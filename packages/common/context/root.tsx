@@ -19,7 +19,7 @@ export const RootContext = createContext<RootContextType | null>(null);
 
 export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Start with sidebar closed
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandSearchOpen, setIsCommandSearchOpen] = useState(false);
 
@@ -28,8 +28,24 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         setIsClient(true);
-        // Only initialize Hotjar on client side and after component has mounted
+
+        // Initialize sidebar state from localStorage if available
         if (typeof window !== "undefined") {
+            try {
+                const storedSidebarState = localStorage.getItem("sidebar-state");
+                if (storedSidebarState) {
+                    const { isOpen } = JSON.parse(storedSidebarState);
+                    setIsSidebarOpen(isOpen ?? false);
+                } else {
+                    // Default to collapsed state if no stored state
+                    setIsSidebarOpen(false);
+                }
+            } catch (error) {
+                log.warn({ data: error }, "Failed to load sidebar state from localStorage");
+                // Default to collapsed state if error
+                setIsSidebarOpen(false);
+            }
+
             try {
                 initHotjar();
             } catch (error) {
@@ -64,7 +80,32 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
         <RootContext.Provider
             value={{
                 isSidebarOpen,
-                setIsSidebarOpen,
+                setIsSidebarOpen: (open) => {
+                    const newState = typeof open === "function" ? open(isSidebarOpen) : open;
+                    setIsSidebarOpen(newState);
+
+                    // Save to localStorage
+                    if (typeof window !== "undefined") {
+                        try {
+                            const currentState = localStorage.getItem("sidebar-state");
+                            const parsedState = currentState
+                                ? JSON.parse(currentState)
+                                : { animationDisabled: false };
+                            localStorage.setItem(
+                                "sidebar-state",
+                                JSON.stringify({
+                                    ...parsedState,
+                                    isOpen: newState,
+                                }),
+                            );
+                        } catch (error) {
+                            log.warn(
+                                { data: error },
+                                "Failed to save sidebar state to localStorage",
+                            );
+                        }
+                    }
+                },
                 isCommandSearchOpen,
                 setIsCommandSearchOpen,
                 isMobileSidebarOpen,

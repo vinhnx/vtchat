@@ -1,4 +1,5 @@
 import { log } from "@repo/shared/logger";
+import { EMBEDDING_MODELS } from "@repo/shared/config/embedding-models";
 
 // In-memory cache for embeddings to avoid duplicate API calls
 const embeddingCache = new Map<string, number[]>();
@@ -32,7 +33,7 @@ export async function getEmbedding(
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
-            model: "text-embedding-004", // Gemini-004 model as requested
+            model: EMBEDDING_MODELS.GEMINI_001,
         });
 
         const result = await model.embedContent(text.trim());

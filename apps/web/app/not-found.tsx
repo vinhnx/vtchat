@@ -15,68 +15,20 @@ export const metadata = {
 
 export default function NotFound() {
     return (
-        <div
-            style={{
-                display: "flex",
-                minHeight: "100vh",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            }}
-        >
-            <div
-                style={{
-                    textAlign: "center",
-                    maxWidth: "400px",
-                    padding: "2rem",
-                }}
-            >
-                <h1
-                    style={{
-                        fontSize: "4rem",
-                        fontWeight: "600",
-                        margin: "0 0 1rem 0",
-                        color: "#374151",
-                    }}
-                >
-                    404
-                </h1>
-                <h2
-                    style={{
-                        fontSize: "1.5rem",
-                        fontWeight: "500",
-                        margin: "0 0 1rem 0",
-                        color: "#6b7280",
-                    }}
-                >
-                    Page Not Found
-                </h2>
-                <p
-                    style={{
-                        fontSize: "1rem",
-                        marginBottom: "2rem",
-                        color: "#9ca3af",
-                        lineHeight: "1.6",
-                    }}
-                >
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+            <div className="w-full max-w-md p-6 text-center">
+                <h1 className="mb-3 text-lg font-medium">404 - Page Not Found</h1>
+                <p className="mb-4 text-sm text-muted-foreground">
                     Sorry, we couldn't find the page you're looking for.
                 </p>
-                <a
-                    href="/"
-                    style={{
-                        display: "inline-block",
-                        padding: "0.75rem 1.5rem",
-                        backgroundColor: "#111827",
-                        color: "#fff",
-                        textDecoration: "none",
-                        borderRadius: "8px",
-                        fontSize: "1rem",
-                        fontWeight: "500",
-                        transition: "background-color 0.2s",
-                    }}
-                >
-                    Back to VT
-                </a>
+                <div className="flex justify-center space-x-3">
+                    <a
+                        href="/"
+                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    >
+                        Back to VT
+                    </a>
+                </div>
             </div>
         </div>
     );

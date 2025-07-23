@@ -3,40 +3,59 @@
 import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from "@repo/common/components";
 import { log } from "@repo/shared/logger";
 import { cn } from "@repo/ui";
+import { useTheme } from "next-themes";
 import { MDXRemote } from "next-mdx-remote";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
 import { memo, Suspense, useEffect, useState } from "react";
 import remarkGfm from "remark-gfm";
+import "./markdown-content.css";
 
 export const markdownStyles = {
-    "animate-fade-in prose prose-base min-w-full": true,
+    // Base prose styling with animation and theme support
+    "animate-fade-in prose prose-base min-w-full dark:prose-invert": true,
 
-    // Text styles
-    "prose-p:font-normal prose-p:text-base prose-p:leading-[1.65rem] prose-p:mx-4 md:prose-p:mx-0": true,
-    "prose-headings:text-base prose-headings:font-medium ": true,
-    "prose-h1:text-2xl prose-h1:font-medium ": true,
-    "prose-h2:text-2xl prose-h2:font-medium ": true,
-    "prose-h3:text-lg prose-h3:font-medium ": true,
-    "prose-strong:font-medium prose-th:font-medium": true,
+    // Improved spacing and layout
+    "prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base": true,
+    "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold prose-headings:tracking-tight": true,
 
-    "prose-li:text-muted-foreground prose-li:font-normal prose-li:leading-[1.65rem] prose-li:mx-4 md:prose-li:mx-0": true,
+    // Heading hierarchy with improved typography
+    "prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:mb-6": true,
+    "prose-h2:text-xl prose-h2:font-semibold prose-h2:border-b prose-h2:border-border/60 prose-h2:pb-1": true,
+    "prose-h3:text-lg prose-h3:font-medium": true,
+    "prose-h4:text-base prose-h4:font-medium prose-h4:opacity-90": true,
 
-    // Code styles
-    "prose-code:font-sans prose-code:text-sm prose-code:font-normal": true,
-    "prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-lg prose-code:p-0.5": true,
+    // List styling with improved spacing
+    "prose-ul:pl-6 prose-ul:my-4 prose-ol:pl-6 prose-ol:my-4": true,
+    "prose-li:my-2 prose-li:leading-relaxed prose-li:text-base prose-li:pl-1": true,
 
-    // Table styles
-    "prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background": true,
+    // Blockquote styling with improved visual design
+    "prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:bg-secondary/20 prose-blockquote:rounded-r-md": true,
 
-    // Table header
-    "prose-th:text-sm prose-th:font-medium prose-th:text-muted-foreground prose-th:bg-tertiary prose-th:px-3 prose-th:py-1.5": true,
+    // Code styling with improved readability
+    "prose-code:font-mono prose-code:text-sm prose-code:font-normal prose-code:whitespace-nowrap": true,
+    "prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5": true,
 
-    // Table row
-    "prose-tr:border-border prose-tr:border": true,
+    // Pre (code block) styling with improved visual design
+    "prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4": true,
 
-    // Table cell
-    "prose-td:px-3 prose-td:py-2.5": true,
+    // Table styling with improved structure and readability
+    "prose-table:w-full prose-table:my-6 prose-table:border-collapse prose-table:bg-background": true,
+    "prose-th:text-sm prose-th:font-semibold prose-th:bg-tertiary prose-th:px-4 prose-th:py-2.5 prose-th:border-b prose-th:border-r prose-th:last:border-r-0 prose-th:border-border prose-th:text-left": true,
+    "prose-tr:border-b prose-tr:border-border": true,
+    "prose-td:px-4 prose-td:py-3 prose-td:border-b prose-td:border-r prose-td:last:border-r-0 prose-td:border-border prose-td:align-top": true,
+
+    // Link styling with improved accessibility
+    "prose-a:text-brand prose-a:underline prose-a:underline-offset-2 prose-a:decoration-[0.08em] hover:prose-a:no-underline prose-a:font-medium": true,
+
+    // Strong and emphasis with improved contrast
+    "prose-strong:font-semibold prose-em:italic": true,
+
+    // Horizontal rule
+    "prose-hr:my-8 prose-hr:border-border": true,
+
+    // Image styling with improved display
+    "prose-img:rounded-md prose-img:my-6 prose-img:max-w-full prose-img:shadow-sm prose-img:mx-auto": true,
 
     // Theme
     "prose-prosetheme": true,
@@ -153,6 +172,8 @@ export const MarkdownContent = memo(
     ({ content, className, isCompleted, isLast }: MarkdownContentProps) => {
         const [previousContent, setPreviousContent] = useState<string[]>([]);
         const [currentContent, setCurrentContent] = useState<string>("");
+        // Force re-render when theme changes
+        const { currentTheme } = useTheme();
 
         useEffect(() => {
             if (!content) return;
@@ -170,11 +191,17 @@ export const MarkdownContent = memo(
             } catch (error) {
                 log.error("Error processing content:", { data: error });
             }
-        }, [content, isCompleted]);
+
+            // Cleanup function to clear content when component unmounts
+            return () => {
+                setPreviousContent([]);
+                setCurrentContent("");
+            };
+        }, [content, isCompleted, currentTheme]);
 
         if (isCompleted && !isLast) {
             return (
-                <div className={cn("", markdownStyles, className)}>
+                <div className={cn("markdown-content", markdownStyles, className)}>
                     <ErrorBoundary fallback={<ErrorPlaceholder />}>
                         <MemoizedMdxChunk chunk={currentContent} />
                     </ErrorBoundary>
@@ -183,7 +210,7 @@ export const MarkdownContent = memo(
         }
 
         return (
-            <div className={cn("", markdownStyles, className)}>
+            <div className={cn("markdown-content", markdownStyles, className)}>
                 {previousContent.length > 0 &&
                     previousContent.map((chunk, index) => (
                         <ErrorBoundary fallback={<ErrorPlaceholder />} key={`prev-${index}`}>
@@ -205,12 +232,15 @@ MarkdownContent.displayName = "MarkdownContent";
 export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     const [mdx, setMdx] = useState<MDXRemoteSerializeResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (!chunk) return;
 
         let isMounted = true;
         setError(null);
+        setIsLoading(true);
 
         (async () => {
             try {
@@ -230,6 +260,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
                 if (isMounted) {
                     setMdx(serialized);
+                    setIsLoading(false);
                 }
             } catch (serializationError) {
                 log.error("Error serializing MDX chunk:", {
@@ -260,9 +291,11 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                             fallbackTimeoutPromise,
                         ]);
                         setMdx(fallbackSerialized);
+                        setIsLoading(false);
                     } catch (fallbackError) {
                         log.error("Fallback serialization also failed:", { data: fallbackError });
                         setError("Failed to render content");
+                        setIsLoading(false);
                     }
                 }
             }
@@ -270,14 +303,34 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
         return () => {
             isMounted = false;
+            // Clear MDX content when component unmounts
+            setMdx(null);
+            setError(null);
+            setIsLoading(false);
         };
-    }, [chunk]);
+    }, [chunk, theme]);
 
     if (error) {
         return (
-            <div className="text-muted-foreground text-sm p-2 border border-border rounded">
-                <p>Content rendering error. Displaying as plain text:</p>
-                <pre className="whitespace-pre-wrap mt-2 text-xs">{chunk}</pre>
+            <div
+                className="text-muted-foreground text-sm p-4 border border-border rounded-md bg-secondary/30"
+                role="alert"
+                aria-live="polite"
+            >
+                <p className="font-medium mb-2">Content rendering error</p>
+                <pre className="whitespace-pre-wrap text-xs markdown-text overflow-x-auto p-2 bg-background rounded border border-border">
+                    {chunk}
+                </pre>
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <div className="animate-pulse space-y-3 py-2" aria-live="polite" aria-busy="true">
+                <div className="h-4 bg-secondary rounded w-3/4"></div>
+                <div className="h-4 bg-secondary rounded w-1/2"></div>
+                <div className="h-4 bg-secondary rounded w-5/6"></div>
             </div>
         );
     }
@@ -288,8 +341,22 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     return (
         <ErrorBoundary fallback={<ErrorPlaceholder />}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <MDXRemote {...mdx} components={mdxComponents} />
+            <Suspense
+                fallback={
+                    <div
+                        className="animate-pulse space-y-3 py-2"
+                        aria-live="polite"
+                        aria-busy="true"
+                    >
+                        <div className="h-4 bg-secondary rounded w-3/4"></div>
+                        <div className="h-4 bg-secondary rounded w-1/2"></div>
+                        <div className="h-4 bg-secondary rounded w-5/6"></div>
+                    </div>
+                }
+            >
+                <div className="markdown-content">
+                    <MDXRemote {...mdx} components={mdxComponents} />
+                </div>
             </Suspense>
         </ErrorBoundary>
     );

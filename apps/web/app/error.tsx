@@ -17,16 +17,16 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-            <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-lg">
-                <h1 className="mb-4 text-4xl font-bold">Something went wrong</h1>
-                <p className="mb-6 text-muted-foreground">
+            <div className="w-full max-w-md p-6 text-center">
+                <h1 className="mb-3 text-lg font-medium">Something went wrong</h1>
+                <p className="mb-4 text-sm text-muted-foreground">
                     An unexpected error occurred. Please try again.
                 </p>
-                <div className="flex justify-center space-x-4">
-                    <Button onClick={reset} variant="default">
+                <div className="flex justify-center space-x-3">
+                    <Button onClick={reset} variant="default" size="sm">
                         Try again
                     </Button>
-                    <Button onClick={handleHomeNavigation} variant="outline">
+                    <Button onClick={handleHomeNavigation} variant="outline" size="sm">
                         Back to VT
                     </Button>
                 </div>

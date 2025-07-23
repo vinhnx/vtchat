@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://vtchat.io.vn";
 
@@ -77,7 +77,6 @@ export const defaultMetadata: Metadata = {
     category: "Technology",
     classification: "AI Chat Application",
     referrer: "origin-when-cross-origin",
-    colorScheme: "light dark",
     themeColor: [
         { media: "(prefers-color-scheme: light)", color: "#ffffff" },
         { media: "(prefers-color-scheme: dark)", color: "#000000" },
@@ -88,4 +87,12 @@ export const defaultMetadata: Metadata = {
         // yandex: "your-yandex-verification-code",
         // yahoo: "your-yahoo-verification-code",
     },
+};
+
+export const defaultViewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    userScalable: true,
+    interactiveWidget: "resizes-content",
+    colorScheme: "light dark",
 };

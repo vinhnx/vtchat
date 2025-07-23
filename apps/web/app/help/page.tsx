@@ -28,6 +28,8 @@ export const metadata: Metadata = {
     },
 };
 
+export const dynamic = "force-static";
+
 export default function HelpCenterPage() {
     return (
         <div className="bg-background min-h-screen">

@@ -1,6 +1,6 @@
 "use client";
 
-import { log } from "@repo/shared/lib/logger";
+import { log } from "@repo/shared/logger";
 import React from "react";
 
 interface ErrorBoundaryState {
@@ -69,26 +69,26 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             }
 
             return (
-                <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 p-8">
-                    <h2 className="mb-2 text-lg font-semibold text-red-900">
+                <div className="flex min-h-[120px] flex-col items-center justify-center p-4">
+                    <h2 className="mb-2 text-sm font-medium text-muted-foreground">
                         Something went wrong
                     </h2>
-                    <p className="mb-4 text-sm text-red-700">
+                    <p className="mb-3 text-xs text-muted-foreground">
                         An error occurred while rendering this component.
                     </p>
                     {process.env.NODE_ENV === "development" && this.state.error && (
-                        <details className="mb-4 max-w-lg">
-                            <summary className="cursor-pointer text-sm font-medium text-red-800">
+                        <details className="mb-3 max-w-lg">
+                            <summary className="cursor-pointer text-xs font-medium text-muted-foreground">
                                 Error Details (Development)
                             </summary>
-                            <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-900">
+                            <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground">
                                 {this.state.error.message}
                                 {this.state.error.stack}
                             </pre>
                         </details>
                     )}
                     <button
-                        className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+                        className="rounded bg-primary px-3 py-1 text-xs text-primary-foreground hover:bg-primary/90"
                         onClick={this.resetError}
                     >
                         Try Again

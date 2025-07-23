@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/* Content paths for Tailwind v4 */
+@source "../../apps/web/app/**/*.{js,ts,jsx,tsx}";
+@source "../../apps/web/components/**/*.{js,ts,jsx,tsx}";
+@source "../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
+@source "../../packages/common/src/**/*.{js,ts,jsx,tsx}";
+
+/* Tailwind v4 CSS Configuration */
+@theme {
+    /* Container configuration */
+    --container-center: true;
+    --container-padding: 2rem;
+    --container-screens-2xl: 1400px;
+
+    /* Color system - using CSS custom properties */
+    --color-border: hsl(var(--border));
+    --color-soft: hsl(var(--soft));
+    --color-hard: hsl(var(--hard));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+    --color-brand: hsl(var(--brand));
+    --color-brand-foreground: hsl(var(--brand-foreground));
+
+    --color-tertiary: hsl(var(--tertiary));
+    --color-tertiary-foreground: hsl(var(--tertiary-foreground));
+
+    --color-quaternary: hsl(var(--quaternary));
+    --color-quaternary-foreground: hsl(var(--quaternary-foreground));
+
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+
+    /* Border configuration */
+    --border-width: 0.8px;
+
+    /* Note: Tailwind v4 generates border-radius utilities automatically, we don't need to override them */
+
+    /* Custom border radius for specific use cases */
+    --radius-lg: 0.625rem; /* Keep this for shadcn compatibility */
+
+    /* Font families */
+    --font-family-mono:
+        "SF Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New",
+        ui-monospace, monospace;
+    --font-family-sans:
+        "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+        sans-serif;
+
+    /* Font sizes with line heights and letter spacing */
+    --font-size-xs: 0.75rem;
+    --line-height-xs: 1.2rem;
+    --letter-spacing-xs: 0.01em;
+
+    --font-size-sm: 0.875rem;
+    --line-height-sm: 1.375rem;
+    --letter-spacing-sm: 0.008em;
+
+    --font-size-base: 1rem;
+    --line-height-base: 1.5rem;
+
+    --font-size-lg: 1.125rem;
+    --line-height-lg: 1.75rem;
+
+    --font-size-xl: 1.25rem;
+    --line-height-xl: 1.95rem;
+
+    --font-size-2xl: 1.5rem;
+    --line-height-2xl: 2.25rem;
+
+    --font-size-3xl: 1.875rem;
+    --line-height-3xl: 2.5rem;
+
+    --font-size-4xl: 2.25rem;
+    --line-height-4xl: 2.75rem;
+
+    --font-size-5xl: 3rem;
+    --line-height-5xl: 3.5rem;
+
+    --font-size-6xl: 3.75rem;
+    --line-height-6xl: 4rem;
+
+    --font-size-7xl: 4.5rem;
+    --line-height-7xl: 4.5rem;
+
+    /* Font weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
+
+    /* Note: Tailwind v4 generates shadow utilities automatically, we don't need to override them */
+
+    /* Custom shadows */
+    --shadow-subtle-xs:
+        rgba(0, 0, 0, 0.04) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px,
+        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    --shadow-subtle-sm:
+        rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 1px 1px -0.5px, rgba(
+            0,
+            0,
+            0,
+            0.06
+        ) 0px 2px 2px -1px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
+    --shadow-glow-sm: 0 0 10px rgba(59, 130, 246, 0.3);
+    --shadow-glow-md: 0 0 20px rgba(59, 130, 246, 0.4);
+    --shadow-glow-lg: 0 0 30px rgba(59, 130, 246, 0.5);
+    --shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-premium-lg: 0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    /* Note: Tailwind v4 generates ring utilities automatically, we don't need to override them */
+
+    /* Spacing */
+    --spacing-18: 4.5rem;
+    --spacing-22: 5.5rem;
+    --spacing-26: 6.5rem;
+    --spacing-30: 7.5rem;
+    --spacing-34: 8.5rem;
+    --spacing-38: 9.5rem;
+
+    /* Animations and keyframes */
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+    --animate-fade-in-once: fade-in-once 10s ease-out forwards;
+    --animate-reveal-pop: reveal-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+    --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+    --animate-scale-in: scale-in 0.2s ease-out;
+    --animate-slide-up: slide-up 0.3s ease-out;
+}
+
+/* Keyframes */
+@keyframes accordion-down {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--radix-accordion-content-height);
+    }
+}
+
+@keyframes accordion-up {
+    from {
+        height: var(--radix-accordion-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes marquee2 {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes fade-in-once {
+    0% {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes reveal-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.01) translateY(-2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes glow-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes scale-in {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Plugin configuration for v4 */
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+@plugin "tailwind-scrollbar-hide";

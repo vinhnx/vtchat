@@ -32,6 +32,7 @@ import { ChatEditor } from "./chat-input";
 import { CombinedSubscriptionSettings } from "./combined-subscription-settings";
 import { LoginRequiredDialog } from "./login-required-dialog";
 import { ModeToggle } from "./mode-toggle";
+import { ModelSettings } from "./model-settings";
 import MultiModelUsageMeter from "./multi-model-usage-meter";
 import { UserProfileSettings } from "./user-profile-settings";
 
@@ -92,6 +93,12 @@ export const SettingsModal = () => {
             component: <MultiModelUsageMeter userId={session?.user?.id} />,
         },
         {
+            title: "Models",
+            description: "View available AI models",
+            key: SETTING_TABS.MODELS,
+            component: <ModelSettings />,
+        },
+        {
             title: "Profile",
             description: "Manage your account details",
             key: SETTING_TABS.PROFILE,
@@ -119,17 +126,14 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl">
+            <DialogContent className="mx-auto h-auto max-h-[90vh] min-h-[500px] w-[calc(100%-2rem)] max-w-[850px] overflow-hidden rounded-lg p-0 md:max-h-[85vh] md:w-[88vw] lg:w-[78vw] xl:w-[68vw] 2xl:w-[58vw] md:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
                 </DialogDescription>
-                <div
-                    className="scrollbar-thin relative w-full overflow-y-auto overflow-x-hidden"
-                    ref={scrollRef}
-                >
+                <div className="flex flex-col h-full w-full">
                     {/* Header */}
-                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
+                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm flex-shrink-0">
                         <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
                             <div>
                                 <TypographyH1 className="text-lg font-semibold md:text-xl">
@@ -140,21 +144,22 @@ export const SettingsModal = () => {
                                 </p>
                             </div>
                             <Button
-                                className="md:hidden"
                                 onClick={() => setIsSettingsOpen(false)}
                                 size="icon-sm"
                                 variant="ghost"
+                                className="flex items-center justify-center"
                             >
                                 <X size={18} strokeWidth={2} />
+                                <span className="sr-only">Close</span>
                             </Button>
                         </div>
                         <div className="border-border border-b" />
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-col xl:flex-row">
+                    <div className="flex flex-col xl:flex-row flex-1 overflow-hidden">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[320px] xl:border-b-0 xl:border-r">
+                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[210px] xl:border-b-0 xl:border-r overflow-y-auto">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
                             <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 xl:flex-col xl:gap-0 xl:space-y-2 xl:overflow-x-visible xl:p-4">
                                 {settingMenu.map((setting) => (
@@ -184,14 +189,10 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 xl:p-8"
+                            className="scrollbar-thin bg-background flex flex-1 overflow-y-auto p-4 xl:p-5"
                             ref={panelContentRef}
-                            style={{
-                                minHeight: "500px",
-                                maxHeight: "calc(85vh - 120px)",
-                            }}
                         >
-                            <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
+                            <div className="w-full max-w-[480px] mx-auto">
                                 {
                                     settingMenu.find((setting) => setting.key === settingTab)
                                         ?.component

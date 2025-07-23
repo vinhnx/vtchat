@@ -24,7 +24,6 @@ export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
  * These routes will redirect to login if user is not authenticated
  */
 export const ProtectedRoutes = {
-    RECENT: "/recent",
     SETTINGS: "/settings",
     PRICING: "/pricing", // VT+ subscription page - requires login
     SUCCESS: "/success",

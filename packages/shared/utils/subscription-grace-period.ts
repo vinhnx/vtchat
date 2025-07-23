@@ -36,11 +36,6 @@ export function hasSubscriptionAccess(subscription: SubscriptionWithPeriod): boo
         case SubscriptionStatusEnum.PAST_DUE:
             // Past due users have grace period until period end
             return notExpired;
-
-        case SubscriptionStatusEnum.EXPIRED:
-        case SubscriptionStatusEnum.INACTIVE:
-        case SubscriptionStatusEnum.INCOMPLETE:
-        case SubscriptionStatusEnum.NONE:
         default:
             // No access for expired, inactive, incomplete, or no subscription
             return false;
@@ -60,13 +55,6 @@ export function isSubscriptionActive(status: SubscriptionStatusEnum): boolean {
         case SubscriptionStatusEnum.TRIALING:
         case SubscriptionStatusEnum.PAST_DUE:
             return true;
-
-        case SubscriptionStatusEnum.CANCELED:
-        case SubscriptionStatusEnum.CANCELLED:
-        case SubscriptionStatusEnum.EXPIRED:
-        case SubscriptionStatusEnum.INACTIVE:
-        case SubscriptionStatusEnum.INCOMPLETE:
-        case SubscriptionStatusEnum.NONE:
         default:
             return false;
     }
@@ -92,7 +80,6 @@ export function getEffectiveAccessStatus(
                 return SubscriptionStatusEnum.CANCELED; // Normalize to single spelling
             case SubscriptionStatusEnum.PAST_DUE:
                 return SubscriptionStatusEnum.PAST_DUE;
-            case SubscriptionStatusEnum.ACTIVE:
             default:
                 return SubscriptionStatusEnum.ACTIVE;
         }

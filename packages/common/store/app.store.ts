@@ -26,6 +26,7 @@ export const SETTING_TABS = {
     TERMS: "terms",
     PRIVACY: "privacy",
     CACHE: "cache",
+    MODELS: "models",
 } as const;
 
 type SideDrawerProps = {
@@ -115,38 +116,32 @@ type Actions = {
 
 // Helper to initialize sidebar state
 function initializeSidebarState() {
-    if (typeof window === "undefined") {
-        return { isOpen: true, animationDisabled: false };
-    }
-
-    try {
-        const stored = localStorage.getItem("sidebar-state");
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            return {
-                isOpen: parsed.isOpen ?? true,
-                animationDisabled: parsed.animationDisabled ?? false,
-            };
+    // Try to get state from localStorage
+    if (typeof window !== "undefined") {
+        try {
+            const storedState = localStorage.getItem("sidebar-state");
+            if (storedState) {
+                const { isOpen, animationDisabled } = JSON.parse(storedState);
+                return { isOpen: isOpen ?? false, animationDisabled: animationDisabled ?? false };
+            }
+        } catch (error) {
+            log.warn({ error }, "Failed to load sidebar state");
         }
-    } catch {
-        // Invalid data, use defaults
     }
-
-    return { isOpen: true, animationDisabled: false };
+    // Default to collapsed state if localStorage not available or parsing fails
+    return { isOpen: false, animationDisabled: false };
 }
 
 export const useAppStore = create<State & Actions>()(
     persist(
         immer((set, get) => {
-            const { isOpen: initialSidebarOpen, animationDisabled } = initializeSidebarState();
-
             // Initialize with base plan defaults
             const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
             return {
                 // Initial state
-                isSidebarOpen: initialSidebarOpen,
-                sidebarAnimationDisabled: animationDisabled,
+                isSidebarOpen: false, // Start with sidebar closed
+                sidebarAnimationDisabled: false,
                 sidebarPlacement: "right",
                 isSourcesOpen: false,
                 isSettingsOpen: false,

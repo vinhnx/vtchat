@@ -44,36 +44,74 @@ async function generateEmbeddingWithProvider(
     model: EmbeddingModel,
     apiKeys: ApiKeys,
 ): Promise<number[]> {
-    const input = text.replaceAll("\\n", " ");
+    try {
+        const input = text.replaceAll("\\n", " ");
 
-    // Only support Gemini models for now
-    // VT+ users can use server API key, free users need their own
-    const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
-    if (!geminiApiKey) {
-        throw new Error(
-            "Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys or upgrade to VT+.",
+        // Only support Gemini models for now
+        // VT+ users can use server API key, free users need their own
+        const geminiApiKey = apiKeys?.[API_KEY_NAMES.GOOGLE] || process.env.GEMINI_API_KEY;
+        if (!geminiApiKey) {
+            throw new Error(
+                "Gemini API key is required for RAG embeddings. Please add it in Settings → API Keys or upgrade to VT+.",
+            );
+        }
+
+        log.info(
+            {
+                model,
+                hasApiKey: !!geminiApiKey,
+                apiKeySource: apiKeys?.[API_KEY_NAMES.GOOGLE] ? "user" : "server",
+                inputLength: input.length,
+            },
+            "RAG Embedding - generateEmbeddingWithProvider start",
         );
-    }
 
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const modelConfig = EMBEDDING_MODEL_CONFIG[model];
-    const geminiModel = genAI.getGenerativeModel({
-        model: modelConfig.id,
-    });
-    const result = await geminiModel.embedContent(input);
-    const embedding = result.embedding.values || [];
+        const genAI = new GoogleGenerativeAI(geminiApiKey);
+        const modelConfig = EMBEDDING_MODEL_CONFIG[model];
 
-    log.info(
-        {
+        if (!modelConfig) {
+            throw new Error(`Unsupported embedding model: ${model}`);
+        }
+
+        const geminiModel = genAI.getGenerativeModel({
             model: modelConfig.id,
-            expectedDimensions: modelConfig.dimensions,
-            actualDimensions: embedding.length,
-            inputLength: input.length,
-        },
-        "🔍 Embedding Debug",
-    );
+        });
 
-    return embedding;
+        log.info(
+            {
+                modelId: modelConfig.id,
+                dimensions: modelConfig.dimensions,
+            },
+            "RAG Embedding - calling embedContent",
+        );
+
+        const result = await geminiModel.embedContent(input);
+        const embedding = result.embedding.values || [];
+
+        log.info(
+            {
+                model: modelConfig.id,
+                expectedDimensions: modelConfig.dimensions,
+                actualDimensions: embedding.length,
+                inputLength: input.length,
+            },
+            "RAG Embedding - embedContent success",
+        );
+
+        return embedding;
+    } catch (error) {
+        log.error(
+            {
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
+                model,
+                hasApiKeys: !!apiKeys && Object.keys(apiKeys || {}).length > 0,
+                textLength: text.length,
+            },
+            "RAG Embedding - generateEmbeddingWithProvider failed",
+        );
+        throw error;
+    }
 }
 
 export const generateEmbeddings = async (
@@ -104,7 +142,7 @@ export const generateEmbeddings = async (
 
 🔧 To fix this:
 1. Go to Settings → API Keys
-2. Add your Google Gemini API key 
+2. Add your Google Gemini API key
    - Get free key: https://ai.google.dev/api
 
 Selected embedding model: ${EMBEDDING_MODEL_CONFIG[embeddingModel].name}`);

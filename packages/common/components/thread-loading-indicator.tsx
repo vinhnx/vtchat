@@ -4,7 +4,6 @@ import { useChatStore } from "@repo/common/store";
 import { GENERATION_TIMEOUTS, TIMEOUT_MESSAGES } from "@repo/shared/constants";
 import { cn } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { memo, useEffect, useState } from "react";
 
@@ -85,28 +84,11 @@ export const ThreadLoadingIndicator = memo(
             lg: 20,
         };
 
-        const dotSizes = {
-            sm: "w-1.5 h-1.5 md:w-2 md:h-2",
-            md: "w-2 h-2 md:w-3 md:h-3",
-            lg: "w-2.5 h-2.5 md:w-4 md:h-4",
-        };
-
-        const formatElapsedTime = (ms: number) => {
-            const seconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-
-            if (minutes > 0) {
-                return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-            }
-            return `${seconds}s`;
-        };
-
         const getLoadingState = () => {
             if (isSlowResponse) {
                 return {
                     variant: "slow",
-                    icon: Clock,
+                    icon: null,
                     message: TIMEOUT_MESSAGES.SLOW_RESPONSE,
                     color: "text-muted-foreground",
                     bgColor: "bg-muted/50",
@@ -118,7 +100,7 @@ export const ThreadLoadingIndicator = memo(
             if (showTimeoutIndicator) {
                 return {
                     variant: "timeout",
-                    icon: Clock,
+                    icon: null,
                     message: TIMEOUT_MESSAGES.TIMEOUT_WARNING,
                     color: "text-muted-foreground",
                     bgColor: "bg-muted/50",
@@ -128,7 +110,7 @@ export const ThreadLoadingIndicator = memo(
             }
             return {
                 variant: "generating",
-                icon: Clock,
+                icon: null,
                 message: TIMEOUT_MESSAGES.GENERATING,
                 color: "text-muted-foreground",
                 bgColor: "bg-muted/50",
@@ -138,7 +120,6 @@ export const ThreadLoadingIndicator = memo(
         };
 
         const config = getLoadingState();
-        const Icon = config.icon;
 
         return (
             <AnimatePresence>
@@ -212,46 +193,8 @@ export const ThreadLoadingIndicator = memo(
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 md:gap-3">
-                                    {/* Animated dots */}
-                                    <div className="flex items-center gap-0.5 md:gap-1">
-                                        {[0, 1, 2].map((index) => (
-                                            <motion.div
-                                                animate={{
-                                                    scale: [1, 1.3, 1],
-                                                    opacity: [0.6, 1, 0.6],
-                                                }}
-                                                className={cn(
-                                                    "rounded-full",
-                                                    config.dots,
-                                                    dotSizes[size],
-                                                )}
-                                                key={index}
-                                                transition={{
-                                                    duration: 1.4,
-                                                    repeat: Number.POSITIVE_INFINITY,
-                                                    delay: index * 0.2,
-                                                    ease: "easeInOut",
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-
                                     {/* Status icon and message */}
                                     <div className="flex items-center gap-1.5 md:gap-2">
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{
-                                                duration: 3,
-                                                repeat: Number.POSITIVE_INFINITY,
-                                                ease: "linear",
-                                            }}
-                                        >
-                                            {" "}
-                                            <Icon
-                                                className={config.color}
-                                                size={size === "sm" ? 10 : size === "md" ? 12 : 14}
-                                            />
-                                        </motion.div>
                                         <span
                                             className={cn(
                                                 "font-medium",
@@ -267,28 +210,6 @@ export const ThreadLoadingIndicator = memo(
                                         </span>
                                     </div>
                                 </div>
-
-                                {/* Elapsed time display */}
-                                {showElapsedTime && elapsedTime > 1000 && (
-                                    <motion.div
-                                        animate={{ opacity: 1 }}
-                                        className={cn(
-                                            "flex items-center gap-1 rounded-full px-1.5 py-0.5 md:px-2 md:py-1",
-                                            "bg-muted/60 border-muted-foreground/10 border",
-                                            size === "sm" ? "text-xs" : "text-xs md:text-sm",
-                                        )}
-                                        initial={{ opacity: 0 }}
-                                        transition={{ delay: 1 }}
-                                    >
-                                        <Clock
-                                            className="text-muted-foreground"
-                                            size={size === "sm" ? 8 : 10}
-                                        />
-                                        <span className="text-muted-foreground font-mono">
-                                            {formatElapsedTime(elapsedTime)}
-                                        </span>
-                                    </motion.div>
-                                )}
                             </div>
 
                             {/* Progress indicator for slow responses */}
@@ -300,7 +221,6 @@ export const ThreadLoadingIndicator = memo(
                                     transition={{ delay: 0.5 }}
                                 >
                                     <div className="text-muted-foreground flex items-center gap-1.5 text-xs md:gap-2">
-                                        <Loader2 className="animate-spin" size={10} />
                                         <span>
                                             {isSlowResponse
                                                 ? "Large or complex request - please wait..."

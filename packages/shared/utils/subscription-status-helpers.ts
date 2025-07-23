@@ -129,8 +129,6 @@ export function getSubscriptionStatusInfo(
                 actionRequired: true,
                 actionText: "Contact Support",
             };
-
-        case SubscriptionStatusEnum.NONE:
         default:
             return {
                 hasAccess: false,
@@ -189,7 +187,6 @@ export function getStatusBadgeText(status: SubscriptionStatusEnum): string {
             return "Incomplete";
         case SubscriptionStatusEnum.INACTIVE:
             return "Inactive";
-        case SubscriptionStatusEnum.NONE:
         default:
             return "Free";
     }

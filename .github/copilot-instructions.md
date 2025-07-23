@@ -186,9 +186,9 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 **Continue Session**: 'continue_session [session_file' (alias continue)
 continue')
 
-- Resumes a previous Amp session with oracle-enhanced analysis
+- Resumes a previous Agent session with oracle-enhanced analysis
 - If no file provided, lists 5 most recent sessions from ./local_ai_docs/sessions/\*
-- Usage: Ask Amp to "run continue_session" or "use continue_session with [filename]"
+- Usage: Ask Agent to "run continue_session" or "use continue_session with [filename]"
 
 **Save Session**: save_session [options] (alias save')
 
@@ -198,7 +198,7 @@ continue')
 - '--fast': Quick save without oracle analysis for faster execution
 - Creates files in •
   •/local_ai_docs/sessions/ with format: "[datel-[title]-amp.md"
-- Usage: Ask Amp to "run save_session" or "save_session --deepthink"
+- Usage: Ask Agent to "run save_session" or "save_session --deepthink"
 
 **Plan Loop**: 'plan_loop [spec_file] [options]' (alias 'plan\*)
 
@@ -206,7 +206,7 @@ continue')
 - Options:
 - '--deepthink: Oracle-enhanced planning and peer review
 - Creates detailed implementation specifications
-- Usage: Ask Amp to "run plan_loop with spec.md --deepthink"
+- Usage: Ask Agent to "run plan_loop with spec.md --deepthink"
 
 **Implementation Loop**: "implementation_loop [spec_file] [options] (alias "impl')
 
@@ -215,7 +215,7 @@ continue')
 - '--deepthink': Oracle analysis for complex decisions
 - '--fast': Skip oracle analysis for rapid cycles
 - Includes quality gates and automatic testing
-- Usage: Ask Amp to "run implementation_loop with spec.md --deepthink"
+- Usage: Ask Agent to "run implementation_loop with spec.md --deepthink"
 
 ### Bun
 

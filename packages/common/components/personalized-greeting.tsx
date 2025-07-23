@@ -62,7 +62,7 @@ export const PersonalizedGreeting = ({ session: initialSession }: PersonalizedGr
                         ease: "easeInOut",
                     }}
                 >
-                    <ShineText className="text-xl font-medium leading-relaxed tracking-tight sm:text-2xl md:text-3xl">
+                    <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
                         {greeting}
                     </ShineText>
                 </motion.div>

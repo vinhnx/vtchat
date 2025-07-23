@@ -1,12 +1,13 @@
-import { db } from "@/lib/database";
-import { userRateLimits } from "@/lib/database/schema";
 import { ModelEnum } from "@repo/ai/models";
 import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
+import { db } from "@repo/shared/lib/database";
 import { and, eq, sql } from "drizzle-orm";
+import type { UserRateLimit } from "../database/schema";
+import { userRateLimits } from "../database/schema";
 import { recordProviderUsage } from "./budget-tracking";
 
 // Security bounds to prevent integer overflow and malicious data
-const SECURITY_BOUNDS = {
+const _SECURITY_BOUNDS = {
     MAX_DAILY_COUNT: 1000000,
     MAX_MINUTE_COUNT: 10000,
 } as const;
@@ -68,9 +69,15 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
 
         try {
             await db.insert(userRateLimits).values(rateLimitRecord);
-        } catch (error: any) {
-            // Handle race condition - another request may have created the record
-            if (error?.code === "23505" && error?.constraint === "unique_user_model") {
+        } catch (error: unknown) {
+            if (
+                error &&
+                typeof error === "object" &&
+                "code" in error &&
+                (error as { code?: string }).code === "23505" &&
+                "constraint" in error &&
+                (error as { constraint?: string }).constraint === "unique_user_model"
+            ) {
                 // Fetch the existing record
                 const existingRecord = await db
                     .select()
@@ -463,7 +470,7 @@ export async function checkRateLimit(
  * Helper function to update an existing rate limit record
  */
 async function updateExistingRateLimitRecord(
-    rateLimitRecord: any,
+    rateLimitRecord: UserRateLimit,
     now: Date,
     userId: string,
     modelId: ModelEnum,
@@ -566,9 +573,15 @@ export async function recordRequest(
                 updatedAt: now,
             });
             return;
-        } catch (error: any) {
-            // If duplicate key error, fetch the existing record and update it
-            if (error?.code === "23505") {
+        } catch (error: unknown) {
+            if (
+                error &&
+                typeof error === "object" &&
+                "code" in error &&
+                (error as { code?: string }).code === "23505" &&
+                "constraint" in error &&
+                (error as { constraint?: string }).constraint === "unique_user_model"
+            ) {
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)

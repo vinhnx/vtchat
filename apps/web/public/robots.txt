@@ -20,7 +20,6 @@ Allow: /pricing
 Allow: /terms
 Allow: /docs
 Disallow: /profile/
-Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 Disallow: /auth/
@@ -50,7 +49,6 @@ Allow: /pricing
 Allow: /terms
 Allow: /docs
 Disallow: /profile/
-Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 Disallow: /auth/
@@ -80,7 +78,6 @@ Allow: /pricing
 Allow: /terms
 Allow: /docs
 Disallow: /profile/
-Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 Disallow: /auth/
@@ -111,7 +108,6 @@ Allow: /terms
 Allow: /docs
 Allow: /
 Disallow: /profile/
-Disallow: /agent/
 Disallow: /api/
 Disallow: /chat/
 Disallow: /auth/

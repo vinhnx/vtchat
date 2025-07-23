@@ -57,15 +57,21 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                 {!isEditing && (
                     <>
                         <div
-                            className={cn("prose-base relative px-3 py-1.5 font-normal", {
-                                "pb-12": isExpanded,
-                                markdownStyles,
-                            })}
+                            className={cn(
+                                "prose-base markdown-text relative px-4 py-2.5 font-normal",
+                                {
+                                    "pb-14": isExpanded,
+                                    markdownStyles,
+                                },
+                            )}
                             ref={messageRef}
+                            id="message-content"
                             style={{
                                 maxHeight: isExpanded ? "none" : maxHeight,
                                 transition: "max-height 0.3s ease-in-out",
                             }}
+                            tabIndex={0}
+                            aria-label="Message content"
                         >
                             {message}
                         </div>
@@ -83,6 +89,8 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                                         rounded="full"
                                         size="xs"
                                         variant="secondary"
+                                        aria-expanded={isExpanded}
+                                        aria-controls="message-content"
                                     >
                                         {isExpanded ? "Show less" : "Show more"}
                                     </Button>

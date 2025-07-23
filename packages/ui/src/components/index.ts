@@ -32,6 +32,7 @@ export * from "./input-premium";
 export * from "./kbd";
 export * from "./label";
 export * from "./label-divider";
+export * from "./link";
 export * from "./link-block";
 export * from "./link-favicon";
 export * from "./loading-spinner";

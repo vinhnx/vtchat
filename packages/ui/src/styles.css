@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "@repo/tailwind-config/tailwind.css";
+@import "./styles/hover-effects.css";
 
 @layer base {
     :root {
@@ -38,6 +37,16 @@
         --sidebar-accent-foreground: 0 0% 9%;
         --sidebar-border: 0 0% 89.8%;
         --sidebar-ring: 0 0% 3.9%;
+
+        /* Custom project variables */
+        --brand: 0 0% 9%;
+        --brand-foreground: 0 0% 98%;
+        --tertiary: 0 0% 96.1%;
+        --tertiary-foreground: 0 0% 9%;
+        --quaternary: 0 0% 96.1%;
+        --quaternary-foreground: 0 0% 9%;
+        --soft: 0 0% 89.8%;
+        --hard: 0 0% 89.8%;
     }
 
     .dark {
@@ -73,6 +82,16 @@
         --sidebar-accent-foreground: 0 0% 98%;
         --sidebar-border: 0 0% 10%;
         --sidebar-ring: 0 0% 83.1%;
+
+        /* Custom project variables */
+        --brand: 0 0% 98%;
+        --brand-foreground: 0 0% 9%;
+        --tertiary: 0 0% 14.9%;
+        --tertiary-foreground: 0 0% 98%;
+        --quaternary: 0 0% 14.9%;
+        --quaternary-foreground: 0 0% 98%;
+        --soft: 0 0% 14.9%;
+        --hard: 0 0% 14.9%;
     }
 
     * {

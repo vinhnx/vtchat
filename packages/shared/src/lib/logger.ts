@@ -1,8 +1,11 @@
 // Simple logger implementation to replace console.log usage
 // This is a minimal implementation to ensure build compatibility
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
+
+type LogData = string | Record<string, unknown> | Error | unknown;
 
 interface LogFunction {
-    (obj: any, msg?: string): void;
+    (obj: LogData, msg?: string): void;
     (msg: string): void;
 }
 
@@ -15,7 +18,7 @@ interface Logger {
 
 // Simple logger that wraps console methods
 const createLogger = (): Logger => {
-    const info: LogFunction = (obj: any, msg?: string) => {
+    const info: LogFunction = (obj: LogData, msg?: string) => {
         if (typeof obj === "string") {
             console.log(obj);
         } else {
@@ -23,7 +26,7 @@ const createLogger = (): Logger => {
         }
     };
 
-    const warn: LogFunction = (obj: any, msg?: string) => {
+    const warn: LogFunction = (obj: LogData, msg?: string) => {
         if (typeof obj === "string") {
             console.warn(obj);
         } else {
@@ -31,15 +34,23 @@ const createLogger = (): Logger => {
         }
     };
 
-    const error: LogFunction = (obj: any, msg?: string) => {
+    const error: LogFunction = (obj: LogData, msg?: string) => {
+        // In development, use console.warn to avoid triggering error overlay for non-critical errors
+        const logMethod = process.env.NODE_ENV === "development" ? console.warn : console.error;
+
         if (typeof obj === "string") {
-            console.error(obj);
+            logMethod(obj);
         } else {
-            console.error(msg || "Error:", obj);
+            // Handle empty or meaningless error objects
+            if (obj && typeof obj === "object" && Object.keys(obj).length === 0) {
+                logMethod(msg || "Error:", "Empty error object");
+            } else {
+                logMethod(msg || "Error:", obj);
+            }
         }
     };
 
-    const debug: LogFunction = (obj: any, msg?: string) => {
+    const debug: LogFunction = (obj: LogData, msg?: string) => {
         if (process.env.NODE_ENV === "development") {
             if (typeof obj === "string") {
                 console.debug(obj);

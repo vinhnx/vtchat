@@ -115,7 +115,7 @@ After the initial fix, discovered that different Gemini embedding models have di
 1. **Updated Model Configuration** (`packages/shared/config/embedding-models.ts`)
 
     - Fixed `gemini-exp` model to correctly specify 3072 dimensions
-    - Changed default model from `gemini-exp` to `gemini-004` (768 dimensions)
+    - Changed default model from `gemini-exp` to `gemini-001` (768 dimensions)
     - This ensures compatibility with our vector(768) database schema
 
 2. **Applied Database Migration** ✅

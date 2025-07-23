@@ -1,5 +1,4 @@
 "use client";
-import { HistoryItem, Logo } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
 import { useAppStore, useChatStore } from "@repo/common/store";
@@ -31,6 +30,8 @@ import {
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
+    ChevronLeft,
+    ChevronRight,
     ChevronsUpDown,
     ChevronUp,
     Command,
@@ -54,8 +55,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { LoginRequiredDialog, useLoginRequired } from "./login-required-dialog";
-import { UserTierBadge } from "./user-tier-badge";
+import { useEffect, useState } from "react";
+import { HistoryItem } from "./history/history-item";
+import {
+    LoginRequiredDialog as SidebarLoginDialog,
+    useLoginRequired,
+} from "./login-required-dialog";
+import { Logo } from "./logo";
+import "./sidebar.css";
+import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
@@ -63,10 +71,36 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const threads = useChatStore((state) => state.threads);
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
+    const [currentPage, setCurrentPage] = useState(1);
+    const threadsPerPage = 10; // Number of threads to display per page
+
     const sortThreads = (threads: Thread[], sortBy: "createdAt") => {
-        return [...threads].sort((a, b) =>
-            getCompareDesc(new Date(a[sortBy]), new Date(b[sortBy])),
+        if (!threads || !Array.isArray(threads)) {
+            return [];
+        }
+
+        // Filter out invalid threads
+        const validThreads = threads.filter(
+            (thread) =>
+                thread && typeof thread === "object" && thread.id && thread[sortBy] !== undefined,
         );
+
+        return [...validThreads].sort((a, b) => {
+            try {
+                const dateA = new Date(a[sortBy]);
+                const dateB = new Date(b[sortBy]);
+
+                // Check if dates are valid
+                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+                    return 0;
+                }
+
+                return getCompareDesc(dateA, dateB);
+            } catch (error) {
+                console.error("Error sorting threads:", error);
+                return 0;
+            }
+        });
     };
 
     const { data: session } = useSession();
@@ -82,6 +116,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const { toast } = useToast();
     const { isAdmin } = useAdmin();
 
+    // Reset pagination when threads change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [threads.length]);
+
     const groupedThreads: Record<string, Thread[]> = {
         today: [],
         yesterday: [],
@@ -90,65 +129,145 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         previousMonths: [],
     };
 
+    // Group all threads by date
     sortThreads(threads, "createdAt")?.forEach((thread) => {
-        const createdAt = new Date(thread.createdAt);
-        const now = new Date();
+        // Skip invalid threads or pinned threads in regular groups to avoid duplicates
+        if (!thread || !thread.id || thread.pinned) return;
 
-        if (getIsToday(createdAt)) {
-            groupedThreads.today.push(thread);
-        } else if (getIsYesterday(createdAt)) {
-            groupedThreads.yesterday.push(thread);
-        } else if (getIsAfter(createdAt, getSubDays(now, 7))) {
-            groupedThreads.last7Days.push(thread);
-        } else if (getIsAfter(createdAt, getSubDays(now, 30))) {
-            groupedThreads.last30Days.push(thread);
-        } else {
-            groupedThreads.previousMonths.push(thread);
+        try {
+            const createdAt = new Date(thread.createdAt);
+            if (isNaN(createdAt.getTime())) {
+                // Skip threads with invalid dates
+                return;
+            }
+
+            const now = new Date();
+
+            if (getIsToday(createdAt)) {
+                groupedThreads.today.push(thread);
+            } else if (getIsYesterday(createdAt)) {
+                groupedThreads.yesterday.push(thread);
+            } else if (getIsAfter(createdAt, getSubDays(now, 7))) {
+                groupedThreads.last7Days.push(thread);
+            } else if (getIsAfter(createdAt, getSubDays(now, 30))) {
+                groupedThreads.last30Days.push(thread);
+            } else {
+                groupedThreads.previousMonths.push(thread);
+            }
+        } catch (error) {
+            // Skip threads that cause errors during date processing
+            console.error("Error processing thread date:", error);
+        }
+    });
+
+    // Calculate total pages based on total threads (excluding pinned ones)
+    const totalNonPinnedThreads = Object.values(groupedThreads).reduce(
+        (acc, group) => acc + group.length,
+        0,
+    );
+    const totalPages = Math.ceil(totalNonPinnedThreads / threadsPerPage);
+
+    // Apply pagination to each group
+    const paginateGroup = (group: Thread[], startIndex: number, endIndex: number) => {
+        return group.slice(startIndex, endIndex);
+    };
+
+    // Calculate pagination indices
+    const startIndex = (currentPage - 1) * threadsPerPage;
+    const endIndex = startIndex + threadsPerPage;
+
+    // Track how many threads we've processed for pagination
+    let processedThreads = 0;
+
+    // Function to get paginated threads for a specific group
+    const getPaginatedThreadsForGroup = (group: Thread[]) => {
+        if (!Array.isArray(group)) {
+            return [];
         }
 
-        //TODO: Paginate these threads
-    });
+        // Filter out invalid thread objects
+        const validThreads = group.filter(
+            (thread) => thread && typeof thread === "object" && thread.id,
+        );
+
+        if (processedThreads >= endIndex) {
+            // We've already shown enough threads for this page
+            return [];
+        }
+
+        if (processedThreads + validThreads.length <= startIndex) {
+            // This entire group is before our pagination window
+            processedThreads += validThreads.length;
+            return [];
+        }
+
+        // Calculate how many threads from this group should be shown
+        const groupStartIndex = Math.max(0, startIndex - processedThreads);
+        const groupEndIndex = Math.min(validThreads.length, endIndex - processedThreads);
+
+        // Update the processed threads count
+        processedThreads += validThreads.length;
+
+        // Return the slice of threads for this group
+        return validThreads.slice(groupStartIndex, groupEndIndex);
+    };
 
     const renderGroup = ({
         title,
         threads,
-
         groupIcon,
         renderEmptyState,
+        isPinned = false,
     }: {
         title: string;
         threads: Thread[];
         groupIcon?: React.ReactNode;
         renderEmptyState?: () => React.ReactNode;
+        isPinned?: boolean;
     }) => {
+        // Skip rendering if threads is not an array or if no threads and no empty state to render
+        if (!threads || !Array.isArray(threads)) return null;
         if (threads.length === 0 && !renderEmptyState) return null;
+
+        // Filter out invalid threads
+        const validThreads = threads.filter(
+            (thread) => thread && typeof thread === "object" && thread.id,
+        );
+
         return (
             <Flex className="w-full gap-0.5" direction="col" items="start">
                 <div className="text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
                     {groupIcon}
                     {title}
                 </div>
-                {threads.length === 0 && renderEmptyState ? (
+                {validThreads.length === 0 && renderEmptyState ? (
                     renderEmptyState()
                 ) : (
                     <Flex className="w-full gap-0.5" direction="col" gap="none">
-                        {threads.map((thread) => (
-                            <HistoryItem
-                                dismiss={() => {
-                                    if (forceMobile) {
-                                        setIsMobileSidebarOpen(false);
-                                    } else {
-                                        setIsSidebarOpen(() => false);
-                                    }
-                                }}
-                                isActive={thread.id === currentThreadId}
-                                isPinned={thread.pinned}
-                                key={thread.id}
-                                pinThread={() => pinThread(thread.id)}
-                                thread={thread}
-                                unpinThread={() => unpinThread(thread.id)}
-                            />
-                        ))}
+                        {validThreads.map((thread) => {
+                            // Ensure thread is valid before rendering
+                            if (!thread || !thread.id) {
+                                return null;
+                            }
+
+                            return (
+                                <HistoryItem
+                                    dismiss={() => {
+                                        if (forceMobile) {
+                                            setIsMobileSidebarOpen(false);
+                                        } else {
+                                            setIsSidebarOpen(() => false);
+                                        }
+                                    }}
+                                    isActive={thread.id === currentThreadId}
+                                    isPinned={thread.pinned}
+                                    key={`${isPinned ? "pinned-" : ""}${thread.id}`}
+                                    pinThread={() => pinThread(thread.id)}
+                                    thread={thread}
+                                    unpinThread={() => unpinThread(thread.id)}
+                                />
+                            );
+                        })}
                     </Flex>
                 )}
             </Flex>
@@ -158,15 +277,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col",
+                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col sidebar-container",
                 "dark:bg-black/95",
                 forceMobile
-                    ? "w-[280px]"
+                    ? "w-[300px] max-w-[300px]"
                     : cn(
                           "transition-all duration-300 ease-in-out",
-                          isSidebarOpen ? "top-0 h-full w-[260px]" : "w-[52px]",
+                          isSidebarOpen
+                              ? "top-0 h-full w-[300px] max-w-[300px] flex-none sidebar-expanded"
+                              : "w-[52px] flex-none sidebar-collapsed",
                       ),
             )}
+            style={{ maxWidth: "300px" }}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
@@ -217,7 +339,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                             <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
                                                 {user?.name || user?.email}
                                             </p>
-                                            <UserTierBadge />
+                                            <SidebarUserTierBadge />
                                         </div>
                                     )}
                                     {isSidebarOpen && (
@@ -327,7 +449,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         </DropdownMenu>
                     ) : (
                         <Button
-                            className="w-full justify-start"
+                            className={cn(
+                                "w-full",
+                                isSidebarOpen ? "justify-start" : "justify-center items-center",
+                            )}
                             onClick={() => push("/login")}
                             rounded="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
@@ -336,7 +461,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             variant="ghost"
                         >
                             <User
-                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                className={cn("flex-shrink-0", isSidebarOpen ? "mr-2" : "")}
                                 size={16}
                                 strokeWidth={2}
                             />
@@ -357,7 +482,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         isSidebarOpen ? "mb-4 px-4 py-3" : "mb-2 px-2 py-2",
                     )}
                 >
-                    <Link className="w-full" href="/">
+                    <Link className={isSidebarOpen ? "flex-1" : "w-full"} href="/">
                         <motion.div
                             animate={{ opacity: 1 }}
                             className={cn(
@@ -380,16 +505,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </motion.div>
                     </Link>
+
+                    {/* Collapse sidebar button in header */}
                     {isSidebarOpen && (
                         <Button
-                            className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
-                            onClick={() =>
-                                forceMobile
-                                    ? setIsMobileSidebarOpen(false)
-                                    : setIsSidebarOpen((prev) => !prev)
-                            }
+                            className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                            onClick={() => setIsSidebarOpen(false)}
                             size="icon-sm"
-                            tooltip="Close Sidebar"
+                            tooltip="Collapse Sidebar"
                             tooltipSide="right"
                             variant="ghost"
                         >
@@ -706,72 +829,162 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Thread History Section */}
                 <div
                     className={cn(
-                        "scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200",
-                        isSidebarOpen ? "flex flex-col gap-4 px-4 pb-6 pt-4" : "hidden",
+                        "thread-history-container w-full flex-1 transition-all duration-200",
+                        isSidebarOpen ? "flex flex-col px-4 pt-4" : "flex flex-col px-2 pt-2",
                     )}
                 >
-                    {threads.length === 0 ? (
-                        <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                            <div className="text-sidebar-foreground/30 text-center">
-                                <FileText size={24} strokeWidth={1.5} />
-                            </div>
-                            <div className="text-center">
-                                <p className="text-sidebar-foreground/70 text-sm font-medium">
-                                    No conversations yet
-                                </p>
-                                <p className="text-sidebar-foreground/50 text-xs">
-                                    Start a new chat to begin
-                                </p>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            {/* Pinned Conversations */}
-                            {renderGroup({
-                                title: "Pinned",
-                                threads: threads
-                                    .filter((thread) => thread.pinned)
-                                    .sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime()),
-                                groupIcon: <Pin size={14} strokeWidth={2} />,
-                                renderEmptyState: () => (
-                                    <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                        <Pin
-                                            className="text-sidebar-foreground/30"
-                                            size={16}
-                                            strokeWidth={1.5}
-                                        />
-                                        <p className="text-sidebar-foreground/60 text-center text-xs">
-                                            Pin important conversations to keep them at the top
+                    {/* Only show threads in expanded mode */}
+                    {isSidebarOpen && (
+                        <div className="scrollbar-thin">
+                            {threads.length === 0 ? (
+                                <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
+                                    <div className="text-sidebar-foreground/30 text-center">
+                                        <FileText size={24} strokeWidth={1.5} />
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-sidebar-foreground/70 text-sm font-medium">
+                                            No conversations yet
+                                        </p>
+                                        <p className="text-sidebar-foreground/50 text-xs">
+                                            Start a new chat to begin
                                         </p>
                                     </div>
-                                ),
-                            })}
+                                </div>
+                            ) : (
+                                <>
+                                    {/* Pinned Conversations */}
+                                    {renderGroup({
+                                        title: "Pinned",
+                                        threads: threads
+                                            .filter(
+                                                (thread) =>
+                                                    thread &&
+                                                    typeof thread === "object" &&
+                                                    thread.id &&
+                                                    thread.pinned,
+                                            )
+                                            .sort((a, b) => {
+                                                // Ensure pinnedAt exists and is a valid date
+                                                const aTime =
+                                                    a.pinnedAt instanceof Date
+                                                        ? a.pinnedAt.getTime()
+                                                        : 0;
+                                                const bTime =
+                                                    b.pinnedAt instanceof Date
+                                                        ? b.pinnedAt.getTime()
+                                                        : 0;
+                                                return bTime - aTime;
+                                            }),
+                                        groupIcon: <Pin size={14} strokeWidth={2} />,
+                                        renderEmptyState: () => (
+                                            <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                                <Pin
+                                                    className="text-sidebar-foreground/30"
+                                                    size={16}
+                                                    strokeWidth={1.5}
+                                                />
+                                                <p className="text-sidebar-foreground/60 text-center text-xs">
+                                                    Pin important conversations to keep them at the
+                                                    top
+                                                </p>
+                                            </div>
+                                        ),
+                                        isPinned: true,
+                                    })}
 
-                            {/* Recent Conversations */}
-                            {renderGroup({ title: "Today", threads: groupedThreads.today })}
-                            {renderGroup({
-                                title: "Yesterday",
-                                threads: groupedThreads.yesterday,
-                            })}
-                            {renderGroup({
-                                title: "Last 7 Days",
-                                threads: groupedThreads.last7Days,
-                            })}
-                            {renderGroup({
-                                title: "Last 30 Days",
-                                threads: groupedThreads.last30Days,
-                            })}
-                            {renderGroup({
-                                title: "Older",
-                                threads: groupedThreads.previousMonths,
-                            })}
-                        </>
+                                    {/* Spacing between pinned and regular threads */}
+                                    <div className="h-4"></div>
+
+                                    {/* Recent Conversations */}
+                                    {renderGroup({
+                                        title: "Today",
+                                        threads:
+                                            currentPage === 1
+                                                ? getPaginatedThreadsForGroup(
+                                                      groupedThreads.today,
+                                                  ).filter((thread) => !thread.pinned)
+                                                : [],
+                                    })}
+                                    {renderGroup({
+                                        title: "Yesterday",
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.yesterday,
+                                        ).filter((thread) => !thread.pinned),
+                                    })}
+                                    {renderGroup({
+                                        title: "Last 7 Days",
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.last7Days,
+                                        ).filter((thread) => !thread.pinned),
+                                    })}
+                                    {renderGroup({
+                                        title: "Last 30 Days",
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.last30Days,
+                                        ).filter((thread) => !thread.pinned),
+                                    })}
+                                    {renderGroup({
+                                        title: "Older",
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.previousMonths,
+                                        ).filter((thread) => !thread.pinned),
+                                    })}
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Show a simplified view in collapsed mode */}
+                    {!isSidebarOpen && threads.length > 0 && (
+                        <div className="flex flex-col items-center gap-2 py-2">
+                            <div className="text-sidebar-foreground/30 text-center">
+                                <FileText size={16} strokeWidth={1.5} />
+                            </div>
+                            <p className="text-sidebar-foreground/50 text-[10px] text-center">
+                                {threads.length} chats
+                            </p>
+                        </div>
                     )}
                 </div>
 
+                {/* Pagination Controls */}
+                {isSidebarOpen && totalPages > 1 && (
+                    <div className="sticky bottom-0 w-full bg-sidebar-accent/20 py-2 px-4 z-20 shadow-md border-t border-sidebar-border">
+                        <div className="flex flex-row items-center justify-between">
+                            <span className="text-sidebar-foreground/70 text-xs font-medium">
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                                    size="icon-sm"
+                                    variant={currentPage === 1 ? "ghost" : "outline"}
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                    <span className="sr-only">Previous page</span>
+                                </Button>
+                                <Button
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() =>
+                                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                                    }
+                                    size="icon-sm"
+                                    variant={currentPage === totalPages ? "ghost" : "outline"}
+                                >
+                                    <ChevronRight className="h-4 w-4" />
+                                    <span className="sr-only">Next page</span>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Bottom Section - Expand Button for Collapsed State */}
                 {!isSidebarOpen && (
-                    <div className="from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent px-2 py-2 pt-8">
+                    <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[52px] bg-gradient-to-t to-transparent px-2 py-4">
                         <div className="flex flex-col items-center gap-3">
                             <Button
                                 className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
@@ -788,7 +1001,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 )}
             </Flex>
 
-            <LoginRequiredDialog
+            <SidebarLoginDialog
                 description="Please sign in to access the command search feature."
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}

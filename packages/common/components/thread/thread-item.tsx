@@ -289,7 +289,7 @@ export const ThreadItem = memo(
                         )}
 
                         {threadItem.status === "ABORTED" && (
-                            <Alert variant="warning">
+                            <Alert>
                                 <AlertDescription>
                                     <AlertCircle className="mt-0.5 size-3.5" />
                                     {threadItem.error ?? "Generation stopped"}

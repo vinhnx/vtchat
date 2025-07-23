@@ -23,16 +23,10 @@ import { ReactScan } from "../components/react-scan";
 import "@repo/ui/src/styles.css";
 import { AccessibilityHead } from "../components/accessibility-improvements";
 import "./globals.css";
-import { defaultMetadata } from "./page-metadata";
+import { defaultMetadata, defaultViewport } from "./page-metadata";
 
 export const metadata: Metadata = defaultMetadata;
-
-export const viewport: Viewport = {
-    width: "device-width",
-    initialScale: 1,
-    userScalable: true,
-    interactiveWidget: "resizes-content",
-};
+export const viewport: Viewport = defaultViewport;
 
 // Remove duplicate font definitions - already defined above
 

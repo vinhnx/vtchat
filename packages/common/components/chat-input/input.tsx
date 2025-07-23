@@ -90,16 +90,8 @@ export const ChatInput = ({
     const useCharts = useChatStore((state) => state.useCharts);
 
     const isGenerating = useChatStore((state) => state.isGenerating);
-    const isChatPage =
-        usePathname() !== "/" &&
-        usePathname() !== "/recent" &&
-        usePathname() !== "/settings" &&
-        usePathname() !== "/pricing" &&
-        usePathname() !== "/about" &&
-        usePathname() !== "/login" &&
-        usePathname() !== "/privacy" &&
-        usePathname() !== "/terms" &&
-        usePathname() !== "/help";
+    const pathname = usePathname();
+    const isChatPage = pathname.startsWith("/chat/");
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
@@ -239,14 +231,17 @@ export const ChatInput = ({
         <AnimatePresence>
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full px-1 md:px-3"
+                className={cn(
+                    "w-full px-3 md:px-4",
+                    currentThreadId ? "mb-3" : "mb-0", // Add bottom margin when in thread detail view
+                )}
                 initial={{ opacity: 0, y: 10 }}
                 key={"chat-input"}
                 transition={{ duration: 0.2, ease: "easeOut" }}
             >
                 <Flex
                     className={cn(
-                        "border-hard/50 bg-background shadow-subtle-sm relative z-10 w-full rounded-xl border",
+                        "bg-background relative z-10 w-full max-w-4xl mx-auto rounded-2xl border border-border/60",
                     )}
                     direction="col"
                 >
@@ -277,14 +272,13 @@ export const ChatInput = ({
                                     </div>
                                     <Flex className="flex w-full flex-row items-end gap-0">
                                         <ChatEditor
-                                            className="px-3 pt-3"
+                                            className=""
                                             editor={editor}
                                             sendMessage={sendMessage}
                                         />
-                                    </Flex>
-
+                                    </Flex>{" "}
                                     <Flex
-                                        className="border-border w-full gap-2 border-t border-dashed px-2 py-2"
+                                        className="border-border w-full gap-3 border-t border-dashed px-4 py-3"
                                         gap="none"
                                         items="center"
                                         justify="between"
@@ -339,7 +333,6 @@ export const ChatInput = ({
                                         >
                                             <SendStopButton
                                                 hasTextInput={hasTextInput}
-                                                isChatPage={isChatPage}
                                                 isGenerating={isGenerating}
                                                 sendMessage={sendMessage}
                                                 stopGeneration={stopGeneration}
@@ -378,12 +371,47 @@ export const ChatInput = ({
         editor?.commands.focus("end");
     }, [currentThreadId]);
 
+    // Auto-focus input when user types anywhere on the page
+    useEffect(() => {
+        const handleGlobalKeyDown = (event: KeyboardEvent) => {
+            // Don't auto-focus if:
+            // 1. User is already typing in an input, textarea, or contenteditable element
+            // 2. User is using keyboard shortcuts (Ctrl/Cmd + key)
+            // 3. User pressed non-printable keys (arrows, escape, etc.)
+            // 4. Editor is not available or not editable
+            const target = event.target as HTMLElement;
+            const isInputElement =
+                target.tagName === "INPUT" ||
+                target.tagName === "TEXTAREA" ||
+                target.contentEditable === "true" ||
+                target.closest('[contenteditable="true"]');
+
+            const isModifierKey = event.ctrlKey || event.metaKey || event.altKey;
+            const isSpecialKey = event.key.length > 1 && !["Enter", "Space"].includes(event.key);
+
+            if (isInputElement || isModifierKey || isSpecialKey || !editor?.isEditable) {
+                return;
+            }
+
+            // Focus the editor and let the character be typed
+            editor.commands.focus("end");
+        };
+
+        // Add global keydown listener
+        document.addEventListener("keydown", handleGlobalKeyDown);
+
+        // Cleanup
+        return () => {
+            document.removeEventListener("keydown", handleGlobalKeyDown);
+        };
+    }, [editor]);
+
     return (
         <div
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
-                    ? "pb-safe absolute bottom-0"
+                    ? "pb-safe absolute bottom-0 mb-4" // Add bottom margin when in thread detail view
                     : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
             )}
         >
@@ -398,7 +426,7 @@ export const ChatInput = ({
                 <Flex
                     className={cn(
                         "pb-safe w-full pb-4 md:pb-4",
-                        threadItemsLength > 0 ? "mb-0" : "h-full",
+                        threadItemsLength > 0 ? "mb-4" : "h-full", // Add bottom margin when there are thread items
                     )}
                     direction="col"
                     items="start"
@@ -407,7 +435,7 @@ export const ChatInput = ({
                     {!currentThreadId && showGreeting && (
                         <motion.div
                             animate={{ opacity: 1 }}
-                            className="mb-2 flex w-full flex-col items-center gap-2"
+                            className="mb-6 flex w-full flex-col items-center gap-2"
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.3, ease: "easeOut" }}
                         >

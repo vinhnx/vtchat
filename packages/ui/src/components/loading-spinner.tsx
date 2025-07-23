@@ -84,7 +84,7 @@ const PulseLoader = React.forwardRef<HTMLDivElement, PulseLoaderProps>(
                 {Array.from({ length: lines }).map((_, i) => (
                     <div
                         className={cn(
-                            "bg-muted animate-pulse rounded",
+                            "bg-muted animate-pulse rounded-sm",
                             heights[height],
                             i === lines - 1 ? "w-3/4" : "w-full",
                         )}
@@ -146,7 +146,7 @@ DotsLoader.displayName = "DotsLoader";
 
 // Premium skeleton loader with shimmer effect
 export interface PremiumSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-    variant?: "default" | "rounded" | "circle";
+    variant?: "default" | "roundedSm" | "circle";
     shimmer?: boolean;
     lines?: number;
     height?: number | string;
@@ -168,7 +168,7 @@ const PremiumSkeleton = React.forwardRef<HTMLDivElement, PremiumSkeletonProps>(
     ) => {
         const variants = {
             default: "rounded-md",
-            rounded: "rounded-lg",
+            roundedSm: "rounded-lg",
             circle: "rounded-full",
         };
 
@@ -286,7 +286,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
                         strokeWidth={strokeWidth}
                         style={{
                             filter: gradient
-                                ? "drop-shadow(0 0 6px rgba(59, 130, 246, 0.3))"
+                                ? "drop-shadow-sm(0 0 6px rgba(59, 130, 246, 0.3))"
                                 : undefined,
                         }}
                     />

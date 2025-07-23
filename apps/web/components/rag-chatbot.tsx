@@ -1,5 +1,6 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
 import { models } from "@repo/ai/models";
 // Import mobile enhancements
 import {
@@ -15,37 +16,10 @@ import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/lib/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
-import {
-    Avatar,
-    Badge,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    Input,
-    ScrollArea,
-    Sheet,
-    SheetContent,
-    useToast,
-} from "@repo/ui";
-import { useChat } from "ai/react";
-import { Database, Eye, Menu, Send, Settings, Trash2 } from "lucide-react";
-import Image from "next/image";
+import { Avatar, Button, Input, ScrollArea, useToast } from "@repo/ui";
+import { Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
-
-interface KnowledgeItem {
-    id: string;
-    content: string;
-    createdAt: string;
-}
 
 export function RAGChatbot() {
     const { data: session } = useSession();
@@ -63,15 +37,6 @@ export function RAGChatbot() {
     const toastRef = useRef(toast);
     toastRef.current = toast;
 
-    const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeItem[]>([]);
-    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-    const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
-    const [isClearing, setIsClearing] = useState(false);
-    const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    // Mobile sidebar state
-    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     // Mobile specific states
     const [isMinimized, setIsMinimized] = useState(false);
 
@@ -80,18 +45,6 @@ export function RAGChatbot() {
 
     const showErrorToast = useCallback(
         async (error: any) => {
-            // Debug logging to understand error structure - serialize error properly
-            log.error(
-                {
-                    errorMessage: error?.message,
-                    errorType: typeof error,
-                    errorName: error?.name,
-                    errorStack: error?.stack,
-                    errorString: String(error),
-                },
-                "showErrorToast called",
-            );
-
             // Check for specific quota_exceeded status from completion API
             if (error?.status === "quota_exceeded" || error?.data?.status === "quota_exceeded") {
                 const quotaMessage = error?.error || error?.data?.error || "VT+ quota exceeded.";
@@ -117,13 +70,13 @@ export function RAGChatbot() {
                 errorMessage = "Unknown error occurred";
             }
 
-            log.info(
+            // Only log the initial processing step without redundant details
+            log.debug(
                 {
-                    message: errorMessage.toLowerCase(),
-                    originalErrorMessage: error instanceof Error ? error.message : String(error),
-                    originalErrorType: typeof error,
+                    processedMessage: errorMessage.toLowerCase(),
+                    errorType: typeof error,
                 },
-                "Processing error message for toast",
+                "Processing error for toast display",
             );
 
             try {
@@ -134,10 +87,10 @@ export function RAGChatbot() {
                     // Add more context if available from the component state
                 });
 
-                log.info({}, "Toast error shown successfully via centralized service");
+                log.debug({}, "Toast error shown successfully via centralized service");
             } catch (serviceError) {
                 // Fallback to basic error handling if service fails
-                log.error(
+                log.warn(
                     {
                         serviceError:
                             serviceError instanceof Error
@@ -178,28 +131,33 @@ export function RAGChatbot() {
             profile,
         },
         onError: (error) => {
-            // Properly serialize error for logging
-            log.error(
-                {
-                    errorMessage: error?.message,
-                    errorType: typeof error,
-                    errorName: error?.name,
-                    errorStack: error?.stack,
-                    errorString: String(error),
-                    errorKeys: Object.keys(error || {}),
-                    errorProto: Object.getPrototypeOf(error || {})?.constructor?.name,
-                },
-                "RAG Chat Error in onError handler",
-            );
+            // Safely extract error information with fallbacks
+            const errorInfo = {
+                errorMessage: error?.message || "Unknown error",
+                errorType: typeof error,
+                errorName: error?.name || "UnknownError",
+                errorStack: error?.stack || "No stack trace",
+                errorString: error ? String(error) : "Empty error",
+                hasError: !!error,
+                errorKeys: error ? Object.keys(error) : [],
+                errorProto: error ? Object.getPrototypeOf(error)?.constructor?.name : "undefined",
+            };
 
-            // Show error toast immediately and also with slight delay as fallback
+            // Only log if we have meaningful error information
+            if (error && (error.message || error.name || Object.keys(error || {}).length > 0)) {
+                log.error(errorInfo, "RAG Chat Error in onError handler");
+            } else {
+                log.warn(errorInfo, "RAG Chat received empty or invalid error object");
+            }
+
+            // Show error toast with single call and simplified fallback
             showErrorToast(error);
 
-            // Fallback with delay in case immediate call doesn't work
+            // Simplified fallback - only if the first call might have failed silently
+            // (reduce logging noise from duplicate calls)
             setTimeout(() => {
-                log.info({}, "Showing error toast with delay fallback");
                 showErrorToast(error);
-            }, 100);
+            }, 150);
         },
         onFinish: (message) => {
             // Check if the assistant message contains error indicators
@@ -242,7 +200,7 @@ export function RAGChatbot() {
                 if (process.env.NODE_ENV === "development") {
                     log.info({ total: resources.length, data }, "📚 Agent fetched");
                 }
-                setKnowledgeBase(resources);
+                // Knowledge base fetched successfully - no need to store since sidebar was removed
             } else {
                 const errorText = await response.text();
                 const error = new Error(
@@ -260,7 +218,14 @@ export function RAGChatbot() {
                 });
             }
         } catch (error) {
-            log.error({ error }, "Error fetching knowledge base");
+            // Properly serialize error for logging
+            const errorDetails = {
+                message: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
+                name: error instanceof Error ? error.name : "UnknownError",
+            };
+            log.error({ error: errorDetails }, "Error fetching knowledge base");
+
             // Use stable toast ref to avoid dependency issues
             const errorMsg = error instanceof Error ? error.message : "Unknown error occurred";
             toastRef.current({
@@ -270,68 +235,6 @@ export function RAGChatbot() {
             });
         }
     }, []); // No dependencies to prevent infinite loop
-
-    const clearKnowledgeBase = async () => {
-        if (!session?.user?.id) return;
-
-        setIsClearing(true);
-        try {
-            const response = await fetch("/api/agent/clear", {
-                method: "DELETE",
-            });
-            if (response.ok) {
-                setKnowledgeBase([]);
-                setIsClearDialogOpen(false);
-                reload();
-                toast({
-                    title: "Knowledge base cleared successfully",
-                    variant: "success",
-                });
-            } else {
-                const errorText = await response.text();
-                const error = new Error(
-                    errorText || `HTTP ${response.status}: Failed to clear knowledge base`,
-                );
-                log.error({ status: response.status, errorText }, "Error clearing knowledge base");
-                showErrorToast(error);
-            }
-        } catch (error) {
-            log.error({ error }, "Error clearing knowledge base");
-            showErrorToast(error as Error);
-        } finally {
-            setIsClearing(false);
-        }
-    };
-
-    const deleteKnowledgeItem = async (id: string) => {
-        setIsDeleting(true);
-        try {
-            const response = await fetch(`/api/agent/delete?id=${id}`, {
-                method: "DELETE",
-            });
-            if (response.ok) {
-                setKnowledgeBase((prev) => prev.filter((item) => item.id !== id));
-                setDeleteItemId(null);
-                reload();
-                toast({
-                    title: "Knowledge item deleted successfully",
-                    variant: "success",
-                });
-            } else {
-                const errorText = await response.text();
-                const error = new Error(
-                    errorText || `HTTP ${response.status}: Failed to delete knowledge item`,
-                );
-                log.error({ status: response.status, errorText }, "Error deleting knowledge item");
-                showErrorToast(error);
-            }
-        } catch (error) {
-            log.error({ error }, "Error deleting knowledge item");
-            showErrorToast(error as Error);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
 
     // Auto-scroll to bottom when new messages arrive
     const scrollToBottom = useCallback(() => {
@@ -415,15 +318,8 @@ export function RAGChatbot() {
                                 <div className="space-y-3 p-3 pb-20">
                                     {messages.length === 0 && (
                                         <div className="text-muted-foreground py-12 text-center">
-                                            <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
-                                                <Image
-                                                    alt="VT Assistant"
-                                                    className="h-full w-full object-cover"
-                                                    src="/icon-192x192.png"
-                                                    width={48}
-                                                    height={48}
-                                                    priority
-                                                />
+                                            <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border font-bold text-lg">
+                                                VT
                                             </div>
                                             <h3 className="text-foreground mb-2 text-lg font-medium">
                                                 VT Personal AI Assistant
@@ -457,14 +353,8 @@ export function RAGChatbot() {
                                                             src={session?.user?.image ?? undefined}
                                                         />
                                                     ) : (
-                                                        <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
-                                                            <Image
-                                                                alt="VT Assistant"
-                                                                className="h-full w-full object-cover"
-                                                                src="/icon-192x192.png"
-                                                                width={32}
-                                                                height={32}
-                                                            />
+                                                        <div className="bg-brand/10 text-brand border-brand/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-semibold">
+                                                            VT
                                                         </div>
                                                     )}
                                                     <div
@@ -550,22 +440,11 @@ export function RAGChatbot() {
                         )}
 
                         <div className="flex flex-col gap-3">
-                            {/* Mobile Agent Button */}
-                            <Button
-                                onClick={() => setIsMobileSidebarOpen(true)}
-                                size="sm"
-                                variant="outline"
-                                className="w-full"
-                            >
-                                <Menu className="mr-2 h-4 w-4" />
-                                Agent ({knowledgeBase.length} items)
-                            </Button>
-
                             {/* Mobile Optimized Input */}
                             <div className="flex gap-2">
                                 <MobileOptimizedInput
                                     value={input}
-                                    onChange={(value) => {
+                                    onChange={(value: string) => {
                                         // Simulate the event object that handleInputChange expects
                                         const syntheticEvent = {
                                             target: { value },
@@ -595,32 +474,6 @@ export function RAGChatbot() {
                 </div>
 
                 {/* Mobile Sidebar Sheet */}
-                <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
-                    <SheetContent className="w-full" title="Agent">
-                        <div className="border-b p-4">
-                            <h2 className="text-lg font-semibold">Agent</h2>
-                        </div>
-                        <RagSidebar
-                            knowledgeBase={knowledgeBase}
-                            isViewDialogOpen={isViewDialogOpen}
-                            setIsViewDialogOpen={setIsViewDialogOpen}
-                            fetchKnowledgeBase={fetchKnowledgeBase}
-                            isClearDialogOpen={isClearDialogOpen}
-                            setIsClearDialogOpen={setIsClearDialogOpen}
-                            clearKnowledgeBase={clearKnowledgeBase}
-                            isClearing={isClearing}
-                            deleteItemId={deleteItemId}
-                            setDeleteItemId={setDeleteItemId}
-                            deleteKnowledgeItem={deleteKnowledgeItem}
-                            isDeleting={isDeleting}
-                            currentRagChatModel={currentRagChatModel}
-                            currentEmbeddingModel={currentEmbeddingModel}
-                            setIsSettingsOpen={setIsSettingsOpen}
-                            isMobile={true}
-                            onClose={() => setIsMobileSidebarOpen(false)}
-                        />
-                    </SheetContent>
-                </Sheet>
             </div>
         );
     }
@@ -634,15 +487,8 @@ export function RAGChatbot() {
                     <div className="space-y-4 p-2 sm:p-4">
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-16 text-center">
-                                <div className="border-primary/20 bg-background mx-auto mb-4 h-12 w-12 overflow-hidden rounded-full border">
-                                    <Image
-                                        alt="VT Assistant"
-                                        className="h-full w-full object-cover"
-                                        src="/icon-192x192.png"
-                                        width={48}
-                                        height={48}
-                                        priority
-                                    />
+                                <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border font-bold text-lg">
+                                    VT
                                 </div>
                                 <h3 className="text-foreground mb-2 text-lg font-medium">
                                     VT Personal AI Assistant
@@ -668,14 +514,8 @@ export function RAGChatbot() {
                                             src={session?.user?.image ?? undefined}
                                         />
                                     ) : (
-                                        <div className="border-primary/20 bg-background h-8 w-8 shrink-0 overflow-hidden rounded-full border">
-                                            <Image
-                                                alt="VT Assistant"
-                                                className="h-full w-full object-cover"
-                                                src="/icon-192x192.png"
-                                                width={32}
-                                                height={32}
-                                            />
+                                        <div className="bg-brand/10 text-brand border-brand/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-semibold">
+                                            VT
                                         </div>
                                     )}
                                     <div
@@ -756,18 +596,6 @@ export function RAGChatbot() {
                     )}
 
                     <div className="flex flex-col gap-3">
-                        <div className="md:hidden">
-                            <Button
-                                onClick={() => setIsMobileSidebarOpen(true)}
-                                size="sm"
-                                variant="outline"
-                                className="w-full"
-                            >
-                                <Menu className="mr-2 h-4 w-4" />
-                                Agent
-                            </Button>
-                        </div>
-
                         <form className="flex gap-3" onSubmit={handleSubmit}>
                             <Input
                                 className="flex-1"
@@ -792,286 +620,6 @@ export function RAGChatbot() {
                     </div>
                 </div>
             </div>
-
-            {/* Desktop Sidebar */}
-            <div className="hidden w-72 border-l md:flex">
-                <RagSidebar
-                    knowledgeBase={knowledgeBase}
-                    isViewDialogOpen={isViewDialogOpen}
-                    setIsViewDialogOpen={setIsViewDialogOpen}
-                    fetchKnowledgeBase={fetchKnowledgeBase}
-                    isClearDialogOpen={isClearDialogOpen}
-                    setIsClearDialogOpen={setIsClearDialogOpen}
-                    clearKnowledgeBase={clearKnowledgeBase}
-                    isClearing={isClearing}
-                    deleteItemId={deleteItemId}
-                    setDeleteItemId={setDeleteItemId}
-                    deleteKnowledgeItem={deleteKnowledgeItem}
-                    isDeleting={isDeleting}
-                    currentRagChatModel={currentRagChatModel}
-                    currentEmbeddingModel={currentEmbeddingModel}
-                    setIsSettingsOpen={setIsSettingsOpen}
-                />
-            </div>
-
-            {/* Mobile Sidebar Sheet */}
-            <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
-                <SheetContent className="w-full" title="Agent">
-                    <div className="border-b p-4">
-                        <h2 className="text-lg font-semibold">Agent</h2>
-                    </div>
-                    <RagSidebar
-                        knowledgeBase={knowledgeBase}
-                        isViewDialogOpen={isViewDialogOpen}
-                        setIsViewDialogOpen={setIsViewDialogOpen}
-                        fetchKnowledgeBase={fetchKnowledgeBase}
-                        isClearDialogOpen={isClearDialogOpen}
-                        setIsClearDialogOpen={setIsClearDialogOpen}
-                        clearKnowledgeBase={clearKnowledgeBase}
-                        isClearing={isClearing}
-                        deleteItemId={deleteItemId}
-                        setDeleteItemId={setDeleteItemId}
-                        deleteKnowledgeItem={deleteKnowledgeItem}
-                        isDeleting={isDeleting}
-                        currentRagChatModel={currentRagChatModel}
-                        currentEmbeddingModel={currentEmbeddingModel}
-                        setIsSettingsOpen={setIsSettingsOpen}
-                        isMobile={true}
-                        onClose={() => setIsMobileSidebarOpen(false)}
-                    />
-                </SheetContent>
-            </Sheet>
         </div>
-    );
-}
-
-interface RagSidebarProps {
-    knowledgeBase: KnowledgeItem[];
-    isViewDialogOpen: boolean;
-    setIsViewDialogOpen: (open: boolean) => void;
-    fetchKnowledgeBase: () => void;
-    isClearDialogOpen: boolean;
-    setIsClearDialogOpen: (open: boolean) => void;
-    clearKnowledgeBase: () => void;
-    isClearing: boolean;
-    deleteItemId: string | null;
-    setDeleteItemId: (id: string | null) => void;
-    deleteKnowledgeItem: (id: string) => void;
-    isDeleting: boolean;
-    currentRagChatModel: any;
-    currentEmbeddingModel: any;
-    setIsSettingsOpen: (open: boolean) => void;
-    isMobile?: boolean;
-    onClose?: () => void;
-}
-
-function RagSidebar({
-    knowledgeBase,
-    isViewDialogOpen,
-    setIsViewDialogOpen,
-    fetchKnowledgeBase,
-    isClearDialogOpen,
-    setIsClearDialogOpen,
-    clearKnowledgeBase,
-    isClearing,
-    deleteItemId,
-    setDeleteItemId,
-    deleteKnowledgeItem,
-    isDeleting,
-    currentRagChatModel,
-    currentEmbeddingModel,
-    setIsSettingsOpen,
-    onClose,
-}: RagSidebarProps) {
-    return (
-        <ScrollArea className="h-full w-full">
-            <div className="space-y-4 p-4">
-                {/* Agent Management */}
-                <Card>
-                    <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-base">
-                            <Database className="h-4 w-4" />
-                            Agent
-                            <Badge className="ml-auto" variant="secondary">
-                                {knowledgeBase.length}
-                            </Badge>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex gap-2">
-                            <Dialog
-                                onOpenChange={(open) => {
-                                    setIsViewDialogOpen(open);
-                                    if (open) {
-                                        fetchKnowledgeBase();
-                                    }
-                                }}
-                                open={isViewDialogOpen}
-                            >
-                                <DialogTrigger asChild>
-                                    <Button className="flex-1" size="sm" variant="outline">
-                                        <Eye className="mr-2 h-3 w-3" />
-                                        View
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-h-[80vh] max-w-2xl">
-                                    <DialogHeader>
-                                        <DialogTitle>
-                                            Agent ({knowledgeBase.length} items)
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                            Your personal knowledge stored for AI assistance
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <ScrollArea className="max-h-96">
-                                        <div className="space-y-3">
-                                            {knowledgeBase.length === 0 ? (
-                                                <div className="text-muted-foreground py-8 text-center">
-                                                    No knowledge items yet. Start chatting to build
-                                                    your knowledge base!
-                                                </div>
-                                            ) : (
-                                                knowledgeBase.map((item) => (
-                                                    <div
-                                                        className="flex items-start justify-between gap-3 rounded-lg border p-3"
-                                                        key={item.id}
-                                                    >
-                                                        <div className="min-w-0 flex-1">
-                                                            <p className="break-words text-sm">
-                                                                {item.content}
-                                                            </p>
-                                                            <p className="text-muted-foreground mt-1 text-xs">
-                                                                {new Date(
-                                                                    item.createdAt,
-                                                                ).toLocaleDateString()}
-                                                            </p>
-                                                        </div>
-                                                        <Button
-                                                            className="text-destructive hover:text-destructive"
-                                                            onClick={() => setDeleteItemId(item.id)}
-                                                            size="sm"
-                                                            variant="ghost"
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </Button>
-                                                    </div>
-                                                ))
-                                            )}
-                                        </div>
-                                    </ScrollArea>
-                                </DialogContent>
-                            </Dialog>
-
-                            <Dialog onOpenChange={setIsClearDialogOpen} open={isClearDialogOpen}>
-                                <DialogTrigger asChild>
-                                    <Button className="flex-1" size="sm" variant="outline">
-                                        <Trash2 className="mr-2 h-3 w-3" />
-                                        Clear
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Clear Agent</DialogTitle>
-                                        <DialogDescription>
-                                            This will permanently delete all {knowledgeBase.length}{" "}
-                                            items from your knowledge base. This action cannot be
-                                            undone.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="flex justify-end gap-2">
-                                        <Button
-                                            onClick={() => setIsClearDialogOpen(false)}
-                                            variant="outline"
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            disabled={isClearing}
-                                            onClick={clearKnowledgeBase}
-                                            variant="destructive"
-                                        >
-                                            {isClearing ? "Clearing..." : "Clear All"}
-                                        </Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                        {/* Individual Delete Confirmation Dialog */}
-                        <Dialog onOpenChange={() => setDeleteItemId(null)} open={!!deleteItemId}>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Delete Knowledge Item</DialogTitle>
-                                    <DialogDescription>
-                                        Are you sure you want to delete this item from your
-                                        knowledge base?
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="flex justify-end gap-2">
-                                    <Button onClick={() => setDeleteItemId(null)} variant="outline">
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        disabled={isDeleting}
-                                        onClick={() =>
-                                            deleteItemId && deleteKnowledgeItem(deleteItemId)
-                                        }
-                                        variant="destructive"
-                                    >
-                                        {isDeleting ? "Deleting..." : "Delete"}
-                                    </Button>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
-                    </CardContent>
-                </Card>
-
-                {/* Model Configuration */}
-                <Card>
-                    <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-base">
-                            <Settings className="h-4 w-4" />
-                            Configuration
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="space-y-2">
-                            <div className="text-muted-foreground text-xs font-medium">
-                                CHAT MODEL
-                            </div>
-                            <div className="text-sm">{currentRagChatModel?.name || "Unknown"}</div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="text-muted-foreground text-xs font-medium">
-                                EMBEDDING MODEL
-                            </div>
-                            <div className="text-sm">
-                                {currentEmbeddingModel?.name || "Unknown"}
-                            </div>
-                            <div className="text-muted-foreground text-xs">
-                                {currentEmbeddingModel?.provider} •{" "}
-                                {currentEmbeddingModel?.dimensions}D
-                            </div>
-                        </div>
-                        <Button
-                            className="mt-3 w-full"
-                            onClick={() => {
-                                setIsSettingsOpen(true);
-                                onClose?.();
-                            }}
-                            size="sm"
-                            variant="outline"
-                        >
-                            <Settings className="mr-2 h-3 w-3" />
-                            Open VT+ Settings
-                        </Button>
-                        <p className="text-muted-foreground text-xs">
-                            Configure AI models, API keys, and embedding preferences in VT+
-                            settings.
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-        </ScrollArea>
     );
 }

@@ -3,17 +3,16 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
 
-import crypto from "node:crypto";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
+import { db } from "@/lib/database";
+import { sessions, userSubscriptions, users } from "@/lib/database/schema";
 import { log } from "@repo/shared/logger";
-import { EnvironmentType, getCurrentEnvironment } from "@repo/shared/types/environment";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import crypto from "node:crypto";
 import { z } from "zod";
-import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
-import { db } from "@/lib/database";
-import { sessions, userSubscriptions, users } from "@/lib/database/schema";
 
 // Known event types and statuses for validation
 const KNOWN_EVENT_TYPES = [

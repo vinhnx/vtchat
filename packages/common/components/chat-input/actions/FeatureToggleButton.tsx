@@ -52,23 +52,41 @@ export function FeatureToggleButton({
             >
                 <Button
                     aria-label={isEnabled ? `${label} Enabled` : `Enable ${label}`}
-                    className={cn("gap-2", isEnabled && `${colourClass.bg} ${colourClass.text}`)}
+                    className={cn(
+                        "gap-2 transition-all duration-200",
+                        isEnabled
+                            ? [
+                                  // Selected state styling
+                                  "border border-muted-foreground/30",
+                                  "bg-gradient-to-r from-blue-50 to-purple-50",
+                                  "hover:from-blue-100 hover:to-purple-100",
+                                  "dark:from-blue-950/20 dark:to-purple-950/20",
+                                  "dark:hover:from-blue-900/30 dark:hover:to-purple-900/30",
+                                  "shadow-sm",
+                              ]
+                            : [`${colourClass.bg}`, "border-0"],
+                    )}
                     onClick={handleToggle}
                     size={isEnabled ? "sm" : "icon-sm"}
                     tooltip={tooltip(isEnabled)}
                     variant={isEnabled ? "secondary" : "ghost"}
                 >
                     {React.isValidElement(icon) && typeof icon.type !== "symbol"
-                        ? React.cloneElement(icon as React.ReactElement<any>, {
+                        ? React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
                               className: cn(
-                                  isEnabled ? colourClass.iconText : "text-muted-foreground",
-                                  (icon as React.ReactElement<any>).props.className,
+                                  isEnabled
+                                      ? "text-blue-500 transition-all duration-200 opacity-100"
+                                      : "text-muted-foreground opacity-80",
+                                  (icon as React.ReactElement<{ className?: string }>).props
+                                      .className,
                               ),
-                              size: 16,
-                              strokeWidth: 2,
                           })
                         : icon}
-                    {isEnabled && hasFeatureAccess && <p className="text-xs">{label}</p>}
+                    {isEnabled && hasFeatureAccess && (
+                        <span className="text-xs font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                            {label}
+                        </span>
+                    )}
                 </Button>
             </GatedFeatureAlert>
             <LoginRequiredDialog

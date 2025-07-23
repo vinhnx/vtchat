@@ -22,3 +22,4 @@ export * from "./use-text-selection";
 export * from "./use-thread-auth";
 export * from "./use-vt-plus-announcement";
 export * from "./use-web-search";
+export * from "./use-theme-change";
