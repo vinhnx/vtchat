@@ -313,10 +313,10 @@ export const CommandSearch = () => {
             />
 
             <Dialog onOpenChange={setShowSubscriptionDialog} open={showSubscriptionDialog}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-md" aria-describedby="subscription-dialog-description">
                     <DialogHeader>
                         <DialogTitle>Sign In Required</DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription id="subscription-dialog-description">
                             Dark theme is available to all registered users. Sign in to enjoy a
                             better viewing experience.
                         </DialogDescription>

@@ -1,5 +1,9 @@
 "use client";
-import { HistoryItem, Logo } from "@repo/common/components";
+import "./sidebar.css";
+import { Logo } from "./logo";
+import { HistoryItem } from "./history/history-item";
+import { LoginRequiredDialog as SidebarLoginDialog, useLoginRequired } from "./login-required-dialog";
+import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 import { useRootContext } from "@repo/common/context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
 import { useAppStore, useChatStore } from "@repo/common/store";
@@ -54,8 +58,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { LoginRequiredDialog, useLoginRequired } from "./login-required-dialog";
-import { UserTierBadge } from "./user-tier-badge";
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { threadId: currentThreadId } = useParams();
@@ -158,15 +160,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col",
+                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col sidebar-container",
                 "dark:bg-black/95",
                 forceMobile
-                    ? "w-[280px]"
+                    ? "w-[300px] max-w-[300px]"
                     : cn(
                           "transition-all duration-300 ease-in-out",
-                          isSidebarOpen ? "top-0 h-full w-[260px]" : "w-[52px]",
+                          isSidebarOpen ? "top-0 h-full w-[300px] max-w-[300px] flex-none sidebar-expanded" : "w-[52px] flex-none sidebar-collapsed",
                       ),
             )}
+            style={{ maxWidth: '300px' }}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
@@ -217,7 +220,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                             <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
                                                 {user?.name || user?.email}
                                             </p>
-                                            <UserTierBadge />
+                                            <SidebarUserTierBadge />
                                         </div>
                                     )}
                                     {isSidebarOpen && (
@@ -380,22 +383,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </motion.div>
                     </Link>
-                    {isSidebarOpen && (
-                        <Button
-                            className="text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
-                            onClick={() =>
-                                forceMobile
-                                    ? setIsMobileSidebarOpen(false)
-                                    : setIsSidebarOpen((prev) => !prev)
-                            }
-                            size="icon-sm"
-                            tooltip="Close Sidebar"
-                            tooltipSide="right"
-                            variant="ghost"
-                        >
-                            <PanelLeftClose size={16} strokeWidth={2} />
-                        </Button>
-                    )}
                 </div>
                 {/* Primary Actions Section */}
                 <Flex
@@ -707,7 +694,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 <div
                     className={cn(
                         "scrollbar-thin w-full flex-1 overflow-y-auto transition-all duration-200",
-                        isSidebarOpen ? "flex flex-col gap-4 px-4 pb-6 pt-4" : "hidden",
+                        isSidebarOpen ? "flex flex-col gap-4 px-4 pb-16 pt-4" : "hidden",
                     )}
                 >
                     {threads.length === 0 ? (
@@ -769,9 +756,28 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
 
+                {/* Bottom Section - Collapse Button for Expanded State */}
+                {isSidebarOpen && (
+                    <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[300px] bg-gradient-to-t to-transparent px-4 py-4 border-t border-sidebar-border">
+                        <div className="flex flex-row items-center justify-between">
+                            <span className="text-sidebar-foreground/60 text-xs">Collapse sidebar</span>
+                            <Button
+                                className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                                onClick={() => setIsSidebarOpen(false)}
+                                size="icon-sm"
+                                tooltip="Close Sidebar"
+                                tooltipSide="left"
+                                variant="ghost"
+                            >
+                                <PanelLeftClose size={16} strokeWidth={2} />
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Bottom Section - Expand Button for Collapsed State */}
                 {!isSidebarOpen && (
-                    <div className="from-sidebar via-sidebar/95 absolute bottom-0 w-full bg-gradient-to-t to-transparent px-2 py-2 pt-8">
+                    <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[52px] bg-gradient-to-t to-transparent px-2 py-4">
                         <div className="flex flex-col items-center gap-3">
                             <Button
                                 className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
@@ -788,7 +794,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 )}
             </Flex>
 
-            <LoginRequiredDialog
+            <SidebarLoginDialog
                 description="Please sign in to access the command search feature."
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}

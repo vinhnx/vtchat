@@ -34,24 +34,34 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return <div className="mb-5 leading-relaxed markdown-text">{children}</div>;
     },
     h1: ({ children }) => {
-        return <h1 className="text-2xl font-bold border-b border-border pb-2 mb-6 mt-8 markdown-text">{children}</h1>;
+        return (
+            <h1 className="text-2xl font-bold border-b border-border pb-2 mb-6 mt-8 markdown-text">
+                {children}
+            </h1>
+        );
     },
     h2: ({ children }) => {
-        return <h2 className="text-xl font-semibold border-b border-border/60 pb-1 mb-4 mt-7 markdown-text">{children}</h2>;
+        return (
+            <h2 className="text-xl font-semibold border-b border-border/60 pb-1 mb-4 mt-7 markdown-text">
+                {children}
+            </h2>
+        );
     },
     h3: ({ children }) => {
         return <h3 className="text-lg font-medium mb-3 mt-6 markdown-text">{children}</h3>;
     },
     h4: ({ children }) => {
-        return <h4 className="text-base font-medium opacity-90 mb-3 mt-5 markdown-text">{children}</h4>;
+        return (
+            <h4 className="text-base font-medium opacity-90 mb-3 mt-5 markdown-text">{children}</h4>
+        );
     },
     a: ({ href, children }) => {
         return (
-            <a 
-                href={href} 
-                className="text-brand underline underline-offset-2 hover:no-underline transition-colors" 
-                target={href?.startsWith('http') ? "_blank" : undefined}
-                rel={href?.startsWith('http') ? "noopener noreferrer" : undefined}
+            <a
+                href={href}
+                className="text-brand underline underline-offset-2 hover:no-underline transition-colors"
+                target={href?.startsWith("http") ? "_blank" : undefined}
+                rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
             >
                 {children}
             </a>
@@ -67,17 +77,21 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return <li className="my-2 leading-relaxed markdown-text">{children}</li>;
     },
     blockquote: ({ children }) => {
-        return <blockquote className="border-l-4 border-border pl-4 italic my-6 text-muted-foreground">{children}</blockquote>;
+        return (
+            <blockquote className="border-l-4 border-border pl-4 italic my-6 text-muted-foreground">
+                {children}
+            </blockquote>
+        );
     },
     hr: () => {
         return <hr className="my-8 border-border" />;
     },
     img: ({ src, alt, ...props }) => {
         return (
-            <img 
-                src={src} 
-                alt={alt || "Image"} 
-                className="rounded-md my-6 max-w-full h-auto" 
+            <img
+                src={src}
+                alt={alt || "Image"}
+                className="rounded-md my-6 max-w-full h-auto"
                 loading="lazy"
                 {...props}
             />
@@ -93,7 +107,11 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     th: ({ children }) => {
-        return <th className="text-sm font-semibold bg-tertiary px-4 py-2.5 border border-border markdown-text">{children}</th>;
+        return (
+            <th className="text-sm font-semibold bg-tertiary px-4 py-2.5 border border-border markdown-text">
+                {children}
+            </th>
+        );
     },
     td: ({ children }) => {
         return <td className="px-4 py-3 border border-border markdown-text">{children}</td>;

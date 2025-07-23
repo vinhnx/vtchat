@@ -6,12 +6,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-@vtchat/web:dev: [ApiKeys] Hydration successful { keyCount: 0 }
-@vtchat/web:dev: ⚠ Unsupported metadata colorScheme is configured in metadata export in /chat/[threadId]. Please move it to viewport export instead.
-@vtchat/web:dev: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
-@vtchat/web:dev: ⚠ Unsupported metadata themeColor is configured in metadata export in /chat/[threadId]. Please move it to viewport export instead.
-@vtchat/web:dev: Read more: https://nextjs.org/docs/app/api-reference/fu
-
 --
 
 make sure thread view in sidebar scrollable. also implmentation pagination

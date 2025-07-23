@@ -18,45 +18,45 @@ export const markdownStyles = {
     // Improved spacing and layout
     "prose-p:mb-5 prose-p:leading-relaxed": true,
     "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold": true,
-    
+
     // Heading hierarchy
     "prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:mb-6": true,
     "prose-h2:text-xl prose-h2:font-semibold prose-h2:border-b prose-h2:border-border/60 prose-h2:pb-1": true,
     "prose-h3:text-lg prose-h3:font-medium": true,
     "prose-h4:text-base prose-h4:font-medium prose-h4:opacity-90": true,
-    
+
     // List styling
     "prose-ul:pl-6 prose-ul:my-4 prose-ol:pl-6 prose-ol:my-4": true,
     "prose-li:my-2 prose-li:leading-relaxed": true,
-    
+
     // Blockquote styling
     "prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6": true,
-    
+
     // Code styling
     "prose-code:font-mono prose-code:text-sm prose-code:font-normal": true,
     "prose-code:bg-secondary prose-code:border-border prose-code:border prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5": true,
-    
+
     // Pre (code block) styling
     "prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4": true,
-    
+
     // Table styling with improved readability
     "prose-table:w-full prose-table:my-6 prose-table:border-collapse prose-table:border-border prose-table:border prose-table:rounded-lg prose-table:bg-background": true,
     "prose-th:text-sm prose-th:font-semibold prose-th:bg-tertiary prose-th:px-4 prose-th:py-2.5 prose-th:border prose-th:border-border": true,
     "prose-tr:border-border prose-tr:border": true,
     "prose-td:px-4 prose-td:py-3 prose-td:border prose-td:border-border": true,
-    
+
     // Link styling
     "prose-a:text-brand prose-a:underline prose-a:underline-offset-2 hover:prose-a:no-underline": true,
-    
+
     // Strong and emphasis
     "prose-strong:font-semibold prose-em:italic": true,
-    
+
     // Horizontal rule
     "prose-hr:my-8 prose-hr:border-border": true,
-    
+
     // Image styling
     "prose-img:rounded-md prose-img:my-6 prose-img:max-w-full": true,
-    
+
     // Theme
     "prose-prosetheme": true,
 };
@@ -302,7 +302,11 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     if (error) {
         return (
-            <div className="text-muted-foreground text-sm p-4 border border-border rounded-md bg-secondary/30" role="alert" aria-live="polite">
+            <div
+                className="text-muted-foreground text-sm p-4 border border-border rounded-md bg-secondary/30"
+                role="alert"
+                aria-live="polite"
+            >
                 <p className="font-medium mb-2">Content rendering error</p>
                 <pre className="whitespace-pre-wrap text-xs markdown-text overflow-x-auto p-2 bg-background rounded border border-border">
                     {chunk}
@@ -327,9 +331,13 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
     return (
         <ErrorBoundary fallback={<ErrorPlaceholder />}>
-            <Suspense 
+            <Suspense
                 fallback={
-                    <div className="animate-pulse space-y-3 py-2" aria-live="polite" aria-busy="true">
+                    <div
+                        className="animate-pulse space-y-3 py-2"
+                        aria-live="polite"
+                        aria-busy="true"
+                    >
                         <div className="h-4 bg-secondary rounded w-3/4"></div>
                         <div className="h-4 bg-secondary rounded w-1/2"></div>
                         <div className="h-4 bg-secondary rounded w-5/6"></div>
