@@ -142,29 +142,6 @@ export const CommandSearch = () => {
             },
         },
         {
-            name: "Delete Thread",
-            icon: Trash,
-            action: async () => {
-                if (!isSignedIn) {
-                    requireLogin();
-                    return;
-                }
-
-                if (!currentThreadId) {
-                    log.warn({}, "Cannot delete thread: no current thread ID");
-                    return;
-                }
-
-                const thread = await getThread(currentThreadId);
-                if (thread) {
-                    removeThread(thread.id);
-                    router.push("/");
-                    onClose();
-                }
-            },
-            requiresAuth: true,
-        },
-        {
             name: "Change Theme",
             icon: Palette,
             action: () => {
@@ -221,18 +198,18 @@ export const CommandSearch = () => {
 
     return (
         <CommandDialog onOpenChange={setIsCommandSearchOpen} open={isCommandSearchOpen}>
-            <div className="flex w-full flex-row items-center gap-2 p-0.5">
-                <div className="flex-1 [&_[cmdk-input-wrapper]]:border-b-0">
-                    <CommandInput placeholder="Search..." />
-                </div>
-                <div className="flex shrink-0 items-center gap-1 px-2 pr-12">
+            <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
+                <div className="flex items-center gap-1 px-2">
                     <Kbd className="h-5 w-5">
                         <Command className="shrink-0" size={12} strokeWidth={2} />
                     </Kbd>
                     <Kbd className="h-5 w-5">K</Kbd>
                 </div>
+                <div className="flex-1">
+                    <CommandInput placeholder="Search..." className="border-none" />
+                </div>
             </div>
-            <CommandList className="max-h-[420px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
+            <CommandList className="max-h-[300px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     {actions.map((action) => {
@@ -269,39 +246,38 @@ export const CommandSearch = () => {
                         return actionItem;
                     })}
                 </CommandGroup>
-                {Object.entries(groupedThreads).map(
-                    ([key, threads]) =>
-                        threads.length > 0 && (
-                            <CommandGroup
-                                heading={groupsNames[key as keyof typeof groupsNames]}
-                                key={key}
-                            >
-                                {threads.slice(0, 3).map((thread) => (
-                                    <CommandItem
-                                        className={cn("w-full gap-3")}
-                                        key={thread.id}
-                                        onSelect={() => {
-                                            switchThread(thread.id);
-                                            router.push(`/chat/${thread.id}`);
-                                            onClose();
-                                        }}
-                                        value={`${thread.id}/${thread.title}`}
-                                    >
-                                        <MessageCircle
-                                            className="text-muted-foreground/50"
-                                            size={16}
-                                            strokeWidth={2}
-                                        />
-                                        <span className="w-full truncate font-normal">
-                                            {thread.title}
-                                        </span>
-                                        {/* <span className="text-muted-foreground flex-shrink-0 pl-4 text-xs !font-normal">
-                                            {formatDistanceToNow(new Date(thread.createdAt), { addSuffix: false })}
-                                        </span> */}
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
-                        ),
+                {/* Show only 3 most recent threads without day grouping */}
+                {threads.length > 0 && (
+                    <CommandGroup heading="Recent Threads">
+                        {threads
+                            .sort(
+                                (a, b) =>
+                                    new Date(b.createdAt).getTime() -
+                                    new Date(a.createdAt).getTime(),
+                            )
+                            .slice(0, 3)
+                            .map((thread) => (
+                                <CommandItem
+                                    className={cn("w-full gap-3")}
+                                    key={thread.id}
+                                    onSelect={() => {
+                                        switchThread(thread.id);
+                                        router.push(`/chat/${thread.id}`);
+                                        onClose();
+                                    }}
+                                    value={`${thread.id}/${thread.title}`}
+                                >
+                                    <MessageCircle
+                                        className="text-muted-foreground/50"
+                                        size={16}
+                                        strokeWidth={2}
+                                    />
+                                    <span className="w-full truncate font-normal">
+                                        {thread.title}
+                                    </span>
+                                </CommandItem>
+                            ))}
+                    </CommandGroup>
                 )}
             </CommandList>
 
