@@ -65,7 +65,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     useMobilePWANotification();
 
     const containerClass =
-        "relative flex flex-1 flex-row h-[calc(99dvh)] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm";
+        "relative flex flex-1 flex-row h-[100dvh] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm";
 
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== "/pricing";
@@ -119,15 +119,15 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             {/* Fixed Left Sidebar - Only visible when placement is left */}
             {sidebarPlacement === "left" && (
-                <div className="hidden md:block flex-none w-auto max-w-[300px]">
+                <div className="hidden md:block flex-none w-auto max-w-[300px] h-[100dvh]">
                     <BasicSidebar />
                 </div>
             )}
 
             {/* Main Content */}
-            <Flex className="flex-1 overflow-hidden">
+            <Flex className="flex-1 overflow-hidden h-[100dvh]">
                 <motion.div
-                    className={`flex w-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
+                    className={`flex w-full h-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
                 >
                     <AgentProvider>
                         <div className={containerClass}>
@@ -205,7 +205,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Right Sidebar - Only visible when placement is right */}
             {sidebarPlacement === "right" && (
-                <div className="hidden md:block flex-none w-auto max-w-[300px]">
+                <div className="hidden md:block flex-none w-auto max-w-[300px] h-[100dvh]">
                     <BasicSidebar />
                 </div>
             )}

@@ -775,88 +775,103 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {/* Thread History Section */}
                 <div
                     className={cn(
-                        "w-full flex-1 transition-all duration-200 overflow-hidden",
-                        isSidebarOpen ? "flex flex-col px-4 pt-4" : "hidden",
+                        "thread-history-container w-full flex-1 transition-all duration-200",
+                        isSidebarOpen ? "flex flex-col px-4 pt-4" : "flex flex-col px-2 pt-2",
                     )}
                 >
-                    <div className="scrollbar-thin h-full overflow-y-auto">
-                        {threads.length === 0 ? (
-                            <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                                <div className="text-sidebar-foreground/30 text-center">
-                                    <FileText size={24} strokeWidth={1.5} />
+                    {/* Only show threads in expanded mode */}
+                    {isSidebarOpen && (
+                        <div className="scrollbar-thin">
+                            {threads.length === 0 ? (
+                                <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
+                                    <div className="text-sidebar-foreground/30 text-center">
+                                        <FileText size={24} strokeWidth={1.5} />
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-sidebar-foreground/70 text-sm font-medium">
+                                            No conversations yet
+                                        </p>
+                                        <p className="text-sidebar-foreground/50 text-xs">
+                                            Start a new chat to begin
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="text-center">
-                                    <p className="text-sidebar-foreground/70 text-sm font-medium">
-                                        No conversations yet
-                                    </p>
-                                    <p className="text-sidebar-foreground/50 text-xs">
-                                        Start a new chat to begin
-                                    </p>
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                {/* Pinned Conversations */}
-                                {renderGroup({
-                                    title: "Pinned",
-                                    threads: threads
-                                        .filter((thread) => thread.pinned)
-                                        .sort(
-                                            (a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime(),
+                            ) : (
+                                <>
+                                    {/* Pinned Conversations */}
+                                    {renderGroup({
+                                        title: "Pinned",
+                                        threads: threads
+                                            .filter((thread) => thread.pinned)
+                                            .sort(
+                                                (a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime(),
+                                            ),
+                                        groupIcon: <Pin size={14} strokeWidth={2} />,
+                                        renderEmptyState: () => (
+                                            <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
+                                                <Pin
+                                                    className="text-sidebar-foreground/30"
+                                                    size={16}
+                                                    strokeWidth={1.5}
+                                                />
+                                                <p className="text-sidebar-foreground/60 text-center text-xs">
+                                                    Pin important conversations to keep them at the top
+                                                </p>
+                                            </div>
                                         ),
-                                    groupIcon: <Pin size={14} strokeWidth={2} />,
-                                    renderEmptyState: () => (
-                                        <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                            <Pin
-                                                className="text-sidebar-foreground/30"
-                                                size={16}
-                                                strokeWidth={1.5}
-                                            />
-                                            <p className="text-sidebar-foreground/60 text-center text-xs">
-                                                Pin important conversations to keep them at the top
-                                            </p>
-                                        </div>
-                                    ),
-                                    isPinned: true,
-                                })}
+                                        isPinned: true,
+                                    })}
 
-                                {/* Spacing between pinned and regular threads */}
-                                <div className="h-4"></div>
+                                    {/* Spacing between pinned and regular threads */}
+                                    <div className="h-4"></div>
 
-                                {/* Recent Conversations */}
-                                {renderGroup({
-                                    title: "Today",
-                                    threads:
-                                        currentPage === 1
-                                            ? getPaginatedThreadsForGroup(groupedThreads.today)
-                                            : [],
-                                })}
-                                {renderGroup({
-                                    title: "Yesterday",
-                                    threads: getPaginatedThreadsForGroup(groupedThreads.yesterday),
-                                })}
-                                {renderGroup({
-                                    title: "Last 7 Days",
-                                    threads: getPaginatedThreadsForGroup(groupedThreads.last7Days),
-                                })}
-                                {renderGroup({
-                                    title: "Last 30 Days",
-                                    threads: getPaginatedThreadsForGroup(groupedThreads.last30Days),
-                                })}
-                                {renderGroup({
-                                    title: "Older",
-                                    threads: getPaginatedThreadsForGroup(
-                                        groupedThreads.previousMonths,
-                                    ),
-                                })}
-                            </>
-                        )}
-                    </div>
+                                    {/* Recent Conversations */}
+                                    {renderGroup({
+                                        title: "Today",
+                                        threads:
+                                            currentPage === 1
+                                                ? getPaginatedThreadsForGroup(groupedThreads.today)
+                                                : [],
+                                    })}
+                                    {renderGroup({
+                                        title: "Yesterday",
+                                        threads: getPaginatedThreadsForGroup(groupedThreads.yesterday),
+                                    })}
+                                    {renderGroup({
+                                        title: "Last 7 Days",
+                                        threads: getPaginatedThreadsForGroup(groupedThreads.last7Days),
+                                    })}
+                                    {renderGroup({
+                                        title: "Last 30 Days",
+                                        threads: getPaginatedThreadsForGroup(groupedThreads.last30Days),
+                                    })}
+                                    {renderGroup({
+                                        title: "Older",
+                                        threads: getPaginatedThreadsForGroup(
+                                            groupedThreads.previousMonths,
+                                        ),
+                                    })}
+                                </>
+                            )}
+                        </div>
+                    )}
+                    
+                    {/* Show a simplified view in collapsed mode */}
+                    {!isSidebarOpen && threads.length > 0 && (
+                        <div className="flex flex-col items-center gap-2 py-2">
+                            <div className="text-sidebar-foreground/30 text-center">
+                                <FileText size={16} strokeWidth={1.5} />
+                            </div>
+                            <p className="text-sidebar-foreground/50 text-[10px] text-center">
+                                {threads.length} chats
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Pagination Controls */}
                 {isSidebarOpen && totalPages > 1 && (
-                    <div className="fixed bottom-0 right-0 w-[300px] max-w-[300px] bg-sidebar-accent/20 py-2 px-4 z-20 sidebar-pagination shadow-md border-t border-sidebar-border">
+                    <div className="sticky bottom-0 w-full bg-sidebar-accent/20 py-2 px-4 z-20 shadow-md border-t border-sidebar-border">
                         <div className="flex flex-row items-center justify-between">
                             <span className="text-sidebar-foreground/70 text-xs font-medium">
                                 Page {currentPage} of {totalPages}

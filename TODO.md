@@ -26,12 +26,14 @@ increase bottom margin from chat input box to bottom of the screen on thread det
 remove shadow on chat input box
 
 --
-
-fix settings width container on desktop
+https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-5/
 
 --
 
-fix command bar search container
+fix: When we reload the chat, it doesn't resume the previous conversation - instead, it starts a new one
+--
+
+fix settings container on desktop is appearing as mobile variant -> it should be full width and not have the mobile styles applied on desktop mode
 
 --
 
