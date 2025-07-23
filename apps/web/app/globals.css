@@ -303,63 +303,105 @@ html.dark .shiki span {
 /* Custom scrollbar styling */
 .custom-scrollbar {
     /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
+    scrollbar-width: auto;
+    scrollbar-color: rgba(100, 100, 100, 0.7) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.5);
+    background: rgba(100, 100, 100, 0.7);
     border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
     transition: background-color 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.8);
+    background: rgba(100, 100, 100, 0.9);
+    border: 2px solid transparent;
+    background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-corner {
     background: transparent;
 }
 
+/* Dark theme scrollbar overrides */
+.dark .custom-scrollbar {
+    scrollbar-color: rgba(170, 170, 170, 0.7) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(170, 170, 170, 0.7);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(170, 170, 170, 0.9);
+}
+
 /* Thin scrollbar variant */
 .thin-scrollbar {
     /* Firefox */
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
+    scrollbar-color: rgba(100, 100, 100, 0.7) transparent;
 }
 
 .thin-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 3px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.5);
+    background: rgba(100, 100, 100, 0.7);
     border-radius: 3px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
     transition: background-color 0.2s ease;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.8);
+    background: rgba(100, 100, 100, 0.9);
+    border: 2px solid transparent;
+    background-clip: padding-box;
 }
 
 .thin-scrollbar::-webkit-scrollbar-corner {
     background: transparent;
+}
+
+/* Dark theme thin scrollbar overrides */
+.dark .thin-scrollbar {
+    scrollbar-color: rgba(170, 170, 170, 0.7) transparent;
+}
+
+.dark .thin-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .thin-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(170, 170, 170, 0.7);
+}
+
+.dark .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(170, 170, 170, 0.9);
 }
 
 /* Premium Glass Morphism Effect */
