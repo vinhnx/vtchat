@@ -6,13 +6,6 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-invite credit system to raise user engagement and retention. users can earn credits by inviting friends, which can be redeemed for premium features or services. implement a referral tracking system to monitor successful invites and credit distribution. ensure that the process is seamless and incentivizes users to share the platform with their network. consider gamification elements, such as leaderboards or badges, to further encourage participation in the invite program.
-
-https://lovable.dev/invite/c0438cac-ab38-40f5-bf50-aa07a3ce7d76
-
---
-
---
 https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-5/
 
 --
