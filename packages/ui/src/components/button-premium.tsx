@@ -4,24 +4,24 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 
 const premiumButtonVariants = cva(
-    "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm transition-all duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring-3 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg font-medium text-sm transition-all duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring-3 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 premium-btn-hover",
     {
         variants: {
             variant: {
                 default:
-                    "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:scale-[1.02] hover:shadow-primary/30 hover:shadow-xl active:scale-[0.98]",
+                    "bg-primary text-primary-foreground hover:bg-primary/95",
                 destructive:
-                    "bg-destructive text-destructive-foreground shadow-destructive/25 shadow-lg hover:scale-[1.02] hover:shadow-destructive/30 hover:shadow-xl active:scale-[0.98]",
+                    "bg-destructive text-destructive-foreground hover:bg-destructive/95",
                 outline:
-                    "border border-input bg-background shadow-xs transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent hover:text-accent-foreground hover:shadow-md",
+                    "border border-input bg-background transition-all duration-200 hover:border-accent-foreground/20 hover:bg-accent/50 hover:text-accent-foreground",
                 secondary:
-                    "bg-secondary text-secondary-foreground shadow-md hover:scale-[1.01] hover:bg-secondary/80 hover:shadow-lg active:scale-[0.99]",
-                ghost: "hover:scale-[1.01] hover:bg-accent hover:text-accent-foreground active:scale-[0.99]",
+                    "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+                ghost: "hover:bg-accent/50 hover:text-accent-foreground",
                 premium:
-                    "border border-slate-600/50 bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-slate-900/25 shadow-xl hover:scale-[1.02] hover:from-slate-700 hover:to-slate-800 hover:shadow-2xl hover:shadow-slate-900/40 active:scale-[0.98]",
-                glass: "border border-white/20 bg-white/10 text-white shadow-xl backdrop-blur-md hover:scale-[1.02] hover:border-white/30 hover:bg-white/20 active:scale-[0.98]",
+                    "border border-slate-600/50 bg-gradient-to-r from-slate-800 to-slate-900 text-white hover:from-slate-700 hover:to-slate-800",
+                glass: "border border-white/20 bg-white/10 text-white backdrop-blur-md hover:border-white/30 hover:bg-white/15",
                 gradient:
-                    "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-500/25 shadow-xl hover:scale-[1.02] hover:from-purple-600 hover:to-pink-600 hover:shadow-2xl hover:shadow-purple-500/40 active:scale-[0.98]",
+                    "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600",
             },
             size: {
                 default: "h-10 px-6 py-2",

@@ -1,0 +1,182 @@
+/* Enhanced hover effects for VT Chat components - Soft Alpha Adaptive */
+
+/* Button hover effects */
+.btn-hover-effect {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-hover-effect:hover {
+  background-color: rgba(var(--foreground-rgb), 0.03);
+}
+
+.btn-hover-effect:active {
+  background-color: rgba(var(--foreground-rgb), 0.05);
+}
+
+.dark .btn-hover-effect:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .btn-hover-effect:active {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Link hover effects */
+.link-hover-effect {
+  position: relative;
+  transition: opacity 0.2s ease;
+}
+
+.link-hover-effect::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -1px;
+  left: 0;
+  background-color: currentColor;
+  opacity: 0.7;
+  transition: width 0.3s ease;
+}
+
+.link-hover-effect:hover {
+  opacity: 0.85;
+}
+
+.link-hover-effect:hover::after {
+  width: 100%;
+}
+
+/* Card hover effects */
+.card-hover-effect {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.card-hover-effect:hover {
+  background-color: rgba(var(--foreground-rgb), 0.01);
+  border-color: rgba(var(--foreground-rgb), 0.1);
+}
+
+.dark .card-hover-effect:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Icon button hover effects */
+.icon-btn-hover {
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.icon-btn-hover:hover {
+  background-color: rgba(var(--foreground-rgb), 0.04);
+}
+
+.dark .icon-btn-hover:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Input hover effects */
+.input-hover-effect {
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-hover-effect:hover {
+  border-color: rgba(var(--foreground-rgb), 0.2);
+  background-color: rgba(var(--foreground-rgb), 0.01);
+}
+
+.input-hover-effect:focus {
+  border-color: hsl(var(--primary));
+  background-color: transparent;
+}
+
+.dark .input-hover-effect:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Dropdown item hover effects */
+.dropdown-item-hover {
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item-hover:hover {
+  background-color: rgba(var(--foreground-rgb), 0.04);
+}
+
+.dark .dropdown-item-hover:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Toggle hover effects */
+.toggle-hover-effect {
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.toggle-hover-effect:hover {
+  background-color: rgba(var(--foreground-rgb), 0.04);
+}
+
+.dark .toggle-hover-effect:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Premium button special effects */
+.premium-btn-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-btn-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.premium-btn-hover:hover::before {
+  left: 100%;
+}
+
+.premium-btn-hover:hover {
+  background-color: rgba(var(--foreground-rgb), 0.02);
+}
+
+.dark .premium-btn-hover:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Sidebar item hover effects */
+.sidebar-item-hover {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-item-hover:hover {
+  background-color: rgba(var(--sidebar-accent-rgb), 0.5);
+}
+
+.dark .sidebar-item-hover:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Add CSS variables for RGB values to use with rgba */
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --sidebar-accent-rgb: 241, 241, 241;
+}
+
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --sidebar-accent-rgb: 38, 38, 38;
+}
