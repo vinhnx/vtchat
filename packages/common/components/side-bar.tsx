@@ -392,7 +392,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         </DropdownMenu>
                     ) : (
                         <Button
-                            className="w-full justify-start"
+                            className={cn(
+                                "w-full",
+                                isSidebarOpen ? "justify-start" : "justify-center items-center"
+                            )}
                             onClick={() => push("/login")}
                             rounded="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
@@ -401,7 +404,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             variant="ghost"
                         >
                             <User
-                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                className={cn(
+                                    "flex-shrink-0", 
+                                    isSidebarOpen ? "mr-2" : ""
+                                )}
                                 size={16}
                                 strokeWidth={2}
                             />
