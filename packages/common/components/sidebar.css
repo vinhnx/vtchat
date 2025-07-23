@@ -1,14 +1,14 @@
 /* Sidebar width constraints */
 .sidebar-container {
-  max-width: 300px !important;
-  width: auto !important;
+    max-width: 300px !important;
+    width: auto !important;
 }
 
 .sidebar-expanded {
-  width: 300px !important;
-  max-width: 300px !important;
+    width: 300px !important;
+    max-width: 300px !important;
 }
 
 .sidebar-collapsed {
-  width: 52px !important;
+    width: 52px !important;
 }

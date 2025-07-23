@@ -280,7 +280,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     )}
-                    
+
                     {/* Sidebar Menu Button */}
                     <Button
                         className="h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-lg transition-shadow hover:shadow-xl"

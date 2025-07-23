@@ -86,7 +86,9 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
                 <DialogContent className="max-w-md" aria-describedby="login-required-description">
                     <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription id="login-required-description">{description}</DialogDescription>
+                        <DialogDescription id="login-required-description">
+                            {description}
+                        </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="gap-3">
                         {showCancel && (

@@ -116,7 +116,7 @@ type Actions = {
 // Helper to initialize sidebar state
 function initializeSidebarState() {
     // Try to get state from localStorage
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
         try {
             const storedState = localStorage.getItem("sidebar-state");
             if (storedState) {

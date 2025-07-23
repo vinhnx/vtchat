@@ -2,7 +2,10 @@
 import "./sidebar.css";
 import { Logo } from "./logo";
 import { HistoryItem } from "./history/history-item";
-import { LoginRequiredDialog as SidebarLoginDialog, useLoginRequired } from "./login-required-dialog";
+import {
+    LoginRequiredDialog as SidebarLoginDialog,
+    useLoginRequired,
+} from "./login-required-dialog";
 import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 import { useRootContext } from "@repo/common/context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
@@ -166,10 +169,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     ? "w-[300px] max-w-[300px]"
                     : cn(
                           "transition-all duration-300 ease-in-out",
-                          isSidebarOpen ? "top-0 h-full w-[300px] max-w-[300px] flex-none sidebar-expanded" : "w-[52px] flex-none sidebar-collapsed",
+                          isSidebarOpen
+                              ? "top-0 h-full w-[300px] max-w-[300px] flex-none sidebar-expanded"
+                              : "w-[52px] flex-none sidebar-collapsed",
                       ),
             )}
-            style={{ maxWidth: '300px' }}
+            style={{ maxWidth: "300px" }}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
@@ -760,7 +765,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 {isSidebarOpen && (
                     <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[300px] bg-gradient-to-t to-transparent px-4 py-4 border-t border-sidebar-border">
                         <div className="flex flex-row items-center justify-between">
-                            <span className="text-sidebar-foreground/60 text-xs">Collapse sidebar</span>
+                            <span className="text-sidebar-foreground/60 text-xs">
+                                Collapse sidebar
+                            </span>
                             <Button
                                 className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
                                 onClick={() => setIsSidebarOpen(false)}
