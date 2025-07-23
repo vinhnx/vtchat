@@ -90,7 +90,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     }
 
     return (
-        <div className="relative flex h-dvh w-full flex-col">
+        <div className="relative flex h-[100dvh] min-h-[100dvh] w-full flex-col">
             <div className="flex-1 overflow-hidden">
                 <div
                     className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"

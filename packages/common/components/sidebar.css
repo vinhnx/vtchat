@@ -2,6 +2,8 @@
 .sidebar-container {
     max-width: 300px !important;
     width: auto !important;
+    height: 100dvh !important; /* Ensure consistent height */
+    min-height: 100dvh !important;
 }
 
 .sidebar-expanded {

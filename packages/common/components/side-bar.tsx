@@ -220,7 +220,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col sidebar-container",
+                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] min-h-[100dvh] flex-shrink-0 flex-col sidebar-container",
                 "dark:bg-black/95",
                 forceMobile
                     ? "w-[300px] max-w-[300px]"
