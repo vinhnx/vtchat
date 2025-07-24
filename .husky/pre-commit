@@ -1,6 +1,41 @@
-# Run Biome format on staged files to auto-fix what we can
-echo "🔧 Auto-formatting staged files with Biome..."
-bunx biome format --write --staged
+#!/bin/sh
+
+# Ensure Bun's bin directory is in PATH for hooks
+export PATH="$HOME/.bun/bin:$PATH"
+echo "[pre-commit] PATH set: $PATH"
+
+# Block commit if any secret/API key is found in staged files (excluding .husky/)
+KEY_PATTERNS="OPENAI_API_KEY|ANTHROPIC_API_KEY|TOGETHER_API_KEY|GEMINI_API_KEY|FIREWORKS_API_KEY|XAI_API_KEY|OPENROUTER_API_KEY|MOONSHOT_API_KEY"
+echo "[pre-commit] Checking for explicit secret/API keys..."
+if git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$KEY_PATTERNS" --color=never -n -H || true | grep -q "$KEY_PATTERNS" || true; then
+    echo "\n❌ Commit blocked: Detected secret/API key in staged files. Remove keys before committing."
+    git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$KEY_PATTERNS" --color=always -n -H || true
+    exit 1
+else
+    echo "[pre-commit] No explicit secret/API keys found."
+fi
+
+# Block commit if any generic secret key pattern is found in staged files (excluding .husky/)
+GENERIC_SECRET_PATTERNS='(KEY|SECRET|TOKEN|PASSWORD|API|ACCESS|PRIVATE)[A-Z0-9_\-]*[\s]*='
+echo "[pre-commit] Checking for generic secret key patterns..."
+if git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=never -n -H || true | grep -qE "$GENERIC_SECRET_PATTERNS" || true; then
+    echo "\n❌ Commit blocked: Detected potential secret key pattern in staged files. Remove secrets before committing."
+    git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=always -n -H || true
+    exit 1
+else
+    echo "[pre-commit] No generic secret key patterns found."
+fi
+
+# Only run Biome on staged files that are not in .husky/ or ignored paths
+STAGED_FILES=$(git diff --cached --name-only | grep -vE '^(.husky/|docs/|memory-bank/|README|\.md$)' || true)
+if [ -n "$STAGED_FILES" ]; then
+    echo "🔧 Auto-formatting staged files with Biome..."
+    echo "$STAGED_FILES" | xargs bunx biome format --write || true
+else
+    echo "No code files to format with Biome."
+fi
+
+set -e
 
 # Run oxlint for fast linting check (non-blocking)
 echo "🔍 Running oxlint checks..."
