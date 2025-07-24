@@ -6,6 +6,10 @@ ok go-> https://vtchat.io.vn/
 
 --
 
+fix mobile sidebar blur effect
+
+--
+
 https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-5/
 
 --
