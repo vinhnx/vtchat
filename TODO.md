@@ -14,8 +14,6 @@ https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-
 
 --
 
-https://v5.ai-sdk.dev/docs/announcing-ai-sdk-5-beta#new-features
-
 --
 
 https://agents-ui.github.io/agents-kit/
@@ -26,13 +24,16 @@ https://ship-25-agents-workshop.vercel.app/docs
 
 --
 
-https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-models
+https://news.ycombinator.com/item?id=44662416
+
+Or you can configure it to use local ollama, and actually use it when needed
+
+    browser.ml.chat.hideLocalhost: false
+    browser.ml.chat.provider:  http://localhost:11434
 
 --
 
-Automatically migrate to AI SDK 5 with our initial set of codemods.
-
-https://v5.ai-sdk.dev/docs/migration-guides/migration-guide-5-0#codemods
+https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai#image-models
 
 --
 
