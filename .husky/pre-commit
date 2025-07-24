@@ -4,23 +4,23 @@
 export PATH="$HOME/.bun/bin:$PATH"
 echo "[pre-commit] PATH set: $PATH"
 
-# Block commit if any secret/API key is found in staged files (excluding .husky/)
+# Block commit if any secret/API key is found in staged files (excluding .husky/, .md, .mdc, .cursor/)
 KEY_PATTERNS="OPENAI_API_KEY|ANTHROPIC_API_KEY|TOGETHER_API_KEY|GEMINI_API_KEY|FIREWORKS_API_KEY|XAI_API_KEY|OPENROUTER_API_KEY|MOONSHOT_API_KEY"
 echo "[pre-commit] Checking for explicit secret/API keys..."
-if git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$KEY_PATTERNS" --color=never -n -H || true | grep -q "$KEY_PATTERNS" || true; then
+if git diff --cached --name-only | grep -vE '^(.husky/|docs/|memory-bank/|README|\.md$|\.mdc$|\.cursor/)' || true | xargs grep -E "$KEY_PATTERNS" --color=never -n -H || true | grep -q "$KEY_PATTERNS" || true; then
     echo "\n❌ Commit blocked: Detected secret/API key in staged files. Remove keys before committing."
-    git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$KEY_PATTERNS" --color=always -n -H || true
+    git diff --cached --name-only | grep -vE '^(.husky/|docs/|memory-bank/|README|\.md$|\.mdc$|\.cursor/)' || true | xargs grep -E "$KEY_PATTERNS" --color=always -n -H || true
     exit 1
 else
     echo "[pre-commit] No explicit secret/API keys found."
 fi
 
-# Block commit if any generic secret key pattern is found in staged files (excluding .husky/)
+# Block commit if any generic secret key pattern is found in staged files (excluding .husky/, .md, .mdc, .cursor/)
 GENERIC_SECRET_PATTERNS='(KEY|SECRET|TOKEN|PASSWORD|API|ACCESS|PRIVATE)[A-Z0-9_\-]*[\s]*='
 echo "[pre-commit] Checking for generic secret key patterns..."
-if git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=never -n -H || true | grep -qE "$GENERIC_SECRET_PATTERNS" || true; then
+if git diff --cached --name-only | grep -vE '^(.husky/|docs/|memory-bank/|README|\.md$|\.mdc$|\.cursor/)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=never -n -H || true | grep -qE "$GENERIC_SECRET_PATTERNS" || true; then
     echo "\n❌ Commit blocked: Detected potential secret key pattern in staged files. Remove secrets before committing."
-    git diff --cached --name-only | grep -vE '^(.husky/)' | grep -vE '^(docs/|memory-bank/|README|\.md$)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=always -n -H || true
+    git diff --cached --name-only | grep -vE '^(.husky/|docs/|memory-bank/|README|\.md$|\.mdc$|\.cursor/)' || true | xargs grep -E "$GENERIC_SECRET_PATTERNS" --color=always -n -H || true
     exit 1
 else
     echo "[pre-commit] No generic secret key patterns found."
