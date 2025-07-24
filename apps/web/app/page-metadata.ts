@@ -5,7 +5,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://vtchat.io.vn";
 export const defaultMetadata: Metadata = {
     metadataBase: new URL(baseUrl),
     title: {
-        default: "VT - Privacy-First AI Chat",
+        default: "VT - Minimal AI Chat",
         template: "%s | VT",
     },
     description:
@@ -38,7 +38,7 @@ export const defaultMetadata: Metadata = {
         locale: "en_US",
         url: baseUrl,
         siteName: "VT",
-        title: "VT - Privacy-First AI Chat",
+        title: "VT - Minimal AI Chat",
         description:
             "Privacy-first AI chat with all premium models free (BYOK). Advanced AI capabilities for everyone.",
         images: [
@@ -46,14 +46,14 @@ export const defaultMetadata: Metadata = {
                 url: `${baseUrl}/og-image-v3.jpg?v=5`,
                 width: 1200,
                 height: 630,
-                alt: "VT - Privacy-First AI Chat",
+                alt: "VT - Minimal AI Chat",
                 type: "image/jpeg",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "VT - Privacy-First AI Chat",
+        title: "VT - Minimal AI Chat",
         description:
             "Privacy-first AI chat with all premium models free (BYOK). Advanced AI capabilities for everyone.",
         images: [`${baseUrl}/twitter-image-v3.jpg?v=5`],

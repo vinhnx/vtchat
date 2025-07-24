@@ -45,7 +45,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                 .filter((s) => s.trim());
 
             return (
-                <Alert className={className} variant="destructive">
+                <Alert className={className}>
                     <AlertDescription>
                         <div className="flex items-start gap-2">
                             <div className="flex-1">
