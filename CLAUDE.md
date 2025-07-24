@@ -1,12 +1,3 @@
-# Development Guidelines
-
-## Tech Stack & Project Overview
-
-- **Monorepo**: Turborepo-managed, with `apps/` (main: Next.js web app) and `packages/` (shared code: `common`, `shared`, `ai`, `ui`, etc.).
-- **Core Technologies**: Next.js 15 (App Router), React 19.0.0, TypeScript, Tailwind CSS, shadcn/ui, Zustand, Drizzle ORM (Neon PostgreSQL), Better-Auth, Framer Motion, Lucide icons.
-- **AI/Agents**: Agentic Graph System in `packages/ai/` (supports OpenAI, Anthropic, Google, Groq, etc.).
-- **Best Practices**: Use environment variables, enums for string keys, named exports, shadcn/ui for UI, Bun for all scripts, and document changes in `memory-bank/`.
-
 ## Package Management
 
 - Use `bun` instead of `npm` for all operations
@@ -46,9 +37,6 @@
 
 ## Deployment
 
-⚠️ **CRITICAL DEPLOYMENT POLICY** ⚠️
-**DO NOT DEPLOY TO PRODUCTION FLY.IO WITHOUT EXPLICIT USER APPROVAL**
-
 - NEVER run `./deploy-fly.sh` without user permission
 - Always ask for approval before any production deployment
 - This applies to ALL deployment commands and scripts
@@ -59,37 +47,6 @@
     - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
     - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
     - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
-
-### Oracle Consultation Workflow (REQUIRED)
-
-All code changes **must** follow this ask-implement-review loop with the Oracle.
-
-1. **Task Intake**
-    - Write a concise Problem Statement, goals, and acceptance criteria.
-
-2. **ASK-ORACLE (PLAN)**
-    - Provide the above context plus key code excerpts.
-    - Ask: "Oracle, please produce a detailed implementation plan."
-
-3. **Implementation**
-    - Implement strictly according to the received plan.
-
-4. **REVIEW-ORACLE**
-    - Present the diff or PR link and ask: "Oracle, please review and approve."
-    - Address comments; iterate until Oracle replies **Approved**.
-
-5. **Merge & Document**
-    - Merge only after approval.
-    - Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
-
-6. **Exceptions**
-    - For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
-
-**Best practices:**
-✔ Provide only relevant context; avoid massive dumps.
-✔ Use enumerated questions.
-✔ Time-box to 2 iterations; escalate if more.
-✔ Always run format, lint, build, and tests before requesting review.
 
 ### Git Hooks
 
@@ -170,52 +127,6 @@ All code changes **must** follow this ask-implement-review loop with the Oracle.
 - **PII masking** - All string fields automatically masked using `maskPII()` function
 - **Environment-specific** configurations (development/production/test)
 - **Log levels**: debug (dev only), info, warn, error, fatal
-
-## Documentation
-
-- Use Markdown files for documentation, those guides with Guides markdown files should be in `docs/guides/`
-- You can search for documentation using `context7` MCP tool
-- You can search the internet using MCP tool `tavily-search`
-- Documentation should be in `docs/` directory
-- **Help Center = FAQ**: When user mentions "help center", they mean the FAQ page for end users
-- After every session, you should document what's been done and report status then update `memory-bank/*.md` md files in that directory.
-- Periodically update `AGENT.md`, `AGENTS.md` and `CLAUDE.md` with latest changes from #codebase and #changes.
-
-### Session Commands
-
-**Continue Session**: 'continue_session [session_file' (alias continue)
-continue')
-
-- Resumes a previous Amp session with oracle-enhanced analysis
-- If no file provided, lists 5 most recent sessions from ./local_ai_docs/sessions/\*
-- Usage: Ask Amp to "run continue_session" or "use continue_session with [filename]"
-
-**Save Session**: save_session [options] (alias save')
-
-- Saves current session with comprehensive analysis
-- Options:
-- '--deepthink': Enhanced analysis using oracle tool for deeper insights
-- '--fast': Quick save without oracle analysis for faster execution
-- Creates files in •
-  •/local_ai_docs/sessions/ with format: "[datel-[title]-amp.md"
-- Usage: Ask Amp to "run save_session" or "save_session --deepthink"
-
-**Plan Loop**: 'plan_loop [spec_file] [options]' (alias 'plan\*)
-
-- Comprehensive feature planning with 7-step process
-- Options:
-- '--deepthink: Oracle-enhanced planning and peer review
-- Creates detailed implementation specifications
-- Usage: Ask Amp to "run plan_loop with spec.md --deepthink"
-
-**Implementation Loop**: "implementation_loop [spec_file] [options] (alias "impl')
-
-- Iterative implementation with testing and validation
-- Options:
-- '--deepthink': Oracle analysis for complex decisions
-- '--fast': Skip oracle analysis for rapid cycles
-- Includes quality gates and automatic testing
-- Usage: Ask Amp to "run implementation_loop with spec.md --deepthink"
 
 ### Bun
 

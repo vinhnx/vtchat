@@ -136,17 +136,6 @@ vtchat/
 - Run `bun run build` to verify compilation before major changes
 - Test core functionality after significant changes
 
-### Oracle Consultation Workflow (REQUIRED)
-
-All code changes **must** follow this ask-implement-review loop with the Oracle.
-
-1. **Task Intake**: Write a concise Problem Statement, goals, and acceptance criteria.
-2. **ASK-ORACLE (PLAN)**: Provide the above context plus key code excerpts. Ask: "Oracle, please produce a detailed implementation plan."
-3. **Implementation**: Implement strictly according to the received plan.
-4. **REVIEW-ORACLE**: Present the diff or PR link and ask: "Oracle, please review and approve." Address comments; iterate until Oracle replies **Approved**.
-5. **Merge & Document**: Merge only after approval. Record the Oracle plan + final approval summary in `memory-bank/<date>-oracle.md`.
-6. **Exceptions**: For sev-1 production fixes, implement immediately, then retroactively seek Oracle review within 24 h.
-
 ### Git Hooks
 
 - **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
