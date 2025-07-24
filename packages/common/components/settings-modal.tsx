@@ -27,7 +27,7 @@ import { AlertCircle, Info, Key, Settings, Trash, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CacheManagement } from "../../../apps/web/components/cache-management";
 import { SETTING_TABS, useAppStore } from "../store";
-import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
+import { useApiKeysStore, type ApiKeys } from "../store/api-keys.store";
 import { ChatEditor } from "./chat-input";
 import { CombinedSubscriptionSettings } from "./combined-subscription-settings";
 import { LoginRequiredDialog } from "./login-required-dialog";
@@ -421,7 +421,7 @@ export const ApiKeySettings = () => {
                                             value={apiKey.value || ""}
                                         />
                                         {validationErrors[apiKey.key] && (
-                                            <Alert variant="destructive">
+                                            <Alert>
                                                 <AlertCircle className="h-4 w-4" />
                                                 <AlertDescription>
                                                     {validationErrors[apiKey.key]}
