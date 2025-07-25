@@ -13,7 +13,7 @@ import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from "@repo/shared/c
 import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
-import { cn, Flex } from "@repo/ui";
+import { Flex, cn } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -233,7 +233,7 @@ export const ChatInput = ({
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
                     "w-full px-3 md:px-4",
-                    currentThreadId ? "mb-3" : "mb-0", // Add bottom margin when in thread detail view
+                    currentThreadId ? "mb-3 md:mb-3" : "mb-20 md:mb-0", // Add bottom margin for PWA banner on mobile
                 )}
                 initial={{ opacity: 0, y: 10 }}
                 key={"chat-input"}
@@ -241,7 +241,7 @@ export const ChatInput = ({
             >
                 <Flex
                     className={cn(
-                        "bg-background relative z-10 w-full max-w-4xl mx-auto rounded-2xl border border-border/60",
+                        "bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border",
                     )}
                     direction="col"
                 >

@@ -76,7 +76,7 @@ export function DatabaseHealthMetrics() {
 
     if (error) {
         return (
-            <div className="text-center py-8">
+            <div className="py-8 text-center">
                 <p className="text-muted-foreground">{error}</p>
             </div>
         );
@@ -84,7 +84,7 @@ export function DatabaseHealthMetrics() {
 
     if (!metrics) {
         return (
-            <div className="text-center py-8">
+            <div className="py-8 text-center">
                 <p className="text-muted-foreground">No database metrics available</p>
             </div>
         );
@@ -108,7 +108,7 @@ export function DatabaseHealthMetrics() {
     return (
         <div className="space-y-6">
             {/* Health Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm">Database Health</CardTitle>
@@ -117,7 +117,7 @@ export function DatabaseHealthMetrics() {
                         <Badge className={`${getHealthColor(metrics.health)} text-white`}>
                             {metrics.health.toUpperCase()}
                         </Badge>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-muted-foreground mt-1 text-sm">
                             {metrics.provider} ({metrics.region})
                         </p>
                     </CardContent>
@@ -129,7 +129,7 @@ export function DatabaseHealthMetrics() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{metrics.connectionTime}ms</div>
-                        <p className="text-sm text-muted-foreground">Response time</p>
+                        <p className="text-muted-foreground text-sm">Response time</p>
                     </CardContent>
                 </Card>
 
@@ -141,7 +141,7 @@ export function DatabaseHealthMetrics() {
                         <div className="text-2xl font-bold">
                             {metrics.metrics.cacheHitRatio.toFixed(1)}%
                         </div>
-                        <p className="text-sm text-muted-foreground">Buffer cache efficiency</p>
+                        <p className="text-muted-foreground text-sm">Buffer cache efficiency</p>
                     </CardContent>
                 </Card>
 
@@ -153,17 +153,17 @@ export function DatabaseHealthMetrics() {
                         <div className="text-2xl font-bold">
                             {metrics.metrics.activeConnections}
                         </div>
-                        <p className="text-sm text-muted-foreground">Current connections</p>
+                        <p className="text-muted-foreground text-sm">Current connections</p>
                     </CardContent>
                 </Card>
             </div>
 
             {/* Database Activity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center">
-                            <Activity className="h-5 w-5 mr-2" />
+                            <Activity className="mr-2 h-5 w-5" />
                             Transaction Activity
                         </CardTitle>
                     </CardHeader>
@@ -188,7 +188,7 @@ export function DatabaseHealthMetrics() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center">
-                            <TrendingUp className="h-5 w-5 mr-2" />
+                            <TrendingUp className="mr-2 h-5 w-5" />
                             Data Operations
                         </CardTitle>
                     </CardHeader>
@@ -222,14 +222,14 @@ export function DatabaseHealthMetrics() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center">
-                            <Database className="h-5 w-5 mr-2" />
+                            <Database className="mr-2 h-5 w-5" />
                             Largest Tables
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
                             {metrics.tables.slice(0, 5).map((table, index) => (
-                                <div key={index} className="flex justify-between items-center">
+                                <div key={index} className="flex items-center justify-between">
                                     <span className="font-medium">{table.name}</span>
                                     <Badge variant="secondary">{table.size}</Badge>
                                 </div>
@@ -244,17 +244,17 @@ export function DatabaseHealthMetrics() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center">
-                            <Clock className="h-5 w-5 mr-2" />
+                            <Clock className="mr-2 h-5 w-5" />
                             Top Index Usage
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
                             {metrics.indexes.slice(0, 5).map((index, idx) => (
-                                <div key={idx} className="flex justify-between items-center">
+                                <div key={idx} className="flex items-center justify-between">
                                     <div>
                                         <span className="font-medium">{index.name}</span>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             {index.table}
                                         </p>
                                     </div>

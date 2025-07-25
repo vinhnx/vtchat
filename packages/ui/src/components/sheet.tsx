@@ -16,7 +16,7 @@ export const SheetContent = ({ children, width = "md", className, title }: TShee
             <Drawer.Content
                 aria-label={title || "Dialog content"}
                 className={cn(
-                    "fixed bottom-0 left-0 right-0 z-40 mx-auto mt-24 flex max-h-[80%] flex-col rounded-3xl outline-hidden md:bottom-4 md:left-[50%]",
+                    "outline-hidden fixed bottom-0 left-0 right-0 z-40 mx-auto mt-24 flex max-h-[80%] flex-col rounded-3xl md:bottom-4 md:left-[50%]",
                     width === "md" && "w-full md:ml-[-250px] md:w-[500px]",
                     width === "sm" && "w-full md:ml-[-200px] md:w-[400px]",
                     className,
@@ -46,7 +46,7 @@ export const SheetHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("flex flex-col space-y-2 text-center sm:text-left px-6", className)}
+            className={cn("flex flex-col space-y-2 px-6 text-center sm:text-left", className)}
             {...props}
         />
     ),
@@ -56,14 +56,14 @@ export const SheetTitle = React.forwardRef<
     HTMLHeadingElement,
     React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-    <h2 ref={ref} className={cn("text-lg font-semibold text-foreground", className)} {...props} />
+    <h2 ref={ref} className={cn("text-foreground text-lg font-semibold", className)} {...props} />
 ));
 
 export const SheetDescription = React.forwardRef<
     HTMLParagraphElement,
     React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+    <p ref={ref} className={cn("text-muted-foreground text-sm", className)} {...props} />
 ));
 
 SheetTrigger.displayName = "SheetTrigger";

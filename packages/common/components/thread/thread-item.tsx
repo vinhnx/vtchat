@@ -1,21 +1,19 @@
 "use client";
 
-import {
-    ChartComponent,
-    CitationProvider,
-    DocumentSidePanel,
-    MarkdownContent,
-    MathCalculatorIndicator,
-    Message,
-    MessageActions,
-    MotionSkeleton,
-    QuestionPrompt,
-    SourceGrid,
-    Steps,
-    ThinkingLog,
-    ThreadLoadingIndicator,
-    ToolsPanel,
-} from "@repo/common/components";
+import { ChartComponent } from "../charts/chart-components";
+import { DocumentSidePanel } from "../document-side-panel";
+import { MotionSkeleton } from "../motion-skeleton";
+import { SourceGrid } from "./components/source-grid";
+import { Steps } from "./components/goals";
+import { ThinkingLog } from "../thinking-log";
+import { ThreadLoadingIndicator } from "../thread-loading-indicator";
+import { ToolsPanel } from "../tools-panel";
+import { CitationProvider } from "./citation-provider";
+import { MarkdownContent } from "./components/markdown-content";
+import { MathCalculatorIndicator } from "../math-calculator-indicator";
+import { Message } from "./components/message";
+import { MessageActions } from "./components/message-actions";
+import { QuestionPrompt } from "./components/question-prompt";
 import { isChartTool } from "@repo/common/constants/chart-tools";
 import { isMathTool } from "@repo/common/constants/math-tools";
 import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";

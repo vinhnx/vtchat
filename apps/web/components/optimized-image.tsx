@@ -49,7 +49,7 @@ export const OptimizedImage = memo(function OptimizedImage({
     if (hasError) {
         return showErrorMessage ? (
             <div
-                className={`bg-muted flex items-center justify-center text-muted-foreground text-sm ${className}`}
+                className={`bg-muted text-muted-foreground flex items-center justify-center text-sm ${className}`}
                 style={{ width: fill ? undefined : width, height: fill ? undefined : height }}
                 role="img"
                 aria-label={`Failed to load: ${alt}`}
@@ -60,7 +60,7 @@ export const OptimizedImage = memo(function OptimizedImage({
     }
 
     return (
-        <div className={`relative ${isLoading ? "animate-pulse bg-muted" : ""}`}>
+        <div className={`relative ${isLoading ? "bg-muted animate-pulse" : ""}`}>
             <Image
                 src={currentSrc}
                 alt={alt}

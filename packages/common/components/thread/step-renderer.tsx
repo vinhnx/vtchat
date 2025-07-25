@@ -32,7 +32,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-3">
                         <div className="w-fit">
-                            <Label className="text-xs font-medium text-muted-foreground/80">
+                            <Label className="text-muted-foreground/80 text-xs font-medium">
                                 Searching
                             </Label>
                         </div>
@@ -42,7 +42,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
                                 step.steps?.search?.data?.map((query: string, index: number) => (
                                     <div key={index}>
                                         <Badge className="bg-muted/50 hover:bg-muted/70 border-border/50 transition-colors duration-200">
-                                            <Search className="opacity-60 mr-1.5" size={11} />
+                                            <Search className="mr-1.5 opacity-60" size={11} />
                                             <span className="text-xs">{query}</span>
                                         </Badge>
                                     </div>
@@ -59,7 +59,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             return (
                 <div className="flex flex-col gap-3">
                     <div className="w-fit">
-                        <Label className="text-xs font-medium text-muted-foreground/80">
+                        <Label className="text-muted-foreground/80 text-xs font-medium">
                             Reading
                         </Label>
                     </div>
@@ -84,7 +84,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             return (
                 <div className="flex flex-col gap-3">
                     <div className="w-fit">
-                        <Label className="text-xs font-medium text-muted-foreground/80">
+                        <Label className="text-muted-foreground/80 text-xs font-medium">
                             Analyzing
                         </Label>
                     </div>
@@ -107,7 +107,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             return (
                 <div className="flex flex-col gap-3">
                     <div className="w-fit">
-                        <Label className="text-xs font-medium text-muted-foreground/80">
+                        <Label className="text-muted-foreground/80 text-xs font-medium">
                             Wrapping up
                         </Label>
                     </div>

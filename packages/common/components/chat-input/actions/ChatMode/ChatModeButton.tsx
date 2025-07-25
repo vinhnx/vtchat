@@ -57,7 +57,7 @@ export function ChatModeButton() {
                 <DropdownMenuTrigger asChild>
                     {isGated ? (
                         <Button
-                            className="opacity-70 border border-muted-foreground/30"
+                            className="border-muted-foreground/30 border opacity-70"
                             size="xs"
                             variant={"secondary"}
                         >
@@ -67,7 +67,7 @@ export function ChatModeButton() {
                         </Button>
                     ) : (
                         <Button
-                            className="border border-muted-foreground/30"
+                            className="border-muted-foreground/30 border"
                             size="xs"
                             variant={"secondary"}
                         >

@@ -11,6 +11,7 @@ We've enhanced the user experience by adding subtle, adaptive hover effects to i
 ### 1. Soft Alpha Adaptive Approach
 
 Instead of using elevation and shadow-based hover effects, we've implemented a more subtle approach using:
+
 - Transparent background color changes (alpha channel)
 - Adaptive opacity transitions
 - Subtle border color shifts
@@ -21,31 +22,37 @@ This approach creates a more cohesive and modern look that adapts well to both l
 ### 2. Component Enhancements
 
 #### Buttons
+
 - Added soft background alpha transitions
 - Removed elevation/shadow changes for a flatter design
 - Maintained consistent color transitions
 
 #### Links
+
 - Implemented subtle opacity changes
 - Added animated underline effects with reduced opacity
 - Ensured smooth transitions between states
 
 #### Cards
+
 - Replaced elevation with subtle background color changes
 - Added gentle border color transitions
 - Maintained consistent hover behavior
 
 #### Form Elements
+
 - Enhanced inputs with subtle background and border transitions
 - Improved focus states with consistent styling
 - Removed shadows for a cleaner look
 
 #### Navigation Elements
+
 - Added soft background transitions to sidebar items
 - Enhanced dropdown menu items with alpha-based hover effects
 - Ensured consistent behavior across all navigation components
 
 #### Interactive Elements
+
 - Improved toggle components with subtle background changes
 - Added consistent hover effects to all clickable elements
 

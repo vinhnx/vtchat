@@ -70,25 +70,25 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
             return (
                 <div className="flex min-h-[120px] flex-col items-center justify-center p-4">
-                    <h2 className="mb-2 text-sm font-medium text-muted-foreground">
+                    <h2 className="text-muted-foreground mb-2 text-sm font-medium">
                         Something went wrong
                     </h2>
-                    <p className="mb-3 text-xs text-muted-foreground">
+                    <p className="text-muted-foreground mb-3 text-xs">
                         An error occurred while rendering this component.
                     </p>
                     {process.env.NODE_ENV === "development" && this.state.error && (
                         <details className="mb-3 max-w-lg">
-                            <summary className="cursor-pointer text-xs font-medium text-muted-foreground">
+                            <summary className="text-muted-foreground cursor-pointer text-xs font-medium">
                                 Error Details (Development)
                             </summary>
-                            <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-foreground">
+                            <pre className="bg-muted text-foreground mt-2 overflow-auto rounded p-2 text-xs">
                                 {this.state.error.message}
                                 {this.state.error.stack}
                             </pre>
                         </details>
                     )}
                     <button
-                        className="rounded bg-primary px-3 py-1 text-xs text-primary-foreground hover:bg-primary/90"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 rounded px-3 py-1 text-xs"
                         onClick={this.resetError}
                     >
                         Try Again

@@ -139,12 +139,12 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Security Threats Timeline */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <AlertTriangle className="h-5 w-5 mr-2" />
+                        <AlertTriangle className="mr-2 h-5 w-5" />
                         Security Threats (7 Days)
                     </CardTitle>
                 </CardHeader>
@@ -194,7 +194,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2" />
+                        <Shield className="mr-2 h-5 w-5" />
                         Security Metrics
                     </CardTitle>
                 </CardHeader>
@@ -229,7 +229,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Activity className="h-5 w-5 mr-2" />
+                        <Activity className="mr-2 h-5 w-5" />
                         Session Security
                     </CardTitle>
                 </CardHeader>
@@ -238,7 +238,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                         <div key={index} className="flex items-center justify-between">
                             <span className="text-sm font-medium">{item.category}</span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-24 bg-muted rounded-full h-2">
+                                <div className="bg-muted h-2 w-24 rounded-full">
                                     <div
                                         className="h-2 rounded-full"
                                         style={{
@@ -252,10 +252,10 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                                         }}
                                     />
                                 </div>
-                                <span className="text-sm text-muted-foreground w-12 text-right">
+                                <span className="text-muted-foreground w-12 text-right text-sm">
                                     {item.count}
                                 </span>
-                                <span className="text-xs text-muted-foreground w-10 text-right">
+                                <span className="text-muted-foreground w-10 text-right text-xs">
                                     {item.percentage}%
                                 </span>
                             </div>
@@ -268,7 +268,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Users className="h-5 w-5 mr-2" />
+                        <Users className="mr-2 h-5 w-5" />
                         Security Status Overview
                     </CardTitle>
                 </CardHeader>
@@ -277,7 +277,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                         <div key={index} className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                                 <div
-                                    className="w-3 h-3 rounded-full"
+                                    className="h-3 w-3 rounded-full"
                                     style={{ backgroundColor: item.color }}
                                 />
                                 <span className="text-sm font-medium">{item.name}</span>
@@ -285,7 +285,7 @@ export function SecurityOverviewChart({ securityMetrics }: SecurityOverviewChart
                             <span className="text-sm font-bold">{item.value}</span>
                         </div>
                     ))}
-                    <div className="pt-3 border-t">
+                    <div className="border-t pt-3">
                         <div className="flex items-center justify-between text-sm">
                             <span className="font-medium">Total Security Events</span>
                             <span className="font-bold">

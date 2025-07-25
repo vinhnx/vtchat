@@ -23,13 +23,13 @@ export default function HomePage() {
                     </div>
                 </div>
             </main>
-            <div className="flex-shrink-0">
+            <div className="pb-safe-area-inset-bottom flex-shrink-0">
                 <ChatInputWithSuspense showGreeting={true} />
             </div>
 
             {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4">
                     <div className="pointer-events-auto">
                         <FooterWithSuspense />
                     </div>

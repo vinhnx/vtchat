@@ -96,17 +96,17 @@ export const AreaChartExamples = () => {
 
             <div className="space-y-6">
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Single Series</h3>
+                    <h3 className="mb-4 text-lg font-semibold">Single Series</h3>
                     <ChartComponent chartData={singleSeriesAreaChart} />
                 </div>
 
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Multi-Series</h3>
+                    <h3 className="mb-4 text-lg font-semibold">Multi-Series</h3>
                     <ChartComponent chartData={multiSeriesAreaChart} />
                 </div>
 
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Stacked</h3>
+                    <h3 className="mb-4 text-lg font-semibold">Stacked</h3>
                     <ChartComponent chartData={stackedAreaChart} />
                 </div>
             </div>

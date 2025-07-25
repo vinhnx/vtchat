@@ -67,11 +67,11 @@ export const ErrorDisplay = ({
         const steps = actionText.split("\n").filter((step) => step.trim());
 
         if (steps.length <= 1) {
-            return <p className="text-sm text-muted-foreground">{actionText}</p>;
+            return <p className="text-muted-foreground text-sm">{actionText}</p>;
         }
 
         return (
-            <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
+            <ol className="text-muted-foreground list-inside list-decimal space-y-1 text-sm">
                 {steps.map((step, index) => (
                     <li key={index} className="pl-2">
                         {step.replace(/^\d+\.\s*/, "")}
@@ -84,7 +84,7 @@ export const ErrorDisplay = ({
     return (
         <Card className={`border-destructive/20 ${className}`}>
             <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-destructive">
+                <CardTitle className="text-destructive flex items-center gap-2">
                     <AlertCircle className="h-5 w-5" />
                     {title}
                 </CardTitle>
@@ -94,8 +94,8 @@ export const ErrorDisplay = ({
             {action && (
                 <CardContent className="pt-0">
                     <div className="space-y-4">
-                        <div className="rounded-lg bg-muted/50 p-3">
-                            <h4 className="font-medium text-sm mb-2">How to fix this:</h4>
+                        <div className="bg-muted/50 rounded-lg p-3">
+                            <h4 className="mb-2 text-sm font-medium">How to fix this:</h4>
                             {formatActionText(action)}
                         </div>
 
@@ -194,7 +194,7 @@ export const EnhancedErrorDisplay = ({
             <Card className={`border-orange-200 bg-orange-50 ${className}`}>
                 <CardContent className="p-6">
                     <div className="flex items-center space-x-2">
-                        <AlertCircle className="h-5 w-5 text-orange-600 animate-pulse" />
+                        <AlertCircle className="h-5 w-5 animate-pulse text-orange-600" />
                         <span className="text-orange-800">Loading error details...</span>
                     </div>
                 </CardContent>

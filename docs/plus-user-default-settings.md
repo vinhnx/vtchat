@@ -5,7 +5,6 @@
 This implementation automatically enables default settings for VT+ subscribers, specifically:
 
 1. **Thinking Mode Settings** (enabled by default for plus users):
-
     - Enable Thinking Mode: `true`
     - Show Thought Process: `true`
     - Thinking Budget: `2048` tokens (default)

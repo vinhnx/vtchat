@@ -5,25 +5,30 @@ This directory contains comprehensive tests to verify all requirements for the G
 ## 📋 Requirements Being Tested
 
 ### Backend Logic Requirements
+
 - **REQ-001**: VT+ Users Have Unlimited Flash Lite Access
-- **REQ-002**: Dual Quota System for VT+ Users on Pro/Flash Models  
+- **REQ-002**: Dual Quota System for VT+ Users on Pro/Flash Models
 - **REQ-003**: Free Users Follow Standard Rate Limits
 - **REQ-004**: Non-Gemini Models Are Unlimited
 - **REQ-005**: Dual Usage Recording for VT+ Users
 
 ### Frontend/UI Requirements
+
 - **REQ-006**: Charts Instead of Progress Bars in UI
 - **REQ-007**: Remove Cost Information from UI
 - **REQ-008**: Display Google Gemini Quota Policies
 
 ### Integration Requirements
+
 - **REQ-009**: API Integration with Rate Limiting
 - **REQ-010**: Error Handling and Edge Cases
 
 ## 🧪 Test Files
 
 ### 1. Backend Logic Tests
+
 **File**: `gemini-requirements-verification.test.ts`
+
 - Tests dual quota logic for VT+ users
 - Verifies unlimited Flash Lite access for VT+ users
 - Tests standard rate limiting for free users
@@ -32,22 +37,25 @@ This directory contains comprehensive tests to verify all requirements for the G
 - Edge cases and error conditions
 
 **Key Test Scenarios**:
+
 ```typescript
 // VT+ unlimited Flash Lite
-it('should allow unlimited requests to Flash Lite for VT+ users')
+it('should allow unlimited requests to Flash Lite for VT+ users');
 
 // Dual quota enforcement
-it('should reject when Flash Lite quota is exhausted even if Pro quota is available')
+it('should reject when Flash Lite quota is exhausted even if Pro quota is available');
 
 // Free user limits
-it('should enforce standard limits for free users on Pro models')
+it('should enforce standard limits for free users on Pro models');
 
 // Non-Gemini unlimited
-it('should allow unlimited access to non-Gemini models for all users')
+it('should allow unlimited access to non-Gemini models for all users');
 ```
 
 ### 2. UI Component Tests
+
 **File**: `packages/common/components/__tests__/multi-model-usage-meter.test.tsx`
+
 - Tests chart display instead of progress bars
 - Verifies cost information removal
 - Tests VT+ dual quota system display
@@ -56,22 +64,25 @@ it('should allow unlimited access to non-Gemini models for all users')
 - Accessibility and user experience
 
 **Key Test Scenarios**:
+
 ```typescript
 // Chart requirement
-it('should render area chart instead of progress bars')
+it('should render area chart instead of progress bars');
 
 // No cost info
-it('should not display cost-related information in main usage display')
+it('should not display cost-related information in main usage display');
 
 // VT+ dual quota display
-it('should display VT+ dual quota explanation')
+it('should display VT+ dual quota explanation');
 
 // Real-time updates
-it('should fetch and display usage data on mount')
+it('should fetch and display usage data on mount');
 ```
 
 ### 3. API Integration Tests
+
 **File**: `api-integration-gemini-requirements.test.ts`
+
 - Tests rate limit status API endpoint
 - Tests completion API with rate limiting
 - Verifies VT+ dual quota API behavior
@@ -79,22 +90,25 @@ it('should fetch and display usage data on mount')
 - Error handling and edge cases
 
 **Key Test Scenarios**:
+
 ```typescript
 // Rate limit API
-it('should return rate limit status for all Gemini models')
+it('should return rate limit status for all Gemini models');
 
 // VT+ unlimited Flash Lite API
-it('should show unlimited Flash Lite for VT+ users')
+it('should show unlimited Flash Lite for VT+ users');
 
 // Completion API rate limiting
-it('should enforce rate limits before processing requests')
+it('should enforce rate limits before processing requests');
 
 // Dual quota recording
-it('should record dual quota usage for VT+ users on Pro models')
+it('should record dual quota usage for VT+ users on Pro models');
 ```
 
 ### 4. End-to-End Tests
+
 **File**: `e2e-gemini-requirements.test.ts`
+
 - Complete user flow tests (structure defined)
 - Visual and accessibility requirements
 - Performance and user experience
@@ -105,11 +119,13 @@ it('should record dual quota usage for VT+ users on Pro models')
 ## 🚀 Running the Tests
 
 ### Run All Tests with Verification Report
+
 ```bash
 bun run apps/web/app/tests/run-gemini-requirements-tests.ts
 ```
 
 ### Run Individual Test Suites
+
 ```bash
 # Backend tests only
 cd apps/web && bun test gemini-requirements-verification.test.ts
@@ -117,11 +133,12 @@ cd apps/web && bun test gemini-requirements-verification.test.ts
 # UI component tests only
 cd packages/common/components && bun test __tests__/multi-model-usage-meter.test.tsx
 
-# API integration tests only  
+# API integration tests only
 cd apps/web && bun test api-integration-gemini-requirements.test.ts
 ```
 
 ### Run with Coverage
+
 ```bash
 cd apps/web && bun test --coverage
 ```
@@ -129,6 +146,7 @@ cd apps/web && bun test --coverage
 ## 📊 Test Coverage
 
 ### Backend Logic: ~95% Coverage
+
 - ✅ Dual quota logic
 - ✅ VT+ unlimited Flash Lite
 - ✅ Free user rate limiting
@@ -136,21 +154,24 @@ cd apps/web && bun test --coverage
 - ✅ Edge cases and errors
 
 ### UI Components: ~85% Coverage
+
 - ✅ Chart display requirements
 - ✅ Cost information removal
 - ✅ VT+ policy display
-- ⚠️  Accessibility testing (partial)
-- ⚠️  Responsive design testing (partial)
+- ⚠️ Accessibility testing (partial)
+- ⚠️ Responsive design testing (partial)
 
 ### API Integration: ~80% Coverage
+
 - ✅ Rate limit endpoints
 - ✅ Completion API integration
 - ✅ Dual quota API behavior
-- ⚠️  Real database integration (mocked)
-- ⚠️  Authentication edge cases (partial)
+- ⚠️ Real database integration (mocked)
+- ⚠️ Authentication edge cases (partial)
 
 ### E2E Testing: ~20% Coverage
-- ⚠️  Test structure defined
+
+- ⚠️ Test structure defined
 - ❌ Browser automation not implemented
 - ❌ Real user flows not tested
 - ❌ Performance testing not implemented
@@ -158,24 +179,28 @@ cd apps/web && bun test --coverage
 ## 🎯 Test Strategies
 
 ### 1. Unit Testing Strategy
+
 - **Isolation**: Each function tested in isolation with mocked dependencies
 - **Edge Cases**: Boundary conditions, null values, invalid inputs
 - **Error Handling**: Exception scenarios and recovery
 - **Performance**: Basic performance expectations
 
 ### 2. Integration Testing Strategy
+
 - **API Contracts**: Verify API responses match expected formats
 - **Database Interactions**: Test rate limit storage and retrieval
 - **Authentication Flow**: Verify subscription status integration
 - **Cross-Service Communication**: Test service boundaries
 
 ### 3. Component Testing Strategy
+
 - **Rendering**: Verify components render with expected elements
 - **User Interactions**: Test clicks, hovers, form submissions
 - **State Management**: Verify state updates and prop changes
 - **Accessibility**: ARIA labels, keyboard navigation, screen readers
 
 ### 4. E2E Testing Strategy (Future)
+
 - **User Journeys**: Complete workflows from login to usage
 - **Cross-Browser**: Chrome, Firefox, Safari compatibility
 - **Device Testing**: Desktop, tablet, mobile responsiveness
@@ -184,21 +209,24 @@ cd apps/web && bun test --coverage
 ## 🔍 Test Data and Mocking
 
 ### Mock Data Factories
+
 ```typescript
 // Rate limit status for different user types
-GeminiTestDataFactory.createRateLimitStatus()
-GeminiTestDataFactory.createVTPlusRateLimitStatus()
-GeminiTestDataFactory.createUnlimitedRateLimitStatus()
-GeminiTestDataFactory.createDualQuotaStatus()
+GeminiTestDataFactory.createRateLimitStatus();
+GeminiTestDataFactory.createVTPlusRateLimitStatus();
+GeminiTestDataFactory.createUnlimitedRateLimitStatus();
+GeminiTestDataFactory.createDualQuotaStatus();
 ```
 
 ### Database Mocking
+
 - Drizzle ORM operations mocked
 - Rate limit records simulated
 - User subscription status mocked
 - Database connection errors simulated
 
 ### API Mocking
+
 - HTTP requests/responses mocked
 - Authentication headers simulated
 - Network failures simulated
@@ -207,6 +235,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 ## 📈 Continuous Integration
 
 ### Test Pipeline
+
 1. **Lint and Format**: Code quality checks
 2. **Unit Tests**: Fast feedback on logic
 3. **Integration Tests**: API and database interactions
@@ -215,6 +244,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 6. **Coverage Report**: Ensure adequate test coverage
 
 ### Quality Gates
+
 - Minimum 80% test coverage
 - All critical path tests must pass
 - No blocking lint errors
@@ -225,6 +255,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 ### Common Issues and Solutions
 
 **Rate Limit Tests Failing**
+
 ```bash
 # Check database mock setup
 # Verify rate limit constants match implementation
@@ -232,6 +263,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 ```
 
 **UI Tests Failing**
+
 ```bash
 # Check component imports and mocks
 # Verify chart library mocking
@@ -239,6 +271,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 ```
 
 **API Tests Failing**
+
 ```bash
 # Check request/response format
 # Verify authentication mocking
@@ -246,6 +279,7 @@ GeminiTestDataFactory.createDualQuotaStatus()
 ```
 
 ### Debug Commands
+
 ```bash
 # Run with verbose output
 bun test --verbose
@@ -260,17 +294,20 @@ bun test --coverage --reporter=verbose
 ## 📚 Additional Resources
 
 ### Related Documentation
+
 - [Rate Limiting Service Documentation](../lib/services/rate-limit.ts)
 - [Multi-Model Usage Meter Component](../../../packages/common/components/multi-model-usage-meter.tsx)
 - [Gemini Rate Limits Constants](../../../packages/shared/constants/rate-limits.ts)
 
 ### Testing Libraries Used
+
 - **Vitest**: Test runner and assertions
 - **@testing-library/react**: Component testing utilities
 - **@testing-library/user-event**: User interaction simulation
 - **@testing-library/jest-dom**: Additional DOM matchers
 
 ### Future Improvements
+
 1. **Real Database Tests**: Use test containers for actual DB integration
 2. **Browser Automation**: Implement Playwright for E2E tests
 3. **Performance Testing**: Add load testing for rate limiting
@@ -280,8 +317,9 @@ bun test --coverage --reporter=verbose
 ## 🎉 Success Criteria
 
 All requirements are considered verified when:
+
 - ✅ All backend logic tests pass
-- ✅ All UI component tests pass  
+- ✅ All UI component tests pass
 - ✅ All API integration tests pass
 - ✅ Test coverage exceeds 80%
 - ✅ No critical bugs in manual testing

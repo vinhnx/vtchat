@@ -75,12 +75,12 @@ export function DatabaseMetricsChart() {
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Query Performance */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Zap className="h-5 w-5 mr-2" />
+                        <Zap className="mr-2 h-5 w-5" />
                         Database Performance
                     </CardTitle>
                 </CardHeader>
@@ -118,7 +118,7 @@ export function DatabaseMetricsChart() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <HardDrive className="h-5 w-5 mr-2" />
+                        <HardDrive className="mr-2 h-5 w-5" />
                         Storage Distribution
                     </CardTitle>
                 </CardHeader>
@@ -147,7 +147,7 @@ export function DatabaseMetricsChart() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Clock className="h-5 w-5 mr-2" />
+                        <Clock className="mr-2 h-5 w-5" />
                         Slow Queries Analysis
                     </CardTitle>
                 </CardHeader>
@@ -173,7 +173,7 @@ export function DatabaseMetricsChart() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Database className="h-5 w-5 mr-2" />
+                        <Database className="mr-2 h-5 w-5" />
                         Maintenance Tasks
                     </CardTitle>
                 </CardHeader>
@@ -182,10 +182,10 @@ export function DatabaseMetricsChart() {
                         <div key={index} className="flex items-center justify-between">
                             <div>
                                 <span className="text-sm font-medium">{task.task}</span>
-                                <p className="text-xs text-muted-foreground">{task.lastRun}</p>
+                                <p className="text-muted-foreground text-xs">{task.lastRun}</p>
                             </div>
                             <div
-                                className={`px-2 py-1 rounded-full text-xs ${
+                                className={`rounded-full px-2 py-1 text-xs ${
                                     task.status === "Completed"
                                         ? "bg-muted text-foreground"
                                         : task.status === "Running"

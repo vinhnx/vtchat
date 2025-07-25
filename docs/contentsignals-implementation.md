@@ -14,16 +14,19 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 **Location:** `apps/web/public/robots.txt`
 
 **Structure:**
+
 - **Group 1:** Search engines (googlebot, bingbot, OAI-Searchbot) - Block all sensitive areas
 - **Group 2:** All other crawlers - Same blocking rules with additional public content permissions
 
 **Blocked Areas:**
+
 - `/profile/` - User account information
-- `/rag/` - Personal AI assistant content  
+- `/rag/` - Personal AI assistant content
 - `/api/` - All API endpoints
 - `/chat/` - All chat conversations and threads
 
 **Allowed Areas:**
+
 - `/about`, `/faq`, `/privacy`, `/terms` - Public informational content
 - Root `/` - General public content
 
@@ -32,36 +35,40 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 **Location:** `apps/web/next.config.mjs`
 
 **Protected Routes:**
+
 - **API Endpoints** (`/api/:path*`)
-  - `Content-Usage: tdm=n, search=n, inference=n`
-  - `X-Robots-Tag: noindex, nofollow`
-  - `Cache-Control: private, no-store`
+    - `Content-Usage: tdm=n, search=n, inference=n`
+    - `X-Robots-Tag: noindex, nofollow`
+    - `Cache-Control: private, no-store`
 
 - **Chat Routes** (`/chat`, `/chat/:path*`)
-  - `Content-Usage: tdm=n, search=n, inference=n`
-  - `X-Robots-Tag: noindex, nofollow`
-  - `Cache-Control: private, no-store`
+    - `Content-Usage: tdm=n, search=n, inference=n`
+    - `X-Robots-Tag: noindex, nofollow`
+    - `Cache-Control: private, no-store`
 
 - **Profile & RAG** (`/profile/:path*`, `/rag/:path*`)
-  - `Content-Usage: tdm=n, search=n, inference=n`
-  - `X-Robots-Tag: noindex, nofollow`
+    - `Content-Usage: tdm=n, search=n, inference=n`
+    - `X-Robots-Tag: noindex, nofollow`
 
 **Public Routes:**
+
 - **Informational Pages** (`/about`, `/faq`, `/privacy`, `/terms`)
-  - `Content-Usage: tdm=y` (Allow AI training)
+    - `Content-Usage: tdm=y` (Allow AI training)
 
 - **Default Routes**
-  - `Content-Usage: tdm=n, search=y, inference=y`
+    - `Content-Usage: tdm=n, search=y, inference=y`
 
 ## Security Measures
 
 ### PII Protection
+
 1. **Complete Chat Blocking** - No search indexing of conversations
 2. **Profile Privacy** - User data completely protected
 3. **RAG Security** - Personal AI content blocked
 4. **API Protection** - Server endpoints secured
 
 ### Technical Controls
+
 1. **Dual Protection** - Both robots.txt and HTTP headers
 2. **Cache Prevention** - Private, no-store policies
 3. **Search Blocking** - X-Robots-Tag headers
@@ -69,30 +76,33 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 
 ## Content Usage Directives
 
-| Directive | Meaning |
-|-----------|---------|
-| `tdm=y` | Allow text and data mining (AI training) |
-| `tdm=n` | Prohibit text and data mining |
-| `search=y` | Allow search engine indexing |
-| `search=n` | Prohibit search engine indexing |
-| `inference=y` | Allow AI inference use |
-| `inference=n` | Prohibit AI inference use |
+| Directive     | Meaning                                  |
+| ------------- | ---------------------------------------- |
+| `tdm=y`       | Allow text and data mining (AI training) |
+| `tdm=n`       | Prohibit text and data mining            |
+| `search=y`    | Allow search engine indexing             |
+| `search=n`    | Prohibit search engine indexing          |
+| `inference=y` | Allow AI inference use                   |
+| `inference=n` | Prohibit AI inference use                |
 
 ## Route Classification
 
 ### Completely Protected (No Access)
+
 - `/profile/` - User profiles and settings
 - `/rag/` - Personal AI assistant knowledge base
 - `/api/` - All server API endpoints
 - `/chat/` - All chat conversations and threads
 
 ### AI Training Allowed
+
 - `/about` - Company information
 - `/faq` - Frequently asked questions
 - `/privacy` - Privacy policy
 - `/terms` - Terms of service
 
 ### Limited Access (Search Only)
+
 - All other public routes (homepage, etc.)
 
 ## Oracle Security Review
@@ -123,6 +133,7 @@ To verify implementation:
 ## Contact
 
 For questions about this implementation:
+
 - Email: hello@vtchat.io.vn
 - Documentation: https://contentsignals.org/
 

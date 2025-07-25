@@ -67,20 +67,20 @@ const stackedAreaChart: ChartComponentData = {
 
 ### Properties
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `type` | `'areaChart'` | - | Chart type identifier |
-| `title` | `string` | - | Chart title displayed in header |
-| `data` | `any[]` | - | Array of data objects |
-| `xAxisLabel` | `string` | - | Label for X-axis |
-| `yAxisLabel` | `string` | - | Label for Y-axis |
-| `series1Name` | `string` | `'Series 1'` | Name for first series |
-| `series2Name` | `string` | - | Name for second series (optional) |
-| `series3Name` | `string` | - | Name for third series (optional) |
-| `dataKey1` | `string` | `'uv'` | Data key for first series |
-| `dataKey2` | `string` | `'pv'` | Data key for second series |
-| `dataKey3` | `string` | `'amt'` | Data key for third series |
-| `stacked` | `boolean` | `false` | Enable stacking for cumulative visualization |
+| Property      | Type          | Default      | Description                                  |
+| ------------- | ------------- | ------------ | -------------------------------------------- |
+| `type`        | `'areaChart'` | -            | Chart type identifier                        |
+| `title`       | `string`      | -            | Chart title displayed in header              |
+| `data`        | `any[]`       | -            | Array of data objects                        |
+| `xAxisLabel`  | `string`      | -            | Label for X-axis                             |
+| `yAxisLabel`  | `string`      | -            | Label for Y-axis                             |
+| `series1Name` | `string`      | `'Series 1'` | Name for first series                        |
+| `series2Name` | `string`      | -            | Name for second series (optional)            |
+| `series3Name` | `string`      | -            | Name for third series (optional)             |
+| `dataKey1`    | `string`      | `'uv'`       | Data key for first series                    |
+| `dataKey2`    | `string`      | `'pv'`       | Data key for second series                   |
+| `dataKey3`    | `string`      | `'amt'`      | Data key for third series                    |
+| `stacked`     | `boolean`     | `false`      | Enable stacking for cumulative visualization |
 
 ### Data Format
 
@@ -88,13 +88,13 @@ The area chart expects data in the following format:
 
 ```typescript
 const data = [
-  {
-    name: 'Category A',  // Used for X-axis labels
-    uv: 4000,           // First series value
-    pv: 2400,           // Second series value (optional)
-    amt: 2400,          // Third series value (optional)
-  },
-  // ... more data points
+    {
+        name: 'Category A', // Used for X-axis labels
+        uv: 4000, // First series value
+        pv: 2400, // Second series value (optional)
+        amt: 2400, // Third series value (optional)
+    },
+    // ... more data points
 ];
 ```
 
@@ -111,6 +111,7 @@ const data = [
 ### Example Data
 
 See `area-chart-example.tsx` for complete examples of:
+
 - Single series area chart
 - Multi-series area chart
 - Stacked area chart

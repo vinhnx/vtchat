@@ -65,12 +65,12 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* System Performance */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Activity className="h-5 w-5 mr-2" />
+                        <Activity className="mr-2 h-5 w-5" />
                         System Performance (24h)
                     </CardTitle>
                 </CardHeader>
@@ -101,7 +101,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <TrendingUp className="h-5 w-5 mr-2" />
+                        <TrendingUp className="mr-2 h-5 w-5" />
                         User Activity Today
                     </CardTitle>
                 </CardHeader>
@@ -133,7 +133,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Database className="h-5 w-5 mr-2" />
+                        <Database className="mr-2 h-5 w-5" />
                         Resource Usage
                     </CardTitle>
                 </CardHeader>
@@ -171,7 +171,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Zap className="h-5 w-5 mr-2" />
+                        <Zap className="mr-2 h-5 w-5" />
                         System Health
                     </CardTitle>
                 </CardHeader>
@@ -180,7 +180,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                         <div key={index} className="flex items-center justify-between">
                             <span className="text-sm font-medium">{item.metric}</span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-24 bg-muted rounded-full h-2">
+                                <div className="bg-muted h-2 w-24 rounded-full">
                                     <div
                                         className="h-2 rounded-full"
                                         style={{
@@ -189,7 +189,7 @@ export function SystemMetricsChart({ activeUsers }: SystemMetricsProps) {
                                         }}
                                     />
                                 </div>
-                                <span className="text-sm text-muted-foreground">{item.value}%</span>
+                                <span className="text-muted-foreground text-sm">{item.value}%</span>
                             </div>
                         </div>
                     ))}

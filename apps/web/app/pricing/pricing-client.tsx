@@ -142,7 +142,7 @@ export function PricingClient() {
                         <AnnouncementTag>Welcome</AnnouncementTag>
                         <AnnouncementTitle>
                             Get 20% off VT+ with code VTLAUNCH
-                            <ArrowUpRight className="shrink-0 text-muted-foreground" size={16} />
+                            <ArrowUpRight className="text-muted-foreground shrink-0" size={16} />
                         </AnnouncementTitle>
                     </Announcement>
                 </div>

@@ -84,7 +84,7 @@ const NavigationMenuViewport = React.forwardRef<
     <div className={cn("absolute left-0 top-full flex justify-center")}>
         <NavigationMenuPrimitive.Viewport
             className={cn(
-                "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 origin-[--radix-navigation-menu-viewport-transform-origin] data-[state=closed]:animate-out data-[state=open]:animate-in relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border border-stone-200 bg-white text-stone-950 shadow-sm md:w-[var(--radix-navigation-menu-viewport-width)] dark:border-stone-800 dark:bg-stone-950 dark:text-stone-50",
+                "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 data-[state=closed]:animate-out data-[state=open]:animate-in relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[--radix-navigation-menu-viewport-transform-origin] overflow-hidden rounded-md border border-stone-200 bg-white text-stone-950 shadow-sm md:w-[var(--radix-navigation-menu-viewport-width)] dark:border-stone-800 dark:bg-stone-950 dark:text-stone-50",
                 className,
             )}
             ref={ref}

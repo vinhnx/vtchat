@@ -14,7 +14,7 @@ export const Announcement = ({
 }: AnnouncementProps) => (
     <Badge
         className={cn(
-            "group max-w-full gap-2 rounded-full bg-background px-3 py-0.5 font-medium shadow-xs transition-all",
+            "bg-background shadow-xs group max-w-full gap-2 rounded-full px-3 py-0.5 font-medium transition-all",
             "hover:shadow-md",
             themed && "announcement-themed border-foreground/5",
             className,
@@ -29,7 +29,7 @@ export type AnnouncementTagProps = HTMLAttributes<HTMLDivElement>;
 export const AnnouncementTag = ({ className, ...props }: AnnouncementTagProps) => (
     <div
         className={cn(
-            "-ml-2.5 shrink-0 truncate rounded-full bg-foreground/5 px-2.5 py-1 text-xs",
+            "bg-foreground/5 -ml-2.5 shrink-0 truncate rounded-full px-2.5 py-1 text-xs",
             "group-[.announcement-themed]:bg-background/60",
             className,
         )}

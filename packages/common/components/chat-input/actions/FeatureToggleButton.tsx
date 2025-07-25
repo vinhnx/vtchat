@@ -57,7 +57,7 @@ export function FeatureToggleButton({
                         isEnabled
                             ? [
                                   // Selected state styling
-                                  "border border-muted-foreground/30",
+                                  "border-muted-foreground/30 border",
                                   "bg-gradient-to-r from-blue-50 to-purple-50",
                                   "hover:from-blue-100 hover:to-purple-100",
                                   "dark:from-blue-950/20 dark:to-purple-950/20",
@@ -83,7 +83,7 @@ export function FeatureToggleButton({
                           })
                         : icon}
                     {isEnabled && hasFeatureAccess && (
-                        <span className="text-xs font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-xs font-medium text-transparent dark:from-blue-400 dark:to-purple-400">
                             {label}
                         </span>
                     )}

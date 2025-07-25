@@ -139,13 +139,11 @@ Better Auth has been optimized for maximum performance using the following techn
 ## Testing Recommendations
 
 1. **Performance Testing**:
-
     - Measure page load times before/after
     - Monitor auth check durations in console
     - Test on slow network connections
 
 2. **Error Scenarios**:
-
     - Test with network disconnected
     - Test with slow database responses
     - Test auth service failures

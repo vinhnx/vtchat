@@ -206,9 +206,9 @@ function AboutContent() {
                                 performance, security, and developer experience:
                             </p>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div>
-                                    <h4 className="text-lg font-semibold mb-2">Frontend & Core</h4>
+                                    <h4 className="mb-2 text-lg font-semibold">Frontend & Core</h4>
                                     <ul className="text-muted-foreground list-inside list-disc space-y-1">
                                         <li>
                                             <strong>Framework:</strong> Next.js 15 (App Router) with
@@ -238,7 +238,7 @@ function AboutContent() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-lg font-semibold mb-2">
+                                    <h4 className="mb-2 text-lg font-semibold">
                                         Backend & Infrastructure
                                     </h4>
                                     <ul className="text-muted-foreground list-inside list-disc space-y-1">
@@ -268,7 +268,7 @@ function AboutContent() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-lg font-semibold mb-2">
+                                    <h4 className="mb-2 text-lg font-semibold">
                                         Development & Build
                                     </h4>
                                     <ul className="text-muted-foreground list-inside list-disc space-y-1">
@@ -299,7 +299,7 @@ function AboutContent() {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-lg font-semibold mb-2">
+                                    <h4 className="mb-2 text-lg font-semibold">
                                         AI & Integrations
                                     </h4>
                                     <ul className="text-muted-foreground list-inside list-disc space-y-1">
@@ -344,7 +344,7 @@ function AboutContent() {
                                     href="https://github.com/vinhnx/vtchat"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                    className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
                                 >
                                     View Source Code on GitHub
                                 </Link>
@@ -354,14 +354,14 @@ function AboutContent() {
                                     href="https://x.com/intent/tweet?text=Check%20out%20VT%20-%20Production-ready%20AI%20chat%20with%20all%20premium%20models%20free!&url=https%3A%2F%2Fvtchat.io.vn%2F"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                                    className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
                                 >
                                     Share VT on X/Twitter
                                 </Link>
                             </div>
 
                             <div className="mt-8 border-t pt-6">
-                                <p className="text-muted-foreground text-sm text-center">
+                                <p className="text-muted-foreground text-center text-sm">
                                     Last updated: July 13, 2025 | Production Status: ✅ Live at{" "}
                                     <Link
                                         href="https://vtchat.io.vn"

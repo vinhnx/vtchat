@@ -1,4 +1,5 @@
 "use client";
+import { createPortal } from "react-dom";
 import { CommandSearch, SettingsModal } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import {
@@ -38,9 +39,8 @@ import {
     X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { type FC, useEffect } from "react";
+import React, { useEffect, type FC } from "react";
 import { useStickToBottom } from "use-stick-to-bottom";
-import { Drawer } from "vaul";
 import { BasicSidebar } from "../basic-sidebar";
 
 export type TRootLayout = {
@@ -74,6 +74,20 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     useEffect(() => {
         setIsMobileSidebarOpen(false);
     }, [pathname, setIsMobileSidebarOpen]);
+
+    // Lock body scroll when mobile sidebar is open
+    useEffect(() => {
+        if (isMobileSidebarOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
+        // Cleanup on unmount
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isMobileSidebarOpen]);
 
     // Render consistent structure during SSR and client hydration
     // Only show complex interactive elements after client is ready
@@ -117,17 +131,17 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
     return (
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
-            {/* Fixed Left Sidebar - Only visible when placement is left */}
+            {/* Fixed Left Sidebar - Only visible when placement is left on desktop */}
             {sidebarPlacement === "left" && (
-                <div className="hidden md:block flex-none w-auto max-w-[300px] h-[100dvh]">
+                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none lg:block">
                     <BasicSidebar />
                 </div>
             )}
 
             {/* Main Content */}
-            <Flex className="flex-1 overflow-hidden h-[100dvh]">
+            <Flex className="h-[100dvh] flex-1 overflow-hidden">
                 <motion.div
-                    className={`flex w-full h-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
+                    className={`flex h-full w-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
                 >
                     <AgentProvider>
                         <div className={containerClass}>
@@ -148,71 +162,103 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 <CommandSearch />
             </Flex>
 
-            <Drawer.Root
-                direction={sidebarPlacement}
-                dismissible={false}
-                modal={true}
-                onOpenChange={setIsMobileSidebarOpen}
-                open={isMobileSidebarOpen}
-                shouldScaleBackground
-            >
-                <Drawer.Portal>
-                    <Drawer.Overlay
-                        className="fixed inset-0 z-30 backdrop-blur-sm transition-opacity duration-300"
-                        onClick={(e) => {
-                            // Check if click target is inside the sidebar content or dropdown
-                            const target = e.target as HTMLElement;
-                            const isInsideSidebar = target.closest("[data-sidebar-content]");
-                            const isInsideDropdown =
-                                target.closest("[data-radix-popper-content-wrapper]") ||
-                                target.closest('[role="menu"]') ||
-                                target.closest("[data-radix-menu-content]") ||
-                                target.closest("[data-radix-dropdown-menu-content]");
+            {/* Mobile Sidebar Modal Overlay - Rendered via Portal */}
+            {typeof window !== "undefined" &&
+                createPortal(
+                    <AnimatePresence>
+                        {isMobileSidebarOpen && (
+                            <div
+                                className="fixed inset-0 md:hidden"
+                                style={{
+                                    position: "fixed",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    zIndex: 99999,
+                                }}
+                            >
+                                {/* Backdrop */}
+                                <motion.div
+                                    animate={{ opacity: 1 }}
+                                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0 }}
+                                    onClick={(e) => {
+                                        // Check if click target is inside the sidebar content or dropdown
+                                        const target = e.target as HTMLElement;
+                                        const isInsideSidebar =
+                                            target.closest("[data-sidebar-content]");
+                                        const isInsideDropdown =
+                                            target.closest("[data-radix-popper-content-wrapper]") ||
+                                            target.closest('[role="menu"]') ||
+                                            target.closest("[data-radix-menu-content]") ||
+                                            target.closest("[data-radix-dropdown-menu-content]");
 
-                            // Only close sidebar if clicking on overlay, not sidebar content or dropdown
-                            if (!(isInsideSidebar || isInsideDropdown)) {
-                                setIsMobileSidebarOpen(false);
-                            }
-                        }}
-                        onTouchEnd={(e) => {
-                            // Handle iOS touch events specifically
-                            const target = e.target as HTMLElement;
-                            const isInsideSidebar = target.closest("[data-sidebar-content]");
-                            const isInsideDropdown =
-                                target.closest("[data-radix-popper-content-wrapper]") ||
-                                target.closest('[role="menu"]') ||
-                                target.closest("[data-radix-menu-content]") ||
-                                target.closest("[data-radix-dropdown-menu-content]");
+                                        // Only close sidebar if clicking on overlay, not sidebar content or dropdown
+                                        if (!(isInsideSidebar || isInsideDropdown)) {
+                                            setIsMobileSidebarOpen(false);
+                                        }
+                                    }}
+                                    onTouchEnd={(e) => {
+                                        // Handle iOS touch events specifically
+                                        const target = e.target as HTMLElement;
+                                        const isInsideSidebar =
+                                            target.closest("[data-sidebar-content]");
+                                        const isInsideDropdown =
+                                            target.closest("[data-radix-popper-content-wrapper]") ||
+                                            target.closest('[role="menu"]') ||
+                                            target.closest("[data-radix-menu-content]") ||
+                                            target.closest("[data-radix-dropdown-menu-content]");
 
-                            // Only close sidebar if touching overlay, not sidebar content or dropdown
-                            if (!(isInsideSidebar || isInsideDropdown)) {
-                                setIsMobileSidebarOpen(false);
-                            }
-                        }}
-                    />
-                    <Drawer.Content
-                        className={`bg-tertiary fixed bottom-0 top-0 z-[50] w-[300px] max-w-[300px] flex-none transition-transform duration-300 ease-in-out ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
-                    >
-                        <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
-                        <div className="h-full overflow-hidden" data-sidebar-content>
-                            <BasicSidebar forceMobile={true} />
-                        </div>
-                    </Drawer.Content>
-                </Drawer.Portal>
-            </Drawer.Root>
+                                        // Only close sidebar if touching overlay, not sidebar content or dropdown
+                                        if (!(isInsideSidebar || isInsideDropdown)) {
+                                            setIsMobileSidebarOpen(false);
+                                        }
+                                    }}
+                                    transition={{ duration: 0.2 }}
+                                />
+
+                                {/* Sidebar Content */}
+                                <motion.div
+                                    animate={{ x: 0 }}
+                                    className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
+                                    exit={{ x: sidebarPlacement === "left" ? -300 : 300 }}
+                                    initial={{ x: sidebarPlacement === "left" ? -300 : 300 }}
+                                    role="dialog"
+                                    aria-modal="true"
+                                    aria-label="Navigation menu"
+                                    transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                                    style={{ zIndex: 100000 }}
+                                >
+                                    <div
+                                        className="h-full overflow-hidden"
+                                        data-sidebar-content
+                                        data-mobile-sidebar
+                                    >
+                                        <BasicSidebar forceMobile={true} />
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>,
+                    document.body,
+                )}
 
             <SonnerToaster />
 
-            {/* Right Sidebar - Only visible when placement is right */}
+            {/* Right Sidebar - Only visible when placement is right on desktop */}
             {sidebarPlacement === "right" && (
-                <div className="hidden md:block flex-none w-auto max-w-[300px] h-[100dvh]">
+                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none lg:block">
                     <BasicSidebar />
                 </div>
             )}
 
             {/* Mobile Floating Buttons Container */}
             {isClient && (
-                <div className="fixed left-4 top-4 z-50 flex flex-col gap-6 md:hidden">
+                <div
+                    className={`fixed left-4 top-4 flex flex-col gap-6 md:hidden ${isMobileSidebarOpen ? "z-[299]" : "z-[100]"}`}
+                >
                     {/* Profile Button */}
                     {session && (
                         <DropdownMenu>
@@ -233,7 +279,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="mb-2 w-48">
+                            <DropdownMenuContent align="start" className="z-[150] mb-2 w-48">
                                 <DropdownMenuItem onClick={() => router.push("/profile")}>
                                     <User className="mr-2" size={16} strokeWidth={2} />
                                     Profile
@@ -283,7 +329,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
                     {/* Sidebar Menu Button */}
                     <Button
-                        className="h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-lg transition-shadow hover:shadow-xl"
+                        className="bg-primary text-primary-foreground h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
                         onClick={() => setIsMobileSidebarOpen(true)}
                         size="icon"
                         variant="default"

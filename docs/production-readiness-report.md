@@ -200,7 +200,6 @@ All sensitive variables properly stored as Fly.io secrets:
 ### 🟢 OPERATIONAL
 
 1. **Monitor Resource Usage**
-
     - Check Fly.io metrics dashboard
     - Monitor memory/CPU usage patterns
     - Adjust machine specs if needed

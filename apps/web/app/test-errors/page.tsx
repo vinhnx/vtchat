@@ -9,7 +9,7 @@ const TestErrorPage: NextPage = () => {
             <h1 className="text-2xl font-bold">Error Page Style Tests</h1>
 
             <div>
-                <h2 className="text-lg font-semibold mb-4">404 Error (with code)</h2>
+                <h2 className="mb-4 text-lg font-semibold">404 Error (with code)</h2>
                 <MinimalErrorPage
                     code="404"
                     title="Page Not Found"
@@ -22,7 +22,7 @@ const TestErrorPage: NextPage = () => {
             </div>
 
             <div>
-                <h2 className="text-lg font-semibold mb-4">401 Error (Auth Error)</h2>
+                <h2 className="mb-4 text-lg font-semibold">401 Error (Auth Error)</h2>
                 <MinimalErrorPage
                     code="401"
                     title="Authentication Error"
@@ -35,7 +35,7 @@ const TestErrorPage: NextPage = () => {
             </div>
 
             <div>
-                <h2 className="text-lg font-semibold mb-4">403 Error (Admin Access)</h2>
+                <h2 className="mb-4 text-lg font-semibold">403 Error (Admin Access)</h2>
                 <MinimalErrorPage
                     code="403"
                     title="Admin Access Required"
@@ -48,7 +48,7 @@ const TestErrorPage: NextPage = () => {
             </div>
 
             <div>
-                <h2 className="text-lg font-semibold mb-4">500 Error (Global Error)</h2>
+                <h2 className="mb-4 text-lg font-semibold">500 Error (Global Error)</h2>
                 <MinimalErrorPage
                     code="500"
                     title="Something went wrong"

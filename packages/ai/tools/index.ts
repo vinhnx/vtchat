@@ -1,8 +1,5 @@
 // Re-export types
-export type {
-    ToolCall,
-    ToolResult,
-} from "@repo/shared/types";
+export type { ToolCall, ToolResult } from "@repo/shared/types";
 export {
     openaiWebSearchTool,
     openaiWebSearchWithModel,

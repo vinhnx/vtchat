@@ -108,12 +108,12 @@ export function UserCharts({
     }));
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* User Status Distribution */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <PieIcon className="h-5 w-5 mr-2" />
+                        <PieIcon className="mr-2 h-5 w-5" />
                         User Status
                     </CardTitle>
                 </CardHeader>
@@ -143,7 +143,7 @@ export function UserCharts({
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <PieIcon className="h-5 w-5 mr-2" />
+                        <PieIcon className="mr-2 h-5 w-5" />
                         Email Verification
                     </CardTitle>
                 </CardHeader>
@@ -173,7 +173,7 @@ export function UserCharts({
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <BarChart3 className="h-5 w-5 mr-2" />
+                        <BarChart3 className="mr-2 h-5 w-5" />
                         Plan Distribution
                     </CardTitle>
                 </CardHeader>
@@ -203,9 +203,9 @@ export function UserCharts({
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <TrendingUp className="h-5 w-5 mr-2" />
+                        <TrendingUp className="mr-2 h-5 w-5" />
                         Registration Trend
-                        <span className="text-sm font-normal text-muted-foreground ml-2">
+                        <span className="text-muted-foreground ml-2 text-sm font-normal">
                             (Last 30 days)
                         </span>
                     </CardTitle>

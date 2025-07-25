@@ -79,12 +79,12 @@ export function UserAnalyticsChart({ users, totalUsers }: UserAnalyticsProps) {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* User Status Distribution */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Users className="h-5 w-5 mr-2" />
+                        <Users className="mr-2 h-5 w-5" />
                         User Status Distribution
                     </CardTitle>
                 </CardHeader>
@@ -114,7 +114,7 @@ export function UserAnalyticsChart({ users, totalUsers }: UserAnalyticsProps) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2" />
+                        <Shield className="mr-2 h-5 w-5" />
                         Role Distribution
                     </CardTitle>
                 </CardHeader>
@@ -139,7 +139,7 @@ export function UserAnalyticsChart({ users, totalUsers }: UserAnalyticsProps) {
             <Card className="md:col-span-2">
                 <CardHeader>
                     <CardTitle className="flex items-center">
-                        <UserCheck className="h-5 w-5 mr-2" />
+                        <UserCheck className="mr-2 h-5 w-5" />
                         Monthly User Registration Trend
                     </CardTitle>
                 </CardHeader>

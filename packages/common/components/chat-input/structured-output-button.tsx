@@ -416,7 +416,7 @@ Please help me analyze this data and provide insights or answer any questions ab
                 className={cn(
                     "text-muted-foreground hover:text-foreground",
                     hasProcessedData && "bg-green-500/10 text-green-500 hover:text-green-600",
-                    isProcessing && "opacity-50 cursor-not-allowed",
+                    isProcessing && "cursor-not-allowed opacity-50",
                 )}
                 onClick={handleClick}
                 disabled={isProcessing}

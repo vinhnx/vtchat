@@ -36,7 +36,6 @@ GOOGLE_AI_API_KEY=your_google_ai_key
 ### 1. Accessing RAG Chat
 
 1. **Sidebar Navigation**: Look for "RAG Chat" button in the sidebar
-
     - For VT+ users: Direct access to `/rag`
     - For free users: Shows "Plus" badge, redirects to upgrade page
 

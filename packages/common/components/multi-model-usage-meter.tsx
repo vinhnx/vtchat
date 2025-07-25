@@ -132,8 +132,8 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     <div className="space-y-6">
                         {Array.from({ length: 3 }).map((_, i) => (
                             <div key={i} className="space-y-3">
-                                <div className="h-4 w-32 rounded bg-muted animate-pulse" />
-                                <div className="h-16 w-full rounded bg-muted animate-pulse" />
+                                <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                                <div className="bg-muted h-16 w-full animate-pulse rounded" />
                             </div>
                         ))}
                     </div>
@@ -150,7 +150,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 </CardHeader>
                 <CardContent>
                     <div className="py-8 text-center">
-                        <p className="mb-4 text-sm text-muted-foreground">{error}</p>
+                        <p className="text-muted-foreground mb-4 text-sm">{error}</p>
                         <Button onClick={fetchUsage} size="sm" variant="outline">
                             Retry
                         </Button>
@@ -174,7 +174,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     Track your Gemini model usage. Server-funded access requires VT+ subscription
                     with monthly budget cap of $80 USD for cost control.
                     <br />
-                    <span className="text-xs text-muted-foreground/80">
+                    <span className="text-muted-foreground/80 text-xs">
                         <strong>VT+ Users:</strong> Server-funded access with rate limits (Flash
                         Lite: 100/day, Flash: 50/day, Pro: 25/day).
                         <br />
@@ -188,7 +188,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             href="https://ai.google.dev/gemini-api/docs/models"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
+                            className="text-blue-600 underline hover:text-blue-800"
                         >
                             View official Gemini model documentation →
                         </a>
@@ -348,35 +348,35 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     </ChartContainer>
 
                     {/* Usage Statistics Grid */}
-                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        <div className="text-center p-4 bg-muted/20 rounded-lg">
-                            <div className="text-2xl font-bold text-foreground">
+                    <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+                        <div className="bg-muted/20 rounded-lg p-4 text-center">
+                            <div className="text-foreground text-2xl font-bold">
                                 {totalRequestsToday}
                             </div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-muted-foreground text-sm">
                                 Total Requests Today
                             </div>
                         </div>
-                        <div className="text-center p-4 bg-muted/20 rounded-lg">
-                            <div className="text-2xl font-bold text-foreground">
+                        <div className="bg-muted/20 rounded-lg p-4 text-center">
+                            <div className="text-foreground text-2xl font-bold">
                                 {Object.values(modelStatuses).reduce(
                                     (sum, status) => sum + status.minuteUsed,
                                     0,
                                 )}
                             </div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-muted-foreground text-sm">
                                 Requests This Minute
                             </div>
                         </div>
-                        <div className="text-center p-4 bg-muted/20 rounded-lg">
-                            <div className="text-2xl font-bold text-foreground">
+                        <div className="bg-muted/20 rounded-lg p-4 text-center">
+                            <div className="text-foreground text-2xl font-bold">
                                 {
                                     Object.keys(modelStatuses).filter(
                                         (model) => modelStatuses[model]?.dailyUsed > 0,
                                     ).length
                                 }
                             </div>
-                            <div className="text-sm text-muted-foreground">Active Models</div>
+                            <div className="text-muted-foreground text-sm">Active Models</div>
                         </div>
                     </div>
                 </CardContent>
@@ -392,16 +392,16 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                 </CardHeader>
                 <CardContent>
                     {/* Subscription Tiers Overview */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
                         {/* VT+ Subscription */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
-                                <div className="h-3 w-3 rounded-full bg-chart-1" />
-                                <div className="font-medium text-foreground">VT+ Subscription</div>
+                                <div className="bg-chart-1 h-3 w-3 rounded-full" />
+                                <div className="text-foreground font-medium">VT+ Subscription</div>
                             </div>
-                            <div className="p-4 bg-background/50 rounded-lg border border-chart-1/20">
-                                <div className="text-sm text-muted-foreground space-y-2">
-                                    <div className="font-medium text-foreground mb-3">
+                            <div className="bg-background/50 border-chart-1/20 rounded-lg border p-4">
+                                <div className="text-muted-foreground space-y-2 text-sm">
+                                    <div className="text-foreground mb-3 font-medium">
                                         Server-funded Access
                                     </div>
                                     <div>
@@ -422,14 +422,14 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                         {/* Free Tier */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
-                                <div className="h-3 w-3 rounded-full bg-chart-2" />
-                                <div className="font-medium text-foreground">
+                                <div className="bg-chart-2 h-3 w-3 rounded-full" />
+                                <div className="text-foreground font-medium">
                                     Free Tier (Registered Users)
                                 </div>
                             </div>
-                            <div className="p-4 bg-background/50 rounded-lg border border-chart-2/20">
-                                <div className="text-sm text-muted-foreground space-y-2">
-                                    <div className="font-medium text-foreground mb-3">
+                            <div className="bg-background/50 border-chart-2/20 rounded-lg border p-4">
+                                <div className="text-muted-foreground space-y-2 text-sm">
+                                    <div className="text-foreground mb-3 font-medium">
                                         Limited Server Access + BYOK
                                     </div>
                                     <div>
@@ -447,22 +447,22 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     </div>
 
                     {/* Rate Limits Breakdown */}
-                    <div className="space-y-4 mb-6">
+                    <div className="mb-6 space-y-4">
                         <div className="flex items-center gap-2">
-                            <div className="h-3 w-3 rounded-full bg-chart-3" />
-                            <div className="font-medium text-foreground">
+                            <div className="bg-chart-3 h-3 w-3 rounded-full" />
+                            <div className="text-foreground font-medium">
                                 Server-funded Rate Limits
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                            <div className="p-3 bg-background/50 rounded-lg">
-                                <div className="font-medium text-foreground mb-2 text-sm">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                            <div className="bg-background/50 rounded-lg p-3">
+                                <div className="text-foreground mb-2 text-sm font-medium">
                                     Gemini 2.5 Flash Lite
                                 </div>
-                                <div className="text-xs text-muted-foreground space-y-1">
+                                <div className="text-muted-foreground space-y-1 text-xs">
                                     <div>
                                         VT+: <span className="font-medium">Unlimited</span>{" "}
-                                        <span className="text-xs text-muted-foreground/70">
+                                        <span className="text-muted-foreground/70 text-xs">
                                             (usage tracked)
                                         </span>
                                     </div>
@@ -475,11 +475,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-3 bg-background/50 rounded-lg">
-                                <div className="font-medium text-foreground mb-2 text-sm">
+                            <div className="bg-background/50 rounded-lg p-3">
+                                <div className="text-foreground mb-2 text-sm font-medium">
                                     Gemini 2.5 Flash
                                 </div>
-                                <div className="text-xs text-muted-foreground space-y-1">
+                                <div className="text-muted-foreground space-y-1 text-xs">
                                     <div>
                                         VT+:{" "}
                                         <span className="font-medium">
@@ -492,11 +492,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-3 bg-background/50 rounded-lg">
-                                <div className="font-medium text-foreground mb-2 text-sm">
+                            <div className="bg-background/50 rounded-lg p-3">
+                                <div className="text-foreground mb-2 text-sm font-medium">
                                     Gemini 2.5 Pro
                                 </div>
-                                <div className="text-xs text-muted-foreground space-y-1">
+                                <div className="text-muted-foreground space-y-1 text-xs">
                                     <div>
                                         VT+:{" "}
                                         <span className="font-medium">
@@ -514,11 +514,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
 
                     {/* Important Notes */}
                     <div className="space-y-3">
-                        <div className="p-4 bg-muted/20 rounded-lg border border-muted">
+                        <div className="bg-muted/20 border-muted rounded-lg border p-4">
                             <div className="flex items-start gap-2">
-                                <div className="h-2 w-2 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                                <div className="bg-muted-foreground mt-2 h-2 w-2 flex-shrink-0 rounded-full" />
                                 <div className="text-sm">
-                                    <div className="font-medium text-foreground mb-1">
+                                    <div className="text-foreground mb-1 font-medium">
                                         VT+ Usage Tracking
                                     </div>
                                     <div className="text-muted-foreground space-y-1">
@@ -540,11 +540,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             </div>
                         </div>
 
-                        <div className="p-4 bg-muted/20 rounded-lg border border-muted">
+                        <div className="bg-muted/20 border-muted rounded-lg border p-4">
                             <div className="flex items-start gap-2">
-                                <div className="h-2 w-2 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                                <div className="bg-muted-foreground mt-2 h-2 w-2 flex-shrink-0 rounded-full" />
                                 <div className="text-sm">
-                                    <div className="font-medium text-foreground mb-1">
+                                    <div className="text-foreground mb-1 font-medium">
                                         BYOK (Bring Your Own Key)
                                     </div>
                                     <div className="text-muted-foreground">
@@ -556,11 +556,11 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             </div>
                         </div>
 
-                        <div className="p-4 bg-muted/20 rounded-lg border border-muted">
+                        <div className="bg-muted/20 border-muted rounded-lg border p-4">
                             <div className="flex items-start gap-2">
-                                <div className="h-2 w-2 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                                <div className="bg-muted-foreground mt-2 h-2 w-2 flex-shrink-0 rounded-full" />
                                 <div className="text-sm">
-                                    <div className="font-medium text-foreground mb-1">
+                                    <div className="text-foreground mb-1 font-medium">
                                         Google's Pricing Reference
                                     </div>
                                     <div className="text-muted-foreground">
@@ -646,8 +646,8 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                 {loading && (
                     <CardContent>
                         <div className="space-y-4">
-                            <div className="h-4 w-32 rounded bg-muted animate-pulse" />
-                            <div className="h-[200px] w-full rounded bg-muted animate-pulse" />
+                            <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                            <div className="bg-muted h-[200px] w-full animate-pulse rounded" />
                         </div>
                     </CardContent>
                 )}
@@ -666,7 +666,7 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                 </CardHeader>
                 <CardContent>
                     <div className="py-8 text-center">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                             {error || "VT+ usage data not available"}
                         </p>
                     </div>
@@ -715,16 +715,16 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
     return (
         <div className="space-y-6">
             <div>
-                <h3 className="text-lg font-semibold text-foreground">
+                <h3 className="text-foreground text-lg font-semibold">
                     VT+ Research Features Usage
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                     Usage tracking for exclusive VT+ research capabilities
                 </p>
             </div>
 
             {/* Individual Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 {features.map((feature, index) => (
                     <Card key={index}>
                         <CardHeader className="pb-3">
@@ -807,11 +807,11 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
                             </ChartContainer>
 
                             {/* Usage Statistics */}
-                            <div className="mt-4 text-center p-3 bg-muted/20 rounded-lg">
-                                <div className="text-xl font-bold text-foreground">
+                            <div className="bg-muted/20 mt-4 rounded-lg p-3 text-center">
+                                <div className="text-foreground text-xl font-bold">
                                     {feature.data.percentage}%
                                 </div>
-                                <div className="text-xs text-muted-foreground mt-1">
+                                <div className="text-muted-foreground mt-1 text-xs">
                                     Usage Percentage
                                 </div>
                             </div>

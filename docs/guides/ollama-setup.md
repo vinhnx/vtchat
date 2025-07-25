@@ -23,6 +23,7 @@ That's it! Now you can use Ollama models in VTChat completely free and private.
 ## Installation Options
 
 ### macOS
+
 ```bash
 # Option 1: Direct download
 open https://ollama.com/download/mac
@@ -32,12 +33,14 @@ brew install ollama
 ```
 
 ### Windows
+
 ```bash
 # Download and run installer
 https://ollama.com/download/windows
 ```
 
 ### Linux
+
 ```bash
 # Install script (Ubuntu, Debian, Fedora, etc.)
 curl -fsSL https://ollama.com/install.sh | sh
@@ -48,6 +51,7 @@ sudo dnf install ollama                      # Fedora
 ```
 
 ### Docker (Production)
+
 ```bash
 # Pull and run Ollama in Docker
 docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
@@ -70,6 +74,7 @@ The service will start automatically and provide an OpenAI-compatible API at `ht
 ### 2. Pull Models
 
 **🚀 Recommended Models (Start Here)**:
+
 ```bash
 # Best all-around models for most users
 ollama pull qwen3:1.7b        # ⭐ Fast, smart, only 1GB - BEST starter model
@@ -82,12 +87,13 @@ ollama pull llama3.3:70b      # Best quality but needs 40GB+ RAM
 ```
 
 **🎯 Specialized Models**:
+
 ```bash
 # For coding
 ollama pull deepseek-r1:1.5b  # ⭐ NEW: Reasoning model for code/math - 1GB
 ollama pull codellama:7b      # Code generation specialist - 4GB
 
-# For vision/images  
+# For vision/images
 ollama pull llava:7b          # Chat with images - 4GB
 
 # Multilingual
@@ -95,8 +101,9 @@ ollama pull qwen2.5:7b        # Excellent for non-English - 4GB
 ```
 
 **💾 Model Size Guide**:
+
 - **1-3B models**: 1-2GB RAM, fast on any modern laptop
-- **7B models**: 4-8GB RAM, good quality, reasonable speed  
+- **7B models**: 4-8GB RAM, good quality, reasonable speed
 - **14B models**: 8-16GB RAM, high quality
 - **70B models**: 40GB+ RAM, best quality, slow
 
@@ -126,9 +133,10 @@ Once you have models installed, you can use them in VTChat:
 3. **Start chatting!** → Your conversations are 100% private and free
 
 **Available Models in VTChat**:
+
 - 🌟 **Qwen 3 (Ollama)** - Our newest, smartest model
 - 🚀 **Llama 3.3 70B (Ollama)** - Best quality (needs powerful hardware)
-- ⚡ **Llama 3.2 (Ollama)** - Fast and efficient 
+- ⚡ **Llama 3.2 (Ollama)** - Fast and efficient
 - 🧠 **DeepSeek R1 (Ollama)** - Reasoning specialist for math/code
 - 🌍 **Gemma 3 (Ollama)** - Google's latest efficient model
 - 💻 **CodeLlama (Ollama)** - Programming specialist
@@ -221,7 +229,8 @@ curl http://127.0.0.1:11434/api/tags
 ❌ Error: Port 11434 already in use
 ```
 
-**Solution**: 
+**Solution**:
+
 - Check if Ollama is already running: `ps aux | grep ollama`
 - Kill existing processes or restart your system
 - Use a different port: `OLLAMA_HOST=localhost:11435 ollama serve`
@@ -231,6 +240,7 @@ curl http://127.0.0.1:11434/api/tags
 If you're running VTChat on HTTPS, browsers may block HTTP requests to `http://localhost:11434`.
 
 **Solutions**:
+
 1. **Run VTChat locally**: Use `http://localhost:3000` for development
 2. **Production Environment**: Deploy with `NODE_ENV=production` to allow remote URLs
 3. **Reverse Proxy**: Set up nginx or similar with SSL for Ollama
@@ -239,6 +249,7 @@ If you're running VTChat on HTTPS, browsers may block HTTP requests to `http://l
 ### Model Performance Issues
 
 **Optimization Tips**:
+
 - Use smaller models for faster inference (e.g., `llama3.2:1b` instead of `llama3.2:70b`)
 - Ensure sufficient RAM (8GB+ recommended for 7B models, 32GB+ for 70B models)
 - Use GPU acceleration if available (NVIDIA GPU recommended)
@@ -247,21 +258,25 @@ If you're running VTChat on HTTPS, browsers may block HTTP requests to `http://l
 ## Model Recommendations
 
 ### For General Chat
+
 - **Llama 3.3:70b** - Best quality but requires more resources
 - **Llama 3.2:8b** - Good balance of quality and speed
 - **Qwen2.5:7b** - Excellent multilingual support
 - **Gemma2:9b** - Efficient and fast
 
 ### For Code
+
 - **CodeLlama:13b** - Best for code generation and analysis
 - **Qwen2.5-Coder:7b** - Good code understanding
 - **Llama 3.2:3b** - Fast coding assistance
 
 ### For Vision Tasks
+
 - **LLaVA:13b** - Best multimodal understanding
 - **LLaVA:7b** - Faster vision-language tasks
 
 ### For Resource-Constrained Systems
+
 - **Llama 3.2:1b** - Ultra-lightweight but capable
 - **Gemma2:2b** - Small but efficient
 - **Qwen2.5:3b** - Good quality in small size
@@ -298,6 +313,7 @@ OLLAMA_NUM_PARALLEL=4 ollama serve
 ## Support
 
 For Ollama-specific issues, check:
+
 - [Ollama Documentation](https://ollama.com/docs)
 - [Ollama GitHub](https://github.com/ollama/ollama)
 - [Ollama Discord](https://discord.gg/ollama)

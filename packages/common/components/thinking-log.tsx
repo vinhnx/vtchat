@@ -26,8 +26,8 @@ function ThinkingStep({ step, index }: ThinkingStepProps) {
             key={index}
             transition={{ delay: index * 0.05, duration: 0.3 }}
         >
-            <div className="rounded-lg border border-border bg-muted/20 p-4">
-                <div className="text-sm text-muted-foreground font-sans whitespace-pre-wrap">
+            <div className="border-border bg-muted/20 rounded-lg border p-4">
+                <div className="text-muted-foreground whitespace-pre-wrap font-sans text-sm">
                     {step.content}
                 </div>
             </div>
@@ -64,13 +64,13 @@ export function ThinkingLog({ thread, className = "", autoExpand = false }: Thin
             <Collapsible onOpenChange={setIsOpen} open={isOpen}>
                 <CollapsibleTrigger asChild>
                     <Button
-                        className="group mb-4 flex w-full items-center justify-between rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50"
+                        className="border-border bg-muted/30 hover:bg-muted/50 group mb-4 flex w-full items-center justify-between rounded-lg border p-4 transition-all duration-200"
                         onClick={toggleOpen}
                         variant="ghost"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="flex-shrink-0 h-4 w-4 bg-foreground rounded" />
-                            <span className="text-sm font-medium text-foreground">
+                            <div className="bg-foreground h-4 w-4 flex-shrink-0 rounded" />
+                            <span className="text-foreground text-sm font-medium">
                                 Thinking Process
                             </span>
                         </div>
@@ -78,7 +78,7 @@ export function ThinkingLog({ thread, className = "", autoExpand = false }: Thin
                             <Badge variant="outline" className="text-foreground">
                                 {thinkingData.steps.length} steps
                             </Badge>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-muted-foreground text-xs">
                                 {formatDuration(thinkingData.duration)}
                             </span>
                             <ChevronDown
@@ -98,17 +98,17 @@ export function ThinkingLog({ thread, className = "", autoExpand = false }: Thin
                                 initial={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                <div className="mt-3 rounded-lg border border-border bg-muted/10 p-6 shadow-sm">
+                                <div className="border-border bg-muted/10 mt-3 rounded-lg border p-6 shadow-sm">
                                     {/* Header */}
-                                    <div className="flex items-center gap-3 border-b border-border pb-3">
-                                        <div className="h-4 w-4 bg-foreground rounded" />
-                                        <span className="text-sm font-medium text-foreground">
+                                    <div className="border-border flex items-center gap-3 border-b pb-3">
+                                        <div className="bg-foreground h-4 w-4 rounded" />
+                                        <span className="text-foreground text-sm font-medium">
                                             Reasoning Steps ({thinkingData.steps.length})
                                         </span>
                                     </div>
 
                                     {/* Thinking Steps */}
-                                    <div className="max-h-96 touch-pan-y space-y-4 overflow-y-auto overscroll-contain mt-4">
+                                    <div className="mt-4 max-h-96 touch-pan-y space-y-4 overflow-y-auto overscroll-contain">
                                         {thinkingData.steps.map((step: any, index: number) => (
                                             <ThinkingStep key={index} step={step} index={index} />
                                         ))}

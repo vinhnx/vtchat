@@ -145,7 +145,7 @@ export const ExamplePrompts = () => {
 
     return (
         <>
-            <div className="animate-fade-in mb-4 flex w-full flex-wrap justify-center gap-1 p-2 sm:mb-8 sm:gap-2 sm:p-6 transition-all duration-1000">
+            <div className="animate-fade-in mb-4 flex w-full flex-wrap justify-center gap-1 p-2 transition-all duration-1000 sm:mb-8 sm:gap-2 sm:p-6">
                 {Object.entries(categoryIcons).map(([category, value], index) => (
                     <ButtonWithIcon
                         className="hover:bg-accent/80 transition-all hover:opacity-90"

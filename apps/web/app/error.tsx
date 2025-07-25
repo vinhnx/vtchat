@@ -16,10 +16,10 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+        <div className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center">
             <div className="w-full max-w-md p-6 text-center">
                 <h1 className="mb-3 text-lg font-medium">Something went wrong</h1>
-                <p className="mb-4 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mb-4 text-sm">
                     An unexpected error occurred. Please try again.
                 </p>
                 <div className="flex justify-center space-x-3">

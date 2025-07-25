@@ -57,7 +57,6 @@
         "@repo/ai": "*",
         "@repo/shared": "*",
         "@repo/ui": "*",
-
         "@tanstack/react-query": "^5.40.0",
         "@tiptap/core": "^3.0.1",
         "@tiptap/extension-character-count": "^3.0.1",

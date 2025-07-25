@@ -21,7 +21,7 @@ export function FeaturesAccordion() {
         >
             {plusFeatures.map((feature: FeatureItem, index: number) => (
                 <AccordionItem className="border-border" key={index} value={`item-${index}`}>
-                    <AccordionTrigger className="text-foreground text-left text-base font-medium hover:text-muted-foreground">
+                    <AccordionTrigger className="text-foreground hover:text-muted-foreground text-left text-base font-medium">
                         {feature.name}
                     </AccordionTrigger>
                     <AccordionContent className="text-foreground text-sm">
