@@ -313,12 +313,12 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     if (error) {
         return (
             <div
-                className="text-muted-foreground text-sm p-4 border border-border rounded-md bg-secondary/30"
+                className="text-muted-foreground border-border bg-secondary/30 rounded-md border p-4 text-sm"
                 role="alert"
                 aria-live="polite"
             >
-                <p className="font-medium mb-2">Content rendering error</p>
-                <pre className="whitespace-pre-wrap text-xs markdown-text overflow-x-auto p-2 bg-background rounded border border-border">
+                <p className="mb-2 font-medium">Content rendering error</p>
+                <pre className="markdown-text bg-background border-border overflow-x-auto whitespace-pre-wrap rounded border p-2 text-xs">
                     {chunk}
                 </pre>
             </div>
@@ -328,9 +328,9 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     if (isLoading) {
         return (
             <div className="animate-pulse space-y-3 py-2" aria-live="polite" aria-busy="true">
-                <div className="h-4 bg-secondary rounded w-3/4"></div>
-                <div className="h-4 bg-secondary rounded w-1/2"></div>
-                <div className="h-4 bg-secondary rounded w-5/6"></div>
+                <div className="bg-secondary h-4 w-3/4 rounded"></div>
+                <div className="bg-secondary h-4 w-1/2 rounded"></div>
+                <div className="bg-secondary h-4 w-5/6 rounded"></div>
             </div>
         );
     }
@@ -348,9 +348,9 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                         aria-live="polite"
                         aria-busy="true"
                     >
-                        <div className="h-4 bg-secondary rounded w-3/4"></div>
-                        <div className="h-4 bg-secondary rounded w-1/2"></div>
-                        <div className="h-4 bg-secondary rounded w-5/6"></div>
+                        <div className="bg-secondary h-4 w-3/4 rounded"></div>
+                        <div className="bg-secondary h-4 w-1/2 rounded"></div>
+                        <div className="bg-secondary h-4 w-5/6 rounded"></div>
                     </div>
                 }
             >

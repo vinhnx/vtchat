@@ -1,11 +1,13 @@
 # Syntax Highlighting Enhancement - January 7, 2025
 
 ## Summary
+
 Successfully enhanced the code block syntax highlighting in VTChat's markdown rendering system with comprehensive language support and improved reliability.
 
 ## Changes Made
 
 ### 1. Enhanced Language Support
+
 - **Added 50+ programming languages** to the Prism.js configuration
 - **Web Technologies**: JavaScript, TypeScript, React (JSX/TSX), CSS, SCSS, SASS, LESS, HTML
 - **Backend Languages**: Python, Java, C/C++, C#, PHP, Ruby, Go, Rust, Kotlin, Swift
@@ -15,6 +17,7 @@ Successfully enhanced the code block syntax highlighting in VTChat's markdown re
 - **Functional Languages**: Haskell, Clojure, Scala
 
 ### 2. Improved Code Block Component (`packages/common/components/code-block/code-block.tsx`)
+
 - **Enhanced Error Handling**: Added try-catch wrapper with graceful fallback to plaintext
 - **Language Normalization**: Converts language names to lowercase for consistency
 - **Language Aliases**: Smart mapping of common aliases (js→javascript, py→python, ts→typescript, etc.)
@@ -23,6 +26,7 @@ Successfully enhanced the code block syntax highlighting in VTChat's markdown re
 - **Better Icon System**: Comprehensive icon mapping for 70+ file types and languages
 
 ### 3. Enhanced Features
+
 - **Robust Error Recovery**: Prevents crashes from unsupported languages or malformed code
 - **Smart Language Detection**: Automatically handles common language aliases
 - **Improved Performance**: Only highlights when language is actually supported
@@ -30,6 +34,7 @@ Successfully enhanced the code block syntax highlighting in VTChat's markdown re
 - **Comprehensive Logging**: Error logging with context for debugging
 
 ### 4. Technical Details
+
 - **File**: `packages/common/components/code-block/code-block.tsx`
 - **Languages Added**: 50+ new Prism.js language components imported
 - **Error Handling**: Comprehensive try-catch with fallback rendering
@@ -65,8 +70,8 @@ def fibonacci(n):
 
 ```sql
 -- SQL with proper syntax highlighting
-SELECT u.name, p.title 
-FROM users u 
+SELECT u.name, p.title
+FROM users u
 JOIN posts p ON u.id = p.user_id;
 ```
 
@@ -90,11 +95,11 @@ JOIN posts p ON u.id = p.user_id;
 ## Files Modified
 
 1. `packages/common/components/code-block/code-block.tsx`
-   - Added 50+ new Prism.js language imports
-   - Enhanced error handling with try-catch
-   - Added language aliases mapping
-   - Improved icon system
-   - Better language detection
+    - Added 50+ new Prism.js language imports
+    - Enhanced error handling with try-catch
+    - Added language aliases mapping
+    - Improved icon system
+    - Better language detection
 
 ## Next Steps
 
@@ -112,33 +117,39 @@ All syntax highlighting enhancements have been successfully implemented and test
 # Enhanced Table Hover Effects - January 7, 2025
 
 ## Summary
+
 Added sophisticated hover effects for table rows in markdown content with smooth animations, shimmer effects, and enhanced visual feedback.
 
 ## Changes Made
 
 ### 1. Enhanced Table Container
+
 - **Elevated Shadow**: Added dynamic shadow that increases on hover
 - **Smooth Transitions**: 300ms cubic-bezier transitions for professional feel
 - **Container Lift**: Subtle translateY effect on table container hover
 
 ### 2. Advanced Row Hover Effects
+
 - **Horizontal Slide**: Rows slide right (4px) on hover with primary color border
 - **Gradient Background**: Smooth gradient from muted/40 to muted/60 on hover
 - **Shimmer Animation**: CSS-only shimmer effect that sweeps across rows
 - **Subtle Scale**: Minimal scale transformation for interactive feedback
 
 ### 3. Enhanced Cell Interactions
+
 - **Cell Lift**: Individual cells lift slightly (-1px) on row hover
 - **Header Underline**: Animated underline appears on header cells during hover
 - **Improved Typography**: Better contrast and color transitions
 
 ### 4. Accessibility & Responsiveness
+
 - **Reduced Motion**: Respects `prefers-reduced-motion` for accessibility
 - **Mobile Optimization**: Simplified hover effects for mobile devices
 - **Keyboard Navigation**: Enhanced focus states for keyboard users
 - **Screen Reader Support**: Proper ARIA attributes and semantic structure
 
 ### 5. Technical Implementation
+
 - **CSS Custom Properties**: Uses design system color variables
 - **Performance Optimized**: Hardware-accelerated transforms
 - **Flexible Classes**: Modular CSS classes for easy customization
@@ -147,19 +158,20 @@ Added sophisticated hover effects for table rows in markdown content with smooth
 ## Files Modified
 
 1. **`packages/common/components/mdx/mdx-components.tsx`**
-   - Added CSS import for table hover effects
-   - Enhanced table, tr, th, td components with new CSS classes
-   - Improved className structure for better styling control
+    - Added CSS import for table hover effects
+    - Enhanced table, tr, th, td components with new CSS classes
+    - Improved className structure for better styling control
 
 2. **`packages/common/components/mdx/table-hover-effects.css`** (New)
-   - Comprehensive CSS for sophisticated hover effects
-   - Shimmer animations with CSS-only implementation
-   - Responsive design considerations
-   - Accessibility features for reduced motion
+    - Comprehensive CSS for sophisticated hover effects
+    - Shimmer animations with CSS-only implementation
+    - Responsive design considerations
+    - Accessibility features for reduced motion
 
 ## Visual Effects
 
 ### Hover Interactions:
+
 - **Table Container**: Lifts with enhanced shadow
 - **Table Rows**: Slide right with primary color border
 - **Background**: Smooth gradient transition
@@ -168,6 +180,7 @@ Added sophisticated hover effects for table rows in markdown content with smooth
 - **Cell Lift**: Subtle cell elevation effect
 
 ### Accessibility Features:
+
 - **Reduced Motion**: Disables animations for users who prefer less motion
 - **Focus States**: Clear keyboard navigation indicators
 - **Mobile Friendly**: Simplified hover effects for touch devices
@@ -195,6 +208,7 @@ All table hover effects have been successfully implemented and tested. The table
 The code block syntax highlighting is working perfectly in thread item markdown content:
 
 ### **Integration Flow:**
+
 1. **Thread Item** → **MarkdownContent** → **MDXRemote** → **mdxComponents** → **CodeBlock**
 2. The `mdxComponents` correctly handles both `<pre>` and `<code>` elements
 3. Language detection works with 50+ supported languages
@@ -202,6 +216,7 @@ The code block syntax highlighting is working perfectly in thread item markdown 
 5. Visual styling matches the design system
 
 ### **Visual Verification:**
+
 - **Keywords**: Red highlighting (`function`, `return`, `const`, `if`, etc.)
 - **Strings**: Green highlighting (`"Hello, World!"`, `"Original:"`, etc.)
 - **Comments**: Gray highlighting (`// Function to reverse a string`)
@@ -210,6 +225,7 @@ The code block syntax highlighting is working perfectly in thread item markdown 
 - **Punctuation**: Dark highlighting for operators and symbols
 
 ### **Code Block Features in Thread Items:**
+
 - ✅ **Syntax Highlighting**: Full Prism.js integration with 50+ languages
 - ✅ **Language Detection**: Automatic detection with smart aliases
 - ✅ **Copy to Clipboard**: Built-in copy functionality

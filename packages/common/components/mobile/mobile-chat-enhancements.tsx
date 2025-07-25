@@ -41,7 +41,7 @@ export const MobileChatHeader = memo(
         return (
             <motion.div
                 animate={{ y: 0, opacity: 1 }}
-                className="sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r gray-900 p-4 text-white md:hidden"
+                className="gray-900 sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r p-4 text-white md:hidden"
                 initial={{ y: -50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
             >

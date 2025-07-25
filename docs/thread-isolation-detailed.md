@@ -26,19 +26,16 @@ User Account B     → ThreadDatabase_userB
 ### What Gets Isolated
 
 1. **Threads & Conversations**
-
     - Each user gets their own IndexedDB database
     - Threads are completely isolated per account
     - Anonymous and authenticated users have separate storage
 
 2. **API Keys (BYOK)**
-
     - Stored in user-specific localStorage keys
     - Format: `api-keys-storage-{userId}`
     - Automatically cleared on logout for security
 
 3. **MCP Tool Configurations**
-
     - Per-user MCP tool settings
     - Format: `mcp-tools-storage-{userId}`
     - Isolated configuration per account
@@ -127,13 +124,11 @@ const logout = async () => {
 ### Storage Safety Features
 
 1. **Corrupted Data Cleanup**
-
     - Automatic detection and removal of corrupted localStorage
     - Safe JSON parsing with fallbacks
     - Periodic cleanup every 5 minutes
 
 2. **SSR Safety**
-
     - Database operations only on client-side
     - Proper guards for server-side rendering
     - No "db is null" errors
@@ -208,13 +203,11 @@ If you experience slow switching:
 ### Planned Features
 
 1. **Thread Migration Tool**
-
     - Export anonymous threads
     - Import to authenticated account
     - User-controlled migration
 
 2. **Cross-Device Sync** (Optional)
-
     - Server-side thread backup
     - Multi-device synchronization
     - Encrypted cloud storage

@@ -99,21 +99,21 @@ export const ModelSettings = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 bg-muted/20 rounded-lg border border-muted">
-                            <div className="font-medium text-foreground mb-2">Free Models</div>
-                            <div className="text-sm text-muted-foreground">
-                                <ul className="list-disc pl-5 space-y-1">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div className="bg-muted/20 border-muted rounded-lg border p-4">
+                            <div className="text-foreground mb-2 font-medium">Free Models</div>
+                            <div className="text-muted-foreground text-sm">
+                                <ul className="list-disc space-y-1 pl-5">
                                     <li>Gemini 2.5 Flash Lite (server-funded)</li>
                                     <li>Qwen3 14B (via OpenRouter)</li>
                                     <li>Local models via Ollama or LM Studio</li>
                                 </ul>
                             </div>
                         </div>
-                        <div className="p-4 bg-muted/20 rounded-lg border border-muted">
-                            <div className="font-medium text-foreground mb-2">VT+ Benefits</div>
-                            <div className="text-sm text-muted-foreground">
-                                <ul className="list-disc pl-5 space-y-1">
+                        <div className="bg-muted/20 border-muted rounded-lg border p-4">
+                            <div className="text-foreground mb-2 font-medium">VT+ Benefits</div>
+                            <div className="text-muted-foreground text-sm">
+                                <ul className="list-disc space-y-1 pl-5">
                                     <li>Enhanced Gemini model limits</li>
                                     <li>Unlimited Gemini 2.5 Flash Lite</li>
                                     <li>Access to all premium research features</li>
@@ -151,18 +151,18 @@ export const ModelSettings = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
                             {providerModels.map((model) => (
                                 <div
                                     key={model.id}
-                                    className={`p-3 rounded-lg border ${
+                                    className={`rounded-lg border p-3 ${
                                         isModelAccessible(model)
                                             ? "bg-background/80 border-muted"
                                             : "bg-muted/10 border-muted/50"
                                     }`}
                                 >
-                                    <div className="flex items-start justify-between mb-2">
-                                        <div className="font-medium text-sm">{model.name}</div>
+                                    <div className="mb-2 flex items-start justify-between">
+                                        <div className="text-sm font-medium">{model.name}</div>
                                         <div className="flex gap-1">
                                             {model.isFree && (
                                                 <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
@@ -183,7 +183,7 @@ export const ModelSettings = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="text-xs text-muted-foreground space-y-1">
+                                    <div className="text-muted-foreground space-y-1 text-xs">
                                         <div>
                                             Context: {(model.contextWindow / 1000).toFixed(0)}K
                                             tokens
@@ -216,9 +216,9 @@ export const ModelSettings = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        <div className="p-4 bg-background/50 rounded-lg border border-muted">
-                            <div className="font-medium text-foreground mb-2">Free Models</div>
-                            <div className="text-sm text-muted-foreground">
+                        <div className="bg-background/50 border-muted rounded-lg border p-4">
+                            <div className="text-foreground mb-2 font-medium">Free Models</div>
+                            <div className="text-muted-foreground text-sm">
                                 <p className="mb-2">
                                     Gemini 2.5 Flash Lite and select OpenRouter models are available
                                     to all registered users without an API key.
@@ -231,11 +231,11 @@ export const ModelSettings = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 bg-background/50 rounded-lg border border-muted">
-                            <div className="font-medium text-foreground mb-2">
+                        <div className="bg-background/50 border-muted rounded-lg border p-4">
+                            <div className="text-foreground mb-2 font-medium">
                                 BYOK (Bring Your Own Key)
                             </div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-muted-foreground text-sm">
                                 <p className="mb-2">
                                     Add your own API keys in the API Keys section to access all
                                     models from that provider without rate limits.
@@ -247,9 +247,9 @@ export const ModelSettings = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 bg-background/50 rounded-lg border border-muted">
-                            <div className="font-medium text-foreground mb-2">VT+ Subscription</div>
-                            <div className="text-sm text-muted-foreground">
+                        <div className="bg-background/50 border-muted rounded-lg border p-4">
+                            <div className="text-foreground mb-2 font-medium">VT+ Subscription</div>
+                            <div className="text-muted-foreground text-sm">
                                 <p className="mb-2">
                                     VT+ subscribers get enhanced access to server-funded Gemini
                                     models with higher rate limits.

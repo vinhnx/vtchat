@@ -269,7 +269,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 10/day)                               |
 | **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 5/day)                             |
 | **Personal AI Memory (RAG)**      | ❌                                     | ✅ (AI Assistant with Memory - 2,000/month)                     |
-| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models        |
+| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models         |
 
 ## 🎯 Target Use Cases
 

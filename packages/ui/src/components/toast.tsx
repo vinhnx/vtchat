@@ -58,7 +58,7 @@ const ToastAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <ToastPrimitive.Action
         className={cn(
-            "hover:bg-secondary focus:ring-ring-3 group-[.destructive]:border-destructive/30 group-[.destructive]:focus:ring-destructive group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium transition-colors focus:outline-hidden focus:ring-1 disabled:pointer-events-none disabled:opacity-50 md:text-base",
+            "hover:bg-secondary focus:ring-ring-3 group-[.destructive]:border-destructive/30 group-[.destructive]:focus:ring-destructive group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-hidden inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium transition-colors focus:ring-1 disabled:pointer-events-none disabled:opacity-50 md:text-base",
             className,
         )}
         ref={ref}
@@ -73,7 +73,7 @@ const ToastClose = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <ToastPrimitive.Close
         className={cn(
-            "bg-muted/50 text-foreground/50 hover:text-foreground group-[.destructive]:text-destructive-foreground/50 group-[.destructive]:focus:ring-destructive group-[.destructive]:hover:text-destructive-foreground absolute right-2 top-2 rounded-lg p-1.5 opacity-100 transition-opacity focus:opacity-100 focus:outline-hidden focus:ring-1 group-hover:opacity-100",
+            "bg-muted/50 text-foreground/50 hover:text-foreground group-[.destructive]:text-destructive-foreground/50 group-[.destructive]:focus:ring-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-hidden absolute right-2 top-2 rounded-lg p-1.5 opacity-100 transition-opacity focus:opacity-100 focus:ring-1 group-hover:opacity-100",
             className,
         )}
         ref={ref}

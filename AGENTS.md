@@ -48,7 +48,6 @@
     - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
     - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
-
 ### Git Hooks
 
 - **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
@@ -128,7 +127,6 @@
 - **PII masking** - All string fields automatically masked using `maskPII()` function
 - **Environment-specific** configurations (development/production/test)
 - **Log levels**: debug (dev only), info, warn, error, fatal
-
 
 ### Bun
 

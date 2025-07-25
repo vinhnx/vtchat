@@ -22,7 +22,7 @@ const RadioGroupItem = React.forwardRef<
     return (
         <RadioGroupPrimitive.Item
             className={cn(
-                "text-primary focus-visible:ring-ring-3 aspect-square size-5 rounded-full border-2 focus:outline-hidden focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50",
+                "text-primary focus-visible:ring-ring-3 focus:outline-hidden aspect-square size-5 rounded-full border-2 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50",
                 className,
             )}
             ref={ref}

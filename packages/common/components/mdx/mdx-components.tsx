@@ -31,35 +31,35 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     p: ({ children }) => {
-        return <div className="mb-5 leading-relaxed text-base markdown-text">{children}</div>;
+        return <div className="markdown-text mb-5 text-base leading-relaxed">{children}</div>;
     },
     h1: ({ children }) => {
         return (
-            <h1 className="text-2xl font-bold border-b border-border pb-2 mb-6 mt-8 markdown-text tracking-tight">
+            <h1 className="border-border markdown-text mb-6 mt-8 border-b pb-2 text-2xl font-bold tracking-tight">
                 {children}
             </h1>
         );
     },
     h2: ({ children }) => {
         return (
-            <h2 className="text-xl font-semibold border-b border-border/60 pb-1 mb-4 mt-7 markdown-text tracking-tight">
+            <h2 className="border-border/60 markdown-text mb-4 mt-7 border-b pb-1 text-xl font-semibold tracking-tight">
                 {children}
             </h2>
         );
     },
     h3: ({ children }) => {
-        return <h3 className="text-lg font-medium mb-3 mt-6 markdown-text">{children}</h3>;
+        return <h3 className="markdown-text mb-3 mt-6 text-lg font-medium">{children}</h3>;
     },
     h4: ({ children }) => {
         return (
-            <h4 className="text-base font-medium opacity-90 mb-3 mt-5 markdown-text">{children}</h4>
+            <h4 className="markdown-text mb-3 mt-5 text-base font-medium opacity-90">{children}</h4>
         );
     },
     a: ({ href, children }) => {
         return (
             <a
                 href={href}
-                className="text-brand underline underline-offset-2 decoration-[0.08em] hover:no-underline transition-colors font-medium"
+                className="text-brand font-medium underline decoration-[0.08em] underline-offset-2 transition-colors hover:no-underline"
                 target={href?.startsWith("http") ? "_blank" : undefined}
                 rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
             >
@@ -68,30 +68,30 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     ul: ({ children }) => {
-        return <ul className="pl-6 my-4 space-y-2">{children}</ul>;
+        return <ul className="my-4 space-y-2 pl-6">{children}</ul>;
     },
     ol: ({ children }) => {
-        return <ol className="pl-6 my-4 space-y-2 list-decimal">{children}</ol>;
+        return <ol className="my-4 list-decimal space-y-2 pl-6">{children}</ol>;
     },
     li: ({ children }) => {
-        return <li className="my-2 leading-relaxed text-base markdown-text pl-1">{children}</li>;
+        return <li className="markdown-text my-2 pl-1 text-base leading-relaxed">{children}</li>;
     },
     blockquote: ({ children }) => {
         return (
-            <blockquote className="border-l-4 border-border pl-4 py-1 italic my-6 text-muted-foreground bg-secondary/20 rounded-r-md">
+            <blockquote className="border-border text-muted-foreground bg-secondary/20 my-6 rounded-r-md border-l-4 py-1 pl-4 italic">
                 {children}
             </blockquote>
         );
     },
     hr: () => {
-        return <hr className="my-8 border-border" />;
+        return <hr className="border-border my-8" />;
     },
     img: ({ src, alt, ...props }) => {
         return (
             <img
                 src={src}
                 alt={alt || "Image"}
-                className="rounded-md my-6 max-w-full h-auto shadow-sm mx-auto"
+                className="mx-auto my-6 h-auto max-w-full rounded-md shadow-sm"
                 loading="lazy"
                 {...props}
             />
@@ -99,21 +99,21 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     },
     table: ({ children }) => {
         return (
-            <div className="overflow-x-auto my-6 rounded-lg border border-border">
-                <table className="w-full border-collapse bg-background">{children}</table>
+            <div className="border-border my-6 overflow-x-auto rounded-lg border">
+                <table className="bg-background w-full border-collapse">{children}</table>
             </div>
         );
     },
     th: ({ children }) => {
         return (
-            <th className="text-sm font-semibold bg-tertiary px-4 py-2.5 border-b border-r last:border-r-0 border-border markdown-text text-left">
+            <th className="bg-tertiary border-border markdown-text border-b border-r px-4 py-2.5 text-left text-sm font-semibold last:border-r-0">
                 {children}
             </th>
         );
     },
     td: ({ children }) => {
         return (
-            <td className="px-4 py-3 border-b border-r last:border-r-0 border-border markdown-text align-top">
+            <td className="border-border markdown-text border-b border-r px-4 py-3 align-top last:border-r-0">
                 {children}
             </td>
         );
@@ -132,7 +132,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     code: ({ children, className }) => {
         if (!className) {
             return (
-                <code className="font-mono text-sm bg-secondary border-border border rounded-md px-1.5 py-0.5 whitespace-nowrap">
+                <code className="bg-secondary border-border whitespace-nowrap rounded-md border px-1.5 py-0.5 font-mono text-sm">
                     {children}
                 </code>
             );
@@ -141,9 +141,9 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return <CodeBlock code={String(children).replace(/<FadeEffect \/>$/, "")} lang={lang} />;
     },
     strong: ({ children }) => {
-        return <strong className="font-semibold markdown-text">{children}</strong>;
+        return <strong className="markdown-text font-semibold">{children}</strong>;
     },
     em: ({ children }) => {
-        return <em className="italic markdown-text">{children}</em>;
+        return <em className="markdown-text italic">{children}</em>;
     },
 };

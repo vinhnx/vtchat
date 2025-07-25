@@ -59,14 +59,15 @@ We've implemented CSS variables for consistent styling:
 ```css
 :root {
     /* Typography */
-    --markdown-font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --markdown-font-family:
+        'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     --markdown-font-size: 16px;
     --markdown-line-height: 1.5;
     --markdown-font-weight-normal: 400;
     --markdown-font-weight-medium: 500;
     --markdown-font-weight-semibold: 600;
     --markdown-font-weight-bold: 700;
-    
+
     /* Spacing */
     --markdown-paragraph-spacing: 1.25rem;
     --markdown-list-spacing: 0.625rem;
@@ -83,20 +84,20 @@ We've enhanced the Tailwind classes for markdown elements:
 ```javascript
 export const markdownStyles = {
     // Base prose styling with animation and theme support
-    "animate-fade-in prose prose-base min-w-full dark:prose-invert": true,
+    'animate-fade-in prose prose-base min-w-full dark:prose-invert': true,
 
     // Improved spacing and layout
-    "prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base": true,
-    "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold prose-headings:tracking-tight": true,
+    'prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base': true,
+    'prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold prose-headings:tracking-tight': true,
 
     // Heading hierarchy with improved typography
-    "prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:mb-6": true,
-    "prose-h2:text-xl prose-h2:font-semibold prose-h2:border-b prose-h2:border-border/60 prose-h2:pb-1": true,
-    "prose-h3:text-lg prose-h3:font-medium": true,
-    "prose-h4:text-base prose-h4:font-medium prose-h4:opacity-90": true,
-    
+    'prose-h1:text-2xl prose-h1:font-bold prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:mb-6': true,
+    'prose-h2:text-xl prose-h2:font-semibold prose-h2:border-b prose-h2:border-border/60 prose-h2:pb-1': true,
+    'prose-h3:text-lg prose-h3:font-medium': true,
+    'prose-h4:text-base prose-h4:font-medium prose-h4:opacity-90': true,
+
     // Additional styling for other elements...
-}
+};
 ```
 
 ## Dark Mode Support
@@ -123,7 +124,7 @@ We've added specific optimizations for mobile devices:
         --markdown-paragraph-spacing: 1rem;
         --markdown-element-spacing: 0.875rem;
     }
-    
+
     /* Additional mobile-specific adjustments... */
 }
 ```

@@ -72,12 +72,12 @@ export const ReasoningModeSettings = () => {
                     <TypographyH3 className="text-foreground">Reasoning Mode</TypographyH3>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-center py-6">
-                        <div className="mx-auto w-fit rounded-full bg-muted p-4">
-                            <div className="h-8 w-8 bg-foreground rounded" />
+                    <div className="py-6 text-center">
+                        <div className="bg-muted mx-auto w-fit rounded-full p-4">
+                            <div className="bg-foreground h-8 w-8 rounded" />
                         </div>
-                        <p className="mt-3 text-base font-medium text-foreground">VT+ Feature</p>
-                        <p className="mt-1 text-sm text-muted-foreground">
+                        <p className="text-foreground mt-3 text-base font-medium">VT+ Feature</p>
+                        <p className="text-muted-foreground mt-1 text-sm">
                             Advanced reasoning capabilities for complex problem-solving. Available
                             exclusively for VT+ subscribers.
                         </p>
@@ -106,10 +106,10 @@ export const ReasoningModeSettings = () => {
                 <CardContent>
                     <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
-                            <Label className="text-base font-medium text-foreground">
+                            <Label className="text-foreground text-base font-medium">
                                 Enable Reasoning
                             </Label>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                                 Show detailed thinking process when analyzing complex problems
                             </p>
                         </div>
@@ -135,14 +135,14 @@ export const ReasoningModeSettings = () => {
                                     {/* Max Depth Setting */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <Label className="text-base font-medium text-foreground">
+                                            <Label className="text-foreground text-base font-medium">
                                                 Reasoning Depth
                                             </Label>
-                                            <span className="text-sm text-muted-foreground">
+                                            <span className="text-muted-foreground text-sm">
                                                 {thinkingMode.maxDepth} steps
                                             </span>
                                         </div>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Controls how deeply the AI reasons through problems
                                         </p>
                                         <Slider
@@ -158,15 +158,15 @@ export const ReasoningModeSettings = () => {
                                     {/* Budget Setting */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <Label className="text-base font-medium text-foreground">
+                                            <Label className="text-foreground text-base font-medium">
                                                 Thinking Budget
                                             </Label>
-                                            <span className="text-sm text-muted-foreground">
+                                            <span className="text-muted-foreground text-sm">
                                                 {REASONING_BUDGETS[thinkingMode.budget]?.label ||
                                                     "Custom"}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Balances response speed vs thinking thoroughness
                                         </p>
                                         <Slider

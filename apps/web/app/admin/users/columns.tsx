@@ -97,7 +97,7 @@ export const createColumns = ({ onUserAction }: ColumnsProps): ColumnDef<User>[]
                     </Avatar>
                     <div>
                         <div className="font-medium">{user.name}</div>
-                        <div className="text-sm text-muted-foreground">{user.email}</div>
+                        <div className="text-muted-foreground text-sm">{user.email}</div>
                     </div>
                 </div>
             );

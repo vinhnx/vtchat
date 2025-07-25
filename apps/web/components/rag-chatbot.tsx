@@ -318,7 +318,7 @@ export function RAGChatbot() {
                                 <div className="space-y-3 p-3 pb-20">
                                     {messages.length === 0 && (
                                         <div className="text-muted-foreground py-12 text-center">
-                                            <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border font-bold text-lg">
+                                            <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border text-lg font-bold">
                                                 VT
                                             </div>
                                             <h3 className="text-foreground mb-2 text-lg font-medium">
@@ -419,7 +419,7 @@ export function RAGChatbot() {
                     </MobilePullToRefresh>
 
                     {/* Mobile Chat Input */}
-                    <div className="border-t bg-background p-3">
+                    <div className="bg-background border-t p-3">
                         {/* Show message when no API keys */}
                         {!canChat && (
                             <div className="mb-3 rounded-lg bg-amber-50 p-3 text-sm">
@@ -487,7 +487,7 @@ export function RAGChatbot() {
                     <div className="space-y-4 p-2 sm:p-4">
                         {messages.length === 0 && (
                             <div className="text-muted-foreground py-16 text-center">
-                                <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border font-bold text-lg">
+                                <div className="bg-brand/10 text-brand border-brand/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border text-lg font-bold">
                                     VT
                                 </div>
                                 <h3 className="text-foreground mb-2 text-lg font-medium">

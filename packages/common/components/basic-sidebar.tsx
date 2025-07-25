@@ -8,7 +8,7 @@ interface BasicSidebarProps {
 
 export const BasicSidebar: React.FC<BasicSidebarProps> = ({ forceMobile = false }) => {
     return (
-        <div className="max-w-[300px] w-auto">
+        <div className="w-auto max-w-[300px]">
             <Sidebar forceMobile={forceMobile} />
         </div>
     );

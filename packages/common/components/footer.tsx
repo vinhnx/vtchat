@@ -39,7 +39,7 @@ export const Footer = () => {
     return (
         <footer className="py-4 md:py-16">
             <div className="mx-auto max-w-5xl px-4 md:px-6">
-                <div className="my-2 md:my-8 flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm">
+                <div className="my-2 flex flex-wrap justify-center gap-3 text-xs md:my-8 md:gap-6 md:text-sm">
                     {links.map((link, index) => (
                         <Link
                             key={index}

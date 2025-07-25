@@ -119,7 +119,7 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
                     style={{ ...floatingStyles, zIndex: 999 }}
                     {...getFloatingProps()}
                     className={cn(
-                        "bg-background text-card-foreground isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md outline-hidden",
+                        "bg-background text-card-foreground outline-hidden isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md",
                         "fade-in-0 zoom-in-95 animate-in",
                         className,
                     )}

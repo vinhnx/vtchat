@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex min-h-screen items-center justify-center">
                 <LoadingSpinner size="lg" text="Loading admin dashboard..." />
             </div>
         );
@@ -53,9 +53,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="bg-background min-h-screen">
             {/* Header with increased top offset */}
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
                 <div className="container mx-auto px-6 py-6">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -70,7 +70,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 onClick={() => router.push("/")}
                                 className="mr-2"
                             >
-                                <ArrowLeft className="h-4 w-4 mr-2" />
+                                <ArrowLeft className="mr-2 h-4 w-4" />
                             </Button>
                         </div>
 
@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 size="sm"
                                 onClick={() => router.push("/admin")}
                             >
-                                <Terminal className="h-4 w-4 mr-2" />
+                                <Terminal className="mr-2 h-4 w-4" />
                                 VT Terminal
                             </Button>
 
@@ -89,7 +89,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 size="sm"
                                 onClick={() => router.push("/admin/users")}
                             >
-                                <Users className="h-4 w-4 mr-2" />
+                                <Users className="mr-2 h-4 w-4" />
                                 Users
                             </Button>
 
@@ -98,7 +98,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 size="sm"
                                 onClick={() => router.push("/admin/logs")}
                             >
-                                <Activity className="h-4 w-4 mr-2" />
+                                <Activity className="mr-2 h-4 w-4" />
                                 Logs
                             </Button>
                             <Button
@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 size="sm"
                                 onClick={() => router.push("/admin/security")}
                             >
-                                <Shield className="h-4 w-4 mr-2" />
+                                <Shield className="mr-2 h-4 w-4" />
                                 Security
                             </Button>
                         </div>

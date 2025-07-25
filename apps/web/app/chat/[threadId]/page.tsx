@@ -263,7 +263,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     }
 
     return (
-        <div className="relative flex h-dvh w-full flex-col bg-muted/50">
+        <div className="bg-muted/50 relative flex h-dvh w-full flex-col">
             <div className="flex-1 overflow-hidden">
                 <div
                     className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
@@ -279,13 +279,13 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     <TableOfMessages />
                 </div>
             </div>
-            <div className="flex-shrink-0">
+            <div className="pb-safe-area-inset-bottom flex-shrink-0">
                 <ChatInput />
             </div>
 
             {/* ChatFooter pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4">
                     <div className="pointer-events-auto">
                         <Footer />
                     </div>

@@ -10,7 +10,7 @@ export const MathCalculatorIndicator = memo(({ isCalculating }: MathCalculatorIn
     if (!isCalculating) return null;
 
     return (
-        <div className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800 p-2">
+        <div className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-800">
             <div className="flex items-center gap-1">
                 <Sigma className="text-green-600" size={16} />
                 <Loader2 className="animate-spin text-green-600" size={14} />

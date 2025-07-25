@@ -99,7 +99,7 @@ export function SendStopButton({
                             size="icon-sm"
                             tooltip="Send Message"
                             variant="default"
-                            className="transition-all duration-200 hover:bg-muted-foreground/10"
+                            className="hover:bg-muted-foreground/10 transition-all duration-200"
                         >
                             <ArrowUp size={ICON_SIZES.small} strokeWidth={2} />
                         </Button>

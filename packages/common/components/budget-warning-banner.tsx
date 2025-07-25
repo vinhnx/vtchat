@@ -64,19 +64,19 @@ export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
 
     return (
         <div className={cn("sticky top-0 z-50", className)}>
-            <Alert className="rounded-none border-x-0 border-t-0 border-border bg-muted/50">
+            <Alert className="border-border bg-muted/50 rounded-none border-x-0 border-t-0">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         {isExceeded ? (
-                            <DollarSign className="h-5 w-5 text-foreground" />
+                            <DollarSign className="text-foreground h-5 w-5" />
                         ) : (
-                            <AlertCircle className="h-5 w-5 text-muted-foreground" />
+                            <AlertCircle className="text-muted-foreground h-5 w-5" />
                         )}
                         <div>
-                            <AlertTitle className="text-sm font-semibold text-foreground">
+                            <AlertTitle className="text-foreground text-sm font-semibold">
                                 {isExceeded ? "Budget Limit Reached" : "Budget Warning"}
                             </AlertTitle>
-                            <AlertDescription className="text-xs text-muted-foreground">
+                            <AlertDescription className="text-muted-foreground text-xs">
                                 {isExceeded
                                     ? `Monthly budget of $${global.budgetLimitUSD} exceeded. Gemini models are temporarily unavailable. Use your own API key for unlimited access.`
                                     : `${global.percentageUsed.toFixed(1)}% of monthly budget used ($${global.totalCostUSD.toFixed(2)} of $${global.budgetLimitUSD}). Approaching limit.`}
@@ -87,7 +87,7 @@ export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
                         variant="ghost"
                         size="sm"
                         onClick={() => setDismissed(true)}
-                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
                     >
                         <X className="h-4 w-4" />
                     </Button>

@@ -44,12 +44,10 @@ TTL: 300
 ### For Matbao.net Users:
 
 1. **Login to Matbao Control Panel**
-
     - Go to: https://matbao.net
     - Login with your account credentials
 
 2. **Navigate to DNS Management**
-
     - Find "Quản lý tên miền" (Domain Management)
     - Select vtchat.io.vn
     - Go to "Quản lý DNS" (DNS Management)
@@ -119,7 +117,6 @@ Once DNS is configured and certificate is ready:
     ```
 
 2. **Update Application URLs**
-
     - Verify all references to vtchat.fly.dev in production
     - Update any hardcoded URLs if needed
 

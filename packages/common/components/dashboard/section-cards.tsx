@@ -11,11 +11,11 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 
 export function SectionCards() {
     return (
-        <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-            <Card className="@container/card bg-gradient-to-t from-primary/5 to-card shadow-xs">
+        <div className="@xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 lg:px-6">
+            <Card className="@container/card from-primary/5 to-card shadow-xs bg-gradient-to-t">
                 <CardHeader>
                     <CardDescription>Total Revenue</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         $1,250.00
                     </CardTitle>
                     <CardAction>
@@ -32,10 +32,10 @@ export function SectionCards() {
                     <div className="text-muted-foreground">Visitors for the last 6 months</div>
                 </CardFooter>
             </Card>
-            <Card className="@container/card bg-gradient-to-t from-primary/5 to-card shadow-xs">
+            <Card className="@container/card from-primary/5 to-card shadow-xs bg-gradient-to-t">
                 <CardHeader>
                     <CardDescription>New Customers</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         1,234
                     </CardTitle>
                     <CardAction>
@@ -52,10 +52,10 @@ export function SectionCards() {
                     <div className="text-muted-foreground">Acquisition needs attention</div>
                 </CardFooter>
             </Card>
-            <Card className="@container/card bg-gradient-to-t from-primary/5 to-card shadow-xs">
+            <Card className="@container/card from-primary/5 to-card shadow-xs bg-gradient-to-t">
                 <CardHeader>
                     <CardDescription>Active Accounts</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         45,678
                     </CardTitle>
                     <CardAction>
@@ -72,10 +72,10 @@ export function SectionCards() {
                     <div className="text-muted-foreground">Engagement exceed targets</div>
                 </CardFooter>
             </Card>
-            <Card className="@container/card bg-gradient-to-t from-primary/5 to-card shadow-xs">
+            <Card className="@container/card from-primary/5 to-card shadow-xs bg-gradient-to-t">
                 <CardHeader>
                     <CardDescription>Growth Rate</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         4.5%
                     </CardTitle>
                     <CardAction>

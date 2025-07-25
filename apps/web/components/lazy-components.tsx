@@ -69,7 +69,7 @@ export function ChatInputWithSuspense({ showGreeting = false }: { showGreeting?:
 
 export function FooterWithSuspense() {
     return (
-        <Suspense fallback={<div className="h-16 bg-muted animate-pulse rounded" />}>
+        <Suspense fallback={<div className="bg-muted h-16 animate-pulse rounded" />}>
             <LazyFooter />
         </Suspense>
     );

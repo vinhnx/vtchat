@@ -104,7 +104,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                             <div
                                 className={cn(
                                     "relative px-4 py-3 text-[15px] font-medium leading-relaxed",
-                                    "selection:bg-blue-200/30 text-white",
+                                    "text-white selection:bg-blue-200/30",
                                     {
                                         "pb-14": isExpanded,
                                         markdownStyles,

@@ -5,6 +5,17 @@
     display: flex;
     flex-direction: column;
     height: 100vh !important; /* Ensure full viewport height */
+    z-index: 50; /* Ensure sidebar is above other content but below modals */
+}
+
+/* Force hide desktop sidebars on mobile */
+@media (max-width: 1024px) {
+    .sidebar-container:not([data-mobile-sidebar]) {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 }
 
 .sidebar-expanded {
@@ -72,4 +83,123 @@
 main.flex.min-h-svh.flex-1.flex-col.bg-background {
     height: 100vh !important;
     min-height: 100vh !important;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 1024px) {
+    /* Ensure mobile content doesn't get hidden behind PWA banner */
+    .mobile-content-container {
+        padding-bottom: 80px; /* Space for PWA banner */
+    }
+
+    /* Hide ALL desktop sidebars on mobile/tablet */
+    .sidebar-container:not([data-mobile-sidebar]) {
+        display: none !important;
+    }
+
+    /* Mobile floating buttons positioning */
+    .mobile-floating-buttons {
+        z-index: 100 !important;
+    }
+
+    /* PWA banner positioning */
+    .pwa-install-banner {
+        z-index: 90 !important;
+    }
+}
+
+/* Z-index hierarchy for proper layering */
+.z-modal {
+    z-index: 250 !important;
+}
+.z-sidebar-mobile-overlay {
+    z-index: 300 !important;
+}
+.z-sidebar-mobile-content {
+    z-index: 301 !important;
+}
+.z-sidebar-mobile {
+    z-index: 302 !important;
+}
+.z-dropdown {
+    z-index: 150 !important;
+}
+.z-floating-buttons {
+    z-index: 100 !important;
+}
+.z-pwa-banner {
+    z-index: 90 !important;
+}
+.z-sidebar-desktop {
+    z-index: 50 !important;
+}
+
+/* Mobile sidebar modal styles */
+@media (max-width: 1024px) {
+    /* Hide all desktop sidebars on mobile/tablet */
+    .desktop-sidebar {
+        display: none !important;
+    }
+
+    .mobile-sidebar-modal {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9999 !important;
+        display: flex !important;
+    }
+
+    .mobile-sidebar-backdrop {
+        position: absolute !important;
+        inset: 0 !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(2px) !important;
+        z-index: 9999 !important;
+    }
+
+    .mobile-sidebar-content {
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 300px !important;
+        max-width: 300px !important;
+        background: var(--tertiary) !important;
+        box-shadow:
+            0 10px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        z-index: 10000 !important;
+    }
+
+    .mobile-sidebar-content.left {
+        left: 0 !important;
+    }
+
+    .mobile-sidebar-content.right {
+        right: 0 !important;
+    }
+}
+
+/* Emergency mobile sidebar fix - force hide all non-modal sidebars */
+@media (max-width: 1024px) {
+    /* Hide any sidebar that's not inside the mobile modal */
+    .sidebar-container:not([data-mobile-sidebar]) {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: translateX(-100%) !important;
+    }
+
+    /* Ensure mobile modal is always on top */
+    [data-mobile-sidebar] {
+        z-index: 10000 !important;
+        position: relative !important;
+    }
+
+    /* Hide desktop sidebar containers completely */
+    .desktop-sidebar {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 }

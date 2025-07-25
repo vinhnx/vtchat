@@ -57,7 +57,7 @@ export const LinkFavicon: FC<LinkFaviconType> = ({ link, className, size = "sm" 
             <div className="border-foreground/10 absolute inset-0 z-[2] rounded-full border" />
             <Image
                 alt="favicon"
-                className={cn("absolute inset-0 h-full w-full rounded-xs object-cover", className)}
+                className={cn("rounded-xs absolute inset-0 h-full w-full object-cover", className)}
                 onError={() => setError(true)}
                 src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
                 width={128}

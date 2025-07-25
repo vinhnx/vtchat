@@ -7,12 +7,14 @@ This document outlines the implementation of a unified access control system tha
 ## Problem Solved
 
 ### Before
+
 - Scattered hardcoded string comparisons: `user?.planSlug === 'vt_plus'`
 - Magic strings: `'vt_plus'` used directly in multiple files
 - Inconsistent plan checking logic across different modules
 - Potential for typos and inconsistent behavior
 
 ### After
+
 - Single source of truth for all access control logic
 - Enum-based plan checking: `PlanSlug.VT_PLUS`
 - Unified functions for all plan comparisons
@@ -25,6 +27,7 @@ This document outlines the implementation of a unified access control system tha
 **File:** `packages/shared/utils/access-control.ts`
 
 **Core Functions:**
+
 - `hasVTPlusAccess(user)` - Check if user has VT+ access
 - `hasVTPlusAccessByPlan(planSlug)` - Check VT+ access by plan slug string
 - `hasVTBaseAccess(user)` - Check if user has base plan access
@@ -36,6 +39,7 @@ This document outlines the implementation of a unified access control system tha
 - `getNormalizedPlanSlug(planSlug)` - Handle null/undefined cases
 
 **Constants:**
+
 ```typescript
 export const ACCESS_CONTROL = {
     VT_PLUS_PLAN: PlanSlug.VT_PLUS,
@@ -47,10 +51,12 @@ export const ACCESS_CONTROL = {
 ### 2. Updated Core Quota System
 
 **Files Modified:**
+
 - `packages/common/src/lib/geminiWithQuota.ts`
 - `packages/ai/workflow/utils.ts`
 
 **Changes:**
+
 - Replaced `user?.planSlug === 'vt_plus'` with `isEligibleForQuotaConsumption(user, isByokKey)`
 - Uses unified access control for all quota consumption decisions
 - Consistent behavior across all AI workflow tasks
@@ -58,6 +64,7 @@ export const ACCESS_CONTROL = {
 ### 3. Replaced All Magic Strings
 
 **Files Updated:**
+
 - `packages/common/components/rate-limit-usage-meter.tsx`
 - `packages/common/__tests__/gemini-logic.test.ts`
 - `packages/common/hooks/__tests__/use-logout.test.ts`
@@ -65,6 +72,7 @@ export const ACCESS_CONTROL = {
 - `apps/web/app/api/completion/route.ts`
 
 **Changes:**
+
 - All `'vt_plus'` strings replaced with `PlanSlug.VT_PLUS`
 - Added proper imports for the enum
 - Maintained backward compatibility
@@ -72,10 +80,12 @@ export const ACCESS_CONTROL = {
 ### 4. Updated Utilities to Use Unified Logic
 
 **Files Modified:**
+
 - `packages/shared/utils/subscription.ts`
 - `packages/shared/utils/plus-defaults.ts`
 
 **Changes:**
+
 - `isVtPlus: hasVTPlusAccessByPlan(subscriptionData.planSlug)`
 - `canUpgrade: canUserUpgrade({ planSlug: subscriptionData.planSlug })`
 - `isPlusUser = hasVTPlusAccessByPlan(plan)`
@@ -85,6 +95,7 @@ export const ACCESS_CONTROL = {
 **File:** `packages/shared/package.json`
 
 **Added:**
+
 ```json
 "./utils/access-control": "./utils/access-control.ts"
 ```
@@ -92,23 +103,28 @@ export const ACCESS_CONTROL = {
 ## Benefits
 
 ### 1. Single Source of Truth
+
 All plan checking logic is centralized in one location, making it easier to:
+
 - Maintain consistency
 - Add new plan types
 - Debug access control issues
 - Update business logic
 
 ### 2. Type Safety
+
 - Eliminates magic strings
 - Uses TypeScript enums for compile-time checking
 - Reduces potential for typos
 
 ### 3. Better Testing
+
 - Unified functions are easier to unit test
 - Consistent behavior across all modules
 - Easier to mock for testing
 
 ### 4. Maintainability
+
 - Changes to access control logic only need to be made in one place
 - Clear function names make intent obvious
 - Better code documentation
@@ -116,6 +132,7 @@ All plan checking logic is centralized in one location, making it easier to:
 ## Migration Guide
 
 ### Before
+
 ```typescript
 // Old scattered checks
 if (user?.planSlug === 'vt_plus') {
@@ -130,6 +147,7 @@ const canUpgrade = user.planSlug !== 'vt_plus';
 ```
 
 ### After
+
 ```typescript
 import { hasVTPlusAccess, canUpgrade, PlanSlug } from '@repo/shared/utils/access-control';
 
@@ -148,12 +166,14 @@ const userCanUpgrade = canUpgrade(user);
 ## Testing
 
 ### Current Status
+
 - ✅ Build passes successfully
 - ✅ All imports and exports configured correctly
 - ✅ Type checking passes
 - 🔄 **Next:** Runtime testing needed
 
 ### Test Plan
+
 1. **Pro Search**: Should consume "PS" quota correctly
 2. **Deep Research**: Should continue consuming "DR" quota correctly
 3. **RAG**: Should consume "RAG" quota correctly (investigate session.user.planSlug)
@@ -162,18 +182,22 @@ const userCanUpgrade = canUpgrade(user);
 ## Files Changed
 
 ### Core System
+
 - `packages/shared/utils/access-control.ts` (new)
 - `packages/shared/package.json` (export added)
 
 ### Quota System
+
 - `packages/common/src/lib/geminiWithQuota.ts`
 - `packages/ai/workflow/utils.ts`
 
 ### Utilities
+
 - `packages/shared/utils/subscription.ts`
 - `packages/shared/utils/plus-defaults.ts`
 
 ### Components & Tests
+
 - `packages/common/components/rate-limit-usage-meter.tsx`
 - `packages/common/__tests__/gemini-logic.test.ts`
 - `packages/common/hooks/__tests__/use-logout.test.ts`

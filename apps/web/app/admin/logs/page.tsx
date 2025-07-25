@@ -130,31 +130,31 @@ export default function AdminLogsPage() {
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
-                            <Activity className="h-4 w-4 text-muted-foreground" />
+                            <Activity className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{stats.totalSessions}</div>
-                            <p className="text-xs text-muted-foreground">All user sessions</p>
+                            <p className="text-muted-foreground text-xs">All user sessions</p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Active Sessions</CardTitle>
-                            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                            <CheckCircle className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{stats.activeSessions}</div>
-                            <p className="text-xs text-muted-foreground">Currently active</p>
+                            <p className="text-muted-foreground text-xs">Currently active</p>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Impersonated</CardTitle>
-                            <Eye className="h-4 w-4 text-muted-foreground" />
+                            <Eye className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{stats.impersonatedSessions}</div>
-                            <p className="text-xs text-muted-foreground">Admin impersonation</p>
+                            <p className="text-muted-foreground text-xs">Admin impersonation</p>
                         </CardContent>
                     </Card>
                 </div>

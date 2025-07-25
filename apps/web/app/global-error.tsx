@@ -33,7 +33,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                     <div className="w-full max-w-md p-6 text-center">
                         <h1 className="mb-2 text-2xl font-medium">500</h1>
                         <h2 className="mb-3 text-lg font-medium">Something went wrong</h2>
-                        <p className="mb-4 text-sm text-muted-foreground">
+                        <p className="text-muted-foreground mb-4 text-sm">
                             An unexpected error occurred. Please try refreshing the page.
                         </p>
                         <div className="flex justify-center space-x-3">

@@ -17,11 +17,12 @@ Our comprehensive verification confirms that the database maintenance system:
 ## 📋 **What the System Actually Does**
 
 ### **Hourly Maintenance** (Real SQL Operations)
+
 ```sql
 -- 1. Cleanup expired sessions
 DELETE FROM sessions WHERE expires_at <= NOW();
 
--- 2. Refresh materialized views 
+-- 2. Refresh materialized views
 SELECT refresh_subscription_summary();
 
 -- 3. Update table statistics
@@ -29,10 +30,11 @@ ANALYZE users, user_subscriptions, sessions;
 ```
 
 ### **Weekly Maintenance** (Real SQL Operations)
+
 ```sql
 -- 1. Vacuum and analyze critical tables
 VACUUM ANALYZE users;
-VACUUM ANALYZE user_subscriptions; 
+VACUUM ANALYZE user_subscriptions;
 VACUUM ANALYZE sessions;
 
 -- 2. Monitor index usage
@@ -43,6 +45,7 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary;
 ```
 
 ### **Health Monitoring** (Real Database Checks)
+
 ```sql
 -- 1. Check for table bloat
 SELECT tablename, n_dead_tup, n_live_tup FROM pg_stat_user_tables;
@@ -59,6 +62,7 @@ SELECT COUNT(*) as expired_sessions FROM sessions WHERE expires_at <= NOW();
 ## 🔧 **How to Verify It's Working**
 
 ### **Method 1: Check GitHub Actions** (Recommended)
+
 ```bash
 # View scheduled maintenance runs
 gh run list --workflow=database-maintenance.yml
@@ -71,6 +75,7 @@ gh workflow run database-maintenance.yml -f maintenance_type=hourly
 ```
 
 ### **Method 2: Monitor Fly.io Logs**
+
 ```bash
 # Watch real-time logs during maintenance
 fly logs --app vtchat | grep -i maintenance
@@ -79,12 +84,14 @@ fly logs --app vtchat | grep -i maintenance
 fly logs --app vtchat | grep "Database maintenance"
 ```
 
-### **Method 3: Admin Dashboard** 
+### **Method 3: Admin Dashboard**
+
 - Visit: `https://vtchat.io.vn/admin/database-maintenance`
 - Check maintenance history, success rates, and performance metrics
 - View real-time database health statistics
 
 ### **Method 4: Direct Database Verification**
+
 ```sql
 -- Connect to your database and run:
 
@@ -97,8 +104,8 @@ SELECT COUNT(*) FROM user_subscription_summary;
 -- Should match user count if views are refreshed
 
 -- Check table statistics update time
-SELECT schemaname, tablename, last_analyze 
-FROM pg_stat_user_tables 
+SELECT schemaname, tablename, last_analyze
+FROM pg_stat_user_tables
 WHERE schemaname = 'public';
 -- last_analyze should be recent
 ```
@@ -108,6 +115,7 @@ WHERE schemaname = 'public';
 ## 📊 **Recording and Logging System**
 
 ### **Structured Logging** (What Gets Recorded)
+
 ```typescript
 // Every maintenance run logs:
 {
@@ -121,11 +129,13 @@ WHERE schemaname = 'public';
 ```
 
 ### **Metrics Storage** (In-Memory + Persistent Logs)
+
 - **In-Memory**: Last 1000 maintenance runs for dashboard
 - **Persistent**: All logs stored in application logs (searchable)
 - **Alerts**: Automatic alerts on consecutive failures or high duration
 
 ### **Performance Tracking**
+
 - Success rate percentage
 - Average execution duration
 - Error frequency and patterns
@@ -139,7 +149,7 @@ The system automatically alerts when:
 
 1. **3+ consecutive failures** occur
 2. **Execution time > 5 minutes** (unusually long)
-3. **More than 2 retries needed** 
+3. **More than 2 retries needed**
 4. **Fatal error** encountered
 5. **1000+ expired sessions** accumulate
 
@@ -150,15 +160,17 @@ Alerts are logged with structured data for monitoring systems.
 ## 🔄 **Scheduling & Automation**
 
 ### **Production Schedules**
+
 - **Hourly**: `0 * * * *` - Session cleanup, view refresh, statistics
 - **Weekly**: `0 2 * * 0` - VACUUM, full index maintenance
 
 ### **Execution Path**
+
 ```
-GitHub Actions (Scheduler) 
+GitHub Actions (Scheduler)
     ↓ Calls authenticated API endpoint
 VTChat App (Fly.io)
-    ↓ Executes real SQL operations  
+    ↓ Executes real SQL operations
 Neon Database
     ↓ Returns results and metrics
 Logging & Monitoring Systems
@@ -172,7 +184,7 @@ Use this checklist to confirm maintenance is working:
 
 - [ ] **GitHub Actions runs on schedule** - Check actions tab
 - [ ] **API endpoints respond correctly** - Test cron endpoints
-- [ ] **Database operations execute** - Monitor SQL activity  
+- [ ] **Database operations execute** - Monitor SQL activity
 - [ ] **Logs show execution details** - Check structured logging
 - [ ] **Metrics are recorded** - View admin dashboard
 - [ ] **Errors are handled gracefully** - Review error logs
@@ -187,7 +199,7 @@ Use this checklist to confirm maintenance is working:
 # 1. Check if maintenance is scheduled and running
 gh workflow list | grep database-maintenance
 
-# 2. View recent maintenance activity  
+# 2. View recent maintenance activity
 fly logs --app vtchat | grep "maintenance completed"
 
 # 3. Test API endpoint security
@@ -206,14 +218,16 @@ fly logs --app vtchat | grep "cleanup_expired_sessions\|refresh_subscription_sum
 ## 📈 **Expected Performance Impact**
 
 ### **Before Maintenance System**
+
 - Manual session cleanup (if any)
 - Query performance degradation over time
 - No systematic database health monitoring
 - Subscription checks: ~50-100ms
 
-### **After Maintenance System** 
+### **After Maintenance System**
+
 - Automated session cleanup every hour
-- Consistent query performance 
+- Consistent query performance
 - Proactive health monitoring with alerts
 - Subscription checks: ~5-10ms (via materialized views)
 
@@ -222,15 +236,19 @@ fly logs --app vtchat | grep "cleanup_expired_sessions\|refresh_subscription_sum
 ## 🔍 **Common Issues & Solutions**
 
 ### **Issue**: No maintenance runs visible
+
 **Solution**: Check CRON_SECRET_TOKEN is set in GitHub secrets and Fly.io
 
 ### **Issue**: Authentication errors in logs
+
 **Solution**: Verify secrets match between GitHub and Fly.io
 
 ### **Issue**: Database connection errors
+
 **Solution**: Check DATABASE_URL is accessible from Fly.io app
 
 ### **Issue**: High execution times
+
 **Solution**: Review database load and consider scaling
 
 ---

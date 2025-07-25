@@ -79,7 +79,7 @@ export function RateLimitMeter() {
                             </span>
                         </div>
                         <Progress
-                            className="h-2 bg-muted"
+                            className="bg-muted h-2"
                             indicatorClassName="bg-foreground"
                             value={dailyUsagePercent}
                         />
@@ -98,7 +98,7 @@ export function RateLimitMeter() {
                             </span>
                         </div>
                         {isAtMinuteLimit && (
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-muted-foreground text-xs">
                                 Next request available{" "}
                                 {getFormatDistanceToNow(status.resetTime.minute, {
                                     addSuffix: true,
@@ -109,22 +109,22 @@ export function RateLimitMeter() {
 
                     {/* Status Messages */}
                     {status.remainingDaily === 0 && (
-                        <div className="rounded-lg border border-border bg-muted/20 p-4">
-                            <div className="text-sm text-foreground font-medium">
+                        <div className="border-border bg-muted/20 rounded-lg border p-4">
+                            <div className="text-foreground text-sm font-medium">
                                 Daily limit reached
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground mt-1 text-xs">
                                 Upgrade to VT+ for unlimited access to all models.
                             </div>
                         </div>
                     )}
 
                     {status.remainingDaily <= 2 && status.remainingDaily > 0 && (
-                        <div className="rounded-lg border border-border bg-muted/20 p-4">
-                            <div className="text-sm text-foreground font-medium">
+                        <div className="border-border bg-muted/20 rounded-lg border p-4">
+                            <div className="text-foreground text-sm font-medium">
                                 Low on daily requests
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground mt-1 text-xs">
                                 Consider upgrading to VT+ for unlimited access.
                             </div>
                         </div>

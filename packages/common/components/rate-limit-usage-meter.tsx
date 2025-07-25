@@ -134,8 +134,8 @@ export default function RateLimitUsageMeter({
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        <div className="h-4 w-32 rounded bg-muted animate-pulse" />
-                        <div className="h-16 w-full rounded bg-muted animate-pulse" />
+                        <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                        <div className="bg-muted h-16 w-full animate-pulse rounded" />
                     </div>
                 </CardContent>
             </Card>
@@ -150,7 +150,7 @@ export default function RateLimitUsageMeter({
                 </CardHeader>
                 <CardContent>
                     <div className="py-8 text-center">
-                        <p className="mb-4 text-sm text-muted-foreground">
+                        <p className="text-muted-foreground mb-4 text-sm">
                             {error || "Unable to load rate limit data"}
                         </p>
                         <Button onClick={fetchUsage} size="sm" variant="outline">
@@ -179,9 +179,9 @@ export default function RateLimitUsageMeter({
             </div>
 
             {/* Main Usage Card */}
-            <Card className={cn(hasEnhancedAccess && "opacity-60 relative")}>
+            <Card className={cn(hasEnhancedAccess && "relative opacity-60")}>
                 {hasEnhancedAccess && (
-                    <div className="absolute inset-0 z-10 bg-background/60 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                    <div className="bg-background/60 absolute inset-0 z-10 flex items-center justify-center rounded-lg backdrop-blur-sm">
                         <Badge variant="outline" className="bg-background text-foreground">
                             {accessType === "byok" ? "Using Your API Key" : "VT+ Higher Limits"}
                         </Badge>
@@ -204,15 +204,15 @@ export default function RateLimitUsageMeter({
                         {/* Daily Usage */}
                         <div className="space-y-4">
                             <div className="flex items-baseline justify-between">
-                                <div className="text-2xl font-bold text-foreground">
+                                <div className="text-foreground text-2xl font-bold">
                                     {status.dailyUsed}
                                 </div>
-                                <div className="text-sm text-muted-foreground">
+                                <div className="text-muted-foreground text-sm">
                                     of {dailyLimit} requests today
                                 </div>
                             </div>
                             <Progress
-                                className="h-2 bg-muted"
+                                className="bg-muted h-2"
                                 indicatorClassName="bg-foreground"
                                 value={dailyPercentage}
                             />
@@ -235,7 +235,7 @@ export default function RateLimitUsageMeter({
                                 </span>
                             </div>
                             {status.remainingMinute <= 0 && (
-                                <div className="text-xs text-muted-foreground">
+                                <div className="text-muted-foreground text-xs">
                                     Next request available soon
                                 </div>
                             )}
@@ -243,11 +243,11 @@ export default function RateLimitUsageMeter({
 
                         {/* Status Messages */}
                         {status.remainingDaily === 0 && (
-                            <div className="rounded-lg border border-border bg-muted/20 p-4">
-                                <div className="text-sm text-foreground font-medium">
+                            <div className="border-border bg-muted/20 rounded-lg border p-4">
+                                <div className="text-foreground text-sm font-medium">
                                     Daily limit reached
                                 </div>
-                                <div className="mt-1 text-xs text-muted-foreground">
+                                <div className="text-muted-foreground mt-1 text-xs">
                                     {isVtPlusUser
                                         ? "Limit will reset tomorrow."
                                         : "Upgrade to VT+ for higher limits or use your own API key."}
@@ -258,11 +258,11 @@ export default function RateLimitUsageMeter({
                         {status.remainingDaily <= 2 &&
                             status.remainingDaily > 0 &&
                             !isVtPlusUser && (
-                                <div className="rounded-lg border border-border bg-muted/20 p-4">
-                                    <div className="text-sm text-foreground font-medium">
+                                <div className="border-border bg-muted/20 rounded-lg border p-4">
+                                    <div className="text-foreground text-sm font-medium">
                                         Low on daily requests
                                     </div>
-                                    <div className="mt-1 text-xs text-muted-foreground">
+                                    <div className="text-muted-foreground mt-1 text-xs">
                                         Consider upgrading to VT+ for higher limits.
                                     </div>
                                 </div>

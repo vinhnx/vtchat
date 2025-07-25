@@ -100,7 +100,7 @@ export default function ThreadsPage() {
                 </TypographyH3>
                 <Command className="!max-h-auto bg-secondary w-full">
                     <CommandInput
-                        className="bg-tertiary h-8 w-full rounded-xs"
+                        className="bg-tertiary rounded-xs h-8 w-full"
                         placeholder="Search"
                     />
 

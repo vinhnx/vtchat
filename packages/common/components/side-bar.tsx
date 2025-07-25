@@ -17,7 +17,6 @@ import {
 import {
     Badge,
     Button,
-    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -26,14 +25,15 @@ import {
     DropdownMenuTrigger,
     Flex,
     UnifiedAvatar,
+    cn,
     useToast,
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
     ChevronLeft,
     ChevronRight,
-    ChevronsUpDown,
     ChevronUp,
+    ChevronsUpDown,
     Command,
     ExternalLink,
     FileText,
@@ -277,18 +277,19 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <div
             className={cn(
-                "bg-sidebar relative bottom-0 right-0 top-0 z-[50] flex h-[100dvh] flex-shrink-0 flex-col sidebar-container",
+                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 flex-col",
                 "dark:bg-black/95",
                 forceMobile
-                    ? "w-[300px] max-w-[300px]"
+                    ? "z-[302] w-[300px] max-w-[300px]"
                     : cn(
-                          "transition-all duration-300 ease-in-out",
+                          "z-[50] transition-all duration-300 ease-in-out",
                           isSidebarOpen
-                              ? "top-0 h-full w-[300px] max-w-[300px] flex-none sidebar-expanded"
-                              : "w-[52px] flex-none sidebar-collapsed",
+                              ? "sidebar-expanded top-0 h-full w-[300px] max-w-[300px] flex-none"
+                              : "sidebar-collapsed w-[52px] flex-none",
                       ),
             )}
             style={{ maxWidth: "300px" }}
+            {...(forceMobile && { "data-mobile-sidebar": "true" })}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
@@ -451,7 +452,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         <Button
                             className={cn(
                                 "w-full",
-                                isSidebarOpen ? "justify-start" : "justify-center items-center",
+                                isSidebarOpen ? "justify-start" : "items-center justify-center",
                             )}
                             onClick={() => push("/login")}
                             rounded="lg"
@@ -940,7 +941,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <div className="text-sidebar-foreground/30 text-center">
                                 <FileText size={16} strokeWidth={1.5} />
                             </div>
-                            <p className="text-sidebar-foreground/50 text-[10px] text-center">
+                            <p className="text-sidebar-foreground/50 text-center text-[10px]">
                                 {threads.length} chats
                             </p>
                         </div>
@@ -949,14 +950,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                 {/* Pagination Controls */}
                 {isSidebarOpen && totalPages > 1 && (
-                    <div className="sticky bottom-0 w-full bg-sidebar-accent/20 py-2 px-4 z-20 shadow-md border-t border-sidebar-border">
+                    <div className="bg-sidebar-accent/20 border-sidebar-border sticky bottom-0 z-20 w-full border-t px-4 py-2 shadow-md">
                         <div className="flex flex-row items-center justify-between">
                             <span className="text-sidebar-foreground/70 text-xs font-medium">
                                 Page {currentPage} of {totalPages}
                             </span>
                             <div className="flex items-center gap-1">
                                 <Button
-                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors"
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                                     size="icon-sm"
@@ -966,7 +967,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     <span className="sr-only">Previous page</span>
                                 </Button>
                                 <Button
-                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors h-7 w-7 p-0"
+                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors"
                                     disabled={currentPage === totalPages}
                                     onClick={() =>
                                         setCurrentPage((prev) => Math.min(totalPages, prev + 1))

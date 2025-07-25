@@ -11,31 +11,37 @@ The authentication system allows Playwright tests to authenticate with Google OA
 This setup follows the [official Playwright best practices](https://playwright.dev/docs/best-practices):
 
 ### 🎯 User-Facing Locators
+
 - Uses `page.getByRole()`, `page.getByLabel()`, `page.getByText()` instead of CSS selectors
 - Prioritizes semantic HTML elements and ARIA roles
 - Avoids brittle CSS class-based selectors
 
-### 🔒 Test Isolation 
+### 🔒 Test Isolation
+
 - Each test runs independently with fresh browser context
 - Proper cleanup between tests using `beforeEach` hooks
 - Separate projects for authenticated and non-authenticated tests
 
 ### 🏗️ Page Object Model
+
 - Organized test code using Page Object Model pattern
 - Centralized locators and actions in page classes
 - Improved maintainability and reusability
 
 ### 🚀 Web-First Assertions
+
 - Uses `await expect().toBeVisible()` instead of manual assertions
 - Automatic waiting and retry logic
 - Better error reporting and debugging
 
 ### 🔧 Debugging & Tracing
+
 - Configured trace collection on test failures
 - Screenshot and video capture for debugging
 - Proper error handling without console.log pollution
 
 ### 📊 Multi-Browser Testing
+
 - Tests run across Chromium, Firefox, and WebKit
 - Mobile viewport testing included
 - Consistent behavior across platforms
@@ -47,12 +53,12 @@ This setup follows the [official Playwright best practices](https://playwright.d
 This file contains the main authentication logic:
 
 - **Google OAuth Flow**: Handles the complete OAuth flow including:
-  - Navigation to login page
-  - Clicking Google OAuth button
-  - Entering credentials
-  - Handling account selection
-  - Managing 2FA prompts
-  - Saving authentication state
+    - Navigation to login page
+    - Clicking Google OAuth button
+    - Entering credentials
+    - Handling account selection
+    - Managing 2FA prompts
+    - Saving authentication state
 
 - **API Fallback**: Alternative authentication method using API calls when OAuth isn't available
 
@@ -66,7 +72,7 @@ Updated configuration includes:
 - **Regular Projects**: Run tests without authentication (chromium, firefox, webkit, etc.)
 - **Authenticated Project**: `chromium-authenticated` project that uses saved auth state
 - **Test Directory**: Uses `./e2e` for Playwright tests
-- **Test Filtering**: Ignores Vitest test files (*.test.ts, *.test.js)
+- **Test Filtering**: Ignores Vitest test files (_.test.ts, _.test.js)
 
 ### 3. Test Files
 
@@ -127,17 +133,17 @@ apps/web/
 
 ## Authentication Flow
 
-1. **Setup Phase**: 
-   - `playwright-auth.setup.ts` runs first
-   - Navigates to `/login`
-   - Clicks Google OAuth button
-   - Handles Google OAuth flow
-   - Saves authentication state to `./playwright/.auth/user.json`
+1. **Setup Phase**:
+    - `playwright-auth.setup.ts` runs first
+    - Navigates to `/login`
+    - Clicks Google OAuth button
+    - Handles Google OAuth flow
+    - Saves authentication state to `./playwright/.auth/user.json`
 
 2. **Test Phase**:
-   - Authenticated tests load saved state
-   - Tests run with user session active
-   - No need to re-authenticate for each test
+    - Authenticated tests load saved state
+    - Tests run with user session active
+    - No need to re-authenticate for each test
 
 ## OAuth Flow Details
 
