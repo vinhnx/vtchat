@@ -6,11 +6,54 @@ ok go-> https://vtchat.io.vn/
 
 --
 
-fix mobile sidebar blur effect
+1. fix the sidebar still under chat input and footer view on mobile view.
+
+2. also fix install app banner PWA should be showing on mobile viewport on bottom
+
+3. fixed the settings width on desktop
 
 --
 
-https://developers.googleblog.com/en/conversational-image-segmentation-gemini-2-5/
+remove thread details chat input bottom margin
+
+--
+fix sonner doesn't work on start app
+
+--
+
+fix install app banner is broken on mobile viewport
+
+--
+
+fix mobile blur on open sidebar
+
+--
+
+fix calculator tools doesn't work
+
+--
+
+migrate 2.5-flash-lite to official model
+
+--
+
+image gen almost working: check "On gemini-image-gen: image gen alsmost working" stash
+
+--
+
+enhance image gen gemini with imagegen model
+
+https://ai.google.dev/gemini-api/docs/image-generation
+
+--
+
+enhance image gen gemini with settings and config
+
+https://ai.google.dev/gemini-api/docs/image-generation
+
+--
+
+enhance image gen gemini with openai model
 
 --
 
@@ -21,15 +64,6 @@ https://agents-ui.github.io/agents-kit/
 --
 
 https://ship-25-agents-workshop.vercel.app/docs
-
---
-
-https://news.ycombinator.com/item?id=44662416
-
-Or you can configure it to use local ollama, and actually use it when needed
-
-    browser.ml.chat.hideLocalhost: false
-    browser.ml.chat.provider:  http://localhost:11434
 
 --
 
