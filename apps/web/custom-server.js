@@ -20,10 +20,13 @@ try {
             if (IS_PRODUCTION) return;
             const timestamp = new Date().toISOString();
             if (typeof msg === "object") {
+                // eslint-disable-next-line no-console
                 console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
             } else if (obj) {
+                // eslint-disable-next-line no-console
                 console.log(`[${timestamp}] INFO: ${msg}`, JSON.stringify(obj));
             } else {
+                // eslint-disable-next-line no-console
                 console.log(`[${timestamp}] INFO: ${msg}`);
             }
         },
@@ -31,10 +34,13 @@ try {
             // Always log errors even in production
             const timestamp = new Date().toISOString();
             if (typeof msg === "object") {
+                // eslint-disable-next-line no-console
                 console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
             } else if (obj) {
+                // eslint-disable-next-line no-console
                 console.error(`[${timestamp}] ERROR: ${msg}`, JSON.stringify(obj));
             } else {
+                // eslint-disable-next-line no-console
                 console.error(`[${timestamp}] ERROR: ${msg}`);
             }
         },
@@ -42,10 +48,13 @@ try {
             // Always log warnings even in production
             const timestamp = new Date().toISOString();
             if (typeof msg === "object") {
+                // eslint-disable-next-line no-console
                 console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
             } else if (obj) {
+                // eslint-disable-next-line no-console
                 console.warn(`[${timestamp}] WARN: ${msg}`, JSON.stringify(obj));
             } else {
+                // eslint-disable-next-line no-console
                 console.warn(`[${timestamp}] WARN: ${msg}`);
             }
         },

@@ -102,7 +102,7 @@ export async function performWeeklyMaintenance(): Promise<void> {
 export async function checkDatabaseHealth(): Promise<{
     healthy: boolean;
     issues: string[];
-    stats: any;
+    stats: Record<string, unknown>[] | null;
 }> {
     const issues: string[] = [];
 
@@ -172,7 +172,7 @@ export async function checkDatabaseHealth(): Promise<{
         return {
             healthy: issues.length === 0,
             issues,
-            stats,
+            stats: [stats],
         };
     } catch (error) {
         log.error({ error }, "Database health check failed");
@@ -188,8 +188,8 @@ export async function checkDatabaseHealth(): Promise<{
  * Optimize specific slow query (emergency use)
  */
 export async function optimizeSlowQuery(query: string): Promise<{
-    before: any;
-    after: any;
+    before: Record<string, unknown>[];
+    after: Record<string, unknown>[];
     suggestions: string[];
 }> {
     try {

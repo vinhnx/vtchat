@@ -9,7 +9,6 @@
         "./config": "./config/index.ts",
         "./config/payment": "./config/payment.ts",
         "./config/vt-plus-features": "./config/vt-plus-features.ts",
-        "./config/embedding-models": "./config/embedding-models.ts",
         "./config/baseUrl": "./config/baseUrl.ts",
         "./constants": "./constants/index.ts",
         "./constants/api-keys": "./constants/api-keys.ts",

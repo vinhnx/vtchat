@@ -6,9 +6,7 @@
  */
 
 import { log } from "@repo/shared/logger";
-import { eq } from "drizzle-orm";
 import { db } from "../apps/web/lib/database";
-import { embeddings } from "../apps/web/lib/database/schema";
 import { secureContentForEmbedding } from "../apps/web/lib/utils/content-security";
 
 async function migrateEmbeddingsContent() {
@@ -16,12 +14,7 @@ async function migrateEmbeddingsContent() {
         log.info("Starting embeddings content security migration...");
 
         // Get all embeddings that need to be secured
-        const allEmbeddings = await db
-            .select({
-                id: embeddings.id,
-                content: embeddings.content,
-            })
-            .from(embeddings);
+        const allEmbeddings = await db.embeddings.findMany();
 
         log.info(`Found ${allEmbeddings.length} embeddings to secure`);
 
@@ -39,10 +32,10 @@ async function migrateEmbeddingsContent() {
 
                 // Only update if content actually changed (has PII or is too long)
                 if (originalContent !== securedContent) {
-                    await db
-                        .update(embeddings)
-                        .set({ content: securedContent })
-                        .where(eq(embeddings.id, embedding.id));
+                    await db.embeddings.update({
+                        where: { id: embedding.id },
+                        data: { content: securedContent },
+                    });
 
                     securedCount++;
                     log.info(`Secured embedding ${embedding.id}`, {

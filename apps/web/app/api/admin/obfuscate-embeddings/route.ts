@@ -1,12 +1,10 @@
+import { isUserAdmin } from "@/lib/admin";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
 import { log } from "@repo/shared/logger";
 import { sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { isUserAdmin } from "@/lib/admin";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { embeddings } from "@/lib/database/schema";
-import { containsPII, secureContentForEmbedding } from "@/lib/utils/content-security";
 
 export async function POST(_req: Request) {
     try {
@@ -30,69 +28,31 @@ export async function POST(_req: Request) {
             );
         }
 
-        // Apply obfuscation to existing embeddings
-        // Get embeddings that might need obfuscation
-        const candidateEmbeddings = await db
-            .select({
-                id: embeddings.id,
-                content: embeddings.content,
-            })
-            .from(embeddings)
-            .where(sql`content NOT LIKE '%_REDACTED%'`)
-            .limit(100); // Process in batches
-
-        let updatedCount = 0;
-        let skippedCount = 0;
-        const updates = [];
-
-        for (const embedding of candidateEmbeddings) {
-            const originalContent = embedding.content;
-            const securedContent = secureContentForEmbedding(originalContent);
-
-            if (originalContent !== securedContent) {
-                await db
-                    .update(embeddings)
-                    .set({ content: securedContent })
-                    .where(sql`id = ${embedding.id}`);
-
-                updates.push({
-                    id: embedding.id,
-                    originalLength: originalContent.length,
-                    securedLength: securedContent.length,
-                    hadPII: containsPII(originalContent),
-                });
-
-                updatedCount++;
-            } else {
-                skippedCount++;
-            }
-        }
-
-        const result = {
-            processed: candidateEmbeddings.length,
-            updated: updatedCount,
-            skipped: skippedCount,
-            updates,
-        };
+        // Remove embeddings
+        const deletedEmbeddings = await db
+            .delete(embeddings)
+            .where(sql`content LIKE '%_REDACTED%'`);
 
         log.info(
             {
                 adminId: session.user.id,
-                ...result,
+                deletedCount: deletedEmbeddings.rowCount,
             },
-            "Admin applied embeddings obfuscation",
+            "Admin removed obfuscated embeddings",
         );
 
         return NextResponse.json({
-            message: "Embeddings obfuscation completed successfully",
-            result,
+            message: "Embeddings removal completed successfully",
+            result: {
+                deletedCount: deletedEmbeddings.rowCount,
+            },
         });
     } catch (error) {
-        log.error({ error }, "Failed to obfuscate embeddings");
+        log.error({ error }, "Failed to remove embeddings");
 
         return NextResponse.json(
             {
-                error: "Obfuscation failed",
+                error: "Removal failed",
                 details: error instanceof Error ? error.message : "Unknown error",
             },
             { status: 500 },
@@ -100,7 +60,7 @@ export async function POST(_req: Request) {
     }
 }
 
-// GET endpoint to check obfuscation status
+// GET endpoint to check removal status
 export async function GET() {
     try {
         const session = await auth.api.getSession({
@@ -122,29 +82,23 @@ export async function GET() {
             );
         }
 
-        // Check obfuscation status
+        // Check removal status
         const total = await db.select({ count: sql<number>`count(*)` }).from(embeddings);
 
-        const obfuscated = await db
-            .select({ count: sql<number>`count(*)` })
-            .from(embeddings)
-            .where(sql`content LIKE '%_REDACTED%'`);
-
-        const unprocessed = await db
+        const removed = await db
             .select({ count: sql<number>`count(*)` })
             .from(embeddings)
             .where(sql`content NOT LIKE '%_REDACTED%'`);
 
         const status = {
             total: total[0].count,
-            obfuscated: obfuscated[0].count,
-            unprocessed: unprocessed[0].count,
-            obfuscationRate:
-                total[0].count > 0 ? Math.round((obfuscated[0].count / total[0].count) * 100) : 0,
+            removed: removed[0].count,
+            removalRate:
+                total[0].count > 0 ? Math.round((removed[0].count / total[0].count) * 100) : 0,
         };
 
         return NextResponse.json({
-            message: "Obfuscation status retrieved",
+            message: "Removal status retrieved",
             status,
         });
     } catch (error) {

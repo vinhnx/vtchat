@@ -21,11 +21,9 @@ test.describe("VT+ Web Search Functionality", () => {
                         (await subscriptionRes.json())?.isPlusSubscriber,
                 };
             } catch (error) {
-                return { error: error.message };
+                return { error: (error as Error).message };
             }
         });
-
-        console.log("User Status:", userStatus);
 
         // Skip test if user is not VT+ subscriber
         if (!userStatus.hasVTPlus) {
@@ -59,11 +57,9 @@ test.describe("VT+ Web Search Functionality", () => {
                     isEventStream: res.headers.get("content-type")?.includes("text/event-stream"),
                 };
             } catch (error) {
-                return { error: error.message };
+                return { error: (error as Error).message };
             }
         });
-
-        console.log("Web Search Response:", webSearchResponse);
 
         // VT+ users should get successful streaming response for web search
         expect(webSearchResponse.status).toBe(200);
@@ -80,7 +76,7 @@ test.describe("VT+ Web Search Functionality", () => {
                 const data = await res.json();
                 return { status: res.status, isPlusSubscriber: data?.isPlusSubscriber };
             } catch (error) {
-                return { error: error.message };
+                return { error: (error as Error).message };
             }
         });
 
@@ -105,11 +101,9 @@ test.describe("VT+ Web Search Functionality", () => {
                     data: await res.json().catch(() => ({})),
                 };
             } catch (error) {
-                return { error: error.message };
+                return { error: (error as Error).message };
             }
         });
-
-        console.log("Rate Limit Response:", rateLimitResponse);
 
         // Should not return 500 error anymore
         expect([200, 401, 403]).toContain(rateLimitResponse.status);

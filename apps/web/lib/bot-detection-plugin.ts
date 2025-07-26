@@ -50,7 +50,7 @@ export const botDetection = (options: BotDetectionOptions = {}) => {
                         return path.startsWith("/api/auth");
                     },
                     handler: createAuthMiddleware(async (ctx) => {
-                        const userAgent = ctx.headers.get("user-agent") || "";
+                        const userAgent = ctx?.headers?.get("user-agent") || "";
 
                         if (isbot(userAgent)) {
                             throw new APIError("BAD_REQUEST", {

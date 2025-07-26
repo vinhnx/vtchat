@@ -24,9 +24,6 @@ function _extractCookiesForPlaywright() {
         };
     });
 
-    console.log("Playwright cookies format:");
-    console.log(JSON.stringify(cookies, null, 2));
-
     return cookies;
 }
 

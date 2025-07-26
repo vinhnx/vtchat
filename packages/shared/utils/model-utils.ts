@@ -22,15 +22,6 @@ export const GEMINI_MODEL_ENUMS = [
 ] as const;
 
 /**
- * All Gemini embedding models
- */
-export const GEMINI_EMBEDDING_MODELS = [
-    "text-embedding-004",
-    "gemini-embedding-exp-03-07",
-    "gemini-embedding-001",
-] as const;
-
-/**
  * Unified constant for Gemini ModelEnum values used across the codebase
  * Use this instead of hardcoded arrays
  */
@@ -50,11 +41,6 @@ export function isGeminiModel(model: ChatMode | ModelEnum | string): boolean {
 
     // Check for ModelEnum
     if (GEMINI_MODEL_ENUMS.includes(model as ModelEnum)) {
-        return true;
-    }
-
-    // Check for embedding models
-    if (GEMINI_EMBEDDING_MODELS.includes(model as any)) {
         return true;
     }
 

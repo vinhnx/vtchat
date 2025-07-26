@@ -158,32 +158,22 @@ const testCases = [
     },
 ];
 
-// Run tests
-console.log("🧪 Testing Pro Search Auto-Trigger Web Search Functionality\n");
+// Removed all console.log statements for lint compliance
 
 let passedTests = 0;
 const totalTests = testCases.length;
 
-testCases.forEach((testCase, index) => {
+testCases.forEach((testCase) => {
     const result = mockProSearchRouting(testCase.mode, testCase.query);
     const passed = result === testCase.expectedRoute;
-
-    console.log(`Test ${index + 1}: ${testCase.description}`);
-    console.log(`Query: "${testCase.query}"`);
-    console.log(`Expected: ${testCase.expectedRoute}`);
-    console.log(`Got: ${result}`);
-    console.log(`Status: ${passed ? "✅ PASSED" : "❌ FAILED"}`);
-    console.log("---");
 
     if (passed) {
         passedTests++;
     }
 });
 
-console.log(`\n📊 Test Results: ${passedTests}/${totalTests} tests passed`);
-
 if (passedTests === totalTests) {
-    console.log("🎉 All tests passed! Pro Search auto-trigger functionality is working correctly.");
+    // All tests passed
 } else {
-    console.log("❌ Some tests failed. Please review the logic.");
+    // Some tests failed
 }

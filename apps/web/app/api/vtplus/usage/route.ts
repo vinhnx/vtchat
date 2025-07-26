@@ -73,16 +73,6 @@ export async function GET(request: NextRequest) {
                 ),
                 resetAt: nextDayReset.toISOString(),
             },
-            rag: {
-                used: usage[VtPlusFeature.RAG].used,
-                limit: usage[VtPlusFeature.RAG].limit,
-                feature: VtPlusFeature.RAG,
-                window: VT_PLUS_LIMITS[VtPlusFeature.RAG].window,
-                percentage: Math.round(
-                    (usage[VtPlusFeature.RAG].used / usage[VtPlusFeature.RAG].limit) * 100,
-                ),
-                resetAt: nextMonthReset.toISOString(),
-            },
             // Legacy resetAt for backward compatibility
             resetAt: nextMonthReset.toISOString(),
             currentPeriod: usage[VtPlusFeature.DEEP_RESEARCH].periodStart

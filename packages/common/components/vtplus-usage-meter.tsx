@@ -19,14 +19,6 @@ interface VtPlusUsageData {
         percentage: number;
         resetAt: string;
     };
-    rag: {
-        used: number;
-        limit: number;
-        feature: string;
-        window: (typeof QUOTA_WINDOW)[keyof typeof QUOTA_WINDOW];
-        percentage: number;
-        resetAt: string;
-    };
     resetAt: string; // Legacy field for backward compatibility
     currentPeriod: string;
 }

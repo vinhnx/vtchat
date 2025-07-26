@@ -1,11 +1,11 @@
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     BUDGET_LIMITS,
     checkBudgetStatus,
     getBudgetStatus,
     recordUsage,
 } from "@/lib/services/budget-tracking";
+import { ModelEnum } from "@repo/ai/models";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database
 vi.mock("@/lib/database", () => ({
@@ -57,9 +57,7 @@ describe("Budget Tracking Service", () => {
             // Mock low usage
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "10.50" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "10.50" }]),
                 }),
             });
 
@@ -76,9 +74,7 @@ describe("Budget Tracking Service", () => {
             // Mock high usage that exceeds budget
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "85.00" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "85.00" }]),
                 }),
             });
 
@@ -95,9 +91,7 @@ describe("Budget Tracking Service", () => {
             // Mock usage at warning threshold (80% of $80 = $64)
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "65.00" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "65.00" }]),
                 }),
             });
 
@@ -114,9 +108,7 @@ describe("Budget Tracking Service", () => {
             // Mock usage at critical threshold (95% of $80 = $76)
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "77.00" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "77.00" }]),
                 }),
             });
 
@@ -213,9 +205,7 @@ describe("Budget Tracking Service", () => {
 
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "45.50" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "45.50" }]),
                 }),
             });
 
@@ -236,9 +226,7 @@ describe("Budget Tracking Service", () => {
 
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "12.25" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "12.25" }]),
                 }),
             });
 
@@ -259,9 +247,7 @@ describe("Budget Tracking Service", () => {
 
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([]),
-                    }),
+                    where: vi.fn().mockReturnValue([]),
                 }),
             });
 
@@ -285,9 +271,7 @@ describe("Budget Tracking Service", () => {
             // Mock budget status check
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([{ totalCost: "82.00" }]),
-                    }),
+                    where: vi.fn().mockReturnValue([{ totalCost: "82.00" }]),
                 }),
             });
 
@@ -315,9 +299,7 @@ describe("Budget Tracking Service", () => {
             // Mock empty result for new month
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: vi.fn().mockResolvedValue([]),
-                    }),
+                    where: vi.fn().mockReturnValue([]),
                 }),
             });
 

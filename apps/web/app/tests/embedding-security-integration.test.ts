@@ -1,8 +1,6 @@
-import { eq } from "drizzle-orm";
-import { afterAll, describe, expect, it } from "vitest";
 import { db } from "@/lib/database";
-import { embeddings, resources } from "@/lib/database/schema";
-import { secureContentForEmbedding } from "@/lib/utils/content-security";
+import { resources } from "@/lib/database/schema";
+import { afterAll, describe, expect, it } from "vitest";
 
 describe("Embedding Security Integration", () => {
     let testResourceId: string;
@@ -10,7 +8,6 @@ describe("Embedding Security Integration", () => {
     afterAll(async () => {
         // Clean up test data
         if (testResourceId) {
-            await db.delete(embeddings).where(eq(embeddings.resourceId, testResourceId));
             await db.delete(resources).where(eq(resources.id, testResourceId));
         }
     });

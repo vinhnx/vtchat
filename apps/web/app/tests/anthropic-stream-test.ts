@@ -37,14 +37,10 @@ describe("Anthropic API Streaming Test", () => {
                 // Collect text chunks as they arrive
                 responses.push(text);
                 finalMessage += text;
-                console.log("Text chunk received:", text);
             })
-            .on("streamEvent", (event) => {
-                console.log("Stream event:", event.type);
-            })
-            .on("error", (error) => {
-                console.error("Stream error:", error);
-                throw error;
+            .on("streamEvent", () => {})
+            .on("error", () => {
+                // Expected when stream is aborted
             });
 
         // Wait for the stream to complete
@@ -61,9 +57,6 @@ describe("Anthropic API Streaming Test", () => {
         // Check that we received some numbers (1-5) in the response
         const hasNumbers = /[1-5]/.test(finalMessage);
         expect(hasNumbers).toBe(true);
-
-        console.log("Final message:", message.content);
-        console.log("Token usage:", message.usage);
     }, 30000); // 30 second timeout for API call
 
     it("should handle streaming with event listeners", async () => {
@@ -83,9 +76,7 @@ describe("Anthropic API Streaming Test", () => {
                     },
                 ],
             })
-            .on("connect", () => {
-                console.log("Connected to Anthropic API");
-            })
+            .on("connect", () => {})
             .on("streamEvent", (event) => {
                 switch (event.type) {
                     case "content_block_start":
@@ -102,9 +93,7 @@ describe("Anthropic API Streaming Test", () => {
             .on("message", () => {
                 messageCompleted = true;
             })
-            .on("end", () => {
-                console.log("Stream ended");
-            });
+            .on("end", () => {});
 
         const finalMessage = await stream.finalMessage();
 
@@ -117,11 +106,6 @@ describe("Anthropic API Streaming Test", () => {
 
         const fullText = textChunks.join("");
         expect(fullText.length).toBeGreaterThan(0);
-
-        console.log("Content start events:", contentStartEvents);
-        console.log("Content stop events:", contentStopEvents);
-        console.log("Text chunks received:", textChunks.length);
-        console.log("Full response:", fullText);
     }, 30000);
 
     it("should handle streaming abort", async () => {
@@ -140,9 +124,8 @@ describe("Anthropic API Streaming Test", () => {
                     },
                 ],
             })
-            .on("text", (text) => {
+            .on("text", () => {
                 textReceived = true;
-                console.log("Received text before abort:", text);
                 // Abort the stream after receiving first text chunk
                 setTimeout(() => {
                     stream.abort();
@@ -150,27 +133,24 @@ describe("Anthropic API Streaming Test", () => {
             })
             .on("abort", () => {
                 streamAborted = true;
-                console.log("Stream was aborted");
             })
-            .on("error", (error) => {
+            .on("error", () => {
                 // Expected when stream is aborted
-                console.log("Stream error (expected):", error.message);
             });
 
         try {
             await stream.finalMessage();
             // Should not reach here if abort works correctly
             expect(false).toBe(true); // Force failure if no abort
-        } catch (error) {
+        } catch {
             // Expected to throw when aborted
             expect(textReceived).toBe(true);
             expect(streamAborted).toBe(true);
-            console.log("Stream correctly aborted with error:", error);
         }
     }, 30000);
 
     it("should provide access to raw stream events", async () => {
-        const rawEvents: any[] = [];
+        const rawEvents: unknown[] = [];
         let messageStart = false;
         let messageStop = false;
 
@@ -193,15 +173,12 @@ describe("Anthropic API Streaming Test", () => {
             switch (messageStreamEvent.type) {
                 case "message_start":
                     messageStart = true;
-                    console.log("Message started:", messageStreamEvent.type);
                     break;
                 case "message_stop":
                     messageStop = true;
-                    console.log("Message stopped:", messageStreamEvent.type);
                     break;
                 case "content_block_delta":
                     if ("text" in messageStreamEvent.delta) {
-                        console.log("Text delta:", messageStreamEvent.delta.text);
                     }
                     break;
             }
@@ -213,14 +190,11 @@ describe("Anthropic API Streaming Test", () => {
         expect(messageStop).toBe(true);
 
         // Check that we have the expected event types
-        const eventTypes = rawEvents.map((event) => event.type);
+        const eventTypes = rawEvents.map((event) => (event as { type: string }).type);
         expect(eventTypes).toContain("message_start");
         expect(eventTypes).toContain("message_stop");
         expect(eventTypes).toContain("content_block_start");
         expect(eventTypes).toContain("content_block_stop");
-
-        console.log("Raw events collected:", rawEvents.length);
-        console.log("Event types:", eventTypes);
     }, 30000);
 
     it("should work with async iteration pattern", async () => {
@@ -245,7 +219,6 @@ describe("Anthropic API Streaming Test", () => {
 
             if (event.type === "content_block_delta" && "text" in event.delta) {
                 textChunks.push(event.delta.text);
-                console.log("Text chunk:", event.delta.text);
             }
         }
 
@@ -255,9 +228,5 @@ describe("Anthropic API Streaming Test", () => {
 
         const fullText = textChunks.join("");
         expect(fullText.length).toBeGreaterThan(0);
-
-        console.log("Total events processed:", eventCount);
-        console.log("Total text chunks:", textChunks.length);
-        console.log("Full response:", fullText);
     }, 30000);
 });

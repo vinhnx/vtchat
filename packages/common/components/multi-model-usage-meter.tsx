@@ -699,17 +699,6 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
             color: "hsl(var(--chart-2))",
             resetPeriod: "Daily Reset",
         },
-        {
-            name: "Personal AI Assistant",
-            data: vtPlusUsage.rag || {
-                used: 0,
-                limit: 0,
-                percentage: 0,
-                window: QUOTA_WINDOW.MONTHLY,
-            },
-            color: "hsl(var(--chart-3))",
-            resetPeriod: "Monthly Reset",
-        },
     ];
 
     return (

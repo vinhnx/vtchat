@@ -16,7 +16,6 @@ export type ServerSideAPIOpts = {
     hasVtPlus: boolean;
     deepResearch?: boolean;
     proSearch?: boolean;
-    rag?: boolean;
 };
 
 /**
@@ -32,7 +31,6 @@ export function shouldUseServerSideAPI({
     hasVtPlus,
     deepResearch = false,
     proSearch = false,
-    rag = false,
 }: ServerSideAPIOpts): boolean {
     // 1. Free tier server-funded model?
     if (FREE_SERVER_MODELS.includes(mode)) {
@@ -46,7 +44,7 @@ export function shouldUseServerSideAPI({
 
     // 3. VT+ exclusive features always run on the server because
     //    they require vector DB / orchestrated tools.
-    if (deepResearch || proSearch || rag) {
+    if (deepResearch || proSearch) {
         return true;
     }
 

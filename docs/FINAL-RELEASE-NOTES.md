@@ -90,10 +90,9 @@ VT (VTChat) has successfully reached production readiness with all core features
 ### **VT+ Premium Tier ($5.99/month)**
 
 - All free features
-- **3 Research-Focused Exclusives:**
+- **2 Research-Focused Exclusives:**
     - **Enhanced Web Search** (PRO_SEARCH)
     - **Deep Research** (DEEP_RESEARCH)
-    - **Personal AI Memory** (RAG)
 - Premium AI models access
 - Priority support
 

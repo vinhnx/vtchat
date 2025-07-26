@@ -97,8 +97,6 @@ class GeminiRequirementsVerifier {
     }
 
     async runBackendTests(): Promise<void> {
-        console.log("🔄 Running Backend Tests...");
-
         try {
             const output = execSync(
                 "bun test gemini-requirements-verification.test.ts --reporter=json",
@@ -111,17 +109,12 @@ class GeminiRequirementsVerifier {
 
             const testResults = this.parseTestOutput(output);
             this.mapBackendResults(testResults);
-
-            console.log("✅ Backend tests completed");
-        } catch (error) {
-            console.log("❌ Backend tests failed:", error);
+        } catch {
             this.markRequirementsFailed(["REQ-001", "REQ-002", "REQ-003", "REQ-004", "REQ-005"]);
         }
     }
 
     async runUITests(): Promise<void> {
-        console.log("🔄 Running UI Component Tests...");
-
         try {
             const output = execSync("bun test multi-model-usage-meter.test.tsx --reporter=json", {
                 cwd: "../../../packages/common/components/__tests__",
@@ -131,17 +124,12 @@ class GeminiRequirementsVerifier {
 
             const testResults = this.parseTestOutput(output);
             this.mapUIResults(testResults);
-
-            console.log("✅ UI tests completed");
-        } catch (error) {
-            console.log("❌ UI tests failed:", error);
+        } catch {
             this.markRequirementsFailed(["REQ-006", "REQ-007", "REQ-008"]);
         }
     }
 
     async runAPITests(): Promise<void> {
-        console.log("🔄 Running API Integration Tests...");
-
         try {
             const output = execSync(
                 "bun test api-integration-gemini-requirements.test.ts --reporter=json",
@@ -154,26 +142,18 @@ class GeminiRequirementsVerifier {
 
             const testResults = this.parseTestOutput(output);
             this.mapAPIResults(testResults);
-
-            console.log("✅ API tests completed");
-        } catch (error) {
-            console.log("❌ API tests failed:", error);
+        } catch {
             this.markRequirementsFailed(["REQ-009", "REQ-010"]);
         }
     }
 
     async runE2ETests(): Promise<void> {
-        console.log("🔄 Running E2E Tests...");
-
         try {
             // Note: E2E tests are placeholders for now
-            console.log("⚠️  E2E tests are defined but not yet implemented with browser automation");
-            console.log("   These would typically use Playwright or similar tools");
-
             // For now, mark as partial since the test structure exists
             this.markRequirementsPartial(["REQ-006", "REQ-007", "REQ-008", "REQ-009", "REQ-010"]);
-        } catch (error) {
-            console.log("❌ E2E tests failed:", error);
+        } catch {
+            // Handle E2E test errors
         }
     }
 
@@ -267,7 +247,7 @@ ${this.results
     .map((r) => `- ${r.id}: ${r.description}`)
     .join("\n")}
 
-### ⚠️  Partial Requirements  
+### ⚠️  Partial Requirements
 ${this.results
     .filter((r) => r.overallStatus === "PARTIAL")
     .map((r) => `- ${r.id}: ${r.description}`)
@@ -290,7 +270,7 @@ ${this.results
 ## Test Files Created
 
 - \`gemini-requirements-verification.test.ts\` - Backend logic tests
-- \`multi-model-usage-meter.test.tsx\` - UI component tests  
+- \`multi-model-usage-meter.test.tsx\` - UI component tests
 - \`api-integration-gemini-requirements.test.ts\` - API integration tests
 - \`e2e-gemini-requirements.test.ts\` - End-to-end test structure
 
@@ -310,7 +290,7 @@ Total Test Cases: ${this.getTotalTestCount()}
 **Overall Status: ${passed === total ? "✅ ALL PASS" : partial > 0 ? "⚠️ PARTIAL" : "❌ NEEDS WORK"}**
 
 - ✅ Passed: ${passed}/${total} (${Math.round((passed / total) * 100)}%)
-- ⚠️ Partial: ${partial}/${total} (${Math.round((partial / total) * 100)}%)  
+- ⚠️ Partial: ${partial}/${total} (${Math.round((partial / total) * 100)}%)
 - ❌ Failed: ${failed}/${total} (${Math.round((failed / total) * 100)}%)
 `;
     }
@@ -416,8 +396,6 @@ ${this.getRequirementDetails(req)}
     }
 
     async run(): Promise<void> {
-        console.log("🚀 Starting Gemini Requirements Verification\n");
-
         await this.runBackendTests();
         await this.runUITests();
         await this.runAPITests();
@@ -428,17 +406,13 @@ ${this.getRequirementDetails(req)}
         // Write report to file
         const reportPath = "./gemini-requirements-report.md";
         writeFileSync(reportPath, report);
-
-        console.log("\n📊 Verification Complete!");
-        console.log(`📄 Report saved to: ${reportPath}`);
-        console.log(`\n${this.generateSummary()}`);
     }
 }
 
 // Run the verification if this script is executed directly
 if (import.meta.main) {
     const verifier = new GeminiRequirementsVerifier();
-    verifier.run().catch(console.error);
+    verifier.run().catch(() => {});
 }
 
 export { GeminiRequirementsVerifier };

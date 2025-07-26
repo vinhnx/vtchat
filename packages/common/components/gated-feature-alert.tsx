@@ -89,9 +89,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH, RAG)
         if (
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
-            requiredFeature === FeatureSlug.PRO_SEARCH ||
-            requiredFeature === FeatureSlug.RAG ||
-            requiredPlan === PlanSlug.VT_PLUS
+            requiredFeature === FeatureSlug.PRO_SEARCH
         ) {
             return isVtPlus;
         }
@@ -280,7 +278,6 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
         if (
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||
-            requiredFeature === FeatureSlug.RAG ||
             requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;

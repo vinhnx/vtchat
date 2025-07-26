@@ -7,7 +7,6 @@ import {
     useAdmin,
     useLogout,
     useMobilePWANotification,
-    useVTPlusAnnouncement,
 } from "@repo/common/hooks";
 import { useAppStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
@@ -57,9 +56,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
-
-    // Show VT+ announcement toast once
-    useVTPlusAnnouncement();
 
     // Show mobile PWA installation notification
     useMobilePWANotification();

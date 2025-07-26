@@ -33,13 +33,6 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
             "Advanced research capabilities with comprehensive analysis and detailed insights.",
         enabled: true,
     },
-    [FeatureSlug.RAG]: {
-        id: FeatureSlug.RAG,
-        name: "Personal AI Assistant with Memory",
-        description:
-            "Personal agent with intelligent information storage and retrieval capabilities for enhanced AI conversations.",
-        enabled: true,
-    },
     [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
         id: FeatureSlug.GEMINI_MODELS_NO_BYOK,
         name: "All Gemini Models Without BYOK",
@@ -55,7 +48,7 @@ export const VT_PLUS_FEATURES: Partial<Record<FeatureSlug, VTPlusFeature>> = {
 export const VT_PLUS_PRODUCT_INFO = {
     name: "VT+",
     productId: process.env.CREEM_PRODUCT_ID, // Use environment variable
-    description: "Premium AI models, research capabilities, and personal AI assistant",
+    description: "Premium AI models and research capabilities",
     pricing: {
         amount: VT_PLUS_PRICE,
         currency: CURRENCIES.USD,
@@ -63,7 +56,7 @@ export const VT_PLUS_PRODUCT_INFO = {
         interval: "monthly" as const,
         taxIncluded: true,
     },
-    features: Object.values(VT_PLUS_FEATURES),
+    features: Object.values(VT_PLUS_FEATURES), // Ensure VT_PLUS_FEATURES does not include RAG or AI memory
 } as const;
 
 /**
@@ -99,13 +92,6 @@ export const VTPlusAccess = {
      */
     hasDeepResearch: (isVTPlusActive: boolean): boolean => {
         return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.DEEP_RESEARCH);
-    },
-
-    /**
-     * Check if user has access to Personal AI Assistant with Memory (VT+ exclusive)
-     */
-    hasPersonalAI: (isVTPlusActive: boolean): boolean => {
-        return isVTPlusActive && isVTPlusFeatureEnabled(FeatureSlug.RAG);
     },
 
     /**

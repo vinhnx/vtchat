@@ -1,6 +1,6 @@
 # VTChat Content Signals Implementation
 
-**Date:** January 6, 2025  
+**Date:** January 6, 2025
 **Standard:** IETF AI Preferences (aipref) via contentsignals.org
 
 ## Overview
@@ -21,7 +21,6 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 **Blocked Areas:**
 
 - `/profile/` - User account information
-- `/rag/` - Personal AI assistant content
 - `/api/` - All API endpoints
 - `/chat/` - All chat conversations and threads
 
@@ -90,7 +89,6 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 ### Completely Protected (No Access)
 
 - `/profile/` - User profiles and settings
-- `/rag/` - Personal AI assistant knowledge base
 - `/api/` - All server API endpoints
 - `/chat/` - All chat conversations and threads
 

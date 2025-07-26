@@ -42,9 +42,9 @@ test.describe("My Real Session Tests", () => {
         const upgradeButtonCount = await upgradeButtons.count();
 
         if (upgradeButtonCount > 0 || (await freeIndicator.isVisible())) {
-            console.log("User appears to be on free tier");
+            // User appears to be on free tier
         } else {
-            console.log("User might have VT+ subscription");
+            // User might have VT+ subscription
         }
     });
 

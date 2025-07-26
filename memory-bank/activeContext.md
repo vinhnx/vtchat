@@ -160,7 +160,6 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
         - Uses localStorage (`vt-mobile-pwa-notification-seen`) to ensure notification is shown only once per device
         - Toast appears after 2-second delay to allow app to load properly
         - Includes "Got it" action button and auto-dismisses after 8 seconds
-        - Follows same pattern as existing `useVTPlusAnnouncement` hook for consistency
     - **Files Created/Modified**:
         - `packages/common/hooks/use-mobile-pwa-notification.ts` - Main hook implementation
         - `packages/common/hooks/index.ts` - Added export for new hook

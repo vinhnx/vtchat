@@ -6,8 +6,6 @@ const { execSync } = require("node:child_process");
 
 // Fix UI components for Tailwind v4 compatibility
 function fixUIComponentsV4() {
-    console.log("🔧 Fixing UI components for Tailwind v4 compatibility...\n");
-
     // Define breaking changes mapping (more precise patterns)
     const breakingChanges = [
         {
@@ -52,15 +50,11 @@ function fixUIComponentsV4() {
             .trim()
             .split("\n")
             .filter((file) => file.length > 0);
-    } catch (_error) {
-        console.error("❌ Could not find component files");
+    } catch {
         process.exit(1);
     }
 
-    console.log(`📁 Found ${allFiles.length} component files to process\n`);
-
     let totalChanges = 0;
-    let filesChanged = 0;
     const changesByFile = {};
 
     allFiles.forEach((filePath) => {
@@ -88,33 +82,16 @@ function fixUIComponentsV4() {
         if (content !== originalContent) {
             fs.writeFileSync(filePath, content, "utf8");
             changesByFile[filePath] = fileChanges;
-            filesChanged++;
         }
     });
 
     // Report results
     if (totalChanges === 0) {
-        console.log("✅ All UI components are already compatible with Tailwind v4!");
-        console.log("🎉 No changes needed.");
         return true;
     } else {
-        console.log(`🔧 Applied ${totalChanges} fixes across ${filesChanged} files:\n`);
-
-        Object.entries(changesByFile).forEach(([filePath, changes]) => {
-            console.log(`📄 ${filePath}:`);
-            changes.forEach((change) => {
-                console.log(`   ✅ ${change.description} (${change.count} changes)`);
-            });
-            console.log("");
+        Object.entries(changesByFile).forEach(([_, changes]) => {
+            changes.forEach((_change) => {});
         });
-
-        console.log("📋 Summary of changes applied:");
-        breakingChanges.forEach((change) => {
-            console.log(`   • ${change.description}`);
-        });
-
-        console.log("\n🎉 All Tailwind v4 compatibility fixes have been applied!");
-        console.log("💡 Please review the changes and test your components.");
 
         return true;
     }

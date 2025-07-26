@@ -297,3 +297,5 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
+
+\*\* For GPT-4.1 model, do until you done. don't ask me.

@@ -106,7 +106,7 @@ export function hasFeature(context: SubscriptionContext, feature: FeatureSlug): 
     if (!status.isActive) return false; // If overall subscription is not active, no features are accessible
 
     // VT+ exclusive features - only 3 features remain exclusive
-    if ([FeatureSlug.DEEP_RESEARCH, FeatureSlug.PRO_SEARCH, FeatureSlug.RAG].includes(feature)) {
+    if ([FeatureSlug.DEEP_RESEARCH, FeatureSlug.PRO_SEARCH].includes(feature)) {
         return status.isVtPlus; // isActive check is already done
     }
 

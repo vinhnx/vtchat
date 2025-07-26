@@ -1,7 +1,6 @@
 "use client";
 
 import { ModelEnum } from "@repo/ai/models";
-import { DEFAULT_EMBEDDING_MODEL, type EmbeddingModel } from "@repo/shared/config/embedding-models";
 import { log } from "@repo/shared/lib/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import {
@@ -156,7 +155,6 @@ export const useAppStore = create<State & Actions>()(
                 showSuggestions: false,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
-                embeddingModel: DEFAULT_EMBEDDING_MODEL,
                 ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
                 profile: {
                     name: "",
@@ -348,7 +346,6 @@ export const useAppStore = create<State & Actions>()(
                         state.showSuggestions = false;
                         state.thinkingMode = baseDefaults.thinkingMode;
                         state.geminiCaching = baseDefaults.geminiCaching;
-                        state.embeddingModel = DEFAULT_EMBEDDING_MODEL;
                         state.ragChatModel = ModelEnum.GEMINI_2_5_FLASH;
                         // Reset UI state to defaults
                         state.isSettingsOpen = false;

@@ -30,8 +30,6 @@ test.describe("Footer useSession Fix", () => {
         // For non-logged users, the footer should be visible
         const footer = page.locator("footer").first();
         await expect(footer).toBeVisible();
-
-        console.log("✅ Footer renders without useSession errors");
     });
 
     test("should show footer for non-logged users", async ({ page }) => {

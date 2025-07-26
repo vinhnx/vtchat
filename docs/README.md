@@ -145,7 +145,6 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[Arcjet Security](guides/arcjet-security.md)** - Comprehensive security setup
 - **[Logging Best Practices](guides/logging-best-practices.md)** - Structured logging with Pino
 - **[Premium Components](guides/premium-components.md)** - VT+ exclusive features
-- **[Embedding Security](guides/embedding-security.md)** - Secure AI embeddings
 
 ### Operational Guides
 

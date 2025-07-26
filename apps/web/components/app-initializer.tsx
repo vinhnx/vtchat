@@ -15,9 +15,8 @@ export function AppInitializer() {
                 .then(({ initializeApp }) => {
                     initializeApp();
                 })
-                .catch((error) => {
+                .catch(() => {
                     // Silent fallback if Redis services aren't available
-                    console.debug("App services initialization skipped:", error?.message);
                 });
         }
     }, []);

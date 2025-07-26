@@ -1,7 +1,6 @@
 import { vi } from "vitest";
 
 // Mock Next.js environment
-process.env.NODE_ENV = "test";
 process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3000";
 
 // Mock environment variables for testing
@@ -28,16 +27,32 @@ global.TextDecoder = TextDecoder;
 
 // Mock ReadableStream for streaming responses
 global.ReadableStream = class MockReadableStream {
-    constructor(underlyingSource: any) {
+    locked = false;
+    constructor(underlyingSource: unknown) {
         this.underlyingSource = underlyingSource;
     }
-
-    underlyingSource: any;
-
-    getReader() {
+    underlyingSource: unknown;
+    cancel(): Promise<void> {
+        return Promise.resolve();
+    }
+    pipeTo(): Promise<void> {
+        return Promise.resolve();
+    }
+    pipeThrough(): MockReadableStream {
+        return this;
+    }
+    tee(): void {}
+    getReader(): {
+        read: () => Promise<{ done: true; value: undefined }>;
+        releaseLock: () => void;
+        closed: Promise<void>;
+        cancel: () => Promise<void>;
+    } {
         return {
-            read: vi.fn().mockResolvedValue({ done: true, value: undefined }),
-            releaseLock: vi.fn(),
+            read: async () => ({ done: true, value: undefined }),
+            releaseLock: () => {},
+            closed: Promise.resolve(),
+            cancel: () => Promise.resolve(),
         };
     }
 };
@@ -46,25 +61,14 @@ global.ReadableStream = class MockReadableStream {
 global.AbortController = class MockAbortController {
     signal = {
         aborted: false,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        onabort: null,
+        reason: null,
+        throwIfAborted: () => {},
+        dispatchEvent: () => false,
     };
-
-    abort() {
-        this.signal.aborted = true;
-    }
-};
-
-// Mock console methods to reduce noise in tests
-const originalConsole = { ...console };
-console.log = vi.fn();
-console.info = vi.fn();
-console.warn = vi.fn();
-console.error = vi.fn();
-
-// Restore console for debugging when needed
-export const restoreConsole = () => {
-    Object.assign(console, originalConsole);
+    abort(): void {}
 };
 
 // Mock logger to prevent actual logging during tests

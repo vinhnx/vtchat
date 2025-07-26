@@ -8,11 +8,6 @@ import {
     useVtPlusAccess,
 } from "@repo/common/hooks";
 import { useAppStore } from "@repo/common/store";
-import {
-    DEFAULT_EMBEDDING_MODEL,
-    EMBEDDING_MODEL_CONFIG,
-} from "@repo/shared/config/embedding-models";
-
 import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
@@ -86,12 +81,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         work: string;
     } | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
-
-    // Ensure embeddingModel is valid, reset to default if not
-    const safeEmbeddingModel = EMBEDDING_MODEL_CONFIG[embeddingModel]
-        ? embeddingModel
-        : DEFAULT_EMBEDDING_MODEL;
-
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
 
     // Function to analyze knowledge base and suggest profile information
@@ -706,110 +695,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                     users.
                                 </AlertDescription>
                             </Alert>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* Personal AI Assistant Embedding Model Selection */}
-                {isVtPlus && (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                                <Database className="h-5 w-5" />
-                                Personal AI Assistant Embedding Model
-                            </CardTitle>
-                            <CardDescription>
-                                Choose which AI model to use for generating embeddings in your
-                                Personal AI Assistant knowledge base. Different models may provide
-                                varying quality and performance characteristics.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
-                                <div className="space-y-3">
-                                    <div className="space-y-1">
-                                        <div className="text-foreground text-sm font-medium">
-                                            Embedding Provider
-                                        </div>
-                                        <div className="text-muted-foreground text-xs">
-                                            {EMBEDDING_MODEL_CONFIG[safeEmbeddingModel].description}
-                                        </div>
-                                    </div>
-                                    <Combobox
-                                        className="w-full"
-                                        onValueChange={(value) => setEmbeddingModel(value as any)}
-                                        options={Object.entries(EMBEDDING_MODEL_CONFIG).map(
-                                            ([key, config]) => ({
-                                                value: key,
-                                                label: config.name,
-                                                description: `${config.provider} • ${config.dimensions}D`,
-                                            }),
-                                        )}
-                                        placeholder="Select embedding model..."
-                                        searchPlaceholder="Search models..."
-                                        value={safeEmbeddingModel}
-                                    />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {/* Personal AI Assistant Chat Model Selection */}
-                {isVtPlus && (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                                <Settings className="h-5 w-5" />
-                                Personal AI Assistant Chat Model
-                            </CardTitle>
-                            <CardDescription>
-                                Choose which AI model to use for conversations in your Personal AI
-                                Assistant chat. Different models may provide varying quality, speed,
-                                and capabilities.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="border-border/50 bg-muted/20 rounded-lg border p-4">
-                                <div className="space-y-3">
-                                    <div className="space-y-1">
-                                        <div className="text-foreground text-sm font-medium">
-                                            Chat Model
-                                        </div>
-                                        <div className="text-muted-foreground text-xs">
-                                            {models.find((m) => m.id === ragChatModel)?.name ||
-                                                "Unknown Model"}
-                                        </div>
-                                    </div>
-                                    <Combobox
-                                        className="w-full"
-                                        onValueChange={(value) =>
-                                            setRagChatModel(value as ModelEnum)
-                                        }
-                                        options={models
-                                            .filter((model) =>
-                                                // Filter to show commonly used models for RAG
-                                                [
-                                                    ModelEnum.GPT_4o,
-                                                    ModelEnum.GPT_4o_Mini,
-                                                    ModelEnum.CLAUDE_4_SONNET,
-                                                    ModelEnum.CLAUDE_4_OPUS,
-                                                    ModelEnum.GEMINI_2_5_PRO,
-                                                    ModelEnum.GEMINI_2_5_FLASH,
-                                                    ModelEnum.GEMINI_2_5_FLASH_LITE,
-                                                ].includes(model.id),
-                                            )
-                                            .map((model) => ({
-                                                value: model.id,
-                                                label: model.name,
-                                                description: `${model.provider} • ${model.contextWindow} tokens`,
-                                            }))}
-                                        placeholder="Select chat model..."
-                                        searchPlaceholder="Search models..."
-                                        value={ragChatModel}
-                                    />
-                                </div>
-                            </div>
                         </CardContent>
                     </Card>
                 )}

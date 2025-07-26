@@ -1,15 +1,11 @@
 "use server";
 
-import type { ApiKeys } from "@repo/common/store";
-import type { EmbeddingModel } from "@repo/shared/config/embedding-models";
 import { log } from "@repo/shared/logger";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { secureContentForEmbedding } from "@/lib/utils/content-security";
-import { generateEmbeddings } from "../ai/embedding";
 import { auth } from "../auth-server";
 import { db } from "../database";
-import { embeddings, resources } from "../database/schema";
+import { resources } from "../database/schema";
 
 // Schema for validating resource input
 const createResourceSchema = z.object({
@@ -18,11 +14,7 @@ const createResourceSchema = z.object({
 
 export type NewResourceParams = z.infer<typeof createResourceSchema>;
 
-export const createResource = async (
-    input: NewResourceParams,
-    apiKeys: ApiKeys,
-    embeddingModel?: EmbeddingModel,
-) => {
+export const createResource = async (input: NewResourceParams) => {
     try {
         // Get the current user
         const session = await auth.api.getSession({
@@ -36,27 +28,12 @@ export const createResource = async (
         const { content } = createResourceSchema.parse(input);
 
         // Create the resource
-        const [resource] = await db
-            .insert(resources)
-            .values({
-                content,
-                userId: session.user.id,
-            })
-            .returning();
+        await db.insert(resources).values({
+            content,
+            userId: session.user.id,
+        });
 
-        // Generate embeddings for the content
-        const embeddingResults = await generateEmbeddings(content, apiKeys, embeddingModel);
-
-        // Save embeddings to database with secure content
-        await db.insert(embeddings).values(
-            embeddingResults.map((embedding) => ({
-                resourceId: resource.id,
-                content: secureContentForEmbedding(embedding.content),
-                embedding: embedding.embedding,
-            })),
-        );
-
-        return "Resource successfully created and embedded.";
+        return "Resource successfully created.";
     } catch (error) {
         log.error({ error }, "Error creating resource");
         return error instanceof Error && error.message.length > 0

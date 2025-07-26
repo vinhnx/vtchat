@@ -37,7 +37,6 @@ test.describe("Authenticated User Tests", () => {
 
         // If no specific user indicator found, verify we can access the main app
         if (!foundUserIndicator) {
-            console.log("No specific user indicator found, verifying general app access");
             await expect(page.locator("body")).toBeVisible();
         }
     });
@@ -69,7 +68,6 @@ test.describe("Authenticated User Tests", () => {
                 await expect(page).not.toHaveURL(/\/login/);
             } catch {
                 // Route might not exist, continue testing
-                console.log(`Route ${route} not accessible or doesn't exist`);
             }
         }
     });

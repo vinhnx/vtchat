@@ -13,8 +13,3 @@
  *
  * If LM Studio support is re-added in the future, this test can be restored.
  */
-
-console.log("🚫 LM Studio integration test disabled - local model support removed");
-console.log("   Reason: HMR issues with provider dependencies");
-console.log("   Status: Models removed from codebase");
-process.exit(0);
