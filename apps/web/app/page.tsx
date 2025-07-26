@@ -15,7 +15,18 @@ export default function HomePage() {
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
-            <h1 className="sr-only">VT - Minimal AI Chat</h1>
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "-10000px",
+                    top: "auto",
+                    width: "1px",
+                    height: "1px",
+                    overflow: "hidden",
+                }}
+            >
+                VT - Minimal AI Chat with Deep Research Features
+            </h1>
             <main id="main-content" className="flex-1 overflow-hidden">
                 <div className="flex h-full flex-col">
                     <div className="flex-1 overflow-y-auto">

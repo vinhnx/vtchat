@@ -264,6 +264,18 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
     return (
         <div className="bg-muted/50 relative flex h-dvh w-full flex-col">
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "-10000px",
+                    top: "auto",
+                    width: "1px",
+                    height: "1px",
+                    overflow: "hidden",
+                }}
+            >
+                VT AI Chat Thread - Minimal Chat with Deep Research
+            </h1>
             <div className="flex-1 overflow-hidden">
                 <div
                     className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
