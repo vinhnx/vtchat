@@ -58,6 +58,18 @@ export const metadata: Metadata = {
 export default function PricingPage() {
     return (
         <>
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "-10000px",
+                    top: "auto",
+                    width: "1px",
+                    height: "1px",
+                    overflow: "hidden",
+                }}
+            >
+                VT Pricing - Minimal AI Chat with Deep Research Features
+            </h1>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{

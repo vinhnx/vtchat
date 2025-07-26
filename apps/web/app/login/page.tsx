@@ -1,11 +1,23 @@
+import { LoginForm } from "@/components/login-form";
 import { ShineText } from "@repo/common/components";
 import Image from "next/image";
 import Link from "next/link";
-import { LoginForm } from "@/components/login-form";
 
 export default function LoginPage() {
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "-10000px",
+                    top: "auto",
+                    width: "1px",
+                    height: "1px",
+                    overflow: "hidden",
+                }}
+            >
+                VT Login - Access Your Minimal AI Chat Account
+            </h1>
             <div className="flex flex-col gap-4 p-6 md:p-10">
                 <div className="flex justify-center gap-2 md:justify-start">
                     <Link className="flex items-center gap-2 font-medium" href="/">
