@@ -103,7 +103,6 @@ export function useSubscriptionAccess() {
                 const vtPlusExclusiveFeatures = [
                     FeatureSlug.PRO_SEARCH,
                     FeatureSlug.DEEP_RESEARCH,
-                    FeatureSlug.RAG,
                     FeatureSlug.GROUNDING_WEB_SEARCH,
                     FeatureSlug.ADVANCED_CHAT_MODES,
                 ];
