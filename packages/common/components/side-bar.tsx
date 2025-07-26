@@ -54,7 +54,7 @@ import {
     Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HistoryItem } from "./history/history-item";
 import {
@@ -66,7 +66,6 @@ import "./sidebar.css";
 import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
-    const { threadId: currentThreadId } = useParams();
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
     const threads = useChatStore((state) => state.threads);
     const pinThread = useChatStore((state) => state.pinThread);
@@ -167,20 +166,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     );
     const totalPages = Math.ceil(totalNonPinnedThreads / threadsPerPage);
 
-    // Apply pagination to each group
-    const paginateGroup = (group: Thread[], startIndex: number, endIndex: number) => {
-        return group.slice(startIndex, endIndex);
-    };
+    // Track how many threads we've processed for pagination
+    let processedThreads = 0;
 
     // Calculate pagination indices
     const startIndex = (currentPage - 1) * threadsPerPage;
     const endIndex = startIndex + threadsPerPage;
 
-    // Track how many threads we've processed for pagination
-    let processedThreads = 0;
-
     // Function to get paginated threads for a specific group
-    const getPaginatedThreadsForGroup = (group: Thread[]) => {
+    const getPaginatedThreadsForGroup = (group: Thread[], startIndex: number, endIndex: number) => {
         if (!Array.isArray(group)) {
             return [];
         }
@@ -455,7 +449,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 isSidebarOpen ? "justify-start" : "items-center justify-center",
                             )}
                             onClick={() => push("/login")}
-                            rounded="lg"
+                            roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
                             tooltip={isSidebarOpen ? undefined : "Login"}
                             tooltipSide="right"
@@ -537,7 +531,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 ? "bg-primary hover:bg-primary/90 w-full justify-between"
                                 : "bg-primary hover:bg-primary/90",
                         )}
-                        onClick={() => {
+                        onClick={async () => {
                             // Show toast notification
                             toast({
                                 title: "New Chat",
@@ -545,6 +539,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 duration: 2000,
                             });
 
+                            // Create a new thread before navigating
+                            await useChatStore.getState().createThread();
                             // Navigate to / to start a new conversation
                             push("/");
                             // Close mobile drawer if open
@@ -552,7 +548,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
-                        rounded="lg"
+                        roundedSm="lg"
                         size={isSidebarOpen ? "sm" : "icon-sm"}
                         tooltip={isSidebarOpen ? undefined : "New Chat (⌘⌃⌥N)"}
                         tooltipSide="right"
@@ -612,7 +608,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }
                             setIsCommandSearchOpen(true);
                         }}
-                        rounded="lg"
+                        roundedSm="lg"
                         size={isSidebarOpen ? "sm" : "icon-sm"}
                         tooltip={isSidebarOpen ? undefined : "Search Conversations"}
                         tooltipSide="right"
@@ -659,7 +655,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 setIsMobileSidebarOpen(false);
                             }
                         }}
-                        rounded="lg"
+                        roundedSm="lg"
                         size={isSidebarOpen ? "sm" : "icon-sm"}
                         tooltip={isSidebarOpen ? undefined : "Agent"}
                         tooltipSide="right"
@@ -701,7 +697,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     setIsMobileSidebarOpen(false);
                                 }
                             }}
-                            rounded="lg"
+                            roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
                             tooltip={isSidebarOpen ? undefined : "Admin"}
                             tooltipSide="right"
@@ -744,7 +740,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     push("/pricing");
                                 }
                             }}
-                            rounded="lg"
+                            roundedSm="lg"
                             size={forceMobile ? "default" : "lg"}
                             variant="ghost"
                         >
@@ -798,7 +794,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     push("/pricing");
                                 }
                             }}
-                            rounded="lg"
+                            roundedSm="lg"
                             size="icon-sm"
                             tooltip={
                                 isPlusSubscriber
@@ -903,6 +899,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                             currentPage === 1
                                                 ? getPaginatedThreadsForGroup(
                                                       groupedThreads.today,
+                                                      startIndex,
+                                                      endIndex,
                                                   ).filter((thread) => !thread.pinned)
                                                 : [],
                                     })}
@@ -910,24 +908,32 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                         title: "Yesterday",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.yesterday,
+                                            startIndex,
+                                            endIndex,
                                         ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Last 7 Days",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.last7Days,
+                                            startIndex,
+                                            endIndex,
                                         ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Last 30 Days",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.last30Days,
+                                            startIndex,
+                                            endIndex,
                                         ).filter((thread) => !thread.pinned),
                                     })}
                                     {renderGroup({
                                         title: "Older",
                                         threads: getPaginatedThreadsForGroup(
                                             groupedThreads.previousMonths,
+                                            startIndex,
+                                            endIndex,
                                         ).filter((thread) => !thread.pinned),
                                     })}
                                 </>
