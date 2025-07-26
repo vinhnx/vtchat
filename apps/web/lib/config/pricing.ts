@@ -75,11 +75,6 @@ export const PRICING_CONFIG = {
                         "Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 5 requests per day",
                 },
                 {
-                    name: "AI Memory (Exclusive)",
-                    description:
-                        "Personal AI assistant that remembers everything you share. Build your personal agent for truly personalized conversations - 2,000 completions per month",
-                },
-                {
                     name: "Priority Support & Daily Reset",
                     description:
                         "Priority customer support with daily quota reset for Pro Search and Deep Research features",

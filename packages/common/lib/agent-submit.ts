@@ -47,7 +47,6 @@ export function logRoutingDecision(params: {
     hasApiKey: boolean;
     deepResearch?: boolean;
     proSearch?: boolean;
-    rag?: boolean;
 }) {
     log.info(params, "🎯 API routing decision");
 }

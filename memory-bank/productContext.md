@@ -27,12 +27,11 @@ This project aims to refactor and improve an existing web application to enhance
 
 Name: VT+
 Product ID: Use environment variable CREEM_PRODUCT_ID.
-Description: "VT+ provides enhanced research capabilities and AI memory"
+Description: "VT+ provides enhanced research capabilities"
 Payment: Subscription type, $5.99 USD monthly, price includes tax.
 Features:
 PRO_SEARCH: "Enhanced Web Search: Real-time web integration for grounded information retrieval."
 DEEP_RESEARCH: "Deep Research: Comprehensive analysis of complex topics with in-depth exploration."
-RAG: "Personal AI Assistant with Memory: AI memory system for personalized assistance."
 
 ## New Tier System (Updated July 2025)
 
@@ -53,8 +52,7 @@ Available to all logged-in users:
 
 ### VT+ Tier ($5.99/month)
 
-All free tier features PLUS 3 exclusive research-focused features:
+All free tier features PLUS 2 exclusive research-focused features:
 
 - PRO_SEARCH (Enhanced Web Search)
 - DEEP_RESEARCH (Deep Research capabilities)
-- RAG (Personal AI Assistant with Memory)

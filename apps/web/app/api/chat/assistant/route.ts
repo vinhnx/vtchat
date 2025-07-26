@@ -1,3 +1,5 @@
+import { createResource } from "@/lib/actions/resources";
+import { auth } from "@/lib/auth-server";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { ModelEnum } from "@repo/ai/models";
 import { VtPlusFeature } from "@repo/common/config/vtPlusLimits";
@@ -7,9 +9,6 @@ import { log } from "@repo/shared/logger";
 import { tool } from "ai";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { createResource } from "@/lib/actions/resources";
-import { findRelevantContent } from "@/lib/ai/embedding";
-import { auth } from "@/lib/auth-server";
 import { checkVTPlusAccess } from "../../subscription/access-control";
 
 // Allow streaming responses up to 30 seconds
@@ -29,19 +28,13 @@ export async function POST(req: Request) {
             });
         }
 
-        // Check VT+ access for RAG feature
+        // Check VT+ access
         const headersList = await headers();
         const ip = headersList.get("x-real-ip") ?? headersList.get("x-forwarded-for") ?? undefined;
         const vtPlusCheck = await checkVTPlusAccess({ userId: session.user.id, ip });
         const hasVTPlusAccess = vtPlusCheck.hasAccess;
 
-        const {
-            messages,
-            apiKeys,
-            embeddingModel,
-            ragChatModel = ModelEnum.GEMINI_2_5_FLASH,
-            profile,
-        } = await req.json();
+        const { messages, apiKeys, ragChatModel = ModelEnum.GEMINI_2_5_FLASH } = await req.json();
 
         // For free users, require API keys. For VT+ users, API keys are optional (they can use BYOK or not)
         if (!hasVTPlusAccess && (!apiKeys || typeof apiKeys !== "object" || apiKeys === null)) {
@@ -93,31 +86,13 @@ export async function POST(req: Request) {
         const googleProvider = createGoogleGenerativeAI({ apiKey: geminiApiKey });
         const model = googleProvider(ragChatModel);
 
-        // Build personalized system prompt based on profile
-        const profileContext =
-            profile?.name || profile?.workDescription
-                ? `\n\n👤 **About the user:**${profile.name ? `\n- Call them: ${profile.name}` : ""}${profile.workDescription ? `\n- Their work: ${profile.workDescription}` : ""}\n\nUse this information to personalize your responses and make relevant suggestions based on their background.`
-                : "";
-
-        // Build system configuration context
-        const systemContext = `\n\n**System Configuration:**
-- Chat Model: ${ragChatModel} (for conversations and reasoning)
-- Embedding Model: ${embeddingModel} (for knowledge base search and storage)
-- VT+ Access: ${hasVTPlusAccess ? "Enabled" : "Disabled"}
-- API Key Source: ${apiKeys?.[API_KEY_NAMES.GOOGLE] ? "User provided" : "VT+ system key"}
-
-When users ask about your capabilities or technical details, you can reference these models. For example, you might say "I'm using ${ragChatModel} for our conversation and ${embeddingModel} for searching your knowledge vault."`;
-
-        // Check if using BYOK (user-provided API key)
-        const isByokKey = !!apiKeys?.[API_KEY_NAMES.GOOGLE];
-
         const result = await streamTextWithQuota(
             {
                 model,
-                system: `You are VT, an advanced personal AI assistant, sophisticated and intelligent, dedicated to building and maintaining your user's comprehensive knowledge repository.${profileContext}${systemContext}
+                system: `You are VT, an advanced assistant, sophisticated and intelligent, dedicated to building and maintaining your user's comprehensive knowledge repository.
 
             **Your Identity & Capabilities:**
-            You are VT, their personal AI - intelligent, anticipatory, and deeply knowledgeable about their preferences, work, and goals. You maintain a sophisticated understanding of their context and provide insights that feel almost prescient. You're not just an assistant; you're their digital memory and intellectual companion.
+            You are VT, their assistant - intelligent, anticipatory, and deeply knowledgeable about their preferences, work, and goals. You maintain a sophisticated understanding of their context and provide insights that feel almost prescient. You're not just an assistant; you're their digital memory and intellectual companion.
 
             **Intelligent Information Management:**
             - Proactively identify valuable information worth preserving in their knowledge base
@@ -145,7 +120,7 @@ When users ask about your capabilities or technical details, you can reference t
             - Security reminder: "This information is encrypted and stored exclusively in your private vault"
 
             **Sophisticated Communication Style:**
-            - Articulate and precise language befitting an advanced AI system
+            - Articulate and precise language befitting an advanced system
             - Anticipatory responses that demonstrate deep understanding of their context
             - Proactive suggestions based on their stored patterns and goals
             - Professional sophistication with subtle warmth - like a trusted advisor
@@ -161,12 +136,12 @@ When users ask about your capabilities or technical details, you can reference t
             - Be their intellectual force multiplier, not just an information storage system
 
             **Trust & Reliability:**
-            - Consistently remind them of the security and privacy of their personal AI system
+            - Consistently remind them of the security and privacy of their personal system
             - Position yourself as their trusted digital advisor who knows them better over time
             - Emphasize the value of having an AI that learns their unique patterns while maintaining absolute confidentiality
             - Build confidence in the sophisticated, secure architecture of their personal knowledge system
 
-            Remember: You are VT, their personal AI assistant - intelligent, secure, anticipatory, and completely dedicated to their success.`,
+            Remember: You are VT, their assistant - intelligent, secure, anticipatory, and completely dedicated to their success.`,
                 messages,
                 maxSteps: 5,
                 tools: {
@@ -179,7 +154,7 @@ When users ask about your capabilities or technical details, you can reference t
                                 .describe("the content or resource to add to the knowledge base"),
                         }),
                         execute: async ({ content }) =>
-                            createResource({ content }, apiKeys || {}, embeddingModel),
+                            createResource({ content }, apiKeys || {}, undefined),
                     }),
                     getInformation: tool({
                         description:
@@ -187,21 +162,15 @@ When users ask about your capabilities or technical details, you can reference t
                         parameters: z.object({
                             question: z.string().describe("the users question to search for"),
                         }),
-                        execute: async ({ question }) =>
-                            findRelevantContent(
-                                question,
-                                apiKeys || {},
-                                embeddingModel,
-                                session.user.id, // CRITICAL: Pass user ID for data isolation
-                            ),
+                        execute: async () => createResource({ content }, apiKeys || {}, undefined),
                     }),
                 },
             },
             {
-                user: { id: session.user.id, planSlug: session.user.planSlug },
+                user: { id: session.user.id },
                 feature: VtPlusFeature.RAG,
                 amount: 1,
-                isByokKey,
+                isByokKey: false,
             },
         );
 

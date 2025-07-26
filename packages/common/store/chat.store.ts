@@ -4,13 +4,12 @@ import { models, type Model } from "@repo/ai/models";
 import { ChatMode } from "@repo/shared/config";
 import { THINKING_MODE } from "@repo/shared/constants";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
-import { log } from "@repo/shared/logger";
+import { log } from "../../shared/src/lib/logger";
 import type { MessageGroup, Thread, ThreadItem } from "@repo/shared/types";
 import Dexie, { type Table } from "dexie";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { getGlobalSubscriptionStatus } from "../providers/subscription-provider";
-import { safeJsonParse } from "../utils/storage-cleanup";
 import { useAppStore } from "./app.store";
 
 // Helper function to check if user has VT+ subscription
@@ -118,21 +117,7 @@ const loadInitialData = async () => {
 
     // Safe JSON parsing for config data
     const configStr = localStorage.getItem(CONFIG_KEY);
-    const config = safeJsonParse(configStr, {
-        customInstructions: undefined,
-        model: models[0].id,
-        useWebSearch: false,
-        useMathCalculator: false,
-        useCharts: false,
-        showSuggestions: true,
-        chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
-        currentThreadId: null,
-        thinkingMode: {
-            enabled: THINKING_MODE.DEFAULT_ENABLED,
-            budget: THINKING_MODE.DEFAULT_BUDGET,
-            includeThoughts: THINKING_MODE.DEFAULT_INCLUDE_THOUGHTS,
-        },
-    });
+    const config = JSON.parse(configStr || "{}");
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
 
@@ -607,10 +592,7 @@ const initializeTabSync = () => {
         if (event.key !== SYNC_EVENT_KEY) return;
 
         try {
-            const syncData = safeJsonParse(localStorage.getItem(SYNC_DATA_KEY), {
-                type: null,
-                data: { threadId: null, id: null },
-            }) as any;
+            const syncData = JSON.parse(localStorage.getItem(SYNC_DATA_KEY) || "null");
 
             if (!syncData?.type) return;
 
@@ -869,7 +851,7 @@ export const useChatStore = create(
             useAppStore.getState().setCustomInstructions(customInstructions);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, customInstructions }),
@@ -945,7 +927,7 @@ export const useChatStore = create(
             useAppStore.getState().setShowSuggestions(!disabledSuggestions);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({
@@ -963,7 +945,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseWebSearch(useWebSearch);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set((state) => {
                 state.useWebSearch = useWebSearch;
@@ -975,7 +957,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseMathCalculator(useMathCalculator);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, useMathCalculator }),
@@ -990,7 +972,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseCharts(useCharts);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
             set((state) => {
                 state.useCharts = useCharts;
@@ -1046,7 +1028,7 @@ export const useChatStore = create(
                 }
 
                 // Update localStorage for persistent states
-                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
                 localStorage.setItem(
                     CONFIG_KEY,
                     JSON.stringify({
@@ -1062,7 +1044,7 @@ export const useChatStore = create(
         setChatMode: (chatMode: ChatMode) => {
             try {
                 // Get existing config and merge with new chat mode
-                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
                 const updatedConfig = { ...existingConfig, chatMode };
 
                 // Immediately save to localStorage
@@ -1070,7 +1052,7 @@ export const useChatStore = create(
 
                 // Verify the save was successful - warn only, don't throw
                 const verification = localStorage.getItem(CONFIG_KEY);
-                const verifiedConfig = safeJsonParse(verification, {}) as any;
+                const verifiedConfig = JSON.parse(verification || "{}") as any;
                 if (verifiedConfig.chatMode !== chatMode) {
                     log.warn(
                         { context: "ChatStore" },
@@ -1118,7 +1100,7 @@ export const useChatStore = create(
             useAppStore.getState().setThinkingMode(thinkingMode);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, thinkingMode }));
 
             set((state) => {
@@ -1141,7 +1123,7 @@ export const useChatStore = create(
             useAppStore.getState().setGeminiCaching(geminiCaching);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, geminiCaching }));
 
             set((state) => {
@@ -1288,7 +1270,7 @@ export const useChatStore = create(
 
                 // Ensure the thread ID is persisted in localStorage for reload resilience
                 try {
-                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
                     if (existingConfig.currentThreadId !== threadId) {
                         localStorage.setItem(
                             CONFIG_KEY,
@@ -1434,7 +1416,7 @@ export const useChatStore = create(
         setModel: async (model: Model) => {
             try {
                 // Get existing config and merge with new model
-                const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {}) as any;
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}") as any;
                 const updatedConfig = { ...existingConfig, model: model.id };
 
                 // Immediately save to localStorage
@@ -1442,7 +1424,7 @@ export const useChatStore = create(
 
                 // Verify the save was successful - warn only, don't throw
                 const verification = localStorage.getItem(CONFIG_KEY);
-                const verifiedConfig = safeJsonParse(verification, {}) as any;
+                const verifiedConfig = JSON.parse(verification || "{}") as any;
                 if (verifiedConfig.model !== model.id) {
                     log.warn(
                         { context: "ChatStore" },
@@ -1633,7 +1615,7 @@ export const useChatStore = create(
             const thread = get().threads.find((t) => t.id === threadId);
 
             // Safely get existing config to preserve other settings
-            const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
             const currentModel = get().model;
 
             // Only update config if model is available
@@ -1916,7 +1898,7 @@ if (typeof window !== "undefined") {
             // If we're using a different thread ID than what's in localStorage, update localStorage
             if (finalThreadId && finalThreadId !== currentThreadId) {
                 try {
-                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
                     localStorage.setItem(
                         CONFIG_KEY,
                         JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),
@@ -1946,7 +1928,7 @@ if (typeof window !== "undefined") {
                 try {
                     sessionStorage.setItem("handling_thread_id", finalThreadId);
                     // Also ensure the thread ID is persisted in localStorage for reload resilience
-                    const existingConfig = safeJsonParse(localStorage.getItem(CONFIG_KEY), {});
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
                     localStorage.setItem(
                         CONFIG_KEY,
                         JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),

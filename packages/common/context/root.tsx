@@ -1,9 +1,8 @@
 "use client";
-import { log } from "@repo/shared/logger";
 import { initHotjar } from "@repo/shared/utils";
 import { createContext, useContext, useEffect, useState } from "react";
+import { log } from "../../shared/src/lib/logger";
 import { useThreadAuth } from "../hooks";
-import { initializeStorageCleanup } from "../utils/storage-cleanup";
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -50,13 +49,6 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
                 initHotjar();
             } catch (error) {
                 log.warn({ data: error }, "Failed to initialize Hotjar");
-            }
-
-            try {
-                // Initialize storage cleanup to handle corrupted localStorage data
-                initializeStorageCleanup();
-            } catch (error) {
-                log.warn({ data: error }, "Failed to initialize storage cleanup");
             }
         }
     }, []);

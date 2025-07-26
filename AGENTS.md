@@ -71,7 +71,7 @@
 ## Domain Knowledge
 
 - Chat application with AI models (OpenAI, Anthropic, etc.)
-- Subscription tiers:VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+- Subscription tiers:VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG.
 - MCP integration for external tools
 - Use promptBoost tools to enhance prompt quality
 - You can use playwright MCP tool to test web components integration

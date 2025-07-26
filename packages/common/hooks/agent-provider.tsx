@@ -694,7 +694,6 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 hasVtPlus: hasVtPlusAccess,
                 deepResearch: mode === ChatMode.Deep,
                 proSearch: mode === ChatMode.Pro,
-                rag: false, // TODO: Add RAG feature detection
             });
 
             // Log routing decision for debugging

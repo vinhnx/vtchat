@@ -72,21 +72,3 @@ export function createContentHash(content: string): string {
 export function containsPII(content: string): boolean {
     return PII_PATTERNS.some(({ pattern }) => pattern.test(content));
 }
-
-/**
- * Secure content for embedding storage
- * - For PII content: return masked version
- * - For non-PII: return truncated version with hash
- */
-export function secureContentForEmbedding(content: string): string {
-    if (containsPII(content)) {
-        return maskPII(content);
-    }
-
-    // For non-PII content, still limit storage to prevent bloat
-    if (content.length > 500) {
-        return createContentHash(content);
-    }
-
-    return content;
-}

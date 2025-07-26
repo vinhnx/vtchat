@@ -2,7 +2,7 @@
 
 ## Summary
 
-VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+VT offers free tier, and with VT+ focusing only on 2 exclusive research capabilities: Deep Research and Pro Search.
 
 ## Key Changes Made
 
@@ -11,8 +11,8 @@ VT offers free tier, and with VT+ focusing only on 3 exclusive research capabili
 **New Messaging:**
 
 - **Free Tier**
-- **VT+**: "Focuses on research and AI memory" ($5.99/month)
-- **Clear Differentiation**: Advanced features available to free tier, with only 3 research-focused exclusives for VT+
+- **VT+**: "Focuses on research" ($5.99/month)
+- **Clear Differentiation**: Advanced features available to free tier, with only 2 research-focused exclusives for VT+
 
 ### 2. Feature Distribution Updates
 
@@ -28,11 +28,10 @@ VT offers free tier, and with VT+ focusing only on 3 exclusive research capabili
 - 9 free AI models (5 Gemini + 4 OpenRouter) ✅
 - Unlimited usage with BYOK ✅
 
-**VT+ Exclusive Features (3 total):**
+**VT+ Exclusive Features (2 total):**
 
 - PRO_SEARCH (Enhanced Web Search)
 - DEEP_RESEARCH (Deep Research capabilities)
-- RAG (Personal AI Assistant with Memory)
 - Premium AI Models: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 
 ## Files Updated
@@ -60,7 +59,7 @@ VT offers free tier, and with VT+ focusing only on 3 exclusive research capabili
 
 1. **Competitive Advantage**
 2. **Clear Value Ladder**: Advanced features in free tier drive account creation
-3. **Focused Premium**: VT+ exclusively targets research and AI memory use cases
+3. **Focused Premium**: VT+ exclusively targets research use cases
 4. **Price Positioning**: $5.99/month competitive pricing for premium features
 
 ### Business Impact

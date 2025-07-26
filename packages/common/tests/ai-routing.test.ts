@@ -108,16 +108,14 @@ describe("shouldUseServerSideAPI", () => {
             expect(
                 shouldUseServerSideAPI({
                     mode: ChatMode.CLAUDE_4_SONNET,
-                    hasVtPlus: false,
-                    rag: true,
+                    hasVtPlus: false
                 }),
             ).toBe(true);
 
             expect(
                 shouldUseServerSideAPI({
                     mode: ChatMode.GPT_4o,
-                    hasVtPlus: true,
-                    rag: true,
+                    hasVtPlus: true
                 }),
             ).toBe(true);
         });

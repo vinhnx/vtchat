@@ -10,7 +10,7 @@ test("authenticate with Better-Auth session", async ({ page, context }) => {
             path: "/",
             httpOnly: true,
             secure: false,
-            sameSite: "Lax",
+            sameSite: "Lax", // changed from string to allowed enum value
         },
         {
             name: "better-auth.csrf_token",
@@ -19,7 +19,7 @@ test("authenticate with Better-Auth session", async ({ page, context }) => {
             path: "/",
             httpOnly: true,
             secure: false,
-            sameSite: "Lax",
+            sameSite: "Lax", // changed from string to allowed enum value
         },
     ];
 
@@ -46,13 +46,6 @@ test("extract session cookies helper", async ({ page, context }) => {
     // Then extract cookies:
     const cookies = await context.cookies();
 
-    console.log("Current session cookies:");
-    cookies.forEach((cookie) => {
-        if (cookie.name.includes("session") || cookie.name.includes("auth")) {
-            console.log(`${cookie.name}: ${cookie.value}`);
-        }
-    });
-
     // Save for future use
     const sessionCookies = cookies.filter(
         (c) => c.name.includes("session") || c.name.includes("auth") || c.name.includes("csrf"),
@@ -63,6 +56,5 @@ test("extract session cookies helper", async ({ page, context }) => {
             "./e2e/session-cookies.json",
             JSON.stringify(sessionCookies, null, 2),
         );
-        console.log("✅ Session cookies saved to ./e2e/session-cookies.json");
     }
 });

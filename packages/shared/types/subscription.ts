@@ -37,7 +37,6 @@ export const FeatureSlug = {
     GEMINI_EXPLICIT_CACHING: "gemini_explicit_caching",
     CHART_VISUALIZATION: "chart_visualization",
     MULTI_MODAL_CHAT: "multi_modal_chat",
-    RAG: "rag",
     GEMINI_MODELS_NO_BYOK: "gemini_models_no_byok",
 } as const;
 
@@ -101,8 +100,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
     [PlanSlug.VT_PLUS]: {
         slug: PlanSlug.VT_PLUS,
         name: "VT+",
-        description:
-            "Enhanced experience with premium research capabilities and personal AI assistant with memory",
+        description: "Enhanced experience with premium research capabilities.",
         features: [
             // All Base plan features
             FeatureSlug.ACCESS_CHAT,
@@ -123,7 +121,6 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             // VT+ exclusive features
             FeatureSlug.PRO_SEARCH,
             FeatureSlug.DEEP_RESEARCH,
-            FeatureSlug.RAG,
             FeatureSlug.GROUNDING_WEB_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
             FeatureSlug.GEMINI_MODELS_NO_BYOK,
@@ -233,12 +230,6 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: "Multi-Modal Chat",
         description:
             "Upload and analyze images and PDF documents alongside text conversations using advanced AI models",
-    },
-    [FeatureSlug.RAG]: {
-        slug: FeatureSlug.RAG,
-        name: "Personal AI Assistant with Memory",
-        description:
-            "Personal agent with intelligent information storage and retrieval capabilities",
     },
     [FeatureSlug.GEMINI_MODELS_NO_BYOK]: {
         slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,

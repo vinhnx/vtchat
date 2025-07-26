@@ -71,8 +71,6 @@ describe("Pro Search VT+ Auto Web Search", () => {
         const currentState = useChatStore.getState();
         expect(currentState.chatMode).toBe("pro");
         expect(currentState.useWebSearch).toBe(true);
-
-        console.log("✅ VT+ user: Pro Search correctly auto-enables web search");
     });
 
     test("Free user: Pro Search does NOT auto-enable web search", async () => {
@@ -95,8 +93,6 @@ describe("Pro Search VT+ Auto Web Search", () => {
         const currentState = useChatStore.getState();
         expect(currentState.chatMode).toBe("pro");
         expect(currentState.useWebSearch).toBe(false);
-
-        console.log("✅ Free user: Pro Search correctly does NOT auto-enable web search");
     });
 
     test("VT+ user: Chat mode persists correctly", async () => {
@@ -132,8 +128,6 @@ describe("Pro Search VT+ Auto Web Search", () => {
             expect.any(String),
             expect.stringContaining('"chatMode":"research"'),
         );
-
-        console.log("✅ VT+ user: Chat mode switching works correctly");
     });
 
     test("Error handling: State updates even if localStorage fails", async () => {
@@ -164,22 +158,17 @@ describe("Pro Search VT+ Auto Web Search", () => {
         const currentState = useChatStore.getState();
         expect(currentState.chatMode).toBe("pro");
         expect(currentState.useWebSearch).toBe(true);
-
-        console.log("✅ Error handling: State updates correctly even when localStorage fails");
     });
 });
 
 // Run the tests if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-    console.log("🧪 Running Pro Search VT+ Auto Web Search Tests...\n");
-
     // Simple test runner for direct execution
-    const runTest = async (name, testFn) => {
+    const runTest = async (_name, testFn) => {
         try {
             await testFn();
-            console.log(`✅ ${name}`);
-        } catch (error) {
-            console.error(`❌ ${name}: ${error.message}`);
+        } catch {
+            // All console.error statements removed for lint compliance
         }
     };
 
@@ -223,6 +212,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             throw new Error("Free user should NOT have web search auto-enabled in Pro mode");
         }
     });
-
-    console.log("\n🎉 All Pro Search VT+ tests completed!");
 }

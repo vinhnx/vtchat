@@ -62,7 +62,7 @@ VT is built with **privacy-first principles** at its core:
 - **Account Management:** Create and manage your account, authenticate users
 - **Free Model Management:** We monitor daily usage and enforce rate limits for our 9 free AI models to ensure fair access for all users.
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
-- **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 10/day, DEEP_RESEARCH: 5/day, RAG: 2,000/month) while providing all premium AI models free to logged-in users with BYOK
+- **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 10/day, DEEP_RESEARCH: 5/day) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 
@@ -134,7 +134,7 @@ VT is built with **privacy-first principles** at its core:
 
 **Content Usage Controls:**
 - **Robots.txt Implementation** - We follow the IETF AI Preferences (aipref) standard via contentsignals.org
-- **Sensitive Area Protection** - Chat threads, personal profiles, and RAG content are completely blocked from all crawlers and AI training
+- **Sensitive Area Protection** - Chat threads and personal profiles are completely blocked from all crawlers and AI training
 - **Public Content Policy** - Only our public informational pages (about, FAQ, privacy, terms) allow AI training data mining
 - **HTTP Header Controls** - Content-Usage headers set specific permissions for different content areas
 - **Search Engine Restrictions** - Major search engines (Google, Bing, OpenAI) are prevented from indexing private conversations and user data
@@ -143,7 +143,6 @@ VT is built with **privacy-first principles** at its core:
 - **Complete Chat Blocking** - All chat conversations are marked "noindex, nofollow" and blocked from crawlers
 - **API Endpoint Security** - All API routes are protected with "private, no-store" cache controls
 - **User Profile Privacy** - Profile pages are completely blocked from search indexing and AI training
-- **RAG Content Security** - Personal AI assistant content is fully protected from external access
 
 ---
 

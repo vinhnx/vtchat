@@ -52,8 +52,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
         responses.forEach((response, index) => {
             expect(response).toContain(`Stream ${index + 1} completed`);
         });
-
-        console.log("Concurrent stream responses:", responses);
     }, 45000); // Longer timeout for concurrent requests
 
     it("should handle streaming with tools/function calls", async () => {
@@ -96,12 +94,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
                     toolCallReceived = true;
                     toolCallId = event.content_block.id;
                     functionName = event.content_block.name;
-                    console.log("Tool call started:", functionName, toolCallId);
                 }
-            })
-            .on("inputJson", (partialJson, jsonSnapshot) => {
-                console.log("Tool input JSON delta:", partialJson);
-                console.log("Current JSON snapshot:", jsonSnapshot);
             });
 
         const message = await stream.finalMessage();
@@ -113,8 +106,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
         // Check that the message contains a tool use block
         const hasToolUse = message.content.some((block) => block.type === "tool_use");
         expect(hasToolUse).toBe(true);
-
-        console.log("Final message with tool call:", message.content);
     }, 30000);
 
     it("should handle streaming with system messages", async () => {
@@ -143,12 +134,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
 
         // Should contain pirate-like language
         const pirateWords = ["arr", "ahoy", "matey", "ye", "aye"];
-        const containsPirateLanguage = pirateWords.some((word) =>
-            responseText.toLowerCase().includes(word),
-        );
-
-        console.log("Pirate response:", responseText);
-        console.log("Contains pirate language:", containsPirateLanguage);
+        pirateWords.some((word) => responseText.toLowerCase().includes(word));
     }, 30000);
 
     it("should handle streaming errors gracefully", async () => {
@@ -170,7 +156,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
                 .on("error", (error) => {
                     errorReceived = true;
                     errorMessage = error.message;
-                    console.log("Expected error received:", error.message);
                 });
 
             await stream.finalMessage();
@@ -181,11 +166,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
             expect(errorReceived || error).toBeTruthy();
             if (error instanceof Anthropic.APIError) {
                 expect(error.status).toBe(400); // Bad request
-                console.log("API Error details:", {
-                    status: error.status,
-                    name: error.name,
-                    message: error.message,
-                });
             }
         }
     }, 30000);
@@ -210,7 +190,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
 
                 if (event.type === "message_start") {
                     messageMetadata = event.message;
-                    console.log("Message metadata:", messageMetadata);
                 }
             });
 
@@ -222,10 +201,6 @@ describe("Advanced Anthropic Streaming Tests", () => {
         expect(finalMessage.usage.input_tokens).toBeGreaterThan(0);
         expect(finalMessage.usage.output_tokens).toBeGreaterThan(0);
         expect(finalMessage.model).toBe("claude-3-5-sonnet-20241022");
-
-        console.log("Stream events collected:", streamEvents.length);
-        console.log("Final usage stats:", finalMessage.usage);
-        console.log("Message ID:", finalMessage.id);
     }, 30000);
 
     it("should handle custom request headers and options", async () => {
@@ -260,13 +235,9 @@ describe("Advanced Anthropic Streaming Tests", () => {
         expect(responseReceived).toBe(true);
         expect(message.content).toBeDefined();
         expect(message.content[0].text.length).toBeGreaterThan(0);
-
-        console.log("Custom options response:", message.content[0].text);
     }, 30000);
 
     it("should demonstrate different streaming patterns", async () => {
-        console.log("\n=== Testing High-Level Streaming API ===");
-
         // Pattern 1: High-level streaming with event handlers
         const stream1 = client.messages
             .stream({
@@ -275,13 +246,9 @@ describe("Advanced Anthropic Streaming Tests", () => {
                 messages: [{ role: "user", content: "Count to 3 with explanations." }],
             })
             .on("text", (text) => process.stdout.write(text))
-            .on("finalMessage", (message) => {
-                console.log(`\nHigh-level: Token usage = ${JSON.stringify(message.usage)}`);
-            });
+            .on("finalMessage", () => {});
 
         await stream1.finalMessage();
-
-        console.log("\n\n=== Testing Low-Level Streaming API ===");
 
         // Pattern 2: Low-level streaming with async iteration
         const stream2 = await client.messages.create({
@@ -292,7 +259,7 @@ describe("Advanced Anthropic Streaming Tests", () => {
         });
 
         const textParts: string[] = [];
-        let usage: any = null;
+        let usage: Record<string, unknown> | undefined;
 
         for await (const event of stream2) {
             switch (event.type) {
@@ -303,13 +270,10 @@ describe("Advanced Anthropic Streaming Tests", () => {
                     }
                     break;
                 case "message_delta":
-                    usage = event.usage;
+                    usage = event.usage as Record<string, unknown>;
                     break;
             }
         }
-
-        console.log(`\nLow-level: Token usage = ${JSON.stringify(usage)}`);
-        console.log(`Text parts collected: ${textParts.length}`);
 
         expect(textParts.length).toBeGreaterThan(0);
         expect(usage).toBeDefined();

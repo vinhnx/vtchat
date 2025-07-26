@@ -1,10 +1,9 @@
 import { ChatMode } from "@repo/shared/config";
-import { log } from "@repo/shared/logger";
+import { log } from "../../shared/src/lib/logger";
 import type { ApiKeyMetadata } from "@repo/shared/utils/key-rotation";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { isGeminiModel } from "../utils";
-import { safeJsonParse } from "../utils/storage-cleanup";
 
 export type ApiKeys = {
     OPENAI_API_KEY?: string;
@@ -170,7 +169,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         }
                     }
 
-                    const userData = safeJsonParse(storedData, { state: { keys: {} } });
+                    const userData = storedData ? JSON.parse(storedData) : { state: { keys: {} } };
 
                     // Update state with new user's data
                     set({ keys: userData.state?.keys || {} });
@@ -193,7 +192,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
             forceRehydrate: () => {
                 // Force re-read from current storage location
                 const storedData = localStorage.getItem(currentStorageKey);
-                const userData = safeJsonParse(storedData, { state: { keys: {} } });
+                const userData = storedData ? JSON.parse(storedData) : { state: { keys: {} } };
                 set({ keys: userData.state?.keys || {} });
             },
             hasApiKeyForChatMode: (

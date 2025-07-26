@@ -1,11 +1,11 @@
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     checkRateLimit,
     getRateLimitStatus,
     RATE_LIMITS,
     recordRequest,
 } from "@/lib/services/rate-limit";
+import { ModelEnum } from "@repo/ai/models";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database
 vi.mock("@/lib/database", () => ({
@@ -60,9 +60,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -91,9 +89,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -122,9 +118,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -159,9 +153,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -194,9 +186,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -248,18 +238,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
-                    }),
-                }),
-            });
-
-            const mockUpdate = vi.fn().mockResolvedValue(undefined);
-            (mockDb.db.update as any).mockReturnValue({
-                set: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: mockUpdate,
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -290,18 +269,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
-                    }),
-                }),
-            });
-
-            const mockUpdate = vi.fn().mockResolvedValue(undefined);
-            (mockDb.db.update as any).mockReturnValue({
-                set: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        then: mockUpdate,
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -335,9 +303,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });
@@ -379,9 +345,7 @@ describe("Gemini Multi-Model Rate Limiting", () => {
             (mockDb.db.select as any).mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockReturnValue({
-                            then: vi.fn().mockResolvedValue([mockRecord]),
-                        }),
+                        limit: vi.fn().mockReturnValue([mockRecord]),
                     }),
                 }),
             });

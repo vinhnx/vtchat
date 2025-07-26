@@ -12,7 +12,7 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 
 - **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys + 9 free server models
 - **Privacy-First**: All conversations stored locally in your browser
-- **Research Features**: Enhanced web search, deep research, personal AI memory (VT+ subscription)
+- **Research Features**: Enhanced web search, deep research (VT+ subscription)
 - **Security**: protection with rate limiting and bot detection
 - **Multi-Device**: Use on desktop, tablet, and mobile devices
 
@@ -40,7 +40,6 @@ All free features plus 3 research-focused exclusives:
 
 - **Enhanced Web Search (PRO_SEARCH)**: AI can search the web for current information (10 requests/day)
 - **Deep Research (DEEP_RESEARCH)**: Comprehensive analysis of complex topics (5 requests/day)
-- **Personal AI Memory (RAG)**: AI assistant with memory capabilities (2,000 completions/month)
 - **Priority Support**: Faster support response times
 
 **Daily Quotas**: Deep Research and Pro Search have daily limits that reset every day at 00:00 UTC to provide meaningful daily usage while controlling costs.
