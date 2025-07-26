@@ -17,7 +17,6 @@ import {
 import {
     Badge,
     Button,
-    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -26,14 +25,15 @@ import {
     DropdownMenuTrigger,
     Flex,
     UnifiedAvatar,
+    cn,
     useToast,
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
     ChevronLeft,
     ChevronRight,
-    ChevronsUpDown,
     ChevronUp,
+    ChevronsUpDown,
     Command,
     ExternalLink,
     FileText,
@@ -51,7 +51,6 @@ import {
     Sparkles,
     Terminal,
     User,
-    Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -637,47 +636,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     K
                                 </Badge>
                             </div>
-                        )}
-                    </Button>
-
-                    {/* RAG Knowledge Chat Button */}
-                    <Button
-                        className={cn(
-                            "relative transition-all duration-200",
-                            isSidebarOpen
-                                ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
-                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                        )}
-                        onClick={() => {
-                            push("/agent");
-                            // Close mobile drawer if open
-                            if (forceMobile) {
-                                setIsMobileSidebarOpen(false);
-                            }
-                        }}
-                        roundedSm="lg"
-                        size={isSidebarOpen ? "sm" : "icon-sm"}
-                        tooltip={isSidebarOpen ? undefined : "Agent"}
-                        tooltipSide="right"
-                        variant="ghost"
-                    >
-                        <Zap
-                            className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
-                            size={16}
-                            strokeWidth={2}
-                        />
-                        {isSidebarOpen && (
-                            <span className="flex items-center gap-2">
-                                Agent
-                                {!isPlusSubscriber && (
-                                    <Badge
-                                        className="vt-plus-glass border-[#D99A4E]/30 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
-                                        variant="secondary"
-                                    >
-                                        VT+
-                                    </Badge>
-                                )}
-                            </span>
                         )}
                     </Button>
 
