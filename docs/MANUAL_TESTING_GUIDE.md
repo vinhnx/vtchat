@@ -48,7 +48,6 @@ These should **always** route to `/api/completion`:
 
 - **Deep Research** ✅
 - **Pro Search** ✅
-- **RAG** (Personal AI Assistant) ✅
 
 ## Testing Steps
 

@@ -9,12 +9,10 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = {
     title: "About VT",
-    description:
-        "Learn about VT - Production-ready, privacy-focused AI chat platform with all premium AI models free (BYOK) and exclusive research features for professionals.",
+    description: "Learn about VT - VT - Minimal AI Chat with Deep Research Features.",
     openGraph: {
         title: "About VT",
-        description:
-            "Production-ready AI chat platform with all premium models free and privacy-first architecture.",
+        description: "VT - Minimal AI Chat with Deep Research Features.",
         type: "website",
     },
     robots: {

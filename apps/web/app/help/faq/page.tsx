@@ -606,8 +606,7 @@ function HelpCenterContent() {
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{" "}
                                         Includes everything in the free tier, plus three exclusive
                                         research features: PRO_SEARCH for enhanced web searches,
-                                        DEEP_RESEARCH for in-depth analysis, and RAG for a personal
-                                        AI assistant with memory. Additionally, VT+ provides
+                                        DEEP_RESEARCH for in-depth analysis. Additionally, VT+ provides
                                         server-funded access to all Gemini models (2.5 Flash Lite,
                                         2.5 Flash, 2.5 Pro) with built-in rate limits and budget
                                         protection.

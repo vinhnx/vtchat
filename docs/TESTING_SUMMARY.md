@@ -44,7 +44,7 @@ The AI routing fix has been successfully implemented and deployed to production 
 
 - **Free Models**: Gemini 2.5 Flash Lite Preview
 - **VT+ Models**: Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
-- **VT+ Features**: Deep Research, Pro Search, RAG
+- **VT+ Features**: Deep Research, Pro Search
 
 #### Expected Network Requests:
 
@@ -70,7 +70,7 @@ bun test packages/common/tests/ai-routing.test.ts
 ## 🔍 Key Verification Points:
 
 1. **VT+ Models**: All VT+ models (Claude 4, GPT 4o, etc.) should call `/api/completion`
-2. **VT+ Features**: Deep Research, Pro Search, RAG should use `/api/completion`
+2. **VT+ Features**: Deep Research, Pro Search should use `/api/completion`
 3. **API Key Security**: Provider keys (ANTHROPIC_API_KEY, OPENAI_API_KEY) should be filtered out
 4. **Free Models**: Should work correctly (may use either endpoint)
 5. **Authentication**: Login dialogs should appear for unauthenticated users

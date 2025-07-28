@@ -39,7 +39,6 @@ VT implements the IETF AI Preferences (aipref) standard to control how automated
 **Protected Content Areas:**
 - **Private Conversations**: All chat threads are completely blocked from search engines and AI training crawlers
 - **User Profiles**: Personal account information is protected from indexing and data mining
-- **RAG Content**: Personal AI assistant agent is fully blocked from external access
 - **API Endpoints**: All server APIs are protected with no-index and no-store policies
 
 **Public Content Policy:**
@@ -123,7 +122,6 @@ VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** tha
 - **Three Exclusive Research Features with Daily Quotas**:
   - **Enhanced Web Search (PRO_SEARCH)**: 10 requests per day (resets at 00:00 UTC)
   - **Deep Research (DEEP_RESEARCH)**: 5 requests per day (resets at 00:00 UTC)
-  - **Personal AI Assistant with Memory (RAG)**: 2,000 completions per month (resets on 1st of month)
 - **Expanded Gemini Access**: VT+ subscribers receive expanded, server-funded access to all Gemini models, including Gemini 2.5 Pro (25 requests/day), Gemini 2.5 Flash (50 requests/day), and Gemini 2.5 Flash Lite (100 requests/day), all without needing your own API keys.
 - **Priority Support**: Enhanced customer support
 - **Daily Reset Schedule**: Pro Search and Deep Research quotas reset every day at 00:00 UTC to provide consistent daily usage

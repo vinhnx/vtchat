@@ -19,14 +19,10 @@ describe("VT+ Configuration", () => {
                 limit: 10,
                 window: QUOTA_WINDOW.DAILY,
             });
-            expect(VT_PLUS_LIMITS[VtPlusFeature.RAG]).toEqual({
-                limit: 2000,
-                window: QUOTA_WINDOW.MONTHLY,
-            });
         });
 
         it("should have all required VT+ features", () => {
-            expect(Object.values(VtPlusFeature)).toEqual(["DR", "PS", "RAG"]);
+            expect(Object.values(VtPlusFeature)).toEqual(["DR", "PS"]);
         });
 
         it("should only have positive limits", () => {
@@ -42,12 +38,11 @@ describe("VT+ Configuration", () => {
         it("should have correct feature names", () => {
             expect(VtPlusFeature.DEEP_RESEARCH).toBe("DR");
             expect(VtPlusFeature.PRO_SEARCH).toBe("PS");
-            expect(VtPlusFeature.RAG).toBe("RAG");
         });
 
         it("should be type-safe", () => {
             const features = Object.values(VtPlusFeature);
-            expect(features).toHaveLength(3);
+            expect(features).toHaveLength(2);
 
             features.forEach((feature) => {
                 expect(VT_PLUS_LIMITS[feature]).toBeDefined();

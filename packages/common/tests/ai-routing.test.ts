@@ -103,22 +103,6 @@ describe("shouldUseServerSideAPI", () => {
                 }),
             ).toBe(true);
         });
-
-        it("should route RAG to server-side regardless of user tier", () => {
-            expect(
-                shouldUseServerSideAPI({
-                    mode: ChatMode.CLAUDE_4_SONNET,
-                    hasVtPlus: false
-                }),
-            ).toBe(true);
-
-            expect(
-                shouldUseServerSideAPI({
-                    mode: ChatMode.GPT_4o,
-                    hasVtPlus: true
-                }),
-            ).toBe(true);
-        });
     });
 
     describe("BYOK scenarios", () => {

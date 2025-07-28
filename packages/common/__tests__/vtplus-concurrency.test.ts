@@ -67,10 +67,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         await Promise.all(promises);
 
         // Verify the final usage count
-        const usage = await getUsage({
-            userId: testUserId,
-            feature: testFeature,
-        });
+        const usage = await getUsage(testUserId, testFeature);
 
         expect(usage.used).toBe(expectedTotal);
         expect(usage.feature).toBe(testFeature);
@@ -118,10 +115,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         await Promise.all(promises);
 
         // Verify the final usage count
-        const usage = await getUsage({
-            userId: testUserId,
-            feature: testFeature,
-        });
+        const usage = await getUsage(testUserId, testFeature);
 
         expect(usage.used).toBe(expectedTotal);
 
@@ -158,10 +152,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         await Promise.all(promises);
 
         // Verify the final usage count
-        const usage = await getUsage({
-            userId: testUserId,
-            feature: testFeature,
-        });
+        const usage = await getUsage(testUserId, testFeature);
 
         expect(usage.used).toBe(expectedTotal);
 
@@ -181,7 +172,7 @@ describe("VT+ Quota Concurrency Tests", () => {
     }, 60000); // 60 second timeout for high concurrency test
 
     it("should handle concurrent calls for different features", async () => {
-        const features = [VtPlusFeature.DEEP_RESEARCH, VtPlusFeature.PRO_SEARCH, VtPlusFeature.RAG];
+        const features = [VtPlusFeature.DEEP_RESEARCH, VtPlusFeature.PRO_SEARCH];
         const callsPerFeature = 10;
         const amountPerCall = 3;
         const expectedPerFeature = callsPerFeature * amountPerCall;
@@ -202,10 +193,7 @@ describe("VT+ Quota Concurrency Tests", () => {
 
         // Verify usage for each feature
         for (const feature of features) {
-            const usage = await getUsage({
-                userId: testUserId,
-                feature,
-            });
+            const usage = await getUsage(testUserId, feature);
             expect(usage.used).toBe(expectedPerFeature);
         }
 

@@ -13,7 +13,7 @@ interface MetadataConfig {
 
 export function generateMetadata({
     title = "VT",
-    description = "Minimal AI chat application.",
+    description = "Minimal AI Chat with Deep Research Features",
     pathname = "",
     keywords,
     image = "/og-image-v3.jpg",

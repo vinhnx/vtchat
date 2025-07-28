@@ -256,7 +256,7 @@ export const ModelSettings = () => {
                                 </p>
                                 <p>
                                     VT+ also includes exclusive research features like Deep
-                                    Research, Pro Search, and Personal AI Assistant.
+                                    Research, Pro Search.
                                 </p>
                             </div>
                         </div>

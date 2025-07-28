@@ -2,7 +2,7 @@
 
 > Privacy-first AI chat application with subscription tiers, MCP integration, and multiple AI model support. Built as a Turborepo monorepo with Next.js 14, TypeScript, and a comprehensive agentic system.
 
-vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory). The codebase follows minimal design principles with Oracle consultation workflow for all changes.
+vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search. The codebase follows minimal design principles with Oracle consultation workflow for all changes.
 
 ## Complete README Content
 
@@ -35,7 +35,7 @@ VT is a production-ready, privacy-focused AI chat application delivering cutting
 
 **Subscription Tiers:**
 - **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features - intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities), and RAG (Personal AI Assistant with Memory)
+- **VT+ ($5.99/month)**: Everything free + 3 exclusive research features: PRO_SEARCH (Enhanced Web Search), DEEP_RESEARCH (Deep Research capabilities)
 - **Seamless Management**: Creem.io integration with customer portal
 
 ### Architecture
@@ -173,7 +173,7 @@ Payment processing with customer portal, webhook validation, and subscription ma
 
 ### Subscription Tiers
 - Free tier: All premium AI models with BYOK + advanced features
-- VT+ ($5.99/month): Exclusive research capabilities (Pro Search, Deep Research, RAG)
+- VT+ ($5.99/month): Exclusive research capabilities (Pro Search, Deep Research)
 
 ## Database & Storage
 

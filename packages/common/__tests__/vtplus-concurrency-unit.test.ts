@@ -48,6 +48,5 @@ describe("VT+ Quota Concurrency Logic Tests", () => {
     it("should validate VT+ feature constants", () => {
         expect(VtPlusFeature.DEEP_RESEARCH).toBe("DR");
         expect(VtPlusFeature.PRO_SEARCH).toBe("PS");
-        expect(VtPlusFeature.RAG).toBe("RAG");
     });
 });

@@ -43,7 +43,6 @@ describe("VT+ Daily Limits", () => {
         delete process.env.USE_NEON_MCP;
         delete process.env.VTPLUS_DAILY_LIMIT_DR;
         delete process.env.VTPLUS_DAILY_LIMIT_PS;
-        delete process.env.VTPLUS_MONTHLY_LIMIT_RAG;
     });
 
     describe("Configuration", () => {
@@ -57,25 +56,18 @@ describe("VT+ Daily Limits", () => {
                 limit: 10,
                 window: "daily",
             });
-
-            expect(VT_PLUS_LIMITS[VtPlusFeature.RAG]).toEqual({
-                limit: 2000,
-                window: "monthly",
-            });
         });
 
         it("should respect environment variables for limits", () => {
             // Set environment variables
             process.env.VTPLUS_DAILY_LIMIT_DR = "3";
             process.env.VTPLUS_DAILY_LIMIT_PS = "7";
-            process.env.VTPLUS_MONTHLY_LIMIT_RAG = "1500";
 
             // Re-import to get updated config
             const { VT_PLUS_LIMITS: updatedLimits } = require("@repo/common/config/vtPlusLimits");
 
             expect(updatedLimits[VtPlusFeature.DEEP_RESEARCH].limit).toBe(3);
             expect(updatedLimits[VtPlusFeature.PRO_SEARCH].limit).toBe(7);
-            expect(updatedLimits[VtPlusFeature.RAG].limit).toBe(1500);
         });
     });
 
@@ -108,35 +100,6 @@ describe("VT+ Daily Limits", () => {
                 expectedPeriodStart.toISOString().split("T")[0],
             );
         });
-
-        it("should use current month for monthly window features", async () => {
-            const mockRecord = {
-                used: 100,
-                feature: VtPlusFeature.RAG,
-                userId: "user123",
-                periodStart: new Date().toISOString().split("T")[0],
-            };
-
-            mockDb.select = vi.fn().mockReturnValue({
-                from: vi.fn().mockReturnValue({
-                    where: vi.fn().mockReturnValue({
-                        limit: vi.fn().mockResolvedValue([mockRecord]),
-                    }),
-                }),
-            });
-
-            const usage = await getUsage("user123", VtPlusFeature.RAG);
-
-            // Verify it uses first day of current month
-            const today = new Date();
-            const expectedPeriodStart = new Date(
-                Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
-            );
-
-            expect(usage.periodStart.toISOString().split("T")[0]).toBe(
-                expectedPeriodStart.toISOString().split("T")[0],
-            );
-        });
     });
 
     describe("Mixed Window Query Optimization", () => {
@@ -148,27 +111,12 @@ describe("VT+ Daily Limits", () => {
                 periodStart: new Date().toISOString().split("T")[0],
             };
 
-            const monthlyRecord = {
-                used: 500,
-                feature: VtPlusFeature.RAG,
-                userId: "user123",
-                periodStart: new Date().toISOString().split("T")[0],
-            };
-
-            let callCount = 0;
             mockDb.select = vi.fn().mockReturnValue({
                 from: vi.fn().mockReturnValue({
                     where: vi.fn().mockReturnValue({
                         limit: vi.fn().mockResolvedValue(() => {
-                            callCount++;
-                            // Return different records based on call order
-                            if (callCount === 1) {
-                                // First call should get daily features (DR, PS)
-                                return [dailyRecord];
-                            } else {
-                                // Second call should get monthly features (RAG)
-                                return [monthlyRecord];
-                            }
+                            // Only daily features (DR, PS)
+                            return [dailyRecord];
                         }),
                     }),
                 }),
@@ -176,13 +124,12 @@ describe("VT+ Daily Limits", () => {
 
             const allUsage = await getAllUsage("user123");
 
-            // Should make separate queries for different window types
-            expect(mockDb.select).toHaveBeenCalledTimes(2);
+            // Should make a single query for daily features
+            expect(mockDb.select).toHaveBeenCalledTimes(1);
 
             // Verify correct limits are applied
             expect(allUsage[VtPlusFeature.DEEP_RESEARCH].limit).toBe(5);
             expect(allUsage[VtPlusFeature.PRO_SEARCH].limit).toBe(10);
-            expect(allUsage[VtPlusFeature.RAG].limit).toBe(2000);
         });
     });
 

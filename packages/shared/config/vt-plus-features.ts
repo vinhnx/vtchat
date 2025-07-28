@@ -56,7 +56,7 @@ export const VT_PLUS_PRODUCT_INFO = {
         interval: "monthly" as const,
         taxIncluded: true,
     },
-    features: Object.values(VT_PLUS_FEATURES), // Ensure VT_PLUS_FEATURES does not include RAG or AI memory
+    features: Object.values(VT_PLUS_FEATURES),
 } as const;
 
 /**

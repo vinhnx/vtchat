@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
     title: "Pricing - VT",
     description:
-        "VT pricing: Most AI features free with BYOK. VT+ ($5.99/month) adds 3 exclusive research features: Deep Research, Pro Search, and RAG Personal AI Assistant.",
+        "VT pricing: Most AI features free with BYOK. VT+ ($5.99/month) adds 3 exclusive research features: Deep Research, Pro Search.",
     keywords: [
         "VT pricing",
         "AI chat pricing",

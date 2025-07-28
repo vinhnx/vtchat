@@ -2,7 +2,7 @@
 
 > Privacy-first AI chat application with subscription tiers, MCP integration, and multiple AI model support. Built as a Turborepo monorepo with Next.js 14, TypeScript, and a comprehensive agentic system.
 
-vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory). The codebase follows minimal design principles with Oracle consultation workflow for all changes.
+vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research, Pro Search. The codebase follows minimal design principles with Oracle consultation workflow for all changes.
 
 ## Core Documentation
 - [README.md](README.md): Project overview, features, tech stack, and setup instructions

@@ -176,8 +176,7 @@ const userCanUpgrade = canUpgrade(user);
 
 1. **Pro Search**: Should consume "PS" quota correctly
 2. **Deep Research**: Should continue consuming "DR" quota correctly
-3. **RAG**: Should consume "RAG" quota correctly (investigate session.user.planSlug)
-4. **Access Control**: All plan checks should work consistently
+3. **Access Control**: All plan checks should work consistently
 
 ## Files Changed
 
@@ -207,7 +206,7 @@ const userCanUpgrade = canUpgrade(user);
 ## Next Steps
 
 1. **Test Runtime Behavior**: Verify quota consumption works correctly
-2. **Add Logging**: Investigate RAG quota consumption issue
+2. **Add Logging**: Investigate quota consumption issue
 3. **Update Documentation**: Update any remaining documentation that references old patterns
 4. **Code Review**: Ensure all team members understand the new unified system
 

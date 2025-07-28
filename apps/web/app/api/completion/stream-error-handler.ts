@@ -142,9 +142,6 @@ export async function handleStreamError({
         } else if (errorString.includes(VtPlusFeature.PRO_SEARCH)) {
             errorMessage =
                 "Daily Pro Search limit reached (10/10). Try regular chat or Deep Research.";
-        } else if (errorString.includes(VtPlusFeature.RAG)) {
-            errorMessage = "Monthly RAG limit reached (2000/2000).";
-            resetMessage = "Your quota will reset next month.";
         }
 
         const response: StreamErrorResponse = {

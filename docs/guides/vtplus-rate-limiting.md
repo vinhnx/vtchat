@@ -8,7 +8,6 @@ The VT+ rate limiting system provides quota-based access control for three premi
 
 - **Deep Research (DR)** - Advanced research workflows with multiple AI model calls
 - **Pro Search (PS)** - Enhanced search capabilities with web grounding
-- **RAG Personal Assistant (RAG)** - Document processing and knowledge management
 
 ## Architecture
 
@@ -36,16 +35,14 @@ The VT+ rate limiting system provides quota-based access control for three premi
 
 ### Current Quota System
 
-| Feature       | Code  | Default Limit    | Reset Window           | Estimated Cost |
-| ------------- | ----- | ---------------- | ---------------------- | -------------- |
-| Deep Research | `DR`  | 5 requests       | Daily (00:00 UTC)      | ~$1-2/day      |
-| Pro Search    | `PS`  | 10 requests      | Daily (00:00 UTC)      | ~$2-3/day      |
-| RAG Assistant | `RAG` | 2000 completions | Monthly (1st of month) | ~$80-100/month |
+| Feature       | Code | Default Limit | Reset Window      | Estimated Cost |
+| ------------- | ---- | ------------- | ----------------- | -------------- |
+| Deep Research | `DR` | 5 requests    | Daily (00:00 UTC) | ~$1-2/day      |
+| Pro Search    | `PS` | 10 requests   | Daily (00:00 UTC) | ~$2-3/day      |
 
 **Important Changes:**
 
 - Deep Research and Pro Search now have **daily limits** that reset every day at 00:00 UTC
-- Personal AI Assistant (RAG) maintains monthly limits for document processing workflows
 - Daily limits are designed to prevent runaway costs while providing meaningful daily usage
 
 ### Environment Configuration
@@ -56,12 +53,10 @@ Override defaults with environment variables:
 # VT+ Rate Limiting Configuration
 VTPLUS_DAILY_LIMIT_DR=5      # Deep Research - requests per day
 VTPLUS_DAILY_LIMIT_PS=10     # Pro Search - requests per day
-VTPLUS_MONTHLY_LIMIT_RAG=2000 # RAG Personal Assistant - completions per month
 
 # Legacy monthly limits (for backward compatibility)
 VTPLUS_LIMIT_DR=500          # Legacy: Deep Research monthly limit
 VTPLUS_LIMIT_PS=800          # Legacy: Pro Search monthly limit
-VTPLUS_LIMIT_RAG=2000        # Legacy: RAG monthly limit
 ```
 
 ## Usage Tracking
@@ -79,11 +74,6 @@ VTPLUS_LIMIT_RAG=2000        # Legacy: RAG monthly limit
     - Daily limit: 10 requests per day
     - Resets every day at 00:00 UTC
     - Each search request consumes 1 unit from daily quota
-
-- **RAG Assistant**: 1 quota unit per API call (unchanged)
-    - Monthly limit: 2000 completions per month
-    - Resets on 1st of each month
-    - Each conversation turn consumes 1 unit from monthly quota
 
 **Note:** The quota system now counts user requests for Deep Research and Pro Search rather than individual AI model API calls, making limits more predictable and user-friendly.
 
