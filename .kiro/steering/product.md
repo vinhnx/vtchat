@@ -1,6 +1,7 @@
 # Product Overview
 
-VT is a production-ready, privacy-first AI chat application that provides cutting-edge AI capabilities through a generous free tier and focused premium subscription.
+Stop juggling multiple AI subscriptions and privacy concerns.
+VT delivers powerful AI conversations with complete privacy protection—starting free, scaling when you're ready.
 
 ## Core Value Proposition
 
