@@ -1,6 +1,6 @@
 "use client";
 
-import { ModelEnum } from "@repo/ai/models";
+import type { ModelEnum } from "@repo/ai/models";
 import { log } from "@repo/shared/lib/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import {
@@ -62,9 +62,6 @@ type State = {
         ttlSeconds: number;
         maxCaches: number;
     };
-    embeddingModel: EmbeddingModel;
-    ragChatModel: ModelEnum;
-    // Profile settings for Personal AI Assistant
     profile: {
         name: string;
         workDescription: string;
@@ -155,7 +152,6 @@ export const useAppStore = create<State & Actions>()(
                 showSuggestions: false,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
-                ragChatModel: ModelEnum.GEMINI_2_5_FLASH,
                 profile: {
                     name: "",
                     workDescription: "",
@@ -346,7 +342,6 @@ export const useAppStore = create<State & Actions>()(
                         state.showSuggestions = false;
                         state.thinkingMode = baseDefaults.thinkingMode;
                         state.geminiCaching = baseDefaults.geminiCaching;
-                        state.ragChatModel = ModelEnum.GEMINI_2_5_FLASH;
                         // Reset UI state to defaults
                         state.isSettingsOpen = false;
                         state.settingTab = SETTING_TABS.USAGE_CREDITS;
@@ -399,8 +394,6 @@ export const useAppStore = create<State & Actions>()(
                 showSuggestions: state.showSuggestions,
                 thinkingMode: state.thinkingMode,
                 geminiCaching: state.geminiCaching,
-                embeddingModel: state.embeddingModel,
-                ragChatModel: state.ragChatModel,
                 profile: state.profile,
             }),
         },

@@ -24,7 +24,6 @@ export type ServerSideAPIOpts = {
  * Rules:
  * 1. Free tier server-funded models (always server-side)
  * 2. VT+ server-funded models (when user has VT+)
- * 3. VT+ exclusive features (Deep Research, Pro Search, RAG)
  */
 export function shouldUseServerSideAPI({
     mode,

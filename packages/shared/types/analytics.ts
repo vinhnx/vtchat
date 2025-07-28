@@ -158,12 +158,10 @@ export const ANALYTICS_EVENTS = {
     PAYMENT_VALIDATION_FAILED: "PaymentValidationFailed",
     PAYMENT_PROCESSING_ERROR: "PaymentProcessingError",
 
-    // Document & RAG Operations
+    // Document Operations
     DOCUMENT_UPLOADED: "DocumentUploaded",
     DOCUMENT_PROCESSED: "DocumentProcessed",
     DOCUMENT_PROCESSING_FAILED: "DocumentProcessingFailed",
-    RAG_QUERY_EXECUTED: "RagQueryExecuted",
-    RAG_CONTEXT_RETRIEVED: "RagContextRetrieved",
 
     // Tool Operations (using constants from features.ts)
     WEB_SEARCH_EXECUTED: "WebSearchExecuted",

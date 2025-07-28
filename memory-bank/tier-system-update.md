@@ -26,7 +26,6 @@ Successfully updated VT's tier system to reflect the new feature distribution wh
 
 - Enhanced Web Search (PRO_SEARCH)
 - Deep Research (DEEP_RESEARCH)
-- Personal AI Assistant with Memory (RAG)
 
 ## Files Updated
 
@@ -72,7 +71,6 @@ Successfully updated VT's tier system to reflect the new feature distribution wh
 2. **VT+ Focus**: Narrowed VT+ to only 3 exclusive features:
     - PRO_SEARCH (Enhanced Web Search)
     - DEEP_RESEARCH (Deep Research)
-    - RAG (Personal AI Assistant with Memory)
 
 3. **Pricing Update**: Updated pricing references from $10/month to $5.99/month
 

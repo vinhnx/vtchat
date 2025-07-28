@@ -86,7 +86,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         // If no session, no access
         if (!session) return false;
 
-        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH, RAG)
+        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH)
         if (
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH
@@ -274,7 +274,7 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
     const hasAccess = React.useMemo(() => {
         if (!session) return false;
 
-        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH, RAG)
+        // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH)
         if (
             requiredFeature === FeatureSlug.DEEP_RESEARCH ||
             requiredFeature === FeatureSlug.PRO_SEARCH ||

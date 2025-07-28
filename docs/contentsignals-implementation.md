@@ -45,7 +45,7 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
     - `X-Robots-Tag: noindex, nofollow`
     - `Cache-Control: private, no-store`
 
-- **Profile & RAG** (`/profile/:path*`, `/rag/:path*`)
+- **Profile** (`/profile/:path*`)
     - `Content-Usage: tdm=n, search=n, inference=n`
     - `X-Robots-Tag: noindex, nofollow`
 
@@ -63,8 +63,7 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 
 1. **Complete Chat Blocking** - No search indexing of conversations
 2. **Profile Privacy** - User data completely protected
-3. **RAG Security** - Personal AI content blocked
-4. **API Protection** - Server endpoints secured
+3. **API Protection** - Server endpoints secured
 
 ### Technical Controls
 

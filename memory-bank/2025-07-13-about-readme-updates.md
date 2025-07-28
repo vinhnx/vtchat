@@ -101,7 +101,6 @@ Updated both the About page and README to accurately reflect the current state o
 - **Everything in Free** +
 - **PRO_SEARCH**: Enhanced Web Search (10 requests/day)
 - **DEEP_RESEARCH**: Comprehensive research (5 requests/day)
-- **RAG**: Personal AI Assistant with Memory (2,000 completions/month)
 - **Priority Support**: Enhanced customer support
 
 ### Performance Metrics

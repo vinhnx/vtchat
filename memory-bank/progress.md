@@ -373,13 +373,13 @@ The application now uses official Shadcn UI components with:
 
 ### 🆓 Gemini Models Free Access Implementation - COMPLETE ✅
 
-**PROJECT**: Remove VT+ tier requirements for all premium AI models - Only keep VT+ exclusive: Deep Research, Pro Search, RAG
+**PROJECT**: Remove VT+ tier requirements for all premium AI models - Only keep VT+ exclusive: Deep Research, Pro Search
 **STATUS**: ✅ **SUCCESSFULLY COMPLETED**
 
 #### 🎯 Key Changes
 
 - **All Premium AI Models Now Free**: Removed ALL VT+ plan restrictions from premium models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3)
-- **Only 3 VT+ Exclusive Features**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH), and RAG (Personal AI Assistant with Memory)
+- **Only 3 VT+ Exclusive Features**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH)
 - **Enhanced Free Tier**: Free users now have access to ALL AI models with BYOK + 9 free server models
 - **Clear Premium Value**: VT+ retains only the 3 most valuable research-focused features
 
@@ -387,7 +387,7 @@ The application now uses official Shadcn UI components with:
 
 - **Chat Mode Config**: Verified NO individual models have `requiredPlan: PlanSlug.VT_PLUS` (only Deep/Pro modes)
 - **Model Configuration**: All premium models accessible without subscription barriers
-- **Access Control Verified**: Only research features (Deep/Pro/RAG) restricted to VT+
+- **Access Control Verified**: Only research features (Deep/Pro) restricted to VT+
 - **Documentation Updated**: All docs reflect new tier structure
 
 #### 🔍 Files Modified
@@ -402,11 +402,11 @@ The application now uses official Shadcn UI components with:
 
 - **Test Results**: ✅ All 17 premium models pass access tests without VT+ requirements
 - **Build Status**: ✅ All systems compile successfully with no errors
-- **Subscription System**: ✅ Only Deep Research, Pro Search, and RAG require VT+
+- **Subscription System**: ✅ Only Deep Research, Pro Search require VT+
 - **Free Users**: ✅ Can access ALL AI models with BYOK without upgrade prompts
 - **VT+ Users**: ✅ Retain exclusive access to the 3 most valuable research features
 
-**Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+**Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search.
 
 ---
 
@@ -899,7 +899,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 #### 🎯 Key Changes
 
 - **ALL Premium AI Models Now FREE**: Removed ALL VT+ plan restrictions from premium models - Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3 are now accessible to all logged-in users with BYOK
-- **Only 3 VT+ Exclusive Features Remain**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH), and RAG (Personal AI Assistant with Memory)
+- **Only 3 VT+ Exclusive Features Remain**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH)
 - **Free Tier**: Free users now have access to ALL AI models with BYOK + all advanced features + 9 free server models
 - **Clear Premium Value**: VT+ now focuses exclusively on research-oriented power user features
 
@@ -929,4 +929,4 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 - **VT+ Value Proposition**: ✅ Focused exclusively on 3 research features for power users
 - **Build Status**: ✅ All changes compile successfully with no breaking changes
 
-**Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search, and RAG (Personal AI Assistant with Memory).
+**Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search.

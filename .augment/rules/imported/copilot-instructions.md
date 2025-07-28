@@ -193,7 +193,7 @@ Critical env vars managed through:
 ### Subscription Tiers & Access Control
 
 - **Free Tier**: All premium models with BYOK + 9 server-funded models
-- **VT+ Tier**: Exclusive access to PRO_SEARCH, DEEP_RESEARCH, RAG features
+- **VT+ Tier**: Exclusive access to PRO_SEARCH, DEEP_RESEARCH
 - **Feature gates**: `packages/shared/constants/features.ts` - Centralized feature definitions
 - **User tier checks**: `getGlobalSubscriptionStatus()` for runtime access control
 

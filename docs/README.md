@@ -118,7 +118,6 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Web Search**: Real-time information grounding
 - **Document Upload**: PDF/DOC/DOCX processing up to 10MB
 - **Structured Extraction**: AI-powered JSON data extraction
-- **Personal AI Assistant (RAG)**: Build and query your own personal knowledge base.
 
 ## 🏗️ Architecture Highlights
 

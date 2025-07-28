@@ -17,7 +17,6 @@ describe("VT+ Limits Configuration", () => {
             expect(features).toHaveLength(3);
             expect(features).toContain("DR");
             expect(features).toContain("PS");
-            expect(features).toContain("RAG");
         });
     });
 

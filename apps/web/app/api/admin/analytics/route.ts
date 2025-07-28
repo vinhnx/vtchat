@@ -90,7 +90,6 @@ export async function GET(request: NextRequest) {
             .from(feedback)
             .where(gte(feedback.createdAt, sevenDaysAgo));
 
-        // RAG analytics
         const [totalResources] = await db.select({ count: count() }).from(resources);
 
         const [recentResources] = await db

@@ -7,11 +7,10 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Terms of Service | VT",
-    description:
-        "Terms of Service for VT - your privacy-focused AI chat platform. Learn about our service terms, user responsibilities, and platform policies.",
+    description: "Terms of Service for VT - Minimal AI Chat with Deep Research Features",
     openGraph: {
         title: "Terms of Service | VT",
-        description: "Terms of Service for VT - your privacy-focused AI chat platform.",
+        description: "Terms of Service for VT - Minimal AI Chat with Deep Research Features",
         type: "website",
     },
     robots: {

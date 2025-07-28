@@ -83,46 +83,6 @@ body::-webkit-scrollbar-corner {
     }
 }
 
-/* Mobile-specific styles for RAG chat */
-@media (max-width: 768px) {
-    .mobile-chat-container {
-        height: 100vh;
-        height: 100dvh; /* Use dynamic viewport height on supported browsers */
-        position: relative;
-        overflow: hidden;
-    }
-
-    .mobile-chat-scroll {
-        height: calc(100vh - 140px); /* Account for header and input */
-        height: calc(100dvh - 140px);
-        min-height: 300px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .mobile-message-bubble {
-        max-width: 90%;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-
-    /* Improve touch targets on mobile */
-    .mobile-button {
-        min-height: 44px;
-        min-width: 44px;
-    }
-
-    /* Safe area handling for iOS */
-    .mobile-safe-top {
-        padding-top: env(safe-area-inset-top);
-    }
-
-    .mobile-safe-bottom {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-}
-
 @keyframes fade458 {
     from {
         opacity: 1;

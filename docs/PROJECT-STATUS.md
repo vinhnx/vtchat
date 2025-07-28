@@ -139,7 +139,6 @@ vtchat/
 | **Structured Extraction**    | ✅ (AI-powered JSON)               | ✅                            |
 | **Web Search (PRO_SEARCH)**  | ❌                                 | ✅ (Real-time Grounding)      |
 | **Deep Research**            | ❌                                 | ✅ (Comprehensive Analysis)   |
-| **Personal AI Memory (RAG)** | ❌                                 | ✅ (AI Assistant with Memory) |
 | **Rate Limiting**            | 10 requests/day (free models)      | Unlimited Premium Models      |
 
 ## 🧪 Testing Status

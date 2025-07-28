@@ -9,13 +9,6 @@ VT is a production-ready, privacy-first AI chat application that provides cuttin
 - **Local AI Support**: Complete integration with Ollama and LM Studio for free, private AI on user's own hardware
 - **Advanced Features**: Document processing, web search, structured output, chart visualization, thinking mode - all free
 
-## Subscription Tiers
-
-- **Free (Logged-in)**: All premium AI models + advanced features with BYOK
-- **VT+ ($5.99/month)**: 3 exclusive research features:
-    - PRO_SEARCH (Enhanced Web Search - 10/day)
-    - DEEP_RESEARCH (Deep Research capabilities - 5/day)
-    - RAG (Personal AI Assistant with Memory - 2,000/month)
 
 ## Key Features
 
