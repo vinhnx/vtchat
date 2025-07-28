@@ -73,5 +73,52 @@ describe("Avatar Cache Utils", () => {
 
             expect(result).toBe(`${url}?_sid=1234567890000`);
         });
+
+        it("should use daily cache busting for GitHub avatars", () => {
+            const url = "https://avatars.githubusercontent.com/u/123456?v=4";
+            const result = getSessionCacheBustedAvatarUrl(url);
+            const today = new Date().toISOString().split("T")[0];
+
+            expect(result).toBe(`${url}&_d=${today}`);
+        });
+
+        it("should use daily cache busting for GitHub avatars without query params", () => {
+            const url = "https://avatars.githubusercontent.com/u/123456";
+            const result = getSessionCacheBustedAvatarUrl(url);
+            const today = new Date().toISOString().split("T")[0];
+
+            expect(result).toBe(`${url}?_d=${today}`);
+        });
+
+        it("should use daily cache busting for Google avatars", () => {
+            const url = "https://lh3.googleusercontent.com/a/default-user=s96-c?v=4";
+            const result = getSessionCacheBustedAvatarUrl(url);
+            const today = new Date().toISOString().split("T")[0];
+
+            expect(result).toBe(`${url}&_d=${today}`);
+        });
+
+        it("should use daily cache busting for Google avatars without query params", () => {
+            const url = "https://lh3.googleusercontent.com/a/default-user";
+            const result = getSessionCacheBustedAvatarUrl(url);
+            const today = new Date().toISOString().split("T")[0];
+
+            expect(result).toBe(`${url}?_d=${today}`);
+        });
+
+        it("should handle different Google avatar subdomains", () => {
+            const urls = [
+                "https://lh3.googleusercontent.com/a/user123",
+                "https://lh4.googleusercontent.com/a/user456",
+                "https://lh5.googleusercontent.com/a/user789",
+                "https://lh6.googleusercontent.com/a/user000",
+            ];
+            const today = new Date().toISOString().split("T")[0];
+
+            urls.forEach((url) => {
+                const result = getSessionCacheBustedAvatarUrl(url);
+                expect(result).toBe(`${url}?_d=${today}`);
+            });
+        });
     });
 });

@@ -26,6 +26,9 @@ export const metadata: Metadata = {
         index: true,
         follow: true,
     },
+    alternates: {
+        canonical: "https://vtchat.io.vn/help",
+    },
 };
 
 export const dynamic = "force-static";
@@ -608,10 +611,10 @@ function HelpCenterContent() {
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{" "}
                                         Includes everything in the free tier, plus three exclusive
                                         research features: PRO_SEARCH for enhanced web searches,
-                                        DEEP_RESEARCH for in-depth analysis. Additionally, VT+ provides
-                                        server-funded access to all Gemini models (2.5 Flash Lite,
-                                        2.5 Flash, 2.5 Pro) with built-in rate limits and budget
-                                        protection.
+                                        DEEP_RESEARCH for in-depth analysis. Additionally, VT+
+                                        provides server-funded access to all Gemini models (2.5
+                                        Flash Lite, 2.5 Flash, 2.5 Pro) with built-in rate limits
+                                        and budget protection.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers are designed with privacy in mind, featuring
