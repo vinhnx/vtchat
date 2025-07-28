@@ -9,7 +9,7 @@
 }
 
 /* Force hide desktop sidebars on mobile */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .sidebar-container:not([data-mobile-sidebar]) {
         display: none !important;
         visibility: hidden !important;
@@ -86,7 +86,7 @@ main.flex.min-h-svh.flex-1.flex-col.bg-background {
 }
 
 /* Mobile layout adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     /* Ensure mobile content doesn't get hidden behind PWA banner */
     .mobile-content-container {
         padding-bottom: 80px; /* Space for PWA banner */
@@ -135,7 +135,7 @@ main.flex.min-h-svh.flex-1.flex-col.bg-background {
 }
 
 /* Mobile sidebar modal styles */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     /* Hide all desktop sidebars on mobile/tablet */
     .desktop-sidebar {
         display: none !important;
@@ -152,7 +152,6 @@ main.flex.min-h-svh.flex-1.flex-col.bg-background {
         position: absolute !important;
         inset: 0 !important;
         background-color: rgba(0, 0, 0, 0.5) !important;
-        backdrop-filter: blur(2px) !important;
         z-index: 9999 !important;
     }
 
@@ -179,7 +178,7 @@ main.flex.min-h-svh.flex-1.flex-col.bg-background {
 }
 
 /* Emergency mobile sidebar fix - force hide all non-modal sidebars */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     /* Hide any sidebar that's not inside the mobile modal */
     .sidebar-container:not([data-mobile-sidebar]) {
         display: none !important;

@@ -60,6 +60,12 @@ export const PROTECTED_ROUTES_ARRAY = Object.values(ProtectedRoutes);
  * @returns true if the pathname is a public route
  */
 export function isPublicRoute(pathname: string): boolean {
+    // Chat threads (/chat/[threadId]) should be treated as protected routes
+    // Only allow exact /chat path to be public (which gets redirected to / anyway)
+    if (pathname.startsWith("/chat/") && pathname !== "/chat") {
+        return false;
+    }
+
     return PUBLIC_ROUTES_ARRAY.some((route) => pathname.startsWith(route));
 }
 
