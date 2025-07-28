@@ -126,12 +126,12 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="mx-auto h-auto max-h-[90vh] min-h-[500px] w-[calc(100%-2rem)] max-w-[850px] overflow-hidden rounded-lg p-0 md:max-h-[85vh] md:w-[88vw] lg:w-[78vw] xl:w-[68vw] 2xl:w-[58vw] md:rounded-xl">
+            <DialogContent className="h-[100vh] w-[100vw] max-w-none overflow-hidden rounded-none p-0 m-0 inset-0 translate-x-0 translate-y-0 lg:h-[calc(100vh-64px)] lg:w-[calc(100vw-64px)] lg:inset-8 lg:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
                 </DialogDescription>
-                <div className="flex flex-col h-full w-full">
+                <div className="flex flex-col h-full w-full" style={{ minWidth: "100%" }}>
                     {/* Header */}
                     <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm flex-shrink-0">
                         <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
@@ -157,46 +157,53 @@ export const SettingsModal = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-col xl:flex-row flex-1 overflow-hidden">
-                        {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[210px] xl:border-b-0 xl:border-r overflow-y-auto">
-                            {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 xl:flex-col xl:gap-0 xl:space-y-2 xl:overflow-x-visible xl:p-4">
+                    <div
+                        className="flex flex-col flex-1 overflow-hidden"
+                        style={{ minHeight: 0, width: "100%" }}
+                    >
+                        {/* Horizontal Navigation for All Screen Sizes */}
+                        <div className="border-b border-border bg-muted/30">
+                            <nav
+                                className="flex gap-2 overflow-x-auto p-3 scrollbar-thin"
+                                role="tablist"
+                                aria-label="Settings navigation"
+                            >
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            "flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left",
+                                            "flex items-center justify-center rounded-lg px-4 py-2 text-center transition-colors whitespace-nowrap text-sm font-medium flex-shrink-0",
                                             settingTab === setting.key
-                                                ? "bg-background text-foreground shadow-sm"
+                                                ? "bg-background text-foreground shadow-sm ring-1 ring-border/50"
                                                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
-                                        style={{ minWidth: "max-content" }}
+                                        role="tab"
+                                        aria-selected={settingTab === setting.key}
+                                        aria-controls={`settings-panel-${setting.key}`}
                                     >
-                                        <div className="flex-1 space-y-0.5">
-                                            <div className="whitespace-nowrap text-xs font-medium xl:whitespace-normal xl:text-base">
-                                                {setting.title}
-                                            </div>
-                                            <div className="text-muted-foreground hidden text-xs xl:block">
-                                                {setting.description}
-                                            </div>
-                                        </div>
+                                        {setting.title}
                                     </button>
                                 ))}
                             </nav>
                         </div>
 
                         {/* Main Content Area */}
-                        <div
-                            className="scrollbar-thin bg-background flex flex-1 overflow-y-auto p-4 xl:p-5"
-                            ref={panelContentRef}
-                        >
-                            <div className="w-full max-w-[480px] mx-auto">
-                                {
-                                    settingMenu.find((setting) => setting.key === settingTab)
-                                        ?.component
-                                }
+                        <div className="flex flex-1 flex-col overflow-hidden">
+                            <div
+                                className="scrollbar-thin bg-background flex-1 overflow-y-auto pt-4 px-4 md:pt-6 md:px-6 lg:pt-8 lg:px-8"
+                                ref={panelContentRef}
+                                role="tabpanel"
+                                id={`settings-panel-${settingTab}`}
+                                aria-labelledby={`settings-tab-${settingTab}`}
+                                style={{ minHeight: "400px" }}
+                            >
+                                <div className="w-full max-w-none h-full">
+                                    {
+                                        settingMenu.find((setting) => setting.key === settingTab)
+                                            ?.component
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -285,8 +292,8 @@ export const ApiKeySettings = () => {
         <div className="w-full space-y-4 md:space-y-6">
             {/* Header */}
             <div className="w-full">
-                <TypographyH3 className="text-base md:text-lg">API Keys</TypographyH3>
-                <TypographyMuted className="text-xs md:text-sm">
+                <TypographyH3 className="text-lg md:text-xl">API Keys</TypographyH3>
+                <TypographyMuted className="text-sm md:text-base">
                     Manage your AI provider API keys securely
                 </TypographyMuted>
             </div>
@@ -376,124 +383,130 @@ export const ApiKeySettings = () => {
                         Add API keys for the AI providers you want to use
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 pt-0 md:space-y-4">
-                    {apiKeyList.map((apiKey) => (
-                        <div
-                            className="border-border/50 bg-muted/20 space-y-2 rounded-lg border p-3 md:space-y-3 md:p-4"
-                            key={apiKey.key}
-                        >
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <div className="text-foreground text-xs font-medium md:text-sm">
-                                            {apiKey.name}
-                                        </div>
-                                        {apiKey.value && (
-                                            <Badge
-                                                className="bg-slate-100 text-[10px] text-slate-700 md:text-xs dark:bg-slate-800 dark:text-slate-300"
-                                                variant="secondary"
-                                            >
-                                                Configured
-                                            </Badge>
-                                        )}
-                                    </div>
-
-                                    <a
-                                        className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-xs underline-offset-2 hover:underline"
-                                        href={apiKey.url}
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                    >
-                                        Get API key →
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                {isEditing === apiKey.key ? (
-                                    <div className="space-y-3">
-                                        <Input
-                                            className={
-                                                validationErrors[apiKey.key] ? "border-red-500" : ""
-                                            }
-                                            onChange={(e) => setApiKey(apiKey.key, e.target.value)}
-                                            placeholder={apiKey.placeholder}
-                                            value={apiKey.value || ""}
-                                        />
-                                        {validationErrors[apiKey.key] && (
-                                            <Alert>
-                                                <AlertCircle className="h-4 w-4" />
-                                                <AlertDescription>
-                                                    {validationErrors[apiKey.key]}
-                                                </AlertDescription>
-                                            </Alert>
-                                        )}
-                                        <div className="flex gap-2">
-                                            <Button
-                                                onClick={() =>
-                                                    handleSave(
-                                                        apiKey.key,
-                                                        apiKey.value || "",
-                                                        apiKey.name,
-                                                    )
-                                                }
-                                                size="sm"
-                                                variant="default"
-                                            >
-                                                Save
-                                            </Button>
-                                            <Button
-                                                onClick={() => setIsEditing(null)}
-                                                size="sm"
-                                                variant="outline"
-                                            >
-                                                Cancel
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex w-full items-center gap-3">
-                                        <button
-                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                            onClick={() => handleEdit(apiKey.key)}
-                                        >
-                                            {apiKey.value ? (
-                                                <span className="text-muted-foreground block truncate">
-                                                    {getMaskedKey(apiKey.value)}
-                                                </span>
-                                            ) : (
-                                                <span className="text-muted-foreground italic">
-                                                    No API key configured
-                                                </span>
-                                            )}
-                                        </button>
-                                        <div className="flex shrink-0 gap-2">
-                                            <Button
-                                                className="whitespace-nowrap"
-                                                onClick={() => handleEdit(apiKey.key)}
-                                                size="sm"
-                                                variant="outline"
-                                            >
-                                                {apiKey.value ? "Update" : "Add Key"}
-                                            </Button>
+                <CardContent className="pt-0">
+                    <div className="grid gap-3 md:gap-4 lg:grid-cols-2">
+                        {apiKeyList.map((apiKey) => (
+                            <div
+                                className="border-border/50 bg-muted/20 space-y-2 rounded-lg border p-3 md:space-y-3 md:p-4"
+                                key={apiKey.key}
+                            >
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <div className="mb-1 flex items-center gap-2">
+                                            <div className="text-foreground text-xs font-medium md:text-sm">
+                                                {apiKey.name}
+                                            </div>
                                             {apiKey.value && (
+                                                <Badge
+                                                    className="bg-slate-100 text-[10px] text-slate-700 md:text-xs dark:bg-slate-800 dark:text-slate-300"
+                                                    variant="secondary"
+                                                >
+                                                    Configured
+                                                </Badge>
+                                            )}
+                                        </div>
+
+                                        <a
+                                            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-xs underline-offset-2 hover:underline"
+                                            href={apiKey.url}
+                                            rel="noopener noreferrer"
+                                            target="_blank"
+                                        >
+                                            Get API key →
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    {isEditing === apiKey.key ? (
+                                        <div className="space-y-3">
+                                            <Input
+                                                className={
+                                                    validationErrors[apiKey.key]
+                                                        ? "border-red-500"
+                                                        : ""
+                                                }
+                                                onChange={(e) =>
+                                                    setApiKey(apiKey.key, e.target.value)
+                                                }
+                                                placeholder={apiKey.placeholder}
+                                                value={apiKey.value || ""}
+                                            />
+                                            {validationErrors[apiKey.key] && (
+                                                <Alert>
+                                                    <AlertCircle className="h-4 w-4" />
+                                                    <AlertDescription>
+                                                        {validationErrors[apiKey.key]}
+                                                    </AlertDescription>
+                                                </Alert>
+                                            )}
+                                            <div className="flex gap-2">
                                                 <Button
-                                                    className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
-                                                    onClick={() => {
-                                                        setApiKey(apiKey.key, "");
-                                                    }}
+                                                    onClick={() =>
+                                                        handleSave(
+                                                            apiKey.key,
+                                                            apiKey.value || "",
+                                                            apiKey.name,
+                                                        )
+                                                    }
+                                                    size="sm"
+                                                    variant="default"
+                                                >
+                                                    Save
+                                                </Button>
+                                                <Button
+                                                    onClick={() => setIsEditing(null)}
                                                     size="sm"
                                                     variant="outline"
                                                 >
-                                                    <Trash size={14} />
+                                                    Cancel
                                                 </Button>
-                                            )}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div className="flex w-full items-center gap-3">
+                                            <button
+                                                className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                onClick={() => handleEdit(apiKey.key)}
+                                            >
+                                                {apiKey.value ? (
+                                                    <span className="text-muted-foreground block truncate">
+                                                        {getMaskedKey(apiKey.value)}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-muted-foreground italic">
+                                                        No API key configured
+                                                    </span>
+                                                )}
+                                            </button>
+                                            <div className="flex shrink-0 gap-2">
+                                                <Button
+                                                    className="whitespace-nowrap"
+                                                    onClick={() => handleEdit(apiKey.key)}
+                                                    size="sm"
+                                                    variant="outline"
+                                                >
+                                                    {apiKey.value ? "Update" : "Add Key"}
+                                                </Button>
+                                                {apiKey.value && (
+                                                    <Button
+                                                        className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
+                                                        onClick={() => {
+                                                            setApiKey(apiKey.key, "");
+                                                        }}
+                                                        size="sm"
+                                                        variant="outline"
+                                                    >
+                                                        <Trash size={14} />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </CardContent>
             </Card>
 
@@ -559,8 +572,10 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
         <div className="w-full space-y-6">
             {/* Header */}
             <div className="w-full">
-                <TypographyH3>Preferences</TypographyH3>
-                <TypographyMuted>Customize your VTChat experience and interface</TypographyMuted>
+                <TypographyH3 className="text-lg md:text-xl">Preferences</TypographyH3>
+                <TypographyMuted className="text-sm md:text-base">
+                    Customize your VTChat experience and interface
+                </TypographyMuted>
             </div>
 
             {/* Theme Preferences Section */}

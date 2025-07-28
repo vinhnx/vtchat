@@ -280,8 +280,10 @@ export const UserProfileSettings = () => {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <TypographyH3>Profile Settings</TypographyH3>
-                <TypographyMuted>Manage your account information and preferences</TypographyMuted>
+                <TypographyH3 className="text-lg md:text-xl">Profile Settings</TypographyH3>
+                <TypographyMuted className="text-sm md:text-base">
+                    Manage your account information and preferences
+                </TypographyMuted>
             </div>
 
             {/* Status Messages */}
