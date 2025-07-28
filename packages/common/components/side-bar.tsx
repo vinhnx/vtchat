@@ -67,6 +67,7 @@ import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
     const threads = useChatStore((state) => state.threads);
+    const currentThreadId = useChatStore((state) => state.currentThreadId);
     const pinThread = useChatStore((state) => state.pinThread);
     const unpinThread = useChatStore((state) => state.unpinThread);
     const [currentPage, setCurrentPage] = useState(1);
