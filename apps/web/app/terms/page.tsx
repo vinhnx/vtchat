@@ -17,6 +17,9 @@ export const metadata: Metadata = {
         index: true,
         follow: true,
     },
+    alternates: {
+        canonical: "https://vtchat.io.vn/terms",
+    },
 };
 
 export default function TermsPage() {

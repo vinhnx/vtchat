@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         index: true,
         follow: true,
     },
+    alternates: {
+        canonical: "https://vtchat.io.vn/privacy",
+    },
 };
 
 export default function PrivacyPage() {
