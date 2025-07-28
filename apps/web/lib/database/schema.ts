@@ -166,27 +166,6 @@ export const resources = pgTable("resources", {
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// Embeddings table for RAG vector search
-export const embeddings = pgTable(
-    "embeddings",
-    {
-        id: varchar("id", { length: 191 })
-            .primaryKey()
-            .$defaultFn(() => crypto.randomUUID()),
-        resourceId: varchar("resource_id", { length: 191 })
-            .notNull()
-            .references(() => resources.id, { onDelete: "cascade" }),
-        content: text("content").notNull(),
-        embedding: vector("embedding", { dimensions: 768 }).notNull(), // Default to 768 for text-embedding-004
-    },
-    (table) => ({
-        embeddingIndex: index("embedding_index").using(
-            "hnsw",
-            table.embedding.op("vector_cosine_ops"),
-        ),
-    }),
-);
-
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
