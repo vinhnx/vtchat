@@ -284,7 +284,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 {isAdmin && (
                                     <DropdownMenuItem onClick={() => router.push("/admin")}>
                                         <Database className="mr-2" size={16} strokeWidth={2} />
-                                        Admin Dashboard
+                                        VT Terminal
                                     </DropdownMenuItem>
                                 )}
 

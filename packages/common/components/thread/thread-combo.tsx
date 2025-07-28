@@ -3,7 +3,6 @@
 import { ThreadItem } from "@repo/common/components";
 import { useChatStore } from "@repo/common/store";
 import { log } from "@repo/shared/logger";
-import { TypographyP } from "@repo/ui";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -200,13 +199,9 @@ export function Thread() {
         );
     }
 
-    // Show loading state
+    // Show loading state - removed skeleton, just return null to show nothing while loading
     if (isLoading) {
-        return (
-            <div className="flex h-full w-full flex-col items-center justify-center">
-                <TypographyP className="text-center">Loading conversation...</TypographyP>
-            </div>
-        );
+        return null;
     }
 
     return (

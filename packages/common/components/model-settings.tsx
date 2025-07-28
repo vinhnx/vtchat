@@ -1,6 +1,6 @@
 "use client";
 
-import { models, ModelEnum } from "@repo/ai/models";
+import { ModelEnum, models } from "@repo/ai/models";
 import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
 import { useSession } from "@repo/shared/lib/auth-client";
 import {
@@ -84,8 +84,8 @@ export const ModelSettings = () => {
         <div className="w-full space-y-6">
             {/* Header */}
             <div>
-                <TypographyH3>AI Models</TypographyH3>
-                <TypographyMuted>
+                <TypographyH3 className="text-lg md:text-xl">AI Models</TypographyH3>
+                <TypographyMuted className="text-sm md:text-base">
                     View all available AI models and their access status
                 </TypographyMuted>
             </div>
