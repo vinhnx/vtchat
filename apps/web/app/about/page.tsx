@@ -63,12 +63,11 @@ function AboutContent() {
             <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
                     <TypographyH1 className="mb-4 text-3xl font-semibold md:text-4xl">
-                        About VT
+                        VT
                     </TypographyH1>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                        VT is a production-ready, privacy-first AI chat application with advanced AI
-                        capabilities, offering all premium models for free with BYOK and exclusive
-                        research features for professionals.
+                        Stop juggling AI subscriptions and privacy concerns -— VT delivers powerful
+                        AI conversations with complete privacy protection, starting free.
                     </p>
                 </div>
 
@@ -77,9 +76,8 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                VT empowers users with secure, privacy-first AI conversations by
-                                offering unlimited access to premium AI models through BYOK while
-                                maintaining complete data sovereignty.
+                                Tired of AI tools that compromise your privacy? VT keeps every
+                                conversation on your device, never on our servers.
                             </p>
                         </div>
 
@@ -115,8 +113,8 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Advanced AI Capabilities</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT integrates with multiple leading AI providers to offer
-                                comprehensive AI capabilities with a generous free tier:
+                                Frustrated by AI subscription limits? VT gives you unlimited access
+                                to ALL premium models with your own API keys.
                             </p>
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">
                                 <li>
@@ -173,8 +171,8 @@ function AboutContent() {
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Security & Privacy</h3>
                             <p className="text-muted-foreground mb-4">
-                                VT implements security measures focused on privacy and user
-                                protection:
+                                Worried about where your data goes? VT stores everything
+                                locally—your conversations never leave your device."
                             </p>
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">
                                 <li>
