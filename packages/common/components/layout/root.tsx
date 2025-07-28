@@ -1,13 +1,7 @@
 "use client";
-import { createPortal } from "react-dom";
 import { CommandSearch, SettingsModal } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
-import {
-    AgentProvider,
-    useAdmin,
-    useLogout,
-    useMobilePWANotification,
-} from "@repo/common/hooks";
+import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from "@repo/common/hooks";
 import { useAppStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
 import { useSession } from "@repo/shared/lib/auth-client";
@@ -39,6 +33,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, type FC } from "react";
+import { createPortal } from "react-dom";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { BasicSidebar } from "../basic-sidebar";
 
@@ -100,7 +95,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 </div>
                 {/* Left sidebar placeholder during SSR */}
                 {sidebarPlacement === "left" && (
-                    <div className="hidden lg:flex">
+                    <div className="hidden md:flex">
                         {isSidebarOpen && (
                             <div className="w-[300px] max-w-[300px] flex-none">
                                 {/* Empty sidebar placeholder */}
@@ -113,7 +108,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 </div>
                 {/* Right sidebar placeholder during SSR */}
                 {sidebarPlacement === "right" && (
-                    <div className="hidden lg:flex">
+                    <div className="hidden md:flex">
                         {isSidebarOpen && (
                             <div className="w-[300px] max-w-[300px] flex-none">
                                 {/* Empty sidebar placeholder */}
@@ -129,7 +124,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
             {/* Fixed Left Sidebar - Only visible when placement is left on desktop */}
             {sidebarPlacement === "left" && (
-                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none lg:block">
+                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none md:block">
                     <BasicSidebar />
                 </div>
             )}
@@ -177,7 +172,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 {/* Backdrop */}
                                 <motion.div
                                     animate={{ opacity: 1 }}
-                                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                                    className="absolute inset-0 bg-black/60"
                                     exit={{ opacity: 0 }}
                                     initial={{ opacity: 0 }}
                                     onClick={(e) => {
@@ -245,7 +240,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Right Sidebar - Only visible when placement is right on desktop */}
             {sidebarPlacement === "right" && (
-                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none lg:block">
+                <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none md:block">
                     <BasicSidebar />
                 </div>
             )}

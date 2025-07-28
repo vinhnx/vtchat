@@ -44,6 +44,20 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     const loadThreadItems = useChatStore((state) => state.loadThreadItems);
     const threads = useChatStore((state) => state.threads);
 
+    // Handle authentication state changes - redirect to login if user signs out
+    useEffect(() => {
+        // Don't redirect while session is still loading
+        if (isPending) return;
+
+        // If user is not authenticated, redirect to login with current thread URL as redirect
+        if (!session) {
+            const loginUrl = `/login?redirect_url=${encodeURIComponent(`/chat/${threadId}`)}`;
+            log.info({ threadId }, "User not authenticated, redirecting to login");
+            router.push(loginUrl);
+            return;
+        }
+    }, [session, isPending, router, threadId]);
+
     // Scroll to bottom when thread loads or content changes
     const scrollToBottom = useCallback(() => {
         if (scrollRef.current) {
@@ -253,8 +267,18 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         };
     }, []);
 
-    // Show loading while threadId is being resolved
-    if (!threadId || isLoading) {
+    // Show loading while threadId is being resolved or authentication is being checked
+    if (!threadId || isLoading || isPending) {
+        return (
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
+        );
+    }
+
+    // If user is not authenticated, don't render the chat interface
+    // (the useEffect above will handle the redirect)
+    if (!session) {
         return (
             <div className="flex h-full items-center justify-center">
                 <InlineLoader />
