@@ -3,7 +3,6 @@ import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import {
     bigserial,
     boolean,
-    customType,
     date,
     index,
     integer,
@@ -13,21 +12,7 @@ import {
     timestamp,
     uniqueIndex,
     uuid,
-    varchar,
 } from "drizzle-orm/pg-core";
-
-// Custom vector type for pgvector
-const vector = customType<{ data: number[]; notNull: false; default: false }>({
-    dataType(config) {
-        return `vector(${config?.dimensions ?? 768})`;
-    },
-    toDriver(value: number[]) {
-        return `[${value.join(",")}]`;
-    },
-    fromDriver(value: string) {
-        return value.slice(1, -1).split(",").map(Number);
-    },
-});
 
 // Users table for Better Auth
 export const users = pgTable(
@@ -153,35 +138,6 @@ export const feedback = pgTable("feedback", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-// Resources table for RAG knowledge base
-export const resources = pgTable("resources", {
-    id: varchar("id", { length: 191 })
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-    content: text("content").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-// Embeddings table for RAG
-export const embeddings = pgTable(
-    "embeddings",
-    {
-        id: varchar("id", { length: 191 })
-            .primaryKey()
-            .$defaultFn(() => crypto.randomUUID()),
-        resourceId: varchar("resource_id", { length: 191 })
-            .notNull()
-            .references(() => resources.id, { onDelete: "cascade" }),
-        embedding: vector("embedding", { dimensions: 768 }).notNull(),
-        createdAt: timestamp("created_at").notNull().defaultNow(),
-        updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    },
-);
-
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
@@ -241,10 +197,6 @@ export const providerUsage = pgTable(
     }),
 );
 
-export type Resource = typeof resources.$inferSelect;
-export type NewResource = typeof resources.$inferInsert;
-export type Embedding = typeof embeddings.$inferSelect;
-export type NewEmbedding = typeof embeddings.$inferInsert;
 export type UserRateLimit = typeof userRateLimits.$inferSelect;
 export type NewUserRateLimit = typeof userRateLimits.$inferInsert;
 // VT+ usage tracking table for rate limiting
