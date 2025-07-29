@@ -18,3 +18,7 @@ when enter new chat conversation in the same chat thread, the old coversation te
 --
 
 on expand sidebar all buttons should have width equally
+
+--
+
+Research and rename "VT" to better and memorable name
