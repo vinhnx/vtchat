@@ -226,6 +226,8 @@ type State = {
         ttlSeconds: number; // Cache time-to-live in seconds
         maxCaches: number; // Maximum number of cached conversations
     };
+    // Store initialization state to help coordinate with components after server restart
+    isStoreInitialized: boolean;
 };
 
 type Actions = {
@@ -271,7 +273,7 @@ type Actions = {
     getCurrentThread: () => Thread | null;
     removeFollowupThreadItems: (threadItemId: string) => Promise<void>;
     getThreadItems: (threadId: string) => Promise<ThreadItem[]>;
-    loadThreadItems: (threadId: string) => Promise<void>;
+    loadThreadItems: (threadId: string) => Promise<ThreadItem[]>;
     setCurrentThreadItem: (threadItem: ThreadItem) => void;
     clearAllThreads: () => void;
     setCurrentSources: (sources: string[]) => void;
@@ -845,6 +847,8 @@ export const useChatStore = create(
             ttlSeconds: 300,
             maxCaches: 10,
         },
+        // Store initialization state
+        isStoreInitialized: false,
 
         setCustomInstructions: (customInstructions: string) => {
             // Save to simple settings
@@ -1966,6 +1970,10 @@ if (typeof window !== "undefined") {
                 // Fallback to localStorage method
                 initializeTabSync();
             }
+
+            // Mark store as initialized to help coordinate with components
+            useChatStore.setState({ isStoreInitialized: true });
+            log.info("Chat store initialization completed");
         },
     );
 }
