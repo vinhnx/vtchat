@@ -267,11 +267,28 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             abortController.signal.addEventListener("abort", () => {
                 log.info({ threadId: body.threadId }, "Abort controller triggered");
                 setIsGenerating(false);
-                updateThreadItem(body.threadId, {
-                    id: body.threadItemId,
-                    status: "ABORTED",
-                    persistToDB: true,
-                });
+
+                // Only mark as ABORTED if the abort was not due to cleanup for new conversation
+                // Check if this is a user-initiated abort vs cleanup abort
+                if (!abortController.signal.reason || abortController.signal.reason !== "cleanup") {
+                    updateThreadItem(body.threadId, {
+                        id: body.threadItemId,
+                        status: "ABORTED",
+                        error: "Generation stopped",
+                        persistToDB: true,
+                    });
+                } else {
+                    // For cleanup aborts, mark as completed if there's content
+                    const threadItem = threadItemMap.get(body.threadItemId);
+                    if (threadItem?.answer?.text) {
+                        updateThreadItem(body.threadId, {
+                            id: body.threadItemId,
+                            status: "COMPLETED",
+                            persistToDB: true,
+                        });
+                    }
+                }
+
                 // Remove from tracking
                 activeControllersRef.current.delete(abortController);
             });
@@ -605,6 +622,20 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
+            // Stop any existing generation before starting new conversation
+            // This prevents old streaming text from continuing when starting new chat
+            const { stopGeneration } = useChatStore.getState();
+            stopGeneration();
+
+            // Clean up any tracked active controllers
+            activeControllersRef.current.forEach((controller) => {
+                if (!controller.signal.aborted) {
+                    // Use "cleanup" reason to distinguish from user-initiated aborts
+                    controller.abort("cleanup");
+                }
+            });
+            activeControllersRef.current.clear();
+
             // Debounce rapid submissions
             const now = Date.now();
             if (now - lastSubmissionRef.current < SUBMISSION_DEBOUNCE_MS) {
@@ -724,10 +755,18 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     log.info({ threadId }, "Abort signal received");
                     setIsGenerating(false);
                     abortWorkflow();
-                    updateThreadItem(threadId, {
-                        id: optimisticAiThreadItemId,
-                        status: "ABORTED",
-                    });
+
+                    // Only mark as ABORTED if not a cleanup abort
+                    if (
+                        !abortController.signal.reason ||
+                        abortController.signal.reason !== "cleanup"
+                    ) {
+                        updateThreadItem(threadId, {
+                            id: optimisticAiThreadItemId,
+                            status: "ABORTED",
+                            error: "Generation stopped",
+                        });
+                    }
                 });
 
                 const apiKeys = getAllKeys();

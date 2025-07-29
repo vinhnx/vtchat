@@ -1,14 +1,14 @@
 "use client";
 
-import { models, type Model } from "@repo/ai/models";
+import { type Model, models } from "@repo/ai/models";
 import { ChatMode } from "@repo/shared/config";
 import { THINKING_MODE } from "@repo/shared/constants";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
-import { log } from "../../shared/src/lib/logger";
 import type { MessageGroup, Thread, ThreadItem } from "@repo/shared/types";
 import Dexie, { type Table } from "dexie";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { log } from "../../shared/src/lib/logger";
 import { getGlobalSubscriptionStatus } from "../providers/subscription-provider";
 import { useAppStore } from "./app.store";
 
@@ -1255,7 +1255,8 @@ export const useChatStore = create(
                 state.isGenerating = false;
                 state.generationStartTime = null;
                 state.showTimeoutIndicator = false;
-                state.abortController?.abort();
+                // Use "cleanup" reason to distinguish from user-initiated aborts
+                state.abortController?.abort("cleanup");
             });
         },
 
