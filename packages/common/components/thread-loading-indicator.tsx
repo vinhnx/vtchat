@@ -3,7 +3,6 @@
 import { useChatStore } from "@repo/common/store";
 import { GENERATION_TIMEOUTS, TIMEOUT_MESSAGES } from "@repo/shared/constants";
 import { cn } from "@repo/ui";
-import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { memo, useEffect, useState } from "react";
 
@@ -22,34 +21,25 @@ const VTIcon = ({ size = 20, className }: { size?: number; className?: string })
 interface ThreadLoadingIndicatorProps {
     className?: string;
     size?: "sm" | "md" | "lg";
-    showElapsedTime?: boolean;
 }
 
 const TIMEOUT_THRESHOLD = GENERATION_TIMEOUTS.TIMEOUT_THRESHOLD;
 const SLOW_RESPONSE_THRESHOLD = GENERATION_TIMEOUTS.SLOW_RESPONSE_THRESHOLD;
 
 export const ThreadLoadingIndicator = memo(
-    ({ className, size = "md", showElapsedTime = true }: ThreadLoadingIndicatorProps) => {
+    ({ className, size = "md" }: ThreadLoadingIndicatorProps) => {
         const isGenerating = useChatStore((state) => state.isGenerating);
         const generationStartTime = useChatStore((state) => state.generationStartTime);
         const showTimeoutIndicator = useChatStore((state) => state.showTimeoutIndicator);
         const setShowTimeoutIndicator = useChatStore((state) => state.setShowTimeoutIndicator);
 
-        const [elapsedTime, setElapsedTime] = useState(0);
         const [isSlowResponse, setIsSlowResponse] = useState(false);
 
         useEffect(() => {
-            let interval: NodeJS.Timeout | null = null;
             let timeoutTimer: NodeJS.Timeout | null = null;
             let slowResponseTimer: NodeJS.Timeout | null = null;
 
             if (isGenerating && generationStartTime) {
-                // Update elapsed time every 100ms for smooth updates
-                interval = setInterval(() => {
-                    const elapsed = Date.now() - generationStartTime;
-                    setElapsedTime(elapsed);
-                }, 100);
-
                 // Show timeout indicator after 5 seconds
                 timeoutTimer = setTimeout(() => {
                     setShowTimeoutIndicator(true);
@@ -60,13 +50,11 @@ export const ThreadLoadingIndicator = memo(
                     setIsSlowResponse(true);
                 }, SLOW_RESPONSE_THRESHOLD);
             } else {
-                setElapsedTime(0);
                 setIsSlowResponse(false);
                 setShowTimeoutIndicator(false);
             }
 
             return () => {
-                if (interval) clearInterval(interval);
                 if (timeoutTimer) clearTimeout(timeoutTimer);
                 if (slowResponseTimer) clearTimeout(slowResponseTimer);
             };
@@ -122,40 +110,22 @@ export const ThreadLoadingIndicator = memo(
         const config = getLoadingState();
 
         return (
-            <AnimatePresence>
+            <>
                 {isGenerating && (
-                    <motion.div
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        className={cn("flex w-full items-start gap-2 md:gap-3", className)}
-                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                        {/* Enhanced Avatar with VT icon */}
-                        <motion.div
-                            animate={{
-                                boxShadow: [
-                                    "0 2px 8px rgba(0, 0, 0, 0.1)",
-                                    "0 4px 12px rgba(0, 0, 0, 0.15)",
-                                    "0 2px 8px rgba(0, 0, 0, 0.1)",
-                                ],
-                            }}
+                    <div className={cn("flex w-full items-start gap-2 md:gap-3", className)}>
+                        {/* Avatar with VT icon */}
+                        <div
                             className={cn(
                                 "relative flex flex-shrink-0 items-center justify-center rounded-xl",
                                 "bg-muted border-muted-foreground/20 border",
                                 "shadow-sm",
                                 sizeClasses[size],
                             )}
-                            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                         >
                             <VTIcon size={iconSizes[size]} />
 
                             {/* Status indicator */}
-                            <motion.div
-                                animate={{
-                                    scale: [1, 1.1, 1],
-                                    opacity: [0.6, 0.8, 0.6],
-                                }}
+                            <div
                                 className={cn(
                                     "absolute -right-1 -top-1 rounded-full",
                                     "bg-muted-foreground/40",
@@ -165,19 +135,13 @@ export const ThreadLoadingIndicator = memo(
                                           ? "h-4 w-4"
                                           : "h-5 w-5",
                                 )}
-                                transition={{
-                                    duration: 1.5,
-                                    repeat: Number.POSITIVE_INFINITY,
-                                    ease: "easeInOut",
-                                }}
                             >
                                 <div className="bg-background/60 h-full w-full rounded-full" />
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
 
-                        {/* Enhanced Loading Content */}
-                        <motion.div
-                            animate={{ scale: 1 }}
+                        {/* Loading Content */}
+                        <div
                             className={cn(
                                 "flex-1 rounded-2xl border shadow-sm",
                                 config.bgColor,
@@ -188,8 +152,6 @@ export const ThreadLoadingIndicator = memo(
                                       ? "gap-2 px-3 py-2 md:gap-3 md:px-4 md:py-3"
                                       : "gap-3 px-4 py-3 md:gap-4 md:px-5 md:py-4",
                             )}
-                            initial={{ scale: 0.9 }}
-                            transition={{ duration: 0.2, delay: 0.1 }}
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 md:gap-3">
@@ -214,12 +176,7 @@ export const ThreadLoadingIndicator = memo(
 
                             {/* Progress indicator for slow responses */}
                             {(showTimeoutIndicator || isSlowResponse) && (
-                                <motion.div
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    className="mt-1.5 md:mt-2"
-                                    initial={{ opacity: 0, height: 0 }}
-                                    transition={{ delay: 0.5 }}
-                                >
+                                <div className="mt-1.5 md:mt-2">
                                     <div className="text-muted-foreground flex items-center gap-1.5 text-xs md:gap-2">
                                         <span>
                                             {isSlowResponse
@@ -227,12 +184,12 @@ export const ThreadLoadingIndicator = memo(
                                                 : "Request is taking longer than usual..."}
                                         </span>
                                     </div>
-                                </motion.div>
+                                </div>
                             )}
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
-            </AnimatePresence>
+            </>
         );
     },
 );

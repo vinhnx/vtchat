@@ -7,7 +7,7 @@ import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
 import { Alert, AlertDescription, cn, useToast } from "@repo/ui";
 import { AlertCircle } from "lucide-react";
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
 import { ChartComponent } from "../charts/chart-components";
@@ -52,6 +52,20 @@ export const ThreadItem = memo(
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
         const { toast } = useToast();
+
+        // Debounced status to prevent flashing during rapid status changes
+        const [debouncedStatus, setDebouncedStatus] = useState(threadItem.status);
+        const [debouncedError, setDebouncedError] = useState(threadItem.error);
+
+        useEffect(() => {
+            // Add a small delay to prevent flashing during rapid status transitions
+            const timer = setTimeout(() => {
+                setDebouncedStatus(threadItem.status);
+                setDebouncedError(threadItem.error);
+            }, 50); // 50ms delay to smooth out rapid changes
+
+            return () => clearTimeout(timer);
+        }, [threadItem.status, threadItem.error]);
 
         // Check if there are active math tool calls
         const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some((toolCall) =>
@@ -293,11 +307,11 @@ export const ThreadItem = memo(
                             />
                         )}
 
-                        {threadItem.status === "ABORTED" && (
+                        {debouncedStatus === "ABORTED" && debouncedError && (
                             <Alert>
                                 <AlertDescription>
                                     <AlertCircle className="mt-0.5 size-3.5" />
-                                    {threadItem.error ?? "Generation stopped"}
+                                    {debouncedError}
                                 </AlertDescription>
                             </Alert>
                         )}
@@ -341,8 +355,19 @@ export const ThreadItem = memo(
             </CitationProvider>
         );
     },
+    // Custom comparison function to prevent unnecessary re-renders and flashing
     (prevProps, nextProps) => {
-        return JSON.stringify(prevProps.threadItem) === JSON.stringify(nextProps.threadItem);
+        // Only re-render if these specific properties change
+        return (
+            prevProps.threadItem.id === nextProps.threadItem.id &&
+            prevProps.threadItem.status === nextProps.threadItem.status &&
+            prevProps.threadItem.error === nextProps.threadItem.error &&
+            prevProps.threadItem.answer?.text === nextProps.threadItem.answer?.text &&
+            prevProps.threadItem.updatedAt?.getTime() ===
+                nextProps.threadItem.updatedAt?.getTime() &&
+            prevProps.isGenerating === nextProps.isGenerating &&
+            prevProps.isLast === nextProps.isLast
+        );
     },
 );
 
