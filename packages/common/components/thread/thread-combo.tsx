@@ -30,21 +30,28 @@ export function Thread() {
         ));
     }, [previousThreadItems]);
 
+    // Memoize current thread item to prevent unnecessary re-renders
+    const memoizedCurrentThreadItem = useMemo(() => {
+        if (!currentThreadItem) return null;
+
+        return (
+            <div key={currentThreadItem.id} className="min-h-[calc(100dvh-16rem)]">
+                <ThreadItem
+                    key={currentThreadItem.id}
+                    threadItem={currentThreadItem}
+                    isAnimated={true}
+                    isGenerating={isGenerating}
+                    isLast={true}
+                />
+            </div>
+        );
+    }, [currentThreadItem, isGenerating]);
+
     return (
         <div className="relative" id="thread-container">
             <div className="flex min-w-full flex-col gap-8 px-2 py-4">
                 {memoizedPreviousThreadItems}
-                {currentThreadItem && (
-                    <div key={currentThreadItem.id} className="min-h-[calc(100dvh-16rem)]">
-                        <ThreadItem
-                            key={currentThreadItem.id}
-                            threadItem={currentThreadItem}
-                            isAnimated={true}
-                            isGenerating={isGenerating}
-                            isLast={true}
-                        />
-                    </div>
-                )}
+                {memoizedCurrentThreadItem}
             </div>
         </div>
     );

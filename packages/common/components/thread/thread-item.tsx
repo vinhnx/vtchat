@@ -1,19 +1,5 @@
 "use client";
 
-import { ChartComponent } from "../charts/chart-components";
-import { DocumentSidePanel } from "../document-side-panel";
-import { MotionSkeleton } from "../motion-skeleton";
-import { SourceGrid } from "./components/source-grid";
-import { Steps } from "./components/goals";
-import { ThinkingLog } from "../thinking-log";
-import { ThreadLoadingIndicator } from "../thread-loading-indicator";
-import { ToolsPanel } from "../tools-panel";
-import { CitationProvider } from "./citation-provider";
-import { MarkdownContent } from "./components/markdown-content";
-import { MathCalculatorIndicator } from "../math-calculator-indicator";
-import { Message } from "./components/message";
-import { MessageActions } from "./components/message-actions";
-import { QuestionPrompt } from "./components/question-prompt";
 import { isChartTool } from "@repo/common/constants/chart-tools";
 import { isMathTool } from "@repo/common/constants/math-tools";
 import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
@@ -24,7 +10,21 @@ import { AlertCircle } from "lucide-react";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
+import { ChartComponent } from "../charts/chart-components";
+import { DocumentSidePanel } from "../document-side-panel";
+import { MathCalculatorIndicator } from "../math-calculator-indicator";
+import { MotionSkeleton } from "../motion-skeleton";
 import { RateLimitErrorAlert } from "../rate-limit-error-alert";
+import { ThinkingLog } from "../thinking-log";
+import { ThreadLoadingIndicator } from "../thread-loading-indicator";
+import { ToolsPanel } from "../tools-panel";
+import { CitationProvider } from "./citation-provider";
+import { Steps } from "./components/goals";
+import { MarkdownContent } from "./components/markdown-content";
+import { Message } from "./components/message";
+import { MessageActions } from "./components/message-actions";
+import { QuestionPrompt } from "./components/question-prompt";
+import { SourceGrid } from "./components/source-grid";
 
 export const ThreadItem = memo(
     ({
@@ -37,9 +37,16 @@ export const ThreadItem = memo(
         isGenerating: boolean;
         isLast: boolean;
     }) => {
+        // Determine if this thread item should animate
+        // Only animate if it's the last item, currently generating, AND not already completed
+        const shouldAnimate =
+            isLast &&
+            isGenerating &&
+            !["COMPLETED", "ERROR", "ABORTED"].includes(threadItem.status || "");
+
         const { isAnimationComplete, text: animatedText } = useAnimatedText(
             threadItem.answer?.text || "",
-            isLast && isGenerating,
+            shouldAnimate,
         );
         const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
