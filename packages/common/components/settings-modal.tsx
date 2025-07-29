@@ -23,6 +23,7 @@ import {
     TypographyH3,
     TypographyMuted,
 } from "@repo/ui";
+import { motion } from "framer-motion";
 import { AlertCircle, Info, Key, Settings, Trash, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CacheManagement } from "../../../apps/web/components/cache-management";
@@ -131,9 +132,21 @@ export const SettingsModal = () => {
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
                 </DialogDescription>
-                <div className="flex flex-col h-full w-full" style={{ minWidth: "100%" }}>
+                <motion.div
+                    className="flex flex-col h-full w-full"
+                    style={{ minWidth: "100%" }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                >
                     {/* Header */}
-                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm flex-shrink-0">
+                    <motion.div
+                        className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm flex-shrink-0"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                    >
                         <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
                             <div>
                                 <TypographyH1 className="text-lg font-semibold md:text-xl">
@@ -154,7 +167,7 @@ export const SettingsModal = () => {
                             </Button>
                         </div>
                         <div className="border-border border-b" />
-                    </div>
+                    </motion.div>
 
                     {/* Content */}
                     <div
@@ -162,7 +175,12 @@ export const SettingsModal = () => {
                         style={{ minHeight: 0, width: "100%" }}
                     >
                         {/* Horizontal Navigation for All Screen Sizes */}
-                        <div className="border-b border-border bg-muted/30">
+                        <motion.div
+                            className="border-b border-border bg-muted/30"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
+                        >
                             <nav
                                 className="flex gap-2 overflow-x-auto p-3 scrollbar-thin"
                                 role="tablist"
@@ -186,17 +204,21 @@ export const SettingsModal = () => {
                                     </button>
                                 ))}
                             </nav>
-                        </div>
+                        </motion.div>
 
                         {/* Main Content Area */}
                         <div className="flex flex-1 flex-col overflow-hidden">
-                            <div
+                            <motion.div
                                 className="scrollbar-thin bg-background flex-1 overflow-y-auto pt-4 px-4 md:pt-6 md:px-6 lg:pt-8 lg:px-8"
                                 ref={panelContentRef}
                                 role="tabpanel"
                                 id={`settings-panel-${settingTab}`}
                                 aria-labelledby={`settings-tab-${settingTab}`}
                                 style={{ minHeight: "400px" }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.3, delay: 0.3 }}
+                                key={settingTab} // Re-animate when tab changes
                             >
                                 <div className="w-full max-w-none h-full">
                                     {
@@ -204,10 +226,10 @@ export const SettingsModal = () => {
                                             ?.component
                                     }
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </DialogContent>
         </Dialog>
     );

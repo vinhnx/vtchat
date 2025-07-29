@@ -134,13 +134,13 @@ export function getVTPlusFeatureFromChatMode(mode?: string): string | null {
     // Import VtPlusFeature enum values as constants to avoid circular imports
     const VT_PLUS_FEATURES = {
         DEEP_RESEARCH: "DR",
-        PRO_SEARCH: "PS"
+        PRO_SEARCH: "PS",
     } as const;
 
     // ChatMode constants to avoid imports
     const CHAT_MODES = {
         Deep: "deep",
-        Pro: "pro"
+        Pro: "pro",
     } as const;
 
     switch (mode) {

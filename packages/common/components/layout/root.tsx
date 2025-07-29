@@ -212,14 +212,25 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
                                 {/* Sidebar Content */}
                                 <motion.div
-                                    animate={{ x: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
                                     className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
-                                    exit={{ x: sidebarPlacement === "left" ? -300 : 300 }}
-                                    initial={{ x: sidebarPlacement === "left" ? -300 : 300 }}
+                                    exit={{
+                                        x: sidebarPlacement === "left" ? -300 : 300,
+                                        opacity: 0,
+                                    }}
+                                    initial={{
+                                        x: sidebarPlacement === "left" ? -300 : 300,
+                                        opacity: 0,
+                                    }}
                                     role="dialog"
                                     aria-modal="true"
                                     aria-label="Navigation menu"
-                                    transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                                    transition={{
+                                        type: "spring",
+                                        damping: 25,
+                                        stiffness: 300,
+                                        opacity: { duration: 0.2 },
+                                    }}
                                     style={{ zIndex: 100000 }}
                                 >
                                     <div
@@ -247,87 +258,107 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
 
             {/* Mobile Floating Buttons Container */}
             {isClient && (
-                <div
+                <motion.div
                     className={`fixed left-4 top-4 flex flex-col gap-6 md:hidden ${isMobileSidebarOpen ? "z-[299]" : "z-[100]"}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.5 }}
                 >
                     {/* Profile Button */}
                     {session && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    className="bg-primary h-12 w-12 rounded-full p-1 shadow-lg transition-shadow hover:shadow-xl"
-                                    size="icon"
-                                    variant="default"
-                                >
-                                    <Avatar
-                                        className="h-8 w-8"
-                                        name={session.user?.name || session.user?.email || "User"}
-                                        size="md"
-                                        src={
-                                            getSessionCacheBustedAvatarUrl(session.user?.image) ||
-                                            undefined
-                                        }
-                                    />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="z-[150] mb-2 w-48">
-                                <DropdownMenuItem onClick={() => router.push("/profile")}>
-                                    <User className="mr-2" size={16} strokeWidth={2} />
-                                    Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                                    <Settings className="mr-2" size={16} strokeWidth={2} />
-                                    Settings
-                                </DropdownMenuItem>
-
-                                {/* Admin Menu Item */}
-                                {isAdmin && (
-                                    <DropdownMenuItem onClick={() => router.push("/admin")}>
-                                        <Database className="mr-2" size={16} strokeWidth={2} />
-                                        VT Terminal
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.6 }}
+                        >
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        className="bg-primary h-12 w-12 rounded-full p-1 shadow-lg transition-shadow hover:shadow-xl"
+                                        size="icon"
+                                        variant="default"
+                                    >
+                                        <Avatar
+                                            className="h-8 w-8"
+                                            name={
+                                                session.user?.name || session.user?.email || "User"
+                                            }
+                                            size="md"
+                                            src={
+                                                getSessionCacheBustedAvatarUrl(
+                                                    session.user?.image,
+                                                ) || undefined
+                                            }
+                                        />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="z-[150] mb-2 w-48">
+                                    <DropdownMenuItem onClick={() => router.push("/profile")}>
+                                        <User className="mr-2" size={16} strokeWidth={2} />
+                                        Profile
                                     </DropdownMenuItem>
-                                )}
+                                    <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+                                        <Settings className="mr-2" size={16} strokeWidth={2} />
+                                        Settings
+                                    </DropdownMenuItem>
 
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => router.push("/about")}>
-                                    <Info className="mr-2" size={16} strokeWidth={2} />
-                                    About
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push("/help")}>
-                                    <HelpCircle className="mr-2" size={16} strokeWidth={2} />
-                                    Help Center
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push("/privacy")}>
-                                    <Shield className="mr-2" size={16} strokeWidth={2} />
-                                    Privacy Policy
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push("/terms")}>
-                                    <FileText className="mr-2" size={16} strokeWidth={2} />
-                                    Terms of Service
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    className={isLoggingOut ? "cursor-not-allowed opacity-50" : ""}
-                                    disabled={isLoggingOut}
-                                    onClick={() => logout()}
-                                >
-                                    <LogOut className="mr-2" size={16} strokeWidth={2} />
-                                    {isLoggingOut ? "Signing out..." : "Sign out"}
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                    {/* Admin Menu Item */}
+                                    {isAdmin && (
+                                        <DropdownMenuItem onClick={() => router.push("/admin")}>
+                                            <Database className="mr-2" size={16} strokeWidth={2} />
+                                            VT Terminal
+                                        </DropdownMenuItem>
+                                    )}
+
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => router.push("/about")}>
+                                        <Info className="mr-2" size={16} strokeWidth={2} />
+                                        About
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/help")}>
+                                        <HelpCircle className="mr-2" size={16} strokeWidth={2} />
+                                        Help Center
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/privacy")}>
+                                        <Shield className="mr-2" size={16} strokeWidth={2} />
+                                        Privacy Policy
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/terms")}>
+                                        <FileText className="mr-2" size={16} strokeWidth={2} />
+                                        Terms of Service
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        className={
+                                            isLoggingOut ? "cursor-not-allowed opacity-50" : ""
+                                        }
+                                        disabled={isLoggingOut}
+                                        onClick={() => logout()}
+                                    >
+                                        <LogOut className="mr-2" size={16} strokeWidth={2} />
+                                        {isLoggingOut ? "Signing out..." : "Sign out"}
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </motion.div>
                     )}
 
                     {/* Sidebar Menu Button */}
-                    <Button
-                        className="bg-primary text-primary-foreground h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
-                        onClick={() => setIsMobileSidebarOpen(true)}
-                        size="icon"
-                        variant="default"
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: session ? 0.7 : 0.6 }}
                     >
-                        <Menu size={20} strokeWidth={2} />
-                    </Button>
-                </div>
+                        <Button
+                            className="bg-primary text-primary-foreground h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
+                            onClick={() => setIsMobileSidebarOpen(true)}
+                            size="icon"
+                            variant="default"
+                        >
+                            <Menu size={20} strokeWidth={2} />
+                        </Button>
+                    </motion.div>
+                </motion.div>
             )}
         </div>
     );

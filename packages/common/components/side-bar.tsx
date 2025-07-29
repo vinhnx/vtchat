@@ -269,7 +269,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     };
 
     return (
-        <div
+        <motion.div
             className={cn(
                 "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 flex-col",
                 "dark:bg-black/95",
@@ -283,6 +283,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                       ),
             )}
             style={{ maxWidth: "300px" }}
+            initial={{ opacity: 0, x: forceMobile ? -20 : isSidebarOpen ? -20 : 0 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             {...(forceMobile && { "data-mobile-sidebar": "true" })}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
@@ -516,141 +519,38 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
                 {/* Primary Actions Section */}
-                <Flex
-                    className={cn(
-                        "w-full transition-all duration-200",
-                        isSidebarOpen ? "gap-2 px-4" : "items-center gap-3 px-2",
-                    )}
-                    direction="col"
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                 >
-                    {/* New Chat Button */}
-                    <Button
+                    <Flex
                         className={cn(
-                            "relative shadow-sm transition-all duration-200",
-                            isSidebarOpen
-                                ? "bg-primary hover:bg-primary/90 w-full justify-between"
-                                : "bg-primary hover:bg-primary/90",
+                            "w-full transition-all duration-200",
+                            isSidebarOpen ? "gap-2 px-4" : "items-center gap-3 px-2",
                         )}
-                        onClick={async () => {
-                            // Show toast notification
-                            toast({
-                                title: "New Chat",
-                                description: "Starting a new conversation...",
-                                duration: 2000,
-                            });
-
-                            // Create a new thread before navigating
-                            await useChatStore.getState().createThread();
-                            // Navigate to / to start a new conversation
-                            push("/");
-                            // Close mobile drawer if open
-                            if (forceMobile) {
-                                setIsMobileSidebarOpen(false);
-                            }
-                        }}
-                        roundedSm="lg"
-                        size={isSidebarOpen ? "sm" : "icon-sm"}
-                        tooltip={isSidebarOpen ? undefined : "New Chat (⌘⌃⌥N)"}
-                        tooltipSide="right"
-                        variant="default"
+                        direction="col"
                     >
-                        <div className="flex items-center">
-                            <Plus
-                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                            {isSidebarOpen && "New Chat"}
-                        </div>
-                        {isSidebarOpen && (
-                            // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
-                            <div className="ml-auto flex flex-row items-center gap-1">
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                    variant="secondary"
-                                >
-                                    <Command className="shrink-0" size={10} strokeWidth={2} />
-                                </Badge>
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                    variant="secondary"
-                                >
-                                    <Option className="shrink-0" size={10} strokeWidth={2} />
-                                </Badge>
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                    variant="secondary"
-                                >
-                                    <ChevronUp className="shrink-0" size={10} strokeWidth={2} />
-                                </Badge>
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
-                                    variant="secondary"
-                                >
-                                    N
-                                </Badge>
-                            </div>
-                        )}
-                    </Button>
-
-                    {/* Search Button */}
-                    <Button
-                        className={cn(
-                            "transition-all duration-200",
-                            isSidebarOpen
-                                ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between"
-                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                        )}
-                        onClick={() => {
-                            if (!isSignedIn) {
-                                requireLogin();
-                                return;
-                            }
-                            setIsCommandSearchOpen(true);
-                        }}
-                        roundedSm="lg"
-                        size={isSidebarOpen ? "sm" : "icon-sm"}
-                        tooltip={isSidebarOpen ? undefined : "Search Conversations"}
-                        tooltipSide="right"
-                        variant="ghost"
-                    >
-                        <div className="flex items-center">
-                            <Search
-                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                            {isSidebarOpen && "Search"}
-                        </div>
-                        {isSidebarOpen && (
-                            <div className="ml-auto flex flex-row items-center gap-1">
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                    variant="secondary"
-                                >
-                                    <Command className="shrink-0" size={10} strokeWidth={2} />
-                                </Badge>
-                                <Badge
-                                    className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
-                                    variant="secondary"
-                                >
-                                    K
-                                </Badge>
-                            </div>
-                        )}
-                    </Button>
-
-                    {/* Admin Button */}
-                    {isAdmin && (
+                        {/* New Chat Button */}
                         <Button
                             className={cn(
-                                "relative transition-all duration-200",
+                                "relative shadow-sm transition-all duration-200",
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                                    ? "bg-primary hover:bg-primary/90 w-full justify-between"
+                                    : "bg-primary hover:bg-primary/90",
                             )}
-                            onClick={() => {
-                                push("/admin");
+                            onClick={async () => {
+                                // Show toast notification
+                                toast({
+                                    title: "New Chat",
+                                    description: "Starting a new conversation...",
+                                    duration: 2000,
+                                });
+
+                                // Create a new thread before navigating
+                                await useChatStore.getState().createThread();
+                                // Navigate to / to start a new conversation
+                                push("/");
                                 // Close mobile drawer if open
                                 if (forceMobile) {
                                     setIsMobileSidebarOpen(false);
@@ -658,19 +558,128 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                             roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
-                            tooltip={isSidebarOpen ? undefined : "Admin"}
+                            tooltip={isSidebarOpen ? undefined : "New Chat (⌘⌃⌥N)"}
+                            tooltipSide="right"
+                            variant="default"
+                        >
+                            <div className="flex items-center">
+                                <Plus
+                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                                {isSidebarOpen && "New Chat"}
+                            </div>
+                            {isSidebarOpen && (
+                                // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
+                                <div className="ml-auto flex flex-row items-center gap-1">
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                        variant="secondary"
+                                    >
+                                        <Command className="shrink-0" size={10} strokeWidth={2} />
+                                    </Badge>
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                        variant="secondary"
+                                    >
+                                        <Option className="shrink-0" size={10} strokeWidth={2} />
+                                    </Badge>
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                        variant="secondary"
+                                    >
+                                        <ChevronUp className="shrink-0" size={10} strokeWidth={2} />
+                                    </Badge>
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                        variant="secondary"
+                                    >
+                                        N
+                                    </Badge>
+                                </div>
+                            )}
+                        </Button>
+
+                        {/* Search Button */}
+                        <Button
+                            className={cn(
+                                "transition-all duration-200",
+                                isSidebarOpen
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                            )}
+                            onClick={() => {
+                                if (!isSignedIn) {
+                                    requireLogin();
+                                    return;
+                                }
+                                setIsCommandSearchOpen(true);
+                            }}
+                            roundedSm="lg"
+                            size={isSidebarOpen ? "sm" : "icon-sm"}
+                            tooltip={isSidebarOpen ? undefined : "Search Conversations"}
                             tooltipSide="right"
                             variant="ghost"
                         >
-                            <Terminal
-                                className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                            {isSidebarOpen && "Admin"}
+                            <div className="flex items-center">
+                                <Search
+                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                                {isSidebarOpen && "Search"}
+                            </div>
+                            {isSidebarOpen && (
+                                <div className="ml-auto flex flex-row items-center gap-1">
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
+                                        variant="secondary"
+                                    >
+                                        <Command className="shrink-0" size={10} strokeWidth={2} />
+                                    </Badge>
+                                    <Badge
+                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
+                                        variant="secondary"
+                                    >
+                                        K
+                                    </Badge>
+                                </div>
+                            )}
                         </Button>
-                    )}
-                </Flex>
+
+                        {/* Admin Button */}
+                        {isAdmin && (
+                            <Button
+                                className={cn(
+                                    "relative transition-all duration-200",
+                                    isSidebarOpen
+                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                                )}
+                                onClick={() => {
+                                    push("/admin");
+                                    // Close mobile drawer if open
+                                    if (forceMobile) {
+                                        setIsMobileSidebarOpen(false);
+                                    }
+                                }}
+                                roundedSm="lg"
+                                size={isSidebarOpen ? "sm" : "icon-sm"}
+                                tooltip={isSidebarOpen ? undefined : "Admin"}
+                                tooltipSide="right"
+                                variant="ghost"
+                            >
+                                <Terminal
+                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                                {isSidebarOpen && "Admin"}
+                            </Button>
+                        )}
+                    </Flex>
+                </motion.div>
 
                 {/* Divider */}
                 <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
@@ -783,11 +792,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 </div>
 
                 {/* Thread History Section */}
-                <div
+                <motion.div
                     className={cn(
                         "thread-history-container w-full flex-1 transition-all duration-200",
                         isSidebarOpen ? "flex flex-col px-4 pt-4" : "flex flex-col px-2 pt-2",
                     )}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                 >
                     {/* Only show threads in expanded mode */}
                     {isSidebarOpen && (
@@ -911,7 +923,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </p>
                         </div>
                     )}
-                </div>
+                </motion.div>
 
                 {/* Pagination Controls */}
                 {isSidebarOpen && totalPages > 1 && (
@@ -973,6 +985,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 onClose={hideLoginPrompt}
                 title="Login Required"
             />
-        </div>
+        </motion.div>
     );
 };
