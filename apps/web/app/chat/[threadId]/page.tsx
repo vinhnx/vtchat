@@ -30,6 +30,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     const router = useRouter();
     const { data: session, isPending } = useSession();
     const isGenerating = useChatStore((state) => state.isGenerating);
+    const isStoreInitialized = useChatStore((state) => state.isStoreInitialized);
     const hasScrolledToBottom = useRef(false);
     const [isThreadLoaded, setIsThreadLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -127,9 +128,10 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     return;
                 }
 
-                // Wait a bit for store initialization if needed
+                // Wait for store initialization and thread loading with improved retry logic
+                // After server restart, IndexedDB needs more time to initialize
                 let retryCount = 0;
-                const maxRetries = 5;
+                const maxRetries = 20; // Increased from 5 to 20 for better reliability after server restart
                 let thread = null;
 
                 while (!thread && retryCount < maxRetries) {
@@ -149,8 +151,32 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     if (!thread) {
                         retryCount++;
                         if (retryCount < maxRetries) {
-                            log.info({ threadId, retryCount }, "Thread not found, retrying...");
-                            await new Promise((resolve) => setTimeout(resolve, 100));
+                            // Exponential backoff: start with 100ms, increase to max 1000ms
+                            const delay = Math.min(100 * 1.5 ** retryCount, 1000);
+                            log.info(
+                                {
+                                    threadId,
+                                    retryCount,
+                                    delay,
+                                    maxRetries,
+                                    isStoreInitialized,
+                                    threadsCount: threads.length,
+                                },
+                                "Thread not found, retrying with exponential backoff...",
+                            );
+                            await new Promise((resolve) => setTimeout(resolve, delay));
+                        } else {
+                            // On final retry, give extra time for IndexedDB initialization
+                            log.warn(
+                                {
+                                    threadId,
+                                    retryCount,
+                                    isStoreInitialized,
+                                    threadsCount: threads.length,
+                                },
+                                "Final retry attempt, waiting longer for IndexedDB initialization...",
+                            );
+                            await new Promise((resolve) => setTimeout(resolve, 2000));
                         }
                     }
                 }
@@ -159,7 +185,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     // Only switch thread if it's different from current
                     if (currentThreadId !== thread.id) {
                         log.info({ threadId, currentThreadId }, "Switching to thread");
-                        await switchThread(thread.id);
+                        switchThread(thread.id);
                     }
 
                     // Force load thread items
@@ -181,8 +207,15 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
                     log.info({ threadId }, "Successfully loaded thread");
                 } else {
-                    // Thread doesn't exist, redirect to home
-                    log.warn({ threadId }, "Thread not found, redirecting to home");
+                    // Thread doesn't exist after extensive retry attempts
+                    // This could be due to:
+                    // 1. Thread was deleted
+                    // 2. User doesn't have access to this thread
+                    // 3. Database corruption or migration issues
+                    log.warn(
+                        { threadId, retryCount, maxRetries },
+                        "Thread not found after extensive retry attempts, redirecting to home",
+                    );
                     router.push("/");
                 }
             } catch (error) {
@@ -204,6 +237,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         scrollToBottom,
         threads,
         currentThreadId,
+        isStoreInitialized,
     ]);
 
     // Get thread items to trigger scroll when content changes

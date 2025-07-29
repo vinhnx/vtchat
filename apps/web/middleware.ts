@@ -1,8 +1,8 @@
+import { auth } from "@/lib/auth-server";
 import { isPublicRoute } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
 import { getCookieCache } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -50,20 +50,31 @@ export default async function middleware(request: NextRequest) {
                 headers: request.headers,
             });
 
-            // Add 1-second timeout to prevent hanging (optimized for INP)
+            // Increase timeout to 5 seconds to prevent false negatives on page refresh
+            // The previous 1-second timeout was too aggressive and caused authenticated users
+            // to be redirected to login on page refresh when cookie cache expired
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Auth timeout")), 1000),
+                setTimeout(() => reject(new Error("Auth timeout")), 5000),
             );
 
             const session = await Promise.race([sessionPromise, timeoutPromise]);
 
             if (!session) {
+                log.info({ pathname }, "[Middleware] No session found, redirecting to login");
                 const loginUrl = new URL("/login", request.url);
                 loginUrl.searchParams.set("redirect_url", pathname);
                 return NextResponse.redirect(loginUrl);
             }
         } catch (error) {
-            log.warn({ error }, "[Middleware] Auth check failed");
+            // Distinguish between timeout and other errors for better debugging
+            const isTimeout = error instanceof Error && error.message === "Auth timeout";
+
+            if (isTimeout) {
+                log.warn({ pathname, timeout: "5s" }, "[Middleware] Auth check timed out");
+            } else {
+                log.warn({ error, pathname }, "[Middleware] Auth check failed");
+            }
+
             // On auth failure, redirect to login for protected routes
             const loginUrl = new URL("/login", request.url);
             loginUrl.searchParams.set("redirect_url", pathname);
