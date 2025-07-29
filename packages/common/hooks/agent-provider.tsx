@@ -279,6 +279,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     });
                 } else {
                     // For cleanup aborts, mark as completed if there's content
+                    // Don't set error message to prevent flashing alerts
                     const threadItem = threadItemMap.get(body.threadItemId);
                     if (threadItem?.answer?.text) {
                         updateThreadItem(body.threadId, {

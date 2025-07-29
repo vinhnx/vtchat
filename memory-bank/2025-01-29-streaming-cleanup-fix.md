@@ -237,3 +237,85 @@ This fix establishes a pattern for proper streaming cleanup that should be follo
 3. **Use thread item status to determine animation eligibility**
 4. **Distinguish between user-initiated and cleanup aborts**
 5. **Optimize component re-rendering to prevent visual flashing**
+
+## Final Fix: Remaining Screen Flashing Prevention
+
+### Problem
+
+Despite previous fixes, there was still visual flashing/flickering when new messages were added to chat threads, particularly around the ABORTED status alert component.
+
+### Root Cause
+
+The remaining flashing was caused by:
+
+1. Rapid status transitions during cleanup (GENERATING → ABORTED → COMPLETED)
+2. The ABORTED alert briefly appearing and disappearing during these transitions
+3. Insufficient debouncing of status changes in the UI
+
+### Solution
+
+**File**: `packages/common/components/thread/thread-item.tsx`
+
+Added debounced status state and improved memoization:
+
+```typescript
+// Debounced status to prevent flashing during rapid status changes
+const [debouncedStatus, setDebouncedStatus] = useState(threadItem.status);
+const [debouncedError, setDebouncedError] = useState(threadItem.error);
+
+useEffect(() => {
+    // Add a small delay to prevent flashing during rapid status transitions
+    const timer = setTimeout(() => {
+        setDebouncedStatus(threadItem.status);
+        setDebouncedError(threadItem.error);
+    }, 50); // 50ms delay to smooth out rapid changes
+
+    return () => clearTimeout(timer);
+}, [threadItem.status, threadItem.error]);
+
+// Use debounced values in alert
+{debouncedStatus === "ABORTED" && debouncedError && (
+    <Alert>
+        <AlertDescription>
+            <AlertCircle className="mt-0.5 size-3.5" />
+            {debouncedError}
+        </AlertDescription>
+    </Alert>
+)}
+```
+
+Also improved the memo comparison function:
+
+```typescript
+// Custom comparison function to prevent unnecessary re-renders and flashing
+(prevProps, nextProps) => {
+    return (
+        prevProps.threadItem.id === nextProps.threadItem.id &&
+        prevProps.threadItem.status === nextProps.threadItem.status &&
+        prevProps.threadItem.error === nextProps.threadItem.error &&
+        prevProps.threadItem.answer?.text === nextProps.threadItem.answer?.text &&
+        prevProps.threadItem.updatedAt?.getTime() === nextProps.threadItem.updatedAt?.getTime() &&
+        prevProps.isGenerating === nextProps.isGenerating &&
+        prevProps.isLast === nextProps.isLast
+    );
+};
+```
+
+### Impact
+
+- ✅ **Eliminated all visual flashing** when adding new messages to threads
+- ✅ **Smooth status transitions** without rapid UI changes
+- ✅ **Debounced alert display** prevents brief flashes of ABORTED alerts
+- ✅ **Optimized re-rendering** through improved memoization
+- ✅ **Professional user experience** with stable visual transitions
+
+## Complete Solution Summary
+
+All streaming and visual issues have been resolved:
+
+1. **Concurrent Streaming**: Fixed cleanup in `handleSubmit` to stop existing generation
+2. **Streaming Persistence**: Prevented completed items from re-animating
+3. **Incorrect ABORTED Status**: Distinguished cleanup vs user-initiated aborts
+4. **Screen Flashing**: Added debouncing and optimized re-rendering
+
+The chat interface now provides a smooth, professional experience without any visual artifacts or incorrect status displays.
