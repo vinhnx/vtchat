@@ -4,6 +4,7 @@
 export const dynamic = "force-dynamic";
 
 import { useSession } from "@repo/shared/lib/auth-client";
+import { motion } from "framer-motion";
 import {
     ChatInputWithSuspense,
     FooterWithSuspense,
@@ -27,24 +28,40 @@ export default function HomePage() {
             >
                 VT - Minimal AI Chat with Deep Research Features
             </h1>
-            <main id="main-content" className="flex-1 overflow-hidden">
+            <motion.main
+                id="main-content"
+                className="flex-1 overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+            >
                 <div className="flex h-full flex-col">
                     <div className="flex-1 overflow-y-auto">
                         <ThreadWithSuspense />
                     </div>
                 </div>
-            </main>
-            <div className="pb-safe-area-inset-bottom flex-shrink-0">
+            </motion.main>
+            <motion.div
+                className="pb-safe-area-inset-bottom flex-shrink-0"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+            >
                 <ChatInputWithSuspense showGreeting={true} />
-            </div>
+            </motion.div>
 
             {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4">
+                <motion.div
+                    className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                >
                     <div className="pointer-events-auto">
                         <FooterWithSuspense />
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

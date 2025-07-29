@@ -407,21 +407,27 @@ export const ChatInput = ({
     }, [editor]);
 
     return (
-        <div
+        <motion.div
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
                     ? "pb-safe absolute bottom-0 mb-4" // Add bottom margin when in thread detail view
                     : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
             )}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: currentThreadId ? 0.2 : 0 }}
         >
-            <div
+            <motion.div
                 className={cn(
                     "mx-auto flex w-full max-w-3xl flex-col items-start",
                     !threadItemsLength && "justify-start",
                     size === "sm" && "px-8",
                     "px-2 md:px-0", // Reduced mobile padding for better space usage
                 )}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: currentThreadId ? 0.3 : 0.1 }}
             >
                 <Flex
                     className={cn(
@@ -456,7 +462,7 @@ export const ChatInput = ({
 
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
                 </Flex>
-            </div>
+            </motion.div>
             {showLoginPrompt && (
                 <LoginRequiredDialog
                     description="Please log in to start chatting or save your conversation."
@@ -476,6 +482,6 @@ export const ChatInput = ({
                     }}
                 />
             )}
-        </div>
+        </motion.div>
     );
 };
