@@ -1,17 +1,9 @@
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { feedback, providerUsage, sessions, users, vtplusUsage } from "@/lib/database/schema";
 import { log } from "@repo/shared/lib/logger";
 import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import {
-    embeddings,
-    feedback,
-    providerUsage,
-    resources,
-    sessions,
-    users,
-    vtplusUsage,
-} from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -41,8 +33,6 @@ export async function GET(request: NextRequest) {
         const [totalUsers] = await db.select({ count: count() }).from(users);
         const [totalSessions] = await db.select({ count: count() }).from(sessions);
         const [totalFeedback] = await db.select({ count: count() }).from(feedback);
-        const [totalResources] = await db.select({ count: count() }).from(resources);
-        const [totalEmbeddings] = await db.select({ count: count() }).from(embeddings);
 
         // Activity Metrics
         const [activeSessions] = await db
@@ -131,21 +121,6 @@ export async function GET(request: NextRequest) {
             .orderBy(desc(count()))
             .limit(10);
 
-        // Resource Usage Stats
-        const resourceStats = await db
-            .select({
-                userId: resources.userId,
-                userName: users.name,
-                userEmail: users.email,
-                resourceCount: count(),
-            })
-            .from(resources)
-            .leftJoin(users, eq(resources.userId, users.id))
-            .where(gte(resources.createdAt, thirtyDaysAgo))
-            .groupBy(resources.userId, users.name, users.email)
-            .orderBy(desc(count()))
-            .limit(10);
-
         // System Health Indicators
         const avgSessionDuration = await db
             .select({
@@ -195,8 +170,6 @@ export async function GET(request: NextRequest) {
                 weeklyActiveUsers: weeklyActiveUsers.count,
                 monthlyActiveUsers: monthlyActiveUsers.count,
                 totalFeedback: totalFeedback.count,
-                totalResources: totalResources.count,
-                totalEmbeddings: totalEmbeddings.count,
                 avgSessionDurationHours: avgSessionDuration[0]?.avgDuration || 0,
             },
             providerStats: providerStats.map((stat) => ({
@@ -240,12 +213,6 @@ export async function GET(request: NextRequest) {
                     costUsd: user.totalCostCents
                         ? (Number(user.totalCostCents) / 100).toFixed(2)
                         : "0.00",
-                })),
-                byResources: resourceStats.map((user) => ({
-                    userId: user.userId,
-                    name: user.userName,
-                    email: user.userEmail,
-                    resourceCount: user.resourceCount,
                 })),
             },
             financialMetrics: {
