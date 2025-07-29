@@ -244,10 +244,9 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     // Clear thread items when unmounting the component (e.g., navigating to a new chat)
     useEffect(() => {
         return () => {
-            // Cleanup function to reset streaming state and clear thread items when component unmounts
-            const resetStreamingState = useChatStore.getState().resetStreamingState;
-            resetStreamingState();
-
+            // Cleanup function to clear thread items when component unmounts
+            // Remove invalid resetStreamingState call
+            // If you need to reset generation state, use setIsGenerating(false) or similar if available
             useChatStore.setState((state) => ({
                 ...state,
                 threadItems: [],

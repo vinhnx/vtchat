@@ -166,6 +166,22 @@ export const resources = pgTable("resources", {
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// Embeddings table for RAG
+export const embeddings = pgTable(
+    "embeddings",
+    {
+        id: varchar("id", { length: 191 })
+            .primaryKey()
+            .$defaultFn(() => crypto.randomUUID()),
+        resourceId: varchar("resource_id", { length: 191 })
+            .notNull()
+            .references(() => resources.id, { onDelete: "cascade" }),
+        embedding: vector("embedding", { dimensions: 768 }).notNull(),
+        createdAt: timestamp("created_at").notNull().defaultNow(),
+        updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    },
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
