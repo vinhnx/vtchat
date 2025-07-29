@@ -77,10 +77,6 @@ export const defaultMetadata: Metadata = {
     category: "Technology",
     classification: "AI Chat Application",
     referrer: "origin-when-cross-origin",
-    themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-        { media: "(prefers-color-scheme: dark)", color: "#000000" },
-    ],
     verification: {
         // Add your verification codes here when you get them
         // google: "your-google-verification-code",
@@ -95,4 +91,8 @@ export const defaultViewport: Viewport = {
     userScalable: true,
     interactiveWidget: "resizes-content",
     colorScheme: "light dark",
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+        { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    ],
 };
