@@ -50,11 +50,10 @@ export default async function middleware(request: NextRequest) {
                 headers: request.headers,
             });
 
-            // Increase timeout to 5 seconds to prevent false negatives on page refresh
-            // The previous 1-second timeout was too aggressive and caused authenticated users
-            // to be redirected to login on page refresh when cookie cache expired
+            // Increase timeout to 10 seconds to handle slow network conditions
+            // and prevent false negatives during active chat sessions
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Auth timeout")), 5000),
+                setTimeout(() => reject(new Error("Auth timeout")), 10000),
             );
 
             const session = await Promise.race([sessionPromise, timeoutPromise]);
@@ -70,7 +69,17 @@ export default async function middleware(request: NextRequest) {
             const isTimeout = error instanceof Error && error.message === "Auth timeout";
 
             if (isTimeout) {
-                log.warn({ pathname, timeout: "5s" }, "[Middleware] Auth check timed out");
+                log.warn({ pathname, timeout: "10s" }, "[Middleware] Auth check timed out");
+
+                // For timeout errors during chat sessions, try to preserve the session
+                // by allowing the request to proceed and let client-side auth handle it
+                if (pathname.startsWith("/chat/")) {
+                    log.info(
+                        { pathname },
+                        "[Middleware] Allowing chat route to proceed despite timeout",
+                    );
+                    return NextResponse.next();
+                }
             } else {
                 log.warn({ error, pathname }, "[Middleware] Auth check failed");
             }
