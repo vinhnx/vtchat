@@ -1,0 +1,307 @@
+/**
+ * Optimized CSS for smooth message animations
+ * Prevents visual flashing and ensures hardware acceleration
+ */
+
+/* Hardware acceleration base classes */
+.message-container {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    contain: layout style;
+}
+
+/* User message optimizations */
+.user-message {
+    transform: translateZ(0);
+    will-change: transform, opacity, box-shadow;
+    backface-visibility: hidden;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-message:hover {
+    transform: translateZ(0) scale(1.01);
+}
+
+.user-message:active {
+    transform: translateZ(0) scale(0.99);
+}
+
+/* AI message optimizations */
+.ai-message {
+    transform: translateZ(0);
+    will-change: contents, opacity;
+    backface-visibility: hidden;
+    contain: layout style;
+}
+
+.ai-message-badge {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Generating indicator optimizations */
+.generating-dots {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}
+
+.generating-dot {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    animation-fill-mode: both;
+}
+
+/* Streaming text optimizations */
+.streaming-text {
+    transform: translateZ(0);
+    will-change: contents;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    contain: layout style;
+}
+
+.streaming-cursor {
+    transform: translateZ(0);
+    will-change: opacity;
+    backface-visibility: hidden;
+    animation-fill-mode: both;
+}
+
+/* Layout stability */
+.message-content {
+    contain: layout style;
+    overflow-anchor: none;
+}
+
+.message-bubble {
+    contain: layout style;
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+}
+
+/* Action button optimizations */
+.message-actions {
+    transform: translateZ(0);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.message-action-button {
+    transform: translateZ(0);
+    will-change: transform, background-color;
+    backface-visibility: hidden;
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.message-action-button:hover {
+    transform: translateZ(0) scale(1.05);
+}
+
+.message-action-button:active {
+    transform: translateZ(0) scale(0.95);
+}
+
+/* Avatar optimizations */
+.message-avatar {
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.message-avatar:hover {
+    transform: translateZ(0) scale(1.05);
+}
+
+/* Edit mode optimizations */
+.edit-container {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    contain: layout style;
+}
+
+/* Prevent layout shifts during streaming */
+.markdown-content {
+    transform: translateZ(0);
+    will-change: contents;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    contain: layout style;
+    overflow-anchor: none;
+}
+
+.markdown-content p,
+.markdown-content div,
+.markdown-content span,
+.markdown-content pre,
+.markdown-content code {
+    contain: layout style;
+}
+
+/* Smooth transitions for state changes */
+.message-state-transition {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimized animations for mobile */
+@media (max-width: 640px) {
+    .user-message,
+    .ai-message {
+        transition-duration: 0.15s;
+    }
+
+    .message-action-button {
+        transition-duration: 0.1s;
+    }
+
+    .generating-dot {
+        animation-duration: 1.2s;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .user-message,
+    .ai-message,
+    .message-avatar,
+    .message-action-button,
+    .generating-dots,
+    .streaming-text {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .user-message:hover,
+    .user-message:active,
+    .message-avatar:hover,
+    .message-action-button:hover,
+    .message-action-button:active {
+        transform: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .message-bubble {
+        border-width: 2px;
+    }
+
+    .message-action-button {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Performance optimizations for complex layouts */
+.thread-container {
+    contain: layout style;
+    overflow-anchor: none;
+}
+
+.thread-item {
+    contain: layout style;
+    transform: translateZ(0);
+    will-change: contents;
+    backface-visibility: hidden;
+}
+
+/* Prevent flash of unstyled content */
+.message-loading {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.message-loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Optimized scrolling */
+.thread-scroll-container {
+    scroll-behavior: smooth;
+    overflow-anchor: auto;
+    contain: layout style;
+}
+
+/* GPU layer promotion for critical elements */
+.critical-animation {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    isolation: isolate;
+}
+
+/* Prevent text selection during animations */
+.animating {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Ensure proper stacking context */
+.message-stack {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+}
+
+/* Optimize for 60fps animations */
+@keyframes smooth-fade-in {
+    from {
+        opacity: 0;
+        transform: translateZ(0) translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateZ(0) translateY(0);
+    }
+}
+
+@keyframes smooth-scale {
+    from {
+        transform: translateZ(0) scale(0.98);
+    }
+    to {
+        transform: translateZ(0) scale(1);
+    }
+}
+
+@keyframes smooth-pulse {
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: translateZ(0) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateZ(0) scale(1.1);
+    }
+}
+
+/* Apply optimized animations */
+.smooth-enter {
+    animation: smooth-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.smooth-scale {
+    animation: smooth-scale 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.smooth-pulse {
+    animation: smooth-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

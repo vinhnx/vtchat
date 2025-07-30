@@ -1,12 +1,12 @@
 "use client";
 
 import { MarkdownContent, markdownStyles } from "@repo/common/components";
-import { useCopyText } from "@repo/common/hooks";
 import type { ThreadItem } from "@repo/shared/types";
-import { Button, cn } from "@repo/ui";
+import { cn } from "@repo/ui";
 import { motion } from "framer-motion";
-import { Copy, RotateCcw, Sparkles } from "lucide-react";
-import { memo, useRef, useState } from "react";
+import { Sparkles } from "lucide-react";
+import { memo, useRef } from "react";
+import "./message-animations.css";
 
 interface AIMessageProps {
     content: string;
@@ -55,49 +55,31 @@ export const AIMessage = memo(
         isLast = false,
         isCompleted = false,
     }: AIMessageProps) => {
-        const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
-        const [isReading, setIsReading] = useState(false);
         const contentRef = useRef<HTMLDivElement>(null);
-        const { copyToClipboard } = useCopyText();
-
-        const handleCopy = () => {
-            if (contentRef.current) {
-                copyToClipboard(contentRef.current);
-            }
-        };
-
-        const handleFeedback = (type: "up" | "down") => {
-            setFeedback(type === feedback ? null : type);
-        };
-
-        const handleRegenerate = () => {
-            // TODO: Implement regenerate functionality
-        };
-
-        const handleReadAloud = () => {
-            setIsReading(!isReading);
-            // TODO: Implement text-to-speech functionality
-        };
 
         return (
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
-                className="flex w-full max-w-none"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={cn("flex w-full max-w-none", "message-container ai-message")}
+                initial={{ opacity: 0, y: 5 }}
+                transition={{
+                    duration: 0.2,
+                    ease: [0.4, 0, 0.2, 1],
+                    type: "tween",
+                }}
             >
                 {/* Message container */}
                 <div className="min-w-0 flex-1 space-y-2">
                     {/* AI badge and timestamp */}
-                    <motion.div
-                        animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-2"
-                        initial={{ opacity: 0, x: -10 }}
-                        transition={{ delay: 0.2 }}
-                    >
-                        <div className="flex items-center gap-2 rounded-full border border-200/50 bg-gradient-to-r from-50 to-blue-50 px-3 py-1 dark:border-700/50 dark:from-900/20 dark:to-blue-900/20">
-                            <Sparkles className="h-3 w-3 text-600 dark:text-400" />
-                            <span className="text-xs font-medium text-700 dark:text-300">
+                    <div className="flex items-center gap-2">
+                        <div
+                            className={cn(
+                                "flex items-center gap-2 rounded-full border border-border/30 bg-muted/50 px-3 py-1",
+                                "ai-message-badge",
+                            )}
+                        >
+                            <Sparkles className="h-3 w-3 text-muted-foreground" />
+                            <span className="text-xs font-medium text-muted-foreground">
                                 {getModelDisplayName(threadItem.mode)}
                             </span>
                             {isGenerating && (
@@ -109,7 +91,7 @@ export const AIMessage = memo(
                                         ease: "linear",
                                     }}
                                 >
-                                    <div className="h-2 w-2 rounded-full bg-600 dark:bg-400" />
+                                    <div className="h-2 w-2 rounded-full bg-muted-foreground" />
                                 </motion.div>
                             )}
                         </div>
@@ -122,21 +104,10 @@ export const AIMessage = memo(
                                 })}
                             </span>
                         )}
-                    </motion.div>
+                    </div>
 
                     {/* Content container */}
-                    <motion.div
-                        animate={{ scale: 1 }}
-                        className={cn(
-                            "group relative",
-                            "bg-gradient-to-br from-background to-muted/30",
-                            "border border-border/50 rounded-2xl shadow-sm",
-                            "transition-all duration-300",
-                            "hover:shadow-md hover:border-border",
-                        )}
-                        initial={{ scale: 0.98 }}
-                        transition={{ delay: 0.3 }}
-                    >
+                    <div className={cn("group relative", "message-bubble")}>
                         {/* Message content */}
                         <div
                             className="relative px-4 py-3"
@@ -167,14 +138,17 @@ export const AIMessage = memo(
                                 initial={{ opacity: 0, height: 0 }}
                             >
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <motion.div className="flex gap-1">
+                                    <motion.div className={cn("flex gap-1", "generating-dots")}>
                                         {[0, 1, 2].map((i) => (
                                             <motion.div
                                                 animate={{
                                                     scale: [1, 1.2, 1],
                                                     opacity: [0.5, 1, 0.5],
                                                 }}
-                                                className="h-2 w-2 rounded-full bg-500"
+                                                className={cn(
+                                                    "h-2 w-2 rounded-full bg-muted-foreground",
+                                                    "generating-dot",
+                                                )}
                                                 key={i}
                                                 transition={{
                                                     duration: 1.5,
@@ -188,7 +162,7 @@ export const AIMessage = memo(
                                 </div>
                             </motion.div>
                         )}
-                    </motion.div>
+                    </div>
                 </div>
             </motion.div>
         );

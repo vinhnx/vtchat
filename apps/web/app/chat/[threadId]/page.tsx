@@ -35,8 +35,8 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     const [isThreadLoaded, setIsThreadLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const { scrollRef, contentRef } = useStickToBottom({
-        stiffness: 0.8, // Reduced for smoother scrolling
-        damping: 0.2, // Added damping for smoother animation
+        stiffness: 1, // Instant scrolling for streaming
+        damping: 0, // No damping for immediate response
     });
     const switchThread = useChatStore((state) => state.switchThread);
     const getThread = useChatStore((state) => state.getThread);
@@ -107,12 +107,25 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                 if (currentThreadId === threadId && threads.some((t) => t.id === threadId)) {
                     log.info({ threadId }, "Thread already loaded in current state");
 
-                    // Just make sure thread items are loaded
-                    const items = await loadThreadItems(threadId);
-                    log.info(
-                        { threadId, itemsCount: items.length },
-                        "Verified thread items for already loaded thread",
-                    );
+                    // Check if we already have thread items in memory (optimistic items)
+                    const currentThreadItems = useChatStore
+                        .getState()
+                        .threadItems.filter((item) => item.threadId === threadId);
+
+                    if (currentThreadItems.length > 0) {
+                        log.info(
+                            { threadId, itemsCount: currentThreadItems.length },
+                            "Using existing thread items from store (optimistic items)",
+                        );
+                        // Don't call loadThreadItems - use what's already in store
+                    } else {
+                        // Only load from database if no items in store
+                        const items = await loadThreadItems(threadId);
+                        log.info(
+                            { threadId, itemsCount: items.length },
+                            "Loaded thread items from database",
+                        );
+                    }
 
                     // Mark thread as loaded
                     setIsThreadLoaded(true);
@@ -255,6 +268,23 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
             });
         }
     }, [threadItems, scrollToBottom, isThreadLoaded]);
+
+    // Instant scroll during streaming for smooth experience
+    useEffect(() => {
+        if (isGenerating && scrollRef.current) {
+            const scrollToBottomInstant = () => {
+                if (scrollRef.current) {
+                    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                }
+            };
+
+            // Scroll immediately and set up interval for continuous scrolling during streaming
+            scrollToBottomInstant();
+            const interval = setInterval(scrollToBottomInstant, 100);
+
+            return () => clearInterval(interval);
+        }
+    }, [isGenerating, scrollRef]);
 
     // Ensure thread items are loaded when currentThreadId changes
     useEffect(() => {
