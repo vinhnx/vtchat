@@ -61,7 +61,7 @@ const config: any = {
                 },
             },
             borderWidth: {
-                DEFAULT: "0.8px",
+                DEFAULT: "0.5px",
             },
             borderRadius: {
                 xs: "0.25rem",

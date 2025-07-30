@@ -1,5 +1,5 @@
 "use client";
-import { CommandSearch, SettingsModal } from "@repo/common/components";
+import { CommandSearch } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from "@repo/common/hooks";
 import { useAppStore } from "@repo/common/store";
@@ -47,7 +47,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isAdmin } = useAdmin();
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
@@ -149,7 +149,6 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         </div>
                     </AgentProvider>
                 </motion.div>
-                <SettingsModal />
                 <CommandSearch />
             </Flex>
 
@@ -274,7 +273,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Mobile Floating Buttons Container */}
             {isClient && (
                 <motion.div
-                    className={`fixed left-4 top-4 flex flex-col gap-6 md:hidden ${isMobileSidebarOpen ? "z-[299]" : "z-[100]"}`}
+                    className={`fixed left-4 top-0 pt-safe flex flex-col gap-6 md:hidden ${isMobileSidebarOpen ? "z-[9999]" : "z-[9998]"}`}
+                    style={{ paddingTop: "max(env(safe-area-inset-top), 1rem)" }}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.5 }}
@@ -312,7 +312,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                         <User className="mr-2" size={16} strokeWidth={2} />
                                         Profile
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+                                    <DropdownMenuItem onClick={() => router.push("/settings")}>
                                         <Settings className="mr-2" size={16} strokeWidth={2} />
                                         Settings
                                     </DropdownMenuItem>

@@ -1,7 +1,7 @@
 "use client";
 import { useRootContext } from "@repo/common/context";
 
-import { useAppStore, useChatStore } from "@repo/common/store";
+import { useChatStore } from "@repo/common/store";
 import { useSession } from "@repo/shared/lib/auth-client";
 
 import { log } from "@repo/shared/logger";
@@ -40,8 +40,7 @@ export const CommandSearch = () => {
     const getThread = useChatStore((state) => state.getThread);
     const removeThread = useChatStore((state) => state.deleteThread);
     const switchThread = useChatStore((state) => state.switchThread);
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore((state) => state.setSettingTab);
+
     const router = useRouter();
     const { theme, setTheme } = useTheme();
     const clearThreads = useChatStore((state) => state.clearAllThreads);
@@ -166,7 +165,7 @@ export const CommandSearch = () => {
                     requireLogin();
                     return;
                 }
-                setIsSettingsOpen(true);
+                router.push("/settings");
                 onClose();
             },
             requiresAuth: true,
@@ -179,8 +178,7 @@ export const CommandSearch = () => {
                     requireLogin();
                     return;
                 }
-                setIsSettingsOpen(true);
-                setSettingTab("api-keys");
+                router.push("/settings");
                 onClose();
             },
             requiresAuth: true,

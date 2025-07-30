@@ -30,7 +30,7 @@
 }
 
 .link-hover-effect::after {
-    content: "";
+    content: '';
     position: absolute;
     width: 0;
     height: 1px;
@@ -89,18 +89,18 @@
 }
 
 .input-hover-effect:hover {
-    border-color: rgba(var(--foreground-rgb), 0.2);
-    background-color: rgba(var(--foreground-rgb), 0.01);
+    border-color: rgba(var(--foreground-rgb), 0.1);
+    background-color: rgba(var(--foreground-rgb), 0.005);
 }
 
 .input-hover-effect:focus {
-    border-color: hsl(var(--primary));
+    border-color: rgba(var(--foreground-rgb), 0.15);
     background-color: transparent;
 }
 
 .dark .input-hover-effect:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    background-color: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.01);
 }
 
 /* Dropdown item hover effects */
@@ -138,7 +138,7 @@
 }
 
 .premium-btn-hover::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;

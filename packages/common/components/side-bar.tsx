@@ -1,5 +1,6 @@
 "use client";
 import { useRootContext } from "@repo/common/context";
+import { useReducedMotion } from "@repo/common/contexts/accessibility-context";
 import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
 import { useAppStore, useChatStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
@@ -107,13 +108,14 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const user = session?.user;
     const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
     const isSidebarOpen = forceMobile || useAppStore((state) => state.isSidebarOpen);
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+
     const { push } = useRouter();
     const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const { logout, isLoggingOut } = useLogout();
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const { toast } = useToast();
     const { isAdmin } = useAdmin();
+    const shouldReduceMotion = useReducedMotion();
 
     // Reset pagination when threads change
     useEffect(() => {
@@ -288,10 +290,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 backfaceVisibility: "hidden",
                 contain: forceMobile ? "layout style paint" : "none",
             }}
-            initial={forceMobile ? { opacity: 0, scale: 0.98 } : false}
-            animate={forceMobile ? { opacity: 1, scale: 1 } : {}}
+            initial={forceMobile && !shouldReduceMotion ? { opacity: 0, scale: 0.98 } : false}
+            animate={forceMobile && !shouldReduceMotion ? { opacity: 1, scale: 1 } : {}}
             transition={
-                forceMobile
+                forceMobile && !shouldReduceMotion
                     ? {
                           type: "tween",
                           duration: 0.2,
@@ -396,7 +398,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setIsSettingsOpen(true);
+                                        push("/settings");
                                     }}
                                 >
                                     <Settings size={16} strokeWidth={2} />
@@ -531,18 +533,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 >
                     <Flex
                         className={cn(
-                            "w-full transition-all duration-200",
-                            isSidebarOpen ? "gap-2 px-4" : "items-center gap-3 px-2",
+                            "transition-all duration-200",
+                            isSidebarOpen ? "gap-2 px-4 w-full" : "items-center gap-2 px-2 w-full",
                         )}
                         direction="col"
                     >
                         {/* New Chat Button */}
                         <Button
                             className={cn(
-                                "relative shadow-sm transition-all duration-200",
+                                "relative shadow-sm transition-colors duration-200",
                                 isSidebarOpen
                                     ? "bg-primary hover:bg-primary/90 w-full justify-between"
-                                    : "bg-primary hover:bg-primary/90 w-full",
+                                    : "bg-primary hover:bg-primary/90 w-10 h-10 justify-center",
                             )}
                             onClick={async () => {
                                 // Show toast notification
@@ -563,16 +565,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                             roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
-                            tooltip={isSidebarOpen ? undefined : "New Chat (⌘⌃⌥N)"}
-                            tooltipSide="right"
                             variant="default"
                         >
                             <div className="flex items-center">
-                                <Plus
-                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
-                                    size={16}
-                                    strokeWidth={2}
-                                />
+                                <Plus className={cn("flex-shrink-0", isSidebarOpen && "mr-2")} />
                                 {isSidebarOpen && "New Chat"}
                             </div>
                             {isSidebarOpen && (
@@ -609,10 +605,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {/* Search Button */}
                         <Button
                             className={cn(
-                                "transition-all duration-200 w-full",
+                                "transition-all duration-200",
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center",
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between w-full"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
                             )}
                             onClick={() => {
                                 if (!isSignedIn) {
@@ -623,8 +619,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                             roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
-                            tooltip={isSidebarOpen ? undefined : "Search Conversations"}
-                            tooltipSide="right"
                             variant="ghost"
                         >
                             <div className="flex items-center">
@@ -653,14 +647,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </Button>
 
-                        {/* Admin Button */}
+                        {/*
+                         Button */}
                         {isAdmin && (
                             <Button
                                 className={cn(
-                                    "relative transition-all duration-200 w-full",
+                                    "relative transition-all duration-200",
                                     isSidebarOpen
-                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-start"
-                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center",
+                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-start w-full"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
                                 )}
                                 onClick={() => {
                                     push("/admin");
@@ -671,8 +666,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 }}
                                 roundedSm="lg"
                                 size={isSidebarOpen ? "sm" : "icon-sm"}
-                                tooltip={isSidebarOpen ? undefined : "Admin"}
-                                tooltipSide="right"
                                 variant="ghost"
                             >
                                 <Terminal
@@ -680,7 +673,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     size={16}
                                     strokeWidth={2}
                                 />
-                                {isSidebarOpen && "Admin"}
+                                {isSidebarOpen && "VT Terminaml"}
                             </Button>
                         )}
                     </Flex>
@@ -914,14 +907,21 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                     {/* Show a simplified view in collapsed mode */}
                     {!isSidebarOpen && threads.length > 0 && (
-                        <div className="flex flex-col items-center gap-2 py-2">
+                        <Button
+                            className="flex flex-col items-center gap-1 py-2 h-auto min-h-[44px] w-full hover:bg-sidebar-accent/50 transition-colors"
+                            onClick={() => setIsSidebarOpen(true)}
+                            size="icon-sm"
+                            tooltip="Open thread list"
+                            tooltipSide="right"
+                            variant="ghost"
+                        >
                             <div className="text-sidebar-foreground/30 text-center">
                                 <FileText size={16} strokeWidth={1.5} />
                             </div>
                             <p className="text-sidebar-foreground/50 text-center text-[10px]">
                                 {threads.length} chats
                             </p>
-                        </div>
+                        </Button>
                     )}
                 </motion.div>
 

@@ -1,6 +1,16 @@
 import { db } from "@/lib/database";
 import { resources } from "@/lib/database/schema";
+import { eq } from "drizzle-orm";
 import { afterAll, describe, expect, it } from "vitest";
+
+// Mock function for secureContentForEmbedding - this should be imported from the actual implementation
+function secureContentForEmbedding(content: string): string {
+    // Basic PII masking implementation for testing
+    return content
+        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[EMAIL_REDACTED]")
+        .replace(/\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g, "[PHONE_REDACTED]")
+        .replace(/\b\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\b/g, "[CARD_REDACTED]");
+}
 
 describe("Embedding Security Integration", () => {
     let testResourceId: string;

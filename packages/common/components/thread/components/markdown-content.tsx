@@ -3,11 +3,11 @@
 import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from "@repo/common/components";
 import { log } from "@repo/shared/logger";
 import { cn } from "@repo/ui";
-import { useTheme } from "next-themes";
 import { MDXRemote } from "next-mdx-remote";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
-import { memo, Suspense, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { memo, Suspense, useEffect, useRef, useState } from "react";
 import remarkGfm from "remark-gfm";
 import "./markdown-content.css";
 
@@ -16,7 +16,7 @@ export const markdownStyles = {
     "animate-fade-in prose prose-base min-w-full dark:prose-invert": true,
 
     // Improved spacing and layout
-    "prose-p:mb-5 prose-p:leading-relaxed prose-p:text-base": true,
+    "prose-p:mb-5 prose-p:leading-loose prose-p:text-base": true,
     "prose-headings:mb-4 prose-headings:mt-6 prose-headings:font-semibold prose-headings:tracking-tight": true,
 
     // Heading hierarchy with improved typography
@@ -27,7 +27,7 @@ export const markdownStyles = {
 
     // List styling with improved spacing
     "prose-ul:pl-6 prose-ul:my-4 prose-ol:pl-6 prose-ol:my-4": true,
-    "prose-li:my-2 prose-li:leading-relaxed prose-li:text-base prose-li:pl-1": true,
+    "prose-li:my-2 prose-li:leading-loose prose-li:text-base prose-li:pl-1": true,
 
     // Blockquote styling with improved visual design
     "prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:bg-secondary/20 prose-blockquote:rounded-r-md": true,
@@ -172,11 +172,17 @@ export const MarkdownContent = memo(
     ({ content, className, isCompleted, isLast }: MarkdownContentProps) => {
         const [previousContent, setPreviousContent] = useState<string[]>([]);
         const [currentContent, setCurrentContent] = useState<string>("");
+        const [stableKey, setStableKey] = useState<string>("");
         // Force re-render when theme changes
         const { currentTheme } = useTheme();
+        const contentRef = useRef<string>("");
+        const processingRef = useRef<boolean>(false);
 
         useEffect(() => {
-            if (!content) return;
+            if (!content || content === contentRef.current || processingRef.current) return;
+
+            processingRef.current = true;
+            contentRef.current = content;
 
             try {
                 const normalizedContent = normalizeContent(content);
@@ -186,39 +192,56 @@ export const MarkdownContent = memo(
                     : handleIncompleteTable(normalizedContent);
                 const contentWithCitations = parseCitationsWithSourceTags(contentWithValidTables);
 
+                // Only update if content actually changed to prevent unnecessary re-renders
+                setCurrentContent((prev) => {
+                    if (prev !== contentWithCitations) {
+                        // Generate stable key for better React reconciliation
+                        setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
+                        return contentWithCitations;
+                    }
+                    return prev;
+                });
                 setPreviousContent([]);
-                setCurrentContent(contentWithCitations);
             } catch (error) {
                 log.error("Error processing content:", { data: error });
+            } finally {
+                processingRef.current = false;
             }
 
             // Cleanup function to clear content when component unmounts
             return () => {
                 setPreviousContent([]);
                 setCurrentContent("");
+                contentRef.current = "";
             };
         }, [content, isCompleted, currentTheme]);
 
         if (isCompleted && !isLast) {
             return (
-                <div className={cn("markdown-content", markdownStyles, className)}>
+                <div className={cn("markdown-content transform-gpu", markdownStyles, className)}>
                     <ErrorBoundary fallback={<ErrorPlaceholder />}>
-                        <MemoizedMdxChunk chunk={currentContent} />
+                        <MemoizedMdxChunk chunk={currentContent} key={stableKey} />
                     </ErrorBoundary>
                 </div>
             );
         }
 
         return (
-            <div className={cn("markdown-content", markdownStyles, className)}>
+            <div className={cn("markdown-content transform-gpu", markdownStyles, className)}>
                 {previousContent.length > 0 &&
                     previousContent.map((chunk, index) => (
-                        <ErrorBoundary fallback={<ErrorPlaceholder />} key={`prev-${index}`}>
+                        <ErrorBoundary
+                            fallback={<ErrorPlaceholder />}
+                            key={`prev-${chunk.slice(0, 50).replace(/\s/g, "")}-${index}`}
+                        >
                             <MemoizedMdxChunk chunk={chunk} />
                         </ErrorBoundary>
                     ))}
                 {currentContent && (
-                    <ErrorBoundary fallback={<ErrorPlaceholder />} key="current-chunk">
+                    <ErrorBoundary
+                        fallback={<ErrorPlaceholder />}
+                        key={stableKey || "current-chunk"}
+                    >
                         <MemoizedMdxChunk chunk={currentContent} />
                     </ErrorBoundary>
                 )}

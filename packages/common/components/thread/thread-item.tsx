@@ -267,7 +267,7 @@ export const ThreadItem = memo(
                             </div>
                         )}
 
-                        <div className="w-full" ref={messageRef}>
+                        <div className="w-full transform-gpu" ref={messageRef}>
                             {hasAnswer && threadItem.answer?.text && (
                                 <div className="flex flex-col">
                                     <SourceGrid sources={validSources} />
