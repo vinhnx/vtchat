@@ -212,11 +212,11 @@ export const CommandSearch = () => {
             <CommandList className="max-h-[300px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                    {actions.map((action) => {
+                    {actions.map((action, index) => {
                         const actionItem = (
                             <CommandItem
                                 className="gap-"
-                                key={action.name}
+                                key={`action-${action.name}-${index}`}
                                 onSelect={action.action}
                                 value={action.name}
                             >
@@ -233,7 +233,7 @@ export const CommandSearch = () => {
                         if (action.requiresAuth && !isSignedIn) {
                             return (
                                 <GatedFeatureAlert
-                                    key={action.name}
+                                    key={`gated-${action.name}-${index}`}
                                     message={`Please sign in to ${action.name.toLowerCase()}.`}
                                     showAlert={true}
                                     title="Login Required"
@@ -256,10 +256,10 @@ export const CommandSearch = () => {
                                     new Date(a.createdAt).getTime(),
                             )
                             .slice(0, 3)
-                            .map((thread) => (
+                            .map((thread, index) => (
                                 <CommandItem
                                     className={cn("w-full gap-3")}
-                                    key={thread.id}
+                                    key={`thread-${thread.id}-${index}`}
                                     onSelect={() => {
                                         switchThread(thread.id);
                                         router.push(`/chat/${thread.id}`);

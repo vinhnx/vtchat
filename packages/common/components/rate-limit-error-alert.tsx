@@ -96,7 +96,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
         }
 
         return (
-            <Alert className={className} variant="destructive">
+            <Alert className={className}>
                 <AlertDescription>
                     <div className="flex items-start gap-2">
                         <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
@@ -129,7 +129,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
     }
 
     return (
-        <Alert className={className} variant="destructive">
+        <Alert className={className}>
             <AlertDescription>
                 <div className="flex items-start gap-2">
                     <AlertCircle className="mt-0.5 size-3.5 shrink-0" />

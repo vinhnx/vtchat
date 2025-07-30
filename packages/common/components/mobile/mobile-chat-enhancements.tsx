@@ -143,8 +143,8 @@ export const MobileInputToolbar = memo(
                 {/* Spacer */}
                 <div className="flex-1" />
 
-                {/* Send button */}
-                <AnimatePresence>
+                {/* Send button - Optimized for mobile */}
+                <AnimatePresence mode="wait">
                     {hasInput && (
                         <motion.div
                             animate={{ scale: 1, rotate: 0 }}
@@ -152,11 +152,13 @@ export const MobileInputToolbar = memo(
                             initial={{ scale: 0, rotate: -180 }}
                             transition={{
                                 type: "spring",
-                                stiffness: 300,
-                                damping: 20,
+                                stiffness: window.innerWidth < 768 ? 400 : 300,
+                                damping: window.innerWidth < 768 ? 25 : 20,
+                                mass: 0.8,
                             }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            className="transform-gpu will-change-transform"
                         >
                             <Button
                                 className="bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg hover:from-blue-600 hover:to-purple-700"
@@ -428,20 +430,22 @@ export const MobilePullToRefresh = memo(
                     {(pullDistance > 0 || isRefreshing) && (
                         <motion.div
                             animate={{
-                                height: isRefreshing ? 60 : Math.min(pullDistance, 60),
+                                // Use transform instead of height for better performance
+                                scaleY: isRefreshing ? 1 : Math.min(pullDistance / 60, 1),
                                 opacity: 1,
                             }}
-                            className="flex items-center justify-center bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900/20"
-                            exit={{ height: 0, opacity: 0 }}
-                            initial={{ height: 0, opacity: 0 }}
+                            className="flex items-center justify-center bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900/20 origin-top transform-gpu will-change-transform"
+                            exit={{ scaleY: 0, opacity: 0 }}
+                            initial={{ scaleY: 0, opacity: 0 }}
+                            style={{ height: 60 }}
                         >
                             <motion.div
                                 animate={{
-                                    rotate: isRefreshing ? 360 : pullDistance * 4,
-                                    scale: pullDistance > threshold ? 1.2 : 1,
+                                    rotate: isRefreshing ? 360 : pullDistance * 2, // Reduced rotation multiplier
+                                    scale: pullDistance > threshold ? 1.1 : 1, // Reduced scale for mobile
                                 }}
                                 className={cn(
-                                    "flex h-8 w-8 items-center justify-center rounded-full",
+                                    "flex h-8 w-8 items-center justify-center rounded-full transform-gpu will-change-transform",
                                     pullDistance > threshold
                                         ? "bg-blue-500 text-white"
                                         : "bg-gray-200 text-gray-500 dark:bg-gray-700",
@@ -449,11 +453,11 @@ export const MobilePullToRefresh = memo(
                                 transition={{
                                     rotate: isRefreshing
                                         ? {
-                                              duration: 1,
+                                              duration: window.innerWidth < 768 ? 1.5 : 1, // Slower on mobile
                                               repeat: Number.POSITIVE_INFINITY,
                                               ease: "linear",
                                           }
-                                        : {},
+                                        : { duration: 0.1 },
                                 }}
                             >
                                 <ChevronDown size={16} />
@@ -464,7 +468,13 @@ export const MobilePullToRefresh = memo(
 
                 <motion.div
                     animate={{ y: pullDistance }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: window.innerWidth < 768 ? 400 : 300,
+                        damping: window.innerWidth < 768 ? 35 : 30,
+                        mass: 0.8,
+                    }}
+                    className="transform-gpu will-change-transform"
                 >
                     {children}
                 </motion.div>
