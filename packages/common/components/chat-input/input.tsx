@@ -96,6 +96,7 @@ export const ChatInput = ({
     const useCharts = useChatStore((state) => state.useCharts);
 
     const isGenerating = useChatStore((state) => state.isGenerating);
+    const setIsGenerating = useChatStore((state) => state.setIsGenerating);
     const pathname = usePathname();
     const isChatPage = pathname.startsWith("/chat/");
     const imageAttachment = useChatStore((state) => state.imageAttachment);
@@ -183,6 +184,8 @@ export const ChatInput = ({
                 title: editor?.getText(),
             });
             threadId = optimisticId;
+            // Set loading state immediately for new threads to prevent missing loading indicator
+            setIsGenerating(true);
         }
         // Removed duplicated block and misplaced return
 

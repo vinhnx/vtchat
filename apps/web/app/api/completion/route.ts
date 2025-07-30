@@ -1,3 +1,6 @@
+import { auth } from "@/lib/auth-server";
+import { shouldDisableGemini } from "@/lib/services/budget-monitor";
+import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
 import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
@@ -11,9 +14,6 @@ import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
 import { type Geo, geolocation } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { shouldDisableGemini } from "@/lib/services/budget-monitor";
-import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
 // Force dynamic rendering for this route
@@ -292,26 +292,37 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                // VT+ REQUIRED for server-funded Gemini access
-                vtPlusAccess = await checkVTPlusAccess({ userId, ip });
-                if (!vtPlusAccess.hasAccess) {
-                    const errorResponse = {
-                        error: "VT+ subscription required",
-                        message:
-                            "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
-                        upgradeUrl: "/pricing",
-                        usageSettingsAction: "open_usage_settings",
-                    };
-                    return new Response(JSON.stringify(errorResponse), {
-                        status: 403,
-                        headers: { "Content-Type": "application/json" },
-                    });
+                // SPECIAL CASE: GEMINI_2_5_FLASH_LITE is free for all authenticated users
+                // Other Gemini models require VT+ subscription for server-side access
+                if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE) {
+                    // VT+ REQUIRED for server-funded Gemini access (except Flash Lite)
+                    vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+                    if (!vtPlusAccess.hasAccess) {
+                        const errorResponse = {
+                            error: "VT+ subscription required",
+                            message:
+                                "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
+                            upgradeUrl: "/pricing",
+                            usageSettingsAction: "open_usage_settings",
+                        };
+                        return new Response(JSON.stringify(errorResponse), {
+                            status: 403,
+                            headers: { "Content-Type": "application/json" },
+                        });
+                    }
+                } else {
+                    // For GEMINI_2_5_FLASH_LITE, allow free users to use server-side keys
+                    vtPlusAccess = await checkVTPlusAccess({ userId, ip });
+                    // Note: We still check VT+ status for rate limiting purposes, but don't block free users
                 }
 
-                // Check rate limits for VT+ users (guaranteed by access check above)
+                // Check rate limits based on user tier
+                // For GEMINI_2_5_FLASH_LITE: both VT+ and free users can access it
+                // For other Gemini models: only VT+ users can access them (guaranteed by access check above)
+                const isVTPlusUser = vtPlusAccess?.hasAccess ?? false;
                 let rateLimitResult;
                 try {
-                    rateLimitResult = await checkRateLimit(userId, selectedModel, true);
+                    rateLimitResult = await checkRateLimit(userId, selectedModel, isVTPlusUser);
                 } catch (error) {
                     log.error({ error }, "Rate limit check failed");
                     // Continue without rate limiting if check fails (graceful degradation)
@@ -323,9 +334,6 @@ export async function POST(request: NextRequest) {
                         rateLimitResult.reason === "daily_limit_exceeded"
                             ? rateLimitResult.resetTime.daily
                             : rateLimitResult.resetTime.minute;
-
-                    // VT+ users are guaranteed at this point (since we gated above)
-                    const isVTPlusUser = true;
 
                     const message =
                         rateLimitResult.reason === "daily_limit_exceeded"

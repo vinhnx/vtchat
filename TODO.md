@@ -10,6 +10,29 @@ Research and rename "VT" to better and memorable name
 
 --
 
+fix HTTP error! status: 403 on GEMINI model chat -- >
+
+on choosing GEMINI Flash Lite -> it should use server-side Gemini API key, not client-side API key
+
+--
+
+for other models, it should use client-side API key BYOK key, check for existing logic and fix
+
+--
+
+Error response received
+Object { errorText: '{"error":"VT+ subscription required","message":"Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.","upgradeUrl":"/pricing","usageSettingsAction":"open_usage_settings"}', status: 403 }
+​
+errorText: '{"error":"VT+ subscription required","message":"Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.","upgradeUrl":"/pricing","usageSettingsAction":"open_usage_settings"}'
+​
+status: 403
+
+-> show this error message instead of "HTTP error! status: 403" error toast
+
+--
+
+--
+
 fix motion animation too flashing and jizzy on both desktop and especially in mobile view port
 
 --
@@ -62,5 +85,12 @@ fix chat detail still flashing on new message received, should not flash, just s
 
 --
 
-
 Accessiblity settings: reduce motion -> disable all framer motion in the app
+
+--
+
+fix every error toast sonner to have a close button and dismissable on tap
+
+--
+
+fix send chat button in chat input spinner doesn't animate and rotate when sending chat
