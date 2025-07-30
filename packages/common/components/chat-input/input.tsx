@@ -13,7 +13,7 @@ import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from "@repo/shared/c
 import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
-import { Flex, cn } from "@repo/ui";
+import { cn, Flex } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,6 +21,12 @@ import { useShallow } from "zustand/react/shallow";
 import { useAgentStream } from "../../hooks/agent-provider";
 import { useChatEditor } from "../../hooks/use-editor";
 import { useChatStore } from "../../store";
+import {
+    getOptimizedTransition,
+    HARDWARE_ACCELERATION_CLASSES,
+    isMobile,
+    prefersReducedMotion,
+} from "../../utils/animation-optimization";
 import { ExamplePrompts } from "../example-prompts";
 import { LMStudioSetupBanner } from "../lm-studio-setup-banner";
 import { LoginRequiredDialog } from "../login-required-dialog";
@@ -228,16 +234,17 @@ export const ChatInput = ({
     };
 
     const renderChatInput = () => (
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
                     "w-full px-3 md:px-4",
                     currentThreadId ? "mb-3 md:mb-3" : "mb-20 md:mb-0", // Add bottom margin for PWA banner on mobile
+                    HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                 )}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 5 : 10 }}
                 key={"chat-input"}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                transition={getOptimizedTransition("fast")}
             >
                 <Flex
                     className={cn(
@@ -413,10 +420,11 @@ export const ChatInput = ({
                 currentThreadId
                     ? "pb-safe absolute bottom-0 mb-4" // Add bottom margin when in thread detail view
                     : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
+                HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
             )}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 10 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: currentThreadId ? 0.2 : 0 }}
+            transition={getOptimizedTransition("standard")}
         >
             <motion.div
                 className={cn(
@@ -424,10 +432,14 @@ export const ChatInput = ({
                     !threadItemsLength && "justify-start",
                     size === "sm" && "px-8",
                     "px-2 md:px-0", // Reduced mobile padding for better space usage
+                    HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                 )}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 5 : 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: currentThreadId ? 0.3 : 0.1 }}
+                transition={{
+                    ...getOptimizedTransition("standard"),
+                    delay: currentThreadId ? (isMobile() ? 0.2 : 0.3) : 0.1,
+                }}
             >
                 <Flex
                     className={cn(
@@ -441,9 +453,12 @@ export const ChatInput = ({
                     {!currentThreadId && showGreeting && (
                         <motion.div
                             animate={{ opacity: 1 }}
-                            className="mb-6 flex w-full flex-col items-center gap-2"
+                            className={cn(
+                                "mb-6 flex w-full flex-col items-center gap-2",
+                                HARDWARE_ACCELERATION_CLASSES.fadeAccelerated,
+                            )}
                             initial={{ opacity: 0 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            transition={getOptimizedTransition("smooth")}
                         >
                             {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />

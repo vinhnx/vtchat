@@ -23,17 +23,15 @@ import {
     TypographyH3,
     TypographyMuted,
 } from "@repo/ui";
-import { motion } from "framer-motion";
 import { AlertCircle, Info, Key, Settings, Trash, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CacheManagement } from "../../../apps/web/components/cache-management";
 import { SETTING_TABS, useAppStore } from "../store";
-import { useApiKeysStore, type ApiKeys } from "../store/api-keys.store";
+import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
 import { ChatEditor } from "./chat-input";
 import { CombinedSubscriptionSettings } from "./combined-subscription-settings";
 import { LoginRequiredDialog } from "./login-required-dialog";
 import { ModeToggle } from "./mode-toggle";
-import { ModelSettings } from "./model-settings";
 import MultiModelUsageMeter from "./multi-model-usage-meter";
 import { UserProfileSettings } from "./user-profile-settings";
 
@@ -94,12 +92,6 @@ export const SettingsModal = () => {
             component: <MultiModelUsageMeter userId={session?.user?.id} />,
         },
         {
-            title: "Models",
-            description: "View available AI models",
-            key: SETTING_TABS.MODELS,
-            component: <ModelSettings />,
-        },
-        {
             title: "Profile",
             description: "Manage your account details",
             key: SETTING_TABS.PROFILE,
@@ -127,26 +119,17 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="h-[100vh] w-[100vw] max-w-none overflow-hidden rounded-none p-0 m-0 inset-0 translate-x-0 translate-y-0 lg:h-[calc(100vh-64px)] lg:w-[calc(100vw-64px)] lg:inset-8 lg:rounded-xl">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
                 </DialogDescription>
-                <motion.div
-                    className="flex flex-col h-full w-full"
-                    style={{ minWidth: "100%" }}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
+                <div
+                    className="scrollbar-thin relative w-full overflow-y-auto overflow-x-hidden"
+                    ref={scrollRef}
                 >
                     {/* Header */}
-                    <motion.div
-                        className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm flex-shrink-0"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                    >
+                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
                         <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
                             <div>
                                 <TypographyH1 className="text-lg font-semibold md:text-xl">
@@ -157,79 +140,66 @@ export const SettingsModal = () => {
                                 </p>
                             </div>
                             <Button
+                                className="md:hidden"
                                 onClick={() => setIsSettingsOpen(false)}
                                 size="icon-sm"
                                 variant="ghost"
-                                className="flex items-center justify-center"
                             >
                                 <X size={18} strokeWidth={2} />
-                                <span className="sr-only">Close</span>
                             </Button>
                         </div>
                         <div className="border-border border-b" />
-                    </motion.div>
+                    </div>
 
                     {/* Content */}
-                    <div
-                        className="flex flex-col flex-1 overflow-hidden"
-                        style={{ minHeight: 0, width: "100%" }}
-                    >
-                        {/* Horizontal Navigation for All Screen Sizes */}
-                        <motion.div
-                            className="border-b border-border bg-muted/30"
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
-                        >
-                            <nav
-                                className="flex gap-2 overflow-x-auto p-3 scrollbar-thin"
-                                role="tablist"
-                                aria-label="Settings navigation"
-                            >
+                    <div className="flex flex-col xl:flex-row">
+                        {/* Sidebar Navigation */}
+                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[320px] xl:border-b-0 xl:border-r">
+                            {/* Mobile horizontal scroll, desktop vertical nav */}
+                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 xl:flex-col xl:gap-0 xl:space-y-2 xl:overflow-x-visible xl:p-4">
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            "flex items-center justify-center rounded-lg px-4 py-2 text-center transition-colors whitespace-nowrap text-sm font-medium flex-shrink-0",
+                                            "flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left",
                                             settingTab === setting.key
-                                                ? "bg-background text-foreground shadow-sm ring-1 ring-border/50"
+                                                ? "bg-background text-foreground shadow-sm"
                                                 : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
-                                        role="tab"
-                                        aria-selected={settingTab === setting.key}
-                                        aria-controls={`settings-panel-${setting.key}`}
+                                        style={{ minWidth: "max-content" }}
                                     >
-                                        {setting.title}
+                                        <div className="flex-1 space-y-0.5">
+                                            <div className="whitespace-nowrap text-xs font-medium xl:whitespace-normal xl:text-base">
+                                                {setting.title}
+                                            </div>
+                                            <div className="text-muted-foreground hidden text-xs xl:block">
+                                                {setting.description}
+                                            </div>
+                                        </div>
                                     </button>
                                 ))}
                             </nav>
-                        </motion.div>
+                        </div>
 
                         {/* Main Content Area */}
-                        <div className="flex flex-1 flex-col overflow-hidden">
-                            <motion.div
-                                className="scrollbar-thin bg-background flex-1 overflow-y-auto pt-4 px-4 md:pt-6 md:px-6 lg:pt-8 lg:px-8"
-                                ref={panelContentRef}
-                                role="tabpanel"
-                                id={`settings-panel-${settingTab}`}
-                                aria-labelledby={`settings-tab-${settingTab}`}
-                                style={{ minHeight: "400px" }}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: 0.3 }}
-                                key={settingTab} // Re-animate when tab changes
-                            >
-                                <div className="w-full max-w-none h-full">
-                                    {
-                                        settingMenu.find((setting) => setting.key === settingTab)
-                                            ?.component
-                                    }
-                                </div>
-                            </motion.div>
+                        <div
+                            className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 xl:p-8"
+                            ref={panelContentRef}
+                            style={{
+                                minHeight: "500px",
+                                maxHeight: "calc(85vh - 120px)",
+                            }}
+                        >
+                            <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
+                                {
+                                    settingMenu.find((setting) => setting.key === settingTab)
+                                        ?.component
+                                }
+                            </div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </DialogContent>
         </Dialog>
     );
@@ -314,8 +284,8 @@ export const ApiKeySettings = () => {
         <div className="w-full space-y-4 md:space-y-6">
             {/* Header */}
             <div className="w-full">
-                <TypographyH3 className="text-lg md:text-xl">API Keys</TypographyH3>
-                <TypographyMuted className="text-sm md:text-base">
+                <TypographyH3 className="text-base md:text-lg">API Keys</TypographyH3>
+                <TypographyMuted className="text-xs md:text-sm">
                     Manage your AI provider API keys securely
                 </TypographyMuted>
             </div>
@@ -405,130 +375,124 @@ export const ApiKeySettings = () => {
                         Add API keys for the AI providers you want to use
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
-                    <div className="grid gap-3 md:gap-4 lg:grid-cols-2">
-                        {apiKeyList.map((apiKey) => (
-                            <div
-                                className="border-border/50 bg-muted/20 space-y-2 rounded-lg border p-3 md:space-y-3 md:p-4"
-                                key={apiKey.key}
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="mb-1 flex items-center gap-2">
-                                            <div className="text-foreground text-xs font-medium md:text-sm">
-                                                {apiKey.name}
-                                            </div>
-                                            {apiKey.value && (
-                                                <Badge
-                                                    className="bg-slate-100 text-[10px] text-slate-700 md:text-xs dark:bg-slate-800 dark:text-slate-300"
-                                                    variant="secondary"
-                                                >
-                                                    Configured
-                                                </Badge>
-                                            )}
+                <CardContent className="space-y-3 pt-0 md:space-y-4">
+                    {apiKeyList.map((apiKey) => (
+                        <div
+                            className="border-border/50 bg-muted/20 space-y-2 rounded-lg border p-3 md:space-y-3 md:p-4"
+                            key={apiKey.key}
+                        >
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="mb-1 flex items-center gap-2">
+                                        <div className="text-foreground text-xs font-medium md:text-sm">
+                                            {apiKey.name}
                                         </div>
-
-                                        <a
-                                            className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-xs underline-offset-2 hover:underline"
-                                            href={apiKey.url}
-                                            rel="noopener noreferrer"
-                                            target="_blank"
-                                        >
-                                            Get API key →
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    {isEditing === apiKey.key ? (
-                                        <div className="space-y-3">
-                                            <Input
-                                                className={
-                                                    validationErrors[apiKey.key]
-                                                        ? "border-red-500"
-                                                        : ""
-                                                }
-                                                onChange={(e) =>
-                                                    setApiKey(apiKey.key, e.target.value)
-                                                }
-                                                placeholder={apiKey.placeholder}
-                                                value={apiKey.value || ""}
-                                            />
-                                            {validationErrors[apiKey.key] && (
-                                                <Alert>
-                                                    <AlertCircle className="h-4 w-4" />
-                                                    <AlertDescription>
-                                                        {validationErrors[apiKey.key]}
-                                                    </AlertDescription>
-                                                </Alert>
-                                            )}
-                                            <div className="flex gap-2">
-                                                <Button
-                                                    onClick={() =>
-                                                        handleSave(
-                                                            apiKey.key,
-                                                            apiKey.value || "",
-                                                            apiKey.name,
-                                                        )
-                                                    }
-                                                    size="sm"
-                                                    variant="default"
-                                                >
-                                                    Save
-                                                </Button>
-                                                <Button
-                                                    onClick={() => setIsEditing(null)}
-                                                    size="sm"
-                                                    variant="outline"
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="flex w-full items-center gap-3">
-                                            <button
-                                                className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                                onClick={() => handleEdit(apiKey.key)}
+                                        {apiKey.value && (
+                                            <Badge
+                                                className="bg-slate-100 text-[10px] text-slate-700 md:text-xs dark:bg-slate-800 dark:text-slate-300"
+                                                variant="secondary"
                                             >
-                                                {apiKey.value ? (
-                                                    <span className="text-muted-foreground block truncate">
-                                                        {getMaskedKey(apiKey.value)}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-muted-foreground italic">
-                                                        No API key configured
-                                                    </span>
-                                                )}
-                                            </button>
-                                            <div className="flex shrink-0 gap-2">
-                                                <Button
-                                                    className="whitespace-nowrap"
-                                                    onClick={() => handleEdit(apiKey.key)}
-                                                    size="sm"
-                                                    variant="outline"
-                                                >
-                                                    {apiKey.value ? "Update" : "Add Key"}
-                                                </Button>
-                                                {apiKey.value && (
-                                                    <Button
-                                                        className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
-                                                        onClick={() => {
-                                                            setApiKey(apiKey.key, "");
-                                                        }}
-                                                        size="sm"
-                                                        variant="outline"
-                                                    >
-                                                        <Trash size={14} />
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
+                                                Configured
+                                            </Badge>
+                                        )}
+                                    </div>
+
+                                    <a
+                                        className="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-xs underline-offset-2 hover:underline"
+                                        href={apiKey.url}
+                                        rel="noopener noreferrer"
+                                        target="_blank"
+                                    >
+                                        Get API key →
+                                    </a>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+
+                            <div className="space-y-2">
+                                {isEditing === apiKey.key ? (
+                                    <div className="space-y-3">
+                                        <Input
+                                            className={
+                                                validationErrors[apiKey.key] ? "border-red-500" : ""
+                                            }
+                                            onChange={(e) => setApiKey(apiKey.key, e.target.value)}
+                                            placeholder={apiKey.placeholder}
+                                            value={apiKey.value || ""}
+                                        />
+                                        {validationErrors[apiKey.key] && (
+                                            <Alert variant="destructive">
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription>
+                                                    {validationErrors[apiKey.key]}
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={() =>
+                                                    handleSave(
+                                                        apiKey.key,
+                                                        apiKey.value || "",
+                                                        apiKey.name,
+                                                    )
+                                                }
+                                                size="sm"
+                                                variant="default"
+                                            >
+                                                Save
+                                            </Button>
+                                            <Button
+                                                onClick={() => setIsEditing(null)}
+                                                size="sm"
+                                                variant="outline"
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex w-full items-center gap-3">
+                                        <button
+                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            onClick={() => handleEdit(apiKey.key)}
+                                        >
+                                            {apiKey.value ? (
+                                                <span className="text-muted-foreground block truncate">
+                                                    {getMaskedKey(apiKey.value)}
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground italic">
+                                                    No API key configured
+                                                </span>
+                                            )}
+                                        </button>
+                                        <div className="flex shrink-0 gap-2">
+                                            <Button
+                                                className="whitespace-nowrap"
+                                                onClick={() => handleEdit(apiKey.key)}
+                                                size="sm"
+                                                variant="outline"
+                                            >
+                                                {apiKey.value ? "Update" : "Add Key"}
+                                            </Button>
+                                            {apiKey.value && (
+                                                <Button
+                                                    className="border-red-200 text-red-600 hover:border-red-300 hover:text-red-700 dark:border-red-800 dark:hover:border-red-700"
+                                                    onClick={() => {
+                                                        setApiKey(apiKey.key, "");
+                                                    }}
+                                                    size="sm"
+                                                    variant="outline"
+                                                >
+                                                    <Trash size={14} />
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
                 </CardContent>
             </Card>
 
@@ -594,10 +558,8 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
         <div className="w-full space-y-6">
             {/* Header */}
             <div className="w-full">
-                <TypographyH3 className="text-lg md:text-xl">Preferences</TypographyH3>
-                <TypographyMuted className="text-sm md:text-base">
-                    Customize your VTChat experience and interface
-                </TypographyMuted>
+                <TypographyH3>Preferences</TypographyH3>
+                <TypographyMuted>Customize your VTChat experience and interface</TypographyMuted>
             </div>
 
             {/* Theme Preferences Section */}

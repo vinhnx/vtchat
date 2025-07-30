@@ -307,15 +307,6 @@ export const ThreadItem = memo(
                             />
                         )}
 
-                        {debouncedStatus === "ABORTED" && debouncedError && (
-                            <Alert>
-                                <AlertDescription>
-                                    <AlertCircle className="mt-0.5 size-3.5" />
-                                    {debouncedError}
-                                </AlertDescription>
-                            </Alert>
-                        )}
-
                         {isAnimationComplete &&
                             (threadItem.status === "COMPLETED" ||
                                 threadItem.status === "ABORTED" ||

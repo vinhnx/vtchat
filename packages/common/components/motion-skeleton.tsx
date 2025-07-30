@@ -1,18 +1,42 @@
 import { cn, Skeleton } from "@repo/ui";
 import { motion } from "framer-motion";
+import {
+    getOptimizedTransition,
+    HARDWARE_ACCELERATION_CLASSES,
+    prefersReducedMotion,
+} from "../utils/animation-optimization";
 
 export const MotionSkeleton = ({ className }: { className?: string }) => {
+    // Use transform-based animation instead of width to avoid layout thrashing
+    const skeletonVariants = {
+        initial: {
+            opacity: 0,
+            scaleX: 0,
+            transformOrigin: "left center",
+        },
+        animate: {
+            opacity: 1,
+            scaleX: 1,
+            transformOrigin: "left center",
+        },
+        exit: {
+            opacity: 0,
+            scaleX: 0,
+            transformOrigin: "left center",
+        },
+    };
+
+    // Reduced animation duration and optimized for mobile
+    const transition = prefersReducedMotion() ? { duration: 0 } : getOptimizedTransition("smooth");
+
     return (
         <motion.div
-            animate={{ opacity: 1, width: "100%" }}
-            exit={{ opacity: 0, width: "0%" }}
-            initial={{ opacity: 0, width: "0%" }}
-            transition={{
-                duration: 2,
-                ease: "easeInOut",
-                damping: 50,
-                stiffness: 20,
-            }}
+            variants={skeletonVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={transition}
+            className={HARDWARE_ACCELERATION_CLASSES.transformAccelerated}
         >
             <Skeleton
                 className={cn(

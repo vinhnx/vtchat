@@ -30,10 +30,23 @@ export default function HomePage() {
             </h1>
             <motion.main
                 id="main-content"
-                className="flex-1 overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
+                className="flex-1 overflow-hidden transform-gpu will-change-transform"
+                initial={{
+                    opacity: 0,
+                    y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? 0
+                        : window.innerWidth < 768
+                          ? 10
+                          : 20,
+                }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{
+                    duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? 0
+                        : window.innerWidth < 768
+                          ? 0.2
+                          : 0.3,
+                }}
             >
                 <div className="flex h-full flex-col">
                     <div className="flex-1 overflow-y-auto">
@@ -42,10 +55,24 @@ export default function HomePage() {
                 </div>
             </motion.main>
             <motion.div
-                className="pb-safe-area-inset-bottom flex-shrink-0"
-                initial={{ opacity: 0, y: 20 }}
+                className="pb-safe-area-inset-bottom flex-shrink-0 transform-gpu will-change-transform"
+                initial={{
+                    opacity: 0,
+                    y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? 0
+                        : window.innerWidth < 768
+                          ? 10
+                          : 20,
+                }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
+                transition={{
+                    duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? 0
+                        : window.innerWidth < 768
+                          ? 0.2
+                          : 0.3,
+                    delay: window.innerWidth < 768 ? 0.1 : 0.2,
+                }}
             >
                 <ChatInputWithSuspense showGreeting={true} />
             </motion.div>
@@ -53,10 +80,24 @@ export default function HomePage() {
             {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
                 <motion.div
-                    className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4 transform-gpu will-change-transform"
+                    initial={{
+                        opacity: 0,
+                        y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                            ? 0
+                            : window.innerWidth < 768
+                              ? 10
+                              : 20,
+                    }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.4 }}
+                    transition={{
+                        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                            ? 0
+                            : window.innerWidth < 768
+                              ? 0.2
+                              : 0.3,
+                        delay: window.innerWidth < 768 ? 0.2 : 0.4,
+                    }}
                 >
                     <div className="pointer-events-auto">
                         <FooterWithSuspense />

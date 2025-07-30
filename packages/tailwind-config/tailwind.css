@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Content paths for Tailwind v4 */
 @source "../../apps/web/app/**/*.{js,ts,jsx,tsx}";
@@ -62,10 +62,10 @@
 
     /* Font families */
     --font-family-mono:
-        "SF Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New",
-        ui-monospace, monospace;
+        'SF Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono',
+        'Courier New', ui-monospace, monospace;
     --font-family-sans:
-        "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+        'SF Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
         sans-serif;
 
     /* Font sizes with line heights and letter spacing */
@@ -119,12 +119,8 @@
         rgba(0, 0, 0, 0.04) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px,
         rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     --shadow-subtle-sm:
-        rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 1px 1px -0.5px, rgba(
-            0,
-            0,
-            0,
-            0.06
-        ) 0px 2px 2px -1px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
+        rgba(0, 0, 0, 0.03) 0px 1px 1px -0.5px, rgba(0, 0, 0, 0.06) 0px 1px 1px -0.5px,
+        rgba(0, 0, 0, 0.06) 0px 2px 2px -1px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
     --shadow-glow-sm: 0 0 10px rgba(59, 130, 246, 0.3);
     --shadow-glow-md: 0 0 20px rgba(59, 130, 246, 0.4);
     --shadow-glow-lg: 0 0 30px rgba(59, 130, 246, 0.5);
@@ -150,6 +146,68 @@
     --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
     --animate-scale-in: scale-in 0.2s ease-out;
     --animate-slide-up: slide-up 0.3s ease-out;
+}
+
+/* Performance optimizations for animations */
+@media (prefers-reduced-motion: no-preference) {
+    /* Hardware acceleration utilities */
+    .transform-gpu {
+        transform: translate3d(0, 0, 0);
+    }
+
+    .will-change-transform {
+        will-change: transform;
+    }
+
+    .will-change-opacity {
+        will-change: opacity;
+    }
+
+    .will-change-auto {
+        will-change: auto;
+    }
+
+    /* Mobile-specific optimizations */
+    @media (max-width: 768px) {
+        /* Reduce animation complexity on mobile */
+        * {
+            animation-duration: 0.8s !important;
+            transition-duration: 0.8s !important;
+        }
+
+        /* Optimize transforms for mobile */
+        [data-framer-motion] {
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    }
+
+    /* Low-end device optimizations */
+    @media (max-width: 480px) {
+        * {
+            animation-duration: 0.6s !important;
+            transition-duration: 0.6s !important;
+        }
+    }
+}
+
+/* Disable animations for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Remove will-change for reduced motion */
+    .will-change-transform,
+    .will-change-opacity {
+        will-change: auto !important;
+    }
 }
 
 /* Keyframes */

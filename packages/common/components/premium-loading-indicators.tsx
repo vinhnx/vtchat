@@ -2,6 +2,11 @@ import { cn } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, Brain, Cpu, Sparkles } from "lucide-react";
 import { memo } from "react";
+import {
+    HARDWARE_ACCELERATION_CLASSES,
+    isMobile,
+    prefersReducedMotion,
+} from "../utils/animation-optimization";
 
 interface PremiumTypingIndicatorProps {
     isVisible: boolean;
@@ -78,28 +83,39 @@ export const PremiumTypingIndicator = memo(
                         initial={{ opacity: 0, scale: 0.8, y: 20 }}
                         transition={{ duration: 0.3, ease: "easeOut" }}
                     >
-                        {/* Avatar */}
+                        {/* Avatar - Optimized with transform-based animation */}
                         <motion.div
-                            animate={{
-                                boxShadow: [
-                                    "0 4px 12px rgba(147, 51, 234, 0.25)",
-                                    "0 6px 20px rgba(59, 130, 246, 0.35)",
-                                    "0 4px 12px rgba(147, 51, 234, 0.25)",
-                                ],
-                            }}
+                            animate={
+                                prefersReducedMotion()
+                                    ? {}
+                                    : {
+                                          scale: [1, 1.05, 1],
+                                      }
+                            }
                             className={cn(
                                 "flex flex-shrink-0 items-center justify-center rounded-xl",
                                 "bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500",
                                 "shadow-md ring-2 ring-white/20",
+                                // CSS-based glow effect instead of animated boxShadow
+                                "shadow-purple-500/25",
+                                HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                                 sizeClasses[size] === "h-3 w-3"
                                     ? "h-8 w-8"
                                     : sizeClasses[size] === "h-4 w-4"
                                       ? "h-10 w-10"
                                       : "h-12 w-12",
                             )}
-                            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+                            transition={
+                                prefersReducedMotion()
+                                    ? { duration: 0 }
+                                    : {
+                                          duration: isMobile() ? 1.5 : 2,
+                                          repeat: Number.POSITIVE_INFINITY,
+                                          ease: "easeInOut",
+                                      }
+                            }
                         >
-                            <Bot
+                            <Icon
                                 className="text-white"
                                 size={size === "sm" ? 16 : size === "md" ? 20 : 24}
                             />
@@ -118,39 +134,55 @@ export const PremiumTypingIndicator = memo(
                             transition={{ duration: 0.2, delay: 0.1 }}
                         >
                             <div className="flex items-center gap-3">
-                                {/* Animated dots */}
+                                {/* Animated dots - Optimized for mobile */}
                                 <div className="flex items-center gap-1">
                                     {[0, 1, 2].map((index) => (
                                         <motion.div
-                                            animate={{
-                                                scale: [1, 1.3, 1],
-                                                opacity: [0.6, 1, 0.6],
-                                            }}
+                                            animate={
+                                                prefersReducedMotion()
+                                                    ? {}
+                                                    : {
+                                                          scale: [1, 1.2, 1],
+                                                          opacity: [0.6, 1, 0.6],
+                                                      }
+                                            }
                                             className={cn(
                                                 "rounded-full",
                                                 config.dots,
                                                 sizeClasses[size],
+                                                HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                                             )}
-                                            key={index}
-                                            transition={{
-                                                duration: 1.4,
-                                                repeat: Number.POSITIVE_INFINITY,
-                                                delay: index * 0.2,
-                                                ease: "easeInOut",
-                                            }}
+                                            key={`dot-${index}`}
+                                            transition={
+                                                prefersReducedMotion()
+                                                    ? { duration: 0 }
+                                                    : {
+                                                          duration: isMobile() ? 1.2 : 1.4,
+                                                          repeat: Number.POSITIVE_INFINITY,
+                                                          delay: index * 0.2,
+                                                          ease: "easeInOut",
+                                                      }
+                                            }
                                         />
                                     ))}
                                 </div>
 
-                                {/* Status icon and message */}
+                                {/* Status icon and message - Optimized rotation */}
                                 <div className="flex items-center gap-2">
                                     <motion.div
-                                        animate={{ rotate: 360 }}
-                                        transition={{
-                                            duration: 3,
-                                            repeat: Number.POSITIVE_INFINITY,
-                                            ease: "linear",
-                                        }}
+                                        animate={prefersReducedMotion() ? {} : { rotate: 360 }}
+                                        className={
+                                            HARDWARE_ACCELERATION_CLASSES.transformAccelerated
+                                        }
+                                        transition={
+                                            prefersReducedMotion()
+                                                ? { duration: 0 }
+                                                : {
+                                                      duration: isMobile() ? 2.5 : 3,
+                                                      repeat: Number.POSITIVE_INFINITY,
+                                                      ease: "linear",
+                                                  }
+                                        }
                                     >
                                         <Icon
                                             className={config.color}
@@ -250,16 +282,24 @@ export const PremiumLoadingSkeleton = memo(
             >
                 {Array.from({ length: lines }).map((_, i) => (
                     <motion.div
-                        animate={{ width: "100%" }}
+                        animate={
+                            prefersReducedMotion() ? { opacity: 1 } : { opacity: 1, scaleX: 1 }
+                        }
                         className={cn(
                             baseClasses,
                             animationClasses,
-                            "h-4",
+                            "h-4 origin-left",
                             i === 0 ? "w-3/4" : i === lines - 1 ? "w-1/2" : "w-full",
+                            HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                         )}
-                        initial={{ width: 0 }}
-                        key={i}
-                        transition={{ delay: i * 0.1, duration: 0.6 }}
+                        initial={
+                            prefersReducedMotion() ? { opacity: 0 } : { opacity: 0, scaleX: 0 }
+                        }
+                        key={`skeleton-line-${i}`}
+                        transition={{
+                            delay: i * 0.1,
+                            duration: prefersReducedMotion() ? 0 : isMobile() ? 0.4 : 0.6,
+                        }}
                     />
                 ))}
             </motion.div>
@@ -388,10 +428,20 @@ export const PremiumProgressIndicator = memo(
                     )}
                 >
                     <motion.div
-                        animate={{ width: `${progress}%` }}
-                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
-                        initial={{ width: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        animate={
+                            prefersReducedMotion()
+                                ? { scaleX: progress / 100 }
+                                : { scaleX: progress / 100 }
+                        }
+                        className={cn(
+                            "h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-600 origin-left",
+                            HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
+                        )}
+                        initial={{ scaleX: 0 }}
+                        transition={{
+                            duration: prefersReducedMotion() ? 0 : isMobile() ? 0.6 : 0.8,
+                            ease: "easeOut",
+                        }}
                     />
                 </div>
             </motion.div>
