@@ -1,21 +1,9 @@
 import { MarkdownContent, markdownStyles } from "@repo/common/components";
 import { useCopyText } from "@repo/common/hooks";
 import type { ThreadItem } from "@repo/shared/types";
-import { Button, cn } from "@repo/ui";
+import { cn } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-    Bot,
-    Brain,
-    Copy,
-    Eye,
-    RotateCcw,
-    Sparkles,
-    ThumbsDown,
-    ThumbsUp,
-    Volume2,
-    VolumeX,
-    Zap,
-} from "lucide-react";
+import { Brain, Sparkles, Zap } from "lucide-react";
 import { memo, useRef, useState } from "react";
 
 interface PremiumAIResponseProps {
@@ -75,18 +63,6 @@ export const PremiumAIResponse = memo(
                     transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 >
                     <div className="relative">
-                        <div
-                            className={cn(
-                                "flex h-10 w-10 items-center justify-center rounded-xl",
-                                "bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500",
-                                "shadow-lg shadow-purple-500/25",
-                                "ring-2 ring-white/20",
-                                isGenerating && "animate-pulse",
-                            )}
-                        >
-                            <Bot className="text-white" size={20} />
-                        </div>
-
                         {/* Thinking indicator */}
                         <AnimatePresence>
                             {isGenerating && (
@@ -112,9 +88,9 @@ export const PremiumAIResponse = memo(
                         initial={{ opacity: 0, x: -10 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <div className="flex items-center gap-2 rounded-full border border-purple-200 bg-gradient-to-r from-purple-100 to-blue-100 px-3 py-1 dark:border-purple-700 dark:from-purple-900/30 dark:to-blue-900/30">
-                            <Sparkles className="text-purple-600 dark:text-purple-400" size={14} />
-                            <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                        <div className="flex items-center gap-2 rounded-full border border-200 bg-gradient-to-r from-100 to-blue-100 px-3 py-1 dark:border-700 dark:from-900/30 dark:to-blue-900/30">
+                            <Sparkles className="text-600 dark:text-400" size={14} />
+                            <span className="text-sm font-medium text-700 dark:text-300">
                                 VT Assistant
                             </span>
                             {isGenerating && (
@@ -126,10 +102,7 @@ export const PremiumAIResponse = memo(
                                         ease: "linear",
                                     }}
                                 >
-                                    <Zap
-                                        className="text-purple-600 dark:text-purple-400"
-                                        size={12}
-                                    />
+                                    <Zap className="text-600 dark:text-400" size={12} />
                                 </motion.div>
                             )}
                         </div>
@@ -196,7 +169,7 @@ export const PremiumAIResponse = memo(
                                                         scale: [1, 1.2, 1],
                                                         opacity: [0.5, 1, 0.5],
                                                     }}
-                                                    className="h-2 w-2 rounded-full bg-blue-500"
+                                                    className="h-2 w-2 rounded-full bg-500"
                                                     key={i}
                                                     transition={{
                                                         duration: 1.5,
@@ -207,106 +180,6 @@ export const PremiumAIResponse = memo(
                                             ))}
                                         </motion.div>
                                         <span>VT is thinking...</span>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        {/* Enhanced action buttons */}
-                        <AnimatePresence>
-                            {(showActions || feedback) && !isGenerating && (
-                                <motion.div
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="absolute bottom-0 left-0 right-0 rounded-b-2xl border-t border-gray-100 bg-gradient-to-t from-white via-white/95 to-transparent p-4 dark:border-gray-700 dark:from-gray-800 dark:via-gray-800/95"
-                                    exit={{ opacity: 0, y: 10 }}
-                                    initial={{ opacity: 0, y: 10 }}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1">
-                                            {/* Feedback buttons */}
-                                            <Button
-                                                className={cn(
-                                                    "transition-all duration-200 hover:scale-110",
-                                                    feedback === "up"
-                                                        ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                                                        : "text-gray-500 hover:text-green-600",
-                                                )}
-                                                onClick={() => handleFeedback("up")}
-                                                size="icon-sm"
-                                                tooltip="Helpful response"
-                                                variant="ghost"
-                                            >
-                                                <ThumbsUp size={14} />
-                                            </Button>
-
-                                            <Button
-                                                className={cn(
-                                                    "transition-all duration-200 hover:scale-110",
-                                                    feedback === "down"
-                                                        ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                                                        : "text-gray-500 hover:text-red-600",
-                                                )}
-                                                onClick={() => handleFeedback("down")}
-                                                size="icon-sm"
-                                                tooltip="Not helpful"
-                                                variant="ghost"
-                                            >
-                                                <ThumbsDown size={14} />
-                                            </Button>
-
-                                            <div className="mx-1 h-4 w-px bg-gray-300 dark:bg-gray-600" />
-
-                                            {/* Action buttons */}
-                                            <Button
-                                                className="text-gray-500 transition-all duration-200 hover:scale-110 hover:text-blue-600"
-                                                onClick={handleCopy}
-                                                size="icon-sm"
-                                                tooltip={
-                                                    status === "copied"
-                                                        ? "Copied!"
-                                                        : "Copy response"
-                                                }
-                                                variant="ghost"
-                                            >
-                                                <Copy size={14} />
-                                            </Button>
-
-                                            <Button
-                                                className={cn(
-                                                    "text-gray-500 transition-all duration-200 hover:scale-110 hover:text-purple-600",
-                                                    isReading &&
-                                                        "bg-purple-100 text-purple-600 dark:bg-purple-900/30",
-                                                )}
-                                                onClick={handleTextToSpeech}
-                                                size="icon-sm"
-                                                tooltip={isReading ? "Stop reading" : "Read aloud"}
-                                                variant="ghost"
-                                            >
-                                                {isReading ? (
-                                                    <VolumeX size={14} />
-                                                ) : (
-                                                    <Volume2 size={14} />
-                                                )}
-                                            </Button>
-
-                                            <Button
-                                                className="text-gray-500 transition-all duration-200 hover:scale-110 hover:text-orange-600"
-                                                onClick={() => {
-                                                    /* Handle regenerate */
-                                                }}
-                                                size="icon-sm"
-                                                tooltip="Regenerate response"
-                                                variant="ghost"
-                                            >
-                                                <RotateCcw size={14} />
-                                            </Button>
-                                        </div>
-
-                                        {/* Response quality indicator */}
-                                        <div className="flex items-center gap-1 text-xs text-gray-400">
-                                            <Eye size={12} />
-                                            <span>High quality response</span>
-                                        </div>
                                     </div>
                                 </motion.div>
                             )}
