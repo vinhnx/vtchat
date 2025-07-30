@@ -9,11 +9,17 @@ import { useShallow } from "zustand/react/shallow";
 export function Thread() {
     const { threadId } = useParams();
     const currentThreadId = threadId?.toString() ?? "";
+
+    // Only call getPreviousThreadItems if we have a valid threadId
     const previousThreadItems = useChatStore(
-        useShallow((state) => state.getPreviousThreadItems(currentThreadId)),
+        useShallow((state) =>
+            currentThreadId ? state.getPreviousThreadItems(currentThreadId) : [],
+        ),
     );
     const currentThreadItem = useChatStore(
-        useShallow((state) => state.getCurrentThreadItem(currentThreadId)),
+        useShallow((state) =>
+            currentThreadId ? state.getCurrentThreadItem(currentThreadId) : null,
+        ),
     );
     const isGenerating = useChatStore(useShallow((state) => state.isGenerating));
     const memoizedPreviousThreadItems = useMemo(() => {

@@ -134,10 +134,12 @@ export const useAppStore = create<State & Actions>()(
             // Initialize with base plan defaults
             const baseDefaults = getDefaultSettingsForPlan(PlanSlug.VT_BASE);
 
+            const { isOpen, animationDisabled } = initializeSidebarState();
+
             return {
                 // Initial state
-                isSidebarOpen: false, // Start with sidebar closed
-                sidebarAnimationDisabled: false,
+                isSidebarOpen: isOpen, // Use persisted state
+                sidebarAnimationDisabled: animationDisabled,
                 sidebarPlacement: "right",
                 isSourcesOpen: false,
                 isSettingsOpen: false,

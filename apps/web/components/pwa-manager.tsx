@@ -3,6 +3,7 @@
 import { log } from "@repo/shared/lib/logger";
 import { Button } from "@repo/ui";
 import { Download, Smartphone, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { swManager } from "../lib/service-worker-manager";
 
@@ -16,11 +17,17 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function PWAManager() {
+    const pathname = usePathname();
     const [isSupported, setIsSupported] = useState(false);
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [isInstalled, setIsInstalled] = useState(false);
     const [isIOS, setIsIOS] = useState(false);
     const [showIOSInstructions, setShowIOSInstructions] = useState(false);
+    const [bannerDismissed, setBannerDismissed] = useState(false);
+    const [showBanner, setShowBanner] = useState(false);
+
+    // Only show PWA banner on homepage
+    const isHomepage = pathname === "/";
 
     useEffect(() => {
         // Check if PWA is supported
@@ -64,6 +71,30 @@ export function PWAManager() {
         };
     }, []);
 
+    // Auto-dismiss banner after 4 seconds and handle banner visibility
+    useEffect(() => {
+        if (
+            isSupported &&
+            !isInstalled &&
+            (deferredPrompt || isIOS) &&
+            isHomepage &&
+            !bannerDismissed
+        ) {
+            // Show banner immediately
+            setShowBanner(true);
+
+            // Auto-dismiss after 4 seconds
+            const timer = setTimeout(() => {
+                setShowBanner(false);
+                setBannerDismissed(true);
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        } else {
+            setShowBanner(false);
+        }
+    }, [isSupported, isInstalled, deferredPrompt, isIOS, isHomepage, bannerDismissed]);
+
     const handleInstallClick = async () => {
         if (deferredPrompt) {
             // Chrome/Edge install prompt
@@ -71,6 +102,8 @@ export function PWAManager() {
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === "accepted") {
                 setDeferredPrompt(null);
+                setShowBanner(false);
+                setBannerDismissed(true);
             }
         } else if (isIOS && !isInstalled) {
             // Show iOS instructions
@@ -78,15 +111,21 @@ export function PWAManager() {
         }
     };
 
-    // Don't show if not supported, already installed, or no install prompt available
-    if (!isSupported || isInstalled || (!deferredPrompt && !isIOS)) {
+    const handleCloseBanner = () => {
+        setShowBanner(false);
+        setBannerDismissed(true);
+        setShowIOSInstructions(false);
+    };
+
+    // Don't show if not supported, already installed, no install prompt available, or not on homepage
+    if (!isSupported || isInstalled || (!deferredPrompt && !isIOS) || !isHomepage) {
         return null;
     }
 
     return (
         <>
             {/* Install Banner */}
-            {(deferredPrompt || (isIOS && !isInstalled)) && (
+            {showBanner && (
                 <div className="pwa-install-banner fixed bottom-0 left-0 right-0 z-[90] bg-background border-t border-border p-3 pb-safe-area-inset-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:hidden">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -102,10 +141,7 @@ export function PWAManager() {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => {
-                                    setDeferredPrompt(null);
-                                    setShowIOSInstructions(false);
-                                }}
+                                onClick={handleCloseBanner}
                                 className="flex-shrink-0"
                             >
                                 <X className="h-4 w-4" />

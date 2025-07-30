@@ -35,9 +35,8 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     const [isThreadLoaded, setIsThreadLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const { scrollRef, contentRef } = useStickToBottom({
-        stiffness: 1,
-        damping: 0,
-        enabled: isGenerating, // Only auto-scroll when generating
+        stiffness: 0.8, // Reduced for smoother scrolling
+        damping: 0.2, // Added damping for smoother animation
     });
     const switchThread = useChatStore((state) => state.switchThread);
     const getThread = useChatStore((state) => state.getThread);
@@ -45,10 +44,13 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     const loadThreadItems = useChatStore((state) => state.loadThreadItems);
     const threads = useChatStore((state) => state.threads);
 
-    // Scroll to bottom when thread loads or content changes
+    // Smooth scroll to bottom when thread loads or content changes
     const scrollToBottom = useCallback(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            scrollRef.current.scrollTo({
+                top: scrollRef.current.scrollHeight,
+                behavior: "smooth",
+            });
         }
     }, [scrollRef]);
 
@@ -248,10 +250,8 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         if (threadItems.length > 0 && !hasScrolledToBottom.current && isThreadLoaded) {
             // Use requestAnimationFrame for better timing with DOM updates
             requestAnimationFrame(() => {
-                setTimeout(() => {
-                    scrollToBottom();
-                    hasScrolledToBottom.current = true;
-                }, 50);
+                scrollToBottom();
+                hasScrolledToBottom.current = true;
             });
         }
     }, [threadItems, scrollToBottom, isThreadLoaded]);
@@ -278,16 +278,18 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     // Clear thread items when unmounting the component (e.g., navigating to a new chat)
     useEffect(() => {
         return () => {
-            // Cleanup function to clear thread items when component unmounts
-            // Remove invalid resetStreamingState call
-            // If you need to reset generation state, use setIsGenerating(false) or similar if available
-            useChatStore.setState((state) => ({
-                ...state,
-                threadItems: [],
-                currentThreadItem: null,
-            }));
+            // Only clear thread items if we're navigating to a different thread
+            // This prevents flashing when the component re-renders
+            const currentPath = window.location.pathname;
+            if (!currentPath.includes(`/chat/${threadId}`)) {
+                useChatStore.setState((state) => ({
+                    ...state,
+                    threadItems: [],
+                    currentThreadItem: null,
+                }));
+            }
         };
-    }, []);
+    }, [threadId]);
 
     // Show loading while threadId is being resolved
     if (!threadId || isLoading) {
