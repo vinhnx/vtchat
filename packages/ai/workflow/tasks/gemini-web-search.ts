@@ -1,6 +1,6 @@
 import { createTask } from "@repo/orchestrator";
 import { UserTier } from "@repo/shared/constants/user-tiers";
-import { log } from "@repo/shared/logger";
+import { log } from "@repo/shared/lib/logger";
 import { getModelFromChatMode, ModelEnum } from "../../models";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from "../utils";
@@ -13,7 +13,36 @@ export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowConte
         const gl = context?.get("gl");
         const { updateStep } = sendEvents(events);
 
-        const prompt = `Please search for and provide comprehensive information to answer this question: "${question}"
+        // Get mode first before using it
+        const mode = context?.get("mode") || "gemini-2.5-flash-lite-preview-06-17";
+
+        // Determine if this is Pro Search mode for enhanced capabilities
+        const isProSearch = mode === "pro";
+
+        const prompt = isProSearch
+            ? `You are conducting a PRO SEARCH - an advanced, intelligent web search with enhanced grounding capabilities.
+
+**Research Question**: "${question}"
+
+**Current Context**:
+- Date: ${getHumanizedDate()}
+${gl?.country ? `- Location: ${gl?.country}` : ""}
+
+**Pro Search Instructions**:
+1. **Multi-angle Analysis**: Search from multiple perspectives and angles
+2. **Deep Fact-checking**: Cross-reference information across multiple sources
+3. **Current Information Priority**: Focus on the most recent and up-to-date information
+4. **Expert Sources**: Prioritize authoritative, expert, and official sources
+5. **Comprehensive Coverage**: Provide thorough analysis with nuanced insights
+6. **Source Quality**: Include high-quality citations with credibility assessment
+
+**Deliverables**:
+- Comprehensive, well-researched answer with multiple viewpoints
+- Recent developments and current status
+- Expert opinions and authoritative sources
+- Fact-checked information with source credibility notes
+- Actionable insights where applicable`
+            : `Please search for and provide comprehensive information to answer this question: "${question}"
 
 The current date is: ${getHumanizedDate()}
 ${gl?.country ? `Location: ${gl?.country}` : ""}
@@ -25,8 +54,7 @@ Please include:
 - A comprehensive answer that directly addresses the question`;
 
         try {
-            // Use the user's selected model
-            const mode = context?.get("mode") || "";
+            // Use the user's selected model (mode already defined above)
             const userTier = context?.get("userTier") || UserTier.FREE;
             const userApiKeys = context?.get("apiKeys") || {};
             const isVtPlusUser = userTier === UserTier.PLUS;
@@ -34,6 +62,11 @@ Please include:
             log.info("=== gemini-web-search EXECUTE START ===");
             log.info("Chat mode:", { data: mode });
             log.info("User tier:", { userTier, isVtPlusUser });
+            log.info("Search type:", {
+                isProSearch,
+                searchCapabilities: isProSearch ? "Enhanced Pro Search" : "Basic Web Search",
+            });
+
             log.info("Context data:", {
                 hasQuestion: !!question,
                 questionLength: question?.length,
@@ -149,10 +182,10 @@ Please include:
             const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
             const isVtPlusUser = userTier === UserTier.PLUS;
 
-            if (error.message?.includes("Free Gemini model requires system configuration")) {
-                // System configuration issue for free model
+            if (error.message?.includes("Web search requires an API key")) {
+                // Free user needs to provide their own API key for web search
                 throw new Error(
-                    "Web search is temporarily unavailable for the free Gemini model. Please try again later or upgrade to use your own API key for unlimited access.",
+                    "Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.",
                 );
             }
             if (error.message?.includes("API key")) {

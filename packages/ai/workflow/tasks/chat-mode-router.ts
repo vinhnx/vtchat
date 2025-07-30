@@ -119,6 +119,8 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
             // Only trigger web search when explicitly enabled AND query needs external info
             // Support web search for both Gemini and OpenAI models
             if (supportsNativeWebSearch(model)) {
+                // Route basic web search to planner for separate quota tracking and workflow
+                // This maintains separation from Pro Search business logic and quota limits
                 redirectTo("planner");
             } else if (supportsOpenAIWebSearch(model)) {
                 // For OpenAI models with web search, use completion with OpenAI web search tools
