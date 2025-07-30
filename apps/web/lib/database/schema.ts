@@ -227,7 +227,20 @@ export const vtplusUsage = pgTable(
     }),
 );
 
+// Resources table for storing user-generated content/resources
+export const resources = pgTable("resources", {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 export type ProviderUsage = typeof providerUsage.$inferSelect;
 export type NewProviderUsage = typeof providerUsage.$inferInsert;
 export type VtplusUsage = typeof vtplusUsage.$inferSelect;
 export type NewVtplusUsage = typeof vtplusUsage.$inferInsert;
+export type Resource = typeof resources.$inferSelect;
+export type NewResource = typeof resources.$inferInsert;

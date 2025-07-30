@@ -11,13 +11,22 @@ import { useApiKeysStore } from "../store/api-keys.store";
 import { isGeminiModel } from "../utils";
 
 // Dynamic import for pdfjs-dist to handle browser environment
-let pdfjsLib: any = null;
+let pdfjsLib: typeof import("pdfjs-dist") | null = null;
 
 const initPdfJs = async () => {
     if (!pdfjsLib && typeof window !== "undefined") {
-        pdfjsLib = await import("pdfjs-dist");
-        // Set worker source for pdfjs-dist
-        pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
+        try {
+            pdfjsLib = await import("pdfjs-dist");
+
+            // Use CDN worker for version consistency
+            const version = "5.4.54"; // Match our installed version
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`;
+
+            log.info("PDF.js initialized successfully", { version });
+        } catch (error) {
+            log.error("Failed to initialize PDF.js", { error });
+            throw new Error("PDF.js initialization failed");
+        }
     }
     return pdfjsLib;
 };
@@ -130,10 +139,10 @@ export const createCustomSchema = (
         optional?: boolean;
     }>,
 ) => {
-    const schemaFields: Record<string, any> = {};
+    const schemaFields: Record<string, z.ZodTypeAny> = {};
 
     fields.forEach((field) => {
-        let zodType;
+        let zodType: z.ZodTypeAny;
         switch (field.type) {
             case "string":
                 zodType = z.string();
@@ -282,7 +291,7 @@ export const useStructuredExtraction = () => {
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
-                const textItems = textContent.items.map((item: any) => item.str);
+                const textItems = textContent.items.map((item: { str: string }) => item.str);
                 fullText += `${textItems.join(" ")}\n`;
             }
 
@@ -386,7 +395,7 @@ export const useStructuredExtraction = () => {
                     "Extract structured data from the document and return it in JSON format";
 
                 // Get BYOK keys for API authentication
-                const byokKeys = getAllKeys;
+                const byokKeys = getAllKeys();
 
                 // Get the correct Google provider instance with BYOK keys
                 const googleProvider = getProviderInstance(Providers.GOOGLE, byokKeys);

@@ -13,7 +13,8 @@ import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from "@repo/shared/c
 import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
-import { cn, Flex } from "@repo/ui";
+import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
+import { cn, Flex, useToast } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -62,6 +63,7 @@ export const ChatInput = ({
     const isPlusTier = useVtPlusAccess();
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [showBYOKDialog, setShowBYOKDialog] = useState(false);
+    const { toast } = useToast();
     const [_pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
 
@@ -109,7 +111,7 @@ export const ChatInput = ({
     useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore((state) => state.chatMode);
-    const { hasApiKeyForChatMode } = useApiKeysStore();
+    const { hasApiKeyForChatMode, getAllKeys } = useApiKeysStore();
 
     // Multi-modal attachments state
     const [multiModalAttachments, setMultiModalAttachments] = useState<
@@ -173,6 +175,36 @@ export const ChatInput = ({
             // For non-signed in users, show login prompt first
             setShowLoginPrompt(true);
             return;
+        }
+
+        // Get thread items for BYOK validation
+        const existingThreadItems = currentThreadId
+            ? await getThreadItems(currentThreadId.toString())
+            : [];
+
+        // BYOK validation for image analysis - ALL users must provide their own API keys for image processing
+        const hasImages = hasImageAttachments({
+            imageAttachment,
+            attachments: multiModalAttachments,
+            messages: existingThreadItems || [],
+        });
+
+        if (hasImages) {
+            const apiKeys = getAllKeys();
+            const validation = validateByokForImageAnalysis({
+                chatMode,
+                apiKeys,
+                hasImageAttachments: hasImages,
+            });
+
+            if (!validation.isValid) {
+                toast({
+                    title: "API Key Required for Image Analysis",
+                    description: validation.errorMessage,
+                    variant: "destructive",
+                });
+                return;
+            }
         }
 
         let threadId = currentThreadId?.toString();

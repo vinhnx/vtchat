@@ -20,7 +20,7 @@ const StructuredOutputButton = () => {
     const chatMode = useChatStore((state) => state.chatMode);
     const setStructuredData = useChatStore((state) => state.setStructuredData);
     const hasStructuredOutputAccess = useFeatureAccess(FeatureSlug.STRUCTURED_OUTPUT);
-    const getAllKeys = useApiKeysStore((state) => state.getAllKeys());
+    const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const { toast } = useToast();
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -234,9 +234,10 @@ const StructuredOutputButton = () => {
         const fileType = file.type;
 
         if (fileType === "application/pdf") {
-            // Use PDF.js for PDF extraction (similar to current implementation)
+            // Use PDF.js for PDF extraction with CDN worker for version consistency
             const pdfjsLib = await import("pdfjs-dist");
-            pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
+            const version = "5.4.54"; // Match our installed version
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`;
 
             const arrayBuffer = await file.arrayBuffer();
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -246,7 +247,7 @@ const StructuredOutputButton = () => {
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
-                const textItems = textContent.items.map((item: any) => item.str);
+                const textItems = textContent.items.map((item: { str: string }) => item.str);
                 fullText += `${textItems.join(" ")}\n`;
             }
 
