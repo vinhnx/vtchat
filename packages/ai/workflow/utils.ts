@@ -18,6 +18,7 @@ import type { ZodSchema } from "zod";
 import { CLAUDE_4_CONFIG, ReasoningType } from "../constants/reasoning";
 import { ModelEnum } from "../models";
 import { getLanguageModel } from "../providers";
+import { generateErrorMessage as centralizedGenerateErrorMessage } from "../services/error-messages";
 import type {
     GenerateTextWithReasoningResult,
     ReasoningDetail,
@@ -105,6 +106,12 @@ export const generateTextWithGeminiSearch = async ({
         byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
     });
 
+    // Declare variables outside try block so they're available in catch block
+    let hasUserGeminiKey = false;
+    let hasSystemGeminiKey = false;
+    let isFreeGeminiModel = false;
+    let isVtPlusUser = false;
+
     try {
         if (signal?.aborted) {
             throw new Error("Operation aborted");
@@ -119,19 +126,20 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        const hasUserGeminiKey =
-            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-        const hasSystemGeminiKey =
+        hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+        hasSystemGeminiKey =
             (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) || windowApiKey;
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
-        const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-        const isVtPlusUser = userTier === UserTier.PLUS;
+        isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        isVtPlusUser = userTier === UserTier.PLUS;
 
-        if (!(hasUserGeminiKey || hasSystemGeminiKey)) {
-            if (isFreeGeminiModel) {
+        // Handle different scenarios for API key requirements
+        if (!hasUserGeminiKey && !hasSystemGeminiKey) {
+            if (isFreeGeminiModel && !isVtPlusUser) {
+                // Free tier user with free model - require BYOK for web search
                 throw new Error(
-                    "Free Gemini model requires system configuration. Please contact support or upgrade to use your own API key.",
+                    "Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.",
                 );
             }
             if (isVtPlusUser) {
@@ -143,9 +151,11 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         // If user has BYOK, use their key (unlimited usage)
-        // If user doesn't have BYOK but using free model, use system key (counted usage)
-        // If VT+ user doesn't have BYOK, use system key (unlimited usage for VT+ users)
-        const useSystemKey = !hasUserGeminiKey && (isFreeGeminiModel || isVtPlusUser);
+        // If user doesn't have BYOK but system key is available:
+        //   - For VT+ users: use system key (unlimited usage for VT+ users)
+        //   - For free users with free model: use system key only if available (counted usage)
+        const useSystemKey =
+            !hasUserGeminiKey && hasSystemGeminiKey && (isFreeGeminiModel || isVtPlusUser);
 
         log.info("API key usage decision:", {
             hasUserKey: hasUserGeminiKey,
@@ -799,21 +809,37 @@ export const generateObject = async ({
         // Import reasoning utilities
         const { supportsReasoning, getReasoningType } = await import("../models");
 
-        // Handle API key logic for VT+ users and Gemini models
+        // Handle API key logic for Gemini models (both free tier and VT+ users)
         const isGeminiModel = model.toString().toLowerCase().includes("gemini");
         const isVtPlusUser = userTier === UserTier.PLUS;
+        const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
 
-        if (isGeminiModel && isVtPlusUser) {
-            // For VT+ users with Gemini models, check if they have BYOK
+        if (isGeminiModel) {
             const hasUserGeminiKey =
                 byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
             const hasSystemGeminiKey =
                 typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
 
+            // Handle different scenarios for API key requirements
+            if (!hasUserGeminiKey && !hasSystemGeminiKey) {
+                if (isFreeGeminiModel && !isVtPlusUser) {
+                    // Free tier user with free model - require BYOK for planning
+                    throw new Error(
+                        "Planning requires an API key. Please add your own Gemini API key in settings for unlimited usage.",
+                    );
+                }
+                if (isVtPlusUser) {
+                    throw new Error(
+                        "Planning is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.",
+                    );
+                }
+                throw new Error("Gemini API key is required for planning functionality");
+            }
+
+            // Use system key when available and user doesn't have BYOK
             if (!hasUserGeminiKey && hasSystemGeminiKey) {
-                // VT+ user without BYOK - use system key
                 byokKeys = undefined;
-                log.info("VT+ user without BYOK - using system API key for generateObject");
+                log.info("Using system API key for generateObject");
             }
         }
 
@@ -934,7 +960,8 @@ export const generateObject = async ({
             originalError: error.message,
         };
 
-        const errorMsg = generateProviderErrorMessage(error, errorContext);
+        const errorMsg = centralizedGenerateErrorMessage(error, errorContext);
+
         throw new Error(errorMsg.message);
     }
 };

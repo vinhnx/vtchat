@@ -200,7 +200,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         let tools: any = {};
 
         if (mathCalculator) {
-            log.info({}, "🧮 Math calculator enabled, adding calculator tools...");
+            log.info({}, "Math calculator enabled, adding calculator tools...");
             const mathToolsObj = calculatorTools();
             log.info({ data: Object.keys(mathToolsObj) }, "🔢 Available math tools");
             tools = { ...tools, ...mathToolsObj };
@@ -268,7 +268,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                 chunkBuffer.add(chunk);
             },
             onToolCall: (toolCall) => {
-                log.info({ toolName: toolCall.toolName, args: toolCall.args }, "🔧 Tool call");
+                log.info({ toolName: toolCall.toolName, args: toolCall.args }, "Tool call");
                 // Send tool call event to UI
                 events?.update("steps", (prev) => ({
                     ...prev,
@@ -309,7 +309,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             onToolResult: (toolResult) => {
                 log.info(
                     { toolName: toolResult.toolName, result: toolResult.result },
-                    "🔧 Tool result for",
+                    "Tool result for",
                 );
                 // Send tool result event to UI
                 events?.update("steps", (prev) => ({

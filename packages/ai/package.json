@@ -17,7 +17,9 @@
         "./services/error-messages": "./services/error-messages.ts",
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
+        "./workflow/utils": "./workflow/utils.ts",
         "./workflow/tasks/chat-mode-router": "./workflow/tasks/chat-mode-router.ts",
+        "./workflow/tasks/gemini-web-search": "./workflow/tasks/gemini-web-search.ts",
         "./worker": "./worker/index.ts",
         "./constants/reasoning": "./constants/reasoning.ts",
         "./cache": "./cache/gemini-cache.ts"
