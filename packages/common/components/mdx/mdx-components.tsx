@@ -31,7 +31,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     p: ({ children }) => {
-        return <div className="markdown-text mb-5 text-base leading-relaxed">{children}</div>;
+        return <div className="markdown-text mb-5 text-base leading-loose">{children}</div>;
     },
     h1: ({ children }) => {
         return (

@@ -56,7 +56,7 @@ export type DynamicSettingsModalProps = React.ComponentProps<typeof SettingsModa
 export function DynamicSettingsModal(props: DynamicSettingsModalProps) {
     return (
         <Dialog onOpenChange={props.onClose} open={props.isOpen}>
-            <DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto sm:max-w-2xl lg:max-w-3xl">
+            <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] overflow-y-auto sm:w-auto sm:max-w-2xl lg:max-w-3xl">
                 <Suspense fallback={<SettingsLoadingSkeleton />}>
                     <SettingsModal {...props} />
                 </Suspense>

@@ -11,6 +11,7 @@
         "./hooks/use-chat-mode-access": "./hooks/use-chat-mode-access.ts",
         "./hooks/use-document-attachment": "./hooks/use-document-attachment.ts",
         "./context": "./context/index.ts",
+        "./contexts/accessibility-context": "./contexts/accessibility-context.tsx",
         "./store": "./store/index.ts",
         "./store/chat.store": "./store/chat.store.ts",
         "./components": "./components/index.ts",

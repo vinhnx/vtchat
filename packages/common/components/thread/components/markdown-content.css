@@ -4,9 +4,9 @@
 :root {
     /* Typography */
     --markdown-font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     --markdown-font-size: 16px;
-    --markdown-line-height: 1.5;
+    --markdown-line-height: 1.7;
     --markdown-font-weight-normal: 400;
     --markdown-font-weight-medium: 500;
     --markdown-font-weight-semibold: 600;
@@ -209,7 +209,7 @@
 }
 
 /* Code styling with improved readability */
-.prose code:not([class*="language-"]) {
+.prose code:not([class*='language-']) {
     color: var(--markdown-text-color);
     background-color: var(--markdown-code-bg);
     border: 1px solid var(--markdown-code-border);
@@ -217,8 +217,8 @@
     border-radius: 0.25rem;
     font-size: 0.875rem;
     font-family:
-        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-        "Courier New", monospace;
+        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
     white-space: nowrap;
 }
 
@@ -241,8 +241,8 @@
     padding: 0;
     font-size: 0.875rem;
     font-family:
-        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-        "Courier New", monospace;
+        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
     white-space: pre;
 }
 
@@ -322,11 +322,30 @@
     transition: color 0.2s ease;
 }
 
+/* Hardware acceleration for smooth streaming animations */
+.markdown-content {
+    transform: translateZ(0);
+    will-change: contents;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize text rendering during streaming */
+.markdown-content p,
+.markdown-content div,
+.markdown-content span {
+    contain: layout style;
+}
+
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
     .prose *,
-    .markdown-text {
+    .markdown-text,
+    .markdown-content {
         transition: none !important;
+        animation: none !important;
+        will-change: auto !important;
     }
 }
 
@@ -391,12 +410,12 @@ html.dark .prose th {
 }
 
 /* Improved code block syntax highlighting */
-.prose pre[class*="language-"] {
+.prose pre[class*='language-'] {
     position: relative;
     padding-top: 1.5rem;
 }
 
-.prose pre[class*="language-"]::before {
+.prose pre[class*='language-']::before {
     content: attr(data-language);
     position: absolute;
     top: 0.25rem;

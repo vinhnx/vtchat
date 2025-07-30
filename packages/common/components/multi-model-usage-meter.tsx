@@ -174,15 +174,6 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     Track your Gemini model usage. Server-funded access requires VT+ subscription.
                     <br />
                     <span className="text-muted-foreground/80 text-xs">
-                        <strong>VT+ Users:</strong> Server-funded access with rate limits (Flash
-                        Lite: 100/day, Flash: 50/day, Pro: 25/day).
-                        <br />
-                        <strong>Free Users:</strong> Must provide own Gemini API key (BYOK) - no
-                        server costs apply.
-                        <br />
-                        <strong>Budget Policy:</strong> Service may be temporarily unavailable if
-                        monthly budget is exceeded.
-                        <br />
                         <a
                             href="https://ai.google.dev/gemini-api/docs/models"
                             target="_blank"

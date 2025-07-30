@@ -28,6 +28,7 @@ import { useEffect, useRef, useState } from "react";
 import { CacheManagement } from "../../../apps/web/components/cache-management";
 import { SETTING_TABS, useAppStore } from "../store";
 import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
+import { AccessibilitySettings } from "./accessibility-settings";
 import { ChatEditor } from "./chat-input";
 import { CombinedSubscriptionSettings } from "./combined-subscription-settings";
 import { LoginRequiredDialog } from "./login-required-dialog";
@@ -80,6 +81,12 @@ export const SettingsModal = () => {
 
     const settingMenu = [
         {
+            title: "Accessibility",
+            description: "Configure accessibility and motion preferences",
+            key: SETTING_TABS.ACCESSIBILITY,
+            component: <AccessibilitySettings />,
+        },
+        {
             title: "VT+",
             description: "Premium features and usage management",
             key: SETTING_TABS.USAGE_CREDITS,
@@ -119,7 +126,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl border-0 shadow-2xl">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
@@ -129,18 +136,18 @@ export const SettingsModal = () => {
                     ref={scrollRef}
                 >
                     {/* Header */}
-                    <div className="border-border bg-background/95 sticky top-0 z-10 backdrop-blur-sm">
-                        <div className="flex items-center justify-between px-3 py-3 md:px-6 md:py-4">
-                            <div>
-                                <TypographyH1 className="text-lg font-semibold md:text-xl">
+                    <div className="border-border/50 bg-background/98 sticky top-0 z-10 backdrop-blur-md">
+                        <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-6">
+                            <div className="space-y-1">
+                                <TypographyH1 className="text-xl font-medium tracking-tight md:text-2xl">
                                     Settings
                                 </TypographyH1>
-                                <p className="text-muted-foreground text-xs md:text-sm">
+                                <p className="text-muted-foreground/80 text-sm md:text-base">
                                     Customize your VT experience and manage your account
                                 </p>
                             </div>
                             <Button
-                                className="md:hidden"
+                                className="md:hidden hover:bg-muted/50 transition-colors"
                                 onClick={() => setIsSettingsOpen(false)}
                                 size="icon-sm"
                                 variant="ghost"
@@ -148,32 +155,32 @@ export const SettingsModal = () => {
                                 <X size={18} strokeWidth={2} />
                             </Button>
                         </div>
-                        <div className="border-border border-b" />
+                        <div className="border-border/30 border-b" />
                     </div>
 
                     {/* Content */}
                     <div className="flex flex-col xl:flex-row">
                         {/* Sidebar Navigation */}
-                        <div className="border-border bg-muted/30 w-full shrink-0 border-b xl:min-h-full xl:w-[320px] xl:border-b-0 xl:border-r">
+                        <div className="border-border/30 bg-muted/20 w-full shrink-0 border-b xl:min-h-full xl:w-[280px] xl:border-b-0 xl:border-r">
                             {/* Mobile horizontal scroll, desktop vertical nav */}
-                            <nav className="scrollbar-thin flex gap-1 overflow-x-auto p-2 xl:flex-col xl:gap-0 xl:space-y-2 xl:overflow-x-visible xl:p-4">
+                            <nav className="scrollbar-thin flex gap-2 overflow-x-auto p-3 xl:flex-col xl:gap-0 xl:space-y-1 xl:overflow-x-visible xl:p-6">
                                 {settingMenu.map((setting) => (
                                     <button
                                         className={cn(
-                                            "flex min-w-0 shrink-0 items-center justify-center rounded-lg px-3 py-2 text-center transition-colors xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-3 xl:text-left",
+                                            "group flex min-w-0 shrink-0 items-center justify-center rounded-xl px-4 py-3 text-center transition-all duration-200 xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-4 xl:text-left",
                                             settingTab === setting.key
-                                                ? "bg-background text-foreground shadow-sm"
-                                                : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
+                                                ? "bg-background text-foreground shadow-md ring-1 ring-border/20 scale-[1.02]"
+                                                : "text-muted-foreground hover:bg-background/60 hover:text-foreground hover:shadow-sm hover:scale-[1.01]",
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
                                         style={{ minWidth: "max-content" }}
                                     >
-                                        <div className="flex-1 space-y-0.5">
-                                            <div className="whitespace-nowrap text-xs font-medium xl:whitespace-normal xl:text-base">
+                                        <div className="flex-1 space-y-1">
+                                            <div className="whitespace-nowrap text-sm font-medium xl:whitespace-normal xl:text-base">
                                                 {setting.title}
                                             </div>
-                                            <div className="text-muted-foreground hidden text-xs xl:block">
+                                            <div className="text-muted-foreground/70 hidden text-xs leading-relaxed xl:block">
                                                 {setting.description}
                                             </div>
                                         </div>
@@ -184,7 +191,7 @@ export const SettingsModal = () => {
 
                         {/* Main Content Area */}
                         <div
-                            className="scrollbar-thin bg-background flex flex-1 justify-center overflow-y-auto p-3 xl:p-8"
+                            className="scrollbar-thin bg-background/50 flex flex-1 justify-center overflow-y-auto p-4 xl:p-10"
                             ref={panelContentRef}
                             style={{
                                 minHeight: "500px",
@@ -192,10 +199,12 @@ export const SettingsModal = () => {
                             }}
                         >
                             <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
-                                {
-                                    settingMenu.find((setting) => setting.key === settingTab)
-                                        ?.component
-                                }
+                                <div className="bg-background rounded-2xl p-6 shadow-sm ring-1 ring-border/10">
+                                    {
+                                        settingMenu.find((setting) => setting.key === settingTab)
+                                            ?.component
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

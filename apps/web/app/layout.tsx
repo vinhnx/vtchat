@@ -7,6 +7,7 @@ import {
 } from "@repo/common/components";
 import { PlusDefaultsProvider } from "@repo/common/components/plus-defaults-provider";
 import { RootProvider } from "@repo/common/context";
+import { AccessibilityProvider } from "@repo/common/contexts/accessibility-context";
 import { OptimizedAuthProvider } from "@repo/common/providers";
 import { SubscriptionProvider } from "@repo/common/providers/subscription-provider";
 import { TooltipProvider } from "@repo/ui";
@@ -94,38 +95,40 @@ export default function ParentLayout({
                     storageKey="vt-theme"
                 >
                     <TooltipProvider>
-                        <SSRErrorBoundary>
-                            <BetterAuthProvider>
-                                <NoSSR
-                                    fallback={
-                                        <div className="z-20 flex min-h-[90vh] w-full flex-1 flex-col items-center justify-center gap-4">
-                                            <FullPageLoader label="Loading..." />
-                                        </div>
-                                    }
-                                >
-                                    <OptimizedAuthProvider>
-                                        <SubscriptionProvider>
-                                            <PlusDefaultsProvider>
-                                                <RootProvider>
-                                                    {/* React Scan for performance monitoring in development */}
-                                                    <ReactScan />
-                                                    {/* PWA Manager for install prompts and service worker */}
-                                                    <PWAManager />
-                                                    {/* Offline status indicator */}
-                                                    <OfflineIndicator />
-                                                    {/* @ts-ignore - Type compatibility issue between React versions */}
-                                                    <RootLayout>
-                                                        <main className="flex flex-1 flex-col">
-                                                            {children}
-                                                        </main>
-                                                    </RootLayout>
-                                                </RootProvider>
-                                            </PlusDefaultsProvider>
-                                        </SubscriptionProvider>
-                                    </OptimizedAuthProvider>
-                                </NoSSR>
-                            </BetterAuthProvider>
-                        </SSRErrorBoundary>
+                        <AccessibilityProvider>
+                            <SSRErrorBoundary>
+                                <BetterAuthProvider>
+                                    <NoSSR
+                                        fallback={
+                                            <div className="z-20 flex min-h-[90vh] w-full flex-1 flex-col items-center justify-center gap-4">
+                                                <FullPageLoader label="Loading..." />
+                                            </div>
+                                        }
+                                    >
+                                        <OptimizedAuthProvider>
+                                            <SubscriptionProvider>
+                                                <PlusDefaultsProvider>
+                                                    <RootProvider>
+                                                        {/* React Scan for performance monitoring in development */}
+                                                        <ReactScan />
+                                                        {/* PWA Manager for install prompts and service worker */}
+                                                        <PWAManager />
+                                                        {/* Offline status indicator */}
+                                                        <OfflineIndicator />
+                                                        {/* @ts-ignore - Type compatibility issue between React versions */}
+                                                        <RootLayout>
+                                                            <main className="flex flex-1 flex-col">
+                                                                {children}
+                                                            </main>
+                                                        </RootLayout>
+                                                    </RootProvider>
+                                                </PlusDefaultsProvider>
+                                            </SubscriptionProvider>
+                                        </OptimizedAuthProvider>
+                                    </NoSSR>
+                                </BetterAuthProvider>
+                            </SSRErrorBoundary>
+                        </AccessibilityProvider>
                     </TooltipProvider>
                 </GatedThemeProvider>
             </body>

@@ -17,7 +17,6 @@ import {
 } from "@repo/ui";
 import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from "lucide-react";
 import Link from "next/link";
-import { useAppStore } from "../store/app.store";
 import { GatedFeatureAlert } from "./gated-feature-alert";
 import { ThemeSwitcher } from "./theme-switcher";
 
@@ -29,7 +28,6 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
     if (!session?.user) {
         return null;
@@ -64,9 +62,11 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Account Management */}
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                <DropdownMenuItem asChild>
+                    <Link href="/settings">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />

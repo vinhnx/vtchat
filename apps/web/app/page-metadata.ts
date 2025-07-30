@@ -88,7 +88,7 @@ export const defaultMetadata: Metadata = {
 export const defaultViewport: Viewport = {
     width: "device-width",
     initialScale: 1,
-    userScalable: true,
+    userScalable: false,
     interactiveWidget: "resizes-content",
     colorScheme: "light dark",
     themeColor: [
