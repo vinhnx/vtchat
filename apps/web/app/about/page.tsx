@@ -339,24 +339,7 @@ function AboutContent() {
                                 community.
                             </p>
                             <div className="mt-6 flex flex-wrap items-center gap-4">
-                                <Link
-                                    href="https://github.com/vinhnx/vtchat"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
-                                >
-                                    View Source Code on GitHub
-                                </Link>
-                            </div>
-                            <div className="mt-6 flex flex-wrap items-center gap-4">
-                                <Link
-                                    href="https://x.com/intent/tweet?text=Check%20out%20VT%20-%20Production-ready%20AI%20chat%20with%20all%20premium%20models%20free!&url=https%3A%2F%2Fvtchat.io.vn%2F"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
-                                >
-                                    Share VT on X/Twitter
-                                </Link>
+                            
                             </div>
 
                             <div className="mt-8 border-t pt-6">
