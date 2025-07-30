@@ -346,14 +346,41 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             );
                         }
                     } else if (response.status === 403) {
-                        // Handle 403 errors, especially X.AI credit issues
-                        if (
-                            finalErrorMessage.includes("doesn't have any credits yet") ||
-                            finalErrorMessage.includes("console.x.ai")
-                        ) {
-                            finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
-                        } else {
-                            finalErrorMessage = `Access Denied (${response.status}): ${finalErrorMessage}`;
+                        // Handle 403 errors with structured error responses
+                        try {
+                            const errorData = JSON.parse(errorText);
+
+                            // Handle VT+ subscription required errors (Gemini models)
+                            if (
+                                errorData.error === "VT+ subscription required" &&
+                                errorData.upgradeUrl
+                            ) {
+                                finalErrorMessage = errorData.message || finalErrorMessage;
+                                // Note: The structured error includes upgradeUrl and usageSettingsAction
+                                // These could be used to show actionable buttons in the UI
+                            }
+                            // Handle X.AI credit issues
+                            else if (
+                                finalErrorMessage.includes("doesn't have any credits yet") ||
+                                finalErrorMessage.includes("console.x.ai")
+                            ) {
+                                finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
+                            } else {
+                                // Use the parsed message or fallback to generic message
+                                finalErrorMessage =
+                                    errorData.message ||
+                                    `Access Denied (${response.status}): ${finalErrorMessage}`;
+                            }
+                        } catch {
+                            // Fallback for non-JSON 403 responses
+                            if (
+                                finalErrorMessage.includes("doesn't have any credits yet") ||
+                                finalErrorMessage.includes("console.x.ai")
+                            ) {
+                                finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
+                            } else {
+                                finalErrorMessage = `Access Denied (${response.status}): ${finalErrorMessage}`;
+                            }
                         }
                     } else if (response.status === 400) {
                         // For 400 errors, use the extracted message or provide context
@@ -372,7 +399,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         persistToDB: true,
                     });
                     log.error({ errorText, status: response.status }, "Error response received");
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Throw the parsed error message instead of generic HTTP status
+                    throw new Error(finalErrorMessage || `HTTP error! status: ${response.status}`);
                 }
 
                 if (!response.body) {

@@ -32,7 +32,7 @@ import {
     X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, type FC } from "react";
+import React, { type FC, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { BasicSidebar } from "../basic-sidebar";
@@ -156,9 +156,10 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Mobile Sidebar Modal Overlay - Rendered via Portal */}
             {typeof window !== "undefined" &&
                 createPortal(
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait" initial={false}>
                         {isMobileSidebarOpen && (
-                            <div
+                            <motion.div
+                                key="mobile-sidebar-overlay"
                                 className="fixed inset-0 md:hidden"
                                 style={{
                                     position: "fixed",
@@ -168,13 +169,18 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     bottom: 0,
                                     zIndex: 99999,
                                 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ type: "tween", duration: 0.15, ease: "easeOut" }}
                             >
                                 {/* Backdrop */}
                                 <motion.div
-                                    animate={{ opacity: 1 }}
-                                    className="absolute inset-0 bg-black/60"
-                                    exit={{ opacity: 0 }}
-                                    initial={{ opacity: 0 }}
+                                    className="absolute inset-0 bg-black/60 transform-gpu will-change-opacity"
+                                    style={{
+                                        transform: "translate3d(0, 0, 0)",
+                                        backfaceVisibility: "hidden",
+                                    }}
                                     onClick={(e) => {
                                         // Check if click target is inside the sidebar content or dropdown
                                         const target = e.target as HTMLElement;
@@ -207,41 +213,43 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                             setIsMobileSidebarOpen(false);
                                         }
                                     }}
-                                    transition={{ duration: 0.2 }}
                                 />
 
                                 {/* Sidebar Content */}
                                 <motion.div
-                                    animate={{ x: 0, opacity: 1 }}
-                                    className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
-                                    exit={{
-                                        x: sidebarPlacement === "left" ? -300 : 300,
-                                        opacity: 0,
+                                    key="mobile-sidebar-content"
+                                    className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl transform-gpu will-change-transform ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
+                                    style={{
+                                        transform: "translate3d(0, 0, 0)",
+                                        backfaceVisibility: "hidden",
+                                        zIndex: 100000,
                                     }}
                                     initial={{
                                         x: sidebarPlacement === "left" ? -300 : 300,
-                                        opacity: 0,
+                                    }}
+                                    animate={{ x: 0 }}
+                                    exit={{
+                                        x: sidebarPlacement === "left" ? -300 : 300,
+                                    }}
+                                    transition={{
+                                        type: "tween",
+                                        duration: 0.2,
+                                        ease: "easeOut",
                                     }}
                                     role="dialog"
                                     aria-modal="true"
                                     aria-label="Navigation menu"
-                                    transition={{
-                                        type: "spring",
-                                        damping: 25,
-                                        stiffness: 300,
-                                        opacity: { duration: 0.2 },
-                                    }}
-                                    style={{ zIndex: 100000 }}
                                 >
                                     <div
-                                        className="h-full overflow-hidden"
+                                        className="h-full overflow-hidden transform-gpu"
+                                        style={{ transform: "translate3d(0, 0, 0)" }}
                                         data-sidebar-content
                                         data-mobile-sidebar
                                     >
                                         <BasicSidebar forceMobile={true} />
                                     </div>
                                 </motion.div>
-                            </div>
+                            </motion.div>
                         )}
                     </AnimatePresence>,
                     document.body,
@@ -440,19 +448,22 @@ export const SideDrawer = () => {
     };
 
     return (
-        <AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
             {sideDrawer.open && isThreadPage && isClient && (
                 <motion.div
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px]"
-                    exit={{ opacity: 0, x: 40 }}
-                    initial={{ opacity: 0, x: 40 }}
                     key="side-drawer"
+                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px] transform-gpu will-change-transform"
+                    style={{
+                        transform: "translate3d(0, 0, 0)",
+                        backfaceVisibility: "hidden",
+                    }}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 40 }}
                     transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                        exit: { duration: 0.2 },
+                        type: "tween",
+                        duration: 0.2,
+                        ease: "easeOut",
                     }}
                 >
                     <div className="border-muted/50 bg-background/95 flex h-full w-full flex-col overflow-hidden rounded-xl shadow-lg backdrop-blur-sm">

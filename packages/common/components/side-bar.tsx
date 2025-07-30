@@ -17,6 +17,7 @@ import {
 import {
     Badge,
     Button,
+    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -25,15 +26,14 @@ import {
     DropdownMenuTrigger,
     Flex,
     UnifiedAvatar,
-    cn,
     useToast,
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
     ChevronLeft,
     ChevronRight,
-    ChevronUp,
     ChevronsUpDown,
+    ChevronUp,
     Command,
     ExternalLink,
     FileText,
@@ -271,21 +271,25 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <motion.div
             className={cn(
-                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 flex-col",
+                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 flex-col transform-gpu will-change-transform",
                 "dark:bg-black/95",
                 forceMobile
                     ? "z-[302] w-[300px] max-w-[300px]"
                     : cn(
-                          "z-[50] transition-all duration-300 ease-in-out",
+                          "z-[50]",
                           isSidebarOpen
                               ? "sidebar-expanded top-0 h-full w-[300px] max-w-[300px] flex-none"
                               : "sidebar-collapsed w-[52px] flex-none",
                       ),
             )}
-            style={{ maxWidth: "300px" }}
-            initial={{ opacity: 0, x: forceMobile ? -20 : isSidebarOpen ? -20 : 0 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{
+                maxWidth: "300px",
+                transform: "translate3d(0, 0, 0)",
+                backfaceVisibility: "hidden",
+            }}
+            initial={forceMobile ? { opacity: 0 } : false}
+            animate={forceMobile ? { opacity: 1 } : {}}
+            transition={forceMobile ? { duration: 0.15, ease: "easeOut" } : {}}
             {...(forceMobile && { "data-mobile-sidebar": "true" })}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
@@ -481,27 +485,20 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 >
                     <Link className={isSidebarOpen ? "flex-1" : "w-full"} href="/">
-                        <motion.div
-                            animate={{ opacity: 1 }}
+                        <div
                             className={cn(
-                                "hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200",
+                                "hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200 transform-gpu will-change-transform",
                                 !isSidebarOpen && "justify-center px-0",
                             )}
-                            initial={{ opacity: 0 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
+                            style={{ transform: "translate3d(0, 0, 0)" }}
                         >
                             <Logo className="text-brand size-6 flex-shrink-0" round />
                             {isSidebarOpen && (
-                                <motion.p
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="font-clash text-sidebar-foreground text-xl font-bold tracking-wide"
-                                    initial={{ opacity: 0, x: -10 }}
-                                    transition={{ duration: 0.2, delay: 0.1 }}
-                                >
+                                <p className="font-clash text-sidebar-foreground text-xl font-bold tracking-wide">
                                     VT
-                                </motion.p>
+                                </p>
                             )}
-                        </motion.div>
+                        </div>
                     </Link>
 
                     {/* Collapse sidebar button in header */}
@@ -519,10 +516,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     )}
                 </div>
                 {/* Primary Actions Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
+                <div
+                    className="transform-gpu will-change-transform"
+                    style={{ transform: "translate3d(0, 0, 0)" }}
                 >
                     <Flex
                         className={cn(
@@ -679,7 +675,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </Button>
                         )}
                     </Flex>
-                </motion.div>
+                </div>
 
                 {/* Divider */}
                 <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>

@@ -171,8 +171,8 @@
     @media (max-width: 768px) {
         /* Reduce animation complexity on mobile */
         * {
-            animation-duration: 0.8s !important;
-            transition-duration: 0.8s !important;
+            animation-duration: 0.2s !important;
+            transition-duration: 0.2s !important;
         }
 
         /* Optimize transforms for mobile */
@@ -180,6 +180,25 @@
             transform: translate3d(0, 0, 0);
             backface-visibility: hidden;
             perspective: 1000px;
+        }
+
+        /* Mobile sidebar optimizations */
+        [data-mobile-sidebar] {
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden !important;
+            will-change: transform !important;
+        }
+
+        /* Prevent layout shifts during sidebar animations */
+        .sidebar-container {
+            contain: layout style paint !important;
+        }
+
+        /* Optimize backdrop animations */
+        .mobile-sidebar-backdrop {
+            will-change: opacity !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden !important;
         }
     }
 
