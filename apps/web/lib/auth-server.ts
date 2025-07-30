@@ -88,10 +88,10 @@ export const auth = betterAuth({
     },
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days
-        updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+        updateAge: 60 * 60 * 12, // 12 hours (update session expiration more frequently)
         cookieCache: {
             enabled: true,
-            maxAge: 60 * 15, // Increase to 15 minutes cache to reduce database lookups on page refresh
+            maxAge: 60 * 30, // Increase to 30 minutes cache to prevent expiration during active chat sessions
         },
     },
     rateLimit: {
