@@ -18,12 +18,12 @@ import { ThinkingLog } from "../thinking-log";
 import { ThreadLoadingIndicator } from "../thread-loading-indicator";
 import { ToolsPanel } from "../tools-panel";
 import { CitationProvider } from "./citation-provider";
+import { AIMessage } from "./components/ai-message";
 import { Steps } from "./components/goals";
-import { MarkdownContent } from "./components/markdown-content";
-import { Message } from "./components/message";
 import { MessageActions } from "./components/message-actions";
 import { QuestionPrompt } from "./components/question-prompt";
 import { SourceGrid } from "./components/source-grid";
+import { UserMessage } from "./components/user-message";
 
 export const ThreadItem = memo(
     ({
@@ -237,7 +237,7 @@ export const ThreadItem = memo(
                 <div className="w-full" id={`thread-item-${threadItem.id}`} ref={inViewRef}>
                     <div className={cn("flex w-full flex-col items-start gap-3 pt-4")}>
                         {threadItem.query && (
-                            <Message
+                            <UserMessage
                                 imageAttachment={threadItem?.imageAttachment}
                                 message={threadItem.query}
                                 threadItem={threadItem}
@@ -269,7 +269,7 @@ export const ThreadItem = memo(
 
                         <div className="w-full transform-gpu" ref={messageRef}>
                             {hasAnswer && threadItem.answer?.text && (
-                                <div className="flex flex-col">
+                                <div className="flex flex-col gap-3">
                                     <SourceGrid sources={validSources} />
 
                                     {/* Show thinking log if reasoning data is available */}
@@ -279,18 +279,14 @@ export const ThreadItem = memo(
                                             (part) => part.type === "reasoning",
                                         )) && <ThinkingLog threadItem={threadItem} />}
 
-                                    <MarkdownContent
+                                    <AIMessage
                                         content={animatedText || ""}
+                                        threadItem={threadItem}
+                                        isGenerating={isGenerating && isLast}
+                                        isLast={isLast}
                                         isCompleted={["COMPLETED", "ERROR", "ABORTED"].includes(
                                             threadItem.status || "",
                                         )}
-                                        isLast={isLast}
-                                        key={`answer-${threadItem.id}`}
-                                        shouldAnimate={
-                                            !["COMPLETED", "ERROR", "ABORTED"].includes(
-                                                threadItem.status || "",
-                                            )
-                                        }
                                     />
                                 </div>
                             )}
