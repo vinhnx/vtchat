@@ -14,6 +14,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { AttachmentDisplay } from "./attachment-display";
 import { DocumentDisplay } from "./document-display";
 import { ImageMessage } from "./image-message";
+import "./message-animations.css";
 
 type UserMessageProps = {
     message: string;
@@ -71,23 +72,26 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
     return (
         <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="group flex w-full justify-end gap-3"
-            initial={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            className={cn("group flex w-full justify-end gap-3", "message-container user-message")}
+            initial={{ opacity: 0, y: 5 }}
+            transition={{
+                duration: 0.2,
+                ease: [0.4, 0, 0.2, 1],
+                type: "tween",
+            }}
         >
             {/* Message content container */}
             <div className="flex max-w-[85%] flex-col items-end gap-2 sm:max-w-[75%]">
                 {/* Message bubble with enhanced styling */}
-                <motion.div
+                <div
                     className={cn(
-                        "relative overflow-hidden rounded-2xl transition-all duration-200",
+                        "relative overflow-hidden rounded-2xl transition-all duration-200 ease-out",
                         "border border-border/50 bg-gradient-to-br from-primary/5 to-primary/10",
                         "shadow-sm hover:shadow-md",
                         "backdrop-blur-sm",
+                        "message-bubble",
                         isEditing && "ring-2 ring-primary/30 ring-offset-2",
                     )}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
                 >
                     {/* Message content */}
                     <div
@@ -111,13 +115,18 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                     </div>
 
                     {/* Action buttons overlay - show on hover */}
-                    <div className="absolute bottom-2 left-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                        <div className="flex items-center gap-1 rounded-lg bg-background/90 p-1 shadow-sm backdrop-blur-sm">
+                    <div
+                        className={cn(
+                            "absolute bottom-2 left-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                            "message-actions",
+                        )}
+                    >
+                        <div className="flex items-center gap-1 rounded-lg bg-background/80 p-1 shadow-lg backdrop-blur-md border border-border/20">
                             <Button
                                 onClick={handleCopy}
                                 size="xs"
                                 variant="ghost"
-                                className="h-6 w-6 p-0"
+                                className={cn("h-6 w-6 p-0", "message-action-button")}
                                 aria-label="Copy message"
                             >
                                 {status === "copied" ? (
@@ -130,7 +139,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                                 onClick={handleEdit}
                                 size="xs"
                                 variant="ghost"
-                                className="h-6 w-6 p-0"
+                                className={cn("h-6 w-6 p-0", "message-action-button")}
                                 disabled={isGenerating}
                                 aria-label="Edit message"
                             >
@@ -152,7 +161,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                             </Button>
                         </div>
                     )}
-                </motion.div>
+                </div>
 
                 {/* Attachments */}
                 {imageAttachment && (
@@ -193,6 +202,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                             "ring-2 ring-background",
                             "transition-all duration-200",
                             "hover:border-primary/40 hover:shadow-md",
+                            "message-avatar",
                         )}
                         fallback={
                             <div className="flex h-full w-full items-center justify-center bg-primary/10 text-primary">
@@ -282,15 +292,22 @@ const EditUserMessage = memo(({ message, onCancel, threadItem, width }: EditUser
     return (
         <motion.div
             animate={{ opacity: 1 }}
-            className="flex w-full justify-end"
+            className={cn("flex w-full justify-end", "edit-container")}
             initial={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{
+                duration: 0.15,
+                ease: [0.4, 0, 0.2, 1],
+                type: "tween",
+            }}
         >
             <div
-                className="relative max-w-[85%] rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 backdrop-blur-sm sm:max-w-[75%]"
+                className={cn(
+                    "relative max-w-[85%] rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 backdrop-blur-sm sm:max-w-[75%]",
+                    "transform-gpu will-change-transform",
+                )}
                 style={{
                     minWidth: width,
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
             >
                 <ChatEditor

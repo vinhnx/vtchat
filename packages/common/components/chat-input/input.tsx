@@ -176,16 +176,66 @@ export const ChatInput = ({
         }
 
         let threadId = currentThreadId?.toString();
+        let optimisticThreadItemId: string | undefined;
 
         if (!threadId) {
             const optimisticId = await generateThreadId();
-            router.push(`/chat/${optimisticId}`); // use router.push
-            createThread(optimisticId, {
+
+            // Create optimistic user thread item BEFORE creating thread to prevent blank screen
+            optimisticThreadItemId = await generateThreadId();
+            const optimisticUserThreadItem = {
+                id: optimisticThreadItemId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                status: "QUEUED" as const,
+                threadId: optimisticId,
+                query: editor.getText(),
+                imageAttachment,
+                documentAttachment: documentAttachment
+                    ? {
+                          base64: documentAttachment.base64,
+                          mimeType: documentAttachment.mimeType,
+                          fileName: documentAttachment.fileName,
+                      }
+                    : undefined,
+                attachments: multiModalAttachments.length > 0 ? multiModalAttachments : undefined,
+                mode: chatMode,
+            };
+
+            // Create thread first (this sets currentThreadId and clears threadItems)
+            log.info({ optimisticId }, "🆕 Creating new thread");
+            await createThread(optimisticId, {
                 title: editor?.getText(),
             });
             threadId = optimisticId;
-            // Set loading state immediately for new threads to prevent missing loading indicator
+
+            // Add the optimistic thread item to store after thread creation
+            const createThreadItem = useChatStore.getState().createThreadItem;
+
+            log.info({ optimisticUserThreadItem }, "📝 Creating optimistic thread item");
+            await createThreadItem(optimisticUserThreadItem);
+
+            // Verify the thread item was created
+            const verifyItem = useChatStore.getState().getCurrentThreadItem(optimisticId);
+            const allThreadItems = useChatStore
+                .getState()
+                .threadItems.filter((item) => item.threadId === optimisticId);
+            log.info(
+                {
+                    verifyItem: !!verifyItem,
+                    itemId: verifyItem?.id,
+                    totalItemsForThread: allThreadItems.length,
+                    threadExists: useChatStore
+                        .getState()
+                        .threads.some((t) => t.id === optimisticId),
+                },
+                "✅ Verified optimistic thread item and thread state",
+            );
+
+            // Set loading state and navigate - user message will be immediately visible
             setIsGenerating(true);
+            log.info({ optimisticId }, "🚀 Navigating to thread page");
+            router.push(`/chat/${optimisticId}`);
         }
         // Removed duplicated block and misplaced return
 
@@ -217,9 +267,14 @@ export const ChatInput = ({
             },
             "🚀 Sending to handleSubmit with flags",
         );
+
+        // For new threads, pass the optimistic thread item ID to update the existing item
+        const existingThreadItemId = !currentThreadId ? optimisticThreadItemId : undefined;
+
         handleSubmit({
             formData,
             newThreadId: threadId,
+            existingThreadItemId,
             messages: threadItems.sort(
                 (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
             ),
@@ -242,7 +297,7 @@ export const ChatInput = ({
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
                     "w-full px-3 md:px-4",
-                    currentThreadId ? "mb-3 md:mb-3" : "mb-20 md:mb-0", // Add bottom margin for PWA banner on mobile
+                    currentThreadId ? "" : "mb-20 md:mb-0", // Remove bottom margin for thread pages
                     HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                 )}
                 initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 5 : 10 }}

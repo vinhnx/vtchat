@@ -5,8 +5,8 @@
     /* Typography */
     --markdown-font-family:
         'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    --markdown-font-size: 16px;
-    --markdown-line-height: 1.7;
+    --markdown-font-size: 17px;
+    --markdown-line-height: 1.75;
     --markdown-font-weight-normal: 400;
     --markdown-font-weight-medium: 500;
     --markdown-font-weight-semibold: 600;
@@ -59,6 +59,9 @@
     max-width: 100%; /* Allow content to fill available space */
     word-break: break-word;
     overflow-wrap: break-word;
+    text-align: left;
+    letter-spacing: 0.01em;
+    text-rendering: optimizeLegibility;
 }
 
 /* Paragraph styling */
@@ -329,6 +332,8 @@
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    contain: layout style;
+    isolation: isolate;
 }
 
 /* Optimize text rendering during streaming */

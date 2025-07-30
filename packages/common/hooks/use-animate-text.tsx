@@ -59,10 +59,10 @@ export function useAnimatedText(text: string, shouldAnimate = true) {
         const textLength = text.length;
         const startCursor = isSameText ? cursor : 0;
 
-        // Improved timing calculation for smoother streaming
-        // Faster for shorter additions, slower for longer content
+        // Optimized timing for instant streaming without corruption
+        // Much faster animation to prevent visual artifacts
         const remainingChars = textLength - startCursor;
-        const baseDuration = Math.max(0.2, Math.min(1.5, remainingChars * 0.012));
+        const baseDuration = Math.max(0.05, Math.min(0.3, remainingChars * 0.003));
 
         animationRef.current = animate(animatedCursor, textLength, {
             duration: baseDuration,
