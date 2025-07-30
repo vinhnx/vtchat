@@ -19,6 +19,7 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/a
 // Force dynamic rendering for this route
 export const dynamic = "force-dynamic";
 
+import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from "./constants";
 import { executeStream, markControllerClosed } from "./stream-handlers";
 import { registerStream, unregisterStream } from "./stream-registry";
@@ -255,6 +256,37 @@ export async function POST(request: NextRequest) {
 
         // Declare vtPlusAccess in outer scope for access in onFinish callback
         let vtPlusAccess: { hasAccess: boolean; reason?: string } | undefined;
+
+        // BYOK validation for image analysis - ALL users must provide their own API keys for image processing
+        const hasImages = hasImageAttachments({
+            imageAttachment: data.imageAttachment,
+            attachments: data.attachments,
+            messages: data.messages || [],
+        });
+
+        if (hasImages) {
+            const validation = validateByokForImageAnalysis({
+                chatMode: data.mode,
+                apiKeys: effectiveApiKeys || {},
+                hasImageAttachments: hasImages,
+            });
+
+            if (!validation.isValid) {
+                return new Response(
+                    JSON.stringify({
+                        error: "API Key Required for Image Analysis",
+                        message: validation.errorMessage,
+                        requiredApiKey: validation.requiredApiKey,
+                        providerName: validation.providerName,
+                        settingsAction: "open_api_keys_settings",
+                    }),
+                    {
+                        status: 403,
+                        headers: { "Content-Type": "application/json" },
+                    },
+                );
+            }
+        }
 
         if (isGeminiModelResult) {
             if (!hasByokGeminiKey) {

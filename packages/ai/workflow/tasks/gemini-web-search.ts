@@ -182,6 +182,21 @@ Please include:
             const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
             const isVtPlusUser = userTier === UserTier.PLUS;
 
+            // Log detailed error information for debugging
+            log.error(
+                {
+                    error: error.message,
+                    model,
+                    isFreeModel,
+                    hasUserApiKey: !!hasUserApiKey,
+                    hasSystemApiKey,
+                    isVtPlusUser,
+                    environment: process.env.NODE_ENV,
+                    errorType: error.constructor.name,
+                },
+                "Web search failed with detailed context",
+            );
+
             if (error.message?.includes("Web search requires an API key")) {
                 // Free user needs to provide their own API key for web search
                 throw new Error(

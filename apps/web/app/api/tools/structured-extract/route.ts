@@ -166,19 +166,38 @@ export async function POST(request: NextRequest) {
         // Check if user has VT+ access
         const { hasAccess: hasVtPlusAccess } = await checkVTPlusAccess(request);
 
-        // For VT+ users, use system API key; for others, use their provided keys
+        // Handle API key logic: VT+ users can use system key, others need BYOK
         let effectiveApiKeys = userApiKeys || {};
-        if (hasVtPlusAccess && !effectiveApiKeys.GEMINI_API_KEY) {
-            if (!process.env.GEMINI_API_KEY) {
+
+        if (hasVtPlusAccess) {
+            // VT+ users: Use system API key if they don't have their own
+            if (!effectiveApiKeys.GEMINI_API_KEY) {
+                if (!process.env.GEMINI_API_KEY) {
+                    return NextResponse.json(
+                        { error: "System Gemini API key not configured" },
+                        { status: 500 },
+                    );
+                }
+                effectiveApiKeys = {
+                    ...effectiveApiKeys,
+                    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+                };
+            }
+        } else {
+            // Non-VT+ users: Must provide their own BYOK Gemini API key
+            if (!effectiveApiKeys.GEMINI_API_KEY || !effectiveApiKeys.GEMINI_API_KEY.trim()) {
                 return NextResponse.json(
-                    { error: "System Gemini API key not configured" },
-                    { status: 500 },
+                    {
+                        error: "Please add your Google Gemini API key",
+                        message:
+                            "Document understanding requires your own Google Gemini API key. Please add your Gemini API key in Settings > API Keys, or upgrade to VT+ for server-funded access.",
+                        requiredApiKey: "GEMINI_API_KEY",
+                        providerName: "Google Gemini",
+                        settingsAction: "open_api_keys_settings",
+                    },
+                    { status: 403 },
                 );
             }
-            effectiveApiKeys = {
-                ...effectiveApiKeys,
-                GEMINI_API_KEY: process.env.GEMINI_API_KEY,
-            };
         }
 
         // Get the document schema
@@ -199,7 +218,7 @@ export async function POST(request: NextRequest) {
             model: googleProvider(chatMode),
             schema,
             prompt: `You are an expert document analyzer. Extract structured data from the following ${documentType} document.
-                
+
 Be thorough and accurate in your extraction. Follow these guidelines:
 - Extract all relevant information that matches the schema
 - For optional fields, include them if the information is available

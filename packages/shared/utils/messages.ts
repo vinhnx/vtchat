@@ -1,5 +1,7 @@
 import type { Attachment, DocumentAttachment, ThreadItem } from "@repo/shared/types";
 
+type MessageContent = { type: "text"; text: string } | { type: "image"; image: string };
+
 export const buildCoreMessagesFromThreadItems = ({
     messages,
     query,
@@ -14,20 +16,18 @@ export const buildCoreMessagesFromThreadItems = ({
     attachments?: Attachment[];
 }) => {
     const threadMessages = (messages || []).flatMap((item) => {
-        const content: any[] = [{ type: "text", text: item.query || "" }];
+        const content: MessageContent[] = [{ type: "text", text: item.query || "" }];
 
         if (item.imageAttachment) {
             content.push({ type: "image", image: item.imageAttachment });
         }
 
         if (item.documentAttachment) {
-            // Convert base64 to buffer for file type
-            const base64Data = item.documentAttachment.base64.split(",")[1];
-            const buffer = Buffer.from(base64Data, "base64");
+            // For document attachments, include as text content since AI SDK doesn't support file type
+            // The document content should be extracted and included as text
             content.push({
-                type: "file",
-                data: buffer,
-                mimeType: item.documentAttachment.mimeType,
+                type: "text",
+                text: `[Document: ${item.documentAttachment.fileName || "document"} (${item.documentAttachment.mimeType})]`,
             });
         }
 
@@ -37,13 +37,10 @@ export const buildCoreMessagesFromThreadItems = ({
                 if (attachment.contentType.startsWith("image/")) {
                     content.push({ type: "image", image: attachment.url });
                 } else if (attachment.contentType === "application/pdf") {
-                    // Convert data URL to buffer for PDF
-                    const base64Data = attachment.url.split(",")[1];
-                    const buffer = Buffer.from(base64Data, "base64");
+                    // For PDF attachments, include as text reference since AI SDK doesn't support file type
                     content.push({
-                        type: "file",
-                        data: buffer,
-                        mimeType: attachment.contentType,
+                        type: "text",
+                        text: `[PDF Document: ${attachment.name}]`,
                     });
                 }
             });
@@ -62,20 +59,17 @@ export const buildCoreMessagesFromThreadItems = ({
     });
 
     // Add current query with attachments
-    const currentContent: any[] = [{ type: "text", text: query || "" }];
+    const currentContent: MessageContent[] = [{ type: "text", text: query || "" }];
 
     if (imageAttachment) {
         currentContent.push({ type: "image", image: imageAttachment });
     }
 
     if (documentAttachment) {
-        // Convert base64 to buffer for file type
-        const base64Data = documentAttachment.base64.split(",")[1];
-        const buffer = Buffer.from(base64Data, "base64");
+        // For document attachments, include as text reference since AI SDK doesn't support file type
         currentContent.push({
-            type: "file",
-            data: buffer,
-            mimeType: documentAttachment.mimeType,
+            type: "text",
+            text: `[Document: ${documentAttachment.fileName || "document"} (${documentAttachment.mimeType})]`,
         });
     }
 
@@ -85,13 +79,10 @@ export const buildCoreMessagesFromThreadItems = ({
             if (attachment.contentType.startsWith("image/")) {
                 currentContent.push({ type: "image", image: attachment.url });
             } else if (attachment.contentType === "application/pdf") {
-                // Convert data URL to buffer for PDF
-                const base64Data = attachment.url.split(",")[1];
-                const buffer = Buffer.from(base64Data, "base64");
+                // For PDF attachments, include as text reference since AI SDK doesn't support file type
                 currentContent.push({
-                    type: "file",
-                    data: buffer,
-                    mimeType: attachment.contentType,
+                    type: "text",
+                    text: `[PDF Document: ${attachment.name}]`,
                 });
             }
         });

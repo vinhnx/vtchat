@@ -136,6 +136,17 @@ export const generateTextWithGeminiSearch = async ({
 
         // Handle different scenarios for API key requirements
         if (!hasUserGeminiKey && !hasSystemGeminiKey) {
+            log.warn(
+                {
+                    isFreeGeminiModel,
+                    isVtPlusUser,
+                    hasUserGeminiKey,
+                    hasSystemGeminiKey,
+                    environment: process.env.NODE_ENV,
+                },
+                "Web search failed: No API key available",
+            );
+
             if (isFreeGeminiModel && !isVtPlusUser) {
                 // Free tier user with free model - require BYOK for web search
                 throw new Error(
