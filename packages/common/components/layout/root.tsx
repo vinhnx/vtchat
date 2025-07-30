@@ -20,7 +20,6 @@ import {
 } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-    Database,
     FileText,
     HelpCircle,
     Info,
@@ -28,6 +27,7 @@ import {
     Menu,
     Settings,
     Shield,
+    Terminal,
     User,
     X,
 } from "lucide-react";
@@ -160,7 +160,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         {isMobileSidebarOpen && (
                             <motion.div
                                 key="mobile-sidebar-overlay"
-                                className="fixed inset-0 md:hidden"
+                                className="fixed inset-0 md:hidden transform-gpu will-change-opacity"
+                                data-framer-motion
                                 style={{
                                     position: "fixed",
                                     top: 0,
@@ -168,11 +169,13 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     right: 0,
                                     bottom: 0,
                                     zIndex: 99999,
+                                    transform: "translate3d(0, 0, 0)",
+                                    backfaceVisibility: "hidden",
                                 }}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                transition={{ type: "tween", duration: 0.15, ease: "easeOut" }}
+                                transition={{ type: "tween", duration: 0.12, ease: "easeOut" }}
                             >
                                 {/* Backdrop */}
                                 <motion.div
@@ -219,22 +222,26 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 <motion.div
                                     key="mobile-sidebar-content"
                                     className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl transform-gpu will-change-transform ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
+                                    data-framer-motion
                                     style={{
                                         transform: "translate3d(0, 0, 0)",
                                         backfaceVisibility: "hidden",
                                         zIndex: 100000,
+                                        contain: "layout style paint",
                                     }}
                                     initial={{
                                         x: sidebarPlacement === "left" ? -300 : 300,
+                                        opacity: 0.8,
                                     }}
-                                    animate={{ x: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
                                     exit={{
                                         x: sidebarPlacement === "left" ? -300 : 300,
+                                        opacity: 0.8,
                                     }}
                                     transition={{
                                         type: "tween",
-                                        duration: 0.2,
-                                        ease: "easeOut",
+                                        duration: 0.18,
+                                        ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smoother motion
                                     }}
                                     role="dialog"
                                     aria-modal="true"
@@ -300,7 +307,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                         />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start" className="z-[150] mb-2 w-48">
+                                <DropdownMenuContent align="start" className="z-[200] mb-2 w-48">
                                     <DropdownMenuItem onClick={() => router.push("/profile")}>
                                         <User className="mr-2" size={16} strokeWidth={2} />
                                         Profile
@@ -313,7 +320,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     {/* Admin Menu Item */}
                                     {isAdmin && (
                                         <DropdownMenuItem onClick={() => router.push("/admin")}>
-                                            <Database className="mr-2" size={16} strokeWidth={2} />
+                                            <Terminal className="mr-2" size={16} strokeWidth={2} />
                                             VT Terminal
                                         </DropdownMenuItem>
                                     )}
@@ -456,14 +463,15 @@ export const SideDrawer = () => {
                     style={{
                         transform: "translate3d(0, 0, 0)",
                         backfaceVisibility: "hidden",
+                        contain: "layout style paint",
                     }}
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 40 }}
+                    initial={{ opacity: 0, x: 30, scale: 0.98 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: 30, scale: 0.98 }}
                     transition={{
                         type: "tween",
-                        duration: 0.2,
-                        ease: "easeOut",
+                        duration: 0.18,
+                        ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing curve
                     }}
                 >
                     <div className="border-muted/50 bg-background/95 flex h-full w-full flex-col overflow-hidden rounded-xl shadow-lg backdrop-blur-sm">

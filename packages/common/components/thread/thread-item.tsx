@@ -5,8 +5,7 @@ import { isMathTool } from "@repo/common/constants/math-tools";
 import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
 import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
-import { Alert, AlertDescription, cn, useToast } from "@repo/ui";
-import { AlertCircle } from "lucide-react";
+import { cn, useToast } from "@repo/ui";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
@@ -310,8 +309,7 @@ export const ThreadItem = memo(
                         {isAnimationComplete &&
                             (threadItem.status === "COMPLETED" ||
                                 threadItem.status === "ABORTED" ||
-                                threadItem.status === "ERROR" ||
-                                !isGenerating) && (
+                                threadItem.status === "ERROR") && (
                                 <div className="flex flex-col gap-3">
                                     <MessageActions
                                         isLast={isLast}

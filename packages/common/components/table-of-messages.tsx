@@ -11,11 +11,17 @@ export const TableOfMessages = () => {
     const { threadId } = useParams();
     const currentThreadId = threadId?.toString() ?? "";
     const [isHovering, setIsHovering] = useState(false);
+
+    // Only call getPreviousThreadItems if we have a valid threadId
     const previousThreadItems = useChatStore(
-        useShallow((state) => state.getPreviousThreadItems(currentThreadId)),
+        useShallow((state) =>
+            currentThreadId ? state.getPreviousThreadItems(currentThreadId) : [],
+        ),
     );
     const currentThreadItem = useChatStore(
-        useShallow((state) => state.getCurrentThreadItem(currentThreadId)),
+        useShallow((state) =>
+            currentThreadId ? state.getCurrentThreadItem(currentThreadId) : null,
+        ),
     );
     const activeItemId = useChatStore((state) => state.activeThreadItemView);
     const allItems = [...previousThreadItems, currentThreadItem].filter(Boolean);

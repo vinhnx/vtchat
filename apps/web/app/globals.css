@@ -1,4 +1,4 @@
-@import "@repo/tailwind-config/tailwind.css";
+@import '@repo/tailwind-config/tailwind.css';
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
@@ -26,6 +26,32 @@ body {
     /* Firefox - completely hide scrollbars globally */
     scrollbar-width: none;
     scrollbar-color: transparent transparent;
+}
+
+/* Safari layout centering fixes */
+@supports (-webkit-appearance: none) {
+    /* Ensure proper centering in Safari */
+    .mx-auto {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Fix Safari flexbox issues */
+    .flex-1 {
+        -webkit-flex: 1 1 0%;
+        flex: 1 1 0%;
+    }
+
+    /* Fix Safari height calculations */
+    .min-h-screen {
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .h-screen {
+        height: 100vh;
+        height: 100dvh;
+    }
 }
 
 /* WebKit browsers - hide scrollbars globally */
@@ -217,8 +243,17 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        'SF Pro Display',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol';
 }
 
 strong {
@@ -447,7 +482,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;
@@ -568,7 +603,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -581,7 +616,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 1;
     bottom: 0;

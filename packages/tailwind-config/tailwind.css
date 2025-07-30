@@ -169,24 +169,26 @@
 
     /* Mobile-specific optimizations */
     @media (max-width: 768px) {
-        /* Reduce animation complexity on mobile */
-        * {
+        /* Reduce animation complexity on mobile - but don't override Framer Motion */
+        *:not([data-framer-motion]):not([data-framer-motion] *) {
             animation-duration: 0.2s !important;
             transition-duration: 0.2s !important;
         }
 
         /* Optimize transforms for mobile */
         [data-framer-motion] {
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden !important;
+            perspective: 1000px !important;
+            contain: layout style paint !important;
         }
 
-        /* Mobile sidebar optimizations */
+        /* Smooth mobile sidebar animations */
         [data-mobile-sidebar] {
             transform: translate3d(0, 0, 0) !important;
             backface-visibility: hidden !important;
-            will-change: transform !important;
+            will-change: transform, opacity !important;
+            contain: layout style paint !important;
         }
 
         /* Prevent layout shifts during sidebar animations */
@@ -200,13 +202,70 @@
             transform: translate3d(0, 0, 0) !important;
             backface-visibility: hidden !important;
         }
+
+        /* Smooth chat message animations */
+        .chat-message-animation {
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden !important;
+            will-change: transform, opacity !important;
+        }
+
+        /* Prevent animation jank on mobile */
+        .transform-gpu {
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden !important;
+        }
     }
 
     /* Low-end device optimizations */
     @media (max-width: 480px) {
-        * {
-            animation-duration: 0.6s !important;
-            transition-duration: 0.6s !important;
+        *:not([data-framer-motion]):not([data-framer-motion] *) {
+            animation-duration: 0.15s !important;
+            transition-duration: 0.15s !important;
+        }
+    }
+
+    /* Safari-specific fixes */
+    @supports (-webkit-appearance: none) {
+        /* Fix Safari flexbox centering issues */
+        .flex {
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .items-center {
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .justify-center {
+            -webkit-justify-content: center;
+            justify-content: center;
+        }
+
+        .justify-between {
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+        }
+
+        /* Fix Safari viewport height issues */
+        .h-dvh {
+            height: 100vh; /* Fallback for older Safari */
+            height: 100dvh;
+        }
+
+        /* Fix Safari container centering */
+        .container {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        /* Fix Safari transform issues */
+        .transform-gpu {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
     }
 }

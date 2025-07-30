@@ -24,6 +24,8 @@ export function useToast() {
                     return toast.error(message, {
                         description: titleText,
                         duration,
+                        dismissible: true,
+                        closeButton: true,
                     });
                 case "success":
                     return toast.success(message, {

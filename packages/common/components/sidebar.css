@@ -4,7 +4,7 @@
     width: auto !important;
     display: flex;
     flex-direction: column;
-    height: 100vh !important; /* Ensure full viewport height */
+    height: 100dvh !important; /* Use dynamic viewport height for Safari */
     z-index: 50; /* Ensure sidebar is above other content but below modals */
 }
 
@@ -21,12 +21,12 @@
 .sidebar-expanded {
     width: 300px !important;
     max-width: 300px !important;
-    height: 100vh !important;
+    height: 100dvh !important;
 }
 
 .sidebar-collapsed {
     width: 52px !important;
-    height: 100vh !important;
+    height: 100dvh !important;
 }
 
 /* Ensure proper spacing for pagination */

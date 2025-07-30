@@ -338,8 +338,19 @@ function AboutContent() {
                                 open development practices and welcome contributions from the
                                 community.
                             </p>
-                            <div className="mt-6 flex flex-wrap items-center gap-4">
-                            
+                            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+                                <a
+                                    href="https://devhub.best/projects/vt-chat"
+                                    target="_blank"
+                                    title="DevHub Top 1 Daily Winner"
+                                    rel="noopener noreferrer"
+                                >
+                                    <img
+                                        src="https://devhub.best/images/badges/top1-light.svg"
+                                        alt="DevHub Top 1 Daily Winner"
+                                        style={{ width: "195px", height: "auto" }}
+                                    />
+                                </a>
                             </div>
 
                             <div className="mt-8 border-t pt-6">

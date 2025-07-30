@@ -171,8 +171,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
             <div>
                 <TypographyH3 className="text-lg md:text-xl">Usage Overview</TypographyH3>
                 <TypographyMuted className="text-sm md:text-base">
-                    Track your Gemini model usage. Server-funded access requires VT+ subscription
-                    with monthly budget cap of $80 USD for cost control.
+                    Track your Gemini model usage. Server-funded access requires VT+ subscription.
                     <br />
                     <span className="text-muted-foreground/80 text-xs">
                         <strong>VT+ Users:</strong> Server-funded access with rate limits (Flash

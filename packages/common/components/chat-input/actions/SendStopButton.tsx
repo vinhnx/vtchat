@@ -4,9 +4,8 @@ import { useChatStore } from "@repo/common/store";
 import { Button } from "@repo/ui";
 import { cn } from "@repo/ui/src/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, Clock, Loader2, Square } from "lucide-react";
+import { ArrowUp, CircleStop, Clock, Square } from "lucide-react";
 import { ICON_SIZES } from "../config/constants";
-import { useIsChatPage } from "../hooks/useIsChatPage";
 
 interface SendStopButtonProps {
     isGenerating: boolean;
@@ -21,7 +20,6 @@ export function SendStopButton({
     hasTextInput,
     sendMessage,
 }: SendStopButtonProps) {
-    const isChatPage = useIsChatPage();
     const showTimeoutIndicator = useChatStore((state) => state.showTimeoutIndicator);
     const generationStartTime = useChatStore((state) => state.generationStartTime);
 
@@ -47,7 +45,7 @@ export function SendStopButton({
     return (
         <div className="flex flex-row items-center gap-2">
             <AnimatePresence initial={false} mode="wait">
-                {isGenerating && !isChatPage ? (
+                {isGenerating ? (
                     <motion.div
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
@@ -72,7 +70,7 @@ export function SendStopButton({
                             {showTimeoutIndicator ? (
                                 <Clock size={ICON_SIZES.small} strokeWidth={2} />
                             ) : isGenerating ? (
-                                <Loader2
+                                <CircleStop
                                     size={ICON_SIZES.small}
                                     strokeWidth={2}
                                     className="animate-spin"

@@ -3,6 +3,7 @@ import { initHotjar } from "@repo/shared/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 import { log } from "../../shared/src/lib/logger";
 import { useThreadAuth } from "../hooks";
+import { useAppStore } from "../store/app.store";
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -18,9 +19,12 @@ export const RootContext = createContext<RootContextType | null>(null);
 
 export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Start with sidebar closed
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandSearchOpen, setIsCommandSearchOpen] = useState(false);
+
+    // Use app store for sidebar state management
+    const isSidebarOpen = useAppStore((state) => state.isSidebarOpen);
+    const setIsSidebarOpen = useAppStore((state) => state.setIsSidebarOpen);
 
     // Initialize thread authentication and database switching
     useThreadAuth();
@@ -28,28 +32,11 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         setIsClient(true);
 
-        // Initialize sidebar state from localStorage if available
-        if (typeof window !== "undefined") {
-            try {
-                const storedSidebarState = localStorage.getItem("sidebar-state");
-                if (storedSidebarState) {
-                    const { isOpen } = JSON.parse(storedSidebarState);
-                    setIsSidebarOpen(isOpen ?? false);
-                } else {
-                    // Default to collapsed state if no stored state
-                    setIsSidebarOpen(false);
-                }
-            } catch (error) {
-                log.warn({ data: error }, "Failed to load sidebar state from localStorage");
-                // Default to collapsed state if error
-                setIsSidebarOpen(false);
-            }
-
-            try {
-                initHotjar();
-            } catch (error) {
-                log.warn({ data: error }, "Failed to initialize Hotjar");
-            }
+        // Sidebar state is now managed by the app store, no need to initialize here
+        try {
+            initHotjar();
+        } catch (error) {
+            log.warn({ data: error }, "Failed to initialize Hotjar");
         }
     }, []);
 
@@ -72,32 +59,7 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
         <RootContext.Provider
             value={{
                 isSidebarOpen,
-                setIsSidebarOpen: (open) => {
-                    const newState = typeof open === "function" ? open(isSidebarOpen) : open;
-                    setIsSidebarOpen(newState);
-
-                    // Save to localStorage
-                    if (typeof window !== "undefined") {
-                        try {
-                            const currentState = localStorage.getItem("sidebar-state");
-                            const parsedState = currentState
-                                ? JSON.parse(currentState)
-                                : { animationDisabled: false };
-                            localStorage.setItem(
-                                "sidebar-state",
-                                JSON.stringify({
-                                    ...parsedState,
-                                    isOpen: newState,
-                                }),
-                            );
-                        } catch (error) {
-                            log.warn(
-                                { data: error },
-                                "Failed to save sidebar state to localStorage",
-                            );
-                        }
-                    }
-                },
+                setIsSidebarOpen,
                 isCommandSearchOpen,
                 setIsCommandSearchOpen,
                 isMobileSidebarOpen,

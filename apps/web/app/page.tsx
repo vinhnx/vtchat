@@ -80,7 +80,7 @@ export default function HomePage() {
             {/* Footer pinned to bottom with padding for non-logged users */}
             {!(isPending || session) && (
                 <motion.div
-                    className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4 transform-gpu will-change-transform"
+                    className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 mobile-footer-spacing md:pb-4 transform-gpu will-change-transform"
                     initial={{
                         opacity: 0,
                         y: window.matchMedia("(prefers-reduced-motion: reduce)").matches

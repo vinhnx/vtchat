@@ -286,11 +286,20 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 maxWidth: "300px",
                 transform: "translate3d(0, 0, 0)",
                 backfaceVisibility: "hidden",
+                contain: forceMobile ? "layout style paint" : "none",
             }}
-            initial={forceMobile ? { opacity: 0 } : false}
-            animate={forceMobile ? { opacity: 1 } : {}}
-            transition={forceMobile ? { duration: 0.15, ease: "easeOut" } : {}}
-            {...(forceMobile && { "data-mobile-sidebar": "true" })}
+            initial={forceMobile ? { opacity: 0, scale: 0.98 } : false}
+            animate={forceMobile ? { opacity: 1, scale: 1 } : {}}
+            transition={
+                forceMobile
+                    ? {
+                          type: "tween",
+                          duration: 0.2,
+                          ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing curve
+                      }
+                    : {}
+            }
+            {...(forceMobile && { "data-mobile-sidebar": "true", "data-framer-motion": "true" })}
         >
             <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
                 {/* Top User Section */}
@@ -533,7 +542,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 "relative shadow-sm transition-all duration-200",
                                 isSidebarOpen
                                     ? "bg-primary hover:bg-primary/90 w-full justify-between"
-                                    : "bg-primary hover:bg-primary/90",
+                                    : "bg-primary hover:bg-primary/90 w-full",
                             )}
                             onClick={async () => {
                                 // Show toast notification
@@ -600,10 +609,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {/* Search Button */}
                         <Button
                             className={cn(
-                                "transition-all duration-200",
+                                "transition-all duration-200 w-full",
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground relative w-full justify-between"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center",
                             )}
                             onClick={() => {
                                 if (!isSignedIn) {
@@ -648,10 +657,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {isAdmin && (
                             <Button
                                 className={cn(
-                                    "relative transition-all duration-200",
+                                    "relative transition-all duration-200 w-full",
                                     isSidebarOpen
-                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
-                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-start"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center",
                                 )}
                                 onClick={() => {
                                     push("/admin");
@@ -692,9 +701,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {isSidebarOpen ? (
                         <Button
                             className={cn(
-                                "group relative w-full justify-start overflow-hidden border shadow-sm transition-all duration-300",
+                                "group relative w-full justify-between overflow-hidden border shadow-sm transition-all duration-300",
                                 "border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10",
-                                forceMobile ? "h-auto min-h-[44px] py-2" : "",
                             )}
                             disabled={isPortalLoading}
                             onClick={() => {
@@ -705,23 +713,22 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 }
                             }}
                             roundedSm="lg"
-                            size={forceMobile ? "default" : "lg"}
+                            size={isSidebarOpen ? "sm" : "icon-sm"}
                             variant="ghost"
                         >
                             <Sparkles
                                 className={cn(
                                     "flex-shrink-0 transition-all duration-300 group-hover:scale-110",
                                     "text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300",
-                                    forceMobile ? "mr-2" : "mr-3",
+                                    isSidebarOpen && "mr-2",
                                 )}
-                                size={forceMobile ? 16 : 20}
+                                size={16}
                                 strokeWidth={2}
                             />
                             <span
                                 className={cn(
                                     "flex-1 truncate text-left font-medium",
                                     "text-[#262626] dark:text-[#BFB38F]",
-                                    forceMobile ? "text-sm leading-tight" : "",
                                 )}
                             >
                                 {isPortalLoading
@@ -732,11 +739,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             </span>
                             {isPlusSubscriber && (
                                 <ExternalLink
-                                    className={cn(
-                                        "ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80",
-                                        forceMobile ? "mt-0.5" : "",
-                                    )}
-                                    size={forceMobile ? 10 : 12}
+                                    className="ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80"
+                                    size={12}
                                 />
                             )}
                         </Button>
