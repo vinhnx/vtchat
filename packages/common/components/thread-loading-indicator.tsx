@@ -116,13 +116,24 @@ export const ThreadLoadingIndicator = memo(
                         {/* Avatar with VT icon */}
                         <div
                             className={cn(
-                                "relative flex flex-shrink-0 items-center justify-center rounded-xl",
+                                "relative flex flex-shrink-0 items-center justify-center rounded-xl overflow-hidden",
                                 "bg-muted border-muted-foreground/20 border",
                                 "shadow-sm",
                                 sizeClasses[size],
                             )}
                         >
-                            <VTIcon size={iconSizes[size]} />
+                            {/* Subtle shimmer for avatar */}
+                            <div
+                                className={cn(
+                                    "absolute inset-0 -translate-x-full",
+                                    "bg-gradient-to-r from-transparent via-white/5 to-transparent",
+                                    "dark:via-white/3",
+                                )}
+                                style={{
+                                    animation: "shimmer 3s infinite linear",
+                                }}
+                            />
+                            <VTIcon size={iconSizes[size]} className="relative z-10" />
 
                             {/* Status indicator */}
                             <div
@@ -143,7 +154,7 @@ export const ThreadLoadingIndicator = memo(
                         {/* Loading Content */}
                         <div
                             className={cn(
-                                "flex-1 rounded-2xl border shadow-sm",
+                                "relative flex-1 rounded-2xl border shadow-sm overflow-hidden",
                                 config.bgColor,
                                 config.borderColor,
                                 size === "sm"
@@ -153,6 +164,18 @@ export const ThreadLoadingIndicator = memo(
                                       : "gap-3 px-4 py-3 md:gap-4 md:px-5 md:py-4",
                             )}
                         >
+                            {/* Shimmer effect background */}
+                            <div
+                                className={cn(
+                                    "absolute inset-0 -translate-x-full",
+                                    "bg-gradient-to-r from-transparent via-white/10 to-transparent",
+                                    "dark:via-white/5",
+                                    "animate-shimmer",
+                                )}
+                                style={{
+                                    animation: "shimmer 2s infinite linear",
+                                }}
+                            />
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2 md:gap-3">
                                     {/* Status icon and message */}

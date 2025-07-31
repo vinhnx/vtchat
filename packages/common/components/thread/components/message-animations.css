@@ -60,11 +60,19 @@
 /* Streaming text optimizations */
 .streaming-text {
     transform: translateZ(0);
-    will-change: contents;
+    will-change: contents, height;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    contain: layout style;
+    /* Remove containment to allow dynamic expansion */
+    contain: none;
+    min-height: 1.5em;
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    /* Enable smooth height transitions */
+    transition: height 0.1s ease-out;
 }
 
 .streaming-cursor {
@@ -78,13 +86,61 @@
 .message-content {
     contain: layout style;
     overflow-anchor: none;
+    min-height: 2rem;
+    transition: height 0.2s ease-out;
 }
 
 .message-bubble {
-    contain: layout style;
+    /* Dynamic containment based on streaming state */
+    contain: none;
     transform: translateZ(0);
-    will-change: transform, box-shadow;
+    will-change: transform, box-shadow, height;
     backface-visibility: hidden;
+    min-height: 0;
+    flex: 1;
+    /* Allow overflow during streaming for dynamic expansion */
+    overflow: visible;
+    /* Smooth height transitions */
+    transition: height 0.1s ease-out;
+}
+
+/* Container expansion for streaming */
+.message-container {
+    /* Remove containment to allow dynamic expansion */
+    contain: none;
+    min-height: 0;
+    /* Faster transitions for real-time streaming */
+    transition: height 0.1s ease-out;
+    /* Enable height changes */
+    will-change: height;
+}
+
+.message-container.streaming {
+    min-height: 3rem;
+    /* Ensure streaming containers can expand freely */
+    overflow: visible;
+}
+
+/* Enhanced streaming content expansion */
+.streaming-content {
+    /* Remove all containment for maximum expansion flexibility */
+    contain: none !important;
+    /* Enable all layout changes */
+    will-change: height, width, contents;
+    /* Immediate transitions for real-time streaming */
+    transition: all 0.05s ease-out;
+    /* Ensure content can grow */
+    min-height: 0;
+    height: auto;
+    overflow: visible;
+}
+
+/* Markdown content during streaming */
+.markdown-content.streaming {
+    contain: none !important;
+    overflow: visible;
+    height: auto;
+    min-height: 1.5em;
 }
 
 /* Action button optimizations */
@@ -269,6 +325,61 @@
     to {
         opacity: 1;
         transform: translateZ(0) translateY(0);
+    }
+}
+
+/* Shimmer loading animation */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite linear;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .animate-shimmer {
+        animation: none;
+    }
+}
+
+/* Streaming cursor animation */
+@keyframes streaming-cursor {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.streaming-cursor {
+    animation: streaming-cursor 1s infinite;
+}
+
+/* Streaming text wrapper */
+.streaming-text-wrapper {
+    display: inline;
+    position: relative;
+}
+
+.streaming-text-content {
+    display: inline;
+}
+
+/* Respect reduced motion for streaming cursor */
+@media (prefers-reduced-motion: reduce) {
+    .streaming-cursor {
+        animation: none;
+        opacity: 0.7;
     }
 }
 

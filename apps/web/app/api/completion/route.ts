@@ -613,9 +613,11 @@ function createCompletionStream({
     const _encoder = new TextEncoder();
     let heartbeatInterval: NodeJS.Timeout | null = null;
     let isControllerClosed: boolean = false;
+    let streamController: ReadableStreamDefaultController<Uint8Array> | null = null;
 
     return new ReadableStream({
         async start(controller) {
+            streamController = controller;
             heartbeatInterval = setInterval(
                 () => {
                     if (isControllerClosed) {
@@ -706,7 +708,9 @@ function createCompletionStream({
                 clearInterval(heartbeatInterval);
                 heartbeatInterval = null;
             }
-            markControllerClosed(controller);
+            if (streamController) {
+                markControllerClosed(streamController);
+            }
             unregisterStream(requestId);
             abortController.abort();
         },

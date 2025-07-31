@@ -41,6 +41,7 @@ import {
     HelpCircle,
     Info,
     LogOut,
+    MessageCircleMore,
     Option,
     PanelLeftClose,
     PanelRightClose,
@@ -541,10 +542,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {/* New Chat Button */}
                         <Button
                             className={cn(
-                                "relative shadow-sm transition-colors duration-200",
+                                "transition-all duration-200",
                                 isSidebarOpen
-                                    ? "bg-primary hover:bg-primary/90 w-full justify-between"
-                                    : "bg-primary hover:bg-primary/90 w-10 h-10 justify-center",
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between w-full"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
                             )}
                             onClick={async () => {
                                 // Show toast notification
@@ -565,12 +566,24 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             }}
                             roundedSm="lg"
                             size={isSidebarOpen ? "sm" : "icon-sm"}
-                            variant="default"
+                            variant="ghost"
                         >
-                            <div className="flex items-center">
-                                <Plus className={cn("flex-shrink-0", isSidebarOpen && "mr-2")} />
-                                {isSidebarOpen && "New Chat"}
-                            </div>
+                            {isSidebarOpen ? (
+                                <div className="flex items-center">
+                                    <div className="flex items-center justify-center rounded-md bg-muted/50 p-1.5 mr-2 transition-colors duration-200">
+                                        <Plus
+                                            className="flex-shrink-0"
+                                            size={12}
+                                            strokeWidth={2.5}
+                                        />
+                                    </div>
+                                    New Chat
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-center rounded-md bg-muted/50 p-1.5 transition-colors duration-200">
+                                    <Plus className="flex-shrink-0" size={12} strokeWidth={2.5} />
+                                </div>
+                            )}
                             {isSidebarOpen && (
                                 // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
                                 <div className="ml-auto flex flex-row items-center gap-1">
@@ -673,7 +686,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     size={16}
                                     strokeWidth={2}
                                 />
-                                {isSidebarOpen && "VT Terminaml"}
+                                {isSidebarOpen && "VT Termimal"}
                             </Button>
                         )}
                     </Flex>
@@ -741,11 +754,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         <Button
                             className={cn(
                                 "group !m-0 flex items-center justify-center !p-0 transition-all duration-300",
-                                isPlusSubscriber
-                                    ? // VT+ Subscriber - Muted amber style
-                                      "border-amber-200/50 bg-amber-50/50 hover:bg-amber-100/70 hover:shadow-lg hover:shadow-amber-200/30 dark:border-amber-800/30 dark:bg-amber-950/30 dark:hover:bg-amber-900/50"
-                                    : // Upgrade Button - Black style
-                                      "border-black/20 bg-black/5 hover:bg-black/10 hover:shadow-lg hover:shadow-black/20 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10",
+                                // Remove background in collapsed state, keep hover effects
+                                "hover:bg-sidebar-accent hover:text-sidebar-foreground",
                             )}
                             disabled={isPortalLoading}
                             onClick={() => {
@@ -768,9 +778,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             <Sparkles
                                 className={cn(
                                     "m-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110",
-                                    isPlusSubscriber
-                                        ? "text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300"
-                                        : "text-black/70 group-hover:text-black dark:text-white/70 dark:group-hover:text-white",
+                                    // Use consistent sidebar foreground colors for collapsed state
+                                    "text-sidebar-foreground/70 group-hover:text-sidebar-foreground",
                                 )}
                                 size={16}
                                 strokeWidth={2}
@@ -916,11 +925,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             variant="ghost"
                         >
                             <div className="text-sidebar-foreground/30 text-center">
-                                <FileText size={16} strokeWidth={1.5} />
+                                <MessageCircleMore size={16} strokeWidth={1.5} />
                             </div>
-                            <p className="text-sidebar-foreground/50 text-center text-[10px]">
-                                {threads.length} chats
-                            </p>
                         </Button>
                     )}
                 </motion.div>

@@ -1,5 +1,6 @@
 ---
-type: "manual"
+type: 'agent_requested'
+description: 'Example description'
 ---
 
 # Cline's Memory Bank
@@ -11,9 +12,9 @@ I am Cline, an expert software engineer with a unique characteristic: my memory 
 The Memory Bank consists of core files and optional context files, all in Markdown format. Files build upon each other in a clear hierarchy:
 
 flowchart TD
-    PB[projectbrief.md] --> PC[productContext.md]
-    PB --> SP[systemPatterns.md]
-    PB --> TC[techContext.md]
+PB[projectbrief.md] --> PC[productContext.md]
+PB --> SP[systemPatterns.md]
+PB --> TC[techContext.md]
 
     PC --> AC[activeContext.md]
     SP --> AC
@@ -22,49 +23,52 @@ flowchart TD
     AC --> P[progress.md]
 
 ### Core Files (Required)
+
 1. `projectbrief.md`
-   - Foundation document that shapes all other files
-   - Created at project start if it doesn't exist
-   - Defines core requirements and goals
-   - Source of truth for project scope
+    - Foundation document that shapes all other files
+    - Created at project start if it doesn't exist
+    - Defines core requirements and goals
+    - Source of truth for project scope
 
 2. `productContext.md`
-   - Why this project exists
-   - Problems it solves
-   - How it should work
-   - User experience goals
+    - Why this project exists
+    - Problems it solves
+    - How it should work
+    - User experience goals
 
 3. `activeContext.md`
-   - Current work focus
-   - Recent changes
-   - Next steps
-   - Active decisions and considerations
-   - Important patterns and preferences
-   - Learnings and project insights
+    - Current work focus
+    - Recent changes
+    - Next steps
+    - Active decisions and considerations
+    - Important patterns and preferences
+    - Learnings and project insights
 
 4. `systemPatterns.md`
-   - System architecture
-   - Key technical decisions
-   - Design patterns in use
-   - Component relationships
-   - Critical implementation paths
+    - System architecture
+    - Key technical decisions
+    - Design patterns in use
+    - Component relationships
+    - Critical implementation paths
 
 5. `techContext.md`
-   - Technologies used
-   - Development setup
-   - Technical constraints
-   - Dependencies
-   - Tool usage patterns
+    - Technologies used
+    - Development setup
+    - Technical constraints
+    - Dependencies
+    - Tool usage patterns
 
 6. `progress.md`
-   - What works
-   - What's left to build
-   - Current status
-   - Known issues
-   - Evolution of project decisions
+    - What works
+    - What's left to build
+    - Current status
+    - Known issues
+    - Evolution of project decisions
 
 ### Additional Context
+
 Create additional files/folders within memory-bank/ when they help organize:
+
 - Complex feature documentation
 - Integration specifications
 - API documentation
@@ -74,9 +78,10 @@ Create additional files/folders within memory-bank/ when they help organize:
 ## Core Workflows
 
 ### Plan Mode
+
 flowchart TD
-    Start[Start] --> ReadFiles[Read Memory Bank]
-    ReadFiles --> CheckFiles{Files Complete?}
+Start[Start] --> ReadFiles[Read Memory Bank]
+ReadFiles --> CheckFiles{Files Complete?}
 
     CheckFiles -->|No| Plan[Create Plan]
     Plan --> Document[Document in Chat]
@@ -86,22 +91,24 @@ flowchart TD
     Strategy --> Present[Present Approach]
 
 ### Act Mode
+
 flowchart TD
-    Start[Start] --> Context[Check Memory Bank]
-    Context --> Update[Update Documentation]
-    Update --> Execute[Execute Task]
-    Execute --> Document[Document Changes]
+Start[Start] --> Context[Check Memory Bank]
+Context --> Update[Update Documentation]
+Update --> Execute[Execute Task]
+Execute --> Document[Document Changes]
 
 ## Documentation Updates
 
 Memory Bank updates occur when:
+
 1. Discovering new project patterns
 2. After implementing significant changes
 3. When user requests with **update memory bank** (MUST review ALL files)
 4. When context needs clarification
 
 flowchart TD
-    Start[Update Process]
+Start[Update Process]
 
     subgraph Process
         P1[Review ALL Files]

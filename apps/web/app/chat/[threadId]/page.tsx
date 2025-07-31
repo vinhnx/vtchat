@@ -346,12 +346,22 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
             </h1>
             <div className="flex-1 overflow-hidden">
                 <div
-                    className="scrollbar-default flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
+                    className="scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
                     ref={scrollRef}
+                    style={{
+                        // Reduce containment to allow dynamic content expansion
+                        contain: "layout",
+                        overflowAnchor: "auto",
+                    }}
                 >
                     <div
                         className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] pt-2 md:w-full"
                         ref={contentRef}
+                        style={{
+                            // Remove containment to allow dynamic expansion during streaming
+                            contain: "none",
+                            isolation: "isolate",
+                        }}
                     >
                         <Thread />
                     </div>

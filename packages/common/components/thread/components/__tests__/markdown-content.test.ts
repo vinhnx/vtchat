@@ -1,5 +1,10 @@
-import { describe, expect, it } from "vitest";
-import { handleIncompleteTable, normalizeContent, removeIncompleteTags } from "../markdown-content";
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+    handleIncompleteTable,
+    normalizeContent,
+    removeIncompleteTags,
+    renderCircuitBreaker,
+} from "../markdown-content";
 
 describe("MarkdownContent utilities", () => {
     describe("handleIncompleteTable", () => {
@@ -14,26 +19,25 @@ describe("MarkdownContent utilities", () => {
             expect(result).toBe(completeTable);
         });
 
-        it("should remove incomplete table with only header", () => {
+        it("should pass through table content for markdown parser to handle", () => {
             const incompleteTable = `
 Some text before
 | Name | Age | City |
 Some text after
 `;
             const result = handleIncompleteTable(incompleteTable);
-            expect(result).toBe(`
-Some text before
-Some text after
-`);
+            // New behavior: let markdown parser handle it
+            expect(result).toBe(incompleteTable);
         });
 
-        it("should remove incomplete table with header but no separator", () => {
+        it("should pass through table content without strict validation", () => {
             const incompleteTable = `
 | Name | Age | City |
 | John | 25  | NYC  |
 `;
             const result = handleIncompleteTable(incompleteTable);
-            expect(result).toBe("");
+            // New behavior: let markdown parser handle it
+            expect(result).toBe(incompleteTable);
         });
 
         it("should handle content without tables", () => {
@@ -42,7 +46,7 @@ Some text after
             expect(result).toBe(noTable);
         });
 
-        it("should handle mixed content with incomplete table", () => {
+        it("should handle mixed content with tables", () => {
             const mixedContent = `
 # Title
 
@@ -54,14 +58,8 @@ Some paragraph text.
 More text after.
 `;
             const result = handleIncompleteTable(mixedContent);
-            expect(result).toBe(`
-# Title
-
-Some paragraph text.
-
-
-More text after.
-`);
+            // New behavior: pass through for markdown parser
+            expect(result).toBe(mixedContent);
         });
 
         it("should preserve complete table with proper separator", () => {
@@ -89,10 +87,11 @@ End of content.
             expect(result).toBe(tableWithDashes);
         });
 
-        it("should remove single line table", () => {
+        it("should pass through single line table content", () => {
             const singleLine = "| Name | Age | City |";
             const result = handleIncompleteTable(singleLine);
-            expect(result).toBe("");
+            // New behavior: let markdown parser handle it
+            expect(result).toBe(singleLine);
         });
     });
 
@@ -127,6 +126,131 @@ End of content.
             const content = "Just plain text";
             const result = removeIncompleteTags(content);
             expect(result).toBe(content);
+        });
+    });
+
+    // Note: Table validation has been simplified to rely on markdown parser
+    // The circuit breaker provides sufficient protection against problematic content
+
+    describe("renderCircuitBreaker", () => {
+        beforeEach(() => {
+            // Reset circuit breaker state before each test
+            renderCircuitBreaker.reset("test-content");
+        });
+
+        it("should allow initial renders", () => {
+            const shouldBlock = renderCircuitBreaker.shouldBlock("test-content");
+            expect(shouldBlock).toBe(false);
+        });
+
+        it("should block after max renders", () => {
+            const contentHash = "test-content-max";
+
+            // First call should not block
+            const firstCall = renderCircuitBreaker.shouldBlock(contentHash);
+            expect(firstCall).toBe(false);
+
+            // Add delay to ensure different timestamp
+            const now = Date.now();
+            while (Date.now() - now < 101) {
+                // Wait for 101ms to exceed the 100ms debounce
+            }
+
+            // Second call should block (MAX_RENDERS = 1)
+            const secondCall = renderCircuitBreaker.shouldBlock(contentHash);
+            expect(secondCall).toBe(true);
+        });
+
+        it("should reset after timeout", async () => {
+            const contentHash = "test-content-timeout";
+
+            // Trigger some renders
+            for (let i = 0; i < 5; i++) {
+                renderCircuitBreaker.shouldBlock(contentHash);
+            }
+
+            // Reset manually (simulating timeout)
+            renderCircuitBreaker.reset(contentHash);
+
+            // Should allow renders again
+            const shouldBlock = renderCircuitBreaker.shouldBlock(contentHash);
+            expect(shouldBlock).toBe(false);
+        });
+    });
+
+    describe("handleIncompleteTable with circuit breaker", () => {
+        beforeEach(() => {
+            renderCircuitBreaker.reset("test");
+        });
+
+        it("should convert to code block when circuit breaker triggers", () => {
+            const problematicTable =
+                "| Project Name | Primary Technology | Description | Key Significance";
+            const contentHash = problematicTable.substring(0, 100);
+
+            // First call to trigger circuit breaker
+            renderCircuitBreaker.shouldBlock(contentHash);
+
+            // Add delay to ensure different timestamp
+            const now = Date.now();
+            while (Date.now() - now < 101) {
+                // Wait for 101ms to exceed the 100ms debounce
+            }
+
+            // Second call should trigger circuit breaker (MAX_RENDERS = 1)
+            renderCircuitBreaker.shouldBlock(contentHash);
+
+            const result = handleIncompleteTable(problematicTable);
+            expect(result).toContain("```");
+            expect(result).toContain(problematicTable);
+        });
+
+        it("should pass through malformed table patterns for markdown parser", () => {
+            // Reset circuit breaker to ensure clean state
+            renderCircuitBreaker.reset(
+                "| Project Name | Primary Technology | Description | Key Significance",
+            );
+
+            const malformedPatterns = [
+                "| Project Name | Primary Technology | Description | Key Significance",
+                "| Name | Age |\n| John",
+                "| Header |\n| Data | Extra |",
+            ];
+
+            for (const pattern of malformedPatterns) {
+                // Reset circuit breaker for each pattern
+                renderCircuitBreaker.reset(pattern.substring(0, 100));
+                const result = handleIncompleteTable(pattern);
+                // New behavior: let markdown parser handle it
+                expect(result).toBe(pattern);
+            }
+        });
+
+        it("should ignore content with insufficient pipes", () => {
+            const nonTablePatterns = [
+                "| Single pipe",
+                "Just text with | one pipe",
+                "No pipes at all",
+            ];
+
+            for (const pattern of nonTablePatterns) {
+                const result = handleIncompleteTable(pattern);
+                // Content without enough pipes should be left unchanged
+                expect(result).toBe(pattern);
+            }
+        });
+
+        it("should preserve valid table structures", () => {
+            const validPatterns = [
+                "| A | B |\n|---|---|",
+                "| Name | Age |\n|-----|-----|\n| John | 25 |",
+            ];
+
+            for (const pattern of validPatterns) {
+                const result = handleIncompleteTable(pattern);
+                // Valid tables should be preserved
+                expect(result).toBe(pattern);
+            }
         });
     });
 });
