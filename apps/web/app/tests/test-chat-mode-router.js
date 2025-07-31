@@ -16,8 +16,8 @@ function chatModeRouter(mode, webSearch, _mathCalculator, _charts) {
         // Pro Search mode with web search enabled
         return "gemini-web-search";
     } else if (webSearch) {
-        // For other models with web search
-        return "planner";
+        // For other models with web search - route directly to gemini-web-search
+        return "gemini-web-search";
     } else {
         // Default case - should allow tools like math calculator and charts
         return "completion";
@@ -50,9 +50,9 @@ describe("Chat Mode Router", () => {
         expect(result).toBe("gemini-web-search");
     });
 
-    it("should route other Gemini models to planner when web search is enabled", () => {
+    it("should route other Gemini models to gemini-web-search when web search is enabled", () => {
         const result = chatModeRouter("gemini-2.5-flash-lite", true, false, false);
-        expect(result).toBe("planner");
+        expect(result).toBe("gemini-web-search");
     });
 
     it("should route other Gemini models to completion when only tools are enabled", () => {

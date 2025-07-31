@@ -151,14 +151,19 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                     {/* Expand button for long messages */}
                     {showExpandButton && (
                         <div className="absolute bottom-2 right-2">
-                            <Button
-                                onClick={handleToggleExpand}
-                                size="xs"
-                                variant="ghost"
-                                className="h-6 rounded-md bg-background/90 px-2 text-xs backdrop-blur-sm"
-                            >
-                                {isExpanded ? "Show less" : "Show more"}
-                            </Button>
+                            <div className="rounded-lg bg-background/80 p-1 shadow-lg backdrop-blur-md border border-border/20">
+                                <Button
+                                    onClick={handleToggleExpand}
+                                    size="xs"
+                                    variant="ghost"
+                                    className={cn(
+                                        "h-6 px-2 text-xs transition-opacity duration-200",
+                                        "message-action-button",
+                                    )}
+                                >
+                                    {isExpanded ? "Show less" : "Show more"}
+                                </Button>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -198,10 +203,11 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                         }
                         size="md"
                         className={cn(
-                            "border-2 border-primary/20 shadow-sm",
+                            "border-2 shadow-sm",
+                            "border-[#D99A4E] dark:border-[#BFB38F]",
                             "ring-2 ring-background",
                             "transition-all duration-200",
-                            "hover:border-primary/40 hover:shadow-md",
+                            "hover:border-[#D99A4E]/80 dark:hover:border-[#BFB38F]/80 hover:shadow-md",
                             "message-avatar",
                         )}
                         fallback={

@@ -73,7 +73,7 @@
     transition: color 0.2s ease;
 }
 
-/* Heading styling with proper hierarchy and spacing */
+/* Heading styling with proper hierarchy and enhanced spacing */
 .prose h1,
 .prose h2,
 .prose h3,
@@ -84,7 +84,7 @@
     font-family: var(--markdown-font-family);
     line-height: 1.3;
     margin-top: var(--markdown-heading-spacing);
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem; /* Increased from 0.75rem */
     transition: color 0.2s ease;
     scroll-margin-top: 4rem;
 }
@@ -92,8 +92,8 @@
 .prose h1 {
     font-size: 1.875rem; /* 30px */
     font-weight: var(--markdown-font-weight-bold);
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
+    margin-top: 3rem; /* Increased from 2.5rem */
+    margin-bottom: 1.5rem; /* Increased from 1rem */
     letter-spacing: -0.025em;
 }
 
@@ -102,30 +102,30 @@
     font-weight: var(--markdown-font-weight-semibold);
     border-bottom: 1px solid var(--markdown-hr-color);
     padding-bottom: 0.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 2.5rem; /* Increased from 2rem */
+    margin-bottom: 1.25rem; /* Increased from 1rem */
     letter-spacing: -0.0125em;
 }
 
 .prose h3 {
     font-size: 1.25rem; /* 20px */
     font-weight: var(--markdown-font-weight-semibold);
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
+    margin-top: 2.25rem; /* Increased from 1.75rem */
+    margin-bottom: 1rem; /* Increased from 0.75rem */
 }
 
 .prose h4 {
     font-size: 1.125rem; /* 18px */
     font-weight: var(--markdown-font-weight-medium);
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+    margin-top: 2rem; /* Increased from 1.5rem */
+    margin-bottom: 1rem; /* Increased from 0.75rem */
 }
 
 .prose h5 {
     font-size: 1rem; /* 16px */
     font-weight: var(--markdown-font-weight-semibold);
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1.75rem; /* Increased from 1.25rem */
+    margin-bottom: 0.75rem; /* Increased from 0.5rem */
 }
 
 .prose h6 {
@@ -133,8 +133,8 @@
     font-weight: var(--markdown-font-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1.75rem; /* Increased from 1.25rem */
+    margin-bottom: 0.75rem; /* Increased from 0.5rem */
 }
 
 /* List styling with improved spacing and bullets */
@@ -249,7 +249,7 @@
     white-space: pre;
 }
 
-/* Table styling with improved readability */
+/* Table styling with improved readability and robustness */
 .prose table {
     width: 100%;
     table-layout: auto;
@@ -260,6 +260,10 @@
     border: 1px solid var(--markdown-table-border);
     border-radius: 0.5rem;
     overflow: hidden;
+    /* Enhanced safety measures */
+    contain: layout style;
+    content-visibility: auto;
+    transform: translateZ(0);
 }
 
 .prose thead {
@@ -274,6 +278,9 @@
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    /* Prevent text overflow issues */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .prose td {
@@ -282,6 +289,10 @@
     border-top: 1px solid var(--markdown-table-border);
     vertical-align: top;
     font-size: var(--markdown-font-size);
+    /* Prevent text overflow issues */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 0; /* Allow flexible column widths */
 }
 
 .prose tr:first-child td {
@@ -459,4 +470,119 @@ html.dark .prose th {
         display: block;
         overflow-x: auto;
     }
+}
+
+/* Performance optimizations for smooth rendering */
+.markdown-content {
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+    transform: translateZ(0);
+    will-change: contents;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Table optimizations to prevent infinite loops */
+.markdown-content table {
+    contain: layout style;
+    content-visibility: auto;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    transform: translateZ(0);
+}
+
+.markdown-content th,
+.markdown-content td {
+    contain: layout style;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Prevent layout shifts during streaming */
+.markdown-content pre {
+    contain: layout style;
+    content-visibility: auto;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.markdown-content code {
+    contain: layout style;
+    word-break: break-word;
+}
+
+/* Optimize list rendering */
+.markdown-content ul,
+.markdown-content ol {
+    contain: layout style;
+    content-visibility: auto;
+}
+
+.markdown-content li {
+    contain: layout style;
+}
+
+/* Optimize image rendering */
+.markdown-content img {
+    contain: layout style;
+    content-visibility: auto;
+    max-width: 100%;
+    height: auto;
+    transform: translateZ(0);
+}
+
+/* Optimize blockquote rendering */
+.markdown-content blockquote {
+    contain: layout style;
+    content-visibility: auto;
+    transform: translateZ(0);
+}
+
+/* Optimized animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.15s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Hardware acceleration for better performance */
+.transform-gpu {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Optimize streaming content */
+.streaming-content {
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 200px;
+}
+
+/* Reduce reflow during content updates */
+.message-container {
+    contain: layout style;
+    isolation: isolate;
+}
+
+/* Optimize scrolling performance */
+.chat-scroll-container {
+    contain: layout style;
+    overflow-anchor: auto;
+    scroll-behavior: smooth;
 }

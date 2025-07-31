@@ -2,9 +2,8 @@
 
 import { ThreadItem } from "@repo/common/components";
 import { useChatStore } from "@repo/common/store";
-import { log } from "@repo/shared/logger";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export function Thread() {
@@ -25,7 +24,15 @@ export function Thread() {
     const isGenerating = useChatStore(useShallow((state) => state.isGenerating));
     const memoizedPreviousThreadItems = useMemo(() => {
         return previousThreadItems.map((threadItem) => (
-            <div key={threadItem.id}>
+            <div
+                key={threadItem.id}
+                className="message-container"
+                style={{
+                    contain: "layout style",
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "0 300px",
+                }}
+            >
                 <ThreadItem
                     key={threadItem.id}
                     threadItem={threadItem}
@@ -42,7 +49,14 @@ export function Thread() {
         if (!currentThreadItem) return null;
 
         return (
-            <div key={currentThreadItem.id} className="min-h-[calc(100dvh-16rem)]">
+            <div
+                key={currentThreadItem.id}
+                className="min-h-[calc(100dvh-16rem)] message-container streaming-content"
+                style={{
+                    contain: "layout style",
+                    contentVisibility: "visible", // Always visible for current item
+                }}
+            >
                 <ThreadItem
                     key={currentThreadItem.id}
                     threadItem={currentThreadItem}

@@ -8,7 +8,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         const { getSourceByIndex } = useContext(CitationProviderContext);
         const index = children as string;
 
-        const source = getSourceByIndex(Number.parseInt(index));
+        const source = getSourceByIndex(parseInt(index));
 
         const url = source?.link;
 
@@ -31,98 +31,17 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         );
     },
     p: ({ children }) => {
-        return <div className="markdown-text mb-5 text-base leading-loose">{children}</div>;
-    },
-    h1: ({ children }) => {
-        return (
-            <h1 className="border-border markdown-text mb-6 mt-8 border-b pb-2 text-2xl font-bold tracking-tight">
-                {children}
-            </h1>
-        );
-    },
-    h2: ({ children }) => {
-        return (
-            <h2 className="border-border/60 markdown-text mb-4 mt-7 border-b pb-1 text-xl font-semibold tracking-tight">
-                {children}
-            </h2>
-        );
-    },
-    h3: ({ children }) => {
-        return <h3 className="markdown-text mb-3 mt-6 text-lg font-medium">{children}</h3>;
-    },
-    h4: ({ children }) => {
-        return (
-            <h4 className="markdown-text mb-3 mt-5 text-base font-medium opacity-90">{children}</h4>
-        );
-    },
-    a: ({ href, children }) => {
-        return (
-            <a
-                href={href}
-                className="text-brand font-medium underline decoration-[0.08em] underline-offset-2 transition-colors hover:no-underline"
-                target={href?.startsWith("http") ? "_blank" : undefined}
-                rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
-                {children}
-            </a>
-        );
-    },
-    ul: ({ children }) => {
-        return <ul className="my-4 space-y-2 pl-6">{children}</ul>;
-    },
-    ol: ({ children }) => {
-        return <ol className="my-4 list-decimal space-y-2 pl-6">{children}</ol>;
+        return <p>{children}</p>;
     },
     li: ({ children }) => {
-        return <li className="markdown-text my-2 pl-1 text-base leading-relaxed">{children}</li>;
+        return <li>{children}</li>;
     },
-    blockquote: ({ children }) => {
-        return (
-            <blockquote className="border-border text-muted-foreground bg-secondary/20 my-6 rounded-r-md border-l-4 py-1 pl-4 italic">
-                {children}
-            </blockquote>
-        );
-    },
-    hr: () => {
-        return <hr className="border-border my-8" />;
-    },
-    img: ({ src, alt, ...props }) => {
-        return (
-            <img
-                src={src}
-                alt={alt || "Image"}
-                className="mx-auto my-6 h-auto max-w-full rounded-md shadow-sm"
-                loading="lazy"
-                {...props}
-            />
-        );
-    },
-    table: ({ children }) => {
-        return (
-            <div className="border-border my-6 overflow-x-auto rounded-lg border">
-                <table className="bg-background w-full border-collapse">{children}</table>
-            </div>
-        );
-    },
-    th: ({ children }) => {
-        return (
-            <th className="bg-tertiary border-border markdown-text border-b border-r px-4 py-2.5 text-left text-sm font-semibold last:border-r-0">
-                {children}
-            </th>
-        );
-    },
-    td: ({ children }) => {
-        return (
-            <td className="border-border markdown-text border-b border-r px-4 py-3 align-top last:border-r-0">
-                {children}
-            </td>
-        );
-    },
+
     pre: ({ children }) => {
         if (typeof children === "string") {
             return <CodeBlock code={children.replace(/<FadeEffect \/>$/, "")} />;
         }
-        const codeElement = children as ReactElement<any>;
+        const codeElement = children as ReactElement;
         const className = codeElement?.props?.className || "";
         const lang = className.replace("language-", "");
         const code = codeElement?.props?.children;
@@ -132,18 +51,12 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     code: ({ children, className }) => {
         if (!className) {
             return (
-                <code className="bg-secondary border-border whitespace-nowrap rounded-md border px-1.5 py-0.5 font-mono text-sm">
+                <code className="border-brand/20 !bg-brand/10 text-brand rounded-md border px-1.5 py-0.5 font-mono text-sm">
                     {children}
                 </code>
             );
         }
         const lang = className.replace("language-", "");
         return <CodeBlock code={String(children).replace(/<FadeEffect \/>$/, "")} lang={lang} />;
-    },
-    strong: ({ children }) => {
-        return <strong className="markdown-text font-semibold">{children}</strong>;
-    },
-    em: ({ children }) => {
-        return <em className="markdown-text italic">{children}</em>;
     },
 };

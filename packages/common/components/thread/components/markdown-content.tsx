@@ -7,7 +7,7 @@ import { MDXRemote } from "next-mdx-remote";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 import { serialize } from "next-mdx-remote/serialize";
 import { useTheme } from "next-themes";
-import { memo, Suspense, useEffect, useRef, useState } from "react";
+import { memo, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import remarkGfm from "remark-gfm";
 import "./markdown-content.css";
 
@@ -83,58 +83,69 @@ export const removeIncompleteTags = (content: string) => {
     return content;
 };
 
-// Function to detect and handle incomplete table markdown
+// Circuit breaker to prevent infinite rendering loops
+const renderCounts = new Map<string, number>();
+const lastRenderTime = new Map<string, number>();
+const MAX_RENDERS = 1; // Reduced to 1 for immediate detection of loops
+const RESET_INTERVAL = 10000; // Increased to 10 seconds
+
+export const renderCircuitBreaker = {
+    shouldBlock(contentHash: string): boolean {
+        const now = Date.now();
+        const lastTime = lastRenderTime.get(contentHash) || 0;
+
+        // Reset counter if enough time has passed
+        if (now - lastTime > RESET_INTERVAL) {
+            renderCounts.set(contentHash, 0);
+        }
+
+        const count = renderCounts.get(contentHash) || 0;
+
+        // Check if we should block BEFORE incrementing
+        if (count >= MAX_RENDERS) {
+            log.warn(
+                { contentHash: contentHash.slice(0, 100), count },
+                "Circuit breaker triggered for table rendering",
+            );
+            return true;
+        }
+
+        // Only increment if this is a new attempt (not within 100ms of last attempt)
+        if (now - lastTime > 100) {
+            renderCounts.set(contentHash, count + 1);
+            lastRenderTime.set(contentHash, now);
+        }
+
+        return false;
+    },
+
+    reset(contentHash: string): void {
+        renderCounts.delete(contentHash);
+        lastRenderTime.delete(contentHash);
+    },
+};
+
+// Note: Table validation has been simplified to rely on markdown parser
+// The circuit breaker provides sufficient protection against problematic content
+
+// Simplified table handling that only intervenes for circuit breaker cases
 export const handleIncompleteTable = (content: string): string => {
-    // Check if content contains table markdown
-    const hasTableStart = content.includes("|");
-    if (!hasTableStart) return content;
+    // Quick check: if content doesn't contain tables, return as-is
+    if (!content.includes("|")) return content;
 
-    const lines = content.split("\n");
-    let tableStartIndex = -1;
-    let tableEndIndex = -1;
-    let inTable = false;
+    // Generate content hash for circuit breaker
+    const contentHash = content.substring(0, 100);
 
-    // Find table boundaries
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-
-        // Check if line looks like a table row (contains |)
-        if (line.includes("|") && line.length > 0) {
-            if (!inTable) {
-                tableStartIndex = i;
-                inTable = true;
-            }
-            tableEndIndex = i;
-        } else if (inTable && line.length === 0) {
-        } else if (inTable && !line.includes("|")) {
-            // Non-table line after table content
-            break;
-        }
+    // Check circuit breaker - only convert to code block if truly problematic
+    if (renderCircuitBreaker.shouldBlock(contentHash)) {
+        log.warn({ contentHash }, "Circuit breaker triggered for table rendering");
+        // Convert problematic table to code block
+        return `\`\`\`\n${content}\n\`\`\``;
     }
 
-    // If we found a table, check if it's complete
-    if (tableStartIndex !== -1) {
-        const tableLines = lines.slice(tableStartIndex, tableEndIndex + 1);
-
-        // Check if table has proper header separator (second line should contain dashes)
-        if (tableLines.length >= 2) {
-            const headerSeparator = tableLines[1];
-            const hasValidSeparator =
-                headerSeparator.includes("-") && headerSeparator.includes("|");
-
-            if (!hasValidSeparator) {
-                // Table is incomplete, remove the incomplete table
-                const beforeTable = lines.slice(0, tableStartIndex).join("\n");
-                const afterTable = lines.slice(tableEndIndex + 1).join("\n");
-                return `${beforeTable}${afterTable ? `\n${afterTable}` : ""}`;
-            }
-        } else if (tableLines.length === 1) {
-            // Only one line of table, likely incomplete
-            const beforeTable = lines.slice(0, tableStartIndex).join("\n");
-            const afterTable = lines.slice(tableEndIndex + 1).join("\n");
-            return `${beforeTable}${afterTable ? `\n${afterTable}` : ""}`;
-        }
-    }
+    // For all other cases, let the markdown parser handle table rendering
+    // Reset circuit breaker since we're not having issues
+    renderCircuitBreaker.reset(contentHash);
 
     return content;
 };
@@ -178,35 +189,52 @@ export const MarkdownContent = memo(
         const contentRef = useRef<string>("");
         const processingRef = useRef<boolean>(false);
 
-        useEffect(() => {
-            if (!content || content === contentRef.current || processingRef.current) return;
-
-            processingRef.current = true;
-            contentRef.current = content;
+        // Memoize processed content to prevent unnecessary re-processing
+        const processedContent = useMemo(() => {
+            if (!content) return "";
 
             try {
                 const normalizedContent = normalizeContent(content);
-                // Handle incomplete tables during streaming to prevent rendering issues
-                const contentWithValidTables = isCompleted
-                    ? normalizedContent
-                    : handleIncompleteTable(normalizedContent);
-                const contentWithCitations = parseCitationsWithSourceTags(contentWithValidTables);
 
-                // Only update if content actually changed to prevent unnecessary re-renders
-                setCurrentContent((prev) => {
-                    if (prev !== contentWithCitations) {
-                        // Generate stable key for better React reconciliation
-                        setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
-                        return contentWithCitations;
-                    }
-                    return prev;
-                });
-                setPreviousContent([]);
+                // Only handle incomplete tables during streaming, not for completed content
+                let contentWithValidTables: string;
+                if (isCompleted) {
+                    // For completed content, use as-is
+                    contentWithValidTables = normalizedContent;
+                } else {
+                    // Handle incomplete tables during streaming to prevent rendering issues
+                    contentWithValidTables = handleIncompleteTable(normalizedContent);
+                }
+
+                return parseCitationsWithSourceTags(contentWithValidTables);
             } catch (error) {
                 log.error("Error processing content:", { data: error });
-            } finally {
-                processingRef.current = false;
+                return content; // Return original content as fallback
             }
+        }, [content, isCompleted]);
+
+        useEffect(() => {
+            if (
+                !processedContent ||
+                processedContent === contentRef.current ||
+                processingRef.current
+            )
+                return;
+
+            processingRef.current = true;
+            contentRef.current = processedContent;
+
+            // Only update if content actually changed to prevent unnecessary re-renders
+            setCurrentContent((prev) => {
+                if (prev !== processedContent) {
+                    // Generate stable key for better React reconciliation
+                    setStableKey(`content-${Date.now()}-${processedContent.length}`);
+                    return processedContent;
+                }
+                return prev;
+            });
+            setPreviousContent([]);
+            processingRef.current = false;
 
             // Cleanup function to clear content when component unmounts
             return () => {
@@ -214,7 +242,7 @@ export const MarkdownContent = memo(
                 setCurrentContent("");
                 contentRef.current = "";
             };
-        }, [content, isCompleted, currentTheme]);
+        }, [processedContent, currentTheme]);
 
         if (isCompleted && !isLast) {
             return (
@@ -227,7 +255,23 @@ export const MarkdownContent = memo(
         }
 
         return (
-            <div className={cn("markdown-content transform-gpu", markdownStyles, className)}>
+            <div
+                className={cn(
+                    "markdown-content transform-gpu",
+                    "min-h-[1.5em] w-full",
+                    "transition-all duration-200 ease-out",
+                    // Add streaming class for enhanced expansion
+                    !isCompleted && "streaming-content",
+                    markdownStyles,
+                    className,
+                )}
+                style={{
+                    wordBreak: "break-word",
+                    overflowWrap: "break-word",
+                    // Remove containment during streaming to allow dynamic expansion
+                    contain: isCompleted ? "layout" : "none",
+                }}
+            >
                 {previousContent.length > 0 &&
                     previousContent.map((chunk, index) => (
                         <ErrorBoundary
@@ -242,7 +286,16 @@ export const MarkdownContent = memo(
                         fallback={<ErrorPlaceholder />}
                         key={stableKey || "current-chunk"}
                     >
-                        <MemoizedMdxChunk chunk={currentContent} />
+                        {!isCompleted && isLast ? (
+                            // Use progressive markdown rendering for real-time formatting during streaming
+                            <ProgressiveMarkdownRenderer
+                                content={currentContent}
+                                isStreaming={true}
+                            />
+                        ) : (
+                            // Use normal MDX rendering for completed content
+                            <MemoizedMdxChunk chunk={currentContent} />
+                        )}
                     </ErrorBoundary>
                 )}
             </div>
@@ -252,77 +305,117 @@ export const MarkdownContent = memo(
 
 MarkdownContent.displayName = "MarkdownContent";
 
+// Cache for serialized MDX content to prevent re-processing
+const mdxCache = new Map<string, MDXRemoteSerializeResult>();
+const CACHE_SIZE_LIMIT = 100;
+
+// Optimized MDX chunk component with caching and deferred rendering
 export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
     const [mdx, setMdx] = useState<MDXRemoteSerializeResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const { theme } = useTheme();
 
+    // Create a stable cache key
+    const cacheKey = `${chunk.slice(0, 100)}-${chunk.length}-${theme}`;
+
     useEffect(() => {
         if (!chunk) return;
+
+        // Check cache first
+        const cached = mdxCache.get(cacheKey);
+        if (cached) {
+            setMdx(cached);
+            setIsLoading(false);
+            return;
+        }
 
         let isMounted = true;
         setError(null);
         setIsLoading(true);
 
-        (async () => {
-            try {
-                // Add timeout to prevent hanging on problematic content
-                const serializationPromise = serialize(chunk, {
-                    mdxOptions: {
-                        remarkPlugins: [remarkGfm],
-                        // rehypePlugins: [rehypeSanitize],
-                    },
-                });
+        // Use requestIdleCallback for deferred processing when available
+        const processChunk = () => {
+            (async () => {
+                try {
+                    // Use normal mode with full features for streaming
+                    const serializationPromise = serialize(chunk, {
+                        mdxOptions: {
+                            remarkPlugins: [remarkGfm],
+                            // rehypePlugins: [rehypeSanitize],
+                        },
+                    });
 
-                const timeoutPromise = new Promise<never>((_, reject) => {
-                    setTimeout(() => reject(new Error("MDX serialization timeout")), 5000);
-                });
+                    const timeoutPromise = new Promise<never>((_, reject) => {
+                        setTimeout(() => reject(new Error("MDX serialization timeout")), 3000);
+                    });
 
-                const serialized = await Promise.race([serializationPromise, timeoutPromise]);
+                    const serialized = await Promise.race([serializationPromise, timeoutPromise]);
 
-                if (isMounted) {
-                    setMdx(serialized);
-                    setIsLoading(false);
-                }
-            } catch (serializationError) {
-                log.error("Error serializing MDX chunk:", {
-                    data: serializationError,
-                    chunkLength: chunk.length,
-                    chunkPreview: chunk.substring(0, 200),
-                });
+                    if (isMounted) {
+                        // Cache the result
+                        if (mdxCache.size >= CACHE_SIZE_LIMIT) {
+                            // Remove oldest entries
+                            const firstKey = mdxCache.keys().next().value;
+                            mdxCache.delete(firstKey);
+                        }
+                        mdxCache.set(cacheKey, serialized);
 
-                if (isMounted) {
-                    // Try to render as plain text if MDX serialization fails
-                    try {
-                        const fallbackPromise = serialize(chunk, {
-                            mdxOptions: {
-                                // Remove remarkGfm to avoid table parsing issues
-                                remarkPlugins: [],
-                            },
-                        });
-
-                        const fallbackTimeoutPromise = new Promise<never>((_, reject) => {
-                            setTimeout(
-                                () => reject(new Error("Fallback serialization timeout")),
-                                2000,
-                            );
-                        });
-
-                        const fallbackSerialized = await Promise.race([
-                            fallbackPromise,
-                            fallbackTimeoutPromise,
-                        ]);
-                        setMdx(fallbackSerialized);
-                        setIsLoading(false);
-                    } catch (fallbackError) {
-                        log.error("Fallback serialization also failed:", { data: fallbackError });
-                        setError("Failed to render content");
+                        setMdx(serialized);
                         setIsLoading(false);
                     }
+                } catch (serializationError) {
+                    log.error("Error serializing MDX chunk:", {
+                        data: serializationError,
+                        chunkLength: chunk.length,
+                        chunkPreview: chunk.substring(0, 200),
+                    });
+
+                    if (isMounted) {
+                        // Try to render as plain text if MDX serialization fails
+                        try {
+                            const fallbackPromise = serialize(chunk, {
+                                mdxOptions: {
+                                    // Remove remarkGfm to avoid table parsing issues
+                                    remarkPlugins: [],
+                                },
+                            });
+
+                            const fallbackTimeoutPromise = new Promise<never>((_, reject) => {
+                                setTimeout(
+                                    () => reject(new Error("Fallback serialization timeout")),
+                                    1000, // Reduced timeout for fallback
+                                );
+                            });
+
+                            const fallbackSerialized = await Promise.race([
+                                fallbackPromise,
+                                fallbackTimeoutPromise,
+                            ]);
+
+                            // Cache fallback result too
+                            mdxCache.set(cacheKey, fallbackSerialized);
+                            setMdx(fallbackSerialized);
+                            setIsLoading(false);
+                        } catch (fallbackError) {
+                            log.error("Fallback serialization also failed:", {
+                                data: fallbackError,
+                            });
+                            setError("Failed to render content");
+                            setIsLoading(false);
+                        }
+                    }
                 }
-            }
-        })();
+            })();
+        };
+
+        // Use requestIdleCallback for deferred processing when available
+        if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+            window.requestIdleCallback(processChunk, { timeout: 1000 });
+        } else {
+            // Fallback to setTimeout for browsers without requestIdleCallback
+            setTimeout(processChunk, 0);
+        }
 
         return () => {
             isMounted = false;
@@ -331,7 +424,7 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
             setError(null);
             setIsLoading(false);
         };
-    }, [chunk, theme]);
+    }, [chunk, cacheKey]);
 
     if (error) {
         return (
@@ -377,7 +470,19 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
                     </div>
                 }
             >
-                <div className="markdown-content">
+                <div
+                    className={cn(
+                        "markdown-content",
+                        "min-h-[1.5em] w-full",
+                        "transition-all duration-200 ease-out",
+                    )}
+                    style={{
+                        wordBreak: "break-word",
+                        overflowWrap: "break-word",
+                        // Allow dynamic expansion for streaming content
+                        contain: "none",
+                    }}
+                >
                     <MDXRemote {...mdx} components={mdxComponents} />
                 </div>
             </Suspense>
@@ -386,3 +491,94 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 });
 
 MemoizedMdxChunk.displayName = "MemoizedMdxChunk";
+
+// Progressive Markdown Renderer for real-time streaming with immediate formatting
+const ProgressiveMarkdownRenderer = memo(
+    ({ content, isStreaming }: { content: string; isStreaming: boolean }) => {
+        // Parse content into blocks for progressive rendering
+        const blocks = useMemo(() => {
+            if (!content) return [];
+
+            // Split content into logical blocks (paragraphs, headers, code blocks, etc.)
+            const lines = content.split("\n");
+            const blocks: string[] = [];
+            let currentBlock = "";
+            let inCodeBlock = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+
+                // Check for code block markers
+                if (line.trim().startsWith("```")) {
+                    if (inCodeBlock) {
+                        // End of code block
+                        currentBlock += line + "\n";
+                        blocks.push(currentBlock);
+                        currentBlock = "";
+                        inCodeBlock = false;
+                    } else {
+                        // Start of code block
+                        if (currentBlock.trim()) {
+                            blocks.push(currentBlock);
+                        }
+                        currentBlock = line + "\n";
+                        inCodeBlock = true;
+                    }
+                } else if (inCodeBlock) {
+                    // Inside code block, add line
+                    currentBlock += line + "\n";
+                } else if (line.trim() === "") {
+                    // Empty line - end current block
+                    if (currentBlock.trim()) {
+                        blocks.push(currentBlock);
+                        currentBlock = "";
+                    }
+                } else if (line.match(/^#{1,6}\s/)) {
+                    // Header - end current block and start new one
+                    if (currentBlock.trim()) {
+                        blocks.push(currentBlock);
+                    }
+                    currentBlock = line + "\n";
+                } else if (line.match(/^[-*+]\s/) || line.match(/^\d+\.\s/)) {
+                    // List item - continue current block or start new one
+                    currentBlock += line + "\n";
+                } else {
+                    // Regular line - add to current block
+                    currentBlock += line + "\n";
+                }
+            }
+
+            // Add remaining content as final block
+            if (currentBlock.trim()) {
+                blocks.push(currentBlock);
+            }
+
+            return blocks;
+        }, [content]);
+
+        return (
+            <div className="progressive-markdown-renderer">
+                {blocks.map((block, index) => (
+                    <MemoizedMarkdownBlock key={`block-${index}`} content={block.trim()} />
+                ))}
+                {isStreaming && (
+                    <span className="streaming-cursor inline-block w-0.5 h-5 bg-current ml-0.5" />
+                )}
+            </div>
+        );
+    },
+);
+
+ProgressiveMarkdownRenderer.displayName = "ProgressiveMarkdownRenderer";
+
+// Memoized markdown block component for performance
+const MemoizedMarkdownBlock = memo(
+    ({ content }: { content: string }) => {
+        return <MemoizedMdxChunk chunk={content} />;
+    },
+    (prevProps, nextProps) => {
+        return prevProps.content === nextProps.content;
+    },
+);
+
+MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock";

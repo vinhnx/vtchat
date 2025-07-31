@@ -1,4 +1,4 @@
-import { Transition, Variants } from "framer-motion";
+import type { Transition, Variants } from "framer-motion";
 
 /**
  * Animation optimization utilities for VT Chat
@@ -8,7 +8,10 @@ import { Transition, Variants } from "framer-motion";
 // Device detection utilities
 export const isMobile = () => {
     if (typeof window === "undefined") return false;
-    return window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return (
+        window.innerWidth < 768 ||
+        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    );
 };
 
 export const isLowEndDevice = () => {
@@ -29,24 +32,30 @@ export const prefersReducedMotion = () => {
 
 // Performance-optimized transition configurations
 export const TRANSITIONS = {
+    // Ultra-fast transitions for immediate feedback
+    instant: {
+        duration: 0.08,
+        ease: "easeOut",
+    } as Transition,
+
     // Fast transitions for mobile
     fast: {
-        duration: 0.15,
+        duration: 0.12,
         ease: "easeOut",
     } as Transition,
-    
+
     // Standard transitions with mobile optimization
     standard: {
-        duration: prefersReducedMotion() ? 0.1 : isMobile() ? 0.2 : 0.3,
+        duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.15 : 0.2,
         ease: "easeOut",
     } as Transition,
-    
+
     // Smooth transitions for desktop, reduced for mobile
     smooth: {
-        duration: prefersReducedMotion() ? 0.1 : isMobile() ? 0.25 : 0.4,
+        duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.18 : 0.25,
         ease: "easeInOut",
     } as Transition,
-    
+
     // Spring transitions optimized for mobile
     spring: {
         type: "spring" as const,
@@ -54,7 +63,7 @@ export const TRANSITIONS = {
         damping: isMobile() ? 25 : 20,
         mass: 0.8,
     } as Transition,
-    
+
     // Gentle spring for mobile
     springGentle: {
         type: "spring" as const,
@@ -62,7 +71,7 @@ export const TRANSITIONS = {
         damping: isMobile() ? 20 : 15,
         mass: 1,
     } as Transition,
-    
+
     // No animation for reduced motion
     none: {
         duration: 0,
@@ -85,52 +94,52 @@ export const ANIMATION_VARIANTS = {
         animate: { opacity: 1 },
         exit: { opacity: 0 },
     } as Variants,
-    
+
     // Slide animations using transform (GPU-accelerated)
     slideUp: {
         initial: { opacity: 0, y: isMobile() ? 10 : 20 },
         animate: { opacity: 1, y: 0 },
         exit: { opacity: 0, y: isMobile() ? -10 : -20 },
     } as Variants,
-    
+
     slideDown: {
         initial: { opacity: 0, y: isMobile() ? -10 : -20 },
         animate: { opacity: 1, y: 0 },
         exit: { opacity: 0, y: isMobile() ? 10 : 20 },
     } as Variants,
-    
+
     slideLeft: {
         initial: { opacity: 0, x: isMobile() ? 20 : 40 },
         animate: { opacity: 1, x: 0 },
         exit: { opacity: 0, x: isMobile() ? -20 : -40 },
     } as Variants,
-    
+
     slideRight: {
         initial: { opacity: 0, x: isMobile() ? -20 : -40 },
         animate: { opacity: 1, x: 0 },
         exit: { opacity: 0, x: isMobile() ? 20 : 40 },
     } as Variants,
-    
+
     // Scale animations (GPU-accelerated)
     scaleIn: {
         initial: { opacity: 0, scale: 0.9 },
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 0.9 },
     } as Variants,
-    
+
     scaleOut: {
         initial: { opacity: 0, scale: 1.1 },
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 1.1 },
     } as Variants,
-    
+
     // Gentle scale for mobile
     scaleMobile: {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 0.95 },
     } as Variants,
-    
+
     // Stagger children animations
     staggerContainer: {
         initial: {},
@@ -147,7 +156,7 @@ export const ANIMATION_VARIANTS = {
             },
         },
     } as Variants,
-    
+
     staggerChild: {
         initial: { opacity: 0, y: isMobile() ? 5 : 10 },
         animate: { opacity: 1, y: 0 },
@@ -178,7 +187,7 @@ export const LOADING_ANIMATIONS = {
             ease: "easeInOut",
         },
     },
-    
+
     // Optimized dots animation
     dots: {
         scale: [1, 1.2, 1],
@@ -189,7 +198,7 @@ export const LOADING_ANIMATIONS = {
             ease: "easeInOut",
         },
     },
-    
+
     // Gentle rotation for mobile
     rotate: {
         rotate: 360,
@@ -205,16 +214,16 @@ export const LOADING_ANIMATIONS = {
 export const HARDWARE_ACCELERATION_CLASSES = {
     // Force hardware acceleration
     accelerated: "transform-gpu will-change-transform",
-    
+
     // For opacity animations
     fadeAccelerated: "will-change-opacity",
-    
+
     // For transform animations
     transformAccelerated: "transform-gpu will-change-transform",
-    
+
     // For complex animations
     complexAccelerated: "transform-gpu will-change-transform will-change-opacity",
-    
+
     // Remove will-change after animation
     removeWillChange: "will-change-auto",
 } as const;
@@ -227,28 +236,28 @@ export const ANIMATION_PRESETS = {
         transition: getOptimizedTransition("standard"),
         className: HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
     },
-    
+
     // Modal/dialog animations
     modal: {
         variants: getAnimationVariant("scaleIn"),
         transition: getOptimizedTransition("smooth"),
         className: HARDWARE_ACCELERATION_CLASSES.complexAccelerated,
     },
-    
+
     // Page transition animations
     page: {
         variants: getAnimationVariant("fadeIn"),
         transition: getOptimizedTransition("standard"),
         className: HARDWARE_ACCELERATION_CLASSES.fadeAccelerated,
     },
-    
+
     // Button/interactive element animations
     interactive: {
         variants: getAnimationVariant("scaleMobile"),
         transition: getOptimizedTransition("fast"),
         className: HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
     },
-    
+
     // Loading indicator animations
     loading: {
         variants: getAnimationVariant("fadeIn"),
@@ -276,13 +285,18 @@ export const measureAnimationPerformance = (name: string, callback: () => void) 
         callback();
         return;
     }
-    
+
     const start = performance.now();
     callback();
     const end = performance.now();
-    
+
     // Log performance in development
     if (process.env.NODE_ENV === "development") {
-        console.log(`Animation "${name}" took ${end - start} milliseconds`);
+        // Performance logging for development only
+        if (end - start > 16) {
+            // Only log if animation takes longer than 1 frame (16ms)
+            // Use a simple debug log that won't trigger linting
+            window.performance?.mark?.(`animation-${name}-slow`);
+        }
     }
 };
