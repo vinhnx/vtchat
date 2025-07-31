@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { SendStopButton } from "../SendStopButton";
 import { useChatStore } from "@repo/common/store";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
+import { SendStopButton } from "../SendStopButton";
 
 // Mock the store
 vi.mock("@repo/common/store", () => ({

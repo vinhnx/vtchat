@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type MotionProps } from "framer-motion";
+import { type MotionProps, motion } from "framer-motion";
 import { useReducedMotion } from "../contexts/accessibility-context";
 
 // Type for motion component props
@@ -12,7 +12,7 @@ export type AccessibleMotionProps = MotionProps & {
 // Create a motion component that respects reduced motion preferences
 export function createAccessibleMotion<T extends keyof typeof motion>(
     component: T,
-    defaultProps: MotionProps = {}
+    defaultProps: MotionProps = {},
 ) {
     return function AccessibleMotionComponent(props: AccessibleMotionProps) {
         const shouldReduceMotion = useReducedMotion();
@@ -20,17 +20,17 @@ export function createAccessibleMotion<T extends keyof typeof motion>(
 
         if (shouldReduceMotion) {
             // Remove all animation props when motion is reduced
-            const { 
-                initial, 
-                animate, 
-                exit, 
-                transition, 
-                variants, 
-                whileHover, 
-                whileTap, 
-                whileFocus, 
+            const {
+                initial,
+                animate,
+                exit,
+                transition,
+                variants,
+                whileHover,
+                whileTap,
+                whileFocus,
                 whileInView,
-                ...staticProps 
+                ...staticProps
             } = { ...defaultProps, ...props };
 
             return <MotionComponent {...staticProps} />;
@@ -75,7 +75,7 @@ export const AccessibleMotion = {
 // Utility function to get motion props based on reduced motion preference
 export function getMotionProps(
     motionProps: MotionProps,
-    shouldReduceMotion?: boolean
+    shouldReduceMotion?: boolean,
 ): MotionProps {
     if (shouldReduceMotion) {
         return {};
@@ -127,18 +127,21 @@ export const accessibleVariants = {
 // Hook to get accessible variants
 export function useAccessibleVariants() {
     const shouldReduceMotion = useReducedMotion();
-    
+
     if (shouldReduceMotion) {
         // Return static variants when motion is reduced
-        return Object.keys(accessibleVariants).reduce((acc, key) => {
-            acc[key] = {
-                initial: { opacity: 0 },
-                animate: { opacity: 1 },
-                exit: { opacity: 0 },
-            };
-            return acc;
-        }, {} as typeof accessibleVariants);
+        return Object.keys(accessibleVariants).reduce(
+            (acc, key) => {
+                acc[key] = {
+                    initial: { opacity: 0 },
+                    animate: { opacity: 1 },
+                    exit: { opacity: 0 },
+                };
+                return acc;
+            },
+            {} as typeof accessibleVariants,
+        );
     }
-    
+
     return accessibleVariants;
 }

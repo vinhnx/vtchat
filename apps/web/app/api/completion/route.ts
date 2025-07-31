@@ -1,6 +1,3 @@
-import { auth } from "@/lib/auth-server";
-import { shouldDisableGemini } from "@/lib/services/budget-monitor";
-import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
 import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
@@ -14,6 +11,9 @@ import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
 import { type Geo, geolocation } from "@vercel/functions";
 import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { shouldDisableGemini } from "@/lib/services/budget-monitor";
+import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
 // Force dynamic rendering for this route

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 /**
  * Critical test to verify the 1-second blank screen fix
- * 
+ *
  * This test ensures that when a user submits a new message:
  * 1. An optimistic thread item is created BEFORE navigation
  * 2. The user's message is immediately visible on the thread page
@@ -14,7 +14,7 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
             // Test the sequence of operations in ChatInput.sendMessage()
             const expectedSequence = [
                 "1. Generate optimistic thread ID",
-                "2. Create thread in store", 
+                "2. Create thread in store",
                 "3. Generate optimistic thread item ID",
                 "4. Create optimistic user thread item with query",
                 "5. Switch to new thread",
@@ -22,15 +22,17 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
                 "7. Set isGenerating state",
                 "8. Navigate to thread page",
                 "9. Thread page immediately shows user message",
-                "10. handleSubmit updates existing thread item with AI response"
+                "10. handleSubmit updates existing thread item with AI response",
             ];
 
             expect(expectedSequence).toHaveLength(10);
-            
+
             // Verify the critical fix: optimistic thread item creation happens BEFORE navigation
-            const navigationStep = expectedSequence.findIndex(step => step.includes("Navigate"));
-            const threadItemCreationStep = expectedSequence.findIndex(step => step.includes("Add thread item"));
-            
+            const navigationStep = expectedSequence.findIndex((step) => step.includes("Navigate"));
+            const threadItemCreationStep = expectedSequence.findIndex((step) =>
+                step.includes("Add thread item"),
+            );
+
             expect(threadItemCreationStep).toBeLessThan(navigationStep);
         });
 
@@ -51,7 +53,7 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
             expect(optimisticThreadItem.query).toBe("User's message text");
             expect(optimisticThreadItem.status).toBe("QUEUED");
             expect(optimisticThreadItem.answer).toBeUndefined();
-            
+
             // This thread item will be immediately visible via UserMessage component
             // when the thread page loads, eliminating the blank screen
         });
@@ -62,17 +64,17 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
                     name: "New thread creation",
                     currentThreadId: null,
                     shouldCreateOptimistic: true,
-                    shouldPassExistingThreadItemId: true
+                    shouldPassExistingThreadItemId: true,
                 },
                 {
-                    name: "Existing thread continuation", 
+                    name: "Existing thread continuation",
                     currentThreadId: "existing-thread-123",
                     shouldCreateOptimistic: false,
-                    shouldPassExistingThreadItemId: false
-                }
+                    shouldPassExistingThreadItemId: false,
+                },
             ];
 
-            scenarios.forEach(scenario => {
+            scenarios.forEach((scenario) => {
                 if (scenario.shouldCreateOptimistic) {
                     // New thread: Create optimistic thread item before navigation
                     expect(scenario.shouldPassExistingThreadItemId).toBe(true);
@@ -93,13 +95,13 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
                     query: "User's message",
                     status: "QUEUED",
                     // No answer yet - AI response pending
-                }
+                },
             ];
 
             // Thread component should render UserMessage immediately
-            const hasUserMessage = threadItems.some(item => item.query && !item.answer);
+            const hasUserMessage = threadItems.some((item) => item.query && !item.answer);
             expect(hasUserMessage).toBe(true);
-            
+
             // No blank screen because user message is visible
             const isBlankScreen = threadItems.length === 0;
             expect(isBlankScreen).toBe(false);
@@ -110,16 +112,17 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
                 threadLoading: false, // Thread exists with optimistic item
                 threadItemsLoading: false, // Items available immediately
                 isGenerating: true, // AI response in progress
-                hasUserMessage: true // User message visible
+                hasUserMessage: true, // User message visible
             };
 
             // Critical: User message is visible even while AI is generating
             expect(loadingStates.hasUserMessage).toBe(true);
             expect(loadingStates.isGenerating).toBe(true);
-            
+
             // No blank screen condition
-            const isBlankScreen = !loadingStates.hasUserMessage && 
-                                 (loadingStates.threadLoading || loadingStates.threadItemsLoading);
+            const isBlankScreen =
+                !loadingStates.hasUserMessage &&
+                (loadingStates.threadLoading || loadingStates.threadItemsLoading);
             expect(isBlankScreen).toBe(false);
         });
     });
@@ -129,14 +132,14 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
             // The fix adds minimal overhead:
             const additionalOperations = [
                 "generateThreadId() - ~1ms",
-                "createThreadItem() - ~5ms", 
-                "switchThread() - ~1ms"
+                "createThreadItem() - ~5ms",
+                "switchThread() - ~1ms",
             ];
 
             // Total overhead: ~7ms (negligible compared to 1000ms blank screen)
             const totalOverheadMs = 7;
             const blankScreenDurationMs = 1000;
-            
+
             expect(totalOverheadMs).toBeLessThan(blankScreenDurationMs / 10);
         });
 
@@ -147,12 +150,12 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
                 "Status updates (QUEUED -> PENDING -> COMPLETED)",
                 "Error handling",
                 "Tool calls and results",
-                "Source citations"
+                "Source citations",
             ];
 
             // All existing functionality should remain unchanged
             expect(updateScenarios).toHaveLength(5);
-            updateScenarios.forEach(scenario => {
+            updateScenarios.forEach((scenario) => {
                 expect(scenario).toBeTruthy();
             });
         });
@@ -163,7 +166,7 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
             // Debouncing should prevent issues with rapid clicks
             const submissionTimes = [0, 50, 100]; // Within debounce window
             const debounceMs = 100;
-            
+
             const allowedSubmissions = submissionTimes.filter((time, index) => {
                 if (index === 0) return true;
                 return time - submissionTimes[index - 1] >= debounceMs;
@@ -176,10 +179,10 @@ describe("Blank Screen Fix - Critical UX Issue", () => {
             // If navigation fails, optimistic item should still be created
             const optimisticItemCreated = true;
             const navigationSucceeded = false; // Simulated failure
-            
+
             // User message should still be visible in store
             expect(optimisticItemCreated).toBe(true);
-            
+
             // Graceful degradation - no data loss
             expect(optimisticItemCreated || navigationSucceeded).toBe(true);
         });
@@ -195,20 +198,20 @@ describe("Blank Screen Fix - Integration Test", () => {
             before: {
                 userSubmitsMessage: "User clicks send",
                 blankScreenAppears: "1 second blank screen",
-                userExperience: "Poor - feels unresponsive"
+                userExperience: "Poor - feels unresponsive",
             },
             after: {
-                userSubmitsMessage: "User clicks send", 
+                userSubmitsMessage: "User clicks send",
                 optimisticMessageShows: "User message appears instantly",
                 aiResponseStreams: "AI response streams in smoothly",
-                userExperience: "Excellent - instant feedback"
-            }
+                userExperience: "Excellent - instant feedback",
+            },
         };
 
         // Verify the fix eliminates the blank screen
         expect(userExperienceFlow.after.optimisticMessageShows).toContain("instantly");
         expect(userExperienceFlow.after.userExperience).toContain("instant feedback");
-        
+
         // Confirm the problem is solved
         expect(userExperienceFlow.after).not.toHaveProperty("blankScreenAppears");
     });

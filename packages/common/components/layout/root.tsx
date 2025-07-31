@@ -136,16 +136,19 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 >
                     <AgentProvider>
                         <div className={containerClass}>
-                            <div className="relative flex h-full w-0 flex-1 flex-row">
-                                <div className="flex w-full flex-col gap-2 overflow-y-auto">
+                            <div className="relative flex h-full w-full flex-row">
+                                {/* Main content area - takes remaining space */}
+                                <div className="flex flex-1 min-w-0 flex-col gap-2 overflow-y-auto">
                                     {shouldShowDropShadow && (
                                         <div className="from-secondary via-secondary/70 to-secondary/0 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block" />
                                     )}
 
                                     {children}
                                 </div>
+
+                                {/* Side drawer - positioned as a separate column to prevent overlap */}
+                                <SideDrawer />
                             </div>
-                            <SideDrawer />
                         </div>
                     </AgentProvider>
                 </motion.div>
@@ -464,6 +467,7 @@ export const SideDrawer = () => {
                         transform: "translate3d(0, 0, 0)",
                         backfaceVisibility: "hidden",
                         contain: "layout style paint",
+                        zIndex: 10, // Ensure proper stacking
                     }}
                     initial={{ opacity: 0, x: 30, scale: 0.98 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}

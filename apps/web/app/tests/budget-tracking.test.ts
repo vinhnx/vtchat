@@ -1,11 +1,11 @@
+import { ModelEnum } from "@repo/ai/models";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     BUDGET_LIMITS,
     checkBudgetStatus,
     getBudgetStatus,
     recordUsage,
 } from "@/lib/services/budget-tracking";
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database
 vi.mock("@/lib/database", () => ({

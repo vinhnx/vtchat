@@ -1,5 +1,9 @@
 {
     "mcpServers": {
+        "Figma Dev Mode MCP": {
+            "type": "sse",
+            "url": "http://127.0.0.1:3845/sse"
+        },
         "fetch": {
             "command": "uvx",
             "args": ["mcp-server-fetch"],

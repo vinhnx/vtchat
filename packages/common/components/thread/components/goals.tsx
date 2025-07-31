@@ -10,7 +10,7 @@ import {
 import { useAppStore } from "@repo/common/store";
 import { ChatMode } from "@repo/shared/config";
 import type { Step, ThreadItem, ToolCall, ToolResult } from "@repo/shared/types";
-import { Badge, Card } from "@repo/ui";
+import { Badge, Card, cn } from "@repo/ui";
 import { motion } from "framer-motion";
 import { Atom, ChevronRight, ListChecks, Star } from "lucide-react";
 import { memo, useEffect, useMemo } from "react";

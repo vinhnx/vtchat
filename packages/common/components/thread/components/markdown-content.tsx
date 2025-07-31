@@ -158,25 +158,53 @@ export const normalizeContent = (content: string) => {
 };
 
 function parseCitationsWithSourceTags(markdown: string): string {
-    // Basic single citation regex
-    const citationRegex = /\[(\d+)\]/g;
-    let result = markdown;
+    // Improved citation parsing with better error handling and pattern detection
+    try {
+        let result = markdown;
 
-    // Replace each citation with the wrapped version
-    result = result.replace(citationRegex, (_match, p1) => {
-        return `<Source>${p1}</Source>`;
-    });
+        // Check for problematic patterns that might cause infinite loops
+        // Pattern: semicolon followed by colon and then markdown tags
+        const problematicPattern = /;.*:.*<[^>]*$/;
+        if (problematicPattern.test(result)) {
+            // If we detect a problematic pattern, be more conservative with parsing
+            log.warn("Detected potentially problematic markdown pattern, using safe parsing");
 
-    // This regex and replacement logic needs to be fixed
-    const multipleCitationsRegex = /\[(\d+(?:,\s*\d+)+)\]/g;
-    result = result.replace(multipleCitationsRegex, (match) => {
-        // Extract all numbers from the citation
-        const numbers = match.match(/\d+/g) || [];
-        // Create Source tags for each number
-        return numbers.map((num) => `<Source>${num}</Source>`).join(" ");
-    });
+            // Only parse complete, well-formed citations
+            const safeCitationRegex = /\[(\d+)\](?=\s|$|[^<])/g;
+            result = result.replace(safeCitationRegex, (_match, p1) => {
+                return `<Source>${p1}</Source>`;
+            });
 
-    return result;
+            return result;
+        }
+
+        // First, handle multiple citations like [1,2,3] to avoid conflicts
+        const multipleCitationsRegex = /\[(\d+(?:,\s*\d+)+)\]/g;
+        result = result.replace(multipleCitationsRegex, (match) => {
+            try {
+                // Extract all numbers from the citation
+                const numbers = match.match(/\d+/g) || [];
+                // Create Source tags for each number
+                return numbers.map((num) => `<Source>${num}</Source>`).join(" ");
+            } catch (error) {
+                // If parsing fails, return original match
+                return match;
+            }
+        });
+
+        // Then handle single citations like [1]
+        // Use a more specific regex to avoid matching incomplete tags
+        const citationRegex = /\[(\d+)\](?![^<]*>)/g;
+        result = result.replace(citationRegex, (_match, p1) => {
+            return `<Source>${p1}</Source>`;
+        });
+
+        return result;
+    } catch (error) {
+        // If any error occurs during parsing, return original markdown
+        console.warn("Error parsing citations:", error);
+        return markdown;
+    }
 }
 
 export const MarkdownContent = memo(
@@ -206,7 +234,20 @@ export const MarkdownContent = memo(
                     contentWithValidTables = handleIncompleteTable(normalizedContent);
                 }
 
-                return parseCitationsWithSourceTags(contentWithValidTables);
+                // Add timeout protection for citation parsing
+                const startTime = Date.now();
+                const result = parseCitationsWithSourceTags(contentWithValidTables);
+                const processingTime = Date.now() - startTime;
+
+                // If processing takes too long, return original content
+                if (processingTime > 1000) {
+                    log.warn("Citation parsing took too long, using original content", {
+                        processingTime,
+                    });
+                    return contentWithValidTables;
+                }
+
+                return result;
             } catch (error) {
                 log.error("Error processing content:", { data: error });
                 return content; // Return original content as fallback

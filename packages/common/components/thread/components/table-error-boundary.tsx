@@ -19,7 +19,10 @@ interface TableErrorBoundaryProps {
  * Specialized error boundary for table rendering that prevents infinite loops
  * and provides safe fallback rendering for malformed tables
  */
-export class TableErrorBoundary extends Component<TableErrorBoundaryProps, TableErrorBoundaryState> {
+export class TableErrorBoundary extends Component<
+    TableErrorBoundaryProps,
+    TableErrorBoundaryState
+> {
     private static errorCounts = new Map<string, number>();
     private static readonly MAX_ERRORS = 3;
     private static readonly RESET_INTERVAL = 10000; // 10 seconds
@@ -52,7 +55,7 @@ export class TableErrorBoundary extends Component<TableErrorBoundaryProps, Table
 
         const currentCount = TableErrorBoundary.errorCounts.get(errorKey) || 0;
         const newCount = currentCount + 1;
-        
+
         TableErrorBoundary.errorCounts.set(errorKey, newCount);
         TableErrorBoundary.lastErrorTime.set(errorKey, now);
 
@@ -99,11 +102,12 @@ export class TableErrorBoundary extends Component<TableErrorBoundaryProps, Table
                     <div className="border-destructive bg-destructive/10 text-destructive my-4 rounded-md border p-4">
                         <div className="text-sm font-medium">Table Rendering Blocked</div>
                         <div className="text-xs opacity-80 mt-1">
-                            Multiple rendering errors detected. Content has been converted to plain text for safety.
+                            Multiple rendering errors detected. Content has been converted to plain
+                            text for safety.
                         </div>
                         <pre className="bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs">
-                            {typeof this.props.children === "string" 
-                                ? this.props.children 
+                            {typeof this.props.children === "string"
+                                ? this.props.children
                                 : "Table content unavailable"}
                         </pre>
                     </div>
@@ -122,8 +126,8 @@ export class TableErrorBoundary extends Component<TableErrorBoundaryProps, Table
                         There was an issue rendering this table. Showing as code block instead.
                     </div>
                     <pre className="bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs">
-                        {typeof this.props.children === "string" 
-                            ? this.props.children 
+                        {typeof this.props.children === "string"
+                            ? this.props.children
                             : "Table content unavailable"}
                     </pre>
                 </div>
@@ -148,9 +152,7 @@ export class TableErrorBoundary extends Component<TableErrorBoundaryProps, Table
 export function useTableErrorBoundary() {
     return {
         wrapTable: (content: ReactNode, fallback?: ReactNode) => (
-            <TableErrorBoundary fallback={fallback}>
-                {content}
-            </TableErrorBoundary>
+            <TableErrorBoundary fallback={fallback}>{content}</TableErrorBoundary>
         ),
         resetErrors: TableErrorBoundary.resetErrorCounts,
     };

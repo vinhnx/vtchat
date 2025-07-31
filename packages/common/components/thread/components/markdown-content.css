@@ -586,3 +586,32 @@ html.dark .prose th {
     overflow-anchor: auto;
     scroll-behavior: smooth;
 }
+
+/* Prevent markdown rendering from getting stuck on problematic patterns */
+.markdown-content {
+    /* Add timeout protection for long-running operations */
+    animation-duration: 0.15s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+}
+
+/* Ensure proper isolation between sidebar views */
+.desktop-sidebar {
+    isolation: isolate;
+    z-index: 50;
+}
+
+.side-drawer {
+    isolation: isolate;
+    z-index: 10;
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}

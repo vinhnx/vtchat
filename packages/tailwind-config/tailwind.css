@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* Content paths for Tailwind v4 */
 @source "../../apps/web/app/**/*.{js,ts,jsx,tsx}";
@@ -62,10 +62,10 @@
 
     /* Font families */
     --font-family-mono:
-        'SF Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono',
-        'Courier New', ui-monospace, monospace;
+        "SF Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New",
+        ui-monospace, monospace;
     --font-family-sans:
-        'SF Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
         sans-serif;
 
     /* Font sizes with line heights and letter spacing */

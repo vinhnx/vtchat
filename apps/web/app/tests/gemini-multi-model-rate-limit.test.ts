@@ -1,11 +1,11 @@
+import { ModelEnum } from "@repo/ai/models";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     checkRateLimit,
     getRateLimitStatus,
     RATE_LIMITS,
     recordRequest,
 } from "@/lib/services/rate-limit";
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the database
 vi.mock("@/lib/database", () => ({
