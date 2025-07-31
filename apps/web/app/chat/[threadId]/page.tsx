@@ -269,20 +269,50 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         }
     }, [threadItems, scrollToBottom, isThreadLoaded]);
 
-    // Instant scroll during streaming for smooth experience
+    // Auto-scroll when new messages are added (not just initial load)
+    useEffect(() => {
+        if (threadItems.length > 0 && hasScrolledToBottom.current && isThreadLoaded) {
+            // Use a small delay to ensure DOM has updated
+            const timeoutId = setTimeout(() => {
+                scrollToBottom();
+            }, 50);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [threadItems.length, scrollToBottom, isThreadLoaded]);
+
+    // Enhanced smooth auto-scrolling during streaming
     useEffect(() => {
         if (isGenerating && scrollRef.current) {
-            const scrollToBottomInstant = () => {
+            let animationFrame: number;
+            let lastScrollHeight = 0;
+
+            const smoothScrollToBottom = () => {
                 if (scrollRef.current) {
-                    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                    const currentScrollHeight = scrollRef.current.scrollHeight;
+
+                    // Only scroll if content has actually changed
+                    if (currentScrollHeight !== lastScrollHeight) {
+                        scrollRef.current.scrollTo({
+                            top: currentScrollHeight,
+                            behavior: "smooth",
+                        });
+                        lastScrollHeight = currentScrollHeight;
+                    }
+
+                    // Continue checking for content changes
+                    animationFrame = requestAnimationFrame(smoothScrollToBottom);
                 }
             };
 
-            // Scroll immediately and set up interval for continuous scrolling during streaming
-            scrollToBottomInstant();
-            const interval = setInterval(scrollToBottomInstant, 100);
+            // Start smooth scrolling
+            smoothScrollToBottom();
 
-            return () => clearInterval(interval);
+            return () => {
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                }
+            };
         }
     }, [isGenerating, scrollRef]);
 

@@ -328,18 +328,24 @@
     }
 }
 
-/* Shimmer loading animation */
+/* Enhanced shimmer loading animation */
 @keyframes shimmer {
     0% {
         transform: translateX(-100%);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
     }
     100% {
         transform: translateX(100%);
+        opacity: 0;
     }
 }
 
 .animate-shimmer {
-    animation: shimmer 2s infinite linear;
+    animation: shimmer 1.5s infinite ease-in-out;
+    will-change: transform, opacity;
 }
 
 /* Respect reduced motion preference */
