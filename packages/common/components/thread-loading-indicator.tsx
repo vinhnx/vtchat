@@ -122,15 +122,16 @@ export const ThreadLoadingIndicator = memo(
                                 sizeClasses[size],
                             )}
                         >
-                            {/* Subtle shimmer for avatar */}
+                            {/* Enhanced shimmer for avatar */}
                             <div
                                 className={cn(
                                     "absolute inset-0 -translate-x-full",
-                                    "bg-gradient-to-r from-transparent via-white/5 to-transparent",
-                                    "dark:via-white/3",
+                                    "bg-gradient-to-r from-transparent via-white/15 to-transparent",
+                                    "dark:via-white/10",
                                 )}
                                 style={{
-                                    animation: "shimmer 3s infinite linear",
+                                    animation: "shimmer 2s infinite ease-in-out",
+                                    width: "200%",
                                 }}
                             />
                             <VTIcon size={iconSizes[size]} className="relative z-10" />
@@ -164,16 +165,17 @@ export const ThreadLoadingIndicator = memo(
                                       : "gap-3 px-4 py-3 md:gap-4 md:px-5 md:py-4",
                             )}
                         >
-                            {/* Shimmer effect background */}
+                            {/* Enhanced shimmer effect background */}
                             <div
                                 className={cn(
                                     "absolute inset-0 -translate-x-full",
-                                    "bg-gradient-to-r from-transparent via-white/10 to-transparent",
-                                    "dark:via-white/5",
+                                    "bg-gradient-to-r from-transparent via-white/20 to-transparent",
+                                    "dark:via-white/15",
                                     "animate-shimmer",
                                 )}
                                 style={{
-                                    animation: "shimmer 2s infinite linear",
+                                    animation: "shimmer 1.5s infinite ease-in-out",
+                                    width: "200%", // Make shimmer wider for better visibility
                                 }}
                             />
                             <div className="flex items-center justify-between">

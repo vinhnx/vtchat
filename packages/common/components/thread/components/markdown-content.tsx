@@ -557,12 +557,28 @@ const ProgressiveMarkdownRenderer = memo(
         }, [content]);
 
         return (
-            <div className="progressive-markdown-renderer">
+            <div
+                className="progressive-markdown-renderer"
+                style={{
+                    // Prevent layout shifts during streaming
+                    minHeight: "1.5em",
+                    contain: "layout style",
+                }}
+            >
                 {blocks.map((block, index) => (
-                    <MemoizedMarkdownBlock key={`block-${index}`} content={block.trim()} />
+                    <MemoizedMarkdownBlock
+                        key={`stable-block-${index}-${block.trim().substring(0, 10).replace(/\s+/g, "-")}`}
+                        content={block.trim()}
+                    />
                 ))}
                 {isStreaming && (
-                    <span className="streaming-cursor inline-block w-0.5 h-5 bg-current ml-0.5" />
+                    <span
+                        className="streaming-cursor inline-block w-0.5 h-5 bg-current ml-0.5"
+                        style={{
+                            // Ensure cursor doesn't cause layout shifts
+                            flexShrink: 0,
+                        }}
+                    />
                 )}
             </div>
         );
@@ -571,12 +587,23 @@ const ProgressiveMarkdownRenderer = memo(
 
 ProgressiveMarkdownRenderer.displayName = "ProgressiveMarkdownRenderer";
 
-// Memoized markdown block component for performance
+// Memoized markdown block component with stable rendering
 const MemoizedMarkdownBlock = memo(
     ({ content }: { content: string }) => {
-        return <MemoizedMdxChunk chunk={content} />;
+        return (
+            <div
+                style={{
+                    // Prevent layout shifts within blocks
+                    contain: "layout style",
+                    minHeight: "1em",
+                }}
+            >
+                <MemoizedMdxChunk chunk={content} />
+            </div>
+        );
     },
     (prevProps, nextProps) => {
+        // Only re-render if content actually changed
         return prevProps.content === nextProps.content;
     },
 );
