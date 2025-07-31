@@ -66,37 +66,37 @@ const testCases = [
 |---|---|---|
 | Clendar | Calendar app | SwiftUI, iOS |
 | VT.ai | AI chat app | AI, Multimodal |`,
-        expectedValid: true
+        expectedValid: true,
     },
     {
         name: "Valid table without header separators",
         content: `| Project Name | Description | Key Technologies |
 | Clendar | Calendar app | SwiftUI, iOS |
 | VT.ai | AI chat app | AI, Multimodal |`,
-        expectedValid: true
+        expectedValid: true,
     },
     {
         name: "Table with inconsistent columns (should be valid)",
         content: `| Project | Description |
 | Clendar | Calendar app | Extra column |
 | VT.ai | AI chat app |`,
-        expectedValid: true
+        expectedValid: true,
     },
     {
         name: "Single pipe lines (should be invalid)",
         content: `| Single pipe content
 | Another single pipe`,
-        expectedValid: false
+        expectedValid: false,
     },
     {
         name: "Empty content",
-        content: ``,
-        expectedValid: true
+        content: "",
+        expectedValid: true,
     },
     {
         name: "No table content",
-        content: `This is just regular text without any tables.`,
-        expectedValid: true
+        content: "This is just regular text without any tables.",
+        expectedValid: true,
     },
     {
         name: "Mixed content with table",
@@ -110,55 +110,55 @@ Some text before table.
 | Jane | 30  | LA   |
 
 Some text after table.`,
-        expectedValid: true
-    }
+        expectedValid: true,
+    },
 ];
 
 // Run tests
-console.log('🧪 Running comprehensive table validation tests...\n');
+console.log("🧪 Running comprehensive table validation tests...\n");
 
 let passedTests = 0;
-let totalTests = testCases.length;
+const totalTests = testCases.length;
 
 testCases.forEach((testCase, index) => {
     const result = validateTableStructure(testCase.content);
     const passed = result.isValid === testCase.expectedValid;
-    
+
     console.log(`Test ${index + 1}: ${testCase.name}`);
-    console.log(`  Expected: ${testCase.expectedValid ? 'Valid' : 'Invalid'}`);
-    console.log(`  Actual: ${result.isValid ? 'Valid' : 'Invalid'}`);
-    
+    console.log(`  Expected: ${testCase.expectedValid ? "Valid" : "Invalid"}`);
+    console.log(`  Actual: ${result.isValid ? "Valid" : "Invalid"}`);
+
     if (result.errors.length > 0) {
-        console.log(`  Errors: ${result.errors.join(', ')}`);
+        console.log(`  Errors: ${result.errors.join(", ")}`);
     }
-    
-    console.log(`  Result: ${passed ? '✅ PASS' : '❌ FAIL'}\n`);
-    
+
+    console.log(`  Result: ${passed ? "✅ PASS" : "❌ FAIL"}\n`);
+
     if (passed) passedTests++;
 });
 
-console.log('📊 Test Summary:');
+console.log("📊 Test Summary:");
 console.log(`  Passed: ${passedTests}/${totalTests}`);
 console.log(`  Success Rate: ${Math.round((passedTests / totalTests) * 100)}%`);
 
 if (passedTests === totalTests) {
-    console.log('\n🎉 All table validation tests passed!');
-    console.log('✅ Table rendering improvements are working correctly');
+    console.log("\n🎉 All table validation tests passed!");
+    console.log("✅ Table rendering improvements are working correctly");
 } else {
-    console.log('\n⚠️  Some tests failed - review table validation logic');
+    console.log("\n⚠️  Some tests failed - review table validation logic");
 }
 
 // Test circuit breaker functionality
-console.log('\n🔧 Testing circuit breaker improvements:');
-console.log('- Reduced MAX_RENDERS from 10 to 3 ✅');
-console.log('- Added 100ms debouncing for render attempts ✅');
-console.log('- Enhanced logging with content preview ✅');
-console.log('- Smart fallback to bypass table processing ✅');
+console.log("\n🔧 Testing circuit breaker improvements:");
+console.log("- Reduced MAX_RENDERS from 10 to 3 ✅");
+console.log("- Added 100ms debouncing for render attempts ✅");
+console.log("- Enhanced logging with content preview ✅");
+console.log("- Smart fallback to bypass table processing ✅");
 
-console.log('\n📈 Header spacing improvements:');
-console.log('- H1: margin-top increased to 3rem, margin-bottom to 1.5rem ✅');
-console.log('- H2: margin-top increased to 2.5rem, margin-bottom to 1.25rem ✅');
-console.log('- H3: margin-top increased to 2.25rem, margin-bottom to 1rem ✅');
-console.log('- H4: margin-top increased to 2rem, margin-bottom to 1rem ✅');
-console.log('- H5: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅');
-console.log('- H6: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅');
+console.log("\n📈 Header spacing improvements:");
+console.log("- H1: margin-top increased to 3rem, margin-bottom to 1.5rem ✅");
+console.log("- H2: margin-top increased to 2.5rem, margin-bottom to 1.25rem ✅");
+console.log("- H3: margin-top increased to 2.25rem, margin-bottom to 1rem ✅");
+console.log("- H4: margin-top increased to 2rem, margin-bottom to 1rem ✅");
+console.log("- H5: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");
+console.log("- H6: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");

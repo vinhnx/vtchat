@@ -1,6 +1,6 @@
 "use client";
 
-import { Transition, Variants } from "framer-motion";
+import type { Transition, Variants } from "framer-motion";
 
 /**
  * Mobile-optimized animation utilities to prevent flashing and improve performance
@@ -10,7 +10,10 @@ import { Transition, Variants } from "framer-motion";
 // Device detection
 export const isMobileDevice = () => {
     if (typeof window === "undefined") return false;
-    return window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return (
+        window.innerWidth < 768 ||
+        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    );
 };
 
 export const prefersReducedMotion = () => {
@@ -33,26 +36,26 @@ export const MOBILE_TRANSITIONS = {
         duration: 0.1,
         ease: "easeOut",
     } as Transition,
-    
+
     // Fast transitions for mobile interactions
     fast: {
         duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.15 : 0.2,
         ease: "easeOut",
     } as Transition,
-    
+
     // Standard mobile-optimized transitions
     standard: {
         duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.2 : 0.3,
         ease: "easeOut",
     } as Transition,
-    
+
     // Tween-based for consistent mobile performance
     mobileTween: {
         type: "tween" as const,
         duration: prefersReducedMotion() ? 0.01 : 0.15,
         ease: "easeOut",
     } as Transition,
-    
+
     // No animation for reduced motion
     none: {
         duration: 0,
@@ -67,27 +70,27 @@ export const MOBILE_VARIANTS = {
         animate: { x: 0 },
         exit: { x: -300 },
     } as Variants,
-    
+
     sidebarSlideRight: {
         initial: { x: 300 },
         animate: { x: 0 },
         exit: { x: 300 },
     } as Variants,
-    
+
     // Backdrop fade
     backdropFade: {
         initial: { opacity: 0 },
         animate: { opacity: 1 },
         exit: { opacity: 0 },
     } as Variants,
-    
+
     // Modal scale (mobile-optimized)
     modalScale: {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 0.95 },
     } as Variants,
-    
+
     // Simple fade for mobile
     simpleFade: {
         initial: { opacity: 0 },
@@ -244,20 +247,20 @@ export const MOBILE_OPTIMIZATION_STYLES = {
         transform: "translate3d(0, 0, 0)",
         backfaceVisibility: "hidden" as const,
     },
-    
+
     sidebar: {
         contain: "layout style paint",
         transform: "translate3d(0, 0, 0)",
         backfaceVisibility: "hidden" as const,
         willChange: "transform" as const,
     },
-    
+
     backdrop: {
         transform: "translate3d(0, 0, 0)",
         backfaceVisibility: "hidden" as const,
         willChange: "opacity" as const,
     },
-    
+
     modal: {
         contain: "layout style paint",
         transform: "translate3d(0, 0, 0)",
@@ -269,7 +272,7 @@ export const MOBILE_OPTIMIZATION_STYLES = {
 // Utility to prevent layout shifts during animations
 export const preventLayoutShift = (element: HTMLElement | null) => {
     if (!element || !isMobileDevice()) return;
-    
+
     element.style.contain = "layout style paint";
     element.style.transform = "translate3d(0, 0, 0)";
     element.style.backfaceVisibility = "hidden";

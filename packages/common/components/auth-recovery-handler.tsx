@@ -1,10 +1,10 @@
 "use client";
 
+import { log } from "@repo/shared/logger";
+import { Button } from "@repo/ui";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useEnhancedAuth } from "../hooks/use-enhanced-auth";
-import { log } from "@repo/shared/logger";
-import { Button } from "@repo/ui";
 
 interface AuthRecoveryHandlerProps {
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
     const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
     const [recoveryAttempts, setRecoveryAttempts] = useState(0);
     const [currentPath, setCurrentPath] = useState<string>("");
-    
+
     const maxRecoveryAttempts = 3;
 
     const {
@@ -54,11 +54,11 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
         if (recoveryAttempts < maxRecoveryAttempts) {
             log.info(
                 { attempt: recoveryAttempts + 1, maxAttempts: maxRecoveryAttempts },
-                "[AuthRecovery] Attempting session recovery"
+                "[AuthRecovery] Attempting session recovery",
             );
-            
-            setRecoveryAttempts(prev => prev + 1);
-            
+
+            setRecoveryAttempts((prev) => prev + 1);
+
             // Try to refresh session
             refreshSession().catch(() => {
                 // If refresh fails, show recovery dialog
@@ -79,8 +79,8 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
             "auth timeout",
         ];
 
-        const isRecoverable = recoverableErrors.some(err => 
-            errorMessage.toLowerCase().includes(err)
+        const isRecoverable = recoverableErrors.some((err) =>
+            errorMessage.toLowerCase().includes(err),
         );
 
         if (isRecoverable && recoveryAttempts < maxRecoveryAttempts) {
@@ -104,10 +104,11 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
     };
 
     const redirectToLogin = () => {
-        const loginUrl = preserveRoute && currentPath 
-            ? `/login?redirect_url=${encodeURIComponent(currentPath)}`
-            : "/login";
-        
+        const loginUrl =
+            preserveRoute && currentPath
+                ? `/login?redirect_url=${encodeURIComponent(currentPath)}`
+                : "/login";
+
         log.info({ redirectUrl: loginUrl }, "[AuthRecovery] Redirecting to login");
         router.push(loginUrl);
     };
@@ -126,15 +127,13 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
                     <h2 className="text-lg font-semibold mb-4">Session Recovery</h2>
                     <p className="text-gray-600 dark:text-gray-300 mb-6">
-                        Your session has expired or encountered an error. Would you like to try recovering 
-                        your session or sign in again?
+                        Your session has expired or encountered an error. Would you like to try
+                        recovering your session or sign in again?
                     </p>
-                    
+
                     {error && (
                         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-3 mb-4">
-                            <p className="text-sm text-red-600 dark:text-red-400">
-                                Error: {error}
-                            </p>
+                            <p className="text-sm text-red-600 dark:text-red-400">Error: {error}</p>
                         </div>
                     )}
 
@@ -162,7 +161,7 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
     // Show expiry warning banner
     if (showExpiryWarning) {
         const minutesUntilExpiry = Math.floor(timeUntilExpiry! / (60 * 1000));
-        
+
         return (
             <div className="relative">
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800 px-4 py-2">

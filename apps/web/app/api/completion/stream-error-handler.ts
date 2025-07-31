@@ -134,7 +134,7 @@ export async function handleStreamError({
         log.warn({ error, userId, threadId: data.threadId }, "VT+ quota exceeded during request");
 
         let errorMessage = "VT+ quota exceeded. Please check your usage limits.";
-        let resetMessage = "Your quota will reset tomorrow.";
+        const resetMessage = "Your quota will reset tomorrow.";
 
         if (errorString.includes(VtPlusFeature.DEEP_RESEARCH)) {
             errorMessage =

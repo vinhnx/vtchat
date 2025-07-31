@@ -7,7 +7,8 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
     describe("New Thread Creation Flow", () => {
         it("should follow the correct sequence to prevent blank screen", async () => {
             // Mock functions
-            const mockGenerateThreadId = vi.fn()
+            const mockGenerateThreadId = vi
+                .fn()
                 .mockResolvedValueOnce("optimistic-thread-123")
                 .mockResolvedValueOnce("optimistic-item-456");
             const mockCreateThread = vi.fn().mockResolvedValue({
@@ -16,7 +17,7 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 pinned: false,
-                pinnedAt: new Date()
+                pinnedAt: new Date(),
             });
             const mockCreateThreadItem = vi.fn().mockResolvedValue(undefined);
             const mockSetIsGenerating = vi.fn();
@@ -24,7 +25,7 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
 
             // Simulate the improved ChatInput flow
             const userMessage = "Test message";
-            
+
             // Step 1: Generate IDs
             const optimisticId = await mockGenerateThreadId();
             const optimisticThreadItemId = await mockGenerateThreadId();
@@ -103,8 +104,8 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     pinned: false,
-                    pinnedAt: new Date()
-                }
+                    pinnedAt: new Date(),
+                },
             ];
             const currentThreadItem = {
                 id: "optimistic-item-456",
@@ -113,12 +114,12 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                 threadId: threadId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                mode: "gemini-2.5-flash-lite"
+                mode: "gemini-2.5-flash-lite",
             };
 
             // Simulate thread page logic
             const currentThreadId = threadId;
-            const threadExists = threads.some(t => t.id === threadId);
+            const threadExists = threads.some((t) => t.id === threadId);
             const hasCurrentThreadItem = !!currentThreadItem;
 
             // Verify conditions for immediate content display
@@ -138,25 +139,25 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                     threadExists: true,
                     hasCurrentThreadItem: true,
                     isLoading: false,
-                    expectedShowContent: true
+                    expectedShowContent: true,
                 },
                 {
                     name: "Thread exists but no item yet - show loading indicator",
                     threadExists: true,
                     hasCurrentThreadItem: false,
                     isLoading: false,
-                    expectedShowContent: true // Thread component handles this case
+                    expectedShowContent: true, // Thread component handles this case
                 },
                 {
                     name: "Thread loading - show page loading",
                     threadExists: false,
                     hasCurrentThreadItem: false,
                     isLoading: true,
-                    expectedShowContent: false
-                }
+                    expectedShowContent: false,
+                },
             ];
 
-            scenarios.forEach(scenario => {
+            scenarios.forEach((scenario) => {
                 // Simulate thread page loading logic
                 const shouldShowPageLoading = scenario.isLoading || !scenario.threadExists;
                 const shouldShowContent = !shouldShowPageLoading;
@@ -174,30 +175,31 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                     navigation: "Navigate to thread page",
                     blankScreen: "1 second blank screen",
                     contentAppears: "User message appears after delay",
-                    perceivedDelay: 1000 // milliseconds
+                    perceivedDelay: 1000, // milliseconds
                 },
                 afterOptimisticUI: {
                     userSubmits: "User clicks send",
                     optimisticCreation: "Create thread item immediately",
                     navigation: "Navigate to thread page",
                     instantContent: "User message appears immediately",
-                    perceivedDelay: 0 // milliseconds
-                }
+                    perceivedDelay: 0, // milliseconds
+                },
             };
 
             // Verify the improvement
             expect(userExperience.afterOptimisticUI.perceivedDelay).toBe(0);
             expect(userExperience.afterOptimisticUI.instantContent).toContain("immediately");
-            
+
             // Verify the problem was solved
             expect(userExperience.afterOptimisticUI).not.toHaveProperty("blankScreen");
-            
+
             // Calculate improvement
-            const improvementPercentage = 
-                (userExperience.beforeOptimisticUI.perceivedDelay - 
-                 userExperience.afterOptimisticUI.perceivedDelay) / 
-                userExperience.beforeOptimisticUI.perceivedDelay * 100;
-            
+            const improvementPercentage =
+                ((userExperience.beforeOptimisticUI.perceivedDelay -
+                    userExperience.afterOptimisticUI.perceivedDelay) /
+                    userExperience.beforeOptimisticUI.perceivedDelay) *
+                100;
+
             expect(improvementPercentage).toBe(100);
         });
 
@@ -210,7 +212,7 @@ describe("Optimistic UI Flow - Improved Implementation", () => {
                 status: "QUEUED" as const,
                 threadId: "thread-id",
                 query: "User message",
-                mode: "gemini-2.5-flash-lite"
+                mode: "gemini-2.5-flash-lite",
             };
 
             // Verify required fields are present
@@ -240,7 +242,7 @@ describe("Optimistic UI - Complete Integration", () => {
             immediateNavigation: "Navigation to thread page happens instantly",
             instantFeedback: "User message visible immediately on thread page",
             aiResponseStreaming: "AI response streams in smoothly",
-            finalState: "Complete conversation visible with no blank screens"
+            finalState: "Complete conversation visible with no blank screens",
         };
 
         // Verify each step contributes to eliminating blank screen
@@ -251,14 +253,14 @@ describe("Optimistic UI - Complete Integration", () => {
         // Verify the complete solution
         const solutionComponents = [
             "Optimistic thread creation",
-            "Optimistic thread item creation", 
+            "Optimistic thread item creation",
             "Proper sequencing of operations",
             "Immediate content visibility",
-            "Smooth AI response integration"
+            "Smooth AI response integration",
         ];
 
         expect(solutionComponents).toHaveLength(5);
-        solutionComponents.forEach(component => {
+        solutionComponents.forEach((component) => {
             expect(component).toBeTruthy();
         });
     });

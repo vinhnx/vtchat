@@ -1,7 +1,7 @@
-import { db } from "@/lib/database";
-import { resources } from "@/lib/database/schema";
 import { eq } from "drizzle-orm";
 import { afterAll, describe, expect, it } from "vitest";
+import { db } from "@/lib/database";
+import { resources } from "@/lib/database/schema";
 
 // Mock function for secureContentForEmbedding - this should be imported from the actual implementation
 function secureContentForEmbedding(content: string): string {

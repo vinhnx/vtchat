@@ -40,8 +40,8 @@ vi.mock("@/lib/database/schema", () => ({
     },
 }));
 
-import { checkRateLimit, getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 import { ModelEnum } from "@repo/ai/models";
+import { checkRateLimit, getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 
 describe("Gemini 2.5 Flash Lite - Database Integration", () => {
     const testUserId = "db-test-user-123";

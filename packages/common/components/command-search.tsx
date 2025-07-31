@@ -9,13 +9,13 @@ import { FeatureSlug } from "@repo/shared/types/subscription";
 import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from "@repo/shared/utils";
 import {
     Button,
-    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
+    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -26,8 +26,8 @@ import {
     useToast,
 } from "@repo/ui";
 import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useFeatureAccess } from "../hooks/use-subscription-access";
 import { GatedFeatureAlert } from "./gated-feature-alert";

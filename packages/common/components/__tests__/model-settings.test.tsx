@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/react";
-import { ModelSettings } from "../model-settings";
-import { useSession } from "@repo/shared/lib/auth-client";
 import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
+import { useSession } from "@repo/shared/lib/auth-client";
+import { render, screen } from "@testing-library/react";
 import { useApiKeysStore } from "../../store/api-keys.store";
+import { ModelSettings } from "../model-settings";
 
 // Mock the hooks
 jest.mock("@repo/shared/lib/auth-client", () => ({

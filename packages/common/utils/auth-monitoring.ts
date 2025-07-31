@@ -3,7 +3,7 @@
 import { log } from "@repo/shared/logger";
 
 interface AuthEvent {
-    type: 'session_check' | 'session_refresh' | 'auth_error' | 'redirect' | 'recovery';
+    type: "session_check" | "session_refresh" | "auth_error" | "redirect" | "recovery";
     timestamp: Date;
     details: Record<string, any>;
     pathname?: string;
@@ -31,7 +31,12 @@ class AuthMonitor {
     };
     private maxEvents = 100; // Keep last 100 events
 
-    logEvent(type: AuthEvent['type'], details: Record<string, any> = {}, pathname?: string, userId?: string) {
+    logEvent(
+        type: AuthEvent["type"],
+        details: Record<string, any> = {},
+        pathname?: string,
+        userId?: string,
+    ) {
         const event: AuthEvent = {
             type,
             timestamp: new Date(),
@@ -51,40 +56,46 @@ class AuthMonitor {
         this.metrics.lastActivity = event.timestamp;
 
         // Log to console in development
-        if (process.env.NODE_ENV === 'development') {
-            log.debug({
-                authEvent: type,
-                details,
-                pathname,
-                userId: userId ? `${userId.substring(0, 8)}...` : undefined,
-            }, `[AuthMonitor] ${type}`);
+        if (process.env.NODE_ENV === "development") {
+            log.debug(
+                {
+                    authEvent: type,
+                    details,
+                    pathname,
+                    userId: userId ? `${userId.substring(0, 8)}...` : undefined,
+                },
+                `[AuthMonitor] ${type}`,
+            );
         }
 
         // Log critical events in production
-        if (process.env.NODE_ENV === 'production' && ['auth_error', 'redirect'].includes(type)) {
-            log.warn({
-                authEvent: type,
-                details,
-                pathname,
-                metrics: this.getMetrics(),
-            }, `[AuthMonitor] Critical auth event: ${type}`);
+        if (process.env.NODE_ENV === "production" && ["auth_error", "redirect"].includes(type)) {
+            log.warn(
+                {
+                    authEvent: type,
+                    details,
+                    pathname,
+                    metrics: this.getMetrics(),
+                },
+                `[AuthMonitor] Critical auth event: ${type}`,
+            );
         }
     }
 
-    private getMetricKey(type: AuthEvent['type']): keyof Omit<AuthMetrics, 'lastActivity'> {
+    private getMetricKey(type: AuthEvent["type"]): keyof Omit<AuthMetrics, "lastActivity"> {
         switch (type) {
-            case 'session_check':
-                return 'sessionChecks';
-            case 'session_refresh':
-                return 'sessionRefreshes';
-            case 'auth_error':
-                return 'authErrors';
-            case 'redirect':
-                return 'redirects';
-            case 'recovery':
-                return 'recoveries';
+            case "session_check":
+                return "sessionChecks";
+            case "session_refresh":
+                return "sessionRefreshes";
+            case "auth_error":
+                return "authErrors";
+            case "redirect":
+                return "redirects";
+            case "recovery":
+                return "recoveries";
             default:
-                return 'authErrors';
+                return "authErrors";
         }
     }
 
@@ -96,10 +107,8 @@ class AuthMonitor {
         return this.events.slice(-limit);
     }
 
-    getEventsByType(type: AuthEvent['type'], limit: number = 10): AuthEvent[] {
-        return this.events
-            .filter(event => event.type === type)
-            .slice(-limit);
+    getEventsByType(type: AuthEvent["type"], limit: number = 10): AuthEvent[] {
+        return this.events.filter((event) => event.type === type).slice(-limit);
     }
 
     // Check for patterns that might indicate issues
@@ -111,7 +120,7 @@ class AuthMonitor {
 
         // Check for frequent auth errors
         const recentErrors = recentEvents.filter(
-            event => event.type === 'auth_error' && event.timestamp > fiveMinutesAgo
+            (event) => event.type === "auth_error" && event.timestamp > fiveMinutesAgo,
         );
         if (recentErrors.length > 3) {
             issues.push(`High auth error rate: ${recentErrors.length} errors in last 5 minutes`);
@@ -119,19 +128,19 @@ class AuthMonitor {
 
         // Check for frequent redirects
         const recentRedirects = recentEvents.filter(
-            event => event.type === 'redirect' && event.timestamp > fiveMinutesAgo
+            (event) => event.type === "redirect" && event.timestamp > fiveMinutesAgo,
         );
         if (recentRedirects.length > 2) {
-            issues.push(`Frequent redirects: ${recentRedirects.length} redirects in last 5 minutes`);
+            issues.push(
+                `Frequent redirects: ${recentRedirects.length} redirects in last 5 minutes`,
+            );
         }
 
         // Check for session refresh failures
         const recentRefreshes = recentEvents.filter(
-            event => event.type === 'session_refresh' && event.timestamp > fiveMinutesAgo
+            (event) => event.type === "session_refresh" && event.timestamp > fiveMinutesAgo,
         );
-        const failedRefreshes = recentRefreshes.filter(
-            event => event.details.success === false
-        );
+        const failedRefreshes = recentRefreshes.filter((event) => event.details.success === false);
         if (failedRefreshes.length > 1) {
             issues.push(`Session refresh failures: ${failedRefreshes.length} failed refreshes`);
         }
@@ -146,26 +155,26 @@ class AuthMonitor {
         const recentEvents = this.getRecentEvents(5);
 
         let report = `Auth Monitor Report (${new Date().toISOString()})\n`;
-        report += `===========================================\n\n`;
-        
-        report += `Metrics:\n`;
+        report += "===========================================\n\n";
+
+        report += "Metrics:\n";
         report += `- Session Checks: ${metrics.sessionChecks}\n`;
         report += `- Session Refreshes: ${metrics.sessionRefreshes}\n`;
         report += `- Auth Errors: ${metrics.authErrors}\n`;
         report += `- Redirects: ${metrics.redirects}\n`;
         report += `- Recoveries: ${metrics.recoveries}\n`;
-        report += `- Last Activity: ${metrics.lastActivity?.toISOString() || 'None'}\n\n`;
+        report += `- Last Activity: ${metrics.lastActivity?.toISOString() || "None"}\n\n`;
 
         if (issues.length > 0) {
-            report += `Issues Detected:\n`;
-            issues.forEach(issue => {
+            report += "Issues Detected:\n";
+            issues.forEach((issue) => {
                 report += `- ${issue}\n`;
             });
-            report += `\n`;
+            report += "\n";
         }
 
-        report += `Recent Events:\n`;
-        recentEvents.forEach(event => {
+        report += "Recent Events:\n";
+        recentEvents.forEach((event) => {
             report += `- ${event.timestamp.toISOString()} [${event.type}] ${JSON.stringify(event.details)}\n`;
         });
 
@@ -191,23 +200,23 @@ export const authMonitor = new AuthMonitor();
 
 // Convenience functions for common events
 export const logSessionCheck = (success: boolean, pathname?: string, userId?: string) => {
-    authMonitor.logEvent('session_check', { success }, pathname, userId);
+    authMonitor.logEvent("session_check", { success }, pathname, userId);
 };
 
 export const logSessionRefresh = (success: boolean, error?: string, userId?: string) => {
-    authMonitor.logEvent('session_refresh', { success, error }, undefined, userId);
+    authMonitor.logEvent("session_refresh", { success, error }, undefined, userId);
 };
 
 export const logAuthError = (error: string, pathname?: string, userId?: string) => {
-    authMonitor.logEvent('auth_error', { error }, pathname, userId);
+    authMonitor.logEvent("auth_error", { error }, pathname, userId);
 };
 
 export const logAuthRedirect = (from: string, to: string, reason?: string) => {
-    authMonitor.logEvent('redirect', { from, to, reason }, from);
+    authMonitor.logEvent("redirect", { from, to, reason }, from);
 };
 
 export const logAuthRecovery = (success: boolean, method: string, userId?: string) => {
-    authMonitor.logEvent('recovery', { success, method }, undefined, userId);
+    authMonitor.logEvent("recovery", { success, method }, undefined, userId);
 };
 
 // Hook for React components to access auth monitoring

@@ -1,6 +1,6 @@
-import { chromium } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
+import { chromium } from "@playwright/test";
 
 /**
  * Script to extract cookies from your current browser session

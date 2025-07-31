@@ -5,20 +5,20 @@
  */
 
 console.log("🧪 Testing Planner Workflow");
-console.log("=" .repeat(60));
+console.log("=".repeat(60));
 
 async function testPlannerWorkflow() {
     console.log("\n📋 Testing planner workflow execution");
-    
+
     try {
         // Import the required modules
         const { generateObject } = await import("@repo/ai/workflow/utils");
         const { ModelEnum } = await import("@repo/ai/models");
         const { UserTier } = await import("@repo/shared/constants/user-tiers");
         const { z } = await import("zod");
-        
+
         console.log("✅ Successfully imported modules");
-        
+
         // Test the exact same call that the planner task makes
         const testParams = {
             prompt: "Plan a search for: who is vinhnx",
@@ -31,27 +31,26 @@ async function testPlannerWorkflow() {
             userTier: UserTier.FREE,
             userId: "test-user-id",
         };
-        
+
         console.log("📋 Calling generateObject with parameters:");
         console.log(`  - Model: ${testParams.model}`);
         console.log(`  - User tier: ${testParams.userTier}`);
         console.log(`  - BYOK keys: ${Object.keys(testParams.byokKeys).length} keys`);
         console.log(`  - Prompt length: ${testParams.prompt.length} characters`);
-        
+
         const result = await generateObject(testParams);
-        
+
         console.log("✅ SUCCESS: generateObject completed successfully!");
         console.log(`  - Reasoning: ${result.reasoning?.substring(0, 100)}...`);
         console.log(`  - Queries: ${result.queries?.length} queries generated`);
-        
+
         return true;
-        
     } catch (error) {
         console.log("❌ FAILED: generateObject threw an error");
         console.log(`  - Error type: ${error.constructor.name}`);
         console.log(`  - Error message: ${error.message}`);
-        console.log(`  - Error stack: ${error.stack?.split('\n')[0]}`);
-        
+        console.log(`  - Error stack: ${error.stack?.split("\n")[0]}`);
+
         // Check for specific error patterns
         if (error.message.includes("API key")) {
             console.log("\n🔍 API Key Error Analysis:");
@@ -70,52 +69,54 @@ async function testPlannerWorkflow() {
             console.log("  - This might be a different type of error");
             console.log("  - Check the full error details above");
         }
-        
+
         return false;
     }
 }
 
 async function testApiKeyAccess() {
     console.log("\n📋 Testing API key access in workflow context");
-    
+
     // Test if the API key is accessible in the same way the workflow accesses it
     const hasSystemGeminiKey = typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
-    
+
     console.log("API Key Access Test:");
     console.log(`  - System API key detected: ${hasSystemGeminiKey}`);
-    
+
     if (hasSystemGeminiKey) {
         const keyLength = process.env.GEMINI_API_KEY?.length || 0;
         const keyPreview = process.env.GEMINI_API_KEY?.substring(0, 10) + "...";
         console.log(`  - Key length: ${keyLength} characters`);
         console.log(`  - Key preview: ${keyPreview}`);
-        
+
         // Test if it looks like a valid Google API key
-        const isValidFormat = process.env.GEMINI_API_KEY?.startsWith('AIza') && keyLength === 39;
-        console.log(`  - Valid Google API key format: ${isValidFormat ? '✅' : '❌'}`);
-        
+        const isValidFormat = process.env.GEMINI_API_KEY?.startsWith("AIza") && keyLength === 39;
+        console.log(`  - Valid Google API key format: ${isValidFormat ? "✅" : "❌"}`);
+
         if (!isValidFormat) {
-            console.log("  ⚠️  Warning: API key doesn't match expected Google format (AIza... 39 chars)");
+            console.log(
+                "  ⚠️  Warning: API key doesn't match expected Google format (AIza... 39 chars)",
+            );
         }
     }
-    
+
     return hasSystemGeminiKey;
 }
 
 async function runTests() {
     console.log("Starting planner workflow tests...\n");
-    
+
     const hasApiKey = await testApiKeyAccess();
-    
+
     if (!hasApiKey) {
         console.log("\n❌ Cannot proceed: No API key detected");
         console.log("Please ensure GEMINI_API_KEY is set in .env.local");
         return;
     }
-    
+
     const result = await testPlannerWorkflow();
-    
-    console.log("\n" + "=" .repeat(60));
+
+    console.log("\n" + "=".repeat(60));
     if (result) {
         console.log("🎉 SUCCESS: Planner workflow is working correctly!");
         console.log("\n✅ The generateObject function can use the system API key");
