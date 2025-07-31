@@ -14,29 +14,6 @@ integrate text-to-speech
 
 --
 
-fix pdf extract/image extract failed
-
-19:53:19.567 Uncaught (in promise) TypeError: can't access property "includes", args.site.enabledFeatures is undefined
-isFeatureBroken <anonymous code>:980
-updateFeaturesInner <anonymous code>:9240
-updateFeaturesInner <anonymous code>:9239
-<anonymous code>:980:143
-
---
-
-🎯 Root Cause Analysis:
-The "Optimized subscription check failed" errors are likely caused by:
-
-Missing Default Subscriptions: Most users (96/97) don't have subscription records
-Subscription Query Logic: The app might be expecting all users to have subscription records
-Caching Issues: Subscription checks might be timing out due to cache misses
-💡 Recommended Fixes:
-Create default subscription records for users without them
-Optimize subscription check logic to handle missing records gracefully
-Add better error handling for subscription lookup failures
-
---
-
 fix web search still doesn't work on production vtchat.io.vn
 
 --

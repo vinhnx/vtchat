@@ -39,9 +39,37 @@ interface AdminStats {
     }>;
 }
 
+interface WebSearchDebug {
+    status: string;
+    timestamp: string;
+    service: string;
+    webSearchConfig: {
+        hasGeminiApiKey: boolean;
+        geminiKeyLength: number;
+        geminiKeyPrefix: string;
+        hasJinaApiKey: boolean;
+        jinaKeyLength: number;
+        environment: string;
+        isProduction: boolean;
+        isFlyApp: boolean;
+        isVercel: boolean;
+    };
+    budgetStatus: {
+        shouldDisable?: boolean;
+        error?: string;
+    };
+    webSearchTest: {
+        taskAvailable: boolean;
+        status: string;
+        error?: string;
+    };
+    recommendations: Array<{ type: string; message: string; action: string }>;
+}
+
 export default function AdminDashboard() {
     const [stats, setStats] = useState<AdminStats | null>(null);
     const [loading, setLoading] = useState(true);
+    const [webSearchDebug, setWebSearchDebug] = useState<WebSearchDebug | null>(null);
 
     // Fetch real analytics, infrastructure, and security data
     useEffect(() => {
@@ -142,6 +170,21 @@ export default function AdminDashboard() {
         };
 
         fetchStats();
+    }, []);
+
+    useEffect(() => {
+        const fetchWebSearchDebug = async () => {
+            try {
+                const response = await fetch("/api/debug/web-search");
+                if (response.ok) {
+                    const data = await response.json();
+                    setWebSearchDebug(data);
+                }
+            } catch (error) {
+                log.error({ error }, "Failed to fetch web search debug");
+            }
+        };
+        fetchWebSearchDebug();
     }, []);
 
     const getHealthColor = (health: string) => {
@@ -300,9 +343,9 @@ export default function AdminDashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {stats.providerUsage.map((provider, index) => (
+                                {stats.providerUsage.map((provider) => (
                                     <div
-                                        key={index}
+                                        key={provider.provider}
                                         className="flex items-center justify-between border-b py-2 last:border-0"
                                     >
                                         <div className="flex items-center space-x-3">
@@ -374,6 +417,81 @@ export default function AdminDashboard() {
                     </CardContent>
                 </Card>
             </motion.div>
+
+            {/* Web Search Debug Card */}
+            {webSearchDebug && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.35 }}
+                >
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center">
+                                <Shield className="mr-2 h-5 w-5" />
+                                Web Search Debug
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="mb-2 text-xs text-muted-foreground">
+                                {webSearchDebug.timestamp}
+                            </div>
+                            <div className="mb-2 text-sm font-medium">
+                                Service: {webSearchDebug.service}
+                            </div>
+                            <div className="mb-2 text-sm">
+                                Gemini API Key:{" "}
+                                {webSearchDebug.webSearchConfig.hasGeminiApiKey
+                                    ? `Set (${webSearchDebug.webSearchConfig.geminiKeyPrefix}...)`
+                                    : "Not set"}
+                            </div>
+                            <div className="mb-2 text-sm">
+                                Jina API Key:{" "}
+                                {webSearchDebug.webSearchConfig.hasJinaApiKey ? "Set" : "Not set"}
+                            </div>
+                            <div className="mb-2 text-sm">
+                                Environment: {webSearchDebug.webSearchConfig.environment}
+                            </div>
+                            <div className="mb-2 text-sm">
+                                Budget Status:{" "}
+                                {webSearchDebug.budgetStatus?.shouldDisable
+                                    ? "Gemini Disabled"
+                                    : "OK"}
+                            </div>
+                            <div className="mb-2 text-sm">
+                                Web Search Task:{" "}
+                                {webSearchDebug.webSearchTest?.taskAvailable
+                                    ? "Available"
+                                    : "Unavailable"}
+                            </div>
+                            {webSearchDebug.recommendations.length > 0 && (
+                                <div className="mt-2">
+                                    <div className="font-semibold text-sm mb-1">
+                                        Recommendations:
+                                    </div>
+                                    <ul className="list-disc ml-4 text-xs">
+                                        {webSearchDebug.recommendations.map((rec) => (
+                                            <li
+                                                key={rec.message + rec.action}
+                                                className={
+                                                    rec.type === "critical"
+                                                        ? "text-red-600"
+                                                        : rec.type === "warning"
+                                                          ? "text-yellow-600"
+                                                          : "text-muted-foreground"
+                                                }
+                                            >
+                                                {rec.message}{" "}
+                                                <span className="font-normal">({rec.action})</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            )}
         </div>
     );
 }
