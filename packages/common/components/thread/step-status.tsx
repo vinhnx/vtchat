@@ -6,11 +6,26 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
         case "PENDING":
             return (
                 <motion.span
-                    className="relative flex size-3 items-center justify-center"
+                    className="relative flex size-3 items-center justify-center overflow-hidden"
                     initial={{ scale: 0.8, opacity: 0.5 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                 >
+                    {/* Enhanced shimmer effect for pending steps */}
+                    <motion.span
+                        className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent dark:via-white/15 rounded-full"
+                        animate={{
+                            x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                            duration: 1.5,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: "easeInOut",
+                        }}
+                        style={{
+                            width: "200%",
+                        }}
+                    />
                     <motion.span
                         className="bg-foreground/20 absolute inline-flex h-full w-full rounded-full"
                         animate={{

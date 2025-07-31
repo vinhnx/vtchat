@@ -1,4 +1,5 @@
 import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from "@repo/common/components";
+import { log } from "@repo/shared/logger";
 import { isValidUrl } from "@repo/shared/utils";
 import type { MDXRemote } from "next-mdx-remote/rsc";
 import { type ComponentProps, type ReactElement, useContext } from "react";
@@ -100,7 +101,20 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     },
     table: ({ children }) => {
         return (
-            <TableErrorBoundary>
+            <TableErrorBoundary
+                onError={(error) => {
+                    // Log table rendering errors for debugging
+                    log.warn({ error: error.message }, "Table rendering error in MDX");
+                }}
+                fallback={
+                    <div className="border-warning bg-warning/10 text-warning my-4 rounded-md border p-4">
+                        <div className="text-sm font-medium">Table Rendering Issue</div>
+                        <div className="text-xs opacity-80 mt-1">
+                            This table couldn't be rendered properly. Content continues below.
+                        </div>
+                    </div>
+                }
+            >
                 <div className="border-border my-6 overflow-x-auto rounded-lg border">
                     <table className="bg-background w-full border-collapse">{children}</table>
                 </div>

@@ -281,37 +281,54 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         }
     }, [threadItems.length, scrollToBottom, isThreadLoaded]);
 
-    // Enhanced smooth auto-scrolling during streaming
+    // Non-blocking auto-scroll during streaming with user scroll detection
     useEffect(() => {
         if (isGenerating && scrollRef.current) {
-            let animationFrame: number;
             let lastScrollHeight = 0;
+            let userScrolling = false;
+            let scrollTimeout: NodeJS.Timeout;
+            let contentCheckInterval: NodeJS.Timeout;
 
-            const smoothScrollToBottom = () => {
-                if (scrollRef.current) {
+            const handleUserScroll = () => {
+                userScrolling = true;
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    userScrolling = false;
+                }, 1000); // Allow auto-scroll to resume after 1 second of no user interaction
+            };
+
+            const checkContentAndScroll = () => {
+                if (scrollRef.current && !userScrolling) {
                     const currentScrollHeight = scrollRef.current.scrollHeight;
+                    const scrollTop = scrollRef.current.scrollTop;
+                    const clientHeight = scrollRef.current.clientHeight;
 
-                    // Only scroll if content has actually changed
-                    if (currentScrollHeight !== lastScrollHeight) {
+                    // Only auto-scroll if user is near the bottom and content has changed
+                    const isNearBottom = scrollTop + clientHeight >= currentScrollHeight - 100;
+
+                    if (currentScrollHeight !== lastScrollHeight && isNearBottom) {
                         scrollRef.current.scrollTo({
                             top: currentScrollHeight,
                             behavior: "smooth",
                         });
                         lastScrollHeight = currentScrollHeight;
                     }
-
-                    // Continue checking for content changes
-                    animationFrame = requestAnimationFrame(smoothScrollToBottom);
                 }
             };
 
-            // Start smooth scrolling
-            smoothScrollToBottom();
+            // Add passive scroll listener to detect user scrolling
+            const scrollElement = scrollRef.current;
+            scrollElement.addEventListener("scroll", handleUserScroll, { passive: true });
+
+            // Check for content changes periodically (less aggressive than requestAnimationFrame)
+            contentCheckInterval = setInterval(checkContentAndScroll, 100);
 
             return () => {
-                if (animationFrame) {
-                    cancelAnimationFrame(animationFrame);
+                if (scrollElement) {
+                    scrollElement.removeEventListener("scroll", handleUserScroll);
                 }
+                clearTimeout(scrollTimeout);
+                clearInterval(contentCheckInterval);
             };
         }
     }, [isGenerating, scrollRef]);
