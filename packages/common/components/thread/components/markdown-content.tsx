@@ -272,31 +272,39 @@ export const MarkdownContent = memo(
                     contain: isCompleted ? "layout" : "none",
                 }}
             >
-                {previousContent.length > 0 &&
-                    previousContent.map((chunk, index) => (
-                        <ErrorBoundary
-                            fallback={<ErrorPlaceholder />}
-                            key={`prev-${chunk.slice(0, 50).replace(/\s/g, "")}-${index}`}
-                        >
-                            <MemoizedMdxChunk chunk={chunk} />
-                        </ErrorBoundary>
-                    ))}
-                {currentContent && (
+                {/* Optimized rendering to prevent double rendering conflicts */}
+                {!isCompleted && isLast ? (
+                    // During streaming: Use progressive markdown renderer for all content
                     <ErrorBoundary
                         fallback={<ErrorPlaceholder />}
-                        key={stableKey || "current-chunk"}
+                        key={stableKey || "streaming-content"}
                     >
-                        {!isCompleted && isLast ? (
-                            // Use progressive markdown rendering for real-time formatting during streaming
-                            <ProgressiveMarkdownRenderer
-                                content={currentContent}
-                                isStreaming={true}
-                            />
-                        ) : (
-                            // Use normal MDX rendering for completed content
-                            <MemoizedMdxChunk chunk={currentContent} />
-                        )}
+                        <ProgressiveMarkdownRenderer
+                            content={previousContent.join("") + currentContent}
+                            isStreaming={true}
+                        />
                     </ErrorBoundary>
+                ) : (
+                    // After completion: Render all content chunks normally
+                    <>
+                        {previousContent.length > 0 &&
+                            previousContent.map((chunk, index) => (
+                                <ErrorBoundary
+                                    fallback={<ErrorPlaceholder />}
+                                    key={`prev-${chunk.slice(0, 50).replace(/\s/g, "")}-${index}`}
+                                >
+                                    <MemoizedMdxChunk chunk={chunk} />
+                                </ErrorBoundary>
+                            ))}
+                        {currentContent && (
+                            <ErrorBoundary
+                                fallback={<ErrorPlaceholder />}
+                                key={stableKey || "current-chunk"}
+                            >
+                                <MemoizedMdxChunk chunk={currentContent} />
+                            </ErrorBoundary>
+                        )}
+                    </>
                 )}
             </div>
         );
@@ -492,10 +500,36 @@ export const MemoizedMdxChunk = memo(({ chunk }: { chunk: string }) => {
 
 MemoizedMdxChunk.displayName = "MemoizedMdxChunk";
 
-// Progressive Markdown Renderer for real-time streaming with immediate formatting
+// Progressive Markdown Renderer with content versioning and forced refresh
 const ProgressiveMarkdownRenderer = memo(
     ({ content, isStreaming }: { content: string; isStreaming: boolean }) => {
-        // Parse content into blocks for progressive rendering
+        // Content versioning to prevent overlap
+        const [contentVersion, setContentVersion] = useState(0);
+        const [lastContent, setLastContent] = useState("");
+        const contentRef = useRef<HTMLDivElement>(null);
+
+        // Debounced content refresh to prevent rapid re-renders
+        useEffect(() => {
+            if (content !== lastContent) {
+                const debounceTimeout = setTimeout(() => {
+                    // Clear any existing content to prevent overlap
+                    if (contentRef.current) {
+                        contentRef.current.style.opacity = "0";
+                        setTimeout(() => {
+                            if (contentRef.current) {
+                                contentRef.current.style.opacity = "1";
+                            }
+                        }, 10);
+                    }
+                    setContentVersion((prev) => prev + 1);
+                    setLastContent(content);
+                }, 50); // 50ms debounce to prevent excessive updates
+
+                return () => clearTimeout(debounceTimeout);
+            }
+        }, [content, lastContent]);
+
+        // Parse content into blocks for progressive rendering with debouncing
         const blocks = useMemo(() => {
             if (!content) return [];
 
@@ -558,16 +592,19 @@ const ProgressiveMarkdownRenderer = memo(
 
         return (
             <div
+                ref={contentRef}
                 className="progressive-markdown-renderer"
                 style={{
                     // Prevent layout shifts during streaming
                     minHeight: "1.5em",
                     contain: "layout style",
+                    transition: "opacity 0.1s ease-out",
                 }}
+                key={`content-v${contentVersion}`} // Force re-render on version change
             >
                 {blocks.map((block, index) => (
                     <MemoizedMarkdownBlock
-                        key={`stable-block-${index}-${block.trim().substring(0, 10).replace(/\s+/g, "-")}`}
+                        key={`v${contentVersion}-block-${index}-${block.trim().substring(0, 10).replace(/\s+/g, "-")}`}
                         content={block.trim()}
                     />
                 ))}

@@ -78,5 +78,6 @@ export * from "./tools-panel";
 export * from "./usage-credits-settings";
 export * from "./user-profile-settings";
 export * from "./user-tier-badge";
+export * from "./virtualized-chat-container";
 export * from "./vtplus-usage-meter";
 export * from "./with-client-only";
