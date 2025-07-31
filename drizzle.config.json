@@ -1,0 +1,8 @@
+{
+    "schema": "./apps/web/lib/database/schema.ts",
+    "out": "./drizzle/migrations",
+    "dialect": "postgresql",
+    "dbCredentials": {
+        "connectionString": "${DATABASE_URL}"
+    }
+}

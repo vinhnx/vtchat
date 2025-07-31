@@ -1,5 +1,3 @@
-import { count, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import {
@@ -10,6 +8,9 @@ import {
     users,
     vtplusUsage,
 } from "@/lib/database/schema";
+import { log } from "@repo/shared/lib/logger";
+import { count, eq, gte, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
                 uniqueUsers: sql<number>`COUNT(DISTINCT ${vtplusUsage.userId})`,
             })
             .from(vtplusUsage)
-            .where(gte(vtplusUsage.periodStart, thirtyDaysAgo))
+            .where(gte(vtplusUsage.periodStart, thirtyDaysAgo.toISOString()))
             .groupBy(vtplusUsage.feature);
 
         // Feedback analytics
@@ -160,7 +161,11 @@ export async function GET(request: NextRequest) {
                 })),
             },
         });
-    } catch {
-        return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
+    } catch (error) {
+        log.error({ error }, "Failed to fetch analytics (detailed)");
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : String(error) },
+            { status: 500 },
+        );
     }
 }
