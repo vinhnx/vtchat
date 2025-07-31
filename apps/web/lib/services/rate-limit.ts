@@ -1,7 +1,8 @@
 import { ModelEnum } from "@repo/ai/models";
 import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
 import { db } from "@repo/shared/lib/database";
-import { and, eq, sql } from "drizzle-orm";
+import { log } from "@repo/shared/lib/logger";
+import { and, eq } from "drizzle-orm";
 import type { UserRateLimit } from "../database/schema";
 import { userRateLimits } from "../database/schema";
 import { recordProviderUsage } from "./budget-tracking";
@@ -66,9 +67,8 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
             createdAt: now,
             updatedAt: now,
         };
-
         try {
-            await db.insert(userRateLimits).values(rateLimitRecord);
+            await safeInsertRateLimit(rateLimitRecord);
         } catch (error: unknown) {
             if (
                 error &&
@@ -102,34 +102,37 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
     return rateLimitRecord;
 }
 
+// Prevent pushing zero-value records in service layer
+function isZeroRateRecord(record: UserRateLimit): boolean {
+    return record.dailyRequestCount === "0" && record.minuteRequestCount === "0";
+}
+
+// Patch getOrCreateRateRecord and incrementRateRecord
+async function safeInsertRateLimit(record: UserRateLimit) {
+    if (isZeroRateRecord(record)) {
+        log.warn({ record }, "Blocked attempt to insert zero-value rate limit record");
+        throw new Error("Cannot insert zero-value rate limit record");
+    }
+    await db.insert(userRateLimits).values(record);
+}
+
 /**
  * Helper to increment a rate limit record
  */
 async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<void> {
     const now = new Date();
 
-    await db
-        .insert(userRateLimits)
-        .values({
-            userId,
-            modelId,
-            dailyRequestCount: "1",
-            minuteRequestCount: "1",
-            lastDailyReset: now,
-            lastMinuteReset: now,
-            createdAt: now,
-            updatedAt: now,
-        })
-        .onConflictDoUpdate({
-            target: [userRateLimits.userId, userRateLimits.modelId],
-            set: {
-                dailyRequestCount: sql`CASE WHEN (timezone('UTC', now()))::date <> (timezone('UTC', ${userRateLimits.lastDailyReset}))::date THEN '1' ELSE (CAST(${userRateLimits.dailyRequestCount} AS integer) + 1)::text END`,
-                minuteRequestCount: sql`CASE WHEN floor(extract(epoch from now())/60) <> floor(extract(epoch from ${userRateLimits.lastMinuteReset})/60) THEN '1' ELSE (CAST(${userRateLimits.minuteRequestCount} AS integer) + 1)::text END`,
-                lastDailyReset: sql`CASE WHEN (timezone('UTC', now()))::date <> (timezone('UTC', ${userRateLimits.lastDailyReset}))::date THEN ${now} ELSE ${userRateLimits.lastDailyReset} END`,
-                lastMinuteReset: now,
-                updatedAt: now,
-            },
-        });
+    await safeInsertRateLimit({
+        id: crypto.randomUUID(),
+        userId,
+        modelId,
+        dailyRequestCount: "1",
+        minuteRequestCount: "1",
+        lastDailyReset: now,
+        lastMinuteReset: now,
+        createdAt: now,
+        updatedAt: now,
+    });
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
@@ -402,7 +405,7 @@ export async function checkRateLimit(
             updatedAt: now,
         };
 
-        await db.insert(userRateLimits).values(rateLimitRecord);
+        await safeInsertRateLimit(rateLimitRecord);
     }
 
     // Check if resets are needed
