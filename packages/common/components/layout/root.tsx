@@ -2,7 +2,7 @@
 import { CommandSearch } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from "@repo/common/hooks";
-import { useAppStore } from "@repo/common/store";
+import { SETTING_TABS, useAppStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/lib/logger";
@@ -32,7 +32,7 @@ import {
     X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { type FC, useEffect } from "react";
+import React, { useEffect, type FC } from "react";
 import { createPortal } from "react-dom";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { BasicSidebar } from "../basic-sidebar";
@@ -49,6 +49,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const { isAdmin } = useAdmin();
 
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
+    const setSettingTab = useAppStore((state) => state.setSettingTab);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
 
@@ -315,7 +317,12 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                         <User className="mr-2" size={16} strokeWidth={2} />
                                         Profile
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push("/settings")}>
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            setIsSettingsOpen(true);
+                                            setSettingTab(SETTING_TABS.USAGE_CREDITS);
+                                        }}
+                                    >
                                         <Settings className="mr-2" size={16} strokeWidth={2} />
                                         Settings
                                     </DropdownMenuItem>
