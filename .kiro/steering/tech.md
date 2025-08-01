@@ -1,5 +1,10 @@
 # Tech Stack & Build System
 
+# NEON MCP
+
+- The production neon project id is autumn-block-60790575
+- Neon dev is lucky-cake-27376292
+
 ## Core Technologies
 
 - **Framework**: Next.js 15 (App Router) with React 19.0.0

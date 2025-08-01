@@ -22,7 +22,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro plus exclusive research features (Pro Search: 10/day, Deep Research: 5/day, AI Memory: 2,000/month).
+- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro plus exclusive research features (Pro Search: 20/day, Deep Research: 10/day, AI Memory: 2,000/month).
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (Free feature)

@@ -107,13 +107,32 @@ function isZeroRateRecord(record: UserRateLimit): boolean {
     return record.dailyRequestCount === "0" && record.minuteRequestCount === "0";
 }
 
-// Patch getOrCreateRateRecord and incrementRateRecord
+/**
+ * Inserts or updates a user/model rate limit record.
+ * Uses Drizzle ORM's onConflictDoUpdate to perform an upsert on (userId, modelId).
+ * This ensures that duplicate key errors are avoided and records are updated as needed.
+ * If a record for (userId, modelId) exists, it is updated with the latest counts and reset times.
+ * If no record exists, a new one is inserted.
+ * This logic is robust against race conditions and concurrent requests.
+ */
 async function safeInsertRateLimit(record: UserRateLimit) {
     if (isZeroRateRecord(record)) {
         log.warn({ record }, "Blocked attempt to insert zero-value rate limit record");
         throw new Error("Cannot insert zero-value rate limit record");
     }
-    await db.insert(userRateLimits).values(record);
+    await db
+        .insert(userRateLimits)
+        .values(record)
+        .onConflictDoUpdate({
+            target: [userRateLimits.userId, userRateLimits.modelId],
+            set: {
+                dailyRequestCount: record.dailyRequestCount,
+                minuteRequestCount: record.minuteRequestCount,
+                lastDailyReset: record.lastDailyReset,
+                lastMinuteReset: record.lastMinuteReset,
+                updatedAt: new Date(),
+            },
+        });
 }
 
 /**

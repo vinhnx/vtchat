@@ -1,4 +1,4 @@
-@import "@repo/tailwind-config/tailwind.css";
+@import '@repo/tailwind-config/tailwind.css';
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
@@ -243,8 +243,17 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        'SF Pro Display',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol';
 }
 
 strong {
@@ -473,7 +482,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;
@@ -594,7 +603,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -607,7 +616,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 1;
     bottom: 0;
@@ -655,4 +664,69 @@ mark.prompt-highlight {
 ::-moz-selection {
     background-color: #bfb38f;
     color: #262626;
+}
+
+/* Improved heading margins for markdown/MDX content */
+.prose h1,
+.markdown h1,
+.mdx h1,
+h1:not([class]) {
+    @apply mb-6 mt-8 first:mt-0;
+}
+
+.prose h2,
+.markdown h2,
+.mdx h2,
+h2:not([class]) {
+    @apply mb-4 mt-10 first:mt-0;
+}
+
+.prose h3,
+.markdown h3,
+.mdx h3,
+h3:not([class]) {
+    @apply mb-4 mt-8 first:mt-0;
+}
+
+.prose h4,
+.markdown h4,
+.mdx h4,
+h4:not([class]) {
+    @apply mb-3 mt-6 first:mt-0;
+}
+
+.prose h5,
+.markdown h5,
+.mdx h5,
+h5:not([class]) {
+    @apply mb-3 mt-6 first:mt-0;
+}
+
+.prose h6,
+.markdown h6,
+.mdx h6,
+h6:not([class]) {
+    @apply mb-2 mt-4 first:mt-0;
+}
+
+/* Ensure headings in markdown content have proper spacing */
+.prose > h1:first-child,
+.prose > h2:first-child,
+.prose > h3:first-child,
+.prose > h4:first-child,
+.prose > h5:first-child,
+.prose > h6:first-child,
+.markdown > h1:first-child,
+.markdown > h2:first-child,
+.markdown > h3:first-child,
+.markdown > h4:first-child,
+.markdown > h5:first-child,
+.markdown > h6:first-child,
+.mdx > h1:first-child,
+.mdx > h2:first-child,
+.mdx > h3:first-child,
+.mdx > h4:first-child,
+.mdx > h5:first-child,
+.mdx > h6:first-child {
+    @apply mt-0;
 }

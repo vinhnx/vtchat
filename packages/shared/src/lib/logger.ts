@@ -4,10 +4,7 @@
 
 type LogData = string | Record<string, unknown> | Error | unknown;
 
-interface LogFunction {
-    (obj: LogData, msg?: string): void;
-    (msg: string): void;
-}
+type LogFunction = (...args: any[]) => void;
 
 interface Logger {
     info: LogFunction;
@@ -16,47 +13,68 @@ interface Logger {
     debug: LogFunction;
 }
 
+// Helper to determine parameter order and handle both patterns
+const logMessage = (
+    consoleMethod: (...args: any[]) => void,
+    defaultPrefix: string,
+    ...args: any[]
+) => {
+    if (args.length === 0) {
+        consoleMethod(defaultPrefix);
+        return;
+    }
+
+    if (args.length === 1) {
+        const [arg] = args;
+        if (typeof arg === "string") {
+            consoleMethod(arg);
+        } else {
+            consoleMethod(defaultPrefix, arg);
+        }
+        return;
+    }
+
+    if (args.length === 2) {
+        const [first, second] = args;
+
+        // Pattern: log.info({data}, "message")
+        if (typeof first === "object" && typeof second === "string") {
+            consoleMethod(second, first);
+        }
+        // Pattern: log.info("message", {data})
+        else if (typeof first === "string" && typeof second === "object") {
+            consoleMethod(first, second);
+        }
+        // Default: treat as message, data
+        else {
+            consoleMethod(first, second);
+        }
+        return;
+    }
+
+    // More than 2 args, just pass through
+    consoleMethod(...args);
+};
+
 // Simple logger that wraps console methods
 const createLogger = (): Logger => {
-    const info: LogFunction = (obj: LogData, msg?: string) => {
-        if (typeof obj === "string") {
-            console.log(obj);
-        } else {
-            console.log(msg || "Info:", obj);
-        }
+    const info: LogFunction = (...args: any[]) => {
+        logMessage(console.log, "Info:", ...args);
     };
 
-    const warn: LogFunction = (obj: LogData, msg?: string) => {
-        if (typeof obj === "string") {
-            console.warn(obj);
-        } else {
-            console.warn(msg || "Warn:", obj);
-        }
+    const warn: LogFunction = (...args: any[]) => {
+        logMessage(console.warn, "Warn:", ...args);
     };
 
-    const error: LogFunction = (obj: LogData, msg?: string) => {
+    const error: LogFunction = (...args: any[]) => {
         // In development, use console.warn to avoid triggering error overlay for non-critical errors
         const logMethod = process.env.NODE_ENV === "development" ? console.warn : console.error;
-
-        if (typeof obj === "string") {
-            logMethod(obj);
-        } else {
-            // Handle empty or meaningless error objects
-            if (obj && typeof obj === "object" && Object.keys(obj).length === 0) {
-                logMethod(msg || "Error:", "Empty error object");
-            } else {
-                logMethod(msg || "Error:", obj);
-            }
-        }
+        logMessage(logMethod, "Error:", ...args);
     };
 
-    const debug: LogFunction = (obj: LogData, msg?: string) => {
+    const debug: LogFunction = (...args: any[]) => {
         if (process.env.NODE_ENV === "development") {
-            if (typeof obj === "string") {
-                console.debug(obj);
-            } else {
-                console.debug(msg || "Debug:", obj);
-            }
+            logMessage(console.debug, "Debug:", ...args);
         }
     };
 

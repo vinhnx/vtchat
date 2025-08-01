@@ -51,7 +51,7 @@ Override defaults with environment variables:
 
 ```bash
 # VT+ Rate Limiting Configuration
-VTPLUS_DAILY_LIMIT_DR=5      # Deep Research - requests per day
+VTPLUS_DAILY_LIMIT_DR=10      # Deep Research - requests per day
 VTPLUS_DAILY_LIMIT_PS=10     # Pro Search - requests per day
 
 # Legacy monthly limits (for backward compatibility)

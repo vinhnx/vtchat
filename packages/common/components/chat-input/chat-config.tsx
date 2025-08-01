@@ -1,4 +1,4 @@
-import { type Model, models } from "@repo/ai/models";
+import { models, type Model } from "@repo/ai/models";
 import type { ApiKeys } from "@repo/common/store/api-keys.store";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import type { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
@@ -8,13 +8,13 @@ import { Brain, Gift } from "lucide-react";
 export const chatOptions = [
     {
         label: "Deep Research",
-        description: "In depth research on complex topic • 5/day with VT+",
+        description: "In depth research on complex topic • 10/day with VT+",
         value: ChatMode.Deep,
         iconName: "Atom",
     },
     {
         label: "Pro Search",
-        description: "Enhanced web search with advanced AI • 10/day with VT+",
+        description: "Enhanced web search with advanced AI • 20/day with VT+",
         value: ChatMode.Pro,
         iconName: "Star",
     },

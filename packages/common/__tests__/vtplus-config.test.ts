@@ -2,21 +2,21 @@
 import { describe, expect, it } from "vitest";
 import {
     QUOTA_WINDOW,
-    type QuotaConfig,
     QuotaExceededError,
     VT_PLUS_LIMITS,
     VtPlusFeature,
+    type QuotaConfig,
 } from "../src/config/vtPlusLimits";
 
 describe("VT+ Configuration", () => {
     describe("VT+ Limits", () => {
         it("should have correct default limits with windows", () => {
             expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toEqual({
-                limit: 5,
+                limit: 10,
                 window: QUOTA_WINDOW.DAILY,
             });
             expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toEqual({
-                limit: 10,
+                limit: 20,
                 window: QUOTA_WINDOW.DAILY,
             });
         });
@@ -99,7 +99,7 @@ describe("VT+ Configuration", () => {
         });
 
         it("should detect quota exceeded", () => {
-            const currentUsed = 4;
+            const currentUsed = 9;
             const requestedAmount = 2;
             const { limit } = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH];
 

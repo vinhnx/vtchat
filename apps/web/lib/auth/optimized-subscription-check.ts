@@ -2,9 +2,12 @@
  * Optimized subscription checking using Neon database optimizations
  */
 
+import { neon } from "@neondatabase/serverless";
 import { log } from "@repo/shared/logger";
 import { redisCache } from "../cache/redis-cache";
-import { db } from "../database";
+
+// Create a direct SQL client for raw queries
+const sql = neon(process.env.DATABASE_URL!);
 
 interface OptimizedSubscriptionData {
     userId: string;
@@ -32,26 +35,23 @@ export async function checkSubscriptionOptimized(
 
     try {
         // 2. Query the materialized view directly - much faster than JOIN
-        const result = await db.execute(
-            `
-            SELECT 
+        const result = await sql`
+            SELECT
                 user_id,
                 is_vt_plus,
                 subscription_status,
                 current_period_end,
                 user_plan_slug as plan_slug
-            FROM user_subscription_summary 
-            WHERE user_id = $1
+            FROM user_subscription_summary
+            WHERE user_id = ${userId}
             LIMIT 1
-        `,
-            [userId],
-        );
+        `;
 
-        if (result.rows.length === 0) {
+        if (result.length === 0) {
             return null;
         }
 
-        const row = result.rows[0];
+        const row = result[0];
         const subscriptionData: OptimizedSubscriptionData = {
             userId: row.user_id as string,
             isVtPlus: Boolean(row.is_vt_plus),
@@ -84,24 +84,18 @@ export async function checkSubscriptionsBatch(
     if (userIds.length === 0) return results;
 
     try {
-        // Build parameterized query for safety
-        const placeholders = userIds.map((_, i) => `$${i + 1}`).join(",");
-
-        const result = await db.execute(
-            `
-            SELECT 
+        const result = await sql`
+            SELECT
                 user_id,
                 is_vt_plus,
                 subscription_status,
                 current_period_end,
                 user_plan_slug as plan_slug
-            FROM user_subscription_summary 
-            WHERE user_id = ANY(ARRAY[${placeholders}])
-        `,
-            userIds,
-        );
+            FROM user_subscription_summary
+            WHERE user_id = ANY(${userIds})
+        `;
 
-        for (const row of result.rows) {
+        for (const row of result) {
             const subscriptionData: OptimizedSubscriptionData = {
                 userId: row.user_id as string,
                 isVtPlus: Boolean(row.is_vt_plus),
@@ -144,7 +138,7 @@ export async function invalidateSubscriptionCache(userId: string): Promise<void>
 
     // Also refresh the materialized view if needed
     try {
-        await db.execute("SELECT refresh_subscription_summary()");
+        await sql`SELECT refresh_subscription_summary()`;
         log.debug("Subscription summary refreshed", { userId });
     } catch (error) {
         log.warn("Failed to refresh subscription summary:", { userId, error });
@@ -156,19 +150,19 @@ export async function invalidateSubscriptionCache(userId: string): Promise<void>
  */
 export async function getVtPlusUsers(): Promise<OptimizedSubscriptionData[]> {
     try {
-        const result = await db.execute(`
-            SELECT 
+        const result = await sql`
+            SELECT
                 user_id,
                 is_vt_plus,
                 subscription_status,
                 current_period_end,
                 user_plan_slug as plan_slug
-            FROM user_subscription_summary 
+            FROM user_subscription_summary
             WHERE is_vt_plus = true
             ORDER BY current_period_end DESC
-        `);
+        `;
 
-        return result.rows.map((row) => ({
+        return result.map((row) => ({
             userId: row.user_id as string,
             isVtPlus: Boolean(row.is_vt_plus),
             subscriptionStatus: row.subscription_status as string | null,
@@ -188,16 +182,16 @@ export async function getVtPlusUsers(): Promise<OptimizedSubscriptionData[]> {
  */
 export async function getSubscriptionStats() {
     try {
-        const result = await db.execute(`
-            SELECT 
+        const result = await sql`
+            SELECT
                 COUNT(*) as total_users,
                 COUNT(CASE WHEN is_vt_plus THEN 1 END) as vt_plus_users,
                 COUNT(CASE WHEN subscription_status = 'active' THEN 1 END) as active_subscriptions,
                 COUNT(CASE WHEN current_period_end < NOW() THEN 1 END) as expired_subscriptions
             FROM user_subscription_summary
-        `);
+        `;
 
-        return result.rows[0];
+        return result[0];
     } catch (error) {
         log.error("Failed to get subscription stats:", { error });
         return null;

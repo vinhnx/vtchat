@@ -121,7 +121,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 ### Sophisticated Subscription Tiers
 
 - **Free Tier**: VT offers free tier, and with VT+ focusing only on 2 exclusive research capabilities: Deep Research and Pro Search.
-- **VT+ ($5.99/month)**: All free features + 2 research-focused exclusives: Enhanced Web Search (PRO_SEARCH - 10/day), Deep Research (DEEP_RESEARCH - 5/day)
+- **VT+ ($5.99/month)**: All free features + 2 research-focused exclusives: Enhanced Web Search (PRO_SEARCH - 20/day), Deep Research (DEEP_RESEARCH - 10/day)
 
 ### Advanced Payment Integration
 
@@ -266,8 +266,8 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅                                                              |
 | **Structured Output**             | ✅ (AI-powered JSON)                   | ✅                                                              |
 | **Chart Visualization**           | ✅                                     | ✅                                                              |
-| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 10/day)                               |
-| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 5/day)                             |
+| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 20/day)                               |
+| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 10/day)                            |
 | **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models         |
 
 ## 🎯 Target Use Cases

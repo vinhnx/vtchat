@@ -114,7 +114,8 @@ function AboutContent() {
                             <h3 className="mb-4 text-xl font-semibold">Advanced AI Capabilities</h3>
                             <p className="text-muted-foreground mb-4">
                                 Frustrated by AI subscription limits? VT gives you unlimited access
-                                to ALL premium models with your own API keys.
+                                to ALL premium models with your own API keys, plus generous free
+                                tiers.
                             </p>
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">
                                 <li>
@@ -164,6 +165,38 @@ function AboutContent() {
                                 <li>
                                     <strong>Mathematical Calculator (Free):</strong> Advanced
                                     functions including trigonometry, logarithms, and arithmetic
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 className="mb-4 text-xl font-semibold">VT+ Premium Features</h3>
+                            <p className="text-muted-foreground mb-4">
+                                Upgrade to VT+ for enhanced research capabilities with flexible,
+                                database-driven quotas.
+                            </p>
+                            <ul className="text-muted-foreground list-inside list-disc space-y-2">
+                                <li>
+                                    <strong>Deep Research:</strong> Advanced research capabilities
+                                    with comprehensive analysis - 10 daily uses for VT+ subscribers
+                                </li>
+                                <li>
+                                    <strong>Pro Search:</strong> Enhanced search with web
+                                    integration - 20 daily uses for VT+ subscribers
+                                </li>
+                                <li>
+                                    <strong>Google Dynamic Retrieval:</strong> Advanced AI-powered
+                                    search with dynamic content retrieval
+                                </li>
+                                <li>
+                                    <strong>All Gemini Models Without BYOK:</strong> Access all
+                                    Gemini models plus enhanced tools without needing your own API
+                                    keys
+                                </li>
+                                <li>
+                                    <strong>Flexible Quotas:</strong> Database-driven quota system
+                                    allows for dynamic adjustments based on usage patterns and
+                                    feedback
                                 </li>
                             </ul>
                         </div>

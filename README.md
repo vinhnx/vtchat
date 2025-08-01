@@ -75,7 +75,7 @@ _Advanced AI capabilities including document processing, web search, and structu
 ### Subscription Tiers
 
 - **Free tier (logged-in users)**: ALL premium AI models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) + all advanced features including intelligent tool routing, chart visualization, dark mode, thinking mode, structured output, document parsing, reasoning chain, Gemini caching, web search, multi-modal chat, mathematical calculator, and unlimited BYOK usage
-- **VT+ ($5.99/month)**: Everything free + 2 exclusive research features: PRO_SEARCH (Enhanced Web Search - 10/day), DEEP_RESEARCH (Deep Research capabilities - 5/day)
+- **VT+ ($5.99/month)**: Everything free + 2 exclusive research features: PRO_SEARCH (Enhanced Web Search - 20/day), DEEP_RESEARCH (Deep Research capabilities - 10/day)
 - **Seamless Management**: Creem.io integration with customer portal and real-time subscription status
 
 ### Local AI Setup Guides

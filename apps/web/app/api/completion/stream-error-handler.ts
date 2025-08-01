@@ -57,6 +57,7 @@ export enum StreamErrorKeywords {
     CONTROLLER = "controller",
     ENQUEUE = "enqueue",
     CLOSED = "closed",
+    UNREF = "unref",
 }
 
 export enum TimeoutErrorKeywords {
@@ -138,10 +139,10 @@ export async function handleStreamError({
 
         if (errorString.includes(VtPlusFeature.DEEP_RESEARCH)) {
             errorMessage =
-                "Daily Deep Research limit reached (5/5). Try Pro Search or regular chat.";
+                "Daily Deep Research limit reached (10/10). Try Pro Search or regular chat.";
         } else if (errorString.includes(VtPlusFeature.PRO_SEARCH)) {
             errorMessage =
-                "Daily Pro Search limit reached (10/10). Try regular chat or Deep Research.";
+                "Daily Pro Search limit reached (20/20). Try regular chat or Deep Research.";
         }
 
         const response: StreamErrorResponse = {
@@ -294,6 +295,21 @@ export async function handleStreamError({
             type: StreamResponseType.DONE,
             status: StreamErrorStatus.ERROR,
             error: "Request timed out. Please try again with a shorter prompt or different model.",
+            threadId: data.threadId,
+            threadItemId: data.threadItemId,
+            parentThreadItemId: data.parentThreadItemId,
+        };
+        await sendMessage(controller, encoder, response);
+        return response;
+    }
+
+    // Bun/Node.js compatibility errors (unref function)
+    if (errorName === ErrorName.TYPE_ERROR && errorString.includes(StreamErrorKeywords.UNREF)) {
+        log.warn({ error, userId, threadId: data.threadId }, "Runtime compatibility error (unref)");
+        const response: StreamErrorResponse = {
+            type: StreamResponseType.DONE,
+            status: StreamErrorStatus.ERROR,
+            error: "Runtime compatibility issue detected. Please refresh the page and try again.",
             threadId: data.threadId,
             threadItemId: data.threadItemId,
             parentThreadItemId: data.parentThreadItemId,

@@ -3,14 +3,16 @@ import type { JSX } from "react";
 import * as React from "react";
 import { cn } from "../lib/utils";
 
-// Typography variants based on Shadcn's typography system
+// Typography variants based on Shadcn's typography system with improved margins
 const typographyVariants = cva("", {
     variants: {
         variant: {
-            h1: "scroll-m-20 text-balance font-extrabold text-4xl tracking-tight",
-            h2: "mt-10 scroll-m-20 border-b pb-2 font-semibold text-3xl tracking-tight transition-colors first:mt-0",
-            h3: "mt-8 scroll-m-20 font-semibold text-2xl tracking-tight",
-            h4: "scroll-m-20 font-semibold text-xl tracking-tight",
+            h1: "scroll-m-20 text-balance font-extrabold text-4xl tracking-tight mt-8 mb-6 first:mt-0",
+            h2: "scroll-m-20 border-b pb-2 font-semibold text-3xl tracking-tight transition-colors mt-10 mb-4 first:mt-0",
+            h3: "scroll-m-20 font-semibold text-2xl tracking-tight mt-8 mb-4 first:mt-0",
+            h4: "scroll-m-20 font-semibold text-xl tracking-tight mt-6 mb-3 first:mt-0",
+            h5: "scroll-m-20 font-semibold text-lg tracking-tight mt-6 mb-3 first:mt-0",
+            h6: "scroll-m-20 font-semibold text-base tracking-tight mt-4 mb-2 first:mt-0",
             p: "leading-8 [&:not(:first-child)]:mt-6",
             blockquote: "mt-6 border-l-2 pl-6 italic",
             list: "my-6 ml-6 list-disc [&>li]:mt-2",
@@ -47,6 +49,8 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
             h2: "h2",
             h3: "h3",
             h4: "h4",
+            h5: "h5",
+            h6: "h6",
             p: "p",
             blockquote: "blockquote",
             list: "ul",
@@ -102,6 +106,20 @@ export const TypographyH4 = React.forwardRef<HTMLHeadingElement, Omit<Typography
     ),
 );
 TypographyH4.displayName = "TypographyH4";
+
+export const TypographyH5 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, "variant">>(
+    ({ className, ...props }, ref) => (
+        <Typography className={className} ref={ref} variant="h5" {...props} />
+    ),
+);
+TypographyH5.displayName = "TypographyH5";
+
+export const TypographyH6 = React.forwardRef<HTMLHeadingElement, Omit<TypographyProps, "variant">>(
+    ({ className, ...props }, ref) => (
+        <Typography className={className} ref={ref} variant="h6" {...props} />
+    ),
+);
+TypographyH6.displayName = "TypographyH6";
 
 export const TypographyP = React.forwardRef<HTMLParagraphElement, Omit<TypographyProps, "variant">>(
     ({ className, ...props }, ref) => (

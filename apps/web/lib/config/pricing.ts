@@ -6,7 +6,7 @@ export const PRICING_CONFIG = {
     product: {
         name: "VT+",
         description:
-            "Research-focused exclusives: Pro Search (10/day), Deep Research (5/day), and AI Memory (2,000/month)",
+            "Research-focused exclusives: Pro Search (20/day), Deep Research (10/day), with flexible database-driven quotas",
         id: process.env.CREEM_PRODUCT_ID || "",
     },
 
@@ -67,12 +67,12 @@ export const PRICING_CONFIG = {
                 {
                     name: "Pro Search (Exclusive)",
                     description:
-                        "Lightning-fast web search with AI grounding for instant, accurate information retrieval - 10 requests per day",
+                        "Lightning-fast web search with AI grounding for instant, accurate information retrieval - 20 requests per day",
                 },
                 {
                     name: "Deep Research (Exclusive)",
                     description:
-                        "Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 5 requests per day",
+                        "Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 10 requests per day",
                 },
                 {
                     name: "Priority Support & Daily Reset",

@@ -1,9 +1,9 @@
-import { VT_PLUS_LIMITS, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
-import { getAllUsage } from "@repo/common/lib/vtplusRateLimiter";
-import { log } from "@repo/shared/lib/logger";
-import { type NextRequest, NextResponse } from "next/server";
 import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
 import { auth } from "@/lib/auth-server";
+import { getAllUsage } from "@/lib/services/vtplus-quota.service";
+import { VtPlusFeature } from "@repo/common/config/vtPlusLimits";
+import { log } from "@repo/shared/lib/logger";
+import { NextResponse, type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
@@ -35,8 +35,13 @@ export async function GET(request: NextRequest) {
             );
         }
 
+        // Get user's subscription plan
+        const userWithSubscription = await getUserWithSubscription(userId);
+        const userPlan =
+            (userWithSubscription?.userSubscription?.plan as PlanSlug) || PlanSlug.VT_BASE;
+
         // Get usage for all VT+ features
-        const usage = await getAllUsage(userId);
+        const usage = await getAllUsage(userId, userPlan);
 
         // Calculate next reset dates based on window type
         const now = new Date();
@@ -54,24 +59,28 @@ export async function GET(request: NextRequest) {
                 used: usage[VtPlusFeature.DEEP_RESEARCH].used,
                 limit: usage[VtPlusFeature.DEEP_RESEARCH].limit,
                 feature: VtPlusFeature.DEEP_RESEARCH,
-                window: VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].window,
+                window: "daily", // From database configuration
                 percentage: Math.round(
                     (usage[VtPlusFeature.DEEP_RESEARCH].used /
                         usage[VtPlusFeature.DEEP_RESEARCH].limit) *
                         100,
                 ),
                 resetAt: nextDayReset.toISOString(),
+                periodStart: usage[VtPlusFeature.DEEP_RESEARCH].periodStart.toISOString(),
+                periodEnd: nextDayReset.toISOString(),
             },
             proSearch: {
                 used: usage[VtPlusFeature.PRO_SEARCH].used,
                 limit: usage[VtPlusFeature.PRO_SEARCH].limit,
                 feature: VtPlusFeature.PRO_SEARCH,
-                window: VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].window,
+                window: "daily", // From database configuration
                 percentage: Math.round(
                     (usage[VtPlusFeature.PRO_SEARCH].used / usage[VtPlusFeature.PRO_SEARCH].limit) *
                         100,
                 ),
                 resetAt: nextDayReset.toISOString(),
+                periodStart: usage[VtPlusFeature.PRO_SEARCH].periodStart.toISOString(),
+                periodEnd: nextDayReset.toISOString(),
             },
             // Legacy resetAt for backward compatibility
             resetAt: nextMonthReset.toISOString(),
