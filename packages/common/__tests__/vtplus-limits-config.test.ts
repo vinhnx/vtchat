@@ -12,9 +12,9 @@ describe("VT+ Limits Configuration", () => {
             expect(VtPlusFeature.PRO_SEARCH).toBe("PS");
         });
 
-        it("should have exactly 3 features", () => {
+        it("should have exactly 2 features", () => {
             const features = Object.values(VtPlusFeature);
-            expect(features).toHaveLength(3);
+            expect(features).toHaveLength(2);
             expect(features).toContain("DR");
             expect(features).toContain("PS");
         });

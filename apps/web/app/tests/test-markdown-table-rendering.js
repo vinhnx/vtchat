@@ -1,3 +1,5 @@
+import { log } from '@repo/shared/lib/logger';
+
 /**
  * Test script for markdown table rendering improvements
  * Tests both header spacing and table rendering fixes
@@ -53,59 +55,59 @@ The table above should render properly with enhanced spacing.
 
 // Test functions
 function testTableValidation() {
-    console.log("🧪 Testing table validation...");
+    log.info("🧪 Testing table validation...");
 
     // Test valid table
-    const validTable = `| Name | Age |
+    const _validTable = `| Name | Age |
 |------|-----|
 | John | 25  |`;
 
     // Test malformed table
-    const malformedTable = `| Single pipe content
+    const _malformedTable = `| Single pipe content
 | Another single pipe`;
 
-    console.log("✅ Table validation tests completed");
+    log.info("✅ Table validation tests completed");
 }
 
 function testHeaderSpacing() {
-    console.log("🧪 Testing header spacing...");
+    log.info("🧪 Testing header spacing...");
 
-    const headerContent = `# Main Title
+    const _headerContent = `# Main Title
 ## Section Header
 ### Subsection
 #### Detail Header
 ##### Minor Header
 ###### Small Header`;
 
-    console.log("✅ Header spacing tests completed");
+    log.info("✅ Header spacing tests completed");
 }
 
 function testCircuitBreaker() {
-    console.log("🧪 Testing circuit breaker...");
+    log.info("🧪 Testing circuit breaker...");
 
     // Simulate problematic content
-    const problematicContent = `| Problematic | Table |
+    const _problematicContent = `| Problematic | Table |
 | Content | That | Might | Cause | Issues |`;
 
-    console.log("✅ Circuit breaker tests completed");
+    log.info("✅ Circuit breaker tests completed");
 }
 
 // Run tests
-console.log("🚀 Starting markdown rendering tests...");
-console.log("");
+log.info("🚀 Starting markdown rendering tests...");
+log.info("");
 
 testTableValidation();
 testHeaderSpacing();
 testCircuitBreaker();
 
-console.log("");
-console.log("📊 Test Results Summary:");
-console.log("- ✅ Table validation: More permissive, fewer false positives");
-console.log("- ✅ Header spacing: Increased vertical padding for better readability");
-console.log("- ✅ Circuit breaker: Faster detection (3 attempts vs 10)");
-console.log("- ✅ Error handling: Smart fallbacks maintain functionality");
-console.log("");
-console.log("🎉 All markdown rendering improvements verified!");
+log.info("");
+log.info("📊 Test Results Summary:");
+log.info("- ✅ Table validation: More permissive, fewer false positives");
+log.info("- ✅ Header spacing: Increased vertical padding for better readability");
+log.info("- ✅ Circuit breaker: Faster detection (3 attempts vs 10)");
+log.info("- ✅ Error handling: Smart fallbacks maintain functionality");
+log.info("");
+log.info("🎉 All markdown rendering improvements verified!");
 
 // Export test content for manual verification
 if (typeof module !== "undefined" && module.exports) {

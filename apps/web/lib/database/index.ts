@@ -1,55 +1,37 @@
-import { Pool } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { log } from "@repo/shared/logger";
-import { drizzle } from "drizzle-orm/neon-serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
 
 if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL environment variable is required");
 }
 
-// Configure Neon for serverless environments with robust error handling
-let pool: Pool;
+// Use Neon HTTP client instead of Pool for better Bun compatibility
+// This avoids the unref() function issues with connection pooling
+const sql = neon(process.env.DATABASE_URL);
 
-try {
-    pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        // Improved serverless optimizations
-        max: 3, // Allow more connections for concurrent requests
-        min: 0, // Start with no connections
-        idleTimeoutMillis: 30_000, // 30 seconds idle timeout (prevent indefinite connections)
-        connectionTimeoutMillis: 10_000, // 10 second connection timeout
-        // Add retry and reconnection logic
-        allowExitOnIdle: true, // Allow process to exit when idle
-        // Enable statement timeout to prevent hanging queries
-        statement_timeout: 60_000, // 60 seconds
-        // Add connection validation
-        query_timeout: 60_000, // 60 seconds query timeout
-    });
-
-    // Add error handling for connection pool
-    pool.on("error", (err: Error) => {
-        log.error({ err }, "Database pool error");
-        // Don't throw here to prevent crashing the app
-    });
-
-    pool.on("connect", () => {
-        log.info({}, "Database connection established");
-    });
-
-    pool.on("remove", () => {
-        log.info({}, "Database connection removed from pool");
-    });
-} catch (error) {
-    log.error({ error }, "Failed to create database pool");
-    throw new Error("Database connection pool creation failed");
-}
-
-// Create drizzle instance with Neon serverless adapter and error handling
-export const db = drizzle(pool, {
+// Create drizzle instance with Neon HTTP adapter (more compatible with Bun)
+export const db = drizzle(sql, {
     schema,
     // Disable drizzle's built-in logger to prevent connection object dumps
     logger: false,
 });
+
+// Simple connection test function
+export const testConnection = async () => {
+    try {
+        await sql`SELECT 1`;
+        log.info({}, "Database connection test successful");
+        return true;
+    } catch (error) {
+        log.error(
+            { error: error instanceof Error ? error.message : String(error) },
+            "Database connection test failed",
+        );
+        return false;
+    }
+};
 
 // Helper function to handle database connection errors gracefully
 export const withDatabaseErrorHandling = async <T>(
@@ -58,25 +40,31 @@ export const withDatabaseErrorHandling = async <T>(
 ): Promise<T> => {
     try {
         return await operation();
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const err = error as {
+            message?: string;
+            code?: string;
+            severity?: string;
+            detail?: string;
+        };
         log.error(
             {
-                error: error.message,
-                code: error.code,
-                severity: error.severity,
-                detail: error.detail,
+                error: err.message || String(error),
+                code: err.code,
+                severity: err.severity,
+                detail: err.detail,
             },
             `${operationName} failed`,
         );
 
         // Handle specific Neon/PostgreSQL error codes
-        if (error.code === "57P01") {
+        if (err.code === "57P01") {
             throw new Error("Database connection was terminated. Please try again.");
         }
-        if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+        if (err.code === "ECONNRESET" || err.code === "ETIMEDOUT") {
             throw new Error("Database connection timeout. Please try again.");
         }
-        if (error.code === "53300") {
+        if (err.code === "53300") {
             throw new Error("Too many database connections. Please try again in a moment.");
         }
 

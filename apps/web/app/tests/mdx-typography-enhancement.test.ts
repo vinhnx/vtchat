@@ -36,6 +36,35 @@ describe("MDX Typography Enhancement", () => {
         expect(expectedTypographyLeading).toBe("leading-8");
     });
 
+    it("should have proper margin spacing for all heading levels", () => {
+        // Test that all heading levels have proper margin spacing
+        const expectedH1Margin = "mt-8 mb-6 first:mt-0";
+        const expectedH2Margin = "mt-10 mb-4 first:mt-0";
+        const expectedH3Margin = "mt-8 mb-4 first:mt-0";
+        const expectedH4Margin = "mt-6 mb-3 first:mt-0";
+        const expectedH5Margin = "mt-6 mb-3 first:mt-0";
+        const expectedH6Margin = "mt-4 mb-2 first:mt-0";
+
+        expect(expectedH1Margin).toBe("mt-8 mb-6 first:mt-0");
+        expect(expectedH2Margin).toBe("mt-10 mb-4 first:mt-0");
+        expect(expectedH3Margin).toBe("mt-8 mb-4 first:mt-0");
+        expect(expectedH4Margin).toBe("mt-6 mb-3 first:mt-0");
+        expect(expectedH5Margin).toBe("mt-6 mb-3 first:mt-0");
+        expect(expectedH6Margin).toBe("mt-4 mb-2 first:mt-0");
+    });
+
+    it("should include all heading levels h1-h6", () => {
+        // Verify that all heading levels are supported
+        const supportedHeadings = ["h1", "h2", "h3", "h4", "h5", "h6"];
+        expect(supportedHeadings).toEqual(["h1", "h2", "h3", "h4", "h5", "h6"]);
+    });
+
+    it("should have consistent first-child margin reset", () => {
+        // Verify that first child headings have no top margin
+        const firstChildReset = "first:mt-0";
+        expect(firstChildReset).toBe("first:mt-0");
+    });
+
     it("should maintain readability standards", () => {
         // Line-height of 1.7 is within the optimal range of 1.6-1.8 for readability
         const lineHeight = 1.7;

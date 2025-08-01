@@ -1,7 +1,9 @@
 import { createTask } from "@repo/orchestrator";
 import { ChatMode } from "@repo/shared/config";
 import { formatDate } from "@repo/shared/utils";
+import { getFormattingInstructions } from "../../config/formatting-guidelines";
 import { getModelFromChatMode, ModelEnum } from "../../models";
+import { ContentMonitor } from "../../utils/content-monitor";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from "../utils";
 
@@ -53,11 +55,6 @@ ${analysis}
    - Highlight key figures, critical statistics, and significant findings with bold text
    - Construct balanced continuous paragraphs (4-5 sentences per paragraph not more than that) with logical flow instead of shorter sentences.
    - Use headings strategically only for thematic shifts depending on the question asked and content
-   - Use lists, tables, links, images when appropriate
-   - use bold text for key points
-   - Implement markdown tables for comparative data where appropriate
-   - **Summarize quantitative data in tables or structured formats that could be easily converted to charts**
-   - When presenting statistics, trends, or comparative data, organize information in table format to facilitate visualization
    - Ensure proper spacing between sections for optimal readability
 
 4. Citations:
@@ -69,8 +66,7 @@ ${analysis}
 
 Note: **Reference list at the end is not required.**
 
-
-Your report should demonstrate subject matter expertise while remaining intellectually accessible to informed professionals. Focus on providing substantive analysis rather than cataloging facts. Emphasize implications and significance rather than merely summarizing information.
+${getFormattingInstructions("writer")}
     `;
 
         if (stepId) {
@@ -82,10 +78,30 @@ Your report should demonstrate subject matter expertise while remaining intellec
                 },
             });
         }
+        // Initialize content monitor to prevent getting stuck on tables
+        const contentMonitor = new ContentMonitor({
+            onStuckDetected: (content, issue) => {
+                updateAnswer({
+                    text: "\n\n**Note**: Switching to alternative formatting to improve readability...\n\n",
+                    status: "PENDING",
+                });
+            },
+        });
+
+        let fullContent = "";
         const chunkBuffer = new ChunkBuffer({
             threshold: 150,
             breakOn: ["\n\n", ".", "!", "?"],
             onFlush: (text: string) => {
+                fullContent += text;
+
+                // Monitor content for issues
+                const check = contentMonitor.checkContent(fullContent);
+                if (check.isStuck && check.suggestion) {
+                    // Add suggestion to help redirect the AI
+                    text += `\n\n*[Formatting note: ${check.suggestion}]*\n\n`;
+                }
+
                 updateAnswer({
                     text,
                     status: "PENDING",

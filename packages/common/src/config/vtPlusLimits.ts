@@ -22,14 +22,17 @@ export interface QuotaConfig {
     window: QuotaWindow;
 }
 
-/** VT+ limits with daily/monthly window configuration */
+/**
+ * @deprecated Use getQuotaConfig() from quota-config.service.ts instead
+ * This is kept for backward compatibility but will be removed in future versions
+ */
 export const VT_PLUS_LIMITS: Record<VtPlusFeature, QuotaConfig> = {
     [VtPlusFeature.DEEP_RESEARCH]: {
-        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_DR ?? "5", 10),
+        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_DR ?? "10", 10),
         window: QUOTA_WINDOW.DAILY,
     },
     [VtPlusFeature.PRO_SEARCH]: {
-        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_PS ?? "10", 10),
+        limit: parseInt(process.env.VTPLUS_DAILY_LIMIT_PS ?? "20", 10),
         window: QUOTA_WINDOW.DAILY,
     },
 };

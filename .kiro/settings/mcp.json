@@ -25,7 +25,9 @@
                 "describe_project",
                 "get_database_tables",
                 "describe_table_schema",
-                "run_sql"
+                "run_sql",
+                "prepare_database_migration",
+                "complete_database_migration"
             ]
         },
         "flymcp": {

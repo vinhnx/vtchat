@@ -1,12 +1,12 @@
 import { db, schema } from "@repo/shared/lib/database";
-import { log } from "@repo/shared/lib/logger";
+import { log } from "@repo/shared/logger";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
-    type QuotaWindow,
     VT_PLUS_LIMITS,
     VtPlusFeature,
+    type QuotaWindow,
 } from "../config/vtPlusLimits";
 
 /**
@@ -29,68 +29,84 @@ const RateLimiterLogMessage = {
 /**
  * Type-safe database column constants to prevent typos
  */
-const VtPlusUsageColumns = {
-    USER_ID: "user_id",
-    FEATURE: "feature",
-    PERIOD_START: "period_start",
-    USED: "used",
-    UPDATED_AT: "updated_at",
-} as const;
-
 /**
- * Helper function to get current usage with type-safe column references
+ * Helper function to get current usage without transaction (for neon-http compatibility)
  */
-async function getCurrentUsage(
-    tx: any,
+async function getCurrentUsageNonTx(
     userId: string,
     feature: VtPlusFeature,
     periodStart: Date,
 ): Promise<number> {
-    const result = await tx.execute(
-        sql`
-            SELECT ${sql.identifier(VtPlusUsageColumns.USED)}
-            FROM vtplus_usage
-            WHERE ${sql.identifier(VtPlusUsageColumns.USER_ID)} = ${userId}
-            AND ${sql.identifier(VtPlusUsageColumns.FEATURE)} = ${feature}
-            AND ${sql.identifier(VtPlusUsageColumns.PERIOD_START)} = ${periodStart}
-        `,
-    );
-    return (result.rows[0]?.used as number) || 0;
+    // Convert to date string for database storage (YYYY-MM-DD format)
+    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const result = await db
+        .select({ used: schema.vtplusUsage.used })
+        .from(schema.vtplusUsage)
+        .where(
+            and(
+                eq(schema.vtplusUsage.userId, userId),
+                eq(schema.vtplusUsage.feature, feature),
+                eq(schema.vtplusUsage.periodStart, periodStartDate),
+            ),
+        )
+        .limit(1);
+
+    return result.length > 0 ? result[0].used : 0;
 }
 
 /**
- * Helper function to perform atomic upsert with type-safe operations
+ * Helper function to perform atomic upsert without transaction (for neon-http compatibility)
  */
-async function upsertUsage(
-    tx: any,
+async function upsertUsageNonTx(
     userId: string,
     feature: VtPlusFeature,
     periodStart: Date,
     amount: number,
-): Promise<number> {
-    const result = await tx.execute(
-        sql`
-            INSERT INTO vtplus_usage (
-                ${sql.identifier(VtPlusUsageColumns.USER_ID)},
-                ${sql.identifier(VtPlusUsageColumns.FEATURE)},
-                ${sql.identifier(VtPlusUsageColumns.PERIOD_START)},
-                ${sql.identifier(VtPlusUsageColumns.USED)},
-                created_at,
-                ${sql.identifier(VtPlusUsageColumns.UPDATED_AT)}
-            )
-            VALUES (${userId}, ${feature}, ${periodStart}, ${amount}, NOW(), NOW())
-            ON CONFLICT (
-                ${sql.identifier(VtPlusUsageColumns.USER_ID)},
-                ${sql.identifier(VtPlusUsageColumns.FEATURE)},
-                ${sql.identifier(VtPlusUsageColumns.PERIOD_START)}
-            )
-            DO UPDATE SET
-                ${sql.identifier(VtPlusUsageColumns.USED)} = vtplus_usage.${sql.identifier(VtPlusUsageColumns.USED)} + ${amount},
-                ${sql.identifier(VtPlusUsageColumns.UPDATED_AT)} = NOW()
-            RETURNING ${sql.identifier(VtPlusUsageColumns.USED)};
-        `,
-    );
-    return result.rows[0].used as number;
+    limit: number,
+): Promise<{ used: number; exceeded: boolean }> {
+    // Convert to date string for database storage (YYYY-MM-DD format)
+    const periodStartDate = periodStart.toISOString().split("T")[0];
+
+    // First, try to get current usage
+    const currentUsage = await getCurrentUsageNonTx(userId, feature, periodStart);
+
+    // Check if adding amount would exceed limit
+    if (currentUsage + amount > limit) {
+        return { used: currentUsage, exceeded: true };
+    }
+
+    // Perform upsert
+    const result = await db
+        .insert(schema.vtplusUsage)
+        .values({
+            userId,
+            feature,
+            periodStart: periodStartDate,
+            used: amount,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+            target: [
+                schema.vtplusUsage.userId,
+                schema.vtplusUsage.feature,
+                schema.vtplusUsage.periodStart,
+            ],
+            set: {
+                used: sql`${schema.vtplusUsage.used} + ${amount}`,
+                updatedAt: new Date(),
+            },
+        })
+        .returning({ used: schema.vtplusUsage.used });
+
+    const newUsed = result[0]?.used || amount;
+
+    // Double-check if the final amount exceeds limit (race condition protection)
+    if (newUsed > limit) {
+        return { used: newUsed, exceeded: true };
+    }
+
+    return { used: newUsed, exceeded: false };
 }
 
 export interface ConsumeOptions {
@@ -138,25 +154,18 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
         RateLimiterLogMessage.ATTEMPTING_TO_CONSUME,
     );
 
-    // Use a cleaner approach with separate check and update operations
+    // Use simplified approach without transactions (neon-http compatibility)
     try {
-        await db.transaction(async (tx) => {
-            // Step 1: Get current usage to validate quota availability
-            const currentUsage = await getCurrentUsage(tx, userId, feature, periodStart);
+        const result = await upsertUsageNonTx(userId, feature, periodStart, amount, limit);
 
-            // Step 2: Validate quota before attempting update
-            if (currentUsage + amount > limit) {
-                throw new QuotaExceededError(feature, limit, currentUsage);
-            }
+        if (result.exceeded) {
+            throw new QuotaExceededError(feature, limit, result.used);
+        }
 
-            // Step 3: Perform atomic upsert with optimistic update
-            const newUsed = await upsertUsage(tx, userId, feature, periodStart, amount);
-
-            log.info(
-                { userId, feature, newUsage: newUsed, limit },
-                RateLimiterLogMessage.QUOTA_CONSUMED_SUCCESS,
-            );
-        });
+        log.info(
+            { userId, feature, newUsage: result.used, limit },
+            RateLimiterLogMessage.QUOTA_CONSUMED_SUCCESS,
+        );
     } catch (error) {
         if (error instanceof QuotaExceededError) {
             throw error;
@@ -172,6 +181,8 @@ export async function consumeQuota(options: ConsumeOptions): Promise<void> {
 export async function getUsage(userId: string, feature: VtPlusFeature): Promise<UsageResponse> {
     const { limit, window } = VT_PLUS_LIMITS[feature];
     const periodStart = getPeriodStart(window);
+    // Convert to date string for database storage (YYYY-MM-DD format)
+    const periodStartDate = periodStart.toISOString().split("T")[0];
 
     const usage = await db
         .select()
@@ -180,7 +191,7 @@ export async function getUsage(userId: string, feature: VtPlusFeature): Promise<
             and(
                 eq(schema.vtplusUsage.userId, userId),
                 eq(schema.vtplusUsage.feature, feature),
-                eq(schema.vtplusUsage.periodStart, periodStart),
+                eq(schema.vtplusUsage.periodStart, periodStartDate),
             ),
         )
         .limit(1);
@@ -210,8 +221,10 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
     }
 
     // Query each window type separately
-    for (const [window, features] of featuresByWindow) {
+    for (const [window, features] of Array.from(featuresByWindow.entries())) {
         const periodStart = getPeriodStart(window);
+        // Convert to date string for database storage (YYYY-MM-DD format)
+        const periodStartDate = periodStart.toISOString().split("T")[0];
 
         const usageRecords = await db
             .select()
@@ -219,7 +232,7 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
             .where(
                 and(
                     eq(schema.vtplusUsage.userId, userId),
-                    eq(schema.vtplusUsage.periodStart, periodStart),
+                    eq(schema.vtplusUsage.periodStart, periodStartDate),
                     inArray(schema.vtplusUsage.feature, features),
                 ),
             );

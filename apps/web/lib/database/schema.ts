@@ -1,5 +1,6 @@
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { desc, eq, sql } from "drizzle-orm";
 import {
     bigserial,
     boolean,
@@ -10,6 +11,7 @@ import {
     pgTable,
     text,
     timestamp,
+    unique,
     uniqueIndex,
     uuid,
 } from "drizzle-orm/pg-core";
@@ -150,6 +152,34 @@ export type UserSubscription = typeof userSubscriptions.$inferSelect;
 export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
 export type Feedback = typeof feedback.$inferSelect;
 export type NewFeedback = typeof feedback.$inferInsert;
+
+// Quota configurations table for VT+ feature limits
+export const quotaConfigs = pgTable(
+    "quota_configs",
+    {
+        id: text("id").primaryKey().default(sql`gen_random_uuid()::text`),
+        feature: text("feature").notNull(),
+        plan: text("plan").notNull(),
+        quotaLimit: integer("quota_limit").notNull().default(0),
+        quotaWindow: text("quota_window").notNull().default("daily"),
+        isActive: boolean("is_active").notNull().default(true),
+        createdAt: timestamp("created_at").notNull().defaultNow(),
+        updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    },
+    (table) => ({
+        featurePlanUnique: unique("quota_configs_feature_plan_unique").on(
+            table.feature,
+            table.plan,
+        ),
+        featurePlanIdx: index("idx_quota_configs_feature_plan")
+            .on(table.feature, table.plan)
+            .where(eq(table.isActive, true)),
+        updatedIdx: index("idx_quota_configs_updated").on(desc(table.updatedAt)),
+    }),
+);
+
+export type QuotaConfig = typeof quotaConfigs.$inferSelect;
+export type NewQuotaConfig = typeof quotaConfigs.$inferInsert;
 // User rate limits table for free model usage tracking
 export const userRateLimits = pgTable(
     "user_rate_limits",

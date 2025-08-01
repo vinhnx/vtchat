@@ -1,5 +1,6 @@
 import { createTask } from "@repo/orchestrator";
 import { ChatMode } from "@repo/shared/config";
+import { getFormattingInstructions } from "../../config/formatting-guidelines";
 import { getModelFromChatMode, ModelEnum } from "../../models";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
@@ -18,9 +19,7 @@ export const analysisTask = createTask<WorkflowEventSchema, WorkflowContextSchem
         const question = context?.get("question") || "";
         const prevSummaries = context?.get("summaries") || [];
         const { updateStep, nextStepId, addSources } = sendEvents(events);
-
         const stepId = nextStepId();
-
         const prompt = `
 
 
@@ -53,6 +52,8 @@ ${s}
 ## Analysis Instructions
 - Analyze the research findings one by one and highlight the most important information which will be used to compose a comprehensive report.
 - Document your analysis in a structured format that will serve as the foundation for creating a comprehensive report.
+
+${getFormattingInstructions("analysis")}
 
                 `;
 

@@ -8,17 +8,20 @@ import {
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
 import {
-    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
+    type CoreMessage,
     type ToolSet,
 } from "ai";
 import type { ZodSchema } from "zod";
 import { CLAUDE_4_CONFIG, ReasoningType } from "../constants/reasoning";
 import { ModelEnum } from "../models";
 import { getLanguageModel } from "../providers";
-import { generateErrorMessage as centralizedGenerateErrorMessage } from "../services/error-messages";
+import {
+    generateErrorMessage as centralizedGenerateErrorMessage,
+    type ErrorContext,
+} from "../services/error-messages";
 import type {
     GenerateTextWithReasoningResult,
     ReasoningDetail,
@@ -96,17 +99,18 @@ export const generateTextWithGeminiSearch = async ({
     userId?: string;
 }): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
-    log.info({}, "=== generateTextWithGeminiSearch START ===");
-    log.info({
-        prompt: `${prompt?.slice(0, 100)}...`,
-        model,
-        hasOnChunk: !!onChunk,
-        messagesLength: messages?.length,
-        hasSignal: !!signal,
-        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
-    });
-
-    // Declare variables outside try block so they're available in catch block
+    log.info("=== generateTextWithGeminiSearch START ===");
+    log.info(
+        {
+            prompt: `${prompt?.slice(0, 100)}...`,
+            model,
+            hasOnChunk: !!onChunk,
+            messagesLength: messages?.length,
+            hasSignal: !!signal,
+            byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        },
+        "generateTextWithGeminiSearch parameters",
+    ); // Declare variables outside try block so they're available in catch block
     let hasUserGeminiKey = false;
     let hasSystemGeminiKey = false;
     let isFreeGeminiModel = false;
@@ -126,9 +130,13 @@ export const generateTextWithGeminiSearch = async ({
             windowApiKey = false;
         }
 
-        hasUserGeminiKey = byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-        hasSystemGeminiKey =
-            (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) || windowApiKey;
+        hasUserGeminiKey = !!(
+            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0
+        );
+        hasSystemGeminiKey = !!(
+            (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) ||
+            windowApiKey
+        );
 
         // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
@@ -310,10 +318,11 @@ export const generateTextWithGeminiSearch = async ({
             if (userId && userTier === "PLUS" && isEligibleForQuotaConsumption(user, isByokKey)) {
                 const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
                 const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
+                const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
 
                 streamResult = await streamTextWithQuota(streamTextConfig as any, {
                     user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                    feature: "PS", // PRO_SEARCH constant to avoid circular imports
+                    feature: VtPlusFeature.PRO_SEARCH,
                     amount: 1,
                     isByokKey: isUsingByokKeys(byokKeys),
                 });
@@ -488,6 +497,15 @@ export const generateTextWithGeminiSearch = async ({
         };
 
         const errorMsg = centralizedGenerateErrorMessage(error, errorContext);
+
+        // Preserve QuotaExceededError type for proper frontend handling
+        if (error.name === "QuotaExceededError") {
+            const quotaError = new Error(errorMsg.message);
+            quotaError.name = "QuotaExceededError";
+            quotaError.cause = error;
+            throw quotaError;
+        }
+
         throw new Error(errorMsg.message);
     }
 };
@@ -685,10 +703,15 @@ export const generateText = async ({
         if (requiresQuotaConsumption) {
             const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
             const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
+            const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
+
+            // Convert string feature code to enum
+            const feature =
+                vtplusFeature === "DR" ? VtPlusFeature.DEEP_RESEARCH : VtPlusFeature.PRO_SEARCH;
 
             streamResult = await streamTextWithQuota(streamConfig, {
                 user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                feature: vtplusFeature!,
+                feature: feature,
                 amount: 1,
                 isByokKey: isUsingByokKeys(byokKeys),
             });
@@ -926,21 +949,32 @@ export const generateObject = async ({
         // Consume quota for VT+ users if using server-funded models
         if (userId && userTier === "PLUS" && !byokKeys && feature) {
             const { consumeQuota } = await import("@repo/common/lib/vtplusRateLimiter");
+            const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
 
-            log.info(
-                {
+            // Convert feature string to VtPlusFeature enum
+            const vtPlusFeature =
+                feature === "DR"
+                    ? VtPlusFeature.DEEP_RESEARCH
+                    : feature === "PS"
+                      ? VtPlusFeature.PRO_SEARCH
+                      : null;
+
+            if (vtPlusFeature) {
+                log.info(
+                    {
+                        userId,
+                        feature: vtPlusFeature,
+                        amount: 1,
+                    },
+                    "Consuming VT+ quota for generateObject",
+                );
+
+                await consumeQuota({
                     userId,
-                    feature,
+                    feature: vtPlusFeature,
                     amount: 1,
-                },
-                "Consuming VT+ quota for generateObject",
-            );
-
-            await consumeQuota({
-                userId,
-                feature,
-                amount: 1,
-            });
+                });
+            }
         }
 
         const { object } = await generateObjectAi(generateConfig);
@@ -953,7 +987,11 @@ export const generateObject = async ({
         log.info("=== generateObject END ===");
         return JSON.parse(JSON.stringify(object));
     } catch (error: any) {
-        log.error("Error in generateObject:", { data: error });
+        log.error("Error in generateObject:", {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+            data: error,
+        });
 
         // Use centralized error message service for better user feedback
         const errorContext: ErrorContext = {
@@ -972,6 +1010,14 @@ export const generateObject = async ({
         };
 
         const errorMsg = centralizedGenerateErrorMessage(error, errorContext);
+
+        // Preserve QuotaExceededError type for proper frontend handling
+        if (error.name === "QuotaExceededError") {
+            const quotaError = new Error(errorMsg.message);
+            quotaError.name = "QuotaExceededError";
+            quotaError.cause = error;
+            throw quotaError;
+        }
 
         throw new Error(errorMsg.message);
     }
@@ -1383,6 +1429,7 @@ export const selectAvailableModel = (
         const providers = {
             // Gemini models
             [ModelEnum.GEMINI_2_5_FLASH]: "GEMINI_API_KEY",
+            [ModelEnum.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
             [ModelEnum.GEMINI_2_5_PRO]: "GEMINI_API_KEY",
             // OpenAI models
             [ModelEnum.GPT_4o_Mini]: "OPENAI_API_KEY",

@@ -1,10 +1,12 @@
+import { log } from '@repo/shared/lib/logger';
+
 /**
  * Basic Tests for Structured Output Feature
  * Simple validation tests that work with the current test setup
  */
 
 // Test 1: Schema Validation
-console.log("🧪 Testing Schema Validation...");
+log.info("🧪 Testing Schema Validation...");
 
 function testSchemaValidation() {
     try {
@@ -22,20 +24,20 @@ function testSchemaValidation() {
             typeof testData.age === "number";
 
         if (isValid) {
-            console.log("✅ Schema validation test passed");
+            log.info("✅ Schema validation test passed");
             return true;
         } else {
-            console.log("❌ Schema validation test failed");
+            log.error("❌ Schema validation test failed");
             return false;
         }
     } catch (error) {
-        console.log("❌ Schema validation test error:", error.message);
+        log.error("❌ Schema validation test error:", error.message);
         return false;
     }
 }
 
 // Test 2: Document Type Detection
-console.log("🧪 Testing Document Type Detection...");
+log.info("🧪 Testing Document Type Detection...");
 
 function testDocumentTypeDetection() {
     try {
@@ -78,9 +80,9 @@ function testDocumentTypeDetection() {
         for (const testCase of testCases) {
             const detectedType = detectDocumentType(testCase.text);
             if (detectedType === testCase.expectedType) {
-                console.log(`✅ Document type detection: ${testCase.expectedType} - passed`);
+                log.info(`✅ Document type detection: ${testCase.expectedType} - passed`);
             } else {
-                console.log(
+                log.error(
                     `❌ Document type detection: expected ${testCase.expectedType}, got ${detectedType}`,
                 );
                 allPassed = false;
@@ -89,13 +91,13 @@ function testDocumentTypeDetection() {
 
         return allPassed;
     } catch (error) {
-        console.log("❌ Document type detection test error:", error.message);
+        log.error("❌ Document type detection test error:", error.message);
         return false;
     }
 }
 
 // Test 3: API Key Validation
-console.log("🧪 Testing API Key Validation...");
+log.info("🧪 Testing API Key Validation...");
 
 function testApiKeyValidation() {
     try {
@@ -116,34 +118,34 @@ function testApiKeyValidation() {
         // Test with valid API key
         const validResult = validateApiKeys("gemini-1.5-pro", { GEMINI_API_KEY: "valid-key" });
         if (!validResult.isValid) {
-            console.log("❌ API key validation failed for valid key");
+            log.error("❌ API key validation failed for valid key");
             return false;
         }
 
         // Test with missing API key
         const invalidResult = validateApiKeys("gemini-1.5-pro", {});
         if (invalidResult.isValid) {
-            console.log("❌ API key validation should fail for missing key");
+            log.error("❌ API key validation should fail for missing key");
             return false;
         }
 
         // Test with non-Gemini model
         const nonGeminiResult = validateApiKeys("gpt-4", {});
         if (!nonGeminiResult.isValid) {
-            console.log("❌ API key validation should pass for non-Gemini models");
+            log.error("❌ API key validation should pass for non-Gemini models");
             return false;
         }
 
-        console.log("✅ API key validation tests passed");
+        log.info("✅ API key validation tests passed");
         return true;
     } catch (error) {
-        console.log("❌ API key validation test error:", error.message);
+        log.error("❌ API key validation test error:", error.message);
         return false;
     }
 }
 
 // Test 4: File Type Validation
-console.log("🧪 Testing File Type Validation...");
+log.info("🧪 Testing File Type Validation...");
 
 function testFileTypeValidation() {
     try {
@@ -164,7 +166,7 @@ function testFileTypeValidation() {
         const pdfFile = { type: "application/pdf", name: "test.pdf" };
         const validResult = validateFileType(pdfFile);
         if (!validResult.isValid) {
-            console.log("❌ File type validation failed for valid PDF");
+            log.error("❌ File type validation failed for valid PDF");
             return false;
         }
 
@@ -172,20 +174,20 @@ function testFileTypeValidation() {
         const txtFile = { type: "text/plain", name: "test.txt" };
         const invalidResult = validateFileType(txtFile);
         if (invalidResult.isValid) {
-            console.log("❌ File type validation should fail for non-PDF files");
+            log.error("❌ File type validation should fail for non-PDF files");
             return false;
         }
 
-        console.log("✅ File type validation tests passed");
+        log.info("✅ File type validation tests passed");
         return true;
     } catch (error) {
-        console.log("❌ File type validation test error:", error.message);
+        log.error("❌ File type validation test error:", error.message);
         return false;
     }
 }
 
 // Test 5: Error Handling
-console.log("🧪 Testing Error Handling...");
+log.info("🧪 Testing Error Handling...");
 
 function testErrorHandling() {
     try {
@@ -203,32 +205,32 @@ function testErrorHandling() {
         // Test missing document
         const result = validateDocumentUpload(null);
         if (result.isValid) {
-            console.log("❌ Error handling should detect missing document");
+            log.error("❌ Error handling should detect missing document");
             return false;
         }
 
         if (result.error !== "No Document") {
-            console.log("❌ Error handling should return correct error message");
+            log.error("❌ Error handling should return correct error message");
             return false;
         }
 
         // Test valid document
         const validResult = validateDocumentUpload({ file: { name: "test.pdf" } });
         if (!validResult.isValid) {
-            console.log("❌ Error handling should pass for valid document");
+            log.error("❌ Error handling should pass for valid document");
             return false;
         }
 
-        console.log("✅ Error handling tests passed");
+        log.info("✅ Error handling tests passed");
         return true;
     } catch (error) {
-        console.log("❌ Error handling test error:", error.message);
+        log.error("❌ Error handling test error:", error.message);
         return false;
     }
 }
 
 // Run all tests
-console.log("\n🚀 Running Structured Output Feature Tests...\n");
+log.info("\n🚀 Running Structured Output Feature Tests...\n");
 
 const testResults = [
     testSchemaValidation(),
@@ -241,14 +243,14 @@ const testResults = [
 const passedTests = testResults.filter((result) => result).length;
 const totalTests = testResults.length;
 
-console.log("\n📊 Test Results Summary:");
-console.log(`✅ Passed: ${passedTests}/${totalTests}`);
-console.log(`❌ Failed: ${totalTests - passedTests}/${totalTests}`);
+log.info("\n📊 Test Results Summary:");
+log.info(`✅ Passed: ${passedTests}/${totalTests}`);
+log.info(`❌ Failed: ${totalTests - passedTests}/${totalTests}`);
 
 if (passedTests === totalTests) {
-    console.log("\n🎉 All tests passed! Structured output feature is working correctly.");
+    log.info("\n🎉 All tests passed! Structured output feature is working correctly.");
     process.exit(0);
 } else {
-    console.log("\n⚠️  Some tests failed. Please check the implementation.");
+    log.error("\n⚠️  Some tests failed. Please check the implementation.");
     process.exit(1);
 }

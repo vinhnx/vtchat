@@ -1,9 +1,9 @@
 import { log } from "@repo/shared/logger";
 import { EnvironmentType } from "@repo/shared/types/environment";
 import { betterAuth } from "better-auth";
+import { emailHarmony } from "better-auth-harmony";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, multiSession } from "better-auth/plugins";
-import { emailHarmony } from "better-auth-harmony";
 import { botDetection } from "./bot-detection-plugin";
 import { db } from "./database";
 import * as schema from "./database/schema";
@@ -44,7 +44,13 @@ export const auth = betterAuth({
     account: {
         accountLinking: {
             enabled: true,
-            trustedProviders: ["google", "github", "twitter"],
+            trustedProviders: [
+                "google",
+                "github",
+                ...(process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET
+                    ? ["twitter"]
+                    : []),
+            ],
             allowDifferentEmails: true, // Allow for Twitter which doesn't provide email consistently
         },
     },
@@ -77,14 +83,18 @@ export const auth = betterAuth({
                 };
             },
         },
-        twitter: {
-            clientId: process.env.TWITTER_CLIENT_ID!,
-            clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-            redirectURI:
-                process.env.NODE_ENV === "production"
-                    ? "https://vtchat.io.vn/api/auth/callback/twitter"
-                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
-        },
+        ...(process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET
+            ? {
+                  twitter: {
+                      clientId: process.env.TWITTER_CLIENT_ID,
+                      clientSecret: process.env.TWITTER_CLIENT_SECRET,
+                      redirectURI:
+                          process.env.NODE_ENV === "production"
+                              ? "https://vtchat.io.vn/api/auth/callback/twitter"
+                              : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
+                  },
+              }
+            : {}),
     },
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days

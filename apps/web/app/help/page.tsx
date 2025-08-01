@@ -294,11 +294,16 @@ function HelpCenterContent() {
                                 <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Pro Search:</strong> Lightning-fast web search with
-                                        AI grounding
+                                        AI grounding - 20 requests per day
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research:</strong> Comprehensive multi-step
-                                        research and analysis
+                                        research and analysis - 10 requests per day
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Flexible Quotas:</strong> Database-driven quota
+                                        system allows for dynamic adjustments based on usage
+                                        patterns and feedback
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -359,12 +364,14 @@ function HelpCenterContent() {
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research (VT+ exclusive):</strong> Uses Gemini
                                         2.5 Pro for comprehensive, multi-step research with detailed
-                                        analysis and thorough investigation of complex topics
+                                        analysis and thorough investigation of complex topics - 10
+                                        requests per day
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Pro Search (VT+ exclusive):</strong> Uses Gemini 2.5
                                         Flash for fast, efficient web search and information
-                                        retrieval with quick grounding capabilities
+                                        retrieval with quick grounding capabilities - 20 requests
+                                        per day
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both modes feature native Google search grounding for
@@ -379,6 +386,45 @@ function HelpCenterContent() {
                                     Both research modes are VT+ exclusive features (
                                     {VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 3 premium features
                                     while everything else is free.
+                                </p>
+                            </AccordionContent>
+                        </AccordionItem>
+
+                        {/* VT+ Quotas */}
+                        <AccordionItem value="vtplus-quotas">
+                            <AccordionTrigger className="font-medium">
+                                How do VT+ quotas work and when do they reset?
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <p className="text-muted-foreground">
+                                    VT+ features have daily quotas that reset automatically:
+                                </p>
+                                <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
+                                    <li className="text-muted-foreground">
+                                        <strong>Deep Research:</strong> 10 requests per day for VT+
+                                        subscribers, 0 for base plan users
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Pro Search:</strong> 20 requests per day for VT+
+                                        subscribers, 0 for base plan users
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Daily Reset:</strong> All quotas reset at 00:00 UTC
+                                        each day
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Database-Driven:</strong> Quotas are managed through
+                                        a flexible database system that allows for dynamic
+                                        adjustments
+                                    </li>
+                                    <li className="text-muted-foreground">
+                                        <strong>Real-Time Tracking:</strong> Your usage is tracked
+                                        in real-time and displayed in your settings
+                                    </li>
+                                </ul>
+                                <p className="text-muted-foreground mt-4 text-sm">
+                                    You can check your current quota usage in Settings → VT+ Usage
+                                    to see how many requests you have remaining for each feature.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>

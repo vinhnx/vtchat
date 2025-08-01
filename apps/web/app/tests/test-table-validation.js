@@ -1,3 +1,5 @@
+import { log } from '@repo/shared/lib/logger';
+
 /**
  * Comprehensive test for table validation and rendering fixes
  */
@@ -115,7 +117,7 @@ Some text after table.`,
 ];
 
 // Run tests
-console.log("🧪 Running comprehensive table validation tests...\n");
+log.info("🧪 Running comprehensive table validation tests...\n");
 
 let passedTests = 0;
 const totalTests = testCases.length;
@@ -124,41 +126,41 @@ testCases.forEach((testCase, index) => {
     const result = validateTableStructure(testCase.content);
     const passed = result.isValid === testCase.expectedValid;
 
-    console.log(`Test ${index + 1}: ${testCase.name}`);
-    console.log(`  Expected: ${testCase.expectedValid ? "Valid" : "Invalid"}`);
-    console.log(`  Actual: ${result.isValid ? "Valid" : "Invalid"}`);
+    log.info({ test: index + 1, name: testCase.name }, 'Test case result');
+    log.info(`  Expected: ${testCase.expectedValid ? "Valid" : "Invalid"}`);
+    log.info(`  Actual: ${result.isValid ? "Valid" : "Invalid"}`);
 
     if (result.errors.length > 0) {
-        console.log(`  Errors: ${result.errors.join(", ")}`);
+        log.info(`  Errors: ${result.errors.join(", ")}`);
     }
 
-    console.log(`  Result: ${passed ? "✅ PASS" : "❌ FAIL"}\n`);
+    log.info(`  Result: ${passed ? "✅ PASS" : "❌ FAIL"}\n`);
 
     if (passed) passedTests++;
 });
 
-console.log("📊 Test Summary:");
-console.log(`  Passed: ${passedTests}/${totalTests}`);
-console.log(`  Success Rate: ${Math.round((passedTests / totalTests) * 100)}%`);
+log.info("📊 Test Summary:");
+log.info(`  Passed: ${passedTests}/${totalTests}`);
+log.info(`  Success Rate: ${Math.round((passedTests / totalTests) * 100)}%`);
 
 if (passedTests === totalTests) {
-    console.log("\n🎉 All table validation tests passed!");
-    console.log("✅ Table rendering improvements are working correctly");
+    log.info("\n🎉 All table validation tests passed!");
+    log.info("✅ Table rendering improvements are working correctly");
 } else {
-    console.log("\n⚠️  Some tests failed - review table validation logic");
+    log.info("\n⚠️  Some tests failed - review table validation logic");
 }
 
 // Test circuit breaker functionality
-console.log("\n🔧 Testing circuit breaker improvements:");
-console.log("- Reduced MAX_RENDERS from 10 to 3 ✅");
-console.log("- Added 100ms debouncing for render attempts ✅");
-console.log("- Enhanced logging with content preview ✅");
-console.log("- Smart fallback to bypass table processing ✅");
+log.info("\n🔧 Testing circuit breaker improvements:");
+log.info("- Reduced MAX_RENDERS from 10 to 3 ✅");
+log.info("- Added 100ms debouncing for render attempts ✅");
+log.info("- Enhanced logging with content preview ✅");
+log.info("- Smart fallback to bypass table processing ✅");
 
-console.log("\n📈 Header spacing improvements:");
-console.log("- H1: margin-top increased to 3rem, margin-bottom to 1.5rem ✅");
-console.log("- H2: margin-top increased to 2.5rem, margin-bottom to 1.25rem ✅");
-console.log("- H3: margin-top increased to 2.25rem, margin-bottom to 1rem ✅");
-console.log("- H4: margin-top increased to 2rem, margin-bottom to 1rem ✅");
-console.log("- H5: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");
-console.log("- H6: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");
+log.info("\n📈 Header spacing improvements:");
+log.info("- H1: margin-top increased to 3rem, margin-bottom to 1.5rem ✅");
+log.info("- H2: margin-top increased to 2.5rem, margin-bottom to 1.25rem ✅");
+log.info("- H3: margin-top increased to 2.25rem, margin-bottom to 1rem ✅");
+log.info("- H4: margin-top increased to 2rem, margin-bottom to 1rem ✅");
+log.info("- H5: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");
+log.info("- H6: margin-top increased to 1.75rem, margin-bottom to 0.75rem ✅");

@@ -8,7 +8,7 @@ import { createXai } from "@ai-sdk/xai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatMode } from "@repo/shared/config";
 import { log } from "@repo/shared/logger";
-import { type LanguageModelV1Middleware, wrapLanguageModel } from "ai";
+import { wrapLanguageModel, type LanguageModelV1Middleware } from "ai";
 export const Providers = {
     OPENAI: "openai",
     ANTHROPIC: "anthropic",
@@ -22,7 +22,7 @@ export const Providers = {
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];
 
 import { CLAUDE_4_CONFIG } from "./constants/reasoning";
-import { type ModelEnum, models } from "./models";
+import { models, type ModelEnum } from "./models";
 import { generateErrorMessage } from "./services/error-messages";
 
 // Define a global type for API keys
@@ -137,6 +137,8 @@ export const getProviderInstance = (
         hasByokKeys: !!byokKeys,
         byokKeysKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         apiKeyLength: apiKey ? apiKey.length : 0,
+        isVtPlus,
+        envGeminiKey: provider === "google" ? !!process.env.GEMINI_API_KEY : undefined,
     });
 
     // Helper function to validate API key and throw consistent errors
@@ -147,6 +149,15 @@ export const getProviderInstance = (
                 hasApiKey: false,
                 isVtPlus,
             });
+
+            // Preserve QuotaExceededError type for proper frontend handling
+            if (error.name === "QuotaExceededError") {
+                const quotaError = new Error(errorMsg.message);
+                quotaError.name = "QuotaExceededError";
+                quotaError.cause = error;
+                throw quotaError;
+            }
+
             throw new Error(errorMsg.message);
         }
     };
@@ -190,6 +201,10 @@ export const getProviderInstance = (
             });
         case "google":
             validateApiKey(Providers.GOOGLE);
+            // Ensure the environment variable is set for the Google provider
+            if (apiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+                process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+            }
             return createGoogleGenerativeAI({
                 apiKey,
             });
@@ -217,6 +232,7 @@ export const getProviderInstance = (
                     hasApiKey: false,
                     isVtPlus,
                 });
+
                 throw new Error(errorMsg.message);
             }
             // Default to OpenAI-compatible for unknown providers

@@ -266,9 +266,9 @@ export class ErrorMessageService {
         if (provider === Providers.GOOGLE && !context.hasApiKey) {
             if (isVtPlus) {
                 return {
-                    title: "VT+ Monthly Quota Exceeded",
+                    title: "VT+ Daily Quota Exceeded",
                     message:
-                        "You've used all your VT+ quota for this month. Add your own API key for unlimited usage.",
+                        "You've used all your VT+ quota for today. Add your own API key for unlimited usage.",
                     action: "Add your own Gemini API key in Settings → API Keys → Google Gemini",
                     helpUrl: PROVIDER_SETUP_URLS[provider],
                     settingsAction: "open_api_keys",

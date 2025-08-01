@@ -9,7 +9,7 @@ describe("Error Diagnostics", () => {
     describe("generateErrorDiagnostic", () => {
         it("should detect VT+ quota exceeded errors", () => {
             const error =
-                "Daily Deep Research limit reached (5/5). Try Pro Search or regular chat. Your quota will reset tomorrow.";
+                "Daily Deep Research limit reached (10/10). Try Pro Search or regular chat. Your quota will reset tomorrow.";
             const diagnostic = generateErrorDiagnostic(error);
 
             expect(diagnostic.category).toBe("rate_limit");
