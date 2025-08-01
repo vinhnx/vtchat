@@ -1,5 +1,4 @@
 import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from "@repo/common/components";
-import { log } from "@repo/shared/logger";
 import { isValidUrl } from "@repo/shared/utils";
 import type { MDXRemote } from "next-mdx-remote/rsc";
 import { type ComponentProps, type ReactElement, useContext } from "react";
@@ -26,35 +25,35 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
 
         return (
             <LinkPreviewPopover source={source}>
-                <span className="bg-quaternary text-quaternary-foreground/50 hover:bg-brand group mx-0.5 inline-flex size-3.5 flex-row items-center justify-center gap-1 rounded-sm text-[10px] font-medium hover:text-white">
+                <span className="bg-gradient-to-br from-brand/15 to-brand/5 text-brand border-brand/30 hover:from-brand hover:to-brand hover:border-brand group mx-1 inline-flex size-6 flex-row items-center justify-center gap-1 rounded-lg border text-xs font-bold transition-all duration-300 hover:text-white hover:shadow-lg hover:shadow-brand/25 hover:scale-105">
                     {source?.index}
                 </span>
             </LinkPreviewPopover>
         );
     },
     p: ({ children }) => {
-        return <div className="markdown-text mb-5 text-base leading-loose">{children}</div>;
+        return <div className="markdown-text mb-6 text-base leading-loose">{children}</div>;
     },
     h1: ({ children }) => {
         return (
-            <h1 className="border-border markdown-text mb-6 mt-8 border-b pb-2 text-2xl font-bold tracking-tight">
+            <h1 className="border-border markdown-text mb-6 mt-12 border-b pb-2 text-2xl font-bold tracking-tight">
                 {children}
             </h1>
         );
     },
     h2: ({ children }) => {
         return (
-            <h2 className="border-border/60 markdown-text mb-4 mt-7 border-b pb-1 text-xl font-semibold tracking-tight">
+            <h2 className="border-border/60 markdown-text mb-5 mt-10 border-b pb-1 text-xl font-semibold tracking-tight">
                 {children}
             </h2>
         );
     },
     h3: ({ children }) => {
-        return <h3 className="markdown-text mb-3 mt-6 text-lg font-medium">{children}</h3>;
+        return <h3 className="markdown-text mb-4 mt-9 text-lg font-medium">{children}</h3>;
     },
     h4: ({ children }) => {
         return (
-            <h4 className="markdown-text mb-3 mt-5 text-base font-medium opacity-90">{children}</h4>
+            <h4 className="markdown-text mb-4 mt-8 text-base font-medium opacity-90">{children}</h4>
         );
     },
     a: ({ href, children }) => {
@@ -103,8 +102,8 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return (
             <TableErrorBoundary
                 onError={(error) => {
-                    // Log table rendering errors for debugging
-                    log.warn({ error: error.message }, "Table rendering error in MDX");
+                    // Silent error handling for table rendering issues
+                    console.warn("Table rendering error in MDX:", error.message);
                 }}
                 fallback={
                     <div className="border-warning bg-warning/10 text-warning my-4 rounded-md border p-4">
@@ -149,7 +148,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
     code: ({ children, className }) => {
         if (!className) {
             return (
-                <code className="bg-secondary border-border whitespace-nowrap rounded-md border px-1.5 py-0.5 font-mono text-sm">
+                <code className="bg-muted/70 text-foreground border-border/40 whitespace-nowrap rounded-md border px-2 py-1 font-mono text-sm font-medium shadow-sm">
                     {children}
                 </code>
             );
