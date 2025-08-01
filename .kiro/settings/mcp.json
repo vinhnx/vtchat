@@ -1,5 +1,11 @@
 {
     "mcpServers": {
+        "tavily-remote-mcp": {
+            "command": "npx -y mcp-remote https://mcp.tavily.com/mcp/?tavilyApiKey=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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC",
+            "env": {},
+            "disabled": false,
+            "autoApprove": ["fetch"]
+        },
         "fetch": {
             "command": "uvx",
             "args": ["mcp-server-fetch"],

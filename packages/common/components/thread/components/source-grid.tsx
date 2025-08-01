@@ -1,7 +1,6 @@
-import { SourceList } from "@repo/common/components";
+import { LinkPreview, SourceList } from "@repo/common/components";
 import { useAppStore } from "@repo/common/store";
 import type { Source } from "@repo/shared/types";
-import { getHost } from "@repo/shared/utils";
 import { LinkFavicon } from "@repo/ui";
 
 type SourceGridProps = {
@@ -34,10 +33,9 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
         <div className="pb-8 pt-2">
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
                 {sortedSources.map((source) => (
-                    <button
-                        type="button"
-                        className="bg-quaternary/60 hover:bg-quaternary flex min-w-[200px] max-w-[250px] cursor-pointer flex-col justify-between rounded-md p-3 text-left transition-all duration-200 border border-border/10 hover:border-border/30 hover:shadow-sm"
+                    <div
                         key={`${source.link}-${source.index}`}
+                        className="bg-quaternary/60 hover:bg-quaternary flex min-w-[300px] max-w-[350px] cursor-pointer flex-col rounded-md border border-border/10 hover:border-border/30 hover:shadow-sm transition-all duration-200"
                         onClick={() => {
                             window?.open(source?.link, "_blank");
                         }}
@@ -47,18 +45,12 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                                 window?.open(source?.link, "_blank");
                             }
                         }}
+                        role="button"
+                        tabIndex={0}
                         aria-label={`Open source: ${source.title}`}
                     >
-                        {source?.link && (
-                            <div className="flex flex-row items-center gap-1 pb-1">
-                                <LinkFavicon link={source?.link} size="sm" />
-                                <p className="text-muted-foreground line-clamp-1 text-xs">
-                                    {getHost(source?.link)}
-                                </p>
-                            </div>
-                        )}
-                        <p className="line-clamp-2 text-xs font-medium">{source?.title}</p>
-                    </button>
+                        <LinkPreview source={source} />
+                    </div>
                 ))}
                 {sortedSources.length > 6 && (
                     <button
