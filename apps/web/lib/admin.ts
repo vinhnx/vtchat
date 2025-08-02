@@ -31,6 +31,9 @@ export async function isUserAdmin(userId?: string): Promise<boolean> {
     }
 }
 
+// Alias for backward compatibility
+export const isAdmin = isUserAdmin;
+
 export async function getCurrentUserAdminStatus(): Promise<boolean> {
     try {
         const session = await auth.api.getSession({
