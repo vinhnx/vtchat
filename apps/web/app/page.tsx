@@ -1,18 +1,75 @@
 "use client";
 
+import { useSession } from "@repo/shared/lib/auth-client";
+import { motion } from "framer-motion";
+import NextDynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+
 // This page needs dynamic rendering due to real-time chat functionality
 export const dynamic = "force-dynamic";
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { motion } from "framer-motion";
-import {
-    ChatInputWithSuspense,
-    FooterWithSuspense,
-    ThreadWithSuspense,
-} from "../components/lazy-components";
+// Dynamically import components that use agent hooks with no SSR
+const ThreadWithSuspense = NextDynamic(
+    () =>
+        import("../components/lazy-components").then((mod) => ({
+            default: mod.ThreadWithSuspense,
+        })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-full items-center justify-center">
+                <div className="animate-pulse">Loading chat...</div>
+            </div>
+        ),
+    },
+);
+
+const ChatInputWithSuspense = NextDynamic(
+    () =>
+        import("../components/lazy-components").then((mod) => ({
+            default: mod.ChatInputWithSuspense,
+        })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-16 items-center justify-center">
+                <div className="animate-pulse">Loading input...</div>
+            </div>
+        ),
+    },
+);
+
+const FooterWithSuspense = NextDynamic(
+    () =>
+        import("../components/lazy-components").then((mod) => ({
+            default: mod.FooterWithSuspense,
+        })),
+    {
+        ssr: false,
+        loading: () => <div className="bg-muted h-16 animate-pulse rounded" />,
+    },
+);
+
+// SSR-safe animation properties hook
+function useAnimationProperties() {
+    const [animProps, setAnimProps] = useState({
+        reducedMotion: false,
+        isMobile: false,
+    });
+
+    useEffect(() => {
+        setAnimProps({
+            reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+            isMobile: window.innerWidth < 768,
+        });
+    }, []);
+
+    return animProps;
+}
 
 export default function HomePage() {
     const { data: session, isPending } = useSession();
+    const { reducedMotion, isMobile } = useAnimationProperties();
 
     return (
         <div className="relative flex h-dvh w-full flex-col">
@@ -33,19 +90,11 @@ export default function HomePage() {
                 className="flex-1 overflow-hidden transform-gpu will-change-transform"
                 initial={{
                     opacity: 0,
-                    y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                        ? 0
-                        : window.innerWidth < 768
-                          ? 10
-                          : 20,
+                    y: reducedMotion ? 0 : isMobile ? 10 : 20,
                 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                    duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                        ? 0
-                        : window.innerWidth < 768
-                          ? 0.2
-                          : 0.3,
+                    duration: reducedMotion ? 0 : isMobile ? 0.2 : 0.3,
                 }}
             >
                 <div className="flex h-full flex-col">
@@ -58,20 +107,12 @@ export default function HomePage() {
                 className="pb-safe-area-inset-bottom flex-shrink-0 transform-gpu will-change-transform"
                 initial={{
                     opacity: 0,
-                    y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                        ? 0
-                        : window.innerWidth < 768
-                          ? 10
-                          : 20,
+                    y: reducedMotion ? 0 : isMobile ? 10 : 20,
                 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                    duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                        ? 0
-                        : window.innerWidth < 768
-                          ? 0.2
-                          : 0.3,
-                    delay: window.innerWidth < 768 ? 0.1 : 0.2,
+                    duration: reducedMotion ? 0 : isMobile ? 0.2 : 0.3,
+                    delay: isMobile ? 0.1 : 0.2,
                 }}
             >
                 <ChatInputWithSuspense showGreeting={true} />
@@ -83,20 +124,12 @@ export default function HomePage() {
                     className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 mobile-footer-spacing md:pb-4 transform-gpu will-change-transform"
                     initial={{
                         opacity: 0,
-                        y: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                            ? 0
-                            : window.innerWidth < 768
-                              ? 10
-                              : 20,
+                        y: reducedMotion ? 0 : isMobile ? 10 : 20,
                     }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
-                        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                            ? 0
-                            : window.innerWidth < 768
-                              ? 0.2
-                              : 0.3,
-                        delay: window.innerWidth < 768 ? 0.2 : 0.4,
+                        duration: reducedMotion ? 0 : isMobile ? 0.2 : 0.3,
+                        delay: isMobile ? 0.2 : 0.4,
                     }}
                 >
                     <div className="pointer-events-auto">
