@@ -12,7 +12,28 @@ Research and rename "VT" to better and memorable name
 
 ai sdk v5 https://vercel.com/blog/ai-sdk-5
 
+
+--
+
+improve deep research and pro search system to display agregated results from multiple sources from footer summarized content in bullet lists, each display title and link of source
+
+--
+
+https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
+
 -
+
+fix user message word wrapping if too long
+
+--
+
+don't count normal 'web search' tool same as pro search "PS" quota
+
+--
+
+https://x.com/joshtriedcoding/status/1950891329589748058
+
+--
 
 integrate text-to-speech
 
@@ -49,3 +70,43 @@ I would also like to mention that I am looking forward to the possibility of a b
 
 Thank you and regards,
 Ivanna
+
+--
+
+fix rate limit record wrong model. example Deep Research
+
+/api/rate-limit/status in 505ms
+@vtchat/web:dev: Recorded provider usage for budget tracking {
+@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
+@vtchat/web:dev:   modelId: 'gemini-2.5-flash-lite-preview-06-17',
+@vtchat/web:dev:   provider: 'gemini',
+@vtchat/web:dev:   estimatedCostCents: 1,
+@vtchat/web:dev:   estimatedCostUSD: 0.01
+@vtchat/web:dev: }
+@vtchat/web:dev: Recorded provider usage for budget tracking {
+@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
+@vtchat/web:dev:   modelId: 'gemini-2.5-pro',
+@vtchat/web:dev:   provider: 'gemini',
+@vtchat/web:dev:   estimatedCostCents: 2,
+@vtchat/web:dev:   estimatedCostUSD: 0.02
+@vtchat/web:dev: }
+@vtchat/web:dev: Recorded provider usage for budget tracking {
+@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
+@vtchat/web:dev:   modelId: 'gemini-2.5-flash-lite-preview-06-17',
+@vtchat/web:dev:   provider: 'gemini',
+@vtchat/web:dev:   estimatedCostCents: 1,
+@vtchat/web:dev:   estimatedCostUSD: 0.01
+@vtchat/web:dev: }
+@vtchat/web:dev: Recorded provider usage for budget tracking {
+@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
+@vtchat/web:dev:   modelId: 'gemini-2.5-pro',
+@vtchat/web:dev:   provider: 'gemini',
+@vtchat/web:dev:   estimatedCostCents: 2,
+@vtchat/web:dev:   estimatedCostUSD: 0.02
+@vtchat/web:dev: }
+
+-> also remove estimated cost tracking fields and logic
+
+--
+
+update about, terms, privacy and help pages with latest info and logic and quota base on our codebase. it was outdated
