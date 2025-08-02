@@ -12,7 +12,7 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
 } from "@repo/ui";
-import { AlertCircle, Check, Copy, FileText, RotateCcw, Trash } from "lucide-react";
+import { AlertCircle, Check, Clipboard, FileText, MessageCircleX, RefreshCcw, Trash2 } from "lucide-react";
 import React, { forwardRef, useState } from "react";
 
 type MessageActionsProps = {
@@ -53,12 +53,13 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             }}
                             size="icon-sm"
                             tooltip="Copy"
-                            variant="ghost-bordered"
+                            variant="secondary"
+                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
                         >
                             {status === "copied" ? (
-                                <Check size={16} strokeWidth={2} />
+                                <Check className="h-4 w-4" strokeWidth={2} />
                             ) : (
-                                <Copy size={16} strokeWidth={2} />
+                                <Clipboard className="h-4 w-4" strokeWidth={2} />
                             )}
                         </Button>
                     )}
@@ -84,12 +85,13 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             }}
                             size="icon-sm"
                             tooltip="Copy Markdown"
-                            variant="ghost-bordered"
+                            variant="secondary"
+                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
                         >
                             {markdownCopyStatus === "copied" ? (
-                                <Check size={16} strokeWidth={2} />
+                                <Check className="h-4 w-4" strokeWidth={2} />
                             ) : (
-                                <FileText size={16} strokeWidth={2} />
+                                <FileText className="h-4 w-4" strokeWidth={2} />
                             )}
                         </Button>
                     )}
@@ -100,9 +102,10 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                     <Button
                                         size="icon-sm"
                                         tooltip="Rewrite"
-                                        variant="ghost-bordered"
+                                        variant="secondary"
+                                        className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
                                     >
-                                        <RotateCcw size={16} strokeWidth={2} />
+                                        <RefreshCcw className="h-4 w-4" strokeWidth={2} />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <ChatModeOptions
@@ -134,9 +137,10 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             }}
                             size="icon-sm"
                             tooltip="Remove"
-                            variant="ghost-bordered"
+                            variant="secondary"
+                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
                         >
-                            <Trash size={16} strokeWidth={2} />
+                            <MessageCircleX className="h-4 w-4" strokeWidth={2} />
                         </Button>
                     )}
                     {threadItem.mode && (
