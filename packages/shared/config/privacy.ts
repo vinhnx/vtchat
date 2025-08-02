@@ -25,9 +25,9 @@ VT is built with **privacy-first principles** at its core:
 
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
-- **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub)
-- **Free Model Usage:** We track daily request counts and rate-limiting data for our suite of 9 free AI models, which includes 5 Gemini models (2.5 Flash Lite, 2.5 Flash, 2.5 Pro) and 4 OpenRouter models.
-- **Premium Model Access:** Access to all premium AI models (Claude 4, GPT-4.1, O3, etc.) with BYOK for all logged-in users
+- **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub and Twitter/X)
+- **Free Model Usage:** We track daily request counts and rate-limiting data for our server-funded AI models, which includes Gemini models (2.5 Flash Lite: 20/day, 2.5 Flash: 10/day, 2.5 Pro: 5/day) and OpenRouter models.
+- **Premium Model Access:** Access to all premium AI models (Claude 4, GPT-4.1, O3, DeepSeek R1, Grok 3, etc.) with BYOK for all logged-in users
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
 - **User Preferences:** Settings and configuration choices
@@ -60,7 +60,7 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Free Model Management:** We monitor daily usage and enforce rate limits for our 9 free AI models to ensure fair access for all users.
+- **Free Model Management:** We monitor daily usage and enforce rate limits for our server-funded AI models to ensure fair access for all users.
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
 - **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 20/day, DEEP_RESEARCH: 10/day) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
@@ -97,7 +97,7 @@ VT is built with **privacy-first principles** at its core:
 ### 3.2 Server Storage (Our Systems)
 **We only store minimal data on our servers:**
 - **Account information** (email, name, subscription status) for registered users
-- **Free model usage data** (daily request counts and timestamps for rate limiting with tiered limits based on subscription status - no conversation content)
+- **Server-funded model usage data** (daily request counts and timestamps for rate limiting with tiered limits based on subscription status - no conversation content)
 - **Payment records** (handled securely by Creem.io, not stored on our servers)
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)
@@ -157,12 +157,13 @@ VT is built with **privacy-first principles** at its core:
 - **No content interception:** We do not store or access message content in transit
 
 **Supported AI Providers:**
-- OpenAI (ChatGPT, GPT-4, DALL-E)
+- OpenAI (ChatGPT, GPT-4, O3, DALL-E)
 - Anthropic (Claude models)
 - Google (Gemini models)
 - Fireworks AI
 - Together AI
 - xAI (Grok)
+- DeepSeek (R1 models)
 
 ### 4.2 Payment Processing
 **Creem.io Integration:**

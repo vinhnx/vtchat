@@ -120,19 +120,19 @@ function AboutContent() {
                             <ul className="text-muted-foreground list-inside list-disc space-y-2">
                                 <li>
                                     <strong>Multi-Provider Support:</strong> OpenAI, Anthropic,
-                                    Google, Fireworks, Together AI, xAI, plus local providers
-                                    (Ollama, LM Studio)
+                                    Google, Fireworks, Together AI, xAI, DeepSeek, plus local
+                                    providers (Ollama, LM Studio)
                                 </li>
                                 <li>
                                     <strong>Premium AI Models (Free with BYOK):</strong> ALL premium
-                                    models including Claude 4, GPT-4.1, o3 series, o1 series, Gemini
-                                    2.5 Pro, DeepSeek R1, Grok 3 - available to all logged-in users
-                                    with their own API keys
+                                    models including Claude 4, GPT-4.1, O3, O1 series, Gemini 2.5
+                                    Pro, DeepSeek R1, Grok 3 - available to all logged-in users with
+                                    their own API keys
                                 </li>
                                 <li>
-                                    <strong>9 Free Server Models:</strong> Gemini 2.0/2.5 Flash
-                                    series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API
-                                    keys required
+                                    <strong>Server-Funded Models:</strong> Gemini models (2.5 Flash
+                                    Lite: 20/day, 2.5 Flash: 10/day, 2.5 Pro: 5/day) + OpenRouter
+                                    models - no API keys required
                                 </li>
                                 <li>
                                     <strong>Free Local AI:</strong> Run AI models on your own
