@@ -53,8 +53,8 @@ export const ThreadItem = memo(
         const { toast } = useToast();
 
         // Debounced status to prevent flashing during rapid status changes
-        const [debouncedStatus, setDebouncedStatus] = useState(threadItem.status);
-        const [debouncedError, setDebouncedError] = useState(threadItem.error);
+        const [_debouncedStatus, setDebouncedStatus] = useState(threadItem.status);
+        const [_debouncedError, setDebouncedError] = useState(threadItem.error);
 
         useEffect(() => {
             // Add a small delay to prevent flashing during rapid status transitions
@@ -222,7 +222,45 @@ export const ThreadItem = memo(
         }, [threadItem.steps]);
 
         const validSources = useMemo(() => {
-            const sources = threadItem.sources || [];
+            // Prefer explicit sources on the thread item
+            let sources = threadItem.sources || [];
+
+            // Fallback: extract links from steps.read.data if sources array is empty
+            if (!sources.length) {
+                const stepLinks =
+                    Object.values(threadItem.steps || {})
+                        ?.filter(
+                            (step) =>
+                                step.steps &&
+                                "read" in step.steps &&
+                                !!step.steps?.read?.data?.length,
+                        )
+                        .flatMap((step) =>
+                            step.steps?.read?.data?.map(
+                                (result: any, i: number) =>
+                                    ({
+                                        title:
+                                            typeof result.title === "string" && result.title.trim()
+                                                ? result.title
+                                                : result.link,
+                                        link: result.link,
+                                        index:
+                                            typeof result.index === "number"
+                                                ? result.index
+                                                : i,
+                                    }) as {
+                                        title: string;
+                                        link: string;
+                                        index: number;
+                                    },
+                            ),
+                        )
+                        .filter((r): r is { title: string; link: string; index: number } => !!r) ||
+                    [];
+                sources = stepLinks;
+            }
+
+            // Validate final list
             return sources.filter(
                 (source) =>
                     source &&
@@ -231,7 +269,29 @@ export const ThreadItem = memo(
                     source.link.trim() !== "" &&
                     typeof source.index === "number",
             );
-        }, [threadItem.sources]);
+        }, [threadItem.sources, threadItem.steps]);
+
+        // Aggregated footer sources: dedupe and cap to max 5 for Deep Research & Pro Search
+        const aggregatedFooterSources = useMemo(() => {
+            const MAX = 5;
+            const dedupMap = new Map<string, { title: string; link: string }>();
+            for (const s of validSources) {
+                try {
+                    const u = new URL(s.link);
+                    const key = `${u.hostname}${u.pathname}`;
+                    if (!dedupMap.has(key)) {
+                        dedupMap.set(key, { title: s.title, link: s.link });
+                    }
+                } catch {
+                    // fallback when invalid URL
+                    if (!dedupMap.has(s.link)) {
+                        dedupMap.set(s.link, { title: s.title, link: s.link });
+                    }
+                }
+                if (dedupMap.size >= MAX) break;
+            }
+            return Array.from(dedupMap.values()).slice(0, MAX);
+        }, [validSources]);
         return (
             <CitationProvider sources={validSources}>
                 <div className="w-full" id={`thread-item-${threadItem.id}`} ref={inViewRef}>
@@ -251,11 +311,7 @@ export const ThreadItem = memo(
 
                         {/* Enhanced loading indicator for generating responses */}
                         {isLast && isGenerating && !hasResponse && (
-                            <ThreadLoadingIndicator
-                                className="mb-4"
-                                size="md"
-                                showElapsedTime={true}
-                            />
+                            <ThreadLoadingIndicator className="mb-4" size="md" />
                         )}
 
                         {!hasResponse && !(isLast && isGenerating) && (
@@ -277,7 +333,7 @@ export const ThreadItem = memo(
                                         threadItem.reasoningDetails?.length ||
                                         threadItem.parts?.some(
                                             (part) => part.type === "reasoning",
-                                        )) && <ThinkingLog threadItem={threadItem} />}
+                                        )) && <ThinkingLog thread={threadItem} />}
 
                                     <AIMessage
                                         content={animatedText || ""}
@@ -288,6 +344,25 @@ export const ThreadItem = memo(
                                             threadItem.status || "",
                                         )}
                                     />
+
+                                    {/* Inline compact sources preview under MDX content (above buttons) */}
+                                    {["deep", "pro"].includes(
+                                        String(threadItem.mode || "").toLowerCase(),
+                                    ) &&
+                                        aggregatedFooterSources.length > 0 && (
+                                            <div className="mt-3 w-full">
+                                                <p className="mb-1 text-xs font-medium text-muted-foreground">
+                                                    Sources
+                                                </p>
+                                                <SourceGrid
+                                                    sources={aggregatedFooterSources.map((s, i) => ({
+                                                        title: s.title || s.link,
+                                                        link: s.link,
+                                                        index: i,
+                                                    }))}
+                                                />
+                                            </div>
+                                        )}
                                 </div>
                             )}
                         </div>
@@ -332,6 +407,8 @@ export const ThreadItem = memo(
                                             />
                                         </div>
                                     )}
+
+                                    {/* Footer sources removed to avoid duplication; shown above under MDX content */}
                                 </div>
                             )}
                         {/* Follow-up suggestions are disabled entirely */}
