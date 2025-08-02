@@ -24,6 +24,11 @@ https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
 
 don't count normal 'web search' tool same as pro search "PS" quota
 
+
+--
+
+https://github.com/marcellosso/better-auth-localization
+
 --
 The initial loading time is quite high - it takes around 2-3 seconds to display the first content, and occasionally, it gets stuck if there’s an authentication error.
 
