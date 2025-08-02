@@ -21,10 +21,6 @@ improve deep research and pro search system to display agregated results from mu
 
 https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
 
--
-
-fix user message word wrapping if too long
-
 --
 
 don't count normal 'web search' tool same as pro search "PS" quota
