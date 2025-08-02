@@ -1,3 +1,6 @@
+import { auth } from "@/lib/auth-server";
+import { shouldDisableGemini } from "@/lib/services/budget-monitor";
+import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
 import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
@@ -11,9 +14,6 @@ import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
 import { type Geo, geolocation } from "@vercel/functions";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { shouldDisableGemini } from "@/lib/services/budget-monitor";
-import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
 // Force dynamic rendering for this route
@@ -324,10 +324,15 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                // SPECIAL CASE: GEMINI_2_5_FLASH_LITE is free for all authenticated users
-                // Other Gemini models require VT+ subscription for server-side access
-                if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE) {
-                    // VT+ REQUIRED for server-funded Gemini access (except Flash Lite)
+                // SPECIAL CASES:
+                // 1. GEMINI_2_5_FLASH_LITE is free for all authenticated users
+                // 2. Deep Research and Pro Search modes have their own access control logic below
+                // 3. Other Gemini models require VT+ subscription for server-side access
+                const isDeepResearchOrProSearch =
+                    data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
+
+                if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE && !isDeepResearchOrProSearch) {
+                    // VT+ REQUIRED for server-funded Gemini access (except Flash Lite and Deep/Pro modes)
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                     if (!vtPlusAccess.hasAccess) {
                         const errorResponse = {
@@ -343,9 +348,10 @@ export async function POST(request: NextRequest) {
                         });
                     }
                 } else {
-                    // For GEMINI_2_5_FLASH_LITE, allow free users to use server-side keys
+                    // For GEMINI_2_5_FLASH_LITE, Deep Research, and Pro Search modes
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
-                    // Note: We still check VT+ status for rate limiting purposes, but don't block free users
+                    // Note: We still check VT+ status for rate limiting purposes
+                    // Deep Research and Pro Search have their own access control logic below
                 }
 
                 // Check rate limits based on user tier
