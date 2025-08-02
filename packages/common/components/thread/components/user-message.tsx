@@ -85,7 +85,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                 {/* Message bubble with enhanced styling */}
                 <div
                     className={cn(
-                        "relative overflow-hidden rounded-2xl transition-all duration-200 ease-out",
+                        "relative rounded-2xl transition-all duration-200 ease-out",
                         "border border-border/50 bg-gradient-to-br from-primary/5 to-primary/10",
                         "shadow-sm hover:shadow-md",
                         "backdrop-blur-sm",
@@ -98,6 +98,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                         className={cn(
                             "relative px-4 py-3 text-[15px] leading-relaxed",
                             "text-foreground selection:bg-primary/20",
+                            "break-words whitespace-pre-wrap overflow-hidden", // Add word wrapping and overflow control
                             {
                                 "pb-14": isExpanded,
                                 markdownStyles,
