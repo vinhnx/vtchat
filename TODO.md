@@ -2,10 +2,6 @@
 
 --
 
-✅ **CRITICAL FIX COMPLETED (Aug 2, 2025)**: Fixed VT+ Deep Research & Pro Search access issue where VT+ users were getting "Free users must provide their own Gemini API key" error. Root cause was general Gemini access check blocking Deep/Pro modes before specific access control logic. Solution: Added special case handling for Deep Research and Pro Search modes in completion route. All tests pass (12/12). See `docs/vt-plus-deep-pro-access-fix.md` for details.
-
---
-
 ok go-> https://vtchat.io.vn/
 
 ---
@@ -15,27 +11,6 @@ Research and rename "VT" to better and memorable name
 --
 
 ai sdk v5 https://vercel.com/blog/ai-sdk-5
-
---
-
-Is it possible to provide backlink for Toolsfine.com?
-Yes, I can provide a back link or friend link for toolsfine.com. (Prioritize)
-
---
-
-improve deep research and pro search system to display agregated results from multiple sources from footer summarized content in bullet lists, each display title and link of source
-
---
-
-https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
-
---
-
-don't count normal 'web search' tool same as pro search "PS" quota
-
---
-
-https://github.com/marcellosso/better-auth-localization
 
 --
 
