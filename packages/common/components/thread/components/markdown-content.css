@@ -83,8 +83,7 @@
     color: var(--markdown-heading-color) !important;
     font-family: var(--markdown-font-family);
     line-height: 1.3;
-    margin-top: var(--markdown-heading-spacing);
-    margin-bottom: 1rem; /* Increased from 0.75rem */
+    /* Margin handled by prose utility classes and MDX components */
     transition: color 0.2s ease;
     scroll-margin-top: 4rem;
 }
@@ -92,8 +91,7 @@
 .prose h1 {
     font-size: 1.875rem; /* 30px */
     font-weight: var(--markdown-font-weight-bold);
-    margin-top: 3rem; /* Increased from 2.5rem */
-    margin-bottom: 1.5rem; /* Increased from 1rem */
+    /* Margin handled by prose utility classes and MDX components */
     letter-spacing: -0.025em;
 }
 
@@ -102,30 +100,26 @@
     font-weight: var(--markdown-font-weight-semibold);
     border-bottom: 1px solid var(--markdown-hr-color);
     padding-bottom: 0.5rem;
-    margin-top: 2.5rem; /* Increased from 2rem */
-    margin-bottom: 1.25rem; /* Increased from 1rem */
+    /* Margin handled by prose utility classes and MDX components */
     letter-spacing: -0.0125em;
 }
 
 .prose h3 {
     font-size: 1.25rem; /* 20px */
     font-weight: var(--markdown-font-weight-semibold);
-    margin-top: 2.25rem; /* Increased from 1.75rem */
-    margin-bottom: 1rem; /* Increased from 0.75rem */
+    /* Margin handled by prose utility classes and MDX components */
 }
 
 .prose h4 {
     font-size: 1.125rem; /* 18px */
     font-weight: var(--markdown-font-weight-medium);
-    margin-top: 2rem; /* Increased from 1.5rem */
-    margin-bottom: 1rem; /* Increased from 0.75rem */
+    /* Margin handled by prose utility classes and MDX components */
 }
 
 .prose h5 {
     font-size: 1rem; /* 16px */
     font-weight: var(--markdown-font-weight-semibold);
-    margin-top: 1.75rem; /* Increased from 1.25rem */
-    margin-bottom: 0.75rem; /* Increased from 0.5rem */
+    /* Margin handled by prose utility classes and MDX components */
 }
 
 .prose h6 {
@@ -133,8 +127,7 @@
     font-weight: var(--markdown-font-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-top: 1.75rem; /* Increased from 1.25rem */
-    margin-bottom: 0.75rem; /* Increased from 0.5rem */
+    /* Margin handled by prose utility classes and MDX components */
 }
 
 /* List styling with improved spacing and bullets */

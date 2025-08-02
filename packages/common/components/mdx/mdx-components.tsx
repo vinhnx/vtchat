@@ -9,16 +9,23 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         const { getSourceByIndex } = useContext(CitationProviderContext);
         const index = children as string;
 
-        const source = getSourceByIndex(Number.parseInt(index));
+        const numericIndex = Number.parseInt(index);
 
-        const url = source?.link;
-
-        if (!url) {
+        // Early return for invalid index
+        if (Number.isNaN(numericIndex)) {
             return null;
         }
 
-        const isValid = isValidUrl(url);
+        const source = getSourceByIndex(numericIndex);
 
+        // Early return if no source found
+        if (!source?.link) {
+            return null;
+        }
+
+        const isValid = isValidUrl(source.link);
+
+        // Early return for invalid URL
         if (!isValid) {
             return null;
         }
@@ -26,7 +33,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
         return (
             <LinkPreviewPopover source={source}>
                 <span className="bg-gradient-to-br from-brand/15 to-brand/5 text-brand border-brand/30 hover:from-brand hover:to-brand hover:border-brand group mx-1 inline-flex size-6 flex-row items-center justify-center gap-1 rounded-lg border text-xs font-bold transition-all duration-300 hover:text-white hover:shadow-lg hover:shadow-brand/25 hover:scale-105">
-                    {source?.index}
+                    {source.index}
                 </span>
             </LinkPreviewPopover>
         );

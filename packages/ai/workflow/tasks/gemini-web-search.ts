@@ -116,24 +116,39 @@ Please include:
                 hasGroundingMetadata: !!result?.groundingMetadata,
             });
 
-            // Update sources if available
+            // Update sources if available with proper deduplication
             if (result.sources && result.sources.length > 0) {
                 context?.update("sources", (current) => {
                     const existingSources = current ?? [];
-                    const newSources = result.sources
-                        ?.filter(
-                            (source: any) =>
-                                source?.url &&
-                                typeof source.url === "string" &&
-                                source.url.trim() !== "" &&
-                                !existingSources.some((existing) => existing.link === source.url),
-                        )
-                        .map((source: any, index: number) => ({
-                            title: source.title || "Web Search Result",
-                            link: source.url,
-                            snippet: source.description || "",
-                            index: index + (existingSources?.length || 1),
-                        }));
+
+                    // Filter out duplicates within the new sources first
+                    const uniqueNewSources = [];
+                    const seenUrls = new Set(existingSources.map(source => source.link));
+
+                    for (const source of result.sources || []) {
+                        if (source?.url &&
+                            typeof source.url === "string" &&
+                            source.url.trim() !== "" &&
+                            !seenUrls.has(source.url)) {
+                            seenUrls.add(source.url);
+                            uniqueNewSources.push(source);
+                        }
+                    }
+
+                    const newSources = uniqueNewSources.map((source: any, index: number) => ({
+                        title: source.title || "Web Search Result",
+                        link: source.url,
+                        snippet: source.description || "",
+                        index: index + (existingSources?.length || 0) + 1,
+                    }));
+
+                    log.info({
+                        existingCount: existingSources.length,
+                        originalNewCount: result.sources?.length || 0,
+                        filteredNewCount: newSources?.length || 0,
+                        totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+                    }, "Updated sources from Gemini web search with deduplication");
+
                     return [...existingSources, ...newSources];
                 });
             }
@@ -158,6 +173,11 @@ Please include:
                 groundingMetadata: result.groundingMetadata,
             };
         } catch (error: any) {
+            // Get context values for error handling
+            const userTier = context?.get("userTier") || UserTier.FREE;
+            const userApiKeys = context?.get("apiKeys") || {};
+            const model = getModelFromChatMode(mode);
+
             log.error("=== gemini-web-search ERROR ===");
             log.error("Error details:", {
                 message: error.message,

@@ -311,6 +311,52 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     { toolName: toolResult.toolName, result: toolResult.result },
                     "Tool result for",
                 );
+
+                // Handle web search tool results - extract and add sources
+                if (toolResult.toolName === "web_search" && toolResult.result?.sources) {
+                    log.info({
+                        toolName: toolResult.toolName,
+                        sourcesCount: toolResult.result.sources.length,
+                        sources: toolResult.result.sources.map((source: any) => ({
+                            title: source.title,
+                            url: source.url,
+                            snippet: source.snippet?.substring(0, 100) + "...",
+                        })),
+                    }, "Processing web search sources from tool result");
+
+                    // Add sources to context with proper deduplication
+                    context?.update("sources", (current) => {
+                        const existingSources = current ?? [];
+
+                        // Filter out duplicates within the new sources first
+                        const uniqueNewSources = [];
+                        const seenUrls = new Set(existingSources.map(source => source.link));
+
+                        for (const source of toolResult.result.sources) {
+                            if (source?.url && !seenUrls.has(source.url)) {
+                                seenUrls.add(source.url);
+                                uniqueNewSources.push(source);
+                            }
+                        }
+
+                        const newSources = uniqueNewSources.map((source: any, index: number) => ({
+                            title: source.title || "Untitled",
+                            link: source.url,
+                            snippet: source.snippet || source.description || "",
+                            index: index + (existingSources.length || 0) + 1,
+                        }));
+
+                        log.info({
+                            existingCount: existingSources.length,
+                            originalNewCount: toolResult.result.sources.length,
+                            filteredNewCount: newSources?.length || 0,
+                            totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+                        }, "Updated sources from web search tool with deduplication");
+
+                        return [...existingSources, ...(newSources || [])];
+                    });
+                }
+
                 // Send tool result event to UI
                 events?.update("steps", (prev) => ({
                     ...prev,
@@ -331,7 +377,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                             ? "charts"
                                             : mathCalculator
                                               ? "math_calculator"
-                                              : "unknown",
+                                              : toolResult.toolName === "web_search"
+                                                ? "web_search"
+                                                : "unknown",
                                 },
                                 status: "COMPLETED",
                             },
