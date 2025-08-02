@@ -1,4 +1,4 @@
-@import '@repo/tailwind-config/tailwind.css';
+@import "@repo/tailwind-config/tailwind.css";
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
@@ -243,17 +243,8 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        'SF Pro Display',
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif,
-        'Apple Color Emoji',
-        'Segoe UI Emoji',
-        'Segoe UI Symbol';
+        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 strong {
@@ -482,7 +473,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
@@ -603,7 +594,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -616,7 +607,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 1;
     bottom: 0;

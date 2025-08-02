@@ -123,13 +123,15 @@ Please include:
 
                     // Filter out duplicates within the new sources first
                     const uniqueNewSources = [];
-                    const seenUrls = new Set(existingSources.map(source => source.link));
+                    const seenUrls = new Set(existingSources.map((source) => source.link));
 
                     for (const source of result.sources || []) {
-                        if (source?.url &&
+                        if (
+                            source?.url &&
                             typeof source.url === "string" &&
                             source.url.trim() !== "" &&
-                            !seenUrls.has(source.url)) {
+                            !seenUrls.has(source.url)
+                        ) {
                             seenUrls.add(source.url);
                             uniqueNewSources.push(source);
                         }
@@ -142,12 +144,15 @@ Please include:
                         index: index + (existingSources?.length || 0) + 1,
                     }));
 
-                    log.info({
-                        existingCount: existingSources.length,
-                        originalNewCount: result.sources?.length || 0,
-                        filteredNewCount: newSources?.length || 0,
-                        totalCount: (existingSources.length || 0) + (newSources?.length || 0),
-                    }, "Updated sources from Gemini web search with deduplication");
+                    log.info(
+                        {
+                            existingCount: existingSources.length,
+                            originalNewCount: result.sources?.length || 0,
+                            filteredNewCount: newSources?.length || 0,
+                            totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+                        },
+                        "Updated sources from Gemini web search with deduplication",
+                    );
 
                     return [...existingSources, ...newSources];
                 });

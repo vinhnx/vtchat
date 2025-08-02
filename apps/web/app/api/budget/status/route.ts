@@ -1,7 +1,7 @@
+import { auth } from "@/lib/auth-server";
+import { getMonthlyUsage } from "@/lib/services/budget-tracking";
 import { log } from "@repo/shared/logger";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { checkBudgetStatus, getUserMonthlySpend } from "@/lib/services/budget-tracking";
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,35 +12,32 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userId = session.user.id;
+        // Get global monthly usage (no cost tracking)
+        const globalUsage = await getMonthlyUsage("gemini");
 
-        // Get global budget status
-        const globalBudgetStatus = await checkBudgetStatus("gemini");
-
-        // Get user-specific spending
-        const userSpending = await getUserMonthlySpend(userId, "gemini");
-
+        // Since cost tracking is removed, return usage-based response
         return NextResponse.json({
-            monthlyUsed: globalBudgetStatus.totalCostUSD,
-            monthlyLimit: globalBudgetStatus.budgetLimitUSD,
-            remainingBudget: globalBudgetStatus.budgetLimitUSD - globalBudgetStatus.totalCostUSD,
-            usagePercent: globalBudgetStatus.percentageUsed,
-            warningLevel: globalBudgetStatus.status === "ok" ? "normal" : globalBudgetStatus.status,
-            isEnabled: !globalBudgetStatus.shouldDisable,
+            monthlyUsed: 0, // No cost tracking
+            monthlyLimit: 0, // No cost tracking
+            remainingBudget: 0, // No cost tracking
+            usagePercent: 0, // No cost tracking
+            warningLevel: "normal", // Always normal since no cost limits
+            isEnabled: true, // Always enabled - rate limits handle usage control
             global: {
-                status: globalBudgetStatus.status,
-                totalCostUSD: globalBudgetStatus.totalCostUSD,
-                budgetLimitUSD: globalBudgetStatus.budgetLimitUSD,
-                percentageUsed: globalBudgetStatus.percentageUsed,
-                shouldDisable: globalBudgetStatus.shouldDisable,
-                requestCount: globalBudgetStatus.requestCount,
+                status: "ok",
+                totalCostUSD: 0, // Cost tracking removed
+                budgetLimitUSD: 0, // Cost tracking removed
+                percentageUsed: 0, // Cost tracking removed
+                shouldDisable: false, // Never disable via budget
+                requestCount: globalUsage.requestCount,
             },
             user: {
-                totalCostUSD: userSpending.totalCostUSD,
-                requestCount: userSpending.requestCount,
-                modelBreakdown: userSpending.modelBreakdown,
+                totalCostUSD: 0, // Cost tracking removed
+                requestCount: 0, // Would need user-specific query
+                modelBreakdown: {}, // Would need user-specific query
             },
             month: new Date().toISOString().slice(0, 7), // YYYY-MM format
+            note: "Cost tracking disabled - using rate limits for usage control",
         });
     } catch (error) {
         log.error({ error }, "Failed to get budget status");

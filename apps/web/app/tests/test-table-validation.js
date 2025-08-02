@@ -1,4 +1,4 @@
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
 
 /**
  * Comprehensive test for table validation and rendering fixes
@@ -126,7 +126,7 @@ testCases.forEach((testCase, index) => {
     const result = validateTableStructure(testCase.content);
     const passed = result.isValid === testCase.expectedValid;
 
-    log.info({ test: index + 1, name: testCase.name }, 'Test case result');
+    log.info({ test: index + 1, name: testCase.name }, "Test case result");
     log.info(`  Expected: ${testCase.expectedValid ? "Valid" : "Invalid"}`);
     log.info(`  Actual: ${result.isValid ? "Valid" : "Invalid"}`);
 
