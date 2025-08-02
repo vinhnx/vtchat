@@ -83,7 +83,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                 {/* Enhanced message bubble with premium styling */}
                 <motion.div
                     className={cn(
-                        "group relative overflow-hidden rounded-2xl transition-all duration-200",
+                        "group relative rounded-2xl transition-all duration-200",
                         "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg",
                         "hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]",
                         "border border-blue-400/30",
@@ -105,6 +105,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                 className={cn(
                                     "relative px-4 py-3 text-[15px] font-medium leading-relaxed",
                                     "text-white selection:bg-blue-200/30",
+                                    "break-words whitespace-pre-wrap overflow-hidden", // Add word wrapping and overflow control
                                     {
                                         "pb-14": isExpanded,
                                         markdownStyles,

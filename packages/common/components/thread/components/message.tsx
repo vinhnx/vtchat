@@ -59,6 +59,7 @@ export const Message = memo(({ message, imageAttachment, threadItem }: MessagePr
                         <div
                             className={cn(
                                 "prose-base markdown-text relative px-4 py-2.5 font-normal",
+                                "break-words whitespace-pre-wrap", // Add word wrapping for long content
                                 {
                                     "pb-14": isExpanded,
                                     markdownStyles,
