@@ -1,4 +1,4 @@
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
 
 /**
  * Test script for markdown table rendering improvements

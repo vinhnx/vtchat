@@ -21,7 +21,7 @@ const mockSources = [
         link: "https://example.com/article-3",
         snippet: "This is the third article snippet with more information...",
         index: 3,
-    }
+    },
 ];
 
 console.log("\n📋 Mock Sources Data:");
@@ -32,7 +32,7 @@ mockSources.forEach((source, i) => {
 // Simulate the getSourceByIndex function from citation-provider.tsx
 function getSourceByIndex(sourceList, index) {
     const result = sourceList.find((source) => source.index === index);
-    console.log(`getSourceByIndex(${index}) -> ${result ? `Found: ${result.title}` : 'Not found'}`);
+    console.log(`getSourceByIndex(${index}) -> ${result ? `Found: ${result.title}` : "Not found"}`);
     return result;
 }
 
@@ -119,16 +119,18 @@ console.log("Parsed:", parsed.trim());
 
 // Extract source indices from parsed content
 const sourceMatches = parsed.match(/<Source>(\d+)<\/Source>/g) || [];
-const extractedIndices = sourceMatches.map(match => {
-    const indexMatch = match.match(/<Source>(\d+)<\/Source>/);
-    return indexMatch ? Number.parseInt(indexMatch[1]) : null;
-}).filter(Boolean);
+const extractedIndices = sourceMatches
+    .map((match) => {
+        const indexMatch = match.match(/<Source>(\d+)<\/Source>/);
+        return indexMatch ? Number.parseInt(indexMatch[1]) : null;
+    })
+    .filter(Boolean);
 
 console.log("Extracted indices:", extractedIndices);
 
 // Test if all extracted indices can be resolved
 console.log("\n✅ Index Resolution Test:");
-extractedIndices.forEach(index => {
+extractedIndices.forEach((index) => {
     const source = getSourceByIndex(mockSources, index);
     console.log(`Citation ${index}: ${source ? "✅ RESOLVED" : "❌ NOT FOUND"}`);
 });

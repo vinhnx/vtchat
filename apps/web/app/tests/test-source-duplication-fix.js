@@ -5,7 +5,7 @@
  * This tests the OpenAI web search tool and source processing
  */
 
-import { log } from '@repo/shared/logger';
+import { log } from "@repo/shared/logger";
 
 // Mock data that simulates OpenAI web search tool result
 const mockToolResult = {
@@ -18,20 +18,20 @@ const mockToolResult = {
             {
                 title: "Test Source 1",
                 url: "https://example.com/page1",
-                snippet: "This is the first test source with some content..."
+                snippet: "This is the first test source with some content...",
             },
             {
                 title: "Test Source 2",
                 url: "https://example.com/page2",
-                snippet: "This is the second test source with different content..."
+                snippet: "This is the second test source with different content...",
             },
             {
                 title: "Duplicate Source",
                 url: "https://example.com/page1", // Same URL as first source
-                snippet: "This should be filtered out as duplicate..."
-            }
-        ]
-    }
+                snippet: "This should be filtered out as duplicate...",
+            },
+        ],
+    },
 };
 
 // Mock context with existing sources
@@ -41,9 +41,9 @@ const mockContext = {
             title: "Existing Source",
             link: "https://existing.com/page",
             snippet: "This source already exists",
-            index: 1
-        }
-    ]
+            index: 1,
+        },
+    ],
 };
 
 // Simulate the source processing logic from completion.ts
@@ -52,19 +52,22 @@ function processWebSearchSources(toolResult, existingSources = []) {
         return existingSources;
     }
 
-    log.info({
-        toolName: toolResult.toolName,
-        sourcesCount: toolResult.result.sources.length,
-        sources: toolResult.result.sources.map((source) => ({
-            title: source.title,
-            url: source.url,
-            snippet: source.snippet?.substring(0, 100) + "...",
-        })),
-    }, "Processing web search sources from tool result");
+    log.info(
+        {
+            toolName: toolResult.toolName,
+            sourcesCount: toolResult.result.sources.length,
+            sources: toolResult.result.sources.map((source) => ({
+                title: source.title,
+                url: source.url,
+                snippet: source.snippet?.substring(0, 100) + "...",
+            })),
+        },
+        "Processing web search sources from tool result",
+    );
 
     // Filter out duplicates within the new sources first
     const uniqueNewSources = [];
-    const seenUrls = new Set(existingSources.map(source => source.link));
+    const seenUrls = new Set(existingSources.map((source) => source.link));
 
     for (const source of toolResult.result.sources) {
         if (source?.url && !seenUrls.has(source.url)) {
@@ -80,11 +83,14 @@ function processWebSearchSources(toolResult, existingSources = []) {
         index: index + (existingSources.length || 0) + 1,
     }));
 
-    log.info({
-        existingCount: existingSources.length,
-        newCount: newSources?.length || 0,
-        totalCount: (existingSources.length || 0) + (newSources?.length || 0),
-    }, "Updated sources from web search tool");
+    log.info(
+        {
+            existingCount: existingSources.length,
+            newCount: newSources?.length || 0,
+            totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+        },
+        "Updated sources from web search tool",
+    );
 
     return [...existingSources, ...(newSources || [])];
 }
@@ -118,13 +124,15 @@ async function testSourceDuplicationFix() {
     const actualCount = updatedSources.length;
 
     // Check for duplicates
-    const uniqueUrls = new Set(updatedSources.map(source => source.link));
+    const uniqueUrls = new Set(updatedSources.map((source) => source.link));
     const hasDuplicates = uniqueUrls.size !== updatedSources.length;
 
     console.log("✅ Test Results:");
     console.log(`- Source count correct: ${actualCount === expectedCount ? "PASS" : "FAIL"}`);
     console.log(`- No duplicate URLs: ${!hasDuplicates ? "PASS" : "FAIL"}`);
-    console.log(`- Sources properly indexed: ${updatedSources.every((source, i) => source.index === i + 1) ? "PASS" : "FAIL"}`);
+    console.log(
+        `- Sources properly indexed: ${updatedSources.every((source, i) => source.index === i + 1) ? "PASS" : "FAIL"}`,
+    );
 
     if (actualCount === expectedCount && !hasDuplicates) {
         console.log("\n🎉 ALL TESTS PASSED! Source duplication fix is working correctly.");

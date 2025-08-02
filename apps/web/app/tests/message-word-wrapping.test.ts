@@ -21,10 +21,7 @@ describe("Message Word Wrapping", () => {
 
         it("should have break-words class for enhanced messages", () => {
             // Test that EnhancedMessage component applies break-words class
-            const expectedClasses = [
-                "break-words",
-                "whitespace-pre-wrap",
-            ];
+            const expectedClasses = ["break-words", "whitespace-pre-wrap"];
 
             expectedClasses.forEach((className) => {
                 expect(className).toBeTruthy();
@@ -33,10 +30,7 @@ describe("Message Word Wrapping", () => {
 
         it("should have break-words class for regular messages", () => {
             // Test that Message component applies break-words class
-            const expectedClasses = [
-                "break-words",
-                "whitespace-pre-wrap",
-            ];
+            const expectedClasses = ["break-words", "whitespace-pre-wrap"];
 
             expectedClasses.forEach((className) => {
                 expect(className).toBeTruthy();
@@ -46,8 +40,9 @@ describe("Message Word Wrapping", () => {
 
     describe("Long Content Scenarios", () => {
         it("should handle very long URLs without horizontal overflow", () => {
-            const longUrl = "https://example.com/very/long/path/that/could/potentially/cause/horizontal/overflow/in/chat/messages/without/proper/word/wrapping/applied/to/the/message/content/container";
-            
+            const longUrl =
+                "https://example.com/very/long/path/that/could/potentially/cause/horizontal/overflow/in/chat/messages/without/proper/word/wrapping/applied/to/the/message/content/container";
+
             // With break-words class, this URL should wrap at appropriate points
             const shouldWrap = longUrl.length > 50; // Arbitrary threshold
             expect(shouldWrap).toBe(true);
@@ -55,7 +50,7 @@ describe("Message Word Wrapping", () => {
 
         it("should handle long words without breaking layout", () => {
             const longWord = "supercalifragilisticexpialidocious".repeat(5);
-            
+
             // With break-words class, even very long words should break
             const shouldBreak = longWord.length > 100;
             expect(shouldBreak).toBe(true);
@@ -67,7 +62,7 @@ Line 2
 Line 3 with a very long sentence that should wrap properly without breaking the layout`;
 
             // With whitespace-pre-wrap, line breaks should be preserved
-            const hasLineBreaks = multiLineContent.includes('\n');
+            const hasLineBreaks = multiLineContent.includes("\n");
             expect(hasLineBreaks).toBe(true);
         });
 
@@ -77,7 +72,7 @@ And here's a URL: https://example.com/api/v1/users/12345/profile/settings/advanc
 And some more text that should wrap properly.`;
 
             // Content should be manageable with proper wrapping
-            const hasVariedContent = mixedContent.includes('`') && mixedContent.includes('http');
+            const hasVariedContent = mixedContent.includes("`") && mixedContent.includes("http");
             expect(hasVariedContent).toBe(true);
         });
     });

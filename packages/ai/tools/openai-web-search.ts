@@ -36,35 +36,48 @@ export const openaiWebSearchTool = () =>
                 });
 
                 // Add detailed logging for debugging source issues
-                log.info({
-                    query,
-                    sourcesReceived: sources?.length || 0,
-                    sourcesData: sources?.map((source: any) => ({
-                        title: source?.title,
-                        url: source?.url,
-                        snippet: source?.snippet?.substring(0, 100) + "...",
-                    })) || [],
-                }, "OpenAI web search sources received");
+                log.info(
+                    {
+                        query,
+                        sourcesReceived: sources?.length || 0,
+                        sourcesData:
+                            sources?.map((source: any) => ({
+                                title: source?.title,
+                                url: source?.url,
+                                snippet: source?.snippet?.substring(0, 100) + "...",
+                            })) || [],
+                    },
+                    "OpenAI web search sources received",
+                );
 
                 // Validate and clean sources
                 const validSources = (sources || []).filter((source: any) => {
-                    const hasValidUrl = source?.url && typeof source.url === 'string' && source.url.trim().length > 0;
+                    const hasValidUrl =
+                        source?.url &&
+                        typeof source.url === "string" &&
+                        source.url.trim().length > 0;
                     if (!hasValidUrl) {
-                        log.warn({
-                            source: source,
-                            hasUrl: !!source?.url,
-                            urlType: typeof source?.url,
-                            urlLength: source?.url?.length || 0,
-                        }, "Invalid source detected - missing or invalid URL");
+                        log.warn(
+                            {
+                                source: source,
+                                hasUrl: !!source?.url,
+                                urlType: typeof source?.url,
+                                urlLength: source?.url?.length || 0,
+                            },
+                            "Invalid source detected - missing or invalid URL",
+                        );
                     }
                     return hasValidUrl;
                 });
 
-                log.info({
-                    originalCount: sources?.length || 0,
-                    validCount: validSources.length,
-                    filteredOut: (sources?.length || 0) - validSources.length,
-                }, "Source validation results");
+                log.info(
+                    {
+                        originalCount: sources?.length || 0,
+                        validCount: validSources.length,
+                        filteredOut: (sources?.length || 0) - validSources.length,
+                    },
+                    "Source validation results",
+                );
 
                 return {
                     success: true,

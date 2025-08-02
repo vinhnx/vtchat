@@ -36,6 +36,24 @@ function isGeminiModel(modelId: ModelEnum): boolean {
     return modelId in MODEL_LIMITS_MAP;
 }
 
+// Helper to determine VT+ feature identifier for provider usage tracking
+function getVtPlusFeatureFromModel(modelId: ModelEnum, isVtPlusUser?: boolean): string | undefined {
+    // Only apply special feature tracking for VT+ users
+    if (!isVtPlusUser) {
+        return undefined;
+    }
+
+    // Map specific Gemini models used by VT+ features to their identifiers
+    switch (modelId) {
+        case ModelEnum.GEMINI_2_5_PRO:
+            return "DEEP_RESEARCH";
+        case ModelEnum.GEMINI_2_5_FLASH:
+            return "PRO_SEARCH";
+        default:
+            return undefined;
+    }
+}
+
 // Helper to get rate limit configuration for a model
 function getModelLimits(modelId: ModelEnum) {
     return MODEL_LIMITS_MAP[modelId as keyof typeof MODEL_LIMITS_MAP];
@@ -138,7 +156,11 @@ async function safeInsertRateLimit(record: UserRateLimit) {
 /**
  * Helper to increment a rate limit record
  */
-async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<void> {
+async function incrementRateRecord(
+    userId: string,
+    modelId: ModelEnum,
+    vtPlusFeature?: string,
+): Promise<void> {
     const now = new Date();
 
     await safeInsertRateLimit({
@@ -154,7 +176,9 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
     });
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
-    recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
+    // Use VT+ feature identifier if provided, otherwise use the model ID
+    const recordingModelId = vtPlusFeature || modelId;
+    recordProviderUsage(userId, recordingModelId, "gemini").catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -163,12 +187,16 @@ async function incrementRateRecord(userId: string, modelId: ModelEnum): Promise<
  * Record usage for VT+ users using non-Flash-Lite models
  * Records in both model-specific AND Flash Lite quotas
  */
-async function recordDualQuotaUsage(userId: string, modelId: ModelEnum): Promise<void> {
+async function recordDualQuotaUsage(
+    userId: string,
+    modelId: ModelEnum,
+    vtPlusFeature?: string,
+): Promise<void> {
     // Record in the model-specific quota
-    await incrementRateRecord(userId, modelId);
+    await incrementRateRecord(userId, modelId, vtPlusFeature);
 
     // Also record in the Flash Lite shared quota
-    await incrementRateRecord(userId, ModelEnum.GEMINI_2_5_FLASH_LITE);
+    await incrementRateRecord(userId, ModelEnum.GEMINI_2_5_FLASH_LITE, vtPlusFeature);
 }
 
 /**
@@ -496,6 +524,7 @@ async function updateExistingRateLimitRecord(
     now: Date,
     userId: string,
     modelId: ModelEnum,
+    vtPlusFeature?: string,
 ): Promise<void> {
     // Check if resets are needed
     const needsDailyReset = isNewDay(rateLimitRecord.lastDailyReset, now);
@@ -533,7 +562,9 @@ async function updateExistingRateLimitRecord(
         .where(eq(userRateLimits.id, rateLimitRecord.id));
 
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
-    recordProviderUsage(userId, modelId, "gemini").catch((_error) => {
+    // Use VT+ feature identifier if provided, otherwise use the model ID
+    const recordingModelId = vtPlusFeature || modelId;
+    recordProviderUsage(userId, recordingModelId, "gemini").catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -553,10 +584,13 @@ export async function recordRequest(
         return;
     }
 
+    // Determine VT+ feature identifier for usage tracking
+    const vtPlusFeature = getVtPlusFeatureFromModel(modelId, isVTPlusUser);
+
     // SECURITY: Validate VT+ user status before applying unlimited access
     if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
         // Additional validation could be added here to verify VT+ status
-        await incrementRateRecord(userId, modelId);
+        await incrementRateRecord(userId, modelId, vtPlusFeature);
         return;
     }
 
@@ -565,7 +599,7 @@ export async function recordRequest(
         isVTPlusUser &&
         (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
-        await recordDualQuotaUsage(userId, modelId);
+        await recordDualQuotaUsage(userId, modelId, vtPlusFeature);
         return;
     }
 
@@ -615,7 +649,13 @@ export async function recordRequest(
 
                 if (existingRecord) {
                     // Update existing record - proceed with normal update logic
-                    await updateExistingRateLimitRecord(existingRecord, now, userId, modelId);
+                    await updateExistingRateLimitRecord(
+                        existingRecord,
+                        now,
+                        userId,
+                        modelId,
+                        vtPlusFeature,
+                    );
                     return;
                 }
             }
@@ -625,7 +665,7 @@ export async function recordRequest(
     }
 
     // Update the existing record
-    await updateExistingRateLimitRecord(rateLimitRecord, now, userId, modelId);
+    await updateExistingRateLimitRecord(rateLimitRecord, now, userId, modelId, vtPlusFeature);
 }
 
 /**

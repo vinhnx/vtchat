@@ -12,7 +12,6 @@ Research and rename "VT" to better and memorable name
 
 ai sdk v5 https://vercel.com/blog/ai-sdk-5
 
-
 --
 
 improve deep research and pro search system to display agregated results from multiple sources from footer summarized content in bullet lists, each display title and link of source
@@ -26,8 +25,9 @@ https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
 don't count normal 'web search' tool same as pro search "PS" quota
 
 --
+The initial loading time is quite high - it takes around 2-3 seconds to display the first content, and occasionally, it gets stuck if there’s an authentication error.
 
-https://x.com/joshtriedcoding/status/1950891329589748058
+I’ve noticed that there’s a forced noSSR, which performs all checks before rendering. From what I understand, the initial screen only includes the chat and the left sidebar. We could consider lazy loading the left sidebar content, as displaying the main screen within milliseconds would significantly enhance the user experience.
 
 --
 

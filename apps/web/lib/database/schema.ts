@@ -214,21 +214,17 @@ export const providerUsage = pgTable(
         userId: text("user_id")
             .notNull()
             .references(() => users.id, { onDelete: "cascade" }),
-        modelId: text("model_id").notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17'
+        modelId: text("model_id").notNull(), // e.g., 'gemini-2.5-flash-lite-preview-06-17' or 'deep-research'
         requestTimestamp: timestamp("request_timestamp").notNull().defaultNow(),
-        estimatedCostCents: integer("estimated_cost_cents").notNull(), // Cost in cents (USD * 100)
         provider: text("provider").notNull().default("gemini"), // 'gemini', 'openai', etc.
         createdAt: timestamp("created_at").notNull().defaultNow(),
     },
     (table) => ({
         userTimeIndex: index("user_time_index").on(table.userId, table.requestTimestamp),
         monthlyUsageIndex: index("monthly_usage_index").on(table.requestTimestamp, table.provider),
-        costTrackingIndex: index("cost_tracking_index").on(table.provider, table.requestTimestamp),
     }),
 );
 
-export type UserRateLimit = typeof userRateLimits.$inferSelect;
-export type NewUserRateLimit = typeof userRateLimits.$inferInsert;
 // VT+ usage tracking table for rate limiting
 export const vtplusUsage = pgTable(
     "vtplus_usage",
@@ -268,6 +264,8 @@ export const resources = pgTable("resources", {
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export type UserRateLimit = typeof userRateLimits.$inferSelect;
+export type NewUserRateLimit = typeof userRateLimits.$inferInsert;
 export type ProviderUsage = typeof providerUsage.$inferSelect;
 export type NewProviderUsage = typeof providerUsage.$inferInsert;
 export type VtplusUsage = typeof vtplusUsage.$inferSelect;

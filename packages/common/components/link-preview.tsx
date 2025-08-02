@@ -25,13 +25,13 @@ const normalizeUrl = (url: string): string => {
     try {
         const urlObj = new URL(url.trim());
         // Remove common tracking parameters
-        urlObj.searchParams.delete('utm_source');
-        urlObj.searchParams.delete('utm_medium');
-        urlObj.searchParams.delete('utm_campaign');
-        urlObj.searchParams.delete('utm_content');
-        urlObj.searchParams.delete('utm_term');
-        urlObj.searchParams.delete('ref');
-        urlObj.searchParams.delete('source');
+        urlObj.searchParams.delete("utm_source");
+        urlObj.searchParams.delete("utm_medium");
+        urlObj.searchParams.delete("utm_campaign");
+        urlObj.searchParams.delete("utm_content");
+        urlObj.searchParams.delete("utm_term");
+        urlObj.searchParams.delete("ref");
+        urlObj.searchParams.delete("source");
         // Ensure consistent URL format
         return urlObj.toString().toLowerCase();
     } catch {
@@ -45,7 +45,7 @@ const generateCacheKey = (source: Source): string => {
     const normalizedUrl = normalizeUrl(source.link);
     // Include source index as primary differentiator to prevent cross-contamination
     // Even if URLs are the same, different sources should have different cache entries
-    return `${normalizedUrl}::index_${source.index || 'unknown'}::title_${(source.title || '').substring(0, 50)}`;
+    return `${normalizedUrl}::index_${source.index || "unknown"}::title_${(source.title || "").substring(0, 50)}`;
 };
 
 // Function to check if cache entry is valid
@@ -59,7 +59,7 @@ const isCacheValid = (url: string): boolean => {
 export const clearOGCache = () => {
     ogCache.clear();
     ogCacheTimestamps.clear();
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
         // Only log in development
     }
 };
@@ -67,7 +67,7 @@ export const clearOGCache = () => {
 // Function to inspect cache for debugging
 export const inspectOGCache = () => {
     const entries = Array.from(ogCache.entries());
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
         // Only log in development - removed console.log statements
     }
     return entries;
@@ -130,9 +130,9 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
             setIsLoading(true);
 
             const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`, {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
             });
 
@@ -202,7 +202,7 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
                     {ogResult?.image && !imageError ? (
                         <img
                             src={ogResult.image}
-                            alt={displayTitle || 'Preview'}
+                            alt={displayTitle || "Preview"}
                             className="h-full w-full object-cover"
                             onError={() => setImageError(true)}
                             loading="lazy"
@@ -230,14 +230,14 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
                     {/* Title */}
                     <div className="h-8 w-full flex items-start">
                         <p className="text-foreground line-clamp-2 w-full overflow-hidden font-sans text-sm font-semibold leading-tight">
-                            {displayTitle || 'Link Preview'}
+                            {displayTitle || "Link Preview"}
                         </p>
                     </div>
 
                     {/* Description */}
                     <div className="flex-1 w-full flex items-start">
                         <p className="text-muted-foreground line-clamp-2 w-full font-sans text-xs leading-relaxed">
-                            {displayDescription || 'No description available for this link.'}
+                            {displayDescription || "No description available for this link."}
                         </p>
                     </div>
                 </div>

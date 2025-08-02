@@ -27,13 +27,13 @@ function normalizeUrl(url) {
     try {
         const urlObj = new URL(url.trim());
         // Remove common tracking parameters
-        urlObj.searchParams.delete('utm_source');
-        urlObj.searchParams.delete('utm_medium');
-        urlObj.searchParams.delete('utm_campaign');
-        urlObj.searchParams.delete('utm_content');
-        urlObj.searchParams.delete('utm_term');
-        urlObj.searchParams.delete('ref');
-        urlObj.searchParams.delete('source');
+        urlObj.searchParams.delete("utm_source");
+        urlObj.searchParams.delete("utm_medium");
+        urlObj.searchParams.delete("utm_campaign");
+        urlObj.searchParams.delete("utm_content");
+        urlObj.searchParams.delete("utm_term");
+        urlObj.searchParams.delete("ref");
+        urlObj.searchParams.delete("source");
         // Ensure consistent URL format
         return urlObj.toString().toLowerCase();
     } catch {
@@ -45,7 +45,7 @@ function normalizeUrl(url) {
 function generateCacheKey(source) {
     const normalizedUrl = normalizeUrl(source.link);
     // Include source metadata to prevent cross-contamination between different sources
-    const sourceHash = `${source.title || ''}_${source.snippet || ''}_${source.index || ''}`;
+    const sourceHash = `${source.title || ""}_${source.snippet || ""}_${source.index || ""}`;
     return `${normalizedUrl}::${sourceHash}`;
 }
 
@@ -66,14 +66,14 @@ const ogData1 = {
     title: "OG Title for Source 1",
     description: "OG description for first context",
     image: "https://example.com/image1.jpg",
-    siteName: "Example Site"
+    siteName: "Example Site",
 };
 
 const ogData2 = {
     title: "OG Title for Source 2",
     description: "OG description for second context",
     image: "https://example.com/image2.jpg",
-    siteName: "Example Site"
+    siteName: "Example Site",
 };
 
 // Store in cache with different keys
@@ -126,12 +126,18 @@ const allTestsPassed = [
 console.log("\n✅ Test Results:");
 console.log(`- Different cache keys for same URL: ${cacheKey1 !== cacheKey2 ? "PASS" : "FAIL"}`);
 console.log(`- Independent cache storage: ${ogCache.size === 2 ? "PASS" : "FAIL"}`);
-console.log(`- Correct data retrieval: ${retrieved1?.title !== retrieved2?.title ? "PASS" : "FAIL"}`);
-console.log(`- Edge case handling: ${new Set([cacheKey1, cacheKey2, cacheKey3, cacheKey4]).size === 4 ? "PASS" : "FAIL"}`);
+console.log(
+    `- Correct data retrieval: ${retrieved1?.title !== retrieved2?.title ? "PASS" : "FAIL"}`,
+);
+console.log(
+    `- Edge case handling: ${new Set([cacheKey1, cacheKey2, cacheKey3, cacheKey4]).size === 4 ? "PASS" : "FAIL"}`,
+);
 
 if (allTestsPassed) {
     console.log("\n🎉 ALL TESTS PASSED! Link preview cache isolation is working correctly.");
-    console.log("✨ Sources with same URL will now have separate cache entries based on their metadata.");
+    console.log(
+        "✨ Sources with same URL will now have separate cache entries based on their metadata.",
+    );
 } else {
     console.log("\n❌ TESTS FAILED! Link preview cache isolation needs attention.");
     process.exit(1);

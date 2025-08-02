@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/lib/logger";
-import { and, count, desc, eq, gte, like, or, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import { providerUsage, sessions, users } from "@/lib/database/schema";
+import { log } from "@repo/shared/lib/logger";
+import { and, count, desc, eq, gte, like, or, sql } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -141,7 +141,6 @@ export async function GET(request: NextRequest) {
             .select({
                 userId: providerUsage.userId,
                 totalRequests: count(),
-                totalCostCents: sum(providerUsage.estimatedCostCents),
             })
             .from(providerUsage)
             .where(gte(providerUsage.requestTimestamp, thirtyDaysAgo))

@@ -1,10 +1,11 @@
 {
     "mcpServers": {
-        "tavily-remote-mcp": {
-            "command": "bunx -y mcp-remote https://mcp.tavily.com/mcp/?tavilyApiKey=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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC",
-            "env": {},
-            "disabled": false,
-            "autoApprove": []
+        "tavily": {
+            "command": "npx",
+            "args": ["-y", "tavily-mcp@latest"],
+            "env": {
+                "TAVILY_API_KEY": "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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC"
+            }
         },
         "fetch": {
             "command": "uvx",

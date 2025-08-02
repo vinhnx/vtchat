@@ -1,4 +1,4 @@
-import { log } from '@repo/shared/lib/logger';
+import { log } from "@repo/shared/lib/logger";
 
 /**
  * Test script to verify table rendering fixes
@@ -130,12 +130,12 @@ tests.forEach((test, index) => {
         const result = test();
         if (result) {
             passedTests++;
-            log.info({ test: index + 1 }, 'Test result: PASSED');
+            log.info({ test: index + 1 }, "Test result: PASSED");
         } else {
-            log.info({ test: index + 1 }, 'Test result: FAILED');
+            log.info({ test: index + 1 }, "Test result: FAILED");
         }
     } catch (error) {
-        log.info({ test: index + 1, error: error.message }, 'Test error');
+        log.info({ test: index + 1, error: error.message }, "Test error");
     }
 });
 

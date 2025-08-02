@@ -39,7 +39,7 @@ console.log(`- Existing sources: ${existingSources.length}`);
 
 console.log("\nProcessing Gemini web search sources from result", {
     sourcesCount: mockGeminiResult.sources.length,
-    sources: mockGeminiResult.sources.map(s => ({
+    sources: mockGeminiResult.sources.map((s) => ({
         title: s.title,
         url: s.url,
         snippet: s.description ? s.description.substring(0, 50) + "......" : "",
@@ -52,13 +52,15 @@ function updateSourcesWithDeduplication(current, result) {
 
     // Filter out duplicates within the new sources first
     const uniqueNewSources = [];
-    const seenUrls = new Set(existingSources.map(source => source.link));
+    const seenUrls = new Set(existingSources.map((source) => source.link));
 
     for (const source of result.sources || []) {
-        if (source?.url &&
+        if (
+            source?.url &&
             typeof source.url === "string" &&
             source.url.trim() !== "" &&
-            !seenUrls.has(source.url)) {
+            !seenUrls.has(source.url)
+        ) {
             seenUrls.add(source.url);
             uniqueNewSources.push(source);
         }
@@ -90,7 +92,7 @@ console.log(`- Expected: 3 (1 existing + 2 new unique sources)`);
 
 console.log("\n📝 Detailed Results:");
 finalSources.forEach((source, index) => {
-    console.log((index + 1) + ". " + source.title);
+    console.log(index + 1 + ". " + source.title);
     console.log("   URL: " + source.link);
     console.log("   Snippet: " + source.snippet);
     console.log(" ");
@@ -99,7 +101,7 @@ finalSources.forEach((source, index) => {
 // Validate results
 const expectedCount = 3; // 1 existing + 2 unique new sources
 const actualCount = finalSources.length;
-const hasNoDuplicateUrls = new Set(finalSources.map(s => s.link)).size === finalSources.length;
+const hasNoDuplicateUrls = new Set(finalSources.map((s) => s.link)).size === finalSources.length;
 const hasProperIndexing = finalSources.every((source, index) => source.index === index + 1);
 
 console.log("✅ Test Results:");

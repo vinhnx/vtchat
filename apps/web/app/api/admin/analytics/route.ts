@@ -62,11 +62,11 @@ export async function GET(request: NextRequest) {
             .where(gte(sessions.createdAt, oneDayAgo));
 
         // Provider usage analytics
-        const providerUsageStats = await db
+        const providerStats = await db
             .select({
                 provider: providerUsage.provider,
-                totalRequests: count(),
-                totalCostCents: sum(providerUsage.estimatedCostCents),
+                totalRequests: sql<number>`COUNT(*)`,
+                uniqueUsers: sql<number>`COUNT(DISTINCT ${providerUsage.userId})`,
             })
             .from(providerUsage)
             .where(gte(providerUsage.requestTimestamp, thirtyDaysAgo))
@@ -138,12 +138,9 @@ export async function GET(request: NextRequest) {
                 totalResources: totalResources.count,
                 recentResources: recentResources.count,
             },
-            providerUsage: providerUsageStats.map((stat) => ({
+            providerUsage: providerStats.map((stat) => ({
                 provider: stat.provider,
                 requests: stat.totalRequests,
-                costUsd: stat.totalCostCents
-                    ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
             })),
             vtPlusUsage: vtPlusFeatureUsage.map((usage) => ({
                 feature: usage.feature,

@@ -1,13 +1,20 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1753972847512,
-      "tag": "0000_white_santa_claus",
-      "breakpoints": true
-    }
-  ]
+    "version": "7",
+    "dialect": "postgresql",
+    "entries": [
+        {
+            "idx": 0,
+            "version": "7",
+            "when": 1753972847512,
+            "tag": "0000_white_santa_claus",
+            "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1754100682664,
+            "tag": "0001_fat_luckman",
+            "breakpoints": true
+        }
+    ]
 }

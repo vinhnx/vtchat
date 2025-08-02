@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/lib/logger";
-import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import { feedback, providerUsage, sessions, users, vtplusUsage } from "@/lib/database/schema";
+import { log } from "@repo/shared/lib/logger";
+import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -59,10 +59,8 @@ export async function GET(request: NextRequest) {
         const providerStats = await db
             .select({
                 provider: providerUsage.provider,
-                totalRequests: count(),
-                totalCostCents: sum(providerUsage.estimatedCostCents),
+                totalRequests: sql<number>`COUNT(*)`,
                 uniqueUsers: sql<number>`COUNT(DISTINCT ${providerUsage.userId})`,
-                avgCostPerRequest: sql<number>`AVG(${providerUsage.estimatedCostCents})`,
             })
             .from(providerUsage)
             .where(gte(providerUsage.requestTimestamp, thirtyDaysAgo))
@@ -86,7 +84,6 @@ export async function GET(request: NextRequest) {
                 date: sql<string>`DATE(${providerUsage.requestTimestamp})`,
                 totalRequests: count(),
                 uniqueUsers: sql<number>`COUNT(DISTINCT ${providerUsage.userId})`,
-                totalCostCents: sum(providerUsage.estimatedCostCents),
             })
             .from(providerUsage)
             .where(gte(providerUsage.requestTimestamp, thirtyDaysAgo))
@@ -112,7 +109,6 @@ export async function GET(request: NextRequest) {
                 userEmail: users.email,
                 userPlan: users.planSlug,
                 totalRequests: count(),
-                totalCostCents: sum(providerUsage.estimatedCostCents),
             })
             .from(providerUsage)
             .leftJoin(users, eq(providerUsage.userId, users.id))
@@ -128,16 +124,6 @@ export async function GET(request: NextRequest) {
             })
             .from(sessions)
             .where(gte(sessions.createdAt, sevenDaysAgo));
-
-        // Cost Analysis
-        const [totalCostStats] = await db
-            .select({
-                totalCostCents: sum(providerUsage.estimatedCostCents),
-                avgCostPerUser: sql<number>`AVG(${providerUsage.estimatedCostCents})`,
-                avgCostPerRequest: sql<number>`AVG(${providerUsage.estimatedCostCents})`,
-            })
-            .from(providerUsage)
-            .where(gte(providerUsage.requestTimestamp, thirtyDaysAgo));
 
         // Error Rate Analysis (feedback as proxy for issues)
         const [errorRate] = await db
@@ -175,13 +161,7 @@ export async function GET(request: NextRequest) {
             providerStats: providerStats.map((stat) => ({
                 provider: stat.provider,
                 requests: stat.totalRequests,
-                costUsd: stat.totalCostCents
-                    ? (Number(stat.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
                 uniqueUsers: Number(stat.uniqueUsers),
-                avgCostPerRequest: stat.avgCostPerRequest
-                    ? (Number(stat.avgCostPerRequest) / 100).toFixed(4)
-                    : "0.00",
             })),
             vtPlusFeatureStats: vtPlusFeatureStats.map((stat) => ({
                 feature: stat.feature,
@@ -194,9 +174,6 @@ export async function GET(request: NextRequest) {
                     date: day.date,
                     requests: day.totalRequests,
                     users: Number(day.uniqueUsers),
-                    costUsd: day.totalCostCents
-                        ? (Number(day.totalCostCents) / 100).toFixed(2)
-                        : "0.00",
                 })),
                 userGrowth: userGrowthTrends.map((day) => ({
                     date: day.date,
@@ -210,21 +187,7 @@ export async function GET(request: NextRequest) {
                     email: user.userEmail,
                     plan: user.userPlan,
                     requests: user.totalRequests,
-                    costUsd: user.totalCostCents
-                        ? (Number(user.totalCostCents) / 100).toFixed(2)
-                        : "0.00",
                 })),
-            },
-            financialMetrics: {
-                totalCostUsd: totalCostStats.totalCostCents
-                    ? (Number(totalCostStats.totalCostCents) / 100).toFixed(2)
-                    : "0.00",
-                avgCostPerUser: totalCostStats.avgCostPerUser
-                    ? (Number(totalCostStats.avgCostPerUser) / 100).toFixed(2)
-                    : "0.00",
-                avgCostPerRequest: totalCostStats.avgCostPerRequest
-                    ? (Number(totalCostStats.avgCostPerRequest) / 100).toFixed(4)
-                    : "0.00",
             },
             performanceMetrics,
         });

@@ -1,6 +1,6 @@
 {
-    "id": "667784ad-e598-429f-ace1-69f17f755d68",
-    "prevId": "00000000-0000-0000-0000-000000000000",
+    "id": "51481b20-fe20-437c-b787-2836c41de29a",
+    "prevId": "667784ad-e598-429f-ace1-69f17f755d68",
     "version": "7",
     "dialect": "postgresql",
     "tables": {
@@ -225,12 +225,6 @@
                     "notNull": true,
                     "default": "now()"
                 },
-                "estimated_cost_cents": {
-                    "name": "estimated_cost_cents",
-                    "type": "integer",
-                    "primaryKey": false,
-                    "notNull": true
-                },
                 "provider": {
                     "name": "provider",
                     "type": "text",
@@ -288,27 +282,6 @@
                     "concurrently": false,
                     "method": "btree",
                     "with": {}
-                },
-                "cost_tracking_index": {
-                    "name": "cost_tracking_index",
-                    "columns": [
-                        {
-                            "expression": "provider",
-                            "isExpression": false,
-                            "asc": true,
-                            "nulls": "last"
-                        },
-                        {
-                            "expression": "request_timestamp",
-                            "isExpression": false,
-                            "asc": true,
-                            "nulls": "last"
-                        }
-                    ],
-                    "isUnique": false,
-                    "concurrently": false,
-                    "method": "btree",
-                    "with": {}
                 }
             },
             "foreignKeys": {
@@ -324,6 +297,117 @@
             },
             "compositePrimaryKeys": {},
             "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.quota_configs": {
+            "name": "quota_configs",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "text",
+                    "primaryKey": true,
+                    "notNull": true,
+                    "default": "gen_random_uuid()::text"
+                },
+                "feature": {
+                    "name": "feature",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "plan": {
+                    "name": "plan",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "quota_limit": {
+                    "name": "quota_limit",
+                    "type": "integer",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": 0
+                },
+                "quota_window": {
+                    "name": "quota_window",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'daily'"
+                },
+                "is_active": {
+                    "name": "is_active",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": true
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                }
+            },
+            "indexes": {
+                "idx_quota_configs_feature_plan": {
+                    "name": "idx_quota_configs_feature_plan",
+                    "columns": [
+                        {
+                            "expression": "feature",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        },
+                        {
+                            "expression": "plan",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": false,
+                    "where": "\"quota_configs\".\"is_active\" = $1",
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                },
+                "idx_quota_configs_updated": {
+                    "name": "idx_quota_configs_updated",
+                    "columns": [
+                        {
+                            "expression": "\"updated_at\" desc",
+                            "asc": true,
+                            "isExpression": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": false,
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                }
+            },
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {
+                "quota_configs_feature_plan_unique": {
+                    "name": "quota_configs_feature_plan_unique",
+                    "nullsNotDistinct": false,
+                    "columns": ["feature", "plan"]
+                }
+            },
             "policies": {},
             "checkConstraints": {},
             "isRLSEnabled": false
