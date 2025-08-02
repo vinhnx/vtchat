@@ -386,6 +386,113 @@ function AboutContent() {
                                 </a>
                             </div>
 
+                            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+                                <a href="https://indie.deals?ref=https%3A%2F%2Fvtchat.io.vn" target="_blank" rel="noopener noreferrer">
+                                  <style>
+                                    .indie-deals-badge {
+                                      position: relative;
+                                      overflow: hidden;
+                                      display: inline-block;
+                                    }
+                                    .indie-deals-badge::after {
+                                      content: '';
+                                      position: absolute;
+                                      top: 0;
+                                      left: 0;
+                                      width: 100%;
+                                      height: 100%;
+                                      background: linear-gradient(45deg,
+                                        rgba(255,255,255,0) 0%,
+                                        rgba(255,255,255,0) 40%,
+                                        rgba(255,255,255,0.9) 50%,
+                                        rgba(255,255,255,0) 60%,
+                                        rgba(255,255,255,0) 100%);
+                                      transform: translateX(-100%) rotate(45deg);
+                                      pointer-events: none;
+                                      transition: transform 0.3s ease-out;
+                                    }
+                                    .indie-deals-badge:hover::after {
+                                      animation: indie-deals-shine 1s ease-out;
+                                    }
+                                    @keyframes indie-deals-shine {
+                                      0% { transform: translateX(-100%) rotate(45deg); }
+                                      50% { transform: translateX(0%) rotate(45deg); }
+                                      100% { transform: translateX(100%) rotate(45deg); }
+                                    }
+                                  </style>
+                                  <svg
+                                    width="180"
+                                    height="60"
+                                    viewBox="0 0 180 60"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="indie-deals-badge"
+                                  >
+                                    <defs>
+                                      <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff" />
+                                        <stop offset="100%" stop-color="#e6f0fc" />
+                                      </linearGradient>
+                                    </defs>
+
+                                    <rect
+                                      width="180"
+                                      height="60"
+                                      rx="10"
+                                      fill="url(#badgeGradient)"
+                                    />
+
+                                    <rect
+                                      x="0.75"
+                                      y="0.75"
+                                      width="178.5"
+                                      height="58.5"
+                                      rx="9.25"
+                                      fill="none"
+                                      stroke="#0070f3"
+                                      stroke-width="1.5"
+                                      stroke-opacity="0.3"
+                                    />
+
+                                    <image
+                                      href="https://indie.deals/logo_badge.png"
+                                      x="14.4"
+                                      y="12"
+                                      width="36"
+                                      height="36"
+                                      preserveAspectRatio="xMidYMid meet"
+                                      filter="drop-shadow(1px 1px 2px rgba(0,0,0,0.15))"
+                                    />
+
+                                    <text
+                                      x="120.60000000000001"
+                                      y="22.8"
+                                      text-anchor="middle"
+                                      dominant-baseline="middle"
+                                      font-family="system-ui, -apple-system, sans-serif"
+                                      font-size="10.799999999999999"
+                                      font-weight="normal"
+                                      fill="#4b5563"
+                                      letter-spacing="0.01em"
+                                    >
+                                      Find us on
+                                    </text>
+                                    <text
+                                      x="120.60000000000001"
+                                      y="39"
+                                      text-anchor="middle"
+                                      dominant-baseline="middle"
+                                      font-family="system-ui, -apple-system, sans-serif"
+                                      font-size="13.2"
+                                      font-weight="bold"
+                                      fill="#0070f3"
+                                      letter-spacing="0.01em"
+                                    >
+                                      Indie.Deals
+                                    </text>
+                                  </svg>
+                                </a>
+                            </div>
+
                             <div className="mt-8 border-t pt-6">
                                 <p className="text-muted-foreground text-center text-sm">
                                     Last updated: July 13, 2025 | Production Status: ✅ Live at{" "}
