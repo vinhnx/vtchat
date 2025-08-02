@@ -2,6 +2,10 @@
 
 --
 
+✅ **CRITICAL FIX COMPLETED (Aug 2, 2025)**: Fixed VT+ Deep Research & Pro Search access issue where VT+ users were getting "Free users must provide their own Gemini API key" error. Root cause was general Gemini access check blocking Deep/Pro modes before specific access control logic. Solution: Added special case handling for Deep Research and Pro Search modes in completion route. All tests pass (12/12). See `docs/vt-plus-deep-pro-access-fix.md` for details.
+
+--
+
 ok go-> https://vtchat.io.vn/
 
 ---
@@ -11,6 +15,11 @@ Research and rename "VT" to better and memorable name
 --
 
 ai sdk v5 https://vercel.com/blog/ai-sdk-5
+
+--
+
+Is it possible to provide backlink for Toolsfine.com?
+Yes, I can provide a back link or friend link for toolsfine.com. (Prioritize)
 
 --
 
@@ -24,15 +33,9 @@ https://ai-sdk.dev/docs/reference/ai-sdk-core/smooth-stream
 
 don't count normal 'web search' tool same as pro search "PS" quota
 
-
 --
 
 https://github.com/marcellosso/better-auth-localization
-
---
-The initial loading time is quite high - it takes around 2-3 seconds to display the first content, and occasionally, it gets stuck if there’s an authentication error.
-
-I’ve noticed that there’s a forced noSSR, which performs all checks before rendering. From what I understand, the initial screen only includes the chat and the left sidebar. We could consider lazy loading the left sidebar content, as displaying the main screen within milliseconds would significantly enhance the user experience.
 
 --
 
