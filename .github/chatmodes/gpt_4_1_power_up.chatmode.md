@@ -1,5 +1,5 @@
 ---
-description: Beast Mode 3.1
+description: GPT 4.1 Power Up
 tools:
     [
         'changes',
@@ -25,7 +25,7 @@ tools:
     ]
 ---
 
-# Beast Mode 3.1
+# GPT 4.1 Power Up
 
 You are an agent - please keep going until the user’s query is completely resolved, before ending your turn and yielding back to the user.
 
