@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar } from "./side-bar";
+import { LazySidebar } from "./lazy-sidebar";
 
 interface BasicSidebarProps {
     forceMobile?: boolean;
@@ -9,7 +9,7 @@ interface BasicSidebarProps {
 export const BasicSidebar: React.FC<BasicSidebarProps> = ({ forceMobile = false }) => {
     return (
         <div className="w-auto max-w-[300px]">
-            <Sidebar forceMobile={forceMobile} />
+            <LazySidebar forceMobile={forceMobile} />
         </div>
     );
 };

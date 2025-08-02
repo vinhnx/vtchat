@@ -29,15 +29,17 @@ export * from "./gated-theme-provider";
 export * from "./history/history-item";
 export * from "./icons";
 export * from "./inline-loader";
-
+export * from "./layout-skeleton";
 export * from "./layout/minimal";
 export * from "./layout/root";
 export * from "./layout/ssr-safe-root";
+export * from "./lazy-sidebar";
 export * from "./link-preview";
 export * from "./login-required-dialog";
 export * from "./logo";
 export * from "./math-calculator-indicator";
 export * from "./mdx";
+export * from "./minimal-layout";
 export * from "./mobile/mobile-chat-enhancements";
 export * from "./mode-toggle";
 export * from "./motion-skeleton";
@@ -70,8 +72,8 @@ export * from "./theme-provider";
 export * from "./theme-switcher";
 export * from "./thinking-log";
 export * from "./thread";
-export * from "./thread/components/attachment-display";
 export * from "./thread-loading-indicator";
+export * from "./thread/components/attachment-display";
 
 export * from "./tools-menu";
 export * from "./tools-panel";

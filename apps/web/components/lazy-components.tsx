@@ -1,5 +1,19 @@
 import { InlineLoader } from "@repo/common/components";
+import dynamic from "next/dynamic";
 import { lazy, Suspense } from "react";
+
+// Client-only wrapper to prevent SSR issues with agent hooks
+const ClientOnlyWrapper = dynamic(
+    () => Promise.resolve(({ children }: { children: React.ReactNode }) => <>{children}</>),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex h-full items-center justify-center">
+                <InlineLoader />
+            </div>
+        ),
+    },
+);
 
 // Lazy load heavy components for better performance with error boundaries
 export const LazyThread = lazy(() =>
@@ -41,15 +55,17 @@ export const LazyFooter = lazy(() =>
 // Wrapper components with suspense boundaries
 export function ThreadWithSuspense() {
     return (
-        <Suspense
-            fallback={
-                <div className="flex h-full items-center justify-center">
-                    <InlineLoader />
-                </div>
-            }
-        >
-            <LazyThread />
-        </Suspense>
+        <ClientOnlyWrapper>
+            <Suspense
+                fallback={
+                    <div className="flex h-full items-center justify-center">
+                        <InlineLoader />
+                    </div>
+                }
+            >
+                <LazyThread />
+            </Suspense>
+        </ClientOnlyWrapper>
     );
 }
 

@@ -40,10 +40,10 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
-    // During SSR, provide a consistent initial state
+    // During SSR, provide a consistent initial state that matches app store defaults
     if (typeof window === "undefined") {
         const ssrContextValue: RootContextType = {
-            isSidebarOpen: true,
+            isSidebarOpen: false, // Match app store default (collapsed state)
             setIsSidebarOpen: () => {},
             isCommandSearchOpen: false,
             setIsCommandSearchOpen: () => {},
