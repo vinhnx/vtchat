@@ -90,7 +90,14 @@
         "!**/node_modules"
     ],
     "dependencies": {
+        "@ai-sdk/anthropic": "^2.0.0",
+        "@ai-sdk/fireworks": "^1.0.0",
         "@ai-sdk/google": "^1.2.22",
+        "@ai-sdk/openai": "^2.0.0",
+        "@ai-sdk/openai-compatible": "^1.0.0",
+        "@ai-sdk/provider": "^2.0.0",
+        "@ai-sdk/togetherai": "^1.0.0",
+        "@ai-sdk/xai": "^2.0.0",
         "@better-auth/utils": "^0.2.6",
         "@mozilla/readability": "^0.6.0",
         "@neondatabase/serverless": "^1.0.1",

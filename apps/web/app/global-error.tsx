@@ -1,8 +1,6 @@
 "use client";
 
-import { log } from "@repo/shared/logger";
-import { Button } from "@repo/ui";
-import { useEffect } from "react";
+export const dynamic = "force-dynamic";
 
 interface GlobalErrorProps {
     error: Error & { digest?: string };
@@ -10,18 +8,6 @@ interface GlobalErrorProps {
 }
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
-    useEffect(() => {
-        // Log the error with proper context
-        log.error(
-            {
-                error: error.message,
-                digest: error.digest,
-                stack: error.stack,
-            },
-            "Global error encountered",
-        );
-    }, [error]);
-
     const handleHomeNavigation = () => {
         window.location.href = "/";
     };
@@ -37,12 +23,18 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                             An unexpected error occurred. Please try refreshing the page.
                         </p>
                         <div className="flex justify-center space-x-3">
-                            <Button onClick={reset} variant="default" size="sm">
+                            <button
+                                onClick={reset}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                            >
                                 Try again
-                            </Button>
-                            <Button onClick={handleHomeNavigation} variant="outline" size="sm">
+                            </button>
+                            <button
+                                onClick={handleHomeNavigation}
+                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md border border-input px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                            >
                                 Back to VT
-                            </Button>
+                            </button>
                         </div>
                     </div>
                 </div>

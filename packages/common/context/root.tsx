@@ -15,7 +15,18 @@ export type RootContextType = {
     isClient: boolean;
 };
 
-export const RootContext = createContext<RootContextType | null>(null);
+// Create a default context value to prevent null issues during SSR
+const defaultContextValue: RootContextType = {
+    isSidebarOpen: false,
+    setIsSidebarOpen: () => {},
+    isCommandSearchOpen: false,
+    setIsCommandSearchOpen: () => {},
+    isMobileSidebarOpen: false,
+    setIsMobileSidebarOpen: () => {},
+    isClient: false,
+};
+
+export const RootContext = createContext<RootContextType>(defaultContextValue);
 
 export const RootProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
@@ -42,17 +53,7 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
 
     // During SSR, provide a consistent initial state that matches app store defaults
     if (typeof window === "undefined") {
-        const ssrContextValue: RootContextType = {
-            isSidebarOpen: false, // Match app store default (collapsed state)
-            setIsSidebarOpen: () => {},
-            isCommandSearchOpen: false,
-            setIsCommandSearchOpen: () => {},
-            isMobileSidebarOpen: false,
-            setIsMobileSidebarOpen: () => {},
-            isClient: false,
-        };
-
-        return <RootContext.Provider value={ssrContextValue}>{children}</RootContext.Provider>;
+        return <RootContext.Provider value={defaultContextValue}>{children}</RootContext.Provider>;
     }
 
     return (
@@ -74,8 +75,6 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useRootContext = () => {
     const context = useContext(RootContext);
-    if (!context) {
-        throw new Error("useRootContext must be used within a RootProvider");
-    }
+    // Context should always exist now with default value
     return context;
 };

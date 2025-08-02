@@ -541,6 +541,9 @@ const nextConfig = {
         ignoreDuringBuilds: true,
     },
 
+    // Skip middleware URL normalization for better performance
+    skipMiddlewareUrlNormalize: true,
+
     // Note: Static page generation is disabled via layout.tsx exports
     // (dynamic = "force-dynamic", revalidate = 0, dynamicParams = true)
 };
