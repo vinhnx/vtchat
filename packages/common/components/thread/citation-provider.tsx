@@ -54,7 +54,7 @@ export type CitationProviderContextType = {
 
 export const CitationProviderContext = createContext<CitationProviderContextType>({
     sources: [],
-    getSourceByIndex: () => {},
+    getSourceByIndex: () => undefined,
 });
 
 export const CitationProvider = ({

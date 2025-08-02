@@ -15,7 +15,63 @@ interface OGData {
     url?: string;
 }
 
+// Use a more robust cache key to prevent collisions
 const ogCache = new Map<string, OGData>();
+const ogCacheTimestamps = new Map<string, number>();
+const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
+
+// Function to normalize URL for consistent caching
+const normalizeUrl = (url: string): string => {
+    try {
+        const urlObj = new URL(url.trim());
+        // Remove common tracking parameters
+        urlObj.searchParams.delete('utm_source');
+        urlObj.searchParams.delete('utm_medium');
+        urlObj.searchParams.delete('utm_campaign');
+        urlObj.searchParams.delete('utm_content');
+        urlObj.searchParams.delete('utm_term');
+        urlObj.searchParams.delete('ref');
+        urlObj.searchParams.delete('source');
+        // Ensure consistent URL format
+        return urlObj.toString().toLowerCase();
+    } catch {
+        // If URL parsing fails, just clean the string
+        return url.trim().toLowerCase();
+    }
+};
+
+// Generate a unique cache key that includes source context
+const generateCacheKey = (source: Source): string => {
+    const normalizedUrl = normalizeUrl(source.link);
+    // Include source index as primary differentiator to prevent cross-contamination
+    // Even if URLs are the same, different sources should have different cache entries
+    return `${normalizedUrl}::index_${source.index || 'unknown'}::title_${(source.title || '').substring(0, 50)}`;
+};
+
+// Function to check if cache entry is valid
+const isCacheValid = (url: string): boolean => {
+    const timestamp = ogCacheTimestamps.get(url);
+    if (!timestamp) return false;
+    return Date.now() - timestamp < CACHE_TTL;
+};
+
+// Function to clear cache for debugging
+export const clearOGCache = () => {
+    ogCache.clear();
+    ogCacheTimestamps.clear();
+    if (process.env.NODE_ENV === 'development') {
+        // Only log in development
+    }
+};
+
+// Function to inspect cache for debugging
+export const inspectOGCache = () => {
+    const entries = Array.from(ogCache.entries());
+    if (process.env.NODE_ENV === 'development') {
+        // Only log in development - removed console.log statements
+    }
+    return entries;
+};
 
 export type LinkPreviewType = {
     source: Source;
@@ -53,14 +109,26 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
     const [ogResult, setOgResult] = useState<OGData | null>(null);
     const [imageError, setImageError] = useState(false);
 
-    const fetchOg = async (url: string) => {
+    const fetchOg = async (source: Source) => {
         try {
-            if (ogCache.has(url)) {
-                setOgResult(ogCache.get(url) || null);
+            // Create a unique cache key that includes source context
+            const cacheKey = generateCacheKey(source);
+            const url = source.link;
+
+            // Check if we have valid cached data
+            if (ogCache.has(cacheKey) && isCacheValid(cacheKey)) {
+                const cachedData = ogCache.get(cacheKey);
+                setOgResult(cachedData || null);
                 return;
             }
 
+            // Clear expired cache entry if it exists
+            if (ogCache.has(cacheKey) && !isCacheValid(cacheKey)) {
+                ogCache.delete(cacheKey);
+                ogCacheTimestamps.delete(cacheKey);
+            }
             setIsLoading(true);
+
             const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`, {
                 method: 'GET',
                 headers: {
@@ -70,7 +138,9 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
 
             if (res.ok) {
                 const data = await res.json();
-                ogCache.set(url, data);
+                // Store with timestamp
+                ogCache.set(cacheKey, data);
+                ogCacheTimestamps.set(cacheKey, Date.now());
                 setOgResult(data);
             } else {
                 setOgResult(null);
@@ -85,26 +155,36 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
     useEffect(() => {
         let mounted = true;
 
-        if (!ogResult && !isLoading && mounted) {
-            fetchOg(source.link);
+        // Reset OG result when source changes
+        setOgResult(null);
+        setImageError(false);
+
+        if (mounted && source.link) {
+            fetchOg(source);
         }
 
         return () => {
             mounted = false;
         };
-    }, [source.link, ogResult, isLoading]);
+    }, [source.link, source.title, source.snippet, source.index]); // Depend on all source properties that affect cache key
 
     if (isLoading) {
         return (
-            <div className="flex w-full animate-pulse flex-col items-start">
-                <div className="bg-muted/20 h-32 w-full rounded-t-xl" />
-                <div className="flex w-full flex-col gap-2 p-4">
-                    <div className="flex w-full items-center gap-1.5">
-                        <div className="bg-muted h-4 w-4 rounded-full" />
-                        <div className="bg-muted h-3 w-24 rounded" />
+            <div className="not-prose overflow-hidden">
+                <div className="flex w-full animate-pulse flex-col items-start">
+                    <div className="bg-muted/20 h-32 w-full rounded-t-xl" />
+                    <div className="flex w-full flex-col gap-2 p-4 min-h-[120px]">
+                        <div className="flex w-full items-center gap-1.5 h-4">
+                            <div className="bg-muted h-4 w-4 rounded-full" />
+                            <div className="bg-muted h-3 w-24 rounded" />
+                        </div>
+                        <div className="h-8 w-full flex items-start">
+                            <div className="bg-muted h-4 w-3/4 rounded" />
+                        </div>
+                        <div className="flex-1 w-full flex items-start">
+                            <div className="bg-muted h-3 w-1/2 rounded" />
+                        </div>
                     </div>
-                    <div className="bg-muted h-4 w-3/4 rounded" />
-                    <div className="bg-muted h-3 w-1/2 rounded" />
                 </div>
             </div>
         );
@@ -117,23 +197,30 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
     return (
         <div className="not-prose overflow-hidden">
             <div className="flex flex-col items-start">
-                {/* OG Image */}
-                {ogResult?.image && !imageError && (
-                    <div className="w-full">
+                {/* OG Image - Always show container for consistent height */}
+                <div className="w-full h-32 bg-muted/20 rounded-t-xl overflow-hidden">
+                    {ogResult?.image && !imageError ? (
                         <img
                             src={ogResult.image}
                             alt={displayTitle || 'Preview'}
-                            className="h-32 w-full rounded-t-xl object-cover"
+                            className="h-full w-full object-cover"
                             onError={() => setImageError(true)}
                             loading="lazy"
                         />
-                    </div>
-                )}
+                    ) : (
+                        <img
+                            src="/bg/bg_vt.jpeg"
+                            alt="Link preview"
+                            className="h-full w-full object-cover opacity-30"
+                            loading="lazy"
+                        />
+                    )}
+                </div>
 
                 {/* Content */}
-                <div className="flex w-full flex-col items-start gap-2 p-4">
+                <div className="flex w-full flex-col items-start gap-2 p-4 min-h-[120px]">
                     {/* Site info */}
-                    <div className="flex flex-row items-center gap-1.5">
+                    <div className="flex flex-row items-center gap-1.5 h-4">
                         <LinkFavicon link={source.link} />
                         <p className="text-muted-foreground line-clamp-1 w-full font-sans text-xs">
                             {siteName}
@@ -141,18 +228,18 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
                     </div>
 
                     {/* Title */}
-                    {displayTitle && (
+                    <div className="h-8 w-full flex items-start">
                         <p className="text-foreground line-clamp-2 w-full overflow-hidden font-sans text-sm font-semibold leading-tight">
-                            {displayTitle}
+                            {displayTitle || 'Link Preview'}
                         </p>
-                    )}
+                    </div>
 
                     {/* Description */}
-                    {displayDescription && (
+                    <div className="flex-1 w-full flex items-start">
                         <p className="text-muted-foreground line-clamp-2 w-full font-sans text-xs leading-relaxed">
-                            {displayDescription}
+                            {displayDescription || 'No description available for this link.'}
                         </p>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>
