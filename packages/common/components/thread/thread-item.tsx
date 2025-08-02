@@ -19,6 +19,7 @@ import { ThreadLoadingIndicator } from "../thread-loading-indicator";
 import { ToolsPanel } from "../tools-panel";
 import { CitationProvider } from "./citation-provider";
 import { AIMessage } from "./components/ai-message";
+import { SpeechButton } from "./components/speech-button";
 import { Steps } from "./components/goals";
 import { MessageActions } from "./components/message-actions";
 import { QuestionPrompt } from "./components/question-prompt";
@@ -382,11 +383,17 @@ export const ThreadItem = memo(
                                 threadItem.status === "ABORTED" ||
                                 threadItem.status === "ERROR") && (
                                 <div className="flex flex-col gap-3">
-                                    <MessageActions
-                                        isLast={isLast}
-                                        ref={messageRef}
-                                        threadItem={threadItem}
-                                    />
+                                    <div className="flex items-center gap-2">
+                                        <SpeechButton
+                                            text={threadItem.answer?.text || ""}
+                                            className="h-8 px-3"
+                                        />
+                                        <MessageActions
+                                            isLast={isLast}
+                                            ref={messageRef}
+                                            threadItem={threadItem}
+                                        />
+                                    </div>
 
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (

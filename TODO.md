@@ -14,10 +14,6 @@ ai sdk v5 https://vercel.com/blog/ai-sdk-5
 
 --
 
-integrate text-to-speech
-
---
-
 Greetings,
 
 As a bug bounty hunter and web security researcher, my main objective is to protect the internet from cyberattacks. I specialize in identifying and reporting bugs on websites, providing comprehensive vulnerability assessment reports that detail the identified issues. During my recent research efforts, I came across your website, vtchat.io.vn.
