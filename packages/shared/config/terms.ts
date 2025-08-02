@@ -22,7 +22,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite, 2.5 Flash, and 2.0 Flash, with daily request limits. VT+ users receive higher limits and access to Gemini 2.5 Pro plus exclusive research features (Pro Search: 20/day, Deep Research: 10/day, AI Memory: 2,000/month).
+- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite (20/day), 2.5 Flash (10/day), and 2.5 Pro (5/day), with daily request limits. VT+ users receive higher limits and access to expanded Gemini models plus exclusive research features (Pro Search: 20/day, Deep Research: 10/day).
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (Free feature)
@@ -86,7 +86,7 @@ By using VT, you acknowledge that we protect your private data from being used i
 
 ### 3.2 Data We Collect
 **User-Provided Information:**
-- Account information (email, name, profile picture) from OAuth providers (Google, GitHub)
+- Account information (email, name, profile picture) from OAuth providers (Google, GitHub and Twitter/X)
 - Payment information for VT+ subscriptions (processed securely through Creem.io)
 - Support communications and feedback
 
@@ -108,20 +108,20 @@ By using VT, you acknowledge that we protect your private data from being used i
 ### 4.1 Free Tier Benefits (VT_BASE)
 VT_BASE is our free tier for logged-in users that includes:
 - **All Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys (BYOK)
-- **9 Free Server Models**: Access a suite of 9 server-funded models, including 5 Gemini versions (2.5 Flash Lite, 2.5 Flash, 2.5 Pro) and 4 OpenRouter models, all without needing your own API key.
+- **Server-Funded Models**: Access a suite of server-funded models, including Gemini versions (2.5 Flash Lite: 20/day, 2.5 Flash: 10/day, 2.5 Pro: 5/day) and OpenRouter models, all without needing your own API key.
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
 - **Advanced Features**: Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, Web Search, Intelligent Tool Router, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
 - **Unlimited BYOK Usage**: No limits when using your own API keys
-- **Free Gemini Access**: Enjoy free access to a range of Gemini models with daily limits: 20 requests for 2.5 Flash Lite. VT+ users get expanded access.
+- **Free Gemini Access**: Enjoy free access to a range of Gemini models with daily limits: 20 requests for 2.5 Flash Lite, 10 requests for 2.5 Flash, and 5 requests for 2.5 Pro. VT+ users get expanded access.
 - **Enhanced Rate Limits**: Higher usage limits compared to free tier for all Gemini models
 
 ### 4.2 VT+ Subscription Features
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
-- **Three Exclusive Research Features with Daily Quotas**:
-  - **Enhanced Web Search (PRO_SEARCH)**: 10 requests per day (resets at 00:00 UTC)
-  - **Deep Research (DEEP_RESEARCH)**: 5 requests per day (resets at 00:00 UTC)
+- **Two Exclusive Research Features with Daily Quotas**:
+  - **Enhanced Web Search (PRO_SEARCH)**: 20 requests per day (resets at 00:00 UTC)
+  - **Deep Research (DEEP_RESEARCH)**: 10 requests per day (resets at 00:00 UTC)
 - **Expanded Gemini Access**: VT+ subscribers receive expanded, server-funded access to all Gemini models, including Gemini 2.5 Pro (25 requests/day), Gemini 2.5 Flash (50 requests/day), and Gemini 2.5 Flash Lite (100 requests/day), all without needing your own API keys.
 - **Priority Support**: Enhanced customer support
 - **Daily Reset Schedule**: Pro Search and Deep Research quotas reset every day at 00:00 UTC to provide consistent daily usage

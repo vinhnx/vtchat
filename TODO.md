@@ -35,10 +35,6 @@ integrate text-to-speech
 
 --
 
-fix web search still doesn't work on production vtchat.io.vn
-
---
-
 Greetings,
 
 As a bug bounty hunter and web security researcher, my main objective is to protect the internet from cyberattacks. I specialize in identifying and reporting bugs on websites, providing comprehensive vulnerability assessment reports that detail the identified issues. During my recent research efforts, I came across your website, vtchat.io.vn.
@@ -68,41 +64,3 @@ Thank you and regards,
 Ivanna
 
 --
-
-fix rate limit record wrong model. example Deep Research
-
-/api/rate-limit/status in 505ms
-@vtchat/web:dev: Recorded provider usage for budget tracking {
-@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
-@vtchat/web:dev:   modelId: 'gemini-2.5-flash-lite-preview-06-17',
-@vtchat/web:dev:   provider: 'gemini',
-@vtchat/web:dev:   estimatedCostCents: 1,
-@vtchat/web:dev:   estimatedCostUSD: 0.01
-@vtchat/web:dev: }
-@vtchat/web:dev: Recorded provider usage for budget tracking {
-@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
-@vtchat/web:dev:   modelId: 'gemini-2.5-pro',
-@vtchat/web:dev:   provider: 'gemini',
-@vtchat/web:dev:   estimatedCostCents: 2,
-@vtchat/web:dev:   estimatedCostUSD: 0.02
-@vtchat/web:dev: }
-@vtchat/web:dev: Recorded provider usage for budget tracking {
-@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
-@vtchat/web:dev:   modelId: 'gemini-2.5-flash-lite-preview-06-17',
-@vtchat/web:dev:   provider: 'gemini',
-@vtchat/web:dev:   estimatedCostCents: 1,
-@vtchat/web:dev:   estimatedCostUSD: 0.01
-@vtchat/web:dev: }
-@vtchat/web:dev: Recorded provider usage for budget tracking {
-@vtchat/web:dev:   userId: 'dc60d50d-9aac-47e7-8cb1-ce9000d28208',
-@vtchat/web:dev:   modelId: 'gemini-2.5-pro',
-@vtchat/web:dev:   provider: 'gemini',
-@vtchat/web:dev:   estimatedCostCents: 2,
-@vtchat/web:dev:   estimatedCostUSD: 0.02
-@vtchat/web:dev: }
-
--> also remove estimated cost tracking fields and logic
-
---
-
-update about, terms, privacy and help pages with latest info and logic and quota base on our codebase. it was outdated

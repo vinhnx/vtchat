@@ -209,12 +209,12 @@ function HelpCenterContent() {
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research:</strong> Comprehensive multi-step
                                         research using Gemini 2.5 Pro for in-depth analysis (VT+
-                                        exclusive)
+                                        exclusive - 10 requests/day)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Pro Search:</strong> Fast grounding web search using
                                         Gemini 2.5 Flash for quick information retrieval (VT+
-                                        exclusive)
+                                        exclusive - 20 requests/day)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Document Processing:</strong> Upload and analyze
@@ -289,11 +289,11 @@ function HelpCenterContent() {
                                 <ul className="mt-2 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
                                         <strong>Pro Search:</strong> Lightning-fast web search with
-                                        AI grounding
+                                        AI grounding (20 requests/day)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research:</strong> Comprehensive multi-step
-                                        research and analysis
+                                        research and analysis (10 requests/day)
                                     </li>
                                 </ul>
                             </AccordionContent>
@@ -354,12 +354,14 @@ function HelpCenterContent() {
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research (VT+ exclusive):</strong> Uses Gemini
                                         2.5 Pro for comprehensive, multi-step research with detailed
-                                        analysis and thorough investigation of complex topics
+                                        analysis and thorough investigation of complex topics (10
+                                        requests/day)
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Pro Search (VT+ exclusive):</strong> Uses Gemini 2.5
                                         Flash for fast, efficient web search and information
-                                        retrieval with quick grounding capabilities
+                                        retrieval with quick grounding capabilities (20
+                                        requests/day)
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both modes feature native Google search grounding for
@@ -372,7 +374,7 @@ function HelpCenterContent() {
                                 </ul>
                                 <p className="text-muted-foreground mt-4 text-sm">
                                     Both research modes are VT+ exclusive features (
-                                    {VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 3 premium features
+                                    {VT_PLUS_PRICE_WITH_INTERVAL}) - part of only 2 premium features
                                     while everything else is free.
                                 </p>
                             </AccordionContent>
@@ -501,14 +503,14 @@ function HelpCenterContent() {
                                 </p>
                                 <ul className="mt-4 list-outside list-disc space-y-2 pl-4">
                                     <li className="text-muted-foreground">
-                                        <strong>Free Models:</strong> Access to 9 powerful models,
-                                        including 5 from the Gemini family (2.5 Flash Lite, 2.5
-                                        Flash, 2.5 Pro) and 4 from OpenRouter.
+                                        <strong>Server-Funded Models:</strong> Access to Gemini
+                                        models (2.5 Flash Lite: 20/day, 2.5 Flash: 10/day, 2.5 Pro:
+                                        5/day) and OpenRouter models.
                                     </li>
                                     <li className="text-muted-foreground">
-                                        <strong>Free Users:</strong> Enjoy a daily limit of 20
-                                        requests for Gemini 2.5 Flash Lite, with a rate limit of 5
-                                        requests per minute.
+                                        <strong>Free Users:</strong> Enjoy daily limits for
+                                        server-funded Gemini models: 20 requests for 2.5 Flash Lite,
+                                        10 for 2.5 Flash, and 5 for 2.5 Pro.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ Users:</strong> Benefit from enhanced limits,
@@ -595,21 +597,22 @@ function HelpCenterContent() {
                                         <strong>Free Tier (for all logged-in users):</strong> Enjoy
                                         unlimited BYOK (Bring Your Own Key) access to all premium AI
                                         models, including Claude 4, GPT-4.1, O3, DeepSeek R1, and
-                                        Grok 3. You also get access to a wide range of advanced
+                                        Grok 3. You also get access to server-funded Gemini models
+                                        with daily limits (2.5 Flash Lite: 20/day, 2.5 Flash:
+                                        10/day, 2.5 Pro: 5/day) plus a wide range of advanced
                                         features like the intelligent tool router, chart
                                         visualization, web search, dark mode, thinking mode,
                                         structured output, document parsing, reasoning chain, and
-                                        multi-modal chat. To access Gemini models, you'll need to
-                                        provide your own API key.
+                                        multi-modal chat.
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{" "}
-                                        Includes everything in the free tier, plus three exclusive
-                                        research features: PRO_SEARCH for enhanced web searches,
-                                        DEEP_RESEARCH for in-depth analysis. Additionally, VT+
-                                        provides server-funded access to all Gemini models (2.5
-                                        Flash Lite, 2.5 Flash, 2.5 Pro) with built-in rate limits
-                                        and budget protection.
+                                        Includes everything in the free tier, plus two exclusive
+                                        research features: PRO_SEARCH for enhanced web searches
+                                        (20/day), DEEP_RESEARCH for in-depth analysis (10/day).
+                                        Additionally, VT+ provides enhanced server-funded access to
+                                        all Gemini models with higher rate limits and budget
+                                        protection.
                                     </li>
                                     <li className="text-muted-foreground">
                                         Both tiers are designed with privacy in mind, featuring
