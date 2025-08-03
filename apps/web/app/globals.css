@@ -1,4 +1,4 @@
-@import "@repo/tailwind-config/tailwind.css";
+@import '@repo/tailwind-config/tailwind.css';
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
@@ -12,11 +12,62 @@
 /* Mobile spacing utilities for PWA banner */
 @media (max-width: 768px) {
     .mobile-bottom-spacing {
-        padding-bottom: 80px; /* Space for PWA banner */
+        padding-bottom: 60px; /* Reduced space for PWA banner */
     }
 
     .mobile-footer-spacing {
-        padding-bottom: 100px; /* Extra space for footer + PWA banner */
+        padding-bottom: 80px; /* Reduced space for footer + PWA banner */
+    }
+}
+
+/* Mobile viewport fixes for chat input */
+@media (max-width: 767px) {
+    /* Ensure chat input is never cut off on mobile */
+    .chat-input-thread {
+        /* Use viewport units that account for mobile browser UI */
+        bottom: env(safe-area-inset-bottom, 0px) !important;
+        /* Add extra margin to prevent cutoff */
+        margin-bottom: 8px !important;
+    }
+
+    /* Fix for iOS Safari and other mobile browsers */
+    @supports (-webkit-touch-callout: none) {
+        .chat-input-thread {
+            /* iOS Safari specific fixes */
+            bottom: max(env(safe-area-inset-bottom), 16px) !important;
+            padding-bottom: 8px !important;
+        }
+    }
+
+    /* Android Chrome specific fixes */
+    @supports not (-webkit-touch-callout: none) {
+        .chat-input-thread {
+            /* Android Chrome specific fixes */
+            bottom: max(env(safe-area-inset-bottom), 12px) !important;
+            padding-bottom: 12px !important;
+        }
+    }
+}
+
+/* Thread page header navigation */
+.thread-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: hsl(var(--background) / 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+}
+
+/* Ensure thread content accounts for header */
+.thread-content-with-header {
+    height: calc(100vh - 60px); /* Account for header height */
+}
+
+@media (max-width: 767px) {
+    .thread-content-with-header {
+        height: calc(100vh - 56px); /* Slightly smaller header on mobile */
     }
 }
 
@@ -243,8 +294,17 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        'SF Pro Display',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol';
 }
 
 strong {
@@ -473,7 +533,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;
@@ -594,7 +654,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -607,7 +667,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 1;
     bottom: 0;
@@ -720,4 +780,141 @@ h6:not([class]) {
 .mdx > h5:first-child,
 .mdx > h6:first-child {
     @apply mt-0;
+}
+
+/* Chat input layout positioning */
+
+/* Smooth positioning transitions for chat input states */
+.chat-input-homepage {
+    /* Center positioning for homepage */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+}
+
+.chat-input-thread {
+    /* Bottom positioning for thread pages */
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    /* Add padding for mobile safe areas */
+    padding-bottom: env(safe-area-inset-bottom, 16px) !important;
+    padding-left: env(safe-area-inset-left, 0px) !important;
+    padding-right: env(safe-area-inset-right, 0px) !important;
+}
+
+/* Flexbox fixes for older browsers */
+@supports not (display: flex) {
+    .chat-input-homepage {
+        display: -webkit-box !important;
+        display: -moz-box !important;
+        display: -ms-flexbox !important;
+        -webkit-box-align: center !important;
+        -moz-box-align: center !important;
+        -ms-flex-align: center !important;
+        -webkit-box-pack: center !important;
+        -moz-box-pack: center !important;
+        -ms-flex-pack: center !important;
+    }
+
+    .chat-input-thread {
+        display: -webkit-box !important;
+        display: -moz-box !important;
+        display: -ms-flexbox !important;
+        -webkit-box-align: start !important;
+        -moz-box-align: start !important;
+        -ms-flex-align: start !important;
+        -webkit-box-pack: start !important;
+        -moz-box-pack: start !important;
+        -ms-flex-pack: start !important;
+    }
+}
+
+/* Footer overlap prevention and center layout fixes */
+.chat-input-homepage {
+    /* Ensure center layout doesn't overlap with footer */
+    padding-bottom: 120px !important; /* Space for footer on mobile */
+}
+
+@media (min-width: 768px) {
+    .chat-input-homepage {
+        padding-bottom: 80px !important; /* Less space needed on desktop */
+    }
+}
+
+/* Ensure center layout stays perfectly centered */
+.homepage-center-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: calc(100vh - 120px) !important; /* Account for footer space on mobile */
+    padding: 20px !important;
+}
+
+@media (min-width: 768px) {
+    .homepage-center-layout {
+        min-height: calc(100vh - 80px) !important; /* Account for footer space on desktop */
+        padding: 40px !important;
+    }
+}
+
+/* Footer positioning improvements */
+.homepage-footer {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 10 !important;
+    background: linear-gradient(to top, hsl(var(--background)) 60%, transparent 100%) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Ensure footer doesn't interfere with center content */
+.homepage-footer::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to bottom, transparent 0%, hsl(var(--background)) 100%);
+    pointer-events: none;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+    .homepage-center-layout {
+        /* Extra space for mobile PWA banner */
+        min-height: calc(100vh - 140px) !important;
+        padding: 16px !important;
+    }
+
+    .chat-input-homepage {
+        padding-bottom: 140px !important;
+    }
+
+    .chat-input-thread {
+        /* Extra padding for mobile to prevent cutoff */
+        padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 20px) !important;
+        padding-left: calc(env(safe-area-inset-left, 0px) + 8px) !important;
+        padding-right: calc(env(safe-area-inset-right, 0px) + 8px) !important;
+        /* Ensure minimum distance from bottom */
+        min-height: 80px !important;
+        /* Add extra bottom margin for better spacing */
+        margin-bottom: 16px !important;
+    }
 }

@@ -3,6 +3,8 @@ import { Footer, InlineLoader, TableOfMessages, Thread } from "@repo/common/comp
 import { useChatStore } from "@repo/common/store";
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/logger";
+import { Button } from "@repo/ui";
+import { ArrowLeft, Home } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useRef, useState } from "react";
@@ -391,7 +393,31 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
             >
                 VT AI Chat Thread - Minimal Chat with Deep Research
             </h1>
-            <div className="flex-1 overflow-hidden">
+
+            {/* Header Navigation with Back to Home Button */}
+            <div className="thread-header flex-shrink-0">
+                <div className="flex items-center justify-between px-4 py-3 md:px-6">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => router.push("/")}
+                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        <ArrowLeft size={16} />
+                        <span className="hidden sm:inline">VT</span>
+                        <Home size={16} className="sm:hidden" />
+                    </Button>
+
+                    {/* Thread title or status */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                            {isGenerating ? "Generating..." : ""}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="thread-content-with-header flex-1 overflow-hidden">
                 <div
                     className="scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
                     ref={scrollRef}
@@ -402,7 +428,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     }}
                 >
                     <div
-                        className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] pt-2 md:w-full"
+                        className="mx-auto w-[95%] max-w-3xl px-4 pb-8 pt-2 md:w-full"
                         ref={contentRef}
                         style={{
                             // Remove containment to allow dynamic expansion during streaming
@@ -413,21 +439,19 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                         <Thread />
                     </div>
 
+                    {/* Footer inside the white container for non-logged users */}
+                    {!(isPending || session) && (
+                        <div className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] md:w-full">
+                            <Footer />
+                        </div>
+                    )}
+
                     <TableOfMessages />
                 </div>
             </div>
             <div className="pb-safe-area-inset-bottom flex-shrink-0">
                 <ChatInput />
             </div>
-
-            {/* ChatFooter pinned to bottom with padding for non-logged users */}
-            {!(isPending || session) && (
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 pb-20 md:pb-4">
-                    <div className="pointer-events-auto">
-                        <Footer />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

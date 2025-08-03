@@ -14,20 +14,13 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
 import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
-import { cn, Flex, useToast } from "@repo/ui";
-import { AnimatePresence, motion } from "framer-motion";
+import { Flex, cn, useToast } from "@repo/ui";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useAgentStream } from "../../hooks/agent-provider";
 import { useChatEditor } from "../../hooks/use-editor";
 import { useChatStore } from "../../store";
-import {
-    getOptimizedTransition,
-    HARDWARE_ACCELERATION_CLASSES,
-    isMobile,
-    prefersReducedMotion,
-} from "../../utils/animation-optimization";
 import { ExamplePrompts } from "../example-prompts";
 import { LMStudioSetupBanner } from "../lm-studio-setup-banner";
 import { LoginRequiredDialog } from "../login-required-dialog";
@@ -324,18 +317,12 @@ export const ChatInput = ({
     };
 
     const renderChatInput = () => (
-        <AnimatePresence mode="wait">
-            <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                    "w-full px-3 md:px-4",
-                    currentThreadId ? "" : "mb-20 md:mb-0", // Remove bottom margin for thread pages
-                    HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
-                )}
-                initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 5 : 10 }}
-                key={"chat-input"}
-                transition={getOptimizedTransition("fast")}
-            >
+        <div
+            className={cn(
+                "w-full px-3 md:px-4",
+                currentThreadId ? "pb-4 md:pb-0" : "mb-20 md:mb-0", // Add bottom padding for thread pages on mobile
+            )}
+        >
                 <Flex
                     className={cn(
                         "bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border",
@@ -343,19 +330,9 @@ export const ChatInput = ({
                     direction="col"
                 >
                     <ImageDropzoneRoot dropzoneProps={dropzonProps}>
-                        <motion.div
-                            animate={{ opacity: 1 }}
-                            className="flex w-full flex-shrink-0 overflow-hidden rounded-lg"
-                            initial={{ opacity: 0 }}
-                            transition={{ duration: 0.15 }}
-                        >
+                        <div className="flex w-full flex-shrink-0 overflow-hidden rounded-lg">
                             {editor?.isEditable ? (
-                                <motion.div
-                                    animate={{ opacity: 1 }}
-                                    className="w-full"
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.15, ease: "easeOut" }}
-                                >
+                                <div className="w-full">
                                     <div className="flex flex-col gap-2">
                                         <ImageAttachment />
                                         <DocumentAttachment />
@@ -436,23 +413,16 @@ export const ChatInput = ({
                                             />
                                         </Flex>
                                     </Flex>
-                                </motion.div>
+                                </div>
                             ) : (
-                                <motion.div
-                                    animate={{ opacity: 1 }}
-                                    className="flex h-24 w-full items-center justify-center"
-                                    exit={{ opacity: 0 }}
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.15 }}
-                                >
+                                <div className="flex h-24 w-full items-center justify-center">
                                     <InlineLoader />
-                                </motion.div>
+                                </div>
                             )}
-                        </motion.div>
+                        </div>
                     </ImageDropzoneRoot>
                 </Flex>
-            </motion.div>
-        </AnimatePresence>
+            </div>
     );
 
     const renderChatBottom = () => (
@@ -504,55 +474,42 @@ export const ChatInput = ({
     }, [editor]);
 
     return (
-        <motion.div
+        <div
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
-                    ? "pb-safe absolute bottom-0 mb-4" // Add bottom margin when in thread detail view
-                    : "pb-safe absolute inset-0 flex h-full w-full flex-col items-center justify-center",
-                HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
+                    ? "chat-input-thread pb-safe mb-4" // Bottom positioning for thread pages
+                    : "chat-input-homepage pb-safe", // Center positioning for homepage
             )}
-            initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 10 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={getOptimizedTransition("standard")}
         >
-            <motion.div
+            <div
                 className={cn(
-                    "mx-auto flex w-full max-w-3xl flex-col items-start",
-                    !threadItemsLength && "justify-start",
+                    "mx-auto flex w-full max-w-3xl flex-col",
+                    !threadItemsLength && !currentThreadId && "homepage-center-layout",
+                    currentThreadId && "items-start justify-start",
                     size === "sm" && "px-8",
                     "px-2 md:px-0", // Reduced mobile padding for better space usage
-                    HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
+                    currentThreadId && "pb-safe", // Add safe area padding for thread mode
                 )}
-                initial={{ opacity: 0, y: prefersReducedMotion() ? 0 : isMobile() ? 5 : 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                    ...getOptimizedTransition("standard"),
-                    delay: currentThreadId ? (isMobile() ? 0.2 : 0.3) : 0.1,
-                }}
             >
                 <Flex
                     className={cn(
                         "pb-safe w-full pb-4 md:pb-4",
-                        threadItemsLength > 0 ? "mb-4" : "h-full", // Add bottom margin when there are thread items
+                        threadItemsLength > 0 ? "mb-4" : "", // Remove h-full to prevent conflicts
+                        // Dynamic alignment based on context
+                        !currentThreadId && !threadItemsLength
+                            ? "items-center justify-center flex-1"
+                            : "items-start justify-start",
                     )}
                     direction="col"
-                    items="start"
-                    justify="start"
+                    items={!currentThreadId && !threadItemsLength ? "center" : "start"}
+                    justify={!currentThreadId && !threadItemsLength ? "center" : "start"}
                 >
                     {!currentThreadId && showGreeting && (
-                        <motion.div
-                            animate={{ opacity: 1 }}
-                            className={cn(
-                                "mb-6 flex w-full flex-col items-center gap-2",
-                                HARDWARE_ACCELERATION_CLASSES.fadeAccelerated,
-                            )}
-                            initial={{ opacity: 0 }}
-                            transition={getOptimizedTransition("smooth")}
-                        >
+                        <div className="mb-6 flex w-full flex-col items-center gap-2">
                             {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />
-                        </motion.div>
+                        </div>
                     )}
 
                     {renderChatBottom()}
@@ -567,7 +524,7 @@ export const ChatInput = ({
 
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
                 </Flex>
-            </motion.div>
+            </div>
             {showLoginPrompt && (
                 <LoginRequiredDialog
                     description="Please log in to start chatting or save your conversation."
@@ -587,6 +544,6 @@ export const ChatInput = ({
                     }}
                 />
             )}
-        </motion.div>
+        </div>
     );
 };
