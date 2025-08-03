@@ -18,11 +18,11 @@ const links = [
         href: "/pricing",
     },
     {
-        title: "Contact",
+        title: "Hello",
         href: "mailto:hello@vtdotai.io.vn",
     },
     {
-        title: "Help Center",
+        title: "Help",
         href: "/help",
     },
     {
@@ -30,7 +30,7 @@ const links = [
         href: "/about",
     },
     {
-        title: "X/Twitter",
+        title: "X",
         href: "https://x.com/vtdotai",
     },
 ];

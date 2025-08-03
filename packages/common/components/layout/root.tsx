@@ -17,6 +17,7 @@ import {
     DropdownMenuTrigger,
     Flex,
     SonnerToaster,
+    cn,
 } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -278,8 +279,15 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {/* Mobile Floating Buttons Container */}
             {isClient && (
                 <motion.div
-                    className={`fixed left-4 top-0 pt-safe flex flex-col gap-6 md:hidden ${isMobileSidebarOpen ? "z-[9999]" : "z-[9998]"}`}
-                    style={{ paddingTop: "max(env(safe-area-inset-top), 1rem)" }}
+                    className={cn(
+                        `fixed left-4 flex flex-col gap-4 md:hidden`,
+                        // Reduce gap and size on thread pages, and adjust top position to avoid header overlap
+                        pathname.startsWith("/chat/") ? "gap-3 top-36" : "gap-6 top-0 pt-safe",
+                        isMobileSidebarOpen ? "z-[9999]" : "z-[9998]"
+                    )}
+                    style={{
+                        paddingTop: pathname.startsWith("/chat/") ? "0" : "max(env(safe-area-inset-top), 1rem)"
+                    }}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.5 }}
@@ -294,16 +302,24 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
-                                        className="bg-primary h-12 w-12 rounded-full p-1 shadow-lg transition-shadow hover:shadow-xl"
+                                        className={cn(
+                                            "bg-primary rounded-full p-0 shadow-lg transition-shadow hover:shadow-xl border-0",
+                                            // Smaller size on thread pages
+                                            pathname.startsWith("/chat/") ? "h-10 w-10" : "h-12 w-12"
+                                        )}
                                         size="icon"
                                         variant="default"
                                     >
                                         <Avatar
-                                            className="h-8 w-8"
+                                            className={cn(
+                                                "rounded-full",
+                                                // Smaller avatar on thread pages with proper sizing
+                                                pathname.startsWith("/chat/") ? "h-8 w-8" : "h-10 w-10"
+                                            )}
                                             name={
                                                 session.user?.name || session.user?.email || "User"
                                             }
-                                            size="md"
+                                            size={pathname.startsWith("/chat/") ? "sm" : "md"}
                                             src={
                                                 getSessionCacheBustedAvatarUrl(
                                                     session.user?.image,
@@ -375,12 +391,16 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         transition={{ duration: 0.3, delay: session ? 0.7 : 0.6 }}
                     >
                         <Button
-                            className="bg-primary text-primary-foreground h-12 w-12 rounded-full shadow-lg transition-shadow hover:shadow-xl"
+                            className={cn(
+                                "bg-primary text-primary-foreground rounded-full shadow-lg transition-shadow hover:shadow-xl",
+                                // Smaller size on thread pages
+                                pathname.startsWith("/chat/") ? "h-10 w-10" : "h-12 w-12"
+                            )}
                             onClick={() => setIsMobileSidebarOpen(true)}
                             size="icon"
                             variant="default"
                         >
-                            <Menu size={20} strokeWidth={2} />
+                            <Menu size={pathname.startsWith("/chat/") ? 18 : 20} strokeWidth={2} />
                         </Button>
                     </motion.div>
                 </motion.div>
