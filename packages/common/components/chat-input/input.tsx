@@ -320,109 +320,103 @@ export const ChatInput = ({
         <div
             className={cn(
                 "w-full px-3 md:px-4",
-                currentThreadId ? "pb-4 md:pb-0" : "mb-20 md:mb-0", // Add bottom padding for thread pages on mobile
+                currentThreadId ? "pb-2 md:pb-0" : "mb-8 md:mb-0", // Reduced bottom padding for mobile
             )}
         >
-                <Flex
-                    className={cn(
-                        "bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border",
-                    )}
-                    direction="col"
-                >
-                    <ImageDropzoneRoot dropzoneProps={dropzonProps}>
-                        <div className="flex w-full flex-shrink-0 overflow-hidden rounded-lg">
-                            {editor?.isEditable ? (
-                                <div className="w-full">
-                                    <div className="flex flex-col gap-2">
-                                        <ImageAttachment />
-                                        <DocumentAttachment />
-                                        <StructuredDataDisplay />
-                                        {multiModalAttachments.length > 0 && (
-                                            <MultiModalAttachmentsDisplay
-                                                attachments={multiModalAttachments}
-                                                onRemove={removeMultiModalAttachment}
-                                            />
-                                        )}
-                                    </div>
-                                    <Flex className="flex w-full flex-row items-end gap-0">
-                                        <ChatEditor
-                                            className=""
-                                            editor={editor}
-                                            sendMessage={sendMessage}
+            <Flex
+                className={cn(
+                    "bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border",
+                )}
+                direction="col"
+            >
+                <ImageDropzoneRoot dropzoneProps={dropzonProps}>
+                    <div className="flex w-full flex-shrink-0 overflow-hidden rounded-lg">
+                        {editor?.isEditable ? (
+                            <div className="w-full">
+                                <div className="flex flex-col gap-2">
+                                    <ImageAttachment />
+                                    <DocumentAttachment />
+                                    <StructuredDataDisplay />
+                                    {multiModalAttachments.length > 0 && (
+                                        <MultiModalAttachmentsDisplay
+                                            attachments={multiModalAttachments}
+                                            onRemove={removeMultiModalAttachment}
                                         />
-                                    </Flex>{" "}
-                                    <Flex
-                                        className="border-border w-full gap-3 border-t border-dashed px-4 py-3"
-                                        gap="none"
-                                        items="center"
-                                        justify="between"
-                                    >
-                                        {isGenerating && !isChatPage ? (
-                                            <GeneratingStatus />
-                                        ) : (
-                                            <Flex
-                                                className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
-                                                gap="xs"
-                                                items="center"
-                                            >
-                                                <ChatModeButton />
-
-                                                {/* AI Enhancement Tools Group */}
-                                                <div className="bg-border/50 mx-1 h-4 w-px" />
-                                                <WebSearchButton />
-                                                <ChartsButton />
-                                                <MathCalculatorButton />
-
-                                                {/* File Upload Tools Group */}
-                                                <div className="bg-border/50 mx-1 h-4 w-px" />
-                                                <DocumentUploadButton />
-                                                {supportsMultiModal(chatMode) ? (
-                                                    <MultiModalAttachmentButton
-                                                        attachments={multiModalAttachments}
-                                                        disabled={isGenerating}
-                                                        onAttachmentsChange={
-                                                            setMultiModalAttachments
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <ImageUpload
-                                                        handleImageUpload={handleImageUpload}
-                                                        id="image-attachment"
-                                                        label="Image"
-                                                        showIcon={true}
-                                                        tooltip="Image Attachment"
-                                                    />
-                                                )}
-
-                                                {/* Data Processing Tools Group */}
-                                                <div className="bg-border/50 mx-1 h-4 w-px" />
-                                                <StructuredOutputButton />
-                                            </Flex>
-                                        )}
-
+                                    )}
+                                </div>
+                                <Flex className="flex w-full flex-row items-end gap-0">
+                                    <ChatEditor
+                                        className=""
+                                        editor={editor}
+                                        sendMessage={sendMessage}
+                                    />
+                                </Flex>{" "}
+                                <Flex
+                                    className="border-border w-full gap-3 border-t border-dashed px-4 py-3"
+                                    gap="none"
+                                    items="center"
+                                    justify="between"
+                                >
+                                    {isGenerating && !isChatPage ? (
+                                        <GeneratingStatus />
+                                    ) : (
                                         <Flex
-                                            className="ml-auto flex-shrink-0"
-                                            gap="sm"
+                                            className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
+                                            gap="xs"
                                             items="center"
                                         >
-                                            <SendStopButton
-                                                hasTextInput={hasTextInput}
-                                                isGenerating={isGenerating}
-                                                sendMessage={sendMessage}
-                                                stopGeneration={stopGeneration}
-                                            />
+                                            <ChatModeButton />
+
+                                            {/* AI Enhancement Tools Group */}
+                                            <div className="bg-border/50 mx-1 h-4 w-px" />
+                                            <WebSearchButton />
+                                            <ChartsButton />
+                                            <MathCalculatorButton />
+
+                                            {/* File Upload Tools Group */}
+                                            <div className="bg-border/50 mx-1 h-4 w-px" />
+                                            <DocumentUploadButton />
+                                            {supportsMultiModal(chatMode) ? (
+                                                <MultiModalAttachmentButton
+                                                    attachments={multiModalAttachments}
+                                                    disabled={isGenerating}
+                                                    onAttachmentsChange={setMultiModalAttachments}
+                                                />
+                                            ) : (
+                                                <ImageUpload
+                                                    handleImageUpload={handleImageUpload}
+                                                    id="image-attachment"
+                                                    label="Image"
+                                                    showIcon={true}
+                                                    tooltip="Image Attachment"
+                                                />
+                                            )}
+
+                                            {/* Data Processing Tools Group */}
+                                            <div className="bg-border/50 mx-1 h-4 w-px" />
+                                            <StructuredOutputButton />
                                         </Flex>
+                                    )}
+
+                                    <Flex className="ml-auto flex-shrink-0" gap="sm" items="center">
+                                        <SendStopButton
+                                            hasTextInput={hasTextInput}
+                                            isGenerating={isGenerating}
+                                            sendMessage={sendMessage}
+                                            stopGeneration={stopGeneration}
+                                        />
                                     </Flex>
-                                </div>
-                            ) : (
-                                <div className="flex h-24 w-full items-center justify-center">
-                                    <InlineLoader />
-                                </div>
-                            )}
-                        </div>
-                    </ImageDropzoneRoot>
-                </Flex>
-            </div>
+                                </Flex>
+                            </div>
+                        ) : (
+                            <div className="flex h-24 w-full items-center justify-center">
+                                <InlineLoader />
+                            </div>
+                        )}
+                    </div>
+                </ImageDropzoneRoot>
+            </Flex>
+        </div>
     );
 
     const renderChatBottom = () => (
@@ -478,7 +472,7 @@ export const ChatInput = ({
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
-                    ? "chat-input-thread pb-safe mb-4" // Bottom positioning for thread pages
+                    ? "chat-input-thread pb-safe mb-2" // Reduced bottom margin for thread pages on mobile
                     : "chat-input-homepage pb-safe", // Center positioning for homepage
             )}
         >
@@ -494,8 +488,8 @@ export const ChatInput = ({
             >
                 <Flex
                     className={cn(
-                        "pb-safe w-full pb-4 md:pb-4",
-                        threadItemsLength > 0 ? "mb-4" : "", // Remove h-full to prevent conflicts
+                        "pb-safe w-full pb-2 md:pb-4", // Reduced mobile bottom padding
+                        threadItemsLength > 0 ? "mb-2 md:mb-4" : "", // Reduced mobile margin
                         // Dynamic alignment based on context
                         !currentThreadId && !threadItemsLength
                             ? "items-center justify-center flex-1"

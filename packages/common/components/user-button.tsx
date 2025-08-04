@@ -28,6 +28,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false }: UserButtonProps) {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
+    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
 
     if (!session?.user) {
         return null;
@@ -62,11 +63,9 @@ export function UserButton({ showName = false }: UserButtonProps) {
 
                 {/* Account Management */}
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuItem asChild>
-                    <Link href="/settings">
-                        <Settings className="mr-2 h-4 w-4" />
-                        Settings
-                    </Link>
+                <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />

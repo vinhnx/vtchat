@@ -126,20 +126,24 @@ vtchat/
 
 ## 🎯 Feature Comparison
 
-| Feature                      | VT_BASE (Free)                     | VT+ ($5.99/month)             |
-| ---------------------------- | ---------------------------------- | ----------------------------- |
-| **AI Models**                | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
-| **Basic Chat**               | ✅                                 | ✅                            |
-| **Local Privacy**            | ✅ (IndexedDB + Thread Isolation)  | ✅ (Enhanced Security)        |
-| **Calculator**               | ✅                                 | ✅                            |
-| **Security Protection**      | ✅ (Arcjet + Better Auth)          | ✅ (Priority Support)         |
-| **Thinking Mode**            | ✅                                 | ✅                            |
-| **Dark Theme**               | ✅                                 | ✅                            |
-| **Document Upload**          | ✅ (PDF/DOC/DOCX up to 10MB)       | ✅                            |
-| **Structured Extraction**    | ✅ (AI-powered JSON)               | ✅                            |
-| **Web Search (PRO_SEARCH)**  | ❌                                 | ✅ (Real-time Grounding)      |
-| **Deep Research**            | ❌                                 | ✅ (Comprehensive Analysis)   |
-| **Rate Limiting**            | 10 requests/day (free models)      | Unlimited Premium Models      |
+| Feature                     | VT_BASE (Free)                     | VT+ ($10/month)               |
+| --------------------------- | ---------------------------------- | ----------------------------- |
+| **AI Models**               | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
+| **Basic Chat**              | ✅                                 | ✅                            |
+| **Local Privacy**           | ✅ (IndexedDB + Thread Isolation)  | ✅ (Enhanced Security)        |
+| **Calculator**              | ✅                                 | ✅                            |
+| **Security Protection**     | ✅ (Arcjet + Better Auth)          | ✅ (Priority Support)         |
+| **Thinking Mode**           | ✅                                 | ✅                            |
+| **Dark Theme**              | ✅                                 | ✅                            |
+| **Document Upload**         | ✅ (PDF/DOC/DOCX up to 10MB)       | ✅ (Enhanced: up to 25MB)     |
+| **Structured Extraction**   | ✅ (AI-powered JSON)               | ✅                            |
+| **Web Search (PRO_SEARCH)** | ❌                                 | ✅ (50/day)                   |
+| **Deep Research**           | ❌                                 | ✅ (25/day)                   |
+| **Priority AI Access**      | ❌                                 | ✅ (Skip rate limits)         |
+| **Custom Workflows**        | ❌                                 | ✅ (Save custom workflows)    |
+| **Extended Chat History**   | ❌                                 | ✅ (Unlimited with search)    |
+| **Premium Exports**         | ❌                                 | ✅ (PDF, Word, Markdown)      |
+| **Rate Limiting**           | 10 requests/day (free models)      | Unlimited Premium Models      |
 
 ## 🧪 Testing Status
 

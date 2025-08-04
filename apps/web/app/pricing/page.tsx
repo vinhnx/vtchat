@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
     title: "Pricing - VT",
     description:
-        "VT pricing: Most AI features free with BYOK. VT+ ($5.99/month) adds 3 exclusive research features: Deep Research, Pro Search.",
+        "VT pricing: Most AI features free with BYOK. VT+ ($10/month) adds professional research tools: Enhanced Pro Search (50/day), Deep Research (25/day), advanced document processing, priority access, custom workflows, and premium exports.",
     keywords: [
         "VT pricing",
         "AI chat pricing",
@@ -17,11 +17,14 @@ export const metadata: Metadata = {
         "premium AI features",
         "research tools",
         "AI subscription",
+        "professional AI tools",
+        "custom workflows",
+        "priority access",
     ],
     openGraph: {
         title: "Pricing - VT",
         description:
-            "Most powerful AI features free with BYOK. VT+ adds exclusive research capabilities.",
+            "Most powerful AI features free with BYOK. VT+ adds professional research capabilities and advanced productivity tools.",
         type: "website",
         images: [
             {
@@ -36,7 +39,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Pricing - VT",
         description:
-            "Most powerful AI features free with BYOK. VT+ adds exclusive research capabilities.",
+            "Most powerful AI features free with BYOK. VT+ adds professional research capabilities and advanced productivity tools.",
         images: ["https://vtchat.io.vn/twitter-image-v3.jpg"],
     },
     robots: {
@@ -85,7 +88,7 @@ export default function PricingPage() {
                         },
                         offers: {
                             "@type": "Offer",
-                            price: "5.99",
+                            price: "10",
                             priceCurrency: "USD",
                             availability: "https://schema.org/InStock",
                             priceValidUntil: "2025-12-31",
