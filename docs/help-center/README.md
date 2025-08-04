@@ -43,8 +43,6 @@ All free features plus professional research and productivity tools:
 - **Advanced Document Processing**: Enhanced document analysis with larger file size limits (up to 25MB), batch processing, and advanced extraction capabilities
 - **Priority AI Model Access**: Skip rate limits and get priority access to all AI models during high-traffic periods with dedicated server resources
 - **Extended Chat History**: Unlimited chat history storage with advanced search and organization features across all your conversations
-- **Custom AI Workflows**: Create and save custom AI workflows for repetitive tasks, with template sharing and automation capabilities
-- **Premium Export Options**: Export conversations in multiple formats (PDF, Word, Markdown) with formatting preservation and sharing options
 - **Priority Support**: Dedicated support channel with faster response times
 
 **Daily Quotas**: Deep Research and Pro Search have daily limits that reset every day at 00:00 UTC to provide meaningful daily usage while controlling costs.

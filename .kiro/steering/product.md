@@ -34,9 +34,7 @@ VT delivers powerful AI conversations with complete privacy protection—startin
 - **Enhanced Research Tools**: Pro Search (50/day), Deep Research (25/day)
 - **Advanced Document Processing**: Up to 25MB files, batch processing, enhanced extraction
 - **Priority AI Access**: Skip rate limits, dedicated server resources
-- **Custom AI Workflows**: Create and save custom workflows for repetitive tasks
 - **Extended Chat History**: Unlimited storage with advanced search
-- **Premium Export Options**: PDF, Word, Markdown with formatting preservation
 - **Priority Support**: Dedicated support channel with faster response times
 
 ## Target Users

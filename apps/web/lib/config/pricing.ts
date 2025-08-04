@@ -90,16 +90,6 @@ export const PRICING_CONFIG = {
                         'Unlimited chat history storage with advanced search and organization features across all your conversations',
                 },
                 {
-                    name: 'Custom AI Workflows',
-                    description:
-                        'Create and save custom AI workflows for repetitive tasks, with template sharing and automation capabilities',
-                },
-                {
-                    name: 'Premium Export Options',
-                    description:
-                        'Export conversations in multiple formats (PDF, Word, Markdown) with formatting preservation and sharing options',
-                },
-                {
                     name: 'Priority Support & Daily Reset',
                     description:
                         'Priority customer support with daily quota reset for Pro Search and Deep Research features, plus dedicated support channel',
