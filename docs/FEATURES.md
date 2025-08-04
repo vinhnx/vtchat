@@ -120,8 +120,8 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ### Sophisticated Subscription Tiers
 
-- **Free Tier**: VT offers free tier, and with VT+ focusing only on 2 exclusive research capabilities: Deep Research and Pro Search.
-- **VT+ ($5.99/month)**: All free features + 2 research-focused exclusives: Enhanced Web Search (PRO_SEARCH - 20/day), Deep Research (DEEP_RESEARCH - 10/day)
+- **Free Tier**: VT offers free tier, and with VT+ focusing on professional research capabilities and advanced features.
+- **VT+ ($10/month)**: All free features + professional research tools: Enhanced Web Search (PRO_SEARCH - 50/day), Deep Research (DEEP_RESEARCH - 25/day), advanced document processing (25MB files), priority AI access, custom workflows, premium exports, extended chat history, and priority support
 
 ### Advanced Payment Integration
 
@@ -253,7 +253,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ## 📋 Feature Comparison Matrix
 
-| Feature                           | Free Tier                              | VT+ ($5.99/month)                                               |
+| Feature                           | Free Tier                              | VT+ ($10/month)                                                 |
 | --------------------------------- | -------------------------------------- | --------------------------------------------------------------- |
 | **Basic AI Models**               | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅                                                              |
 | **Premium AI Models**             | ❌                                     | ✅ (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) |
@@ -263,11 +263,15 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | **Security Protection**           | ✅ (Bot Detection + Better Auth)       | ✅ (Priority Support)                                           |
 | **Thinking Mode**                 | ✅ (AI SDK Reasoning Tokens)           | ✅                                                              |
 | **Dark Theme**                    | ✅ (Official Shadcn Variables)         | ✅                                                              |
-| **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅                                                              |
+| **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅ (Enhanced: up to 25MB, batch processing)                     |
 | **Structured Output**             | ✅ (AI-powered JSON)                   | ✅                                                              |
 | **Chart Visualization**           | ✅                                     | ✅                                                              |
-| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 20/day)                               |
-| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 10/day)                            |
+| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 50/day)                               |
+| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 25/day)                            |
+| **Priority AI Access**            | ❌                                     | ✅ (Skip rate limits, dedicated resources)                      |
+| **Custom AI Workflows**           | ❌                                     | ✅ (Create and save custom workflows)                           |
+| **Extended Chat History**         | ❌                                     | ✅ (Unlimited storage with advanced search)                     |
+| **Premium Export Options**        | ❌                                     | ✅ (PDF, Word, Markdown with formatting)                        |
 | **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models         |
 
 ## 🎯 Target Use Cases

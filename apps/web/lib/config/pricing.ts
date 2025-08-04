@@ -1,13 +1,13 @@
-import { CURRENCIES, VT_PLUS_PRICE } from "@repo/shared/constants";
+import { CURRENCIES, VT_PLUS_PRICE } from '@repo/shared/constants';
 
 // Pricing and product configuration
 export const PRICING_CONFIG = {
     // Product information
     product: {
-        name: "VT+",
+        name: 'VT+',
         description:
-            "Research-focused exclusives: Pro Search (20/day), Deep Research (10/day), with flexible database-driven quotas",
-        id: process.env.CREEM_PRODUCT_ID || "",
+            'Professional AI toolkit: Enhanced Pro Search (50/day), Deep Research (25/day), advanced document processing, priority access, custom workflows, and premium export options',
+        id: process.env.CREEM_PRODUCT_ID || '',
     },
 
     // Pricing details
@@ -15,69 +15,99 @@ export const PRICING_CONFIG = {
         free: {
             price: 0,
             currency: CURRENCIES.USD,
-            interval: "month",
+            interval: 'month',
             features: [
                 {
-                    name: "All Advanced AI Features",
+                    name: 'All Advanced AI Features',
                     description:
-                        "Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users",
+                        'Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users',
                 },
                 {
-                    name: "Multi-Modal Chat",
+                    name: 'Multi-Modal Chat',
                     description:
-                        "Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini",
+                        'Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini',
                 },
                 {
-                    name: "All Chat Input Tools",
+                    name: 'All Chat Input Tools',
                     description:
-                        "Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included",
+                        'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included',
                 },
                 {
-                    name: "All Premium AI Models (Free with BYOK)",
+                    name: 'All Premium AI Models (Free with BYOK)',
                     description:
-                        "Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users",
+                        'Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users',
                 },
                 {
-                    name: "9 Free Server Models",
+                    name: '9 Free Server Models',
                     description:
                         "Gemini and OpenRouter models with VT's server API keys - no setup required",
                 },
                 {
-                    name: "Unlimited BYOK Access",
+                    name: 'Unlimited BYOK Access',
                     description:
-                        "Use your own API keys for unlimited access to OpenAI, Anthropic, Google, and other AI providers",
+                        'Use your own API keys for unlimited access to OpenAI, Anthropic, Google, and other AI providers',
                 },
             ],
         },
         plus: {
             price: VT_PLUS_PRICE,
             currency: CURRENCIES.USD,
-            interval: "month",
+            interval: 'month',
             features: [
                 {
-                    name: "Access to Gemini Models + Enhanced Tools",
+                    name: 'Access to Gemini Models + Enhanced Tools',
                     description:
-                        "Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.",
+                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
                 },
                 {
-                    name: "Everything in Free Plan (All Premium AI Models Included)",
+                    name: 'Everything in Free Plan (All Premium AI Models Included)',
                     description:
-                        "All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier",
+                        'All premium AI models (Claude 4, GPT-4.1, O3, etc.) + all advanced features already available in free tier',
                 },
                 {
-                    name: "Pro Search (Exclusive)",
+                    name: 'Pro Search (Exclusive) - 50 requests/day',
                     description:
-                        "Lightning-fast web search with AI grounding for instant, accurate information retrieval - 20 requests per day",
+                        'Lightning-fast web search with AI grounding for instant, accurate information retrieval - increased from 20 to 50 requests per day',
                 },
                 {
-                    name: "Deep Research (Exclusive)",
+                    name: 'Deep Research (Exclusive) - 25 requests/day',
                     description:
-                        "Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - 10 requests per day",
+                        'Comprehensive multi-step research with detailed analysis and thorough investigation of complex topics - increased from 10 to 25 requests per day',
                 },
                 {
-                    name: "Priority Support & Daily Reset",
+                    name: 'Advanced Document Processing',
                     description:
-                        "Priority customer support with daily quota reset for Pro Search and Deep Research features",
+                        'Enhanced document analysis with larger file size limits (up to 25MB), batch processing, and advanced extraction capabilities',
+                },
+                {
+                    name: 'Priority AI Model Access',
+                    description:
+                        'Skip rate limits and get priority access to all AI models during high-traffic periods with dedicated server resources',
+                },
+                {
+                    name: 'Extended Chat History',
+                    description:
+                        'Unlimited chat history storage with advanced search and organization features across all your conversations',
+                },
+                {
+                    name: 'Custom AI Workflows',
+                    description:
+                        'Create and save custom AI workflows for repetitive tasks, with template sharing and automation capabilities',
+                },
+                {
+                    name: 'Premium Export Options',
+                    description:
+                        'Export conversations in multiple formats (PDF, Word, Markdown) with formatting preservation and sharing options',
+                },
+                {
+                    name: 'Priority Support & Daily Reset',
+                    description:
+                        'Priority customer support with daily quota reset for Pro Search and Deep Research features, plus dedicated support channel',
+                },
+                {
+                    name: 'Support Development',
+                    description:
+                        'Your subscription directly supports the continued development and improvement of VT. Thank you for helping us build better AI tools for everyone!',
                 },
             ],
         },
