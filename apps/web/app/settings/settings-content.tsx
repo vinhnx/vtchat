@@ -23,14 +23,31 @@ import {
     TabsTrigger,
 } from "@repo/ui";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CacheManagement } from "../../components/cache-management";
 
 export function SettingsContent() {
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const [activeTab, setActiveTab] = useState<string>(SETTING_TABS.ACCESSIBILITY);
+    const searchParams = useSearchParams();
+    const tabParam = searchParams.get("tab");
+
+    // Set default tab based on URL parameter
+    const getDefaultTab = () => {
+        if (tabParam === "profile") return SETTING_TABS.PROFILE;
+        return SETTING_TABS.ACCESSIBILITY;
+    };
+
+    const [activeTab, setActiveTab] = useState<string>(getDefaultTab());
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    // Update active tab when URL parameter changes
+    useEffect(() => {
+        if (tabParam === "profile") {
+            setActiveTab(SETTING_TABS.PROFILE);
+        }
+    }, [tabParam]);
 
     // Show login required message if not signed in
     if (!isSignedIn) {
@@ -101,29 +118,30 @@ export function SettingsContent() {
         <div className="mx-auto max-w-6xl">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 {/* Horizontal tabs for mobile, vertical for desktop */}
-                <div className="flex flex-col lg:flex-row gap-8">
+                <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
                     {/* Sidebar Navigation */}
-                    <div className="lg:w-72 flex-shrink-0">
-                        {/* Mobile Dropdown - Fixed position with high z-index */}
+                    <div className="lg:w-72 xl:w-80 flex-shrink-0">
+                        {/* Mobile Dropdown */}
                         <div className="lg:hidden mb-6">
-                            <div className="sticky top-8 pt-safe z-[100]">
+                            <div className="sticky top-4 z-[50]">
                                 <Popover open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant="outline"
                                             role="combobox"
                                             aria-expanded={mobileMenuOpen}
-                                            className="w-full justify-between bg-background/95 backdrop-blur-sm border shadow-lg"
+                                            className="w-full justify-between bg-background/95 backdrop-blur-sm border shadow-sm"
                                         >
                                             {settingTabs.find((tab) => tab.id === activeTab)?.label}
                                             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent
-                                        className="w-[var(--radix-popover-trigger-width)] p-0 z-[100]"
+                                        className="w-[var(--radix-popover-trigger-width)] p-0 z-[60]"
                                         align="start"
+                                        sideOffset={4}
                                     >
-                                        <div className="max-h-[300px] overflow-auto">
+                                        <div className="max-h-[60vh] overflow-auto">
                                             {settingTabs.map((tab) => (
                                                 <button
                                                     key={tab.id}
@@ -159,13 +177,16 @@ export function SettingsContent() {
                                     key={tab.id}
                                     value={tab.id}
                                     className={cn(
-                                        "w-full justify-start text-left h-auto p-4 rounded-lg min-h-[4rem]",
+                                        "w-full justify-start text-left h-auto p-3 lg:p-4 rounded-lg min-h-[3.5rem] lg:min-h-[4rem]",
                                         "data-[state=active]:bg-muted data-[state=active]:shadow-sm",
                                         "data-[state=inactive]:bg-transparent hover:bg-muted/50",
+                                        "transition-all duration-200",
                                     )}
                                 >
                                     <div className="flex flex-col items-start w-full">
-                                        <div className="font-medium text-base">{tab.label}</div>
+                                        <div className="font-medium text-sm lg:text-base">
+                                            {tab.label}
+                                        </div>
                                         <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
                                             {tab.description}
                                         </div>
@@ -179,7 +200,7 @@ export function SettingsContent() {
                     <div className="flex-1 min-w-0">
                         {settingTabs.map((tab) => (
                             <TabsContent key={tab.id} value={tab.id} className="mt-0 space-y-6">
-                                <div className="bg-background rounded-lg border p-6 shadow-sm">
+                                <div className="bg-background rounded-lg border p-4 md:p-6 shadow-sm">
                                     {tab.component}
                                 </div>
                             </TabsContent>
