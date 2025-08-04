@@ -66,18 +66,34 @@ function AboutContent() {
                         VT
                     </TypographyH1>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-                        Stop juggling AI subscriptions and privacy concerns -— VT delivers powerful
-                        AI conversations with complete privacy protection, starting free.
+                        VT is a production-ready, privacy-first AI chat application with advanced AI
+                        capabilities, offering all premium models for free with BYOK and exclusive
+                        research features for professionals.
                     </p>
                 </div>
 
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube-nocookie.com/embed/5ChJ-b3Ie-k?si=HTu07olzi2RA_ZSm&amp;controls=0"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+
+                <br />
                 <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <div className="space-y-8">
                         <div>
                             <h3 className="mb-4 text-xl font-semibold">Our Mission</h3>
                             <p className="text-muted-foreground">
-                                Tired of AI tools that compromise your privacy? VT keeps every
-                                conversation on your device, never on our servers.
+                                VT empowers users with secure, privacy-first AI conversations by
+                                offering unlimited access to premium AI models through BYOK while
+                                maintaining complete data sovereignty.
                             </p>
                         </div>
 
@@ -371,107 +387,44 @@ function AboutContent() {
                                 open development practices and welcome contributions from the
                                 community.
                             </p>
-                            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-                                <a
-                                    href="https://devhub.best/projects/vt-chat"
-                                    target="_blank"
-                                    title="DevHub Top 1 Daily Winner"
-                                    rel="noopener noreferrer"
-                                >
-                                    <img
-                                        src="https://devhub.best/images/badges/top1-light.svg"
-                                        alt="DevHub Top 1 Daily Winner"
-                                        style={{ width: "195px", height: "auto" }}
-                                    />
-                                </a>
-                            </div>
 
                             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-                                <a
-                                    href="https://indie.deals?ref=https%3A%2F%2Fvtchat.io.vn"
+                                <Link
+                                    href="https://github.com/vinhnx/vtchat"
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="text-primary hover:underline"
                                 >
-                                    <div className="relative overflow-hidden inline-block group">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/90 to-transparent transform -translate-x-full rotate-45 group-hover:animate-shimmer pointer-events-none transition-transform duration-300 ease-out"></div>
+                                    <Button variant="outline" className="gap-2">
                                         <svg
-                                            width="180"
-                                            height="60"
-                                            viewBox="0 0 180 60"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="block"
+                                            className="h-4 w-4"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
                                         >
-                                            <defs>
-                                                <linearGradient
-                                                    id="badgeGradient"
-                                                    x1="0%"
-                                                    y1="0%"
-                                                    x2="100%"
-                                                    y2="100%"
-                                                >
-                                                    <stop offset="0%" stopColor="#ffffff" />
-                                                    <stop offset="100%" stopColor="#e6f0fc" />
-                                                </linearGradient>
-                                            </defs>
-
-                                            <rect
-                                                width="180"
-                                                height="60"
-                                                rx="10"
-                                                fill="url(#badgeGradient)"
-                                            />
-
-                                            <rect
-                                                x="0.75"
-                                                y="0.75"
-                                                width="178.5"
-                                                height="58.5"
-                                                rx="9.25"
-                                                fill="none"
-                                                stroke="#0070f3"
-                                                strokeWidth="1.5"
-                                                stroke-opacity="0.3"
-                                            />
-
-                                            <image
-                                                href="https://indie.deals/logo_badge.png"
-                                                x="14.4"
-                                                y="12"
-                                                width="36"
-                                                height="36"
-                                                preserveAspectRatio="xMidYMid meet"
-                                                filter="drop-shadow(1px 1px 2px rgba(0,0,0,0.15))"
-                                            />
-
-                                            <text
-                                                x="120.60000000000001"
-                                                y="22.8"
-                                                textAnchor="middle"
-                                                dominantBaseline="middle"
-                                                fontFamily="system-ui, -apple-system, sans-serif"
-                                                fontSize="10.799999999999999"
-                                                fontWeight="normal"
-                                                fill="#4b5563"
-                                                letterSpacing="0.01em"
-                                            >
-                                                Find us on
-                                            </text>
-                                            <text
-                                                x="120.60000000000001"
-                                                y="39"
-                                                textAnchor="middle"
-                                                dominantBaseline="middle"
-                                                fontFamily="system-ui, -apple-system, sans-serif"
-                                                fontSize="13.2"
-                                                fontWeight="bold"
-                                                fill="#0070f3"
-                                                letterSpacing="0.01em"
-                                            >
-                                                Indie.Deals
-                                            </text>
+                                            <title>GitHub</title>
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                                         </svg>
-                                    </div>
-                                </a>
+                                        View on GitHub
+                                    </Button>
+                                </Link>
+                                <Link
+                                    href="https://twitter.com/intent/tweet?text=Check%20out%20VT%20-%20Privacy-first%20AI%20chat%20with%20all%20premium%20models%20for%20free!&url=https://vtchat.io.vn"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline"
+                                >
+                                    <Button variant="outline" className="gap-2">
+                                        <svg
+                                            className="h-4 w-4"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <title>X (Twitter)</title>
+                                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                        </svg>
+                                        Share on X
+                                    </Button>
+                                </Link>
                             </div>
 
                             <div className="mt-8 border-t pt-6">
