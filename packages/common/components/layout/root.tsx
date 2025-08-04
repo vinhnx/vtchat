@@ -2,7 +2,7 @@
 import { CommandSearch } from "@repo/common/components";
 import { useRootContext } from "@repo/common/context";
 import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from "@repo/common/hooks";
-import { SETTING_TABS, useAppStore } from "@repo/common/store";
+import { useAppStore } from "@repo/common/store";
 import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
 import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/lib/logger";
@@ -280,13 +280,33 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
             {isClient && (
                 <motion.div
                     className={cn(
-                        `fixed left-4 flex flex-col gap-4 md:hidden`,
-                        // Reduce gap and size on thread pages, and adjust top position to avoid header overlap
-                        pathname.startsWith("/chat/") ? "gap-3 top-36" : "gap-6 top-0 pt-safe",
-                        isMobileSidebarOpen ? "z-[9999]" : "z-[9998]"
+                        "fixed left-4 flex flex-col gap-4 md:hidden",
+                        // Adjust positioning based on page type and navigation presence
+                        pathname.startsWith("/chat/")
+                            ? "gap-3 top-36"
+                            : pathname.startsWith("/settings") ||
+                                pathname.startsWith("/about") ||
+                                pathname.startsWith("/help") ||
+                                pathname.startsWith("/privacy") ||
+                                pathname.startsWith("/terms") ||
+                                pathname.startsWith("/profile") ||
+                                pathname.startsWith("/admin")
+                              ? "gap-4 top-20" // Pages with navigation headers (80px to clear header + padding)
+                              : "gap-6 top-0 pt-safe", // Home and other pages
+                        isMobileSidebarOpen ? "z-[9999]" : "z-[9998]",
                     )}
                     style={{
-                        paddingTop: pathname.startsWith("/chat/") ? "0" : "max(env(safe-area-inset-top), 1rem)"
+                        paddingTop: pathname.startsWith("/chat/")
+                            ? "0"
+                            : pathname.startsWith("/settings") ||
+                                pathname.startsWith("/about") ||
+                                pathname.startsWith("/help") ||
+                                pathname.startsWith("/privacy") ||
+                                pathname.startsWith("/terms") ||
+                                pathname.startsWith("/profile") ||
+                                pathname.startsWith("/admin")
+                              ? "max(env(safe-area-inset-top), 0.5rem)" // Reduced padding for pages with headers
+                              : "max(env(safe-area-inset-top), 1rem)",
                     }}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -305,7 +325,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                         className={cn(
                                             "bg-primary rounded-full p-0 shadow-lg transition-shadow hover:shadow-xl border-0",
                                             // Smaller size on thread pages
-                                            pathname.startsWith("/chat/") ? "h-10 w-10" : "h-12 w-12"
+                                            pathname.startsWith("/chat/")
+                                                ? "h-10 w-10"
+                                                : "h-12 w-12",
                                         )}
                                         size="icon"
                                         variant="default"
@@ -314,7 +336,9 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                             className={cn(
                                                 "rounded-full",
                                                 // Smaller avatar on thread pages with proper sizing
-                                                pathname.startsWith("/chat/") ? "h-8 w-8" : "h-10 w-10"
+                                                pathname.startsWith("/chat/")
+                                                    ? "h-8 w-8"
+                                                    : "h-10 w-10",
                                             )}
                                             name={
                                                 session.user?.name || session.user?.email || "User"
@@ -329,14 +353,19 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="start" className="z-[200] mb-2 w-48">
-                                    <DropdownMenuItem onClick={() => router.push("/profile")}>
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            router.push("/settings?tab=profile");
+                                            setIsMobileSidebarOpen(false);
+                                        }}
+                                    >
                                         <User className="mr-2" size={16} strokeWidth={2} />
                                         Profile
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setIsSettingsOpen(true);
-                                            setSettingTab(SETTING_TABS.USAGE_CREDITS);
+                                            router.push("/settings");
+                                            setIsMobileSidebarOpen(false);
                                         }}
                                     >
                                         <Settings className="mr-2" size={16} strokeWidth={2} />
@@ -394,7 +423,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             className={cn(
                                 "bg-primary text-primary-foreground rounded-full shadow-lg transition-shadow hover:shadow-xl",
                                 // Smaller size on thread pages
-                                pathname.startsWith("/chat/") ? "h-10 w-10" : "h-12 w-12"
+                                pathname.startsWith("/chat/") ? "h-10 w-10" : "h-12 w-12",
                             )}
                             onClick={() => setIsMobileSidebarOpen(true)}
                             size="icon"
