@@ -2,8 +2,8 @@ import { Footer } from "@repo/common/components";
 import type { Metadata } from "next";
 import { PricingClient } from "./pricing-client";
 
-// This page needs to be dynamic due to authentication checks
-export const dynamic = "force-dynamic";
+// This page can be statically generated for better SEO
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
     title: "Pricing - VT",

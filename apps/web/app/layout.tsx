@@ -12,10 +12,8 @@ import { PerformanceOptimizations } from "../components/performance-optimization
 import { PWAManager } from "../components/pwa-manager";
 import { ReactScan } from "../components/react-scan";
 
-// Force all pages to be dynamic to prevent React context issues during build
+// Force dynamic rendering for all pages to avoid context issues during build
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const dynamicParams = true;
 
 import "@repo/ui/src/styles.css";
 import { AccessibilityHead } from "../components/accessibility-improvements";
@@ -24,6 +22,8 @@ import { defaultMetadata, defaultViewport } from "./page-metadata";
 
 export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = defaultViewport;
+
+// Remove duplicate font definitions - already defined above
 
 export default function ParentLayout({
     children,

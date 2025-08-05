@@ -1,7 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
+// Standalone error page without any imports to avoid context issues during build
 interface ErrorPageProps {
     error: Error & { digest?: string };
     reset: () => void;
@@ -13,22 +12,103 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
     };
 
     return (
-        <div className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center">
-            <div className="w-full max-w-md p-6 text-center">
-                <h1 className="mb-3 text-lg font-medium">Something went wrong</h1>
-                <p className="text-muted-foreground mb-4 text-sm">
+        <div
+            style={{
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                backgroundColor: "hsl(0 0% 100%)",
+                color: "hsl(0 0% 3.9%)",
+                display: "flex",
+                minHeight: "100vh",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                lineHeight: 1.5,
+            }}
+        >
+            <div
+                style={{
+                    width: "100%",
+                    maxWidth: "28rem",
+                    padding: "1.5rem",
+                    textAlign: "center",
+                }}
+            >
+                <h1
+                    style={{
+                        marginBottom: "0.75rem",
+                        fontSize: "1.125rem",
+                        fontWeight: 500,
+                    }}
+                >
+                    Something went wrong
+                </h1>
+                <p
+                    style={{
+                        marginBottom: "1rem",
+                        fontSize: "0.875rem",
+                        color: "hsl(0 0% 45.1%)",
+                    }}
+                >
                     An unexpected error occurred. Please try again.
                 </p>
-                <div className="flex justify-center space-x-3">
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "0.75rem",
+                    }}
+                >
                     <button
                         onClick={reset}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                        style={{
+                            display: "inline-flex",
+                            height: "2.25rem",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: "0.375rem",
+                            padding: "0.5rem 1rem",
+                            fontSize: "0.875rem",
+                            fontWeight: 500,
+                            border: "none",
+                            cursor: "pointer",
+                            backgroundColor: "hsl(0 0% 9%)",
+                            color: "hsl(0 0% 98%)",
+                            boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+                            transition: "background-color 0.2s",
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "hsl(0 0% 9% / 0.9)";
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "hsl(0 0% 9%)";
+                        }}
                     >
                         Try again
                     </button>
                     <button
                         onClick={handleHomeNavigation}
-                        className="bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md border border-input px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                        style={{
+                            display: "inline-flex",
+                            height: "2.25rem",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: "0.375rem",
+                            padding: "0.5rem 1rem",
+                            fontSize: "0.875rem",
+                            fontWeight: 500,
+                            cursor: "pointer",
+                            backgroundColor: "hsl(0 0% 100%)",
+                            color: "hsl(0 0% 3.9%)",
+                            border: "1px solid hsl(0 0% 89.1%)",
+                            boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+                            transition: "background-color 0.2s",
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "hsl(0 0% 96.1%)";
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "hsl(0 0% 100%)";
+                        }}
                     >
                         Back to VT
                     </button>

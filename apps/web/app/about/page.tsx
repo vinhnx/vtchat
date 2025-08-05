@@ -1,3 +1,4 @@
+import { AiToolsBadge } from "@/components/aitools-badge";
 import { Footer } from "@repo/common/components";
 import { Button, TypographyH1 } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
@@ -78,7 +79,7 @@ function AboutContent() {
                         height="315"
                         src="https://www.youtube-nocookie.com/embed/5ChJ-b3Ie-k?si=RphgJ7OMT67Xmcpc&amp;controls=0"
                         title="YouTube video player"
-                        frameBorder="0"
+                        style={{ border: 0 }}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
@@ -425,20 +426,7 @@ function AboutContent() {
                                         Share on X
                                     </Button>
                                 </Link>
-                                <a
-                                    href="https://aitools.inc/tools/vt?utm_source=embed-badge-vt&utm_medium=embed&utm_campaign=embed-badge-featured"
-                                    target="_blank"
-                                    style={{ width: "175px", height: "54px" }}
-                                    rel="noopener"
-                                >
-                                    <img
-                                        src="https://aitools.inc/tools/vt/embeds/v1/featured-badge.svg?theme=neutral"
-                                        alt="VT | AI Tools"
-                                        style={{ width: "175px", height: "54px" }}
-                                        width="175"
-                                        height="54"
-                                    />
-                                </a>
+                                <AiToolsBadge />
                             </div>
 
                             <div className="mt-8 border-t pt-6">
