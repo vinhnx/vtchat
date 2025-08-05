@@ -96,27 +96,32 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         </span>
                     </div>
                 </div>
-                {/* Left sidebar placeholder during SSR */}
+                {/* Left sidebar placeholder during SSR - always render container but conditionally show content */}
                 {sidebarPlacement === "left" && (
-                    <div className="hidden md:flex">
-                        {isSidebarOpen && (
-                            <div className="w-[300px] max-w-[300px] flex-none">
-                                {/* Empty sidebar placeholder */}
-                            </div>
-                        )}
+                    <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none md:block">
+                        {/* Empty placeholder during SSR */}
                     </div>
                 )}
-                <div className={containerClass}>
-                    <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
-                </div>
-                {/* Right sidebar placeholder during SSR */}
-                {sidebarPlacement === "right" && (
-                    <div className="hidden md:flex">
-                        {isSidebarOpen && (
-                            <div className="w-[300px] max-w-[300px] flex-none">
-                                {/* Empty sidebar placeholder */}
+
+                {/* Main Content */}
+                <div className="h-[100dvh] flex-1 overflow-hidden">
+                    <div
+                        className={`flex h-full w-full md:py-1 ${sidebarPlacement === "left" ? "md:pr-1" : "md:pl-1"}`}
+                    >
+                        <div className={containerClass}>
+                            <div className="relative flex h-full w-full flex-row">
+                                <div className="flex flex-1 min-w-0 flex-col gap-2 overflow-y-auto">
+                                    {children}
+                                </div>
                             </div>
-                        )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right sidebar placeholder during SSR - always render container but conditionally show content */}
+                {sidebarPlacement === "right" && (
+                    <div className="desktop-sidebar hidden h-[100dvh] w-auto max-w-[300px] flex-none md:block">
+                        {/* Empty placeholder during SSR */}
                     </div>
                 )}
             </div>

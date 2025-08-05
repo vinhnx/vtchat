@@ -319,8 +319,8 @@ export const ChatInput = ({
     const renderChatInput = () => (
         <div
             className={cn(
-                "w-full px-3 md:px-4",
-                currentThreadId ? "pb-2 md:pb-0" : "mb-8 md:mb-0", // Reduced bottom padding for mobile
+                "w-full", // Removed all padding/margins
+                currentThreadId ? "pb-2 md:pb-0" : "mb-2 md:mb-0",
             )}
         >
             <Flex
@@ -472,7 +472,7 @@ export const ChatInput = ({
             className={cn(
                 "bg-secondary w-full",
                 currentThreadId
-                    ? "chat-input-thread pb-safe mb-2" // Reduced bottom margin for thread pages on mobile
+                    ? "chat-input-thread pb-safe" // Removed margin-top
                     : "chat-input-homepage pb-safe", // Center positioning for homepage
             )}
         >

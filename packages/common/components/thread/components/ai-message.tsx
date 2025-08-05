@@ -122,7 +122,7 @@ export const AIMessage = memo(
                         {/* Message content */}
                         <div
                             className={cn(
-                                "relative px-4 py-3",
+                                "relative px-4 py-3 pt-4", // Increased top padding
                                 "min-h-[2rem] w-full",
                                 "transition-all duration-200 ease-out",
                                 // Add streaming class for enhanced expansion
