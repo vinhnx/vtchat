@@ -425,6 +425,20 @@ function AboutContent() {
                                         Share on X
                                     </Button>
                                 </Link>
+                                <a
+                                    href="https://aitools.inc/tools/vt?utm_source=embed-badge-vt&utm_medium=embed&utm_campaign=embed-badge-featured"
+                                    target="_blank"
+                                    style={{ width: "175px", height: "54px" }}
+                                    rel="noopener"
+                                >
+                                    <img
+                                        src="https://aitools.inc/tools/vt/embeds/v1/featured-badge.svg?theme=neutral"
+                                        alt="VT | AI Tools"
+                                        style={{ width: "175px", height: "54px" }}
+                                        width="175"
+                                        height="54"
+                                    />
+                                </a>
                             </div>
 
                             <div className="mt-8 border-t pt-6">
