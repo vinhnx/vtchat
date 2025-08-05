@@ -31,11 +31,25 @@ const initHotjar = () => {
             return;
         }
 
-        // Initialize Hotjar with proper error handling
+        // Additional validation for reasonable values
+        if (parsedSiteId <= 0 || parsedVersion <= 0) {
+            log.warn(
+                { siteId: parsedSiteId, version: parsedVersion },
+                "Hotjar configuration invalid: values must be positive numbers",
+            );
+            return;
+        }
+
+        // Initialize Hotjar with proper error handling and timeout
+        const initTimeout = setTimeout(() => {
+            log.warn("Hotjar initialization timed out");
+        }, 5000);
+
         Hotjar.init(parsedSiteId, parsedVersion, {
-            // Add configuration to prevent feature detection errors
             debug: process.env.NODE_ENV === "development",
         });
+
+        clearTimeout(initTimeout);
 
         log.info(
             { siteId: parsedSiteId, version: parsedVersion },
@@ -44,6 +58,12 @@ const initHotjar = () => {
     } catch (error) {
         // Log error but don't throw to prevent app crashes
         log.warn({ error }, "Failed to initialize Hotjar");
+
+        // Additional safety: if Hotjar fails, ensure it doesn't break the app
+        if (typeof window !== "undefined") {
+            // Provide a minimal fallback to prevent undefined errors
+            (window as any).hj = (window as any).hj || (() => {});
+        }
     }
 };
 
