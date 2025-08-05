@@ -1,7 +1,7 @@
 "use client";
+import { log } from "@repo/shared/logger";
 import { initHotjar } from "@repo/shared/utils";
 import { createContext, useContext, useEffect, useState } from "react";
-import { log } from "../../shared/src/lib/logger";
 import { useThreadAuth } from "../hooks";
 import { useAppStore } from "../store/app.store";
 

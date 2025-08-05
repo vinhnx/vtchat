@@ -67,9 +67,7 @@ export const ChatInput = ({
             if (typeof window !== "undefined" && !isFollowUp && !isSignedIn) {
                 const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
-                    editor.commands.setContent(draftMessage, true, {
-                        preserveWhitespace: true,
-                    });
+                    editor.commands.setContent(draftMessage, true);
                 }
             }
             // Removed automatic login prompt on focus - users should be able to type without being forced to login
@@ -97,7 +95,7 @@ export const ChatInput = ({
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
-    const _clearDocumentAttachment = useChatStore((state) => state.clearDocumentAttachment);
+
     const stopGeneration = useChatStore((state) => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
     const { dropzonProps, handleImageUpload } = useImageAttachment();
@@ -143,7 +141,7 @@ export const ChatInput = ({
         }
 
         const messageText = editor?.getText();
-        if (!messageText) {
+        if (!messageText || !editor) {
             return;
         }
 
@@ -214,8 +212,8 @@ export const ChatInput = ({
                 updatedAt: new Date(),
                 status: "QUEUED" as const,
                 threadId: optimisticId,
-                query: editor.getText(),
-                imageAttachment,
+                query: editor?.getText() || "",
+                imageAttachment: imageAttachment?.base64 || "",
                 documentAttachment: documentAttachment
                     ? {
                           base64: documentAttachment.base64,
@@ -230,7 +228,7 @@ export const ChatInput = ({
             // Create thread first (this sets currentThreadId and clears threadItems)
             log.info({ optimisticId }, "🆕 Creating new thread");
             await createThread(optimisticId, {
-                title: editor?.getText(),
+                title: editor?.getText() || "New Chat",
             });
             threadId = optimisticId;
 
@@ -266,7 +264,7 @@ export const ChatInput = ({
 
         // First submit the message
         const formData = new FormData();
-        formData.append("query", editor.getText());
+        formData.append("query", editor?.getText() || "");
         imageAttachment?.base64 && formData.append("imageAttachment", imageAttachment?.base64);
         documentAttachment?.base64 &&
             formData.append("documentAttachment", documentAttachment?.base64);
@@ -309,7 +307,7 @@ export const ChatInput = ({
         });
 
         window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
-        editor.commands.clearContent();
+        editor?.commands.clearContent();
         clearImageAttachment();
         // Don't clear document attachment to support structured output after message submission
         // clearDocumentAttachment();
@@ -455,7 +453,7 @@ export const ChatInput = ({
             }
 
             // Focus the editor and let the character be typed
-            editor.commands.focus("end");
+            editor?.commands.focus("end");
         };
 
         // Add global keydown listener
@@ -465,7 +463,7 @@ export const ChatInput = ({
         return () => {
             document.removeEventListener("keydown", handleGlobalKeyDown);
         };
-    }, [editor]);
+    }, [editor?.commands, editor?.isEditable]);
 
     return (
         <div
