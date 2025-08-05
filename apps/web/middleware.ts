@@ -1,8 +1,6 @@
 import { isPublicRoute } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
-import { getCookieCache } from "better-auth/cookies";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -37,6 +35,10 @@ export default async function middleware(request: NextRequest) {
     // Only check authentication for protected routes
     if (!isPublic) {
         try {
+            // Dynamic import to avoid Edge Runtime issues
+            const { getCookieCache } = await import("better-auth/cookies");
+            const { auth } = await import("@/lib/auth-server");
+
             // First, try to get session from cookie cache (fastest)
             const cachedSession = await getCookieCache(request);
 

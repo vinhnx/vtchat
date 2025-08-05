@@ -1,6 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect } from "react";
 
 interface GlobalErrorProps {
     error: Error & { digest?: string };
@@ -8,6 +8,15 @@ interface GlobalErrorProps {
 }
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
+    useEffect(() => {
+        // Simple console error logging to avoid import issues during build
+        console.error("Global error encountered:", {
+            error: error.message,
+            digest: error.digest,
+            stack: error.stack,
+        });
+    }, [error]);
+
     const handleHomeNavigation = () => {
         window.location.href = "/";
     };
@@ -31,7 +40,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                             </button>
                             <button
                                 onClick={handleHomeNavigation}
-                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md border border-input px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                                className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Back to VT
                             </button>
