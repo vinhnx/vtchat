@@ -26,7 +26,7 @@ export function Thread() {
         return previousThreadItems.map((threadItem) => (
             <div
                 key={threadItem.id}
-                className="message-container"
+                className="message-container pb-2"
                 style={{
                     contain: "layout style",
                     contentVisibility: "auto",
@@ -51,7 +51,7 @@ export function Thread() {
         return (
             <div
                 key={currentThreadItem.id}
-                className="min-h-[calc(100dvh-16rem)] message-container streaming-content"
+                className="min-h-[calc(100dvh-16rem)] message-container streaming-content pb-2"
                 style={{
                     contain: "layout style",
                     contentVisibility: "visible", // Always visible for current item
@@ -73,7 +73,9 @@ export function Thread() {
 
     return (
         <div className="relative" id="thread-container">
-            <div className="flex min-w-full flex-col gap-8 px-2 py-4">
+            <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
+                {" "}
+                {/* Reduced gap between thread items to prevent overlap */}
                 {memoizedPreviousThreadItems}
                 {memoizedCurrentThreadItem}
                 {showNewThreadLoadingIndicator && (

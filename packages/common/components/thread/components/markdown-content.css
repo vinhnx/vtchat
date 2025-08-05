@@ -4,7 +4,7 @@
 :root {
     /* Typography */
     --markdown-font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     --markdown-font-size: 17px;
     --markdown-line-height: 1.75;
     --markdown-font-weight-normal: 400;
@@ -62,6 +62,8 @@
     text-align: left;
     letter-spacing: 0.01em;
     text-rendering: optimizeLegibility;
+    margin-top: 0.25rem; /* Reduced margin-top */
+    margin-bottom: 0.25rem; /* Reduced bottom margin for tighter spacing with actions */
 }
 
 /* Paragraph styling */
@@ -205,7 +207,7 @@
 }
 
 /* Code styling with improved readability */
-.prose code:not([class*="language-"]) {
+.prose code:not([class*='language-']) {
     color: var(--markdown-text-color);
     background-color: var(--markdown-code-bg);
     border: 1px solid var(--markdown-code-border);
@@ -213,8 +215,8 @@
     border-radius: 0.25rem;
     font-size: 0.875rem;
     font-family:
-        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-        "Courier New", monospace;
+        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
     white-space: nowrap;
 }
 
@@ -237,8 +239,8 @@
     padding: 0;
     font-size: 0.875rem;
     font-family:
-        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-        "Courier New", monospace;
+        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
     white-space: pre;
 }
 
@@ -411,20 +413,25 @@ html.dark .prose th {
 
 /* Additional spacing improvements */
 .prose > *:first-child {
-    margin-top: 0;
+    margin-top: 0.25rem; /* Reduced margin-top */
 }
 
 .prose > *:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0.25rem; /* Reduced bottom margin for tighter spacing with actions */
+}
+
+/* Specific spacing for first paragraph in AI messages */
+.ai-message .prose > p:first-child {
+    margin-top: 0.25rem; /* Reduced spacing for first paragraph */
 }
 
 /* Improved code block syntax highlighting */
-.prose pre[class*="language-"] {
+.prose pre[class*='language-'] {
     position: relative;
     padding-top: 1.5rem;
 }
 
-.prose pre[class*="language-"]::before {
+.prose pre[class*='language-']::before {
     content: attr(data-language);
     position: absolute;
     top: 0.25rem;
@@ -597,6 +604,11 @@ html.dark .prose th {
 .side-drawer {
     isolation: isolate;
     z-index: 10;
+}
+
+/* Ensure proper spacing for thread content */
+#thread-container {
+    padding-bottom: 2rem; /* Add bottom padding to thread container */
 }
 
 /* Shimmer animation for loading states */

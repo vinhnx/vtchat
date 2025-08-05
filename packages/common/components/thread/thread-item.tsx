@@ -19,11 +19,11 @@ import { ThreadLoadingIndicator } from "../thread-loading-indicator";
 import { ToolsPanel } from "../tools-panel";
 import { CitationProvider } from "./citation-provider";
 import { AIMessage } from "./components/ai-message";
-import { SpeechButton } from "./components/speech-button";
 import { Steps } from "./components/goals";
 import { MessageActions } from "./components/message-actions";
 import { QuestionPrompt } from "./components/question-prompt";
 import { SourceGrid } from "./components/source-grid";
+import { SpeechButton } from "./components/speech-button";
 import { UserMessage } from "./components/user-message";
 
 export const ThreadItem = memo(
@@ -245,10 +245,7 @@ export const ThreadItem = memo(
                                                 ? result.title
                                                 : result.link,
                                         link: result.link,
-                                        index:
-                                            typeof result.index === "number"
-                                                ? result.index
-                                                : i,
+                                        index: typeof result.index === "number" ? result.index : i,
                                     }) as {
                                         title: string;
                                         link: string;
@@ -356,11 +353,13 @@ export const ThreadItem = memo(
                                                     Sources
                                                 </p>
                                                 <SourceGrid
-                                                    sources={aggregatedFooterSources.map((s, i) => ({
-                                                        title: s.title || s.link,
-                                                        link: s.link,
-                                                        index: i,
-                                                    }))}
+                                                    sources={aggregatedFooterSources.map(
+                                                        (s, i) => ({
+                                                            title: s.title || s.link,
+                                                            link: s.link,
+                                                            index: i,
+                                                        }),
+                                                    )}
                                                 />
                                             </div>
                                         )}
@@ -378,46 +377,46 @@ export const ThreadItem = memo(
                             />
                         )}
 
-                        {isAnimationComplete &&
-                            (threadItem.status === "COMPLETED" ||
-                                threadItem.status === "ABORTED" ||
-                                threadItem.status === "ERROR") && (
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-2">
-                                        <SpeechButton
-                                            text={threadItem.answer?.text || ""}
-                                            className="h-8 px-3"
-                                        />
-                                        <MessageActions
-                                            isLast={isLast}
-                                            ref={messageRef}
-                                            threadItem={threadItem}
+                        {(threadItem.status === "COMPLETED" ||
+                            threadItem.status === "ABORTED" ||
+                            threadItem.status === "ERROR" ||
+                            (!isGenerating && hasAnswer)) && ( // Show for completed threads or non-generating threads with answers
+                            <div className="flex flex-col gap-1 mb-4 mt-2">
+                                <div className="flex items-center gap-2">
+                                    <SpeechButton
+                                        text={threadItem.answer?.text || ""}
+                                        className="h-8 px-3"
+                                    />
+                                    <MessageActions
+                                        isLast={isLast}
+                                        ref={messageRef}
+                                        threadItem={threadItem}
+                                    />
+                                </div>
+
+                                {/* Render Chart Components */}
+                                {chartToolResults.length > 0 && (
+                                    <div className="mt-4 w-full space-y-4">
+                                        {chartToolResults.map((toolResult) => (
+                                            <ChartComponent
+                                                chartData={toolResult.result}
+                                                key={toolResult.toolCallId}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {threadItem.documentAttachment && (
+                                    <div className="flex justify-start">
+                                        <DocumentSidePanel
+                                            documentAttachment={threadItem.documentAttachment}
                                         />
                                     </div>
+                                )}
 
-                                    {/* Render Chart Components */}
-                                    {chartToolResults.length > 0 && (
-                                        <div className="mt-4 w-full space-y-4">
-                                            {chartToolResults.map((toolResult) => (
-                                                <ChartComponent
-                                                    chartData={toolResult.result}
-                                                    key={toolResult.toolCallId}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {threadItem.documentAttachment && (
-                                        <div className="flex justify-start">
-                                            <DocumentSidePanel
-                                                documentAttachment={threadItem.documentAttachment}
-                                            />
-                                        </div>
-                                    )}
-
-                                    {/* Footer sources removed to avoid duplication; shown above under MDX content */}
-                                </div>
-                            )}
+                                {/* Footer sources removed to avoid duplication; shown above under MDX content */}
+                            </div>
+                        )}
                         {/* Follow-up suggestions are disabled entirely */}
                     </div>
                 </div>
