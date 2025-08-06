@@ -19,6 +19,7 @@ export const ChatMode = {
     GEMINI_2_5_FLASH: "gemini-2.5-flash",
     GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
 
+    CLAUDE_4_1_OPUS: "claude-opus-4-1-20250805",
     CLAUDE_4_SONNET: "claude-sonnet-4-20250514",
     CLAUDE_4_OPUS: "claude-opus-4-20250514",
     DEEPSEEK_R1_FIREWORKS: "deepseek-r1-fireworks",
@@ -130,6 +131,14 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         multiModal: true,
         retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.CLAUDE_4_1_OPUS]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
         isAuthRequired: true,
     },
     [ChatMode.CLAUDE_4_SONNET]: {
@@ -273,6 +282,14 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
     },
+    [ChatMode.KIMI_K2]: {
+        webSearch: true,
+        imageUpload: false,
+        multiModal: false,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
 };
 
 // Previously deprecated hasChatModeAccess function removed
@@ -365,6 +382,21 @@ export function supportsMultiModal(mode: ChatMode): boolean {
     return ChatModeConfig[mode]?.multiModal;
 }
 
+/**
+ * Get unified display name for AI model
+ * Uses the centralized getChatModeName function for consistency
+ * 
+ * @param mode - ChatMode string
+ * @returns Display name for the model
+ */
+export function getModelDisplayName(mode: string): string {
+    // Use the centralized getChatModeName function
+    const displayName = getChatModeName(mode as ChatMode);
+    
+    // Fallback for unknown modes
+    return displayName || "VT Assistant";
+}
+
 export const getChatModeName = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Deep:
@@ -381,6 +413,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI GPT 4o Mini";
         case ChatMode.GPT_4o:
             return "OpenAI GPT 4o";
+        case ChatMode.CLAUDE_4_1_OPUS:
+            return "Anthropic Claude 4.1 Opus";
         case ChatMode.CLAUDE_4_SONNET:
             return "Anthropic Claude 4 Sonnet";
         case ChatMode.CLAUDE_4_OPUS:
@@ -425,5 +459,7 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI o1-mini";
         case ChatMode.O1:
             return "OpenAI o1";
+        case ChatMode.KIMI_K2:
+            return "OpenRouter Kimi K2";
     }
 };

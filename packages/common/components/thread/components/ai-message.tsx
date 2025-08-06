@@ -2,6 +2,7 @@
 
 import { MarkdownContent, markdownStyles } from "@repo/common/components";
 import type { ThreadItem } from "@repo/shared/types";
+import { getModelDisplayName } from "@repo/shared/config";
 import { cn } from "@repo/ui";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
@@ -14,33 +15,6 @@ interface AIMessageProps {
     isGenerating?: boolean;
     isLast?: boolean;
     isCompleted?: boolean;
-}
-
-/**
- * Get display name for AI model
- */
-function getModelDisplayName(mode: string): string {
-    const modelMap: Record<string, string> = {
-        "gpt-4o": "GPT-4o",
-        "gpt-4o-mini": "GPT-4o Mini",
-        "gpt-4-turbo": "GPT-4 Turbo",
-        "gpt-3.5-turbo": "GPT-3.5 Turbo",
-        "claude-3-5-sonnet-20241022": "Claude 3.5 Sonnet",
-        "claude-3-5-haiku-20241022": "Claude 3.5 Haiku",
-        "claude-3-opus-20240229": "Claude 3 Opus",
-        "gemini-2.0-flash-exp": "Gemini 2.0 Flash",
-        "gemini-1.5-pro": "Gemini 1.5 Pro",
-        "gemini-1.5-flash": "Gemini 1.5 Flash",
-        "gemini-2.5-flash-lite-preview-06-17": "Gemini 2.5 Flash Lite",
-        "o1-preview": "OpenAI o1 Preview",
-        "o1-mini": "OpenAI o1 Mini",
-        "deepseek-chat": "DeepSeek Chat",
-        "llama-3.3-70b-versatile": "Llama 3.3 70B",
-        "llama-3.1-8b-instant": "Llama 3.1 8B",
-        "mixtral-8x7b-32768": "Mixtral 8x7B",
-    };
-
-    return modelMap[mode] || "VT Assistant";
 }
 
 /**
