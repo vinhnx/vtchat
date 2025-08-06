@@ -245,21 +245,21 @@ export const models: Model[] = [
     },
     {
         id: ModelEnum.KIMI_K2,
-        name: "Kimi K2",
+        name: "Kimi K2 (OpenRouter)",
         provider: "openrouter",
         maxTokens: 4096,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GPT_OSS_120B,
-        name: "GPT-OSS 120B",
+        name: "OpenAI gpt-oss-120b (via OpenRouter)",
         provider: "openrouter",
         maxTokens: 32_768,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GPT_OSS_20B,
-        name: "GPT-OSS 20B",
+        name: "OpenAI gpt-oss-20b (via OpenRouter)",
         provider: "openrouter",
         maxTokens: 32_768,
         contextWindow: 131_072,
@@ -509,7 +509,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // Anthropic reasoning models
     const anthropicReasoningModels = [
-        ModelEnum.CLAUDE_4_1_OPUS, // claude-opus-4-1-20250805
+        ModelEnum.CLAUDE_4_1_OPUS, // claude-4.1-opus-20250805
         ModelEnum.CLAUDE_4_SONNET, // claude-4-sonnet-20250514
         ModelEnum.CLAUDE_4_OPUS, // claude-4-opus-20250514
     ];

@@ -140,7 +140,25 @@ export async function POST(request: NextRequest) {
 
                 // Validate API keys for the selected model's provider
                 const selectedModel = getModelFromChatMode(data.mode);
-                const modelProvider = selectedModel?.split("_")[0]?.toLowerCase(); // Extract provider from model name
+                
+                // Extract provider from model name - handle multiple formats
+                let modelProvider: string | undefined;
+                if (selectedModel?.includes("/")) {
+                    // OpenRouter format: "openai/gpt-oss-120b" -> "openai"
+                    modelProvider = selectedModel.split("/")[0]?.toLowerCase();
+                } else if (selectedModel?.includes("_")) {
+                    // Standard format: "CLAUDE_4_SONNET" -> "claude"
+                    modelProvider = selectedModel.split("_")[0]?.toLowerCase();
+                } else if (selectedModel?.startsWith("claude-")) {
+                    // Claude format: "claude-4-opus-20250514" -> "claude"
+                    modelProvider = "claude";
+                } else if (selectedModel?.startsWith("gpt-") || selectedModel?.startsWith("o1-") || selectedModel?.startsWith("o3-") || selectedModel?.startsWith("o4-")) {
+                    // OpenAI format: "gpt-4o", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
+                    modelProvider = selectedModel.split("-")[0]?.toLowerCase();
+                } else {
+                    // Fallback: try to extract first part before dash
+                    modelProvider = selectedModel?.split("-")[0]?.toLowerCase();
+                }
 
                 if (modelProvider && transformedApiKeys) {
                     // Import validation functions
@@ -153,6 +171,7 @@ export async function POST(request: NextRequest) {
                     // Map common model prefixes to provider names
                     const providerMapping: Record<string, string> = {
                         gpt: "openai",
+                        o1: "openai",
                         o3: "openai",
                         o4: "openai",
                         claude: "anthropic",
@@ -161,6 +180,8 @@ export async function POST(request: NextRequest) {
                         deepseek: "fireworks", // or openrouter depending on model
                         qwen: "openrouter",
                         mistral: "openrouter",
+                        openai: "openrouter", // OpenRouter models with openai/ prefix
+                        moonshot: "openrouter", // OpenRouter models with moonshot/ prefix
                     };
 
                     const providerName = providerMapping[modelProvider] || modelProvider;

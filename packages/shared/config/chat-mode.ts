@@ -457,9 +457,9 @@ export const getChatModeName = (mode: ChatMode) => {
             return "xAI Grok 4";
         // OpenRouter models
         case ChatMode.GPT_OSS_120B:
-            return "OpenRouter OpenAI gpt-oss 120B";
+            return "OpenAI gpt-oss-120b (via OpenRouter)";
         case ChatMode.GPT_OSS_20B:
-            return "OpenRouter OpenAI gpt-oss 20B";
+            return "OpenAI gpt-oss-20b (via OpenRouter)";
         case ChatMode.DEEPSEEK_V3_0324:
             return "OpenRouter DeepSeek V3 0324";
         case ChatMode.DEEPSEEK_R1:

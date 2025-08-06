@@ -1,12 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { getModelFromChatMode, ModelEnum, models } from "@repo/ai/models";
+import { describe, expect, it } from "vitest";
 import { ChatMode, getChatModeName, getModelDisplayName } from "../config/chat-mode";
-import { ModelEnum, getModelFromChatMode, models } from "@repo/ai/models";
 
 describe("ChatMode and ModelEnum Synchronization", () => {
     describe("ChatMode to ModelEnum mapping", () => {
         it("should have a corresponding ModelEnum for every ChatMode", () => {
             const chatModes = Object.values(ChatMode);
-            
+
             for (const chatMode of chatModes) {
                 const modelEnum = getModelFromChatMode(chatMode);
                 expect(modelEnum).toBeDefined();
@@ -30,8 +30,8 @@ describe("ChatMode and ModelEnum Synchronization", () => {
     describe("Model definitions completeness", () => {
         it("should have model definitions for all ModelEnum values", () => {
             const modelEnums = Object.values(ModelEnum);
-            const modelIds = models.map(m => m.id);
-            
+            const modelIds = models.map((m) => m.id);
+
             for (const modelEnum of modelEnums) {
                 expect(modelIds).toContain(modelEnum);
             }
@@ -41,7 +41,7 @@ describe("ChatMode and ModelEnum Synchronization", () => {
     describe("Display name consistency", () => {
         it("should have display names for all ChatMode values", () => {
             const chatModes = Object.values(ChatMode);
-            
+
             for (const chatMode of chatModes) {
                 const displayName = getChatModeName(chatMode);
                 expect(displayName).toBeDefined();
@@ -56,9 +56,13 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             expect(getModelDisplayName(ChatMode.CLAUDE_4_SONNET)).toBe("Anthropic Claude 4 Sonnet");
             expect(getModelDisplayName(ChatMode.O1_MINI)).toBe("OpenAI o1-mini");
             expect(getModelDisplayName(ChatMode.KIMI_K2)).toBe("OpenRouter Kimi K2");
-            expect(getModelDisplayName(ChatMode.GPT_OSS_120B)).toBe("OpenRouter GPT-OSS 120B");
-            expect(getModelDisplayName(ChatMode.GPT_OSS_20B)).toBe("OpenRouter GPT-OSS 20B");
-            
+            expect(getModelDisplayName(ChatMode.GPT_OSS_120B)).toBe(
+                "OpenAI gpt-oss-120b (via OpenRouter)",
+            );
+            expect(getModelDisplayName(ChatMode.GPT_OSS_20B)).toBe(
+                "OpenAI gpt-oss-20b (via OpenRouter)",
+            );
+
             // Test fallback for unknown mode
             expect(getModelDisplayName("unknown-mode")).toBe("VT Assistant");
         });
@@ -67,10 +71,10 @@ describe("ChatMode and ModelEnum Synchronization", () => {
     describe("ChatMode configuration completeness", () => {
         it("should have configuration for all ChatMode values", () => {
             const chatModes = Object.values(ChatMode);
-            
+
             // Import ChatModeConfig to test
             const { ChatModeConfig } = require("../config/chat-mode");
-            
+
             for (const chatMode of chatModes) {
                 expect(ChatModeConfig[chatMode]).toBeDefined();
                 expect(ChatModeConfig[chatMode]).toHaveProperty("webSearch");
@@ -91,32 +95,32 @@ describe("ChatMode and ModelEnum Synchronization", () => {
         it("should have O1 models properly defined", () => {
             expect(ModelEnum.O1_MINI).toBe("o1-mini");
             expect(ModelEnum.O1).toBe("o1");
-            
+
             // Check they exist in models array
-            const modelIds = models.map(m => m.id);
+            const modelIds = models.map((m) => m.id);
             expect(modelIds).toContain(ModelEnum.O1_MINI);
             expect(modelIds).toContain(ModelEnum.O1);
         });
 
         it("should have GPT 4.1 Nano model", () => {
             expect(ModelEnum.GPT_4_1_Nano).toBe("gpt-4.1-nano");
-            
-            const modelIds = models.map(m => m.id);
+
+            const modelIds = models.map((m) => m.id);
             expect(modelIds).toContain(ModelEnum.GPT_4_1_Nano);
         });
 
         it("should have KIMI_K2 model", () => {
             expect(ModelEnum.KIMI_K2).toBe("moonshot/kimi-k2");
-            
-            const modelIds = models.map(m => m.id);
+
+            const modelIds = models.map((m) => m.id);
             expect(modelIds).toContain(ModelEnum.KIMI_K2);
         });
 
         it("should have GPT-OSS models", () => {
             expect(ModelEnum.GPT_OSS_120B).toBe("openai/gpt-oss-120b");
             expect(ModelEnum.GPT_OSS_20B).toBe("openai/gpt-oss-20b");
-            
-            const modelIds = models.map(m => m.id);
+
+            const modelIds = models.map((m) => m.id);
             expect(modelIds).toContain(ModelEnum.GPT_OSS_120B);
             expect(modelIds).toContain(ModelEnum.GPT_OSS_20B);
         });
