@@ -4,11 +4,12 @@ import { ReasoningTagName, ReasoningType } from "./constants/reasoning";
 import type { ProviderEnumType } from "./providers";
 
 export const ModelEnum = {
-    CLAUDE_4_SONNET: "claude-4-sonnet-20250514",
+    CLAUDE_4_1_OPUS: "claude-opus-4-1-20250805",
+    CLAUDE_4_SONNET: "claude-sonnet-4-20250514",
+    CLAUDE_4_OPUS: "claude-opus-4-20250514",
     GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
     GEMINI_2_5_FLASH: "gemini-2.5-flash",
     GEMINI_2_5_PRO: "gemini-2.5-pro",
-    CLAUDE_4_OPUS: "claude-4-opus-20250514",
     GPT_4o_Mini: "gpt-4o-mini",
     GPT_4o: "gpt-4o",
     GPT_4_1_Mini: "gpt-4.1-mini",
@@ -17,6 +18,8 @@ export const ModelEnum = {
     O3: "o3",
     O3_Mini: "o3-mini",
     O4_Mini: "o4-mini",
+    O1_MINI: "o1-mini",
+    O1: "o1",
     GROK_3: "grok-3",
     GROK_3_MINI: "grok-3-mini",
     GROK_4: "grok-4",
@@ -88,10 +91,38 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
+        id: ModelEnum.GPT_4_1_Nano,
+        name: "GPT-4.1 Nano",
+        provider: "openai",
+        maxTokens: 16_384,
+        contextWindow: 1_047_576,
+    },
+    {
+        id: ModelEnum.O1_MINI,
+        name: "o1-mini",
+        provider: "openai",
+        maxTokens: 65_536,
+        contextWindow: 128_000,
+    },
+    {
+        id: ModelEnum.O1,
+        name: "o1",
+        provider: "openai",
+        maxTokens: 100_000,
+        contextWindow: 200_000,
+    },
+    {
         id: ModelEnum.GPT_4o_Mini,
         name: "GPT-4o Mini",
         provider: "openai",
         maxTokens: 100_000,
+        contextWindow: 200_000,
+    },
+    {
+        id: ModelEnum.CLAUDE_4_1_OPUS,
+        name: "Claude 4.1 Opus",
+        provider: "anthropic",
+        maxTokens: 64_000,
         contextWindow: 200_000,
     },
     {
@@ -175,6 +206,13 @@ export const models: Model[] = [
         contextWindow: 163_840,
     },
     {
+        id: ModelEnum.DEEPSEEK_R1,
+        name: "DeepSeek R1",
+        provider: "openrouter",
+        maxTokens: 32_768,
+        contextWindow: 163_840,
+    },
+    {
         id: ModelEnum.QWEN3_235B_A22B,
         name: "Qwen3 235B A22B",
         provider: "openrouter",
@@ -222,12 +260,16 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
         case ChatMode.GEMINI_2_5_PRO:
             return ModelEnum.GEMINI_2_5_PRO;
+        case ChatMode.GEMINI_2_5_FLASH:
+            return ModelEnum.GEMINI_2_5_FLASH;
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
             return ModelEnum.DEEPSEEK_R1_FIREWORKS;
         case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
             return ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS;
         case ChatMode.DEEPSEEK_R1:
             return ModelEnum.DEEPSEEK_R1;
+        case ChatMode.CLAUDE_4_1_OPUS:
+            return ModelEnum.CLAUDE_4_1_OPUS;
         case ChatMode.CLAUDE_4_SONNET:
             return ModelEnum.CLAUDE_4_SONNET;
         case ChatMode.CLAUDE_4_OPUS:
@@ -248,6 +290,10 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.O3_Mini;
         case ChatMode.O4_Mini:
             return ModelEnum.O4_Mini;
+        case ChatMode.O1_MINI:
+            return ModelEnum.O1_MINI;
+        case ChatMode.O1:
+            return ModelEnum.O1;
         case ChatMode.GROK_3:
             return ModelEnum.GROK_3;
         case ChatMode.GROK_3_MINI:
@@ -280,6 +326,7 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return 1_048_576;
+        case ChatMode.CLAUDE_4_1_OPUS:
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
             return 200_000;
@@ -287,15 +334,25 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.O3_Mini:
         case ChatMode.O4_Mini:
         case ChatMode.GPT_4o_Mini:
+        case ChatMode.O1:
             return 200_000;
+        case ChatMode.O1_MINI:
+            return 128_000;
         case ChatMode.GPT_4o:
             return 128_000;
         case ChatMode.GPT_4_1_Mini:
         case ChatMode.GPT_4_1:
+        case ChatMode.GPT_4_1_Nano:
             return 1_047_576;
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
+            return 131_072;
         case ChatMode.GROK_4:
+            return 256_000;
+        // Fireworks models
+        case ChatMode.DEEPSEEK_R1_FIREWORKS:
+            return 163_840;
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
             return 131_072;
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
@@ -429,6 +486,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // Anthropic reasoning models
     const anthropicReasoningModels = [
+        ModelEnum.CLAUDE_4_1_OPUS, // claude-opus-4-1-20250805
         ModelEnum.CLAUDE_4_SONNET, // claude-4-sonnet-20250514
         ModelEnum.CLAUDE_4_OPUS, // claude-4-opus-20250514
     ];
@@ -441,7 +499,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     ];
 
     // OpenAI reasoning models
-    const openaiReasoningModels = [ModelEnum.O3, ModelEnum.O3_Mini, ModelEnum.O4_Mini];
+    const openaiReasoningModels = [ModelEnum.O3, ModelEnum.O3_Mini, ModelEnum.O4_Mini, ModelEnum.O1_MINI, ModelEnum.O1];
 
     return [
         ...deepseekReasoningModels,
@@ -467,7 +525,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ];
 
     // Anthropic models that support tools
-    const anthropicToolModels = [ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
+    const anthropicToolModels = [ModelEnum.CLAUDE_4_1_OPUS, ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
 
     // Google models that support tools
     const googleToolModels = [
@@ -535,7 +593,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     }
 
     // Anthropic models support reasoning with providerOptions
-    const anthropicReasoningModels = [ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
+    const anthropicReasoningModels = [ModelEnum.CLAUDE_4_1_OPUS, ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
 
     if (anthropicReasoningModels.includes(model)) {
         return ReasoningType.ANTHROPIC_REASONING;

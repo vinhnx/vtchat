@@ -9,3 +9,9 @@ ok go-> https://vtchat.io.vn/
 Research and rename "VT" to better and memorable name
 
 --
+
+https://openai.com/index/introducing-gpt-oss/
+
+add openai/gpt-oss models
+
+--

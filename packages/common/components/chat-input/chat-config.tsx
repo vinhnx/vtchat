@@ -29,6 +29,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "Gemini 2.5 Flash": ChatMode.GEMINI_2_5_FLASH,
         "Gemini 2.5 Flash Lite Preview": ChatMode.GEMINI_2_5_FLASH_LITE,
         // Anthropic models
+        "Claude 4.1 Opus": ChatMode.CLAUDE_4_1_OPUS,
         "Claude 4 Sonnet": ChatMode.CLAUDE_4_SONNET,
         "Claude 4 Opus": ChatMode.CLAUDE_4_OPUS,
         // OpenAI models
@@ -81,6 +82,7 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         ChatMode.DEEPSEEK_R1,
 
         // Anthropic reasoning models
+        ChatMode.CLAUDE_4_1_OPUS,
         ChatMode.CLAUDE_4_SONNET,
         ChatMode.CLAUDE_4_OPUS,
 
@@ -156,6 +158,13 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
 // BYOK-only models - all models require API keys, grouped by provider
 export const modelOptionsByProvider = {
     Anthropic: [
+        {
+            label: "Claude 4.1 Opus",
+            value: ChatMode.CLAUDE_4_1_OPUS,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
+        },
         {
             label: "Claude 4 Sonnet",
             value: ChatMode.CLAUDE_4_SONNET,
