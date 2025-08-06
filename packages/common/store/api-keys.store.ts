@@ -229,6 +229,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.O3:
                     case ChatMode.O3_Mini:
                     case ChatMode.O4_Mini:
+                    case ChatMode.O1_MINI:
+                    case ChatMode.O1:
                     case ChatMode.GPT_4o_Mini:
                     case ChatMode.GPT_4o:
                     case ChatMode.GPT_4_1_Mini:
@@ -244,6 +246,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_5_FLASH_LITE:
                         return true; // Free model, no API key required
+                    case ChatMode.CLAUDE_4_1_OPUS:
                     case ChatMode.CLAUDE_4_SONNET:
                     case ChatMode.CLAUDE_4_OPUS:
                         return isValidKey(apiKeys.ANTHROPIC_API_KEY);
@@ -262,6 +265,8 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.MISTRAL_NEMO:
                     case ChatMode.QWEN3_14B:
                     case ChatMode.KIMI_K2:
+                    case ChatMode.GPT_OSS_120B:
+                    case ChatMode.GPT_OSS_20B:
                         return isValidKey(apiKeys.OPENROUTER_API_KEY);
                     default:
                         return false;

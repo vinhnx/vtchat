@@ -139,8 +139,8 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
                     "mistralai/mistral-nemo": "Mistral Nemo",
                     "qwen/qwen3-14b": "Qwen3 14B",
                     "moonshot/kimi-k2": "Kimi K2",
-                    "openai/gpt-oss-120b": "GPT-OSS 120B",
-                    "openai/gpt-oss-20b": "GPT-OSS 20B",
+                    "openai/gpt-oss-120b": "OpenAI gpt-oss-120b (via OpenRouter)",
+                    "openai/gpt-oss-20b": "OpenAI gpt-oss-20b (via OpenRouter)",
                 };
                 label = customLabels[model.id] || model.name;
             }
@@ -271,14 +271,14 @@ export const modelOptionsByProvider = {
 
     OpenRouter: [
         {
-            label: "gpt-oss 120b",
+            label: "OpenAI gpt-oss-120b (via OpenRouter)",
             value: ChatMode.GPT_OSS_120B,
             webSearch: true,
             icon: undefined,
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
-            label: "gpt-oss 20b",
+            label: "OpenAI gpt-oss-20b (via OpenRouter)",
             value: ChatMode.GPT_OSS_20B,
             webSearch: true,
             icon: undefined,
