@@ -1,4 +1,4 @@
-import { AiToolsBadge } from "@/components/aitools-badge";
+import { BadgesSection } from "@/components/badges";
 import { Footer } from "@repo/common/components";
 import { Button, TypographyH1 } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
@@ -426,10 +426,17 @@ function AboutContent() {
                                         Share on X
                                     </Button>
                                 </Link>
-                                <AiToolsBadge />
                             </div>
 
+                            {/* Badges Section - Organized and Performance Optimized */}
                             <div className="mt-8 border-t pt-6">
+                                <h4 className="mb-4 text-center text-lg font-semibold">
+                                    Recognition & Community
+                                </h4>
+                                <BadgesSection className="mb-6" />
+                            </div>
+
+                            <div className="mt-6">
                                 <p className="text-muted-foreground text-center text-sm">
                                     Last updated: July 13, 2025 | Production Status: ✅ Live at{" "}
                                     <Link

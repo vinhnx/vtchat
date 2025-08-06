@@ -918,3 +918,38 @@ h6:not([class]) {
         margin-bottom: 16px !important;
     }
 }
+/* Badge Section Optimizations */
+.badges-section {
+  /* Optimize for badge loading */
+  contain: layout style;
+}
+
+.badge-item {
+  /* Prevent layout shift during loading */
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-item img {
+  /* Optimize image rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Loading animation for badges */
+@keyframes badge-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.badge-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: badge-shimmer 1.5s infinite;
+}
