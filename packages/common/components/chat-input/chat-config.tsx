@@ -1,4 +1,4 @@
-import { models, type Model } from "@repo/ai/models";
+import { type Model, models } from "@repo/ai/models";
 import type { ApiKeys } from "@repo/common/store/api-keys.store";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import type { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
@@ -57,6 +57,9 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "qwen/qwen3-32b": ChatMode.QWEN3_32B,
         "mistralai/mistral-nemo": ChatMode.MISTRAL_NEMO,
         "qwen/qwen3-14b": ChatMode.QWEN3_14B,
+        "moonshot/kimi-k2": ChatMode.KIMI_K2,
+        "openai/gpt-oss-120b": ChatMode.GPT_OSS_120B,
+        "openai/gpt-oss-20b": ChatMode.GPT_OSS_20B,
     };
 
     // First try model name mapping
@@ -136,6 +139,8 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
                     "mistralai/mistral-nemo": "Mistral Nemo",
                     "qwen/qwen3-14b": "Qwen3 14B",
                     "moonshot/kimi-k2": "Kimi K2",
+                    "openai/gpt-oss-120b": "GPT-OSS 120B",
+                    "openai/gpt-oss-20b": "GPT-OSS 20B",
                 };
                 label = customLabels[model.id] || model.name;
             }
@@ -263,46 +268,22 @@ export const modelOptionsByProvider = {
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
     ],
-    Fireworks: [
-        {
-            label: "DeepSeek R1 (Fireworks)",
-            value: ChatMode.DEEPSEEK_R1_FIREWORKS,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
-        },
-        {
-            label: "Kimi K2 Instruct (Fireworks)",
-            value: ChatMode.KIMI_K2_INSTRUCT_FIREWORKS,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
-        },
-    ],
-    xAI: [
-        {
-            label: "Grok 4",
-            value: ChatMode.GROK_4,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
-        },
-        {
-            label: "Grok 3",
-            value: ChatMode.GROK_3,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
-        },
-        {
-            label: "Grok 3 Mini",
-            value: ChatMode.GROK_3_MINI,
-            webSearch: true,
-            icon: undefined,
-            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
-        },
-    ],
+
     OpenRouter: [
+        {
+            label: "gpt-oss 120b",
+            value: ChatMode.GPT_OSS_120B,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
+        },
+        {
+            label: "gpt-oss 20b",
+            value: ChatMode.GPT_OSS_20B,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
+        },
         {
             label: "Kimi K2",
             value: ChatMode.KIMI_K2,
@@ -351,6 +332,45 @@ export const modelOptionsByProvider = {
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
+        },
+    ],
+    Fireworks: [
+        {
+            label: "DeepSeek R1 (Fireworks)",
+            value: ChatMode.DEEPSEEK_R1_FIREWORKS,
+            webSearch: true,
+            icon: <Brain className="text-purple-500" size={16} />,
+            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
+        },
+        {
+            label: "Kimi K2 Instruct (Fireworks)",
+            value: ChatMode.KIMI_K2_INSTRUCT_FIREWORKS,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
+        },
+    ],
+    xAI: [
+        {
+            label: "Grok 4",
+            value: ChatMode.GROK_4,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
+        },
+        {
+            label: "Grok 3",
+            value: ChatMode.GROK_3,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
+        },
+        {
+            label: "Grok 3 Mini",
+            value: ChatMode.GROK_3_MINI,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
     ],
 };

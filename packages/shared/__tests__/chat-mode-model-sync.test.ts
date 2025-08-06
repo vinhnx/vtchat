@@ -22,6 +22,8 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             expect(getModelFromChatMode(ChatMode.O1_MINI)).toBe(ModelEnum.O1_MINI);
             expect(getModelFromChatMode(ChatMode.O1)).toBe(ModelEnum.O1);
             expect(getModelFromChatMode(ChatMode.KIMI_K2)).toBe(ModelEnum.KIMI_K2);
+            expect(getModelFromChatMode(ChatMode.GPT_OSS_120B)).toBe(ModelEnum.GPT_OSS_120B);
+            expect(getModelFromChatMode(ChatMode.GPT_OSS_20B)).toBe(ModelEnum.GPT_OSS_20B);
         });
     });
 
@@ -54,6 +56,8 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             expect(getModelDisplayName(ChatMode.CLAUDE_4_SONNET)).toBe("Anthropic Claude 4 Sonnet");
             expect(getModelDisplayName(ChatMode.O1_MINI)).toBe("OpenAI o1-mini");
             expect(getModelDisplayName(ChatMode.KIMI_K2)).toBe("OpenRouter Kimi K2");
+            expect(getModelDisplayName(ChatMode.GPT_OSS_120B)).toBe("OpenRouter GPT-OSS 120B");
+            expect(getModelDisplayName(ChatMode.GPT_OSS_20B)).toBe("OpenRouter GPT-OSS 20B");
             
             // Test fallback for unknown mode
             expect(getModelDisplayName("unknown-mode")).toBe("VT Assistant");
@@ -106,6 +110,15 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             
             const modelIds = models.map(m => m.id);
             expect(modelIds).toContain(ModelEnum.KIMI_K2);
+        });
+
+        it("should have GPT-OSS models", () => {
+            expect(ModelEnum.GPT_OSS_120B).toBe("openai/gpt-oss-120b");
+            expect(ModelEnum.GPT_OSS_20B).toBe("openai/gpt-oss-20b");
+            
+            const modelIds = models.map(m => m.id);
+            expect(modelIds).toContain(ModelEnum.GPT_OSS_120B);
+            expect(modelIds).toContain(ModelEnum.GPT_OSS_20B);
         });
     });
 });

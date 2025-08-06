@@ -34,6 +34,8 @@ export const ModelEnum = {
     MISTRAL_NEMO: "mistralai/mistral-nemo",
     QWEN3_14B: "qwen/qwen3-14b",
     KIMI_K2: "moonshot/kimi-k2",
+    GPT_OSS_120B: "openai/gpt-oss-120b",
+    GPT_OSS_20B: "openai/gpt-oss-20b",
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -248,6 +250,20 @@ export const models: Model[] = [
         maxTokens: 4096,
         contextWindow: 131_072,
     },
+    {
+        id: ModelEnum.GPT_OSS_120B,
+        name: "GPT-OSS 120B",
+        provider: "openrouter",
+        maxTokens: 32_768,
+        contextWindow: 131_072,
+    },
+    {
+        id: ModelEnum.GPT_OSS_20B,
+        name: "GPT-OSS 20B",
+        provider: "openrouter",
+        maxTokens: 32_768,
+        contextWindow: 131_072,
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -313,6 +329,10 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.QWEN3_14B;
         case ChatMode.KIMI_K2:
             return ModelEnum.KIMI_K2;
+        case ChatMode.GPT_OSS_120B:
+            return ModelEnum.GPT_OSS_120B;
+        case ChatMode.GPT_OSS_20B:
+            return ModelEnum.GPT_OSS_20B;
         default:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
@@ -365,6 +385,9 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.MISTRAL_NEMO:
         case ChatMode.KIMI_K2:
             return 131_072;
+        case ChatMode.GPT_OSS_120B:
+        case ChatMode.GPT_OSS_20B:
+            return 200_000;
         default:
             return 100_000;
     }
@@ -499,7 +522,13 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     ];
 
     // OpenAI reasoning models
-    const openaiReasoningModels = [ModelEnum.O3, ModelEnum.O3_Mini, ModelEnum.O4_Mini, ModelEnum.O1_MINI, ModelEnum.O1];
+    const openaiReasoningModels = [
+        ModelEnum.O3,
+        ModelEnum.O3_Mini,
+        ModelEnum.O4_Mini,
+        ModelEnum.O1_MINI,
+        ModelEnum.O1,
+    ];
 
     return [
         ...deepseekReasoningModels,
@@ -525,7 +554,11 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ];
 
     // Anthropic models that support tools
-    const anthropicToolModels = [ModelEnum.CLAUDE_4_1_OPUS, ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
+    const anthropicToolModels = [
+        ModelEnum.CLAUDE_4_1_OPUS,
+        ModelEnum.CLAUDE_4_SONNET,
+        ModelEnum.CLAUDE_4_OPUS,
+    ];
 
     // Google models that support tools
     const googleToolModels = [
@@ -542,6 +575,8 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.QWEN3_14B,
         ModelEnum.MISTRAL_NEMO,
         ModelEnum.KIMI_K2,
+        ModelEnum.GPT_OSS_120B,
+        ModelEnum.GPT_OSS_20B,
     ];
 
     // xAI models that support tools
@@ -593,7 +628,11 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     }
 
     // Anthropic models support reasoning with providerOptions
-    const anthropicReasoningModels = [ModelEnum.CLAUDE_4_1_OPUS, ModelEnum.CLAUDE_4_SONNET, ModelEnum.CLAUDE_4_OPUS];
+    const anthropicReasoningModels = [
+        ModelEnum.CLAUDE_4_1_OPUS,
+        ModelEnum.CLAUDE_4_SONNET,
+        ModelEnum.CLAUDE_4_OPUS,
+    ];
 
     if (anthropicReasoningModels.includes(model)) {
         return ReasoningType.ANTHROPIC_REASONING;
