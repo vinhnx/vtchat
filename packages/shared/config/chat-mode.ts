@@ -35,6 +35,8 @@ export const ChatMode = {
     MISTRAL_NEMO: "mistral-nemo",
     QWEN3_14B: "qwen3-14b",
     KIMI_K2: "kimi-k2",
+    GPT_OSS_120B: "gpt-oss-120b",
+    GPT_OSS_20B: "gpt-oss-20b",
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
@@ -290,6 +292,22 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
+    [ChatMode.GPT_OSS_120B]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
+    [ChatMode.GPT_OSS_20B]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
+    },
 };
 
 // Previously deprecated hasChatModeAccess function removed
@@ -385,14 +403,14 @@ export function supportsMultiModal(mode: ChatMode): boolean {
 /**
  * Get unified display name for AI model
  * Uses the centralized getChatModeName function for consistency
- * 
+ *
  * @param mode - ChatMode string
  * @returns Display name for the model
  */
 export function getModelDisplayName(mode: string): string {
     // Use the centralized getChatModeName function
     const displayName = getChatModeName(mode as ChatMode);
-    
+
     // Fallback for unknown modes
     return displayName || "VT Assistant";
 }
@@ -438,6 +456,10 @@ export const getChatModeName = (mode: ChatMode) => {
         case ChatMode.GROK_4:
             return "xAI Grok 4";
         // OpenRouter models
+        case ChatMode.GPT_OSS_120B:
+            return "OpenRouter OpenAI gpt-oss 120B";
+        case ChatMode.GPT_OSS_20B:
+            return "OpenRouter OpenAI gpt-oss 20B";
         case ChatMode.DEEPSEEK_V3_0324:
             return "OpenRouter DeepSeek V3 0324";
         case ChatMode.DEEPSEEK_R1:
