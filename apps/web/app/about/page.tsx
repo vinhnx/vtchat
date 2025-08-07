@@ -1,6 +1,6 @@
 import { BadgesSection } from "@/components/badges";
 import { Footer } from "@repo/common/components";
-import { Button, TypographyH1 } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -9,11 +9,25 @@ import Link from "next/link";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-    title: "About VT",
-    description: "Learn about VT - VT - Minimal AI Chat with Deep Research Features.",
+    title: "About VT - Advanced AI Platform with Generative AI & Deep Learning",
+    description:
+        "Learn about VT's advanced artificial intelligence platform featuring generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with machine learning capabilities.",
+    keywords: [
+        "about ai platform",
+        "artificial intelligence",
+        "generative ai",
+        "deep learning",
+        "natural language processing nlp",
+        "large language models llms",
+        "machine learning",
+        "ai systems",
+        "computer vision",
+        "privacy-first ai",
+    ],
     openGraph: {
-        title: "About VT",
-        description: "VT - Minimal AI Chat with Deep Research Features.",
+        title: "About VT - Advanced AI Platform with Generative AI & Deep Learning",
+        description:
+            "Learn about VT's advanced artificial intelligence platform featuring generative AI, deep learning, natural language processing, and large language models. Privacy-first AI systems.",
         type: "website",
     },
     robots: {
@@ -44,6 +58,10 @@ export default function AboutPage() {
             {/* Main Content */}
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto max-w-7xl">
+                    {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
+                    <h1 className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden text-[0px] leading-[0]">
+                        About VT - Advanced AI Chat Platform with Privacy-First Architecture
+                    </h1>
                     <AboutContent />
                 </div>
             </main>
@@ -63,9 +81,9 @@ function AboutContent() {
         <section className="py-8 md:py-16">
             <div className="mx-auto w-full max-w-4xl px-4 md:px-8 lg:px-12 xl:px-16">
                 <div className="mb-12 text-center">
-                    <TypographyH1 className="mb-4 text-3xl font-semibold md:text-4xl">
+                    <h2 className="mb-4 text-3xl font-semibold md:text-4xl text-foreground">
                         VT
-                    </TypographyH1>
+                    </h2>
                     <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
                         VT is a production-ready, privacy-first AI chat application with advanced AI
                         capabilities, offering all premium models for free with BYOK and exclusive

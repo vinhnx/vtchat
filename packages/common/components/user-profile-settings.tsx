@@ -675,7 +675,7 @@ export const UserProfileSettings = () => {
                                     {/* Loading overlay */}
                                     {(isLinking === "github" || isUnlinking === "github") && (
                                         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
-                                            <Loader2 className="h-4 w-4 animate-spin text-gray-600 dark:text-gray-400" />
+                                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                                         </div>
                                     )}
                                 </div>
@@ -742,7 +742,7 @@ export const UserProfileSettings = () => {
                                     </>
                                 ) : (
                                     <Button
-                                        className="border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:border-gray-800 dark:bg-gray-950/20 dark:text-gray-300 dark:hover:border-gray-700 dark:hover:bg-gray-950/30"
+                                        className="text-muted-foreground hover:text-foreground"
                                         disabled={isLinking === "github" || isLoadingAccounts}
                                         onClick={() => handleLinkAccount("github")}
                                         size="sm"

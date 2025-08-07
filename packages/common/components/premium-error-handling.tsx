@@ -118,7 +118,7 @@ export const PremiumErrorBoundary = memo(
                                 <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {errorConfig.title}
                                 </h4>
-                                <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
+                                <p className="mt-1 text-xs text-muted-foreground">
                                     {errorConfig.description}
                                 </p>
                             </div>
@@ -164,7 +164,7 @@ export const PremiumErrorBoundary = memo(
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {errorConfig.title}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
+                        <p className="text-xs text-muted-foreground">
                             {errorConfig.description}
                         </p>
                     </div>
@@ -205,14 +205,14 @@ export const PremiumErrorBoundary = memo(
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                     {errorConfig.title}
                                 </h3>
-                                <p className="mt-1 text-gray-600 dark:text-gray-300">
+                                <p className="mt-1 text-muted-foreground">
                                     {errorConfig.description}
                                 </p>
 
                                 {/* Error details (expandable) */}
                                 <div className="mt-4">
                                     <button
-                                        className="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
+                                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                                         onClick={() => setIsExpanded(!isExpanded)}
                                     >
                                         {isExpanded ? "Hide" : "Show"} technical details
@@ -226,7 +226,7 @@ export const PremiumErrorBoundary = memo(
                                                 exit={{ opacity: 0, height: 0 }}
                                                 initial={{ opacity: 0, height: 0 }}
                                             >
-                                                <code className="break-all text-xs text-gray-700 dark:text-gray-300">
+                                                <code className="break-all text-xs text-muted-foreground">
                                                     {errorMessage}
                                                 </code>
                                             </motion.div>
@@ -258,7 +258,7 @@ export const PremiumErrorBoundary = memo(
                                     )}
 
                                     <Button
-                                        className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
+                                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                                         onClick={() => window.open("/help", "_blank")}
                                         variant="ghost"
                                     >
@@ -423,13 +423,13 @@ export const NotificationToast = memo(
                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                         {title}
                                     </h4>
-                                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
+                                    <p className="mt-1 text-xs text-muted-foreground">
                                         {message}
                                     </p>
                                 </div>
 
                                 <Button
-                                    className="flex-shrink-0 text-gray-400 hover:text-gray-600"
+                                    className="flex-shrink-0 text-muted-foreground hover:text-foreground"
                                     onClick={onClose}
                                     size="icon-sm"
                                     variant="ghost"

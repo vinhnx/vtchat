@@ -6,10 +6,18 @@ import { PricingClient } from "./pricing-client";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-    title: "Pricing - VT",
+    title: "AI Platform Pricing - Advanced Artificial Intelligence Features | VT",
     description:
-        "VT pricing: Most AI features free with BYOK. VT+ ($10/month) adds professional research tools: Enhanced Pro Search (50/day), Deep Research (25/day), advanced document processing, priority access, custom workflows, and premium exports.",
+        "VT AI platform pricing: Most artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing (NLP). VT+ adds professional AI research tools with large language models (LLMs) and machine learning capabilities.",
     keywords: [
+        "ai platform pricing",
+        "artificial intelligence pricing",
+        "generative ai pricing",
+        "deep learning pricing",
+        "natural language processing nlp pricing",
+        "large language models llms pricing",
+        "machine learning pricing",
+        "ai systems pricing",
         "VT pricing",
         "AI chat pricing",
         "BYOK AI",
@@ -22,24 +30,24 @@ export const metadata: Metadata = {
         "priority access",
     ],
     openGraph: {
-        title: "Pricing - VT",
+        title: "AI Platform Pricing - Advanced Artificial Intelligence Features",
         description:
-            "Most powerful AI features free with BYOK. VT+ adds professional research capabilities and advanced productivity tools.",
+            "Most powerful artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing. VT+ adds professional AI research capabilities with large language models.",
         type: "website",
         images: [
             {
                 url: "https://vtchat.io.vn/og-image-v3.jpg",
                 width: 1200,
                 height: 630,
-                alt: "VT Pricing",
+                alt: "VT AI Platform Pricing - Advanced Artificial Intelligence Features",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Pricing - VT",
+        title: "AI Platform Pricing - Advanced Artificial Intelligence Features",
         description:
-            "Most powerful AI features free with BYOK. VT+ adds professional research capabilities and advanced productivity tools.",
+            "Most powerful artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing. VT+ adds professional AI research capabilities.",
         images: ["https://vtchat.io.vn/twitter-image-v3.jpg"],
     },
     robots: {
@@ -71,7 +79,8 @@ export default function PricingPage() {
                     overflow: "hidden",
                 }}
             >
-                VT Pricing - Minimal AI Chat with Deep Research Features
+                AI Platform Pricing - Advanced Artificial Intelligence with Generative AI & Deep
+                Learning
             </h1>
             <script
                 type="application/ld+json"

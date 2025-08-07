@@ -76,15 +76,15 @@ export const getRandomPrompt = (category?: keyof typeof examplePrompts) => {
 
 // Map of category to icon component
 const categoryIcons = {
-    howTo: { name: "How to", icon: HelpCircle, color: "!text-gray-600" },
+    howTo: { name: "How to", icon: HelpCircle, color: "!text-muted-foreground" },
     explainConcepts: {
         name: "Explain Concepts",
         icon: Lightbulb,
-        color: "!text-gray-600",
+        color: "!text-muted-foreground",
     },
-    creative: { name: "Creative", icon: Pencil, color: "!text-gray-600" },
-    advice: { name: "Advice", icon: Calculator, color: "!text-gray-600" },
-    analysis: { name: "Analysis", icon: Search, color: "!text-gray-600" },
+    creative: { name: "Creative", icon: Pencil, color: "!text-muted-foreground" },
+    advice: { name: "Advice", icon: Calculator, color: "!text-muted-foreground" },
+    analysis: { name: "Analysis", icon: Search, color: "!text-muted-foreground" },
 };
 
 export const ExamplePrompts = () => {
