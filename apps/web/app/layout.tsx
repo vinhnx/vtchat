@@ -35,18 +35,39 @@ export default function ParentLayout({
             <head>
                 <PerformanceOptimizations />
                 <AccessibilityHead />
-                <link href="/favicon.ico" rel="icon" sizes="any" />
+                {/* Favicon and Icons - Multiple formats for better compatibility */}
+                <link href="/favicon.ico" rel="icon" sizes="32x32" />
+                <link href="/icon.svg" rel="icon" type="image/svg+xml" />
+                <link href="/apple-icon.png" rel="apple-touch-icon" />
+                <link href="/icon-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+                <link href="/icon-512x512.png" rel="icon" sizes="512x512" type="image/png" />
+
+                {/* Additional meta tags for better search engine recognition */}
+                <meta name="theme-color" content="#ffffff" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="msapplication-TileImage" content="/icon-512x512.png" />
+
+                {/* Preload critical favicon for faster loading */}
+                <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
+
+                {/* Canonical link for favicon */}
+                <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "Organization",
-                            name: "VT",
+                            name: "VT - Advanced AI Platform",
                             url: "https://vtchat.io.vn",
-                            logo: "https://vtchat.io.vn/og-image-v3.jpg?v=5",
+                            logo: {
+                                "@type": "ImageObject",
+                                url: "https://vtchat.io.vn/icon-512x512.png",
+                                width: 512,
+                                height: 512,
+                            },
                             description:
-                                "Privacy-first AI chat application with advanced AI capabilities",
+                                "Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.",
                             foundingDate: "2025",
                             contactPoint: {
                                 "@type": "ContactPoint",
@@ -54,6 +75,8 @@ export default function ParentLayout({
                                 contactType: "customer service",
                             },
                             sameAs: ["https://github.com/vinhnx/vtchat", "https://x.com/vinhnx"],
+                            keywords:
+                                "artificial intelligence, AI, generative AI, deep learning, machine learning, natural language processing, large language models, computer vision, AI systems",
                         }),
                     }}
                 />
@@ -63,10 +86,10 @@ export default function ParentLayout({
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "WebSite",
-                            name: "VT",
+                            name: "VT - Advanced AI Platform",
                             url: "https://vtchat.io.vn",
                             description:
-                                "Privacy-first AI chat application with advanced AI capabilities",
+                                "Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.",
                             potentialAction: {
                                 "@type": "SearchAction",
                                 target: {
@@ -75,6 +98,37 @@ export default function ParentLayout({
                                 },
                                 "query-input": "required name=search_term_string",
                             },
+                        }),
+                    }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "SoftwareApplication",
+                            name: "VT - Advanced AI Chat Platform",
+                            url: "https://vtchat.io.vn",
+                            description:
+                                "Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.",
+                            applicationCategory: "AI Chat Application",
+                            operatingSystem: "Web Browser",
+                            offers: {
+                                "@type": "Offer",
+                                price: "0",
+                                priceCurrency: "USD",
+                                description: "Free AI chat with premium models",
+                            },
+                            featureList: [
+                                "Generative AI",
+                                "Deep Learning",
+                                "Natural Language Processing (NLP)",
+                                "Large Language Models (LLMs)",
+                                "Machine Learning Models",
+                                "Computer Vision",
+                                "Real-time AI Processing",
+                                "Privacy-first AI Systems",
+                            ],
                         }),
                     }}
                 />

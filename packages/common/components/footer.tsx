@@ -30,6 +30,18 @@ const links = [
         href: "/about",
     },
     {
+        title: "FAQ",
+        href: "/faq",
+    },
+    {
+        title: "AI Glossary",
+        href: "/ai-glossary",
+    },
+    {
+        title: "AI Resources",
+        href: "/ai-resources",
+    },
+    {
         title: "X",
         href: "https://x.com/vtdotai",
     },

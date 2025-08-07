@@ -394,6 +394,18 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                         <HelpCircle className="mr-2" size={16} strokeWidth={2} />
                                         Help Center
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/faq")}>
+                                        <HelpCircle className="mr-2" size={16} strokeWidth={2} />
+                                        FAQ
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/ai-glossary")}>
+                                        <FileText className="mr-2" size={16} strokeWidth={2} />
+                                        AI Glossary
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/ai-resources")}>
+                                        <FileText className="mr-2" size={16} strokeWidth={2} />
+                                        AI Resources
+                                    </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => router.push("/privacy")}>
                                         <Shield className="mr-2" size={16} strokeWidth={2} />
                                         Privacy Policy

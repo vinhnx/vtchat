@@ -137,7 +137,7 @@ export const PremiumAIResponse = memo(
                                 "prose prose-base max-w-none p-6",
                                 "prose-gray dark:prose-invert",
                                 "prose-headings:font-semibold prose-headings:text-gray-900 dark:prose-headings:text-gray-100",
-                                "prose-p:text-gray-700 prose-p:leading-relaxed dark:prose-p:text-gray-300",
+                                "prose-p:text-foreground prose-p:leading-relaxed",
                                 "prose-code:rounded-md prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 dark:prose-code:bg-gray-800",
                                 "prose-pre:border prose-pre:border-gray-200 prose-pre:bg-gray-100 dark:prose-pre:border-gray-700 dark:prose-pre:bg-gray-800",
                                 markdownStyles,

@@ -15,7 +15,6 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -23,11 +22,22 @@ import {
     DialogHeader,
     DialogTitle,
     Kbd,
+    cn,
     useToast,
 } from "@repo/ui";
-import { Command, Key, MessageCircle, Palette, Plus, Settings, Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import {
+    Command,
+    FileText,
+    HelpCircle,
+    Key,
+    MessageCircle,
+    Palette,
+    Plus,
+    Settings,
+    Trash,
+} from "lucide-react";
 import { useTheme } from "next-themes";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFeatureAccess } from "../hooks/use-subscription-access";
 import { GatedFeatureAlert } from "./gated-feature-alert";
@@ -58,14 +68,6 @@ export const CommandSearch = () => {
         last7Days: [],
         last30Days: [],
         previousMonths: [],
-    };
-
-    const groupsNames = {
-        today: "Today",
-        yesterday: "Yesterday",
-        last7Days: "Last 7 Days",
-        last30Days: "Last 30 Days",
-        previousMonths: "Previous Months",
     };
 
     threads.forEach((thread) => {
@@ -189,6 +191,30 @@ export const CommandSearch = () => {
             action: () => {
                 clearThreads();
                 router.push("/");
+                onClose();
+            },
+        },
+        {
+            name: "FAQ",
+            icon: HelpCircle,
+            action: () => {
+                router.push("/faq");
+                onClose();
+            },
+        },
+        {
+            name: "AI Glossary",
+            icon: FileText,
+            action: () => {
+                router.push("/ai-glossary");
+                onClose();
+            },
+        },
+        {
+            name: "AI Resources",
+            icon: FileText,
+            action: () => {
+                router.push("/ai-resources");
                 onClose();
             },
         },

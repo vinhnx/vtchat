@@ -18,7 +18,6 @@ import {
 import {
     Badge,
     Button,
-    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -27,14 +26,15 @@ import {
     DropdownMenuTrigger,
     Flex,
     UnifiedAvatar,
+    cn,
     useToast,
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
     ChevronLeft,
     ChevronRight,
-    ChevronsUpDown,
     ChevronUp,
+    ChevronsUpDown,
     Command,
     ExternalLink,
     FileText,
@@ -426,6 +426,24 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 >
                                     <HelpCircle size={16} strokeWidth={2} />
                                     Help Center
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        push("/ai-glossary");
+                                    }}
+                                >
+                                    <FileText size={16} strokeWidth={2} />
+                                    AI Glossary
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        push("/ai-resources");
+                                    }}
+                                >
+                                    <FileText size={16} strokeWidth={2} />
+                                    AI Resources
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onClick={(e) => {
