@@ -3,16 +3,16 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
 
-import crypto from "node:crypto";
+import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
+import { db } from "@/lib/database";
+import { sessions, userSubscriptions, users } from "@/lib/database/schema";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import crypto from "node:crypto";
 import { z } from "zod";
-import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
-import { db } from "@/lib/database";
-import { sessions, userSubscriptions, users } from "@/lib/database/schema";
 
 // Known event types and statuses for validation
 const KNOWN_EVENT_TYPES = [
@@ -213,51 +213,51 @@ async function updateUserSubscription(
             `[Creem Webhook] Updating subscription for user ${userId}: ${planSlug} (${status})`,
         );
 
-        // Start a transaction to ensure data consistency
-        await db.transaction(async (tx) => {
-            // Update user's plan and customer ID in the users table
-            const userUpdateData: any = {
-                planSlug,
-                updatedAt: new Date(),
-            };
+        // NOTE: neon-http driver doesn't support transactions, so we do sequential updates
+        // This is acceptable for webhook processing as the operations are idempotent
 
-            if (creemCustomerId) {
-                userUpdateData.creemCustomerId = creemCustomerId;
-            }
+        // 1. Update user's plan and customer ID in the users table
+        const userUpdateData: any = {
+            planSlug,
+            updatedAt: new Date(),
+        };
 
-            await tx.update(users).set(userUpdateData).where(eq(users.id, userId));
+        if (creemCustomerId) {
+            userUpdateData.creemCustomerId = creemCustomerId;
+        }
 
-            // Update or create user subscription record
-            const existingSubscription = await tx
-                .select()
-                .from(userSubscriptions)
-                .where(eq(userSubscriptions.userId, userId))
-                .limit(1);
+        await db.update(users).set(userUpdateData).where(eq(users.id, userId));
 
-            const subscriptionData = {
-                plan: planSlug,
-                status: status, // Use the provided status directly
-                ...(expiresAt && { currentPeriodEnd: expiresAt }),
-                ...(subscriptionId && { creemSubscriptionId: subscriptionId }), // Store Creem subscription ID
-                updatedAt: new Date(),
-            };
+        // 2. Update or create user subscription record
+        const existingSubscription = await db
+            .select()
+            .from(userSubscriptions)
+            .where(eq(userSubscriptions.userId, userId))
+            .limit(1);
 
-            if (existingSubscription.length === 0) {
-                // Create new subscription
-                await tx.insert(userSubscriptions).values({
-                    id: crypto.randomUUID(),
-                    userId,
-                    ...subscriptionData,
-                    createdAt: new Date(),
-                });
-            } else {
-                // Update existing subscription
-                await tx
-                    .update(userSubscriptions)
-                    .set(subscriptionData)
-                    .where(eq(userSubscriptions.userId, userId));
-            }
-        });
+        const subscriptionData = {
+            plan: planSlug,
+            status: status, // Use the provided status directly
+            ...(expiresAt && { currentPeriodEnd: expiresAt }),
+            ...(subscriptionId && { creemSubscriptionId: subscriptionId }), // Store Creem subscription ID
+            updatedAt: new Date(),
+        };
+
+        if (existingSubscription.length === 0) {
+            // Create new subscription
+            await db.insert(userSubscriptions).values({
+                id: crypto.randomUUID(),
+                userId,
+                ...subscriptionData,
+                createdAt: new Date(),
+            });
+        } else {
+            // Update existing subscription
+            await db
+                .update(userSubscriptions)
+                .set(subscriptionData)
+                .where(eq(userSubscriptions.userId, userId));
+        }
 
         log.info(
             `[Creem Webhook] Successfully updated subscription for user ${userId}: ${planSlug} (${status})`,
