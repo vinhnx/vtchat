@@ -504,11 +504,6 @@ const nextConfig = {
     async redirects() {
         return [
             {
-                source: "/faq",
-                destination: "/help",
-                permanent: true,
-            },
-            {
                 source: "/plus",
                 destination: "/pricing",
                 permanent: true,

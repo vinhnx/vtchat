@@ -430,6 +430,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        push("/faq");
+                                    }}
+                                >
+                                    <MessageCircleMore size={16} strokeWidth={2} />
+                                    FAQ
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         push("/ai-glossary");
                                     }}
                                 >
