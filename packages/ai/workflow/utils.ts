@@ -1458,6 +1458,8 @@ export const selectAvailableModel = (
             [ModelEnum.MISTRAL_NEMO]: "OPENROUTER_API_KEY",
             [ModelEnum.QWEN3_14B]: "OPENROUTER_API_KEY",
             [ModelEnum.KIMI_K2]: "OPENROUTER_API_KEY",
+            [ModelEnum.GPT_OSS_120B]: "OPENROUTER_API_KEY",
+            [ModelEnum.GPT_OSS_20B]: "OPENROUTER_API_KEY",
         };
 
         const requiredKey = providers[model];
