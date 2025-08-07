@@ -19,6 +19,9 @@ Allow: /privacy
 Allow: /pricing
 Allow: /terms
 Allow: /docs
+Allow: /ai-resources
+Allow: /ai-glossary
+Allow: /faq
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -48,6 +51,9 @@ Allow: /privacy
 Allow: /pricing
 Allow: /terms
 Allow: /docs
+Allow: /ai-resources
+Allow: /ai-glossary
+Allow: /faq
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -77,6 +83,9 @@ Allow: /privacy
 Allow: /pricing
 Allow: /terms
 Allow: /docs
+Allow: /ai-resources
+Allow: /ai-glossary
+Allow: /faq
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -106,6 +115,9 @@ Allow: /privacy
 Allow: /pricing
 Allow: /terms
 Allow: /docs
+Allow: /ai-resources
+Allow: /ai-glossary
+Allow: /faq
 Allow: /
 Disallow: /profile/
 Disallow: /api/
