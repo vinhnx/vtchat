@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ReasoningType } from "../constants/reasoning";
-import { getReasoningType, ModelEnum, supportsReasoning, supportsTools } from "../models";
+import { ModelEnum, getReasoningType, supportsReasoning, supportsTools } from "../models";
 
 describe("Reasoning Support", () => {
     describe("supportsReasoning", () => {
@@ -12,8 +12,7 @@ describe("Reasoning Support", () => {
         });
 
         it("should return true for DeepSeek reasoning models", () => {
-            expect(supportsReasoning(ModelEnum.Deepseek_R1)).toBe(true);
-            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1)).toBe(true);
+            expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FIREWORKS)).toBe(true);
             expect(supportsReasoning(ModelEnum.DEEPSEEK_R1)).toBe(true);
         });
 
@@ -32,7 +31,9 @@ describe("Reasoning Support", () => {
         });
 
         it("should return deepseek-reasoning for DeepSeek models", () => {
-            expect(getReasoningType(ModelEnum.Deepseek_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
+            expect(getReasoningType(ModelEnum.DEEPSEEK_R1_FIREWORKS)).toBe(
+                ReasoningType.DEEPSEEK_REASONING,
+            );
             expect(getReasoningType(ModelEnum.DEEPSEEK_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
         });
 
