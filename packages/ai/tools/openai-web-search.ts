@@ -102,6 +102,7 @@ export const openaiWebSearchTool = () =>
  */
 export const supportsOpenAIWebSearch = (modelId: string): boolean => {
     const supportedModels = [
+        "gpt-5",
         "gpt-4o-mini",
         "gpt-4o",
         // Add other models as they become available for Responses API

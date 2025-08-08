@@ -10,6 +10,7 @@ export const ChatMode = {
     O4_Mini: "o4-mini",
     O1_MINI: "o1-mini",
     O1: "o1",
+    GPT_5: "gpt-5",
     GPT_4_1: "gpt-4.1",
     GPT_4_1_Mini: "gpt-4.1-mini",
     GPT_4_1_Nano: "gpt-4.1-nano",
@@ -72,6 +73,14 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         requiredFeature: FeatureSlug.PRO_SEARCH,
         requiredPlan: PlanSlug.VT_PLUS,
+    },
+    [ChatMode.GPT_5]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
     },
     [ChatMode.GPT_4_1]: {
         webSearch: true,
@@ -421,6 +430,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return "Deep Research - Gemini 2.5 Pro";
         case ChatMode.Pro:
             return "Pro Search - Gemini 2.5 Flash";
+        case ChatMode.GPT_5:
+            return "OpenAI GPT-5";
         case ChatMode.GPT_4_1:
             return "OpenAI GPT 4.1";
         case ChatMode.GPT_4_1_Mini:

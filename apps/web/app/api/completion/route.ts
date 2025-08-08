@@ -12,7 +12,7 @@ import {
 } from "@repo/shared/constants/security-headers";
 import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
-import { type Geo, geolocation } from "@vercel/functions";
+import { geolocation, type Geo } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
@@ -20,6 +20,7 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/a
 export const dynamic = "force-dynamic";
 
 import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
+import { data } from "happy-dom/lib/PropertySymbol.js";
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from "./constants";
 import { executeStream, markControllerClosed } from "./stream-handlers";
 import { registerStream, unregisterStream } from "./stream-registry";
@@ -140,7 +141,7 @@ export async function POST(request: NextRequest) {
 
                 // Validate API keys for the selected model's provider
                 const selectedModel = getModelFromChatMode(data.mode);
-                
+
                 // Extract provider from model name - handle multiple formats
                 let modelProvider: string | undefined;
                 if (selectedModel?.includes("/")) {
@@ -152,8 +153,13 @@ export async function POST(request: NextRequest) {
                 } else if (selectedModel?.startsWith("claude-")) {
                     // Claude format: "claude-4-opus-20250514" -> "claude"
                     modelProvider = "claude";
-                } else if (selectedModel?.startsWith("gpt-") || selectedModel?.startsWith("o1-") || selectedModel?.startsWith("o3-") || selectedModel?.startsWith("o4-")) {
-                    // OpenAI format: "gpt-4o", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
+                } else if (
+                    selectedModel?.startsWith("gpt-") ||
+                    selectedModel?.startsWith("o1-") ||
+                    selectedModel?.startsWith("o3-") ||
+                    selectedModel?.startsWith("o4-")
+                ) {
+                    // OpenAI format: "gpt-4o", "gpt-5", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
                     modelProvider = selectedModel.split("-")[0]?.toLowerCase();
                 } else {
                     // Fallback: try to extract first part before dash
@@ -272,6 +278,10 @@ export async function POST(request: NextRequest) {
         // BYOK bypass: If user has their own Gemini API key, skip rate limiting entirely
         // Use transformed API keys if available, otherwise use original keys
         const effectiveApiKeys = transformedApiKeys || data.apiKeys;
+
+        // Update data.apiKeys with the effective (transformed) API keys for the workflow
+        data.apiKeys = effectiveApiKeys;
+
         const geminiApiKey = effectiveApiKeys?.GEMINI_API_KEY;
         const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 

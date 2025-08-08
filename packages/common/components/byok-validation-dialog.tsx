@@ -22,6 +22,7 @@ type ProviderKeyMapping = {
 
 const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     // OpenAI models
+    [ChatMode.GPT_5]: "OPENAI_API_KEY",
     [ChatMode.O3]: "OPENAI_API_KEY",
     [ChatMode.O3_Mini]: "OPENAI_API_KEY",
     [ChatMode.O4_Mini]: "OPENAI_API_KEY",
@@ -39,6 +40,7 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.GEMINI_2_5_FLASH]: "GEMINI_API_KEY",
     [ChatMode.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
     // Anthropic models
+    [ChatMode.CLAUDE_4_1_OPUS]: "ANTHROPIC_API_KEY",
     [ChatMode.CLAUDE_4_SONNET]: "ANTHROPIC_API_KEY",
     [ChatMode.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
     // Fireworks models
@@ -56,6 +58,8 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.MISTRAL_NEMO]: "OPENROUTER_API_KEY",
     [ChatMode.QWEN3_14B]: "OPENROUTER_API_KEY",
     [ChatMode.KIMI_K2]: "OPENROUTER_API_KEY",
+    [ChatMode.GPT_OSS_120B]: "OPENROUTER_API_KEY",
+    [ChatMode.GPT_OSS_20B]: "OPENROUTER_API_KEY",
 } as const;
 
 const PROVIDER_NAMES = {

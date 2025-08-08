@@ -20,6 +20,7 @@ export function isPremiumMode(mode: ChatMode): boolean {
 
     // Models with reasoning capabilities or that require API keys are premium
     const reasoningModels = [
+        ChatMode.GPT_5,
         ChatMode.O3,
         ChatMode.O3_Mini,
         ChatMode.O4_Mini,

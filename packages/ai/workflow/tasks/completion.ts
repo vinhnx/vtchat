@@ -6,7 +6,13 @@ import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } 
 import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
 import { getWebSearchTool } from "../../tools";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
-import { ChunkBuffer, generateText, getHumanizedDate, handleError } from "../utils";
+import {
+    ChunkBuffer,
+    generateText,
+    getHumanizedDate,
+    handleError,
+    selectAvailableModel,
+} from "../utils";
 
 const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
@@ -45,8 +51,20 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
             ];
         }
 
-        const model = getModelFromChatMode(mode);
+        const baseModel = getModelFromChatMode(mode);
+        const model = selectAvailableModel(baseModel, context?.get("apiKeys"));
         const modelName = models.find((m) => m.id === model)?.name || model;
+
+        // Debug logging for model selection
+        log.info(
+            {
+                mode,
+                model,
+                modelName,
+                modelFromFunction: getModelFromChatMode(mode),
+            },
+            "🔍 Completion task model selection",
+        );
 
         // Check if model supports OpenAI web search when web search is enabled
         const supportsOpenAISearch = supportsOpenAIWebSearch(model);

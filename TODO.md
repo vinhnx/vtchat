@@ -13,4 +13,3 @@ Research and rename "VT" to better and memorable name
 add gpt-5
 
 https://platform.openai.com/docs/models/gpt-5
-

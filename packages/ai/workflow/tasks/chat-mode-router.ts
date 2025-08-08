@@ -6,6 +6,7 @@ import {
 } from "@repo/ai/models";
 import { createTask } from "@repo/orchestrator";
 import { ChatMode } from "@repo/shared/config";
+import { log } from "@repo/shared/lib/logger";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import { handleError, sendEvents } from "../utils";
 
@@ -87,6 +88,13 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
         const mode = context?.get("mode") || ChatMode.GEMINI_2_5_FLASH_LITE;
         const { updateStatus } = sendEvents(events);
 
+        // Debug logging to track what's happening with mode
+        log.info("🔍 Router Debug - Context mode:", { contextMode: context?.get("mode") });
+        log.info("🔍 Router Debug - Final mode:", { finalMode: mode });
+        log.info("🔍 Router Debug - Mode defaulted?", {
+            modeDefaulted: context?.get("mode") === undefined,
+        });
+
         const messageHistory = context?.get("messages") || [];
         const trimmedMessageHistory = trimMessageHistoryEstimated(messageHistory, mode);
         context?.set("messages", trimmedMessageHistory.trimmedMessages ?? []);
@@ -100,6 +108,10 @@ export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSc
         const webSearch = context?.get("webSearch");
         const question = context?.get("question") || "";
         const model = getModelFromChatMode(mode);
+
+        // Debug logging for model selection
+        log.info("🔍 Router Debug - Model from mode:", { model });
+        log.info("🔍 Router Debug - getModelFromChatMode called with:", { mode });
 
         // Intelligent query classification - skip web search for certain queries
         const shouldSkip = shouldSkipWebSearch(question);

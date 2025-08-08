@@ -1432,15 +1432,19 @@ export const selectAvailableModel = (
             [ModelEnum.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
             [ModelEnum.GEMINI_2_5_PRO]: "GEMINI_API_KEY",
             // OpenAI models
+            [ModelEnum.GPT_5]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o_Mini]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4_1]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4_1_Mini]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4_1_Nano]: "OPENAI_API_KEY",
+            [ModelEnum.O1]: "OPENAI_API_KEY",
+            [ModelEnum.O1_MINI]: "OPENAI_API_KEY",
             [ModelEnum.O3]: "OPENAI_API_KEY",
             [ModelEnum.O3_Mini]: "OPENAI_API_KEY",
             [ModelEnum.O4_Mini]: "OPENAI_API_KEY",
             // Anthropic models
+            [ModelEnum.CLAUDE_4_1_OPUS]: "ANTHROPIC_API_KEY",
             [ModelEnum.CLAUDE_4_SONNET]: "ANTHROPIC_API_KEY",
             [ModelEnum.CLAUDE_4_OPUS]: "ANTHROPIC_API_KEY",
             // Fireworks models

@@ -10,7 +10,9 @@
         "TAVILY_API_KEY": "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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC"
       },
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "tavily-search"
+      ]
     },
     "fetch": {
       "command": "uvx",
