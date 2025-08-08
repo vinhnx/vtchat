@@ -36,6 +36,7 @@ export const ModelEnum = {
     KIMI_K2: "moonshot/kimi-k2",
     GPT_OSS_120B: "openai/gpt-oss-120b",
     GPT_OSS_20B: "openai/gpt-oss-20b",
+    GPT_5_OPENROUTER: "openai/gpt-5",
 } as const;
 
 export type ModelEnum = (typeof ModelEnum)[keyof typeof ModelEnum];
@@ -264,6 +265,13 @@ export const models: Model[] = [
         maxTokens: 32_768,
         contextWindow: 131_072,
     },
+    {
+        id: ModelEnum.GPT_5_OPENROUTER,
+        name: "OpenAI GPT-5 (via OpenRouter)",
+        provider: "openrouter",
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
@@ -333,6 +341,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GPT_OSS_120B;
         case ChatMode.GPT_OSS_20B:
             return ModelEnum.GPT_OSS_20B;
+        case ChatMode.GPT_5_OPENROUTER:
+            return ModelEnum.GPT_5_OPENROUTER;
         default:
             return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
@@ -388,6 +398,8 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GPT_OSS_120B:
         case ChatMode.GPT_OSS_20B:
             return 200_000;
+        case ChatMode.GPT_5_OPENROUTER:
+            return 400_000;
         default:
             return 100_000;
     }
@@ -437,6 +449,10 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GPT_4o,
         ModelEnum.O3,
         ModelEnum.O3_Mini,
+        // OpenAI models via OpenRouter also support OpenAI web search tools
+        ModelEnum.GPT_OSS_120B,
+        ModelEnum.GPT_OSS_20B,
+        ModelEnum.GPT_5_OPENROUTER,
         // Add other models as they become available for Responses API
     ];
 
@@ -577,6 +593,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.KIMI_K2,
         ModelEnum.GPT_OSS_120B,
         ModelEnum.GPT_OSS_20B,
+        ModelEnum.GPT_5_OPENROUTER,
     ];
 
     // xAI models that support tools

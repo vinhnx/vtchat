@@ -60,6 +60,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "moonshot/kimi-k2": ChatMode.KIMI_K2,
         "openai/gpt-oss-120b": ChatMode.GPT_OSS_120B,
         "openai/gpt-oss-20b": ChatMode.GPT_OSS_20B,
+        "openai/gpt-5": ChatMode.GPT_5_OPENROUTER,
     };
 
     // First try model name mapping
@@ -141,6 +142,7 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
                     "moonshot/kimi-k2": "Kimi K2",
                     "openai/gpt-oss-120b": "OpenAI gpt-oss-120b (via OpenRouter)",
                     "openai/gpt-oss-20b": "OpenAI gpt-oss-20b (via OpenRouter)",
+                    "openai/gpt-5": "OpenAI GPT-5 (via OpenRouter)",
                 };
                 label = customLabels[model.id] || model.name;
             }
@@ -270,6 +272,13 @@ export const modelOptionsByProvider = {
     ],
 
     OpenRouter: [
+        {
+            label: "OpenAI GPT-5 (via OpenRouter)",
+            value: ChatMode.GPT_5_OPENROUTER,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
+        },
         {
             label: "OpenAI gpt-oss-120b (via OpenRouter)",
             value: ChatMode.GPT_OSS_120B,
