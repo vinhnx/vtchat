@@ -2,7 +2,7 @@
 
 > Privacy-first AI chat application with subscription tiers, MCP integration, and multiple AI model support. Built as a Turborepo monorepo with Next.js 14, TypeScript, and a comprehensive agentic system.
 
-vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research and Pro Search. The codebase follows minimal design principles with Oracle consultation workflow for all changes.
+vtchat is an AI chat application featuring free and premium tiers (VT+), with exclusive research capabilities including Deep Research and Pro Search. The codebase follows minimal design principles with a plan-review workflow for significant changes.
 
 ## Complete README Content
 
@@ -129,7 +129,7 @@ vtchat/
 
 ### Development Workflow
 
-- **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
+- Plan before implementing significant tasks; request maintainer feedback on the plan
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
 - Run `bun run lint` (oxlint) for comprehensive error checking
@@ -146,8 +146,8 @@ vtchat/
 ### README.md
 Complete project overview, features, tech stack, and setup instructions for the vtchat AI chat application.
 
-### AGENT.md
-Development guidelines including tech stack, code style, UI/UX principles, Oracle consultation workflow, and best practices.
+### AGENTS.md
+Repository guidelines including tech stack, code style, UI/UX principles, testing, and best practices.
 
 ### Security Implementation
 Comprehensive security design with Better Auth, bot detection, local-first storage, and privacy-focused architecture.

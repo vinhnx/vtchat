@@ -12,7 +12,15 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
 } from "@repo/ui";
-import { AlertCircle, Check, Clipboard, FileText, MessageCircleX, RefreshCcw, Trash2 } from "lucide-react";
+import {
+    AlertCircle,
+    Check,
+    Clipboard,
+    FileText,
+    MessageCircleX,
+    RefreshCcw,
+    Trash2,
+} from "lucide-react";
 import React, { forwardRef, useState } from "react";
 
 type MessageActionsProps = {
@@ -54,7 +62,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             size="icon-sm"
                             tooltip="Copy"
                             variant="secondary"
-                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
+                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
                         >
                             {status === "copied" ? (
                                 <Check className="h-4 w-4" strokeWidth={2} />
@@ -86,7 +94,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             size="icon-sm"
                             tooltip="Copy Markdown"
                             variant="secondary"
-                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
+                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
                         >
                             {markdownCopyStatus === "copied" ? (
                                 <Check className="h-4 w-4" strokeWidth={2} />
@@ -103,7 +111,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                         size="icon-sm"
                                         tooltip="Rewrite"
                                         variant="secondary"
-                                        className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
+                                        className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
                                     >
                                         <RefreshCcw className="h-4 w-4" strokeWidth={2} />
                                     </Button>
@@ -138,7 +146,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             size="icon-sm"
                             tooltip="Remove"
                             variant="secondary"
-                            className="h-8 px-3 rounded-md border bg-muted/30 text-muted-foreground hover:bg-muted"
+                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
                         >
                             <MessageCircleX className="h-4 w-4" strokeWidth={2} />
                         </Button>

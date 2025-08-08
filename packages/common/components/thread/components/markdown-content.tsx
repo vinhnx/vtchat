@@ -651,7 +651,7 @@ const ProgressiveMarkdownRenderer = memo(
                 ))}
                 {isStreaming && (
                     <span
-                        className="streaming-cursor inline-block w-0.5 h-5 bg-current ml-0.5"
+                        className="streaming-cursor ml-0.5 inline-block h-5 w-0.5 bg-current"
                         style={{
                             // Ensure cursor doesn't cause layout shifts
                             flexShrink: 0,

@@ -12,7 +12,7 @@ import {
 } from "@repo/shared/constants/security-headers";
 import { log } from "@repo/shared/logger";
 import { isGeminiModel } from "@repo/shared/utils";
-import { geolocation, type Geo } from "@vercel/functions";
+import { type Geo, geolocation } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
 
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
                     selectedModel?.startsWith("o3-") ||
                     selectedModel?.startsWith("o4-")
                 ) {
-                    // OpenAI format: "gpt-4o", "gpt-5", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
+                    // OpenAI format: "gpt-4o", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
                     modelProvider = selectedModel.split("-")[0]?.toLowerCase();
                 } else {
                     // Fallback: try to extract first part before dash

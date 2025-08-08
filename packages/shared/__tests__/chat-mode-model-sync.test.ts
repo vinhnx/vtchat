@@ -16,7 +16,6 @@ describe("ChatMode and ModelEnum Synchronization", () => {
 
         it("should have consistent naming patterns", () => {
             // Test specific known mappings
-            expect(getModelFromChatMode(ChatMode.GPT_5)).toBe(ModelEnum.GPT_5);
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_1_OPUS)).toBe(ModelEnum.CLAUDE_4_1_OPUS);
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_SONNET)).toBe(ModelEnum.CLAUDE_4_SONNET);
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_OPUS)).toBe(ModelEnum.CLAUDE_4_OPUS);

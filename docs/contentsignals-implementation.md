@@ -102,9 +102,9 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 
 - All other public routes (homepage, etc.)
 
-## Oracle Security Review
+## Security Review
 
-The implementation was reviewed by Oracle (o3 reasoning model) which identified and helped fix:
+The implementation underwent an independent security review which identified and helped fix:
 
 1. **robots.txt Group Precedence** - Fixed multiple User-Agent groups issue
 2. **PII Exposure Risk** - Added complete chat blocking
@@ -136,6 +136,6 @@ For questions about this implementation:
 
 ## Change Log
 
-- **2025-01-06:** Initial implementation with Oracle security review
+- **2025-01-06:** Initial implementation with security review
 - **2025-01-06:** Fixed critical PII protection gaps
 - **2025-01-06:** Updated privacy policy and terms of service

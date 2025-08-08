@@ -145,7 +145,7 @@ export default function AIGlossaryPage() {
     return (
         <div className="bg-background min-h-screen">
             {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
-            <h1 className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden text-[0px] leading-[0]">
+            <h1 className="sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0">
                 AI Glossary - Artificial Intelligence Terms & Definitions | VT
             </h1>
 
@@ -166,7 +166,7 @@ export default function AIGlossaryPage() {
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto max-w-4xl">
                     <div className="mb-12 text-center">
-                        <h2 className="mb-4 text-3xl font-semibold md:text-4xl text-foreground">
+                        <h2 className="text-foreground mb-4 text-3xl font-semibold md:text-4xl">
                             Artificial Intelligence Glossary
                         </h2>
                         <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
@@ -179,8 +179,8 @@ export default function AIGlossaryPage() {
 
                     <div className="space-y-6">
                         {glossaryTerms.map((item, index) => (
-                            <div key={index} className="rounded-lg p-6 bg-card">
-                                <h3 className="text-xl font-semibold text-foreground mb-3">
+                            <div key={index} className="bg-card rounded-lg p-6">
+                                <h3 className="text-foreground mb-3 text-xl font-semibold">
                                     {item.term}
                                 </h3>
                                 <p className="text-muted-foreground leading-relaxed">
@@ -193,7 +193,7 @@ export default function AIGlossaryPage() {
                     {/* Additional AI Context */}
                     <div className="mt-12 space-y-8">
                         <div className="bg-muted/50 rounded-xl p-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-6">
+                            <h2 className="text-foreground mb-6 text-2xl font-bold">
                                 Understanding AI in the Real World
                             </h2>
                             <p className="text-muted-foreground mb-4">
@@ -214,7 +214,7 @@ export default function AIGlossaryPage() {
                         </div>
 
                         <div className="bg-muted/30 rounded-xl p-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-6">
+                            <h2 className="text-foreground mb-6 text-2xl font-bold">
                                 The Future of Artificial Intelligence
                             </h2>
                             <p className="text-muted-foreground mb-4">

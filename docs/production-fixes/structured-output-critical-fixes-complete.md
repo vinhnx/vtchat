@@ -9,7 +9,7 @@
 Successfully resolved all three critical issues with the structured output/document understanding feature:
 
 1. **✅ Document Upload Understanding Broken** - Fixed and working
-2. **✅ PDF.js Version Mismatch** - Resolved with CDN-based approach  
+2. **✅ PDF.js Version Mismatch** - Resolved with CDN-based approach
 3. **✅ Zod Schema Issues** - Fixed type safety and validation problems
 
 ## Issues Resolved
@@ -20,7 +20,8 @@ Successfully resolved all three critical issues with the structured output/docum
 
 **Root Cause**: Multiple integration issues including API key handling, PDF processing, and schema validation.
 
-**Solution**: 
+**Solution**:
+
 - Fixed API key retrieval in structured extraction hook (`getAllKeys()` function call)
 - Corrected document attachment validation logic
 - Ensured proper integration between client-side and server-side components
@@ -31,7 +32,8 @@ Successfully resolved all three critical issues with the structured output/docum
 
 **Root Cause**: Local worker file was outdated and incompatible with the updated PDF.js library version.
 
-**Solution**: 
+**Solution**:
+
 - Updated to CDN-based PDF.js worker for version consistency
 - Used versioned CDN URL: `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.54/pdf.worker.min.mjs`
 - Added proper error handling and logging for PDF.js initialization
@@ -44,6 +46,7 @@ Successfully resolved all three critical issues with the structured output/docum
 **Root Cause**: Improper TypeScript types and unsafe type casting in schema definitions.
 
 **Solution**:
+
 - Fixed TypeScript types: `let pdfjsLib: typeof import("pdfjs-dist") | null = null`
 - Replaced `any` types with proper type definitions: `Record<string, z.ZodTypeAny>`
 - Added proper type annotations for PDF.js text extraction: `{ str: string }`
@@ -54,33 +57,36 @@ Successfully resolved all three critical issues with the structured output/docum
 ### PDF.js Configuration Fix
 
 <augment_code_snippet path="packages/common/hooks/use-structured-extraction.ts" mode="EXCERPT">
+
 ```typescript
 const initPdfJs = async () => {
-    if (!pdfjsLib && typeof window !== "undefined") {
+    if (!pdfjsLib && typeof window !== 'undefined') {
         try {
-            pdfjsLib = await import("pdfjs-dist");
-            
+            pdfjsLib = await import('pdfjs-dist');
+
             // Use CDN worker for version consistency
-            const version = "5.4.54"; // Match our installed version
+            const version = '5.4.54'; // Match our installed version
             pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`;
-            
-            log.info("PDF.js initialized successfully", { version });
+
+            log.info('PDF.js initialized successfully', { version });
         } catch (error) {
-            log.error("Failed to initialize PDF.js", { error });
-            throw new Error("PDF.js initialization failed");
+            log.error('Failed to initialize PDF.js', { error });
+            throw new Error('PDF.js initialization failed');
         }
     }
     return pdfjsLib;
 };
 ```
+
 </augment_code_snippet>
 
 ### Type Safety Improvements
 
 <augment_code_snippet path="packages/common/hooks/use-structured-extraction.ts" mode="EXCERPT">
+
 ```typescript
 // Fixed type definitions
-let pdfjsLib: typeof import("pdfjs-dist") | null = null;
+let pdfjsLib: typeof import('pdfjs-dist') | null = null;
 
 // Proper schema field types
 const schemaFields: Record<string, z.ZodTypeAny> = {};
@@ -91,18 +97,21 @@ const textItems = textContent.items.map((item: { str: string }) => item.str);
 // Correct API key retrieval
 const byokKeys = getAllKeys(); // Fixed function call
 ```
+
 </augment_code_snippet>
 
 ### API Key Handling Fix
 
 <augment_code_snippet path="packages/common/components/chat-input/structured-output-button.tsx" mode="EXCERPT">
+
 ```typescript
 // Fixed API key store access
-const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
+const getAllKeys = useApiKeysStore(state => state.getAllKeys);
 
 // Later in the component:
 const apiKeys = getAllKeys(); // Proper function call
 ```
+
 </augment_code_snippet>
 
 ## Testing Results
@@ -112,7 +121,7 @@ const apiKeys = getAllKeys(); // Proper function call
 Created and executed comprehensive tests covering:
 
 1. **Schema Validation** - ✅ Passed
-2. **Document Type Detection** - ✅ Passed  
+2. **Document Type Detection** - ✅ Passed
 3. **API Key Validation** - ✅ Passed
 4. **File Type Validation** - ✅ Passed
 5. **Error Handling** - ✅ Passed
@@ -131,17 +140,17 @@ Created and executed comprehensive tests covering:
 ### Core Implementation Files
 
 1. **`packages/common/hooks/use-structured-extraction.ts`**
-   - Fixed PDF.js initialization with CDN worker
-   - Corrected API key retrieval
-   - Improved type safety
+    - Fixed PDF.js initialization with CDN worker
+    - Corrected API key retrieval
+    - Improved type safety
 
 2. **`packages/common/components/chat-input/structured-output-button.tsx`**
-   - Fixed API key store access
-   - Updated PDF.js worker configuration
-   - Improved type annotations
+    - Fixed API key store access
+    - Updated PDF.js worker configuration
+    - Improved type annotations
 
 3. **`packages/shared/utils/image-byok-validation.ts`**
-   - Fixed import statement (type vs value import)
+    - Fixed import statement (type vs value import)
 
 ### Test Files
 

@@ -128,7 +128,7 @@ export function PricingClient() {
                             <ShineText className="text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-loose lg:text-6xl">
                                 Advanced AI features
                             </ShineText>
-                            <p className="mt-4 text-lg text-muted-foreground md:text-xl">
+                            <p className="text-muted-foreground mt-4 text-lg md:text-xl">
                                 Most powerful AI capabilities included free. VT+ adds 3 exclusive
                                 research features.
                             </p>
@@ -177,15 +177,15 @@ export function PricingClient() {
                                     <span className="text-5xl font-semibold tracking-tight text-gray-900">
                                         ${PRICING_CONFIG.pricing.free.price}
                                     </span>
-                                    <span className="text-base text-muted-foreground">
+                                    <span className="text-muted-foreground text-base">
                                         /{PRICING_CONFIG.pricing.free.interval}
                                     </span>
                                 </p>
-                                <p className="mt-6 text-base/7 text-muted-foreground">
+                                <p className="text-muted-foreground mt-6 text-base/7">
                                     VT offers free tier, and with VT+ focusing only on 3 exclusive
                                     research capabilities: Deep Research, Pro Search.
                                 </p>
-                                <ul className="mt-8 space-y-3 text-sm/6 text-muted-foreground sm:mt-10">
+                                <ul className="text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10">
                                     {PRICING_CONFIG.pricing.free.features.map((feature, index) => (
                                         <li className="flex gap-x-3" key={index}>
                                             <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
@@ -238,15 +238,15 @@ export function PricingClient() {
                                         <span className="text-5xl font-semibold tracking-tight text-white">
                                             ${PRICING_CONFIG.pricing.plus.price}
                                         </span>
-                                        <span className="text-base text-muted-foreground">
+                                        <span className="text-muted-foreground text-base">
                                             /{PRICING_CONFIG.pricing.plus.interval}
                                         </span>
                                     </p>
-                                    <p className="mt-6 text-base/7 text-muted-foreground">
+                                    <p className="text-muted-foreground mt-6 text-base/7">
                                         {PRICING_CONFIG.product.description}
                                     </p>
 
-                                    <ul className="mt-8 space-y-3 text-sm/6 text-muted-foreground sm:mt-10">
+                                    <ul className="text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10">
                                         {PRICING_CONFIG.pricing.plus.features.map(
                                             (feature, index) => (
                                                 <li className="flex gap-x-3" key={index}>
@@ -285,8 +285,10 @@ export function PricingClient() {
                                         <TypographyMuted>Cancel anytime</TypographyMuted>
                                     </div>
                                     {/* Terms and Privacy Links */}
-                                    <div className="mt-4 text-center text-sm text-muted-foreground">
-                                        <span className="text-muted-foreground">Please review our</span>{" "}
+                                    <div className="text-muted-foreground mt-4 text-center text-sm">
+                                        <span className="text-muted-foreground">
+                                            Please review our
+                                        </span>{" "}
                                         <a
                                             className="underline transition-colors hover:text-[#BFB38F]"
                                             href="/terms"
@@ -300,7 +302,9 @@ export function PricingClient() {
                                         >
                                             Privacy Policy
                                         </a>{" "}
-                                        <span className="text-muted-foreground">before subscribing</span>
+                                        <span className="text-muted-foreground">
+                                            before subscribing
+                                        </span>
                                     </div>
                                 </div>
                             </CardSpotlightPricing>
@@ -343,7 +347,7 @@ export function PricingClient() {
 
                 {/* Contact Section */}
                 <div className="mb-8 mt-8 text-center">
-                    <p className="text-base text-muted-foreground">
+                    <p className="text-muted-foreground text-base">
                         Have questions? Get in touch:{" "}
                         <a
                             className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"

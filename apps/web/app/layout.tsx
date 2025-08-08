@@ -37,7 +37,7 @@ export default function ParentLayout({
                 <AccessibilityHead />
                 {/* Favicon and Icons - Multiple formats for better compatibility */}
                 <link href="/favicon.ico" rel="icon" sizes="32x32" />
-                <link href="/icon.svg" rel="icon" type="image/svg+xml" />
+                <link href="/logo.svg" rel="icon" type="image/svg+xml" />
                 <link href="/apple-icon.png" rel="apple-touch-icon" />
                 <link href="/icon-192x192.png" rel="icon" sizes="192x192" type="image/png" />
                 <link href="/icon-512x512.png" rel="icon" sizes="512x512" type="image/png" />

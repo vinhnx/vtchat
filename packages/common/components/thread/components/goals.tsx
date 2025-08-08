@@ -189,13 +189,13 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     }
 
     return (
-        <Card className="border-muted/50 bg-muted/20 hover:bg-muted/30 w-full cursor-pointer transition-all duration-200 overflow-hidden relative">
+        <Card className="border-muted/50 bg-muted/20 hover:bg-muted/30 relative w-full cursor-pointer overflow-hidden transition-all duration-200">
             {/* Enhanced shimmer effect for Steps component */}
             {isLoading && (
                 <div
                     className={cn(
                         "absolute inset-0 -translate-x-full",
-                        "bg-gradient-to-r from-transparent via-white/12 to-transparent",
+                        "via-white/12 bg-gradient-to-r from-transparent to-transparent",
                         "dark:via-white/8",
                     )}
                     style={{
@@ -205,7 +205,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                 />
             )}
             <motion.div
-                className="flex w-full flex-row items-center gap-3 p-3 relative z-10"
+                className="relative z-10 flex w-full flex-row items-center gap-3 p-3"
                 onClick={handleClick}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}

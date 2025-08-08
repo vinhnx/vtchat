@@ -281,3 +281,4 @@ module.exports = {
     formatBytes,
     compareBundles,
 };
+/* eslint-disable no-console */

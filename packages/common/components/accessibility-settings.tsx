@@ -30,7 +30,7 @@ export function AccessibilitySettings() {
         <div className="space-y-6">
             <div>
                 <h3 className="text-lg font-medium">Accessibility</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                     Configure accessibility settings to improve your experience
                 </p>
             </div>
@@ -48,7 +48,7 @@ export function AccessibilitySettings() {
                             <Label htmlFor="reduce-motion" className="text-sm font-medium">
                                 Reduce Motion
                             </Label>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-muted-foreground text-xs">
                                 Disable animations and motion effects throughout the app
                             </p>
                             {prefersReducedMotion && !settings.reduceMotion && (
@@ -79,7 +79,7 @@ export function AccessibilitySettings() {
                             <Label htmlFor="high-contrast" className="text-sm font-medium">
                                 High Contrast Mode
                             </Label>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-muted-foreground text-xs">
                                 Increase contrast for better visibility and readability
                             </p>
                         </div>
@@ -95,7 +95,7 @@ export function AccessibilitySettings() {
                             <Label htmlFor="focus-indicators" className="text-sm font-medium">
                                 Enhanced Focus Indicators
                             </Label>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-muted-foreground text-xs">
                                 Show clearer focus outlines for keyboard navigation
                             </p>
                         </div>
@@ -124,7 +124,7 @@ export function AccessibilitySettings() {
                             >
                                 Screen Reader Optimizations
                             </Label>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-muted-foreground text-xs">
                                 Enable enhanced descriptions and navigation aids for screen readers
                             </p>
                         </div>
@@ -147,7 +147,7 @@ export function AccessibilitySettings() {
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label className="text-sm font-medium">System Motion Preference</Label>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                             VT Chat automatically detects and respects your system's motion
                             preferences.
                             {prefersReducedMotion
@@ -164,7 +164,7 @@ export function AccessibilitySettings() {
                                     prefersReducedMotion ? "bg-orange-500" : "bg-green-500"
                                 }`}
                             />
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-muted-foreground text-xs">
                                 {prefersReducedMotion
                                     ? "Motion is currently reduced"
                                     : "Motion and animations are enabled"}

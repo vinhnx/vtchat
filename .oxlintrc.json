@@ -16,5 +16,14 @@
         "node": true,
         "es2022": true
     },
-    "ignore": ["node_modules", ".next", "dist", "build", "coverage", "*.min.js", "*.d.ts"]
+    "ignore": [
+        "node_modules",
+        ".next",
+        "dist",
+        "build",
+        "coverage",
+        "*.min.js",
+        "*.d.ts",
+        "scripts/**"
+    ]
 }

@@ -20,17 +20,13 @@ export function GoodFirmsBadge({ className }: GoodFirmsBadgeProps) {
             className={`${className} block`}
             aria-label="VT featured on GoodFirms Chatbot Software directory"
         >
-            <div className="flex h-20 w-40 items-center justify-center rounded-lg border-2 border-blue-500 bg-card px-4 py-2 text-center shadow-sm transition-transform duration-200 hover:scale-105">
+            <div className="bg-card flex h-20 w-40 items-center justify-center rounded-lg border-2 border-blue-500 px-4 py-2 text-center shadow-sm transition-transform duration-200 hover:scale-105">
                 <div>
                     <div className="text-xs font-semibold text-blue-600 dark:text-blue-400">
                         Featured on
                     </div>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white">
-                        GoodFirms
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                        Chatbot Software
-                    </div>
+                    <div className="text-sm font-bold text-gray-900 dark:text-white">GoodFirms</div>
+                    <div className="text-muted-foreground text-xs">Chatbot Software</div>
                 </div>
             </div>
         </a>
@@ -51,8 +47,8 @@ export function GoodFirmsBadge({ className }: GoodFirmsBadgeProps) {
         >
             <div className="relative">
                 {isLoading && (
-                    <div 
-                        className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"
+                    <div
+                        className="absolute inset-0 animate-pulse rounded bg-gray-200 dark:bg-gray-700"
                         style={{ width: "160px", height: "120px" }}
                     />
                 )}
@@ -61,11 +57,11 @@ export function GoodFirmsBadge({ className }: GoodFirmsBadgeProps) {
                     alt="VT | GoodFirms Chatbot Software"
                     width={160}
                     height={120}
-                    style={{ 
-                        width: "160px", 
+                    style={{
+                        width: "160px",
                         height: "auto",
                         maxHeight: "120px",
-                        objectFit: "contain"
+                        objectFit: "contain",
                     }}
                     onError={() => {
                         console.warn("GoodFirms badge failed to load, using fallback");

@@ -6,6 +6,7 @@
  */
 
 import { execSync } from "node:child_process";
+import { log } from "../packages/shared/dist/lib/logger.js";
 
 const HARDCODED_URL_PATTERNS = [
     "localhost:3000",
@@ -29,13 +30,13 @@ const EXCLUDE_PATTERNS = [
 ];
 
 function checkForHardcodedUrls() {
-    console.log("🔍 Checking for hardcoded URLs...");
+    log.info("🔍 Checking for hardcoded URLs...");
 
     // Check if ripgrep is available
     try {
         execSync("command -v rg", { stdio: "pipe" });
     } catch {
-        console.warn("⚠️  ripgrep (rg) not found, falling back to grep");
+        log.warn("⚠️  ripgrep (rg) not found, falling back to grep");
         return checkWithGrep();
     }
 
@@ -52,38 +53,38 @@ function checkForHardcodedUrls() {
             });
 
             if (result.trim()) {
-                console.error(`\n❌ Hardcoded URL pattern "${pattern}" found:`);
-                console.error(result);
+                log.error(`\n❌ Hardcoded URL pattern "${pattern}" found:`);
+                log.error(result);
                 foundViolations = true;
             }
         } catch (error) {
             // rg exits with code 1 when no matches found, which is what we want
             if (error.status !== 1) {
-                console.error(`Error running ripgrep: ${error.message}`);
+                log.error(`Error running ripgrep: ${error.message}`);
                 process.exit(2);
             }
         }
     }
 
     if (foundViolations) {
-        console.error("\n💡 Fix these issues by:");
-        console.error("  1. Using getBaseURL() from @repo/shared/config/baseUrl");
-        console.error("  2. Using environment variables (NEXT_PUBLIC_APP_URL, APP_URL)");
-        console.error("  3. For documentation, use placeholders like $DEV_URL or $PROD_URL");
+        log.error("\n💡 Fix these issues by:");
+        log.error("  1. Using getBaseURL() from @repo/shared/config/baseUrl");
+        log.error("  2. Using environment variables (NEXT_PUBLIC_APP_URL, APP_URL)");
+        log.error("  3. For documentation, use placeholders like $DEV_URL or $PROD_URL");
         process.exit(1);
     }
 
-    console.log("✅ No hardcoded URLs found");
+    log.info("✅ No hardcoded URLs found");
 }
 
 function checkWithGrep() {
-    console.log("Using basic file scanning (no ripgrep found)...");
+    log.info("Using basic file scanning (no ripgrep found)...");
 
     // For now, just warn and pass - the CI environment should have ripgrep
-    console.warn("⚠️  Install ripgrep (rg) for proper URL checking");
-    console.warn("   brew install ripgrep  # macOS");
-    console.warn("   apt install ripgrep   # Ubuntu/Debian");
-    console.log("✅ Skipping URL check (install ripgrep for full validation)");
+    log.warn("⚠️  Install ripgrep (rg) for proper URL checking");
+    log.warn("   brew install ripgrep  # macOS");
+    log.warn("   apt install ripgrep   # Ubuntu/Debian");
+    log.info("✅ Skipping URL check (install ripgrep for full validation)");
 }
 
 // Only run if not imported as module

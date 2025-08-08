@@ -8,9 +8,9 @@
 
 Multiple files contained hardcoded rate limit numbers (20/5 for free tier, 100/10 for VT+ tier) that needed to be centralized for consistency and maintainability. Any future rate limit changes would require updating multiple files manually.
 
-## Oracle Plan Implementation
+## Plan Implementation
 
-Following the Oracle's detailed plan, implemented a single source of truth for rate limit constants:
+Implemented a single source of truth for rate limit constants:
 
 ### 1. Created Central Constants File
 
@@ -38,11 +38,11 @@ Following the Oracle's detailed plan, implemented a single source of truth for r
 - Added re-export in `packages/shared/constants/index.ts`
 - Enables both direct imports and through main constants index
 
-## Oracle Review & Approval
+## Review & Approval
 
 **Status:** ✅ Approved with addressed feedback
 
-**Oracle Feedback Addressed:**
+**Feedback Addressed:**
 
 - ✅ Normalized wording in limitText helpers for consistency
 - ✅ Added re-export in constants/index.ts for alternative import paths
@@ -92,7 +92,7 @@ export const limitText = {
 6. `apps/web/lib/config/pricing.ts` (pricing descriptions)
 7. `packages/common/components/rate-limit-usage-meter.tsx` (usage display)
 
-## Next Steps (Oracle Suggestions)
+## Next Steps
 
 - Optional: Update remaining hardcoded numbers in FAQ, terms, privacy pages
 - Optional: Update test files to use constants for future-proofing

@@ -1432,7 +1432,6 @@ export const selectAvailableModel = (
             [ModelEnum.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
             [ModelEnum.GEMINI_2_5_PRO]: "GEMINI_API_KEY",
             // OpenAI models
-            [ModelEnum.GPT_5]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o_Mini]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4_1]: "OPENAI_API_KEY",

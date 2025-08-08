@@ -48,12 +48,12 @@ export const AIMessage = memo(
                     <div className="flex items-center gap-2">
                         <div
                             className={cn(
-                                "flex items-center gap-2 rounded-full border border-border/30 bg-muted/50 px-3 py-1",
+                                "border-border/30 bg-muted/50 flex items-center gap-2 rounded-full border px-3 py-1",
                                 "ai-message-badge",
                             )}
                         >
-                            <Sparkles className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-xs font-medium text-muted-foreground">
+                            <Sparkles className="text-muted-foreground h-3 w-3" />
+                            <span className="text-muted-foreground text-xs font-medium">
                                 {getModelDisplayName(threadItem.mode)}
                             </span>
                             {isGenerating && (
@@ -65,13 +65,13 @@ export const AIMessage = memo(
                                         ease: "linear",
                                     }}
                                 >
-                                    <div className="h-2 w-2 rounded-full bg-muted-foreground" />
+                                    <div className="bg-muted-foreground h-2 w-2 rounded-full" />
                                 </motion.div>
                             )}
                         </div>
 
                         {!isGenerating && (
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-muted-foreground text-xs">
                                 {new Date(threadItem.createdAt).toLocaleTimeString([], {
                                     hour: "2-digit",
                                     minute: "2-digit",

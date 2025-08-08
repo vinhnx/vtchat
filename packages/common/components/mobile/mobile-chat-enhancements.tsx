@@ -434,7 +434,7 @@ export const MobilePullToRefresh = memo(
                                 scaleY: isRefreshing ? 1 : Math.min(pullDistance / 60, 1),
                                 opacity: 1,
                             }}
-                            className="flex items-center justify-center bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900/20 origin-top transform-gpu will-change-transform"
+                            className="flex origin-top transform-gpu items-center justify-center bg-gradient-to-b from-blue-50 to-transparent will-change-transform dark:from-blue-900/20"
                             exit={{ scaleY: 0, opacity: 0 }}
                             initial={{ scaleY: 0, opacity: 0 }}
                             style={{ height: 60 }}
@@ -445,7 +445,7 @@ export const MobilePullToRefresh = memo(
                                     scale: pullDistance > threshold ? 1.1 : 1, // Reduced scale for mobile
                                 }}
                                 className={cn(
-                                    "flex h-8 w-8 items-center justify-center rounded-full transform-gpu will-change-transform",
+                                    "flex h-8 w-8 transform-gpu items-center justify-center rounded-full will-change-transform",
                                     pullDistance > threshold
                                         ? "bg-blue-500 text-white"
                                         : "bg-gray-200 text-gray-500 dark:bg-gray-700",

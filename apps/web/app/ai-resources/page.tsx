@@ -165,7 +165,7 @@ export default function AIResourcesPage() {
     return (
         <div className="bg-background min-h-screen">
             {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
-            <h1 className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden text-[0px] leading-[0]">
+            <h1 className="sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0">
                 AI Resources - Learn Artificial Intelligence & Machine Learning | VT
             </h1>
 
@@ -186,7 +186,7 @@ export default function AIResourcesPage() {
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto max-w-6xl">
                     <div className="mb-12 text-center">
-                        <h2 className="mb-4 text-3xl font-semibold md:text-4xl text-foreground">
+                        <h2 className="text-foreground mb-4 text-3xl font-semibold md:text-4xl">
                             Artificial Intelligence Learning Resources
                         </h2>
                         <p className="text-muted-foreground mx-auto max-w-3xl text-lg">
@@ -201,16 +201,13 @@ export default function AIResourcesPage() {
                     <div className="space-y-12">
                         {resources.map((section, sectionIndex) => (
                             <div key={sectionIndex} className="space-y-6">
-                                <h2 className="text-2xl font-bold text-foreground border-b border-border/30 pb-2">
+                                <h2 className="text-foreground border-border/30 border-b pb-2 text-2xl font-bold">
                                     {section.category}
                                 </h2>
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     {section.items.map((item, itemIndex) => (
-                                        <div
-                                            key={itemIndex}
-                                            className="bg-card rounded-lg p-6"
-                                        >
-                                            <h3 className="text-lg font-semibold text-foreground mb-3">
+                                        <div key={itemIndex} className="bg-card rounded-lg p-6">
+                                            <h3 className="text-foreground mb-3 text-lg font-semibold">
                                                 {item.title}
                                             </h3>
                                             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -226,12 +223,12 @@ export default function AIResourcesPage() {
                     {/* Additional Content Sections */}
                     <div className="mt-16 space-y-12">
                         <div className="bg-muted/50 rounded-xl p-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-6">
+                            <h2 className="text-foreground mb-6 text-2xl font-bold">
                                 Why Learn About Artificial Intelligence?
                             </h2>
-                            <div className="grid md:grid-cols-2 gap-8">
+                            <div className="grid gap-8 md:grid-cols-2">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         Career Opportunities
                                     </h3>
                                     <p className="text-muted-foreground mb-4">
@@ -240,7 +237,7 @@ export default function AIResourcesPage() {
                                         AI engineering to data science, the demand for AI-literate
                                         professionals continues to grow across all industries.
                                     </p>
-                                    <ul className="text-sm text-muted-foreground space-y-1">
+                                    <ul className="text-muted-foreground space-y-1 text-sm">
                                         <li>• AI Engineer and Developer roles</li>
                                         <li>• Machine Learning Specialist positions</li>
                                         <li>• Data Scientist opportunities</li>
@@ -248,7 +245,7 @@ export default function AIResourcesPage() {
                                     </ul>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         Business Innovation
                                     </h3>
                                     <p className="text-muted-foreground mb-4">
@@ -257,7 +254,7 @@ export default function AIResourcesPage() {
                                         AI helps leaders make informed decisions about technology
                                         adoption and digital transformation.
                                     </p>
-                                    <ul className="text-sm text-muted-foreground space-y-1">
+                                    <ul className="text-muted-foreground space-y-1 text-sm">
                                         <li>• Process automation and efficiency</li>
                                         <li>• Customer experience enhancement</li>
                                         <li>• Data-driven decision making</li>
@@ -268,15 +265,15 @@ export default function AIResourcesPage() {
                         </div>
 
                         <div className="bg-muted/30 rounded-xl p-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-6">
+                            <h2 className="text-foreground mb-6 text-2xl font-bold">
                                 Learning Path Recommendations
                             </h2>
                             <div className="space-y-6">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         For Beginners
                                     </h3>
-                                    <ol className="text-sm text-muted-foreground space-y-2">
+                                    <ol className="text-muted-foreground space-y-2 text-sm">
                                         <li>1. Start with AI fundamentals and basic concepts</li>
                                         <li>2. Learn about different types of AI systems</li>
                                         <li>3. Explore practical AI applications in daily life</li>
@@ -288,10 +285,10 @@ export default function AIResourcesPage() {
                                     </ol>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         For Intermediate Learners
                                     </h3>
-                                    <ol className="text-sm text-muted-foreground space-y-2">
+                                    <ol className="text-muted-foreground space-y-2 text-sm">
                                         <li>
                                             1. Dive deeper into machine learning models and
                                             algorithms
@@ -307,10 +304,10 @@ export default function AIResourcesPage() {
                                     </ol>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         For Advanced Practitioners
                                     </h3>
-                                    <ol className="text-sm text-muted-foreground space-y-2">
+                                    <ol className="text-muted-foreground space-y-2 text-sm">
                                         <li>1. Research cutting-edge AI developments and papers</li>
                                         <li>2. Contribute to open-source AI projects</li>
                                         <li>3. Develop custom AI models for specific tasks</li>
@@ -322,7 +319,7 @@ export default function AIResourcesPage() {
                         </div>
 
                         <div className="bg-muted/40 rounded-xl p-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-6">
+                            <h2 className="text-foreground mb-6 text-2xl font-bold">
                                 Staying Updated with AI Developments
                             </h2>
                             <p className="text-muted-foreground mb-6">
@@ -332,12 +329,12 @@ export default function AIResourcesPage() {
                                 informed about these developments is crucial for anyone working with
                                 or interested in AI.
                             </p>
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="grid gap-6 md:grid-cols-2">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         Key Areas to Watch
                                     </h3>
-                                    <ul className="text-sm text-muted-foreground space-y-2">
+                                    <ul className="text-muted-foreground space-y-2 text-sm">
                                         <li>• Advances in large language models (LLMs)</li>
                                         <li>• Breakthroughs in computer vision technology</li>
                                         <li>• Progress toward artificial general intelligence</li>
@@ -347,10 +344,10 @@ export default function AIResourcesPage() {
                                     </ul>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                                    <h3 className="text-foreground mb-3 text-lg font-semibold">
                                         Learning Resources
                                     </h3>
-                                    <ul className="text-sm text-muted-foreground space-y-2">
+                                    <ul className="text-muted-foreground space-y-2 text-sm">
                                         <li>• Research papers and academic publications</li>
                                         <li>• AI conferences and industry events</li>
                                         <li>• Online courses and certification programs</li>

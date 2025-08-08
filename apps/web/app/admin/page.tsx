@@ -433,7 +433,7 @@ export default function AdminDashboard() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="mb-2 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground mb-2 text-xs">
                                 {webSearchDebug.timestamp}
                             </div>
                             <div className="mb-2 text-sm font-medium">
@@ -466,10 +466,10 @@ export default function AdminDashboard() {
                             </div>
                             {webSearchDebug.recommendations.length > 0 && (
                                 <div className="mt-2">
-                                    <div className="font-semibold text-sm mb-1">
+                                    <div className="mb-1 text-sm font-semibold">
                                         Recommendations:
                                     </div>
-                                    <ul className="list-disc ml-4 text-xs">
+                                    <ul className="ml-4 list-disc text-xs">
                                         {webSearchDebug.recommendations.map((rec) => (
                                             <li
                                                 key={rec.message + rec.action}

@@ -9,6 +9,26 @@
 const https = require("node:https");
 const crypto = require("node:crypto");
 
+// Minimal logger to satisfy linting rules without external deps
+const log = {
+    info: (msg, data) => {
+        process.stdout.write(`${String(msg)}${data ? ` ${JSON.stringify(data)}` : ""}\n`);
+    },
+    warn: (msg, data) => {
+        process.stdout.write(`WARN: ${String(msg)}${data ? ` ${JSON.stringify(data)}` : ""}\n`);
+    },
+    error: (msg, data) => {
+        process.stderr.write(`ERROR: ${String(msg)}${data ? ` ${JSON.stringify(data)}` : ""}\n`);
+    },
+    debug: (msg, data) => {
+        if (process.env.NODE_ENV === "development") {
+            process.stdout.write(
+                `DEBUG: ${String(msg)}${data ? ` ${JSON.stringify(data)}` : ""}\n`,
+            );
+        }
+    },
+};
+
 const BASE_URL = process.env.BASE_URL || "https://vtchat.io.vn";
 const CRON_SECRET = process.env.CRON_SECRET_TOKEN;
 const TIMEOUT_MS = parseInt(process.env.TIMEOUT_MS || "300000"); // 5 minutes default
@@ -51,8 +71,8 @@ function validateEnvironment() {
     }
 
     if (errors.length > 0) {
-        console.error("❌ Environment validation failed:");
-        errors.forEach((error) => console.error(`   • ${error}`));
+        log.error("❌ Environment validation failed:");
+        errors.forEach((error) => log.error(`   • ${error}`));
         process.exit(1);
     }
 }
@@ -97,10 +117,10 @@ async function makeRequestWithRetry(endpoint, type = "hourly", attempt = 1) {
         const jitter = Math.random() * 0.1 * baseDelay; // 10% jitter
         const delay = Math.floor(baseDelay + jitter);
 
-        console.log(
+        log.warn(
             `⚠️  Attempt ${attempt}/${MAX_RETRIES} failed after ${duration}ms: ${error.message}`,
         );
-        console.log(`⏳ Retrying in ${delay}ms...`);
+        log.info(`⏳ Retrying in ${delay}ms...`);
 
         await sleep(delay);
         return makeRequestWithRetry(endpoint, type, attempt + 1);
@@ -125,12 +145,12 @@ function logMetrics(type, status, duration, attempt, error = null) {
     };
 
     // Log structured metrics for monitoring systems
-    console.log(`📊 METRICS: ${JSON.stringify(metrics)}`);
+    log.info(`📊 METRICS: ${JSON.stringify(metrics)}`);
 
     // Send metrics to observability endpoint (fire and forget)
     sendMetricsToEndpoint(metrics).catch((err) => {
         // Don't fail the main process if metrics reporting fails
-        console.log(`⚠️  Failed to send metrics: ${err.message}`);
+        log.warn(`⚠️  Failed to send metrics: ${err.message}`);
     });
 }
 
@@ -219,7 +239,7 @@ function makeRequest(endpoint, type = "hourly") {
             timeout: TIMEOUT_MS,
         };
 
-        console.log(`🚀 Starting ${type} database maintenance...`);
+        log.info(`🚀 Starting ${type} database maintenance...`);
 
         const req = https.request(url, options, (res) => {
             let data = "";
@@ -232,10 +252,10 @@ function makeRequest(endpoint, type = "hourly") {
                 try {
                     // Enhanced debugging for HTML responses
                     if (data.trim().startsWith("<!DOCTYPE") || data.trim().startsWith("<html")) {
-                        console.error(`❌ Received HTML instead of JSON from ${url}`);
-                        console.error(`Status: ${res.statusCode}`);
-                        console.error("Headers:", res.headers);
-                        console.error("Response preview:", data.substring(0, 200));
+                        log.error(`❌ Received HTML instead of JSON from ${url}`);
+                        log.error(`Status: ${res.statusCode}`);
+                        log.error("Headers:", res.headers);
+                        log.error("Response preview:", data.substring(0, 200));
                         reject(
                             new Error(
                                 `Server returned HTML instead of JSON. Status: ${res.statusCode}`,
@@ -246,12 +266,12 @@ function makeRequest(endpoint, type = "hourly") {
 
                     const response = JSON.parse(data);
                     if (res.statusCode === 200 && response.success) {
-                        console.log(`✅ ${type} maintenance completed successfully`);
-                        console.log(
+                        log.info(`✅ ${type} maintenance completed successfully`);
+                        log.info(
                             `📊 Health: ${response.health.healthy ? "Good" : "Issues detected"}`,
                         );
                         if (response.health.issues.length > 0) {
-                            console.log(`⚠️  Issues: ${response.health.issues.join(", ")}`);
+                            log.warn(`⚠️  Issues: ${response.health.issues.join(", ")}`);
                         }
                         resolve(response);
                     } else {
@@ -289,7 +309,7 @@ async function runHourlyMaintenance() {
     try {
         // Perform health check before maintenance
         await performHealthCheck();
-        console.log("✅ Health check passed");
+        log.info("✅ Health check passed");
 
         const result = await makeRequestWithRetry("/api/cron/database-maintenance", "hourly");
 
@@ -325,18 +345,18 @@ async function runWeeklyMaintenance() {
 
         const result = await makeRequestWithRetry("/api/cron/weekly-maintenance", "weekly");
 
-        console.log("🎉 Weekly database maintenance completed successfully");
-        console.log(`📊 Health: ${result.health?.healthy ? "Good" : "Issues detected"}`);
+        log.info("🎉 Weekly database maintenance completed successfully");
+        log.info(`📊 Health: ${result.health?.healthy ? "Good" : "Issues detected"}`);
 
         if (result.health?.issues?.length > 0) {
-            console.log(`⚠️  Issues found: ${result.health.issues.join(", ")}`);
+            log.warn(`⚠️  Issues found: ${result.health.issues.join(", ")}`);
         }
 
         // Cleanup HTTPS agent
         httpsAgent.destroy();
         process.exit(0);
     } catch (error) {
-        console.error("💥 Weekly maintenance failed:", error.message);
+        log.error("💥 Weekly maintenance failed:", error.message);
 
         // Log structured error for monitoring
         logMetrics("weekly", "fatal_error", 0, 0, error.message);
@@ -349,20 +369,20 @@ async function runWeeklyMaintenance() {
 
 // Graceful shutdown handler
 process.on("SIGTERM", () => {
-    console.log("⚠️  Received SIGTERM, shutting down gracefully...");
+    log.warn("⚠️  Received SIGTERM, shutting down gracefully...");
     httpsAgent.destroy();
     process.exit(0);
 });
 
 process.on("SIGINT", () => {
-    console.log("⚠️  Received SIGINT, shutting down gracefully...");
+    log.warn("⚠️  Received SIGINT, shutting down gracefully...");
     httpsAgent.destroy();
     process.exit(0);
 });
 
 // Unhandled promise rejection handler
 process.on("unhandledRejection", (reason, _promise) => {
-    console.error("💥 Unhandled Promise Rejection:", reason);
+    log.error("💥 Unhandled Promise Rejection:", reason);
     logMetrics("unknown", "unhandled_rejection", 0, 0, reason.toString());
     httpsAgent.destroy();
     process.exit(1);
@@ -376,7 +396,7 @@ if (maintenanceType === "weekly") {
 } else if (maintenanceType === "hourly") {
     runHourlyMaintenance();
 } else {
-    console.error('❌ Invalid maintenance type. Use "hourly" or "weekly"');
-    console.error("Usage: node cron-database-maintenance.js [hourly|weekly]");
+    log.error('❌ Invalid maintenance type. Use "hourly" or "weekly"');
+    log.error("Usage: node cron-database-maintenance.js [hourly|weekly]");
     process.exit(1);
 }

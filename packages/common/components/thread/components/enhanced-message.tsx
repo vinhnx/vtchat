@@ -105,7 +105,7 @@ export const EnhancedMessage = memo(({ message, imageAttachment, threadItem }: M
                                 className={cn(
                                     "relative px-4 py-3 text-[15px] font-medium leading-relaxed",
                                     "text-white selection:bg-blue-200/30",
-                                    "break-words whitespace-pre-wrap overflow-hidden", // Add word wrapping and overflow control
+                                    "overflow-hidden whitespace-pre-wrap break-words", // Add word wrapping and overflow control
                                     {
                                         "pb-14": isExpanded,
                                         markdownStyles,

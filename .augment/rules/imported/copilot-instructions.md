@@ -90,14 +90,14 @@ console.log('User:', userId); // Exposes PII!
 - **Test**: `bun test` (vitest) with jsdom environment for React components
 - **Dev**: `bun dev` - development server with optional React Scan (`bun run dev:scan`)
 
-### Oracle Consultation Workflow (MANDATORY)
+### Change Planning Workflow
 
-**All significant changes require Oracle approval** following ask-implement-review pattern:
+For significant changes, request maintainer feedback on the plan before implementation, then implement and document.
 
 1. **ASK-ORACLE**: Provide problem statement + code context, request detailed implementation plan
-2. **Implement**: Follow Oracle's plan strictly
+2. **Implement**: Follow the agreed plan
 3. **REVIEW-ORACLE**: Present diff/changes for approval before merge
-4. **Document**: Record plan + approval in `memory-bank/<date>-oracle.md`
+4. **Document**: Record plan and decisions in `memory-bank/`
 
 Exceptions: Sev-1 production fixes (implement first, seek retroactive approval within 24h)
 
@@ -105,7 +105,7 @@ Exceptions: Sev-1 production fixes (implement first, seek retroactive approval w
 
 1. **Always run `bun dev`** and check console for errors before starting new tasks
 2. **Run `bun run biome:format`** to auto-fix formatting
-3. **Consult Oracle workflow** for complex features (see AGENT.md)
+3. **Request maintainer review** for complex features (see AGENTS.md)
 4. **Never commit changes yourself** - DO NOT execute `git commit` or use commit tools
 
 ### Shadcn/ui Component Installation

@@ -173,15 +173,15 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
             <div className="not-prose overflow-hidden">
                 <div className="flex w-full animate-pulse flex-col items-start">
                     <div className="bg-muted/20 h-32 w-full rounded-t-xl" />
-                    <div className="flex w-full flex-col gap-2 p-4 min-h-[120px]">
-                        <div className="flex w-full items-center gap-1.5 h-4">
+                    <div className="flex min-h-[120px] w-full flex-col gap-2 p-4">
+                        <div className="flex h-4 w-full items-center gap-1.5">
                             <div className="bg-muted h-4 w-4 rounded-full" />
                             <div className="bg-muted h-3 w-24 rounded" />
                         </div>
-                        <div className="h-8 w-full flex items-start">
+                        <div className="flex h-8 w-full items-start">
                             <div className="bg-muted h-4 w-3/4 rounded" />
                         </div>
-                        <div className="flex-1 w-full flex items-start">
+                        <div className="flex w-full flex-1 items-start">
                             <div className="bg-muted h-3 w-1/2 rounded" />
                         </div>
                     </div>
@@ -198,7 +198,7 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
         <div className="not-prose overflow-hidden">
             <div className="flex flex-col items-start">
                 {/* OG Image - Always show container for consistent height */}
-                <div className="w-full h-32 bg-muted/20 rounded-t-xl overflow-hidden">
+                <div className="bg-muted/20 h-32 w-full overflow-hidden rounded-t-xl">
                     {ogResult?.image && !imageError ? (
                         <img
                             src={ogResult.image}
@@ -218,9 +218,9 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
                 </div>
 
                 {/* Content */}
-                <div className="flex w-full flex-col items-start gap-2 p-4 min-h-[120px]">
+                <div className="flex min-h-[120px] w-full flex-col items-start gap-2 p-4">
                     {/* Site info */}
-                    <div className="flex flex-row items-center gap-1.5 h-4">
+                    <div className="flex h-4 flex-row items-center gap-1.5">
                         <LinkFavicon link={source.link} />
                         <p className="text-muted-foreground line-clamp-1 w-full font-sans text-xs">
                             {siteName}
@@ -228,14 +228,14 @@ export const LinkPreview = memo(({ source }: { source: Source }) => {
                     </div>
 
                     {/* Title */}
-                    <div className="h-8 w-full flex items-start">
+                    <div className="flex h-8 w-full items-start">
                         <p className="text-foreground line-clamp-2 w-full overflow-hidden font-sans text-sm font-semibold leading-tight">
                             {displayTitle || "Link Preview"}
                         </p>
                     </div>
 
                     {/* Description */}
-                    <div className="flex-1 w-full flex items-start">
+                    <div className="flex w-full flex-1 items-start">
                         <p className="text-muted-foreground line-clamp-2 w-full font-sans text-xs leading-relaxed">
                             {displayDescription || "No description available for this link."}
                         </p>

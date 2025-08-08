@@ -43,13 +43,13 @@ export default function LoginPage() {
                 VT Login - Access Your Minimal AI Chat Account
             </h1>
             <motion.div
-                className="flex flex-col gap-4 p-6 md:p-10 transform-gpu will-change-transform"
+                className="flex transform-gpu flex-col gap-4 p-6 will-change-transform md:p-10"
                 initial={animationProps.initial}
                 animate={animationProps.animate}
                 transition={animationProps.transition}
             >
                 <motion.div
-                    className="flex justify-center gap-2 md:justify-start transform-gpu will-change-transform"
+                    className="flex transform-gpu justify-center gap-2 will-change-transform md:justify-start"
                     initial={animationProps.initial}
                     animate={animationProps.animate}
                     transition={{ ...animationProps.transition, delay: 0.1 }}
@@ -61,7 +61,7 @@ export default function LoginPage() {
                     </Link>
                 </motion.div>
                 <motion.div
-                    className="flex flex-1 items-center justify-center transform-gpu will-change-transform"
+                    className="flex flex-1 transform-gpu items-center justify-center will-change-transform"
                     initial={animationProps.initial}
                     animate={animationProps.animate}
                     transition={{ ...animationProps.transition, delay: 0.2 }}
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 </motion.div>
             </motion.div>
             <motion.div
-                className="relative hidden lg:block transform-gpu will-change-transform"
+                className="relative hidden transform-gpu will-change-transform lg:block"
                 initial={animationProps.initial}
                 animate={animationProps.animate}
                 transition={{ ...animationProps.transition, delay: 0.3 }}

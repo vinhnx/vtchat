@@ -22,7 +22,6 @@ type ProviderKeyMapping = {
 
 const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     // OpenAI models
-    [ChatMode.GPT_5]: "OPENAI_API_KEY",
     [ChatMode.O3]: "OPENAI_API_KEY",
     [ChatMode.O3_Mini]: "OPENAI_API_KEY",
     [ChatMode.O4_Mini]: "OPENAI_API_KEY",

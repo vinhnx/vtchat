@@ -9,7 +9,7 @@
 
 **A modern, privacy-first AI chat application with security**
 
-[Live App](https://vtchat.io.vn) | [Documentation](docs/) | [Project Status](docs/PROJECT-STATUS.md) | [Features](docs/FEATURES.md) | [Architecture](docs/ARCHITECTURE.md) | [Security](docs/SECURITY.md)
+[Live App](https://vtchat.io.vn) | [Documentation](docs/) | [Repository Guidelines](AGENTS.md) | [Project Status](docs/PROJECT-STATUS.md) | [Features](docs/FEATURES.md) | [Architecture](docs/ARCHITECTURE.md) | [Security](docs/SECURITY.md)
 
 </div>
 
@@ -371,7 +371,7 @@ The **[memory-bank/](memory-bank/)** directory contains contextual documents tra
 Key memory bank documents:
 
 - Development session logs and feature implementation notes
-- Oracle consultation records and architectural decisions
+- Architectural decisions and evolution notes
 - Performance optimization discoveries and lessons learned
 - User feedback integration and feature prioritization insights
 
@@ -415,7 +415,7 @@ Testing framework: Vitest with Testing Library for React components.
 We welcome contributions! Please follow these guidelines:
 
 1. **Fork the repository** and create a feature branch
-2. **Follow the coding standards** defined in [AGENT.md](AGENT.md)
+2. **Follow the coding standards** defined in [AGENTS.md](AGENTS.md)
 3. **Write tests** for new features
 4. **Update documentation** as needed
 5. **Submit a pull request** with a clear description
@@ -425,7 +425,7 @@ We welcome contributions! Please follow these guidelines:
 - Use TypeScript with strict configuration
 - Follow the existing code style and patterns
 - Ensure all tests pass before submitting
-- Update AGENT.md with any significant changes
+- Update AGENTS.md with any significant changes
 
 ## License
 

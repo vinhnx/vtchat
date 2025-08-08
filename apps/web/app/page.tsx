@@ -55,21 +55,21 @@ export default function HomePage() {
     return (
         <div className="relative flex h-dvh w-full flex-col">
             {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
-            <h1 className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden text-[0px] leading-[0]">
+            <h1 className="sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0">
                 VT - Advanced AI Chat Platform with Generative AI & Deep Learning
             </h1>
 
             {/* Hidden SEO Content Section - Only for search engines, completely invisible to users */}
-            <div className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden pointer-events-none">
+            <div className="sr-only pointer-events-none invisible absolute h-0 w-0 overflow-hidden opacity-0">
                 {!(isPending || session) && (
-                    <section className="px-4 py-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-                        <div className="max-w-6xl mx-auto space-y-8">
+                    <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-8 dark:from-gray-900 dark:to-gray-800">
+                        <div className="mx-auto max-w-6xl space-y-8">
                             {/* Hero Section */}
-                            <div className="text-center space-y-6">
-                                <h2 className="text-3xl font-bold text-foreground">
+                            <div className="space-y-6 text-center">
+                                <h2 className="text-foreground text-3xl font-bold">
                                     What is Artificial Intelligence (AI)?
                                 </h2>
-                                <p className="text-lg text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+                                <p className="text-muted-foreground mx-auto max-w-4xl text-lg leading-relaxed">
                                     Artificial Intelligence (AI) is a revolutionary technology that
                                     enables machines to simulate human intelligence and perform
                                     tasks that traditionally require human cognitive abilities. Our
@@ -78,7 +78,7 @@ export default function HomePage() {
                                     create intelligent systems that can understand, learn, and
                                     respond like humans.
                                 </p>
-                                <p className="text-base text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+                                <p className="text-muted-foreground mx-auto max-w-4xl text-base leading-relaxed">
                                     VT represents the cutting edge of AI technology, offering users
                                     access to the most advanced artificial intelligence systems
                                     available today. From large language models (LLMs) like GPT-4
@@ -90,7 +90,7 @@ export default function HomePage() {
 
                             {/* Introduction to AI Concepts */}
                             <div className="bg-muted/50 rounded-xl p-8">
-                                <h2 className="text-2xl font-bold text-foreground mb-6">
+                                <h2 className="text-foreground mb-6 text-2xl font-bold">
                                     Understanding Modern AI Technology
                                 </h2>
                                 <div className="space-y-4">
@@ -124,9 +124,9 @@ export default function HomePage() {
                             </div>
 
                             {/* Core AI Technologies */}
-                            <div className="grid md:grid-cols-3 gap-8">
+                            <div className="grid gap-8 md:grid-cols-3">
                                 <div className="bg-card rounded-lg p-6 shadow-sm">
-                                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                                    <h3 className="text-foreground mb-4 text-xl font-semibold">
                                         Generative AI & Large Language Models (LLMs)
                                     </h3>
                                     <p className="text-muted-foreground mb-4">
@@ -136,7 +136,7 @@ export default function HomePage() {
                                         on large amounts of data to perform specific tasks with
                                         human-level accuracy.
                                     </p>
-                                    <ul className="text-sm text-muted-foreground space-y-2">
+                                    <ul className="text-muted-foreground space-y-2 text-sm">
                                         <li>• Advanced text generation and analysis</li>
                                         <li>• Creative content creation</li>
                                         <li>• Complex problem-solving capabilities</li>
@@ -145,7 +145,7 @@ export default function HomePage() {
                                 </div>
 
                                 <div className="bg-card rounded-lg p-6 shadow-sm">
-                                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                                    <h3 className="text-foreground mb-4 text-xl font-semibold">
                                         Deep Learning & Neural Networks
                                     </h3>
                                     <p className="text-muted-foreground mb-4">
@@ -155,7 +155,7 @@ export default function HomePage() {
                                         models to deliver sophisticated artificial intelligence
                                         capabilities.
                                     </p>
-                                    <ul className="text-sm text-muted-foreground space-y-2">
+                                    <ul className="text-muted-foreground space-y-2 text-sm">
                                         <li>• Pattern recognition and analysis</li>
                                         <li>• Predictive modeling and forecasting</li>
                                         <li>• Automated decision-making</li>
@@ -164,7 +164,7 @@ export default function HomePage() {
                                 </div>
 
                                 <div className="bg-card rounded-lg p-6 shadow-sm">
-                                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                                    <h3 className="text-foreground mb-4 text-xl font-semibold">
                                         Natural Language Processing (NLP)
                                     </h3>
                                     <p className="text-muted-foreground mb-4">
@@ -173,7 +173,7 @@ export default function HomePage() {
                                         naturally. This technology bridges the gap between human
                                         communication and machine understanding.
                                     </p>
-                                    <ul className="text-sm text-muted-foreground space-y-2">
+                                    <ul className="text-muted-foreground space-y-2 text-sm">
                                         <li>• Human-like conversation capabilities</li>
                                         <li>• Sentiment analysis and understanding</li>
                                         <li>• Language translation and localization</li>
@@ -184,45 +184,45 @@ export default function HomePage() {
 
                             {/* AI Applications and Use Cases */}
                             <div className="bg-muted/40 rounded-xl p-8">
-                                <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
+                                <h2 className="text-foreground mb-6 text-center text-2xl font-bold">
                                     Real-World AI Applications
                                 </h2>
-                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    <div className="text-center space-y-3">
-                                        <h4 className="font-semibold text-foreground">
+                                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                                    <div className="space-y-3 text-center">
+                                        <h4 className="text-foreground font-semibold">
                                             Business Intelligence
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             AI systems analyze business data, generate insights, and
                                             automate decision-making processes to improve efficiency
                                             and productivity.
                                         </p>
                                     </div>
-                                    <div className="text-center space-y-3">
-                                        <h4 className="font-semibold text-foreground">
+                                    <div className="space-y-3 text-center">
+                                        <h4 className="text-foreground font-semibold">
                                             Content Creation
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Generative AI creates high-quality content, from
                                             articles and marketing copy to code and creative
                                             writing, saving time and resources.
                                         </p>
                                     </div>
-                                    <div className="text-center space-y-3">
-                                        <h4 className="font-semibold text-foreground">
+                                    <div className="space-y-3 text-center">
+                                        <h4 className="text-foreground font-semibold">
                                             Research & Analysis
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             AI performs complex research tasks, analyzes large
                                             datasets, and provides comprehensive insights that would
                                             require human experts.
                                         </p>
                                     </div>
-                                    <div className="text-center space-y-3">
-                                        <h4 className="font-semibold text-foreground">
+                                    <div className="space-y-3 text-center">
+                                        <h4 className="text-foreground font-semibold">
                                             Customer Support
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             AI-powered chatbots and virtual assistants provide 24/7
                                             customer support with human-level understanding and
                                             response quality.
@@ -233,13 +233,13 @@ export default function HomePage() {
 
                             {/* Advanced AI Features */}
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-foreground text-center">
+                                <h2 className="text-foreground text-center text-2xl font-bold">
                                     Advanced AI Technologies & Features
                                 </h2>
 
-                                <div className="grid md:grid-cols-2 gap-8">
+                                <div className="grid gap-8 md:grid-cols-2">
                                     <div className="space-y-4">
-                                        <h3 className="text-xl font-semibold text-foreground">
+                                        <h3 className="text-foreground text-xl font-semibold">
                                             Machine Learning & Computer Vision
                                         </h3>
                                         <p className="text-muted-foreground">
@@ -250,7 +250,7 @@ export default function HomePage() {
                                             human intelligence, from image recognition to complex
                                             visual analysis.
                                         </p>
-                                        <ul className="text-sm text-muted-foreground space-y-2">
+                                        <ul className="text-muted-foreground space-y-2 text-sm">
                                             <li>• Image and video analysis</li>
                                             <li>• Object detection and recognition</li>
                                             <li>• Visual content understanding</li>
@@ -260,7 +260,7 @@ export default function HomePage() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <h3 className="text-xl font-semibold text-foreground">
+                                        <h3 className="text-foreground text-xl font-semibold">
                                             Artificial General Intelligence (AGI) Progress
                                         </h3>
                                         <p className="text-muted-foreground">
@@ -271,7 +271,7 @@ export default function HomePage() {
                                             beyond science fiction to deliver practical AI solutions
                                             in the real world.
                                         </p>
-                                        <ul className="text-sm text-muted-foreground space-y-2">
+                                        <ul className="text-muted-foreground space-y-2 text-sm">
                                             <li>• Multi-domain problem solving</li>
                                             <li>• Adaptive learning capabilities</li>
                                             <li>• Cross-functional AI integration</li>
@@ -284,11 +284,11 @@ export default function HomePage() {
 
                             {/* Privacy and Security */}
                             <div className="bg-muted/30 rounded-xl p-8">
-                                <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
+                                <h2 className="text-foreground mb-6 text-center text-2xl font-bold">
                                     Privacy-First AI Architecture
                                 </h2>
-                                <div className="grid md:grid-cols-3 gap-6">
-                                    <div className="text-center space-y-3">
+                                <div className="grid gap-6 md:grid-cols-3">
+                                    <div className="space-y-3 text-center">
                                         <h4 className="font-semibold text-green-800 dark:text-green-200">
                                             Local Data Storage
                                         </h4>
@@ -297,7 +297,7 @@ export default function HomePage() {
                                             browser, ensuring complete privacy and data sovereignty.
                                         </p>
                                     </div>
-                                    <div className="text-center space-y-3">
+                                    <div className="space-y-3 text-center">
                                         <h4 className="font-semibold text-green-800 dark:text-green-200">
                                             Encrypted Processing
                                         </h4>
@@ -307,7 +307,7 @@ export default function HomePage() {
                                             entire workflow.
                                         </p>
                                     </div>
-                                    <div className="text-center space-y-3">
+                                    <div className="space-y-3 text-center">
                                         <h4 className="font-semibold text-green-800 dark:text-green-200">
                                             No Server Storage
                                         </h4>
@@ -321,12 +321,12 @@ export default function HomePage() {
 
                             {/* AI Industry Impact */}
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-foreground text-center">
+                                <h2 className="text-foreground text-center text-2xl font-bold">
                                     The Impact of AI on Modern Industries
                                 </h2>
-                                <div className="grid md:grid-cols-2 gap-8">
+                                <div className="grid gap-8 md:grid-cols-2">
                                     <div className="space-y-4">
-                                        <h3 className="text-xl font-semibold text-foreground">
+                                        <h3 className="text-foreground text-xl font-semibold">
                                             Transforming Business Operations
                                         </h3>
                                         <p className="text-muted-foreground">
@@ -350,7 +350,7 @@ export default function HomePage() {
                                         </p>
                                     </div>
                                     <div className="space-y-4">
-                                        <h3 className="text-xl font-semibold text-foreground">
+                                        <h3 className="text-foreground text-xl font-semibold">
                                             Advancing Scientific Research
                                         </h3>
                                         <p className="text-muted-foreground">
@@ -378,7 +378,7 @@ export default function HomePage() {
 
                             {/* Future of AI */}
                             <div className="bg-muted/60 rounded-xl p-8">
-                                <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
+                                <h2 className="text-foreground mb-6 text-center text-2xl font-bold">
                                     The Future of Artificial Intelligence
                                 </h2>
                                 <div className="space-y-6">
@@ -391,12 +391,12 @@ export default function HomePage() {
                                         fundamental shift in how we interact with technology and
                                         solve complex global challenges.
                                     </p>
-                                    <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="grid gap-6 md:grid-cols-2">
                                         <div>
-                                            <h3 className="text-lg font-semibold text-foreground mb-3">
+                                            <h3 className="text-foreground mb-3 text-lg font-semibold">
                                                 Emerging AI Capabilities
                                             </h3>
-                                            <ul className="text-sm text-muted-foreground space-y-2">
+                                            <ul className="text-muted-foreground space-y-2 text-sm">
                                                 <li>
                                                     • Multi-modal AI that combines text, images, and
                                                     audio processing
@@ -419,10 +419,10 @@ export default function HomePage() {
                                             </ul>
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-semibold text-foreground mb-3">
+                                            <h3 className="text-foreground mb-3 text-lg font-semibold">
                                                 Ethical AI Development
                                             </h3>
-                                            <ul className="text-sm text-muted-foreground space-y-2">
+                                            <ul className="text-muted-foreground space-y-2 text-sm">
                                                 <li>• Ensuring AI systems are fair and unbiased</li>
                                                 <li>
                                                     • Protecting user privacy and data sovereignty
@@ -442,11 +442,11 @@ export default function HomePage() {
                             </div>
 
                             {/* Getting Started */}
-                            <div className="text-center space-y-6 bg-gray-100 dark:bg-gray-800 rounded-xl p-8">
-                                <h2 className="text-2xl font-bold text-foreground">
+                            <div className="space-y-6 rounded-xl bg-gray-100 p-8 text-center dark:bg-gray-800">
+                                <h2 className="text-foreground text-2xl font-bold">
                                     Start Your AI Journey Today
                                 </h2>
-                                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                                <p className="text-muted-foreground mx-auto max-w-3xl text-lg">
                                     Join thousands of users who are already leveraging the power of
                                     artificial intelligence with VT's advanced AI platform. Whether
                                     you're a developer, researcher, content creator, or business
@@ -454,13 +454,13 @@ export default function HomePage() {
                                     enhance productivity and achieve better results.
                                 </p>
 
-                                <div className="text-left max-w-2xl mx-auto mt-8">
-                                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                                <div className="mx-auto mt-8 max-w-2xl text-left">
+                                    <h3 className="text-foreground mb-4 text-xl font-semibold">
                                         Your Step-by-Step Guide to AI Success
                                     </h3>
                                     <ol className="text-muted-foreground space-y-3">
                                         <li className="flex items-start">
-                                            <span className="font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                            <span className="mr-3 font-semibold text-blue-600 dark:text-blue-400">
                                                 1.
                                             </span>
                                             <span>
@@ -470,7 +470,7 @@ export default function HomePage() {
                                             </span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                            <span className="mr-3 font-semibold text-blue-600 dark:text-blue-400">
                                                 2.
                                             </span>
                                             <span>
@@ -479,7 +479,7 @@ export default function HomePage() {
                                             </span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                            <span className="mr-3 font-semibold text-blue-600 dark:text-blue-400">
                                                 3.
                                             </span>
                                             <span>
@@ -489,7 +489,7 @@ export default function HomePage() {
                                             </span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                            <span className="mr-3 font-semibold text-blue-600 dark:text-blue-400">
                                                 4.
                                             </span>
                                             <span>
@@ -499,7 +499,7 @@ export default function HomePage() {
                                             </span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                            <span className="mr-3 font-semibold text-blue-600 dark:text-blue-400">
                                                 5.
                                             </span>
                                             <span>
@@ -510,32 +510,32 @@ export default function HomePage() {
                                         </li>
                                     </ol>
                                 </div>
-                                <div className="grid md:grid-cols-3 gap-6 mt-8">
+                                <div className="mt-8 grid gap-6 md:grid-cols-3">
                                     <div className="space-y-2">
-                                        <h4 className="font-semibold text-foreground">
+                                        <h4 className="text-foreground font-semibold">
                                             Free Access
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Start using advanced AI features immediately with our
                                             generous free tier and bring-your-own-key (BYOK)
                                             options.
                                         </p>
                                     </div>
                                     <div className="space-y-2">
-                                        <h4 className="font-semibold text-foreground">
+                                        <h4 className="text-foreground font-semibold">
                                             Premium Models
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Access the latest AI models including GPT-4, Claude 4,
                                             Gemini Pro, and other cutting-edge systems from leading
                                             providers.
                                         </p>
                                     </div>
                                     <div className="space-y-2">
-                                        <h4 className="font-semibold text-foreground">
+                                        <h4 className="text-foreground font-semibold">
                                             Local AI Support
                                         </h4>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-muted-foreground text-sm">
                                             Run AI models locally with Ollama and LM Studio for
                                             complete privacy and offline capabilities.
                                         </p>

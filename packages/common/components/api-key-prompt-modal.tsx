@@ -25,7 +25,6 @@ interface ApiKeyPromptModalProps {
 
 const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
     switch (chatMode) {
-        case ChatMode.GPT_5:
         case ChatMode.O3:
         case ChatMode.O3_Mini:
         case ChatMode.O4_Mini:

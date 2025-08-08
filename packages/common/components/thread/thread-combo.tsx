@@ -51,7 +51,7 @@ export function Thread() {
         return (
             <div
                 key={currentThreadItem.id}
-                className="min-h-[calc(100dvh-16rem)] message-container streaming-content pb-2"
+                className="message-container streaming-content min-h-[calc(100dvh-16rem)] pb-2"
                 style={{
                     contain: "layout style",
                     contentVisibility: "visible", // Always visible for current item
@@ -80,9 +80,9 @@ export function Thread() {
                 {memoizedCurrentThreadItem}
                 {showNewThreadLoadingIndicator && (
                     <div className="min-h-[calc(100dvh-16rem)]">
-                        <div className="flex w-full items-start gap-2 md:gap-3 pt-4">
+                        <div className="flex w-full items-start gap-2 pt-4 md:gap-3">
                             {/* Avatar with VT icon */}
-                            <div className="relative flex flex-shrink-0 items-center justify-center rounded-xl bg-muted border-muted-foreground/20 border shadow-sm h-8 w-8 md:h-10 md:w-10">
+                            <div className="bg-muted border-muted-foreground/20 relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border shadow-sm md:h-10 md:w-10">
                                 <img
                                     src="/icon-192x192.png"
                                     alt="VT"
@@ -91,7 +91,7 @@ export function Thread() {
                                     className="object-contain"
                                 />
                                 {/* Status indicator */}
-                                <div className="absolute -right-1 -top-1 rounded-full bg-muted-foreground/40 h-4 w-4">
+                                <div className="bg-muted-foreground/40 absolute -right-1 -top-1 h-4 w-4 rounded-full">
                                     <div className="bg-background/60 h-full w-full rounded-full" />
                                 </div>
                             </div>
@@ -100,11 +100,11 @@ export function Thread() {
                             <div className="flex-1 space-y-3">
                                 <div className="flex items-center gap-2">
                                     <div className="flex space-x-1">
-                                        <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                        <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                        <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce"></div>
+                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]"></div>
+                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]"></div>
+                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full"></div>
                                     </div>
-                                    <span className="text-sm text-muted-foreground">
+                                    <span className="text-muted-foreground text-sm">
                                         Thinking...
                                     </span>
                                 </div>

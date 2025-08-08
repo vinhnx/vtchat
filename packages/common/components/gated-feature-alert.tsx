@@ -223,7 +223,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                         <DialogTitle className="text-xl font-bold text-gray-900">
                             {title}
                         </DialogTitle>
-                        <DialogDescription className="leading-relaxed text-muted-foreground">
+                        <DialogDescription className="text-muted-foreground leading-relaxed">
                             {defaultMessage}
                         </DialogDescription>
 
@@ -243,7 +243,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                     </DialogHeader>
                     <DialogFooter className="gap-3 pt-4">
                         <Button
-                            className="border-gray-200 text-muted-foreground hover:bg-gray-50"
+                            className="text-muted-foreground border-gray-200 hover:bg-gray-50"
                             onClick={() => setShowUpgradeAlert(false)}
                             variant="outline"
                         >

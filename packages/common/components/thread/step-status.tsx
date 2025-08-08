@@ -13,7 +13,7 @@ export const StepStatus = ({ status }: { status: ItemStatus }) => {
                 >
                     {/* Enhanced shimmer effect for pending steps */}
                     <motion.span
-                        className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent dark:via-white/15 rounded-full"
+                        className="absolute inset-0 -translate-x-full rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent dark:via-white/15"
                         animate={{
                             x: ["-100%", "100%"],
                         }}

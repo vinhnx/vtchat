@@ -37,12 +37,12 @@ The issue was in the middleware's authentication flow (`apps/web/middleware.ts`)
 ```typescript
 // BEFORE: 1-second timeout (too aggressive)
 const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Auth timeout")), 1000),
+    setTimeout(() => reject(new Error('Auth timeout')), 1000)
 );
 
 // AFTER: 5-second timeout (more reasonable)
 const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Auth timeout")), 5000),
+    setTimeout(() => reject(new Error('Auth timeout')), 5000)
 );
 ```
 
@@ -70,24 +70,26 @@ Added better distinction between timeout errors and other authentication failure
 
 ```typescript
 // Distinguish between timeout and other errors for better debugging
-const isTimeout = error instanceof Error && error.message === "Auth timeout";
+const isTimeout = error instanceof Error && error.message === 'Auth timeout';
 
 if (isTimeout) {
-    log.warn({ pathname, timeout: "5s" }, "[Middleware] Auth check timed out");
+    log.warn({ pathname, timeout: '5s' }, '[Middleware] Auth check timed out');
 } else {
-    log.warn({ error, pathname }, "[Middleware] Auth check failed");
+    log.warn({ error, pathname }, '[Middleware] Auth check failed');
 }
 ```
 
 ## Impact
 
 ### Before Fix
+
 - ❌ Users redirected to login on page refresh
 - ❌ Lost context and thread state
 - ❌ Poor user experience
 - ❌ False authentication failures
 
 ### After Fix
+
 - ✅ Users remain on thread page after refresh
 - ✅ Context and thread state preserved
 - ✅ Improved user experience
@@ -96,16 +98,16 @@ if (isTimeout) {
 ## Testing
 
 1. **Manual Testing Required**:
-   - Navigate to a thread page (`/chat/[threadId]`)
-   - Wait 5+ minutes (to ensure cookie cache expires)
-   - Perform page refresh (F5)
-   - Verify user stays on thread page (no redirect to login)
+    - Navigate to a thread page (`/chat/[threadId]`)
+    - Wait 5+ minutes (to ensure cookie cache expires)
+    - Perform page refresh (F5)
+    - Verify user stays on thread page (no redirect to login)
 
 2. **Edge Cases to Test**:
-   - Page refresh immediately after login
-   - Page refresh after extended idle time
-   - Page refresh with slow network connection
-   - Page refresh with database latency
+    - Page refresh immediately after login
+    - Page refresh after extended idle time
+    - Page refresh with slow network connection
+    - Page refresh with database latency
 
 ## Files Modified
 

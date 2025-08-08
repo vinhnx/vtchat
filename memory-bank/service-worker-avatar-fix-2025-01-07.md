@@ -12,7 +12,7 @@ A ServiceWorker passed a promise to FetchEvent.respondWith() that resolved with 
 sw.js:374:11
 ```
 
-### **Root Cause Analysis** (Provided by Oracle)
+### **Root Cause Analysis**
 
 1. **Next.js Image Optimization**: Avatars are requested through `/_next/image?url=<ENCODED_EXTERNAL_URL>&w=32&q=75` (same origin)
 

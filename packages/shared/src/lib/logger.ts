@@ -2,8 +2,6 @@
 // This is a minimal implementation to ensure build compatibility
 /* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 
-type LogData = string | Record<string, unknown> | Error | unknown;
-
 type LogFunction = (...args: any[]) => void;
 
 interface Logger {

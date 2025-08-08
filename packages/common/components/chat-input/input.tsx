@@ -490,7 +490,7 @@ export const ChatInput = ({
                         threadItemsLength > 0 ? "mb-2 md:mb-4" : "", // Reduced mobile margin
                         // Dynamic alignment based on context
                         !currentThreadId && !threadItemsLength
-                            ? "items-center justify-center flex-1"
+                            ? "flex-1 items-center justify-center"
                             : "items-start justify-start",
                     )}
                     direction="col"

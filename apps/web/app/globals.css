@@ -1,4 +1,4 @@
-@import '@repo/tailwind-config/tailwind.css';
+@import "@repo/tailwind-config/tailwind.css";
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
@@ -294,17 +294,8 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        'SF Pro Display',
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif,
-        'Apple Color Emoji',
-        'Segoe UI Emoji',
-        'Segoe UI Symbol';
+        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 strong {
@@ -533,7 +524,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
@@ -654,7 +645,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -667,7 +658,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 1;
     bottom: 0;
@@ -885,7 +876,7 @@ h6:not([class]) {
 
 /* Ensure footer doesn't interfere with center content */
 .homepage-footer::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -20px;
     left: 0;
@@ -920,36 +911,36 @@ h6:not([class]) {
 }
 /* Badge Section Optimizations */
 .badges-section {
-  /* Optimize for badge loading */
-  contain: layout style;
+    /* Optimize for badge loading */
+    contain: layout style;
 }
 
 .badge-item {
-  /* Prevent layout shift during loading */
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    /* Prevent layout shift during loading */
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .badge-item img {
-  /* Optimize image rendering */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+    /* Optimize image rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 /* Loading animation for badges */
 @keyframes badge-shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
 }
 
 .badge-loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  animation: badge-shimmer 1.5s infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: badge-shimmer 1.5s infinite;
 }

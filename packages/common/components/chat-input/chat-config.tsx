@@ -33,7 +33,6 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "Claude 4 Sonnet": ChatMode.CLAUDE_4_SONNET,
         "Claude 4 Opus": ChatMode.CLAUDE_4_OPUS,
         // OpenAI models
-        "GPT-5": ChatMode.GPT_5,
         "GPT-4o": ChatMode.GPT_4o,
         "GPT-4o Mini": ChatMode.GPT_4o_Mini,
         "GPT-4.1": ChatMode.GPT_4_1,
@@ -78,7 +77,6 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
 export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
     const reasoningModels = [
         // OpenAI o-series models
-        ChatMode.GPT_5,
         ChatMode.O3,
         ChatMode.O1,
 
@@ -213,13 +211,6 @@ export const modelOptionsByProvider = {
         },
     ],
     OpenAI: [
-        {
-            label: "GPT-5",
-            value: ChatMode.GPT_5,
-            webSearch: true,
-            icon: <Brain className="text-purple-500" size={16} />,
-            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
-        },
         {
             label: "GPT 4o Mini",
             value: ChatMode.GPT_4o_Mini,

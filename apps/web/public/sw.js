@@ -7,7 +7,7 @@ const IMAGE_CACHE = `vtchat-images-v${CACHE_VERSION}`;
 // Static assets that rarely change
 const STATIC_ASSETS = [
     "/favicon.ico",
-    "/icon.svg",
+    "/logo.svg",
     "/icon-192x192.png",
     "/icon-256x256.png",
     "/icon-384x384.png",

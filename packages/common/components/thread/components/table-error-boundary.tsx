@@ -101,7 +101,7 @@ export class TableErrorBoundary extends Component<
                 return (
                     <div className="border-destructive bg-destructive/10 text-destructive my-4 rounded-md border p-4">
                         <div className="text-sm font-medium">Table Rendering Blocked</div>
-                        <div className="text-xs opacity-80 mt-1">
+                        <div className="mt-1 text-xs opacity-80">
                             Multiple rendering errors detected. Content has been converted to plain
                             text for safety.
                         </div>
@@ -122,7 +122,7 @@ export class TableErrorBoundary extends Component<
             return (
                 <div className="border-warning bg-warning/10 text-warning my-4 rounded-md border p-4">
                     <div className="text-sm font-medium">Table Rendering Error</div>
-                    <div className="text-xs opacity-80 mt-1">
+                    <div className="mt-1 text-xs opacity-80">
                         There was an issue rendering this table. Showing as code block instead.
                     </div>
                     <pre className="bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs">

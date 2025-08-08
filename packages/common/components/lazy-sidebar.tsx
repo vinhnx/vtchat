@@ -33,20 +33,20 @@ export function LazySidebar({ forceMobile = false }: LazySidebarProps) {
  */
 function SidebarSkeleton() {
     return (
-        <div className="flex h-full w-full flex-col gap-2 bg-background p-3">
+        <div className="bg-background flex h-full w-full flex-col gap-2 p-3">
             {/* Minimal header */}
-            <div className="flex items-center gap-2 h-8">
-                <div className="h-4 w-4 rounded bg-muted/50" />
-                <div className="h-3 w-12 rounded bg-muted/50" />
+            <div className="flex h-8 items-center gap-2">
+                <div className="bg-muted/50 h-4 w-4 rounded" />
+                <div className="bg-muted/50 h-3 w-12 rounded" />
             </div>
 
             {/* Compact search placeholder */}
-            <div className="h-8 w-full rounded bg-muted/30" />
+            <div className="bg-muted/30 h-8 w-full rounded" />
 
             {/* Minimal thread placeholders */}
-            <div className="flex flex-col gap-1 mt-2">
+            <div className="mt-2 flex flex-col gap-1">
                 {Array.from({ length: 3 }).map(() => (
-                    <div key={crypto.randomUUID()} className="h-6 w-full rounded bg-muted/40" />
+                    <div key={crypto.randomUUID()} className="bg-muted/40 h-6 w-full rounded" />
                 ))}
             </div>
         </div>

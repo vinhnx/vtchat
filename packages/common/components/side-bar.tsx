@@ -274,7 +274,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <motion.div
             className={cn(
-                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 flex-col transform-gpu will-change-transform",
+                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 transform-gpu flex-col will-change-transform",
                 "dark:bg-black/95",
                 forceMobile
                     ? "z-[302] w-[300px] max-w-[300px]"
@@ -526,7 +526,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     <Link className={isSidebarOpen ? "flex-1" : "w-full"} href="/">
                         <div
                             className={cn(
-                                "hover:bg-sidebar-accent/70 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200 transform-gpu will-change-transform",
+                                "hover:bg-sidebar-accent/70 flex w-full transform-gpu cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200 will-change-transform",
                                 !isSidebarOpen && "justify-center px-0",
                             )}
                             style={{ transform: "translate3d(0, 0, 0)" }}
@@ -562,7 +562,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     <Flex
                         className={cn(
                             "transition-all duration-200",
-                            isSidebarOpen ? "gap-2 px-4 w-full" : "items-center gap-2 px-2 w-full",
+                            isSidebarOpen ? "w-full gap-2 px-4" : "w-full items-center gap-2 px-2",
                         )}
                         direction="col"
                     >
@@ -571,8 +571,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             className={cn(
                                 "transition-all duration-200",
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between w-full"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
                             )}
                             onClick={async () => {
                                 // Show toast notification
@@ -597,7 +597,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         >
                             {isSidebarOpen ? (
                                 <div className="flex items-center">
-                                    <div className="flex items-center justify-center rounded-md bg-muted/50 p-1.5 mr-2 transition-colors duration-200">
+                                    <div className="bg-muted/50 mr-2 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200">
                                         <Plus
                                             className="flex-shrink-0"
                                             size={12}
@@ -607,7 +607,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                     New Chat
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center rounded-md bg-muted/50 p-1.5 transition-colors duration-200">
+                                <div className="bg-muted/50 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200">
                                     <Plus className="flex-shrink-0" size={12} strokeWidth={2.5} />
                                 </div>
                             )}
@@ -647,8 +647,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             className={cn(
                                 "transition-all duration-200",
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-between w-full"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
+                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
                             )}
                             onClick={() => {
                                 if (!isSignedIn) {
@@ -694,8 +694,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 className={cn(
                                     "relative transition-all duration-200",
                                     isSidebarOpen
-                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-start w-full"
-                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground justify-center w-10 h-10",
+                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
                                 )}
                                 onClick={() => {
                                     push("/admin");
@@ -944,7 +944,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {/* Show a simplified view in collapsed mode */}
                     {!isSidebarOpen && threads.length > 0 && (
                         <Button
-                            className="flex flex-col items-center gap-1 py-2 h-auto min-h-[44px] w-full hover:bg-sidebar-accent/50 transition-colors"
+                            className="hover:bg-sidebar-accent/50 flex h-auto min-h-[44px] w-full flex-col items-center gap-1 py-2 transition-colors"
                             onClick={() => setIsSidebarOpen(true)}
                             size="icon-sm"
                             tooltip="Open thread list"

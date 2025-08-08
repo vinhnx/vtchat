@@ -27,8 +27,8 @@ export function AiToolsBadge({ className }: AiToolsBadgeProps) {
         >
             <div className="relative">
                 {isLoading && (
-                    <div 
-                        className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"
+                    <div
+                        className="absolute inset-0 animate-pulse rounded bg-gray-200 dark:bg-gray-700"
                         style={{ width: "175px", height: "54px" }}
                     />
                 )}
@@ -37,10 +37,10 @@ export function AiToolsBadge({ className }: AiToolsBadgeProps) {
                     alt="VT | AI Tools"
                     width={175}
                     height={54}
-                    style={{ 
-                        width: "175px", 
+                    style={{
+                        width: "175px",
                         height: "54px",
-                        objectFit: "contain"
+                        objectFit: "contain",
                     }}
                     onError={() => setHasError(true)}
                     onLoad={() => setIsLoading(false)}

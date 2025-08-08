@@ -41,8 +41,7 @@ description: 'Example description'
 
 - Make sure you DO NOT CREATE ANY debug and test FILES IN ./ ROOT DIRECTORY. Only use files in /temps or apps/web/app/tests/ or /scripts.
 - Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
-- **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
-- **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
+- Plan first, then implement. For substantial changes, request maintainer feedback on the plan before coding.
 - **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` unless you have my approval
 - Run `bun run lint` (oxlint) for comprehensive error checking
@@ -160,7 +159,7 @@ description: 'Example description'
 **Continue Session**: 'continue_session [session_file' (alias continue)
 continue')
 
-- Resumes a previous Amp session with oracle-enhanced analysis
+- Resumes a previous Amp session with enhanced analysis
 - If no file provided, lists 5 most recent sessions from ./local_ai_docs/sessions/\*
 - Usage: Ask Amp to "run continue_session" or "use continue_session with [filename]"
 
@@ -168,8 +167,8 @@ continue')
 
 - Saves current session with comprehensive analysis
 - Options:
-- '--deepthink': Enhanced analysis using oracle tool for deeper insights
-- '--fast': Quick save without oracle analysis for faster execution
+- '--deepthink': Enhanced analysis for deeper insights
+- '--fast': Quick save without enhanced analysis
 - Creates files in •
   •/local_ai_docs/sessions/ with format: "[datel-[title]-amp.md"
 - Usage: Ask Amp to "run save_session" or "save_session --deepthink"
@@ -178,7 +177,7 @@ continue')
 
 - Comprehensive feature planning with 7-step process
 - Options:
-- '--deepthink: Oracle-enhanced planning and peer review
+- '--deepthink: Enhanced planning and peer review
 - Creates detailed implementation specifications
 - Usage: Ask Amp to "run plan_loop with spec.md --deepthink"
 
@@ -186,8 +185,8 @@ continue')
 
 - Iterative implementation with testing and validation
 - Options:
-- '--deepthink': Oracle analysis for complex decisions
-- '--fast': Skip oracle analysis for rapid cycles
+- '--deepthink': Enhanced analysis for complex decisions
+- '--fast': Skip enhanced analysis for rapid cycles
 - Includes quality gates and automatic testing
 - Usage: Ask Amp to "run implementation_loop with spec.md --deepthink"
 

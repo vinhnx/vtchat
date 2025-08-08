@@ -4,7 +4,7 @@
 :root {
     /* Typography */
     --markdown-font-family:
-        'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --markdown-font-size: 17px;
     --markdown-line-height: 1.75;
     --markdown-font-weight-normal: 400;
@@ -207,7 +207,7 @@
 }
 
 /* Code styling with improved readability */
-.prose code:not([class*='language-']) {
+.prose code:not([class*="language-"]) {
     color: var(--markdown-text-color);
     background-color: var(--markdown-code-bg);
     border: 1px solid var(--markdown-code-border);
@@ -215,8 +215,8 @@
     border-radius: 0.25rem;
     font-size: 0.875rem;
     font-family:
-        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
-        'Courier New', monospace;
+        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
     white-space: nowrap;
 }
 
@@ -239,8 +239,8 @@
     padding: 0;
     font-size: 0.875rem;
     font-family:
-        'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono',
-        'Courier New', monospace;
+        "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
     white-space: pre;
 }
 
@@ -426,12 +426,12 @@ html.dark .prose th {
 }
 
 /* Improved code block syntax highlighting */
-.prose pre[class*='language-'] {
+.prose pre[class*="language-"] {
     position: relative;
     padding-top: 1.5rem;
 }
 
-.prose pre[class*='language-']::before {
+.prose pre[class*="language-"]::before {
     content: attr(data-language);
     position: absolute;
     top: 0.25rem;

@@ -58,12 +58,12 @@ export default function FAQPage() {
             <main className="bg-background w-full px-4 py-12">
                 <div className="mx-auto max-w-4xl">
                     {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
-                    <h1 className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden text-[0px] leading-[0]">
+                    <h1 className="sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0">
                         FAQ - Artificial Intelligence Platform Questions | VT
                     </h1>
 
                     <div className="mb-12 text-center">
-                        <h2 className="mb-4 text-3xl font-semibold md:text-4xl text-foreground">
+                        <h2 className="text-foreground mb-4 text-3xl font-semibold md:text-4xl">
                             Frequently Asked Questions
                         </h2>
                         <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
@@ -75,13 +75,13 @@ export default function FAQPage() {
 
                     <div className="space-y-8">
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-semibold text-foreground">
+                            <h2 className="text-foreground text-2xl font-semibold">
                                 Artificial Intelligence & AI Systems
                             </h2>
 
                             <div className="space-y-4">
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         What artificial intelligence technologies does VT use?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -94,8 +94,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         How does generative AI work in VT?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -109,8 +109,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         What is natural language processing (NLP) and how does VT
                                         use it?
                                     </h3>
@@ -128,13 +128,13 @@ export default function FAQPage() {
                         </div>
 
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-semibold text-foreground">
+                            <h2 className="text-foreground text-2xl font-semibold">
                                 Deep Learning & Machine Learning
                             </h2>
 
                             <div className="space-y-4">
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         How does deep learning enhance VT's AI capabilities?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -147,8 +147,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         What machine learning models does VT support?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -161,8 +161,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         Does VT support computer vision and real-time processing?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -178,13 +178,13 @@ export default function FAQPage() {
                         </div>
 
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-semibold text-foreground">
+                            <h2 className="text-foreground text-2xl font-semibold">
                                 Large Language Models (LLMs) & AI Features
                             </h2>
 
                             <div className="space-y-4">
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         What large language models (LLMs) are available?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -197,8 +197,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         How does VT approach artificial general intelligence (AGI)?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -212,8 +212,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         Is VT's AI platform suitable for professional use?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -230,13 +230,13 @@ export default function FAQPage() {
                         </div>
 
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-semibold text-foreground">
+                            <h2 className="text-foreground text-2xl font-semibold">
                                 Privacy & Security
                             </h2>
 
                             <div className="space-y-4">
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         How does VT ensure AI privacy and data security?
                                     </h3>
                                     <p className="text-muted-foreground">
@@ -250,8 +250,8 @@ export default function FAQPage() {
                                     </p>
                                 </div>
 
-                                <div className="rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-semibold mb-2">
+                                <div className="bg-card rounded-lg p-6">
+                                    <h3 className="mb-2 text-lg font-semibold">
                                         Can I use VT's AI systems offline or locally?
                                     </h3>
                                     <p className="text-muted-foreground">

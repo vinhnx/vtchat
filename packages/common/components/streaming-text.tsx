@@ -110,7 +110,7 @@ export const StreamingText = memo(
                 {displayedText}
                 {!isComplete && (
                     <motion.span
-                        className="inline-block w-0.5 h-5 bg-current ml-0.5"
+                        className="ml-0.5 inline-block h-5 w-0.5 bg-current"
                         animate={{ opacity: [1, 0] }}
                         transition={{
                             duration: 0.6,

@@ -12,7 +12,7 @@ export type LinkFaviconType = {
 
 const FallbackIcon = ({ size, className }: { size: "sm" | "md" | "lg"; className?: string }) => (
     <Globe
-        className={cn("shrink-0 text-muted-foreground", className)}
+        className={cn("text-muted-foreground shrink-0", className)}
         size={size === "sm" ? 12 : size === "md" ? 16 : 20}
         strokeWidth={2}
     />

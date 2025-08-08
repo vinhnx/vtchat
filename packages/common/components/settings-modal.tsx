@@ -126,7 +126,7 @@ export const SettingsModal = () => {
 
     return (
         <Dialog onOpenChange={() => setIsSettingsOpen(false)} open={isSettingsOpen}>
-            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg p-0 md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] lg:max-w-[1200px] md:rounded-xl border-0 shadow-2xl">
+            <DialogContent className="mx-1 h-full max-h-[95vh] min-h-[500px] w-[calc(100vw-0.5rem)] !max-w-[1200px] overflow-x-hidden rounded-lg border-0 p-0 shadow-2xl md:mx-auto md:max-h-[85vh] md:min-h-[700px] md:w-[95vw] md:rounded-xl lg:max-w-[1200px]">
                 <DialogTitle className="sr-only">Settings</DialogTitle>
                 <DialogDescription className="sr-only">
                     Customize your VT experience and manage your account settings
@@ -147,7 +147,7 @@ export const SettingsModal = () => {
                                 </p>
                             </div>
                             <Button
-                                className="md:hidden hover:bg-muted/50 transition-colors"
+                                className="hover:bg-muted/50 transition-colors md:hidden"
                                 onClick={() => setIsSettingsOpen(false)}
                                 size="icon-sm"
                                 variant="ghost"
@@ -169,8 +169,8 @@ export const SettingsModal = () => {
                                         className={cn(
                                             "group flex min-w-0 shrink-0 items-center justify-center rounded-xl px-4 py-3 text-center transition-all duration-200 xl:min-w-0 xl:shrink xl:items-start xl:justify-start xl:p-4 xl:text-left",
                                             settingTab === setting.key
-                                                ? "bg-background text-foreground shadow-md ring-1 ring-border/20 scale-[1.02]"
-                                                : "text-muted-foreground hover:bg-background/60 hover:text-foreground hover:shadow-sm hover:scale-[1.01]",
+                                                ? "bg-background text-foreground ring-border/20 scale-[1.02] shadow-md ring-1"
+                                                : "text-muted-foreground hover:bg-background/60 hover:text-foreground hover:scale-[1.01] hover:shadow-sm",
                                         )}
                                         key={setting.key}
                                         onClick={() => setSettingTab(setting.key)}
@@ -199,7 +199,7 @@ export const SettingsModal = () => {
                             }}
                         >
                             <div className="w-full min-w-0 max-w-none md:min-w-[500px] lg:min-w-[600px] xl:min-w-[500px] 2xl:min-w-[600px]">
-                                <div className="bg-background rounded-2xl p-6 shadow-sm ring-1 ring-border/10">
+                                <div className="bg-background ring-border/10 rounded-2xl p-6 shadow-sm ring-1">
                                     {
                                         settingMenu.find((setting) => setting.key === settingTab)
                                             ?.component
@@ -462,7 +462,7 @@ export const ApiKeySettings = () => {
                                 ) : (
                                     <div className="flex w-full items-center gap-3">
                                         <button
-                                            className="border-border bg-background hover:bg-muted min-w-0 flex-1 rounded-lg border px-3 py-2 font-sans text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            className="border-border bg-background hover:bg-muted focus-visible:ring-ring min-w-0 flex-1 rounded-lg border px-3 py-2 text-left font-sans text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                                             onClick={() => handleEdit(apiKey.key)}
                                         >
                                             {apiKey.value ? (

@@ -675,7 +675,7 @@ export const UserProfileSettings = () => {
                                     {/* Loading overlay */}
                                     {(isLinking === "github" || isUnlinking === "github") && (
                                         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-900/80">
-                                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                            <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
                                         </div>
                                     )}
                                 </div>

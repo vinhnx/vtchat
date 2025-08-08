@@ -10,7 +10,6 @@ export const ModelEnum = {
     GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
     GEMINI_2_5_FLASH: "gemini-2.5-flash",
     GEMINI_2_5_PRO: "gemini-2.5-pro",
-    GPT_5: "gpt-5-2025-08-07",
     GPT_4o_Mini: "gpt-4o-mini",
     GPT_4o: "gpt-4o",
     GPT_4_1_Mini: "gpt-4.1-mini",
@@ -51,13 +50,6 @@ export type Model = {
 };
 
 export const models: Model[] = [
-    {
-        id: ModelEnum.GPT_5,
-        name: "GPT-5",
-        provider: "openai",
-        maxTokens: 32_768,
-        contextWindow: 200_000,
-    },
     {
         id: ModelEnum.GPT_4o,
         name: "GPT-4o",
@@ -298,8 +290,6 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.CLAUDE_4_SONNET;
         case ChatMode.CLAUDE_4_OPUS:
             return ModelEnum.CLAUDE_4_OPUS;
-        case ChatMode.GPT_5:
-            return ModelEnum.GPT_5;
         case ChatMode.GPT_4o_Mini:
             return ModelEnum.GPT_4o_Mini;
         case ChatMode.GPT_4o:
@@ -359,7 +349,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.CLAUDE_4_1_OPUS:
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
-        case ChatMode.GPT_5:
             return 200_000;
         case ChatMode.O3:
         case ChatMode.O3_Mini:
@@ -444,7 +433,6 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
 
 export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     const openaiWebSearchModels = [
-        ModelEnum.GPT_5,
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4o,
         ModelEnum.O3,
@@ -535,7 +523,6 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // OpenAI reasoning models
     const openaiReasoningModels = [
-        ModelEnum.GPT_5,
         ModelEnum.O3,
         ModelEnum.O3_Mini,
         ModelEnum.O4_Mini,
@@ -558,7 +545,6 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 export const supportsTools = (model: ModelEnum): boolean => {
     // OpenAI models that support tools
     const openaiToolModels = [
-        ModelEnum.GPT_5,
         ModelEnum.GPT_4o,
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4_1,

@@ -21,18 +21,18 @@ export function AboutPageClient() {
                     <TypographyH1 className="text-4xl font-bold">
                         VT - Advanced AI Platform
                     </TypographyH1>
-                    <p className="break-words px-4 text-base text-muted-foreground sm:text-lg">
+                    <p className="text-muted-foreground break-words px-4 text-base sm:text-lg">
                         Welcome to VT - Your privacy-focused artificial intelligence chat platform
                         powered by generative AI, deep learning, and natural language processing
                         (NLP). Experience advanced AI systems with large language models (LLMs) and
                         machine learning capabilities.
                     </p>
 
-                    <div className="text-left space-y-4 px-4">
-                        <h2 className="text-xl font-semibold text-foreground">
+                    <div className="space-y-4 px-4 text-left">
+                        <h2 className="text-foreground text-xl font-semibold">
                             Advanced AI Technologies
                         </h2>
-                        <ul className="text-sm text-muted-foreground space-y-2">
+                        <ul className="text-muted-foreground space-y-2 text-sm">
                             <li>
                                 • <strong>Generative AI:</strong> Create content and solve complex
                                 problems with artificial intelligence
@@ -63,10 +63,10 @@ export function AboutPageClient() {
                             </li>
                         </ul>
 
-                        <h3 className="text-lg font-semibold text-foreground pt-4">
+                        <h3 className="text-foreground pt-4 text-lg font-semibold">
                             Privacy-First AI Systems
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                             Our artificial intelligence platform prioritizes your privacy while
                             delivering human-level intelligence. All AI processing happens with
                             complete data protection, ensuring your conversations remain private

@@ -116,7 +116,7 @@ export const ThreadLoadingIndicator = memo(
                         {/* Avatar with VT icon */}
                         <div
                             className={cn(
-                                "relative flex flex-shrink-0 items-center justify-center rounded-xl overflow-hidden",
+                                "relative flex flex-shrink-0 items-center justify-center overflow-hidden rounded-xl",
                                 "bg-muted border-muted-foreground/20 border",
                                 "shadow-sm",
                                 sizeClasses[size],
@@ -155,7 +155,7 @@ export const ThreadLoadingIndicator = memo(
                         {/* Loading Content */}
                         <div
                             className={cn(
-                                "relative flex-1 rounded-2xl border shadow-sm overflow-hidden",
+                                "relative flex-1 overflow-hidden rounded-2xl border shadow-sm",
                                 config.bgColor,
                                 config.borderColor,
                                 size === "sm"

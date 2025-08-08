@@ -110,7 +110,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                     >
                         <div className={containerClass}>
                             <div className="relative flex h-full w-full flex-row">
-                                <div className="flex flex-1 min-w-0 flex-col gap-2 overflow-y-auto">
+                                <div className="flex min-w-0 flex-1 flex-col gap-2 overflow-y-auto">
                                     {children}
                                 </div>
                             </div>
@@ -146,7 +146,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         <div className={containerClass}>
                             <div className="relative flex h-full w-full flex-row">
                                 {/* Main content area - takes remaining space */}
-                                <div className="flex flex-1 min-w-0 flex-col gap-2 overflow-y-auto">
+                                <div className="flex min-w-0 flex-1 flex-col gap-2 overflow-y-auto">
                                     {shouldShowDropShadow && (
                                         <div className="from-secondary via-secondary/70 to-secondary/0 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block" />
                                     )}
@@ -170,7 +170,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         {isMobileSidebarOpen && (
                             <motion.div
                                 key="mobile-sidebar-overlay"
-                                className="fixed inset-0 md:hidden transform-gpu will-change-opacity"
+                                className="will-change-opacity fixed inset-0 transform-gpu md:hidden"
                                 data-framer-motion
                                 style={{
                                     position: "fixed",
@@ -189,7 +189,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                             >
                                 {/* Backdrop */}
                                 <motion.div
-                                    className="absolute inset-0 bg-black/60 transform-gpu will-change-opacity"
+                                    className="will-change-opacity absolute inset-0 transform-gpu bg-black/60"
                                     style={{
                                         transform: "translate3d(0, 0, 0)",
                                         backfaceVisibility: "hidden",
@@ -231,7 +231,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 {/* Sidebar Content */}
                                 <motion.div
                                     key="mobile-sidebar-content"
-                                    className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] border-r shadow-2xl transform-gpu will-change-transform ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
+                                    className={`bg-tertiary border-border absolute bottom-0 top-0 w-[300px] max-w-[300px] transform-gpu border-r shadow-2xl will-change-transform ${sidebarPlacement === "left" ? "left-0" : "right-0"}`}
                                     data-framer-motion
                                     style={{
                                         transform: "translate3d(0, 0, 0)",
@@ -258,7 +258,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                     aria-label="Navigation menu"
                                 >
                                     <div
-                                        className="h-full overflow-hidden transform-gpu"
+                                        className="h-full transform-gpu overflow-hidden"
                                         style={{ transform: "translate3d(0, 0, 0)" }}
                                         data-sidebar-content
                                         data-mobile-sidebar
@@ -288,7 +288,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         "fixed left-4 flex flex-col gap-4 md:hidden",
                         // Adjust positioning based on page type and navigation presence
                         pathname.startsWith("/chat/")
-                            ? "gap-3 top-36"
+                            ? "top-36 gap-3"
                             : pathname.startsWith("/settings") ||
                                 pathname.startsWith("/about") ||
                                 pathname.startsWith("/help") ||
@@ -296,8 +296,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 pathname.startsWith("/terms") ||
                                 pathname.startsWith("/profile") ||
                                 pathname.startsWith("/admin")
-                              ? "gap-4 top-20" // Pages with navigation headers (80px to clear header + padding)
-                              : "gap-6 top-0 pt-safe", // Home and other pages
+                              ? "top-20 gap-4" // Pages with navigation headers (80px to clear header + padding)
+                              : "pt-safe top-0 gap-6", // Home and other pages
                         isMobileSidebarOpen ? "z-[9999]" : "z-[9998]",
                     )}
                     style={{
@@ -328,7 +328,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         className={cn(
-                                            "bg-primary rounded-full p-0 shadow-lg transition-shadow hover:shadow-xl border-0",
+                                            "bg-primary rounded-full border-0 p-0 shadow-lg transition-shadow hover:shadow-xl",
                                             // Smaller size on thread pages
                                             pathname.startsWith("/chat/")
                                                 ? "h-10 w-10"
@@ -535,7 +535,7 @@ export const SideDrawer = () => {
             {sideDrawer.open && isThreadPage && isClient && (
                 <motion.div
                     key="side-drawer"
-                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 md:w-[500px] transform-gpu will-change-transform"
+                    className="flex min-h-[99dvh] w-full max-w-[500px] shrink-0 transform-gpu flex-col overflow-hidden py-1.5 pl-0.5 pr-1.5 will-change-transform md:w-[500px]"
                     style={{
                         transform: "translate3d(0, 0, 0)",
                         backfaceVisibility: "hidden",

@@ -88,9 +88,9 @@ export const PremiumAIResponse = memo(
                         initial={{ opacity: 0, x: -10 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <div className="flex items-center gap-2 rounded-full border border-200 bg-gradient-to-r from-100 to-blue-100 px-3 py-1 dark:border-700 dark:from-900/30 dark:to-blue-900/30">
+                        <div className="border-200 from-100 dark:border-700 dark:from-900/30 flex items-center gap-2 rounded-full border bg-gradient-to-r to-blue-100 px-3 py-1 dark:to-blue-900/30">
                             <Sparkles className="text-600 dark:text-400" size={14} />
-                            <span className="text-sm font-medium text-700 dark:text-300">
+                            <span className="text-700 dark:text-300 text-sm font-medium">
                                 VT Assistant
                             </span>
                             {isGenerating && (

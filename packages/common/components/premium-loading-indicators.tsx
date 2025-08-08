@@ -434,7 +434,7 @@ export const PremiumProgressIndicator = memo(
                                 : { scaleX: progress / 100 }
                         }
                         className={cn(
-                            "h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-600 origin-left",
+                            "h-full origin-left rounded-full bg-gradient-to-r from-blue-500 to-purple-600",
                             HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
                         )}
                         initial={{ scaleX: 0 }}

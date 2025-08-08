@@ -25,12 +25,14 @@ The issue was in the thread loading logic in `/apps/web/app/chat/[threadId]/page
 ### Technical Details
 
 **Original Retry Logic**:
+
 - 5 retries maximum
 - 100ms fixed delay between retries
 - Total timeout: 500ms
 - No coordination with store initialization
 
 **Store Initialization Issues**:
+
 - No way for components to know when store was ready
 - SessionStorage coordination flag cleared on server restart
 - IndexedDB connections needed time to re-establish
@@ -68,7 +70,7 @@ type State = {
 
 // Added to store initialization
 useChatStore.setState({ isStoreInitialized: true });
-log.info("Chat store initialization completed");
+log.info('Chat store initialization completed');
 ```
 
 ### 3. Enhanced Error Logging and Context
@@ -77,17 +79,20 @@ log.info("Chat store initialization completed");
 
 ```typescript
 // BEFORE: Basic logging
-log.info({ threadId, retryCount }, "Thread not found, retrying...");
+log.info({ threadId, retryCount }, 'Thread not found, retrying...');
 
 // AFTER: Comprehensive context logging
-log.info({
-    threadId,
-    retryCount,
-    delay,
-    maxRetries,
-    isStoreInitialized,
-    threadsCount: threads.length,
-}, "Thread not found, retrying with exponential backoff...");
+log.info(
+    {
+        threadId,
+        retryCount,
+        delay,
+        maxRetries,
+        isStoreInitialized,
+        threadsCount: threads.length,
+    },
+    'Thread not found, retrying with exponential backoff...'
+);
 ```
 
 ### 4. Fixed TypeScript Return Types
@@ -105,12 +110,14 @@ loadThreadItems: (threadId: string) => Promise<ThreadItem[]>;
 ## Impact
 
 ### Before Fix
+
 - ❌ Users redirected to homepage after server restart + page refresh
 - ❌ Lost thread context and conversation state
 - ❌ Poor user experience requiring manual navigation
 - ❌ False negatives due to insufficient retry timeout
 
 ### After Fix
+
 - ✅ Users remain on thread page after server restart + page refresh
 - ✅ Thread context and conversation state preserved
 - ✅ Improved user experience with seamless recovery
@@ -120,23 +127,25 @@ loadThreadItems: (threadId: string) => Promise<ThreadItem[]>;
 ## Testing
 
 ### Automated Tests
+
 - ✅ Created comprehensive test suite (`apps/web/app/tests/thread-server-restart-fix.test.js`)
 - ✅ All tests pass
 - ✅ Verifies retry logic, exponential backoff, and type fixes
 
 ### Manual Testing Required
+
 1. **Server Restart Scenario**:
-   - Start development server (`bun dev`)
-   - Login and navigate to thread page (`/chat/[threadId]`)
-   - Stop server (Ctrl+C) and restart (`bun dev`)
-   - Refresh thread page
-   - **Verify**: User stays on thread page (no redirect to homepage)
+    - Start development server (`bun dev`)
+    - Login and navigate to thread page (`/chat/[threadId]`)
+    - Stop server (Ctrl+C) and restart (`bun dev`)
+    - Refresh thread page
+    - **Verify**: User stays on thread page (no redirect to homepage)
 
 2. **Edge Cases**:
-   - Test with slow IndexedDB initialization
-   - Test with network latency
-   - Test with multiple threads loaded
-   - Test with empty thread state
+    - Test with slow IndexedDB initialization
+    - Test with network latency
+    - Test with multiple threads loaded
+    - Test with empty thread state
 
 ## Files Modified
 

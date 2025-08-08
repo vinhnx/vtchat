@@ -35,25 +35,27 @@ A properly configured system should return:
 
 ```json
 {
-  "status": "ok",
-  "webSearchConfig": {
-    "hasGeminiApiKey": true,
-    "environment": "production",
-    "isProduction": true,
-    "isFlyApp": true
-  },
-  "recommendations": []
+    "status": "ok",
+    "webSearchConfig": {
+        "hasGeminiApiKey": true,
+        "environment": "production",
+        "isProduction": true,
+        "isFlyApp": true
+    },
+    "recommendations": []
 }
 ```
 
 ## How Web Search Works
 
 ### Production Environment
+
 - **Requires**: System `GEMINI_API_KEY` environment variable
 - **Fallback**: None - web search will fail without system key
 - **User Experience**: VT+ users get server-funded web search
 
-### Development Environment  
+### Development Environment
+
 - **Requires**: User BYOK keys OR system `GEMINI_API_KEY`
 - **Fallback**: User can provide their own Gemini API key
 - **User Experience**: Flexible - works with user keys or system key

@@ -123,16 +123,16 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
 
     if (showRecoveryDialog) {
         return (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-                    <h2 className="text-lg font-semibold mb-4">Session Recovery</h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+                    <h2 className="mb-4 text-lg font-semibold">Session Recovery</h2>
                     <p className="text-muted-foreground mb-6">
                         Your session has expired or encountered an error. Would you like to try
                         recovering your session or sign in again?
                     </p>
 
                     {error && (
-                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-3 mb-4">
+                        <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
                             <p className="text-sm text-red-600 dark:text-red-400">Error: {error}</p>
                         </div>
                     )}
@@ -164,7 +164,7 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
 
         return (
             <div className="relative">
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800 px-4 py-2">
+                <div className="border-b border-yellow-200 bg-yellow-50 px-4 py-2 dark:border-yellow-800 dark:bg-yellow-900/20">
                     <div className="flex items-center justify-between">
                         <p className="text-sm text-yellow-800 dark:text-yellow-200">
                             Your session will expire in {minutesUntilExpiry} minutes.

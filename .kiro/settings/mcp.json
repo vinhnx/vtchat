@@ -1,92 +1,67 @@
 {
-  "mcpServers": {
-    "tavily": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "tavily-mcp@latest"
-      ],
-      "env": {
-        "TAVILY_API_KEY": "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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC"
-      },
-      "disabled": false,
-      "autoApprove": [
-        "tavily-search"
-      ]
-    },
-    "fetch": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "env": {},
-      "disabled": false,
-      "autoApprove": [
-        "fetch"
-      ]
-    },
-    "context7": {
-      "command": "bunx",
-      "args": [
-        "@upstash/context7-mcp"
-      ],
-      "disabled": false,
-      "autoApprove": [
-        "resolve-library-id",
-        "get-library-docs"
-      ]
-    },
-    "neon_production": {
-      "command": "bunx",
-      "args": [
-        "@neondatabase/mcp-server-neon",
-        "start",
-        "napi_dmpvy7933795mznidrkmgiadliagv3jin440tz3p3v7h4qss0zaq1v7e3ib9lkjb"
-      ],
-      "disabled": false,
-      "autoApprove": [
-        "describe_project",
-        "get_database_tables",
-        "describe_table_schema",
-        "run_sql",
-        "prepare_database_migration",
-        "complete_database_migration"
-      ]
-    },
-    "flymcp": {
-      "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
-      "args": [],
-      "env": {},
-      "disabled": false,
-      "autoApprove": [
-        "fly-logs",
-        "fly-status"
-      ]
-    },
-    "time": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-time"
-      ],
-      "disabled": false,
-      "autoApprove": [
-        "get_current_time"
-      ]
-    },
-    "neon_dev": {
-      "command": "bunx",
-      "args": [
-        "@neondatabase/mcp-server-neon",
-        "start",
-        "napi_81ej0iuhglfmiqtbrsxlay1eya0ku65wqo62ex838i408vgyzq0xta91n5mog4pi"
-      ],
-      "env": {},
-      "disabled": false,
-      "autoApprove": [
-        "get_database_tables",
-        "run_sql",
-        "describe_table_schema"
-      ]
+    "mcpServers": {
+        "tavily": {
+            "command": "npx",
+            "args": ["-y", "tavily-mcp@latest"],
+            "env": {
+                "TAVILY_API_KEY": "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-dev-fOAoeKHfGynKKipVCPBAfJ1yPSeqaeyC"
+            },
+            "disabled": false,
+            "autoApprove": ["tavily-search"]
+        },
+        "fetch": {
+            "command": "uvx",
+            "args": ["mcp-server-fetch"],
+            "env": {},
+            "disabled": false,
+            "autoApprove": ["fetch"]
+        },
+        "context7": {
+            "command": "bunx",
+            "args": ["@upstash/context7-mcp"],
+            "disabled": false,
+            "autoApprove": ["resolve-library-id", "get-library-docs"]
+        },
+        "neon_production": {
+            "command": "bunx",
+            "args": [
+                "@neondatabase/mcp-server-neon",
+                "start",
+                "napi_dmpvy7933795mznidrkmgiadliagv3jin440tz3p3v7h4qss0zaq1v7e3ib9lkjb"
+            ],
+            "disabled": false,
+            "autoApprove": [
+                "describe_project",
+                "get_database_tables",
+                "describe_table_schema",
+                "run_sql",
+                "prepare_database_migration",
+                "complete_database_migration"
+            ]
+        },
+        "flymcp": {
+            "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
+            "args": [],
+            "env": {},
+            "disabled": false,
+            "autoApprove": ["fly-logs", "fly-status"]
+        },
+        "time": {
+            "command": "uvx",
+            "args": ["mcp-server-time"],
+            "disabled": false,
+            "autoApprove": ["get_current_time"]
+        },
+        "neon_dev": {
+            "command": "bunx",
+            "args": [
+                "@neondatabase/mcp-server-neon",
+                "start",
+                "napi_81ej0iuhglfmiqtbrsxlay1eya0ku65wqo62ex838i408vgyzq0xta91n5mog4pi"
+            ],
+            "env": {},
+            "disabled": false,
+            "autoApprove": ["get_database_tables", "run_sql", "describe_table_schema"]
+        }
     }
-  }
 }

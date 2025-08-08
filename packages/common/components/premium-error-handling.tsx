@@ -118,7 +118,7 @@ export const PremiumErrorBoundary = memo(
                                 <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {errorConfig.title}
                                 </h4>
-                                <p className="mt-1 text-xs text-muted-foreground">
+                                <p className="text-muted-foreground mt-1 text-xs">
                                     {errorConfig.description}
                                 </p>
                             </div>
@@ -164,9 +164,7 @@ export const PremiumErrorBoundary = memo(
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {errorConfig.title}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                            {errorConfig.description}
-                        </p>
+                        <p className="text-muted-foreground text-xs">{errorConfig.description}</p>
                     </div>
                     {onRetry && (
                         <Button
@@ -205,14 +203,14 @@ export const PremiumErrorBoundary = memo(
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                     {errorConfig.title}
                                 </h3>
-                                <p className="mt-1 text-muted-foreground">
+                                <p className="text-muted-foreground mt-1">
                                     {errorConfig.description}
                                 </p>
 
                                 {/* Error details (expandable) */}
                                 <div className="mt-4">
                                     <button
-                                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                                         onClick={() => setIsExpanded(!isExpanded)}
                                     >
                                         {isExpanded ? "Hide" : "Show"} technical details
@@ -226,7 +224,7 @@ export const PremiumErrorBoundary = memo(
                                                 exit={{ opacity: 0, height: 0 }}
                                                 initial={{ opacity: 0, height: 0 }}
                                             >
-                                                <code className="break-all text-xs text-muted-foreground">
+                                                <code className="text-muted-foreground break-all text-xs">
                                                     {errorMessage}
                                                 </code>
                                             </motion.div>
@@ -258,7 +256,7 @@ export const PremiumErrorBoundary = memo(
                                     )}
 
                                     <Button
-                                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                                        className="text-muted-foreground hover:text-foreground flex items-center gap-2"
                                         onClick={() => window.open("/help", "_blank")}
                                         variant="ghost"
                                     >
@@ -423,13 +421,11 @@ export const NotificationToast = memo(
                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                         {title}
                                     </h4>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        {message}
-                                    </p>
+                                    <p className="text-muted-foreground mt-1 text-xs">{message}</p>
                                 </div>
 
                                 <Button
-                                    className="flex-shrink-0 text-muted-foreground hover:text-foreground"
+                                    className="text-muted-foreground hover:text-foreground flex-shrink-0"
                                     onClick={onClose}
                                     size="icon-sm"
                                     variant="ghost"

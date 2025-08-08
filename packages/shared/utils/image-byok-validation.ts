@@ -52,7 +52,6 @@ export const getRequiredApiKeyForChatMode = (chatMode: ChatMode): keyof ApiKeys 
     // Map chat modes to their required API keys
     const chatModeToApiKeyMap: Partial<Record<ChatMode, keyof ApiKeys>> = {
         // OpenAI models
-        [ChatMode.GPT_5]: "OPENAI_API_KEY",
         [ChatMode.O3]: "OPENAI_API_KEY",
         [ChatMode.O3_Mini]: "OPENAI_API_KEY",
         [ChatMode.O4_Mini]: "OPENAI_API_KEY",

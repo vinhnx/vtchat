@@ -36,10 +36,10 @@ export default async function SettingsPage() {
         redirect("/login?redirect=/settings");
     }
     return (
-        <div className="bg-background min-h-screen pb-safe">
+        <div className="bg-background pb-safe min-h-screen">
             {/* Header */}
             <header className="border-border/50 bg-background/95 sticky top-0 z-50 border-b backdrop-blur-sm">
-                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 sm:px-4 py-3 md:py-4">
+                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-3 sm:px-4 md:py-4">
                     <Link href="/">
                         <Button className="gap-2" size="sm" variant="ghost">
                             <ArrowLeft size={16} />
@@ -52,13 +52,13 @@ export default async function SettingsPage() {
             </header>
 
             {/* Main Content */}
-            <main className="bg-background w-full px-3 sm:px-4 py-6 md:py-12 min-h-[calc(100vh-120px)]">
+            <main className="bg-background min-h-[calc(100vh-120px)] w-full px-3 py-6 sm:px-4 md:py-12">
                 <div className="mx-auto max-w-7xl">
-                    <div className="mb-6 md:mb-8 text-center">
-                        <TypographyH1 className="mb-2 md:mb-4 text-2xl md:text-3xl lg:text-4xl font-semibold">
+                    <div className="mb-6 text-center md:mb-8">
+                        <TypographyH1 className="mb-2 text-2xl font-semibold md:mb-4 md:text-3xl lg:text-4xl">
                             Settings
                         </TypographyH1>
-                        <p className="text-muted-foreground mx-auto max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed px-2">
+                        <p className="text-muted-foreground mx-auto max-w-2xl px-2 text-sm leading-relaxed sm:text-base md:text-lg">
                             Customize your VT experience and manage your account settings
                         </p>
                     </div>
@@ -67,7 +67,7 @@ export default async function SettingsPage() {
             </main>
 
             {/* Footer */}
-            <footer className="border-border/50 bg-background border-t mt-8 md:mt-12">
+            <footer className="border-border/50 bg-background mt-8 border-t md:mt-12">
                 <div className="mx-auto w-full max-w-7xl px-4">
                     <Footer />
                 </div>

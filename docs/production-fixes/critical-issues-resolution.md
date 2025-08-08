@@ -13,12 +13,14 @@
 **Root Cause**: API endpoint wasn't properly checking for user's BYOK Gemini API key before requiring VT+ subscription.
 
 **Solution**: Modified `/apps/web/app/api/tools/structured-extract/route.ts` to:
+
 - ✅ Check for user's `GEMINI_API_KEY` in their API keys store first
 - ✅ For VT+ users: Use system API key if they don't have BYOK
 - ✅ For non-VT+ users: Require BYOK key with clear error messaging
 - ✅ Provide helpful error messages with upgrade path
 
 **Files Modified**:
+
 - `apps/web/app/api/tools/structured-extract/route.ts`
 
 ### 2. ✅ PDF/Image Extract JavaScript Error
@@ -28,6 +30,7 @@
 **Root Cause**: Hotjar analytics library initialization failing due to missing or invalid configuration, causing feature detection errors.
 
 **Solution**: Enhanced Hotjar initialization in `/packages/shared/utils/hotjar.ts` to:
+
 - ✅ Add proper null/undefined checks for configuration
 - ✅ Validate environment variables before initialization
 - ✅ Use proper error handling to prevent app crashes
@@ -35,6 +38,7 @@
 - ✅ Use structured logging instead of console statements
 
 **Files Modified**:
+
 - `packages/shared/utils/hotjar.ts`
 
 ### 3. ✅ Web Search Production Failure
@@ -44,12 +48,14 @@
 **Root Cause**: Missing `GEMINI_API_KEY` environment variable on production deployment.
 
 **Solution**: Created comprehensive fix documentation and automation:
+
 - ✅ Documented the requirement for `GEMINI_API_KEY` in production
 - ✅ Created diagnostic script `/scripts/fix-web-search-production.sh`
 - ✅ Provided step-by-step fix instructions
 - ✅ Added validation and troubleshooting guides
 
 **Files Created**:
+
 - `docs/production-fixes/web-search-configuration.md`
 - `scripts/fix-web-search-production.sh`
 
@@ -87,17 +93,17 @@ Hotjar.init(Number.parseInt(siteId), Number.parseInt(hotjarVersion));
 try {
     const parsedSiteId = Number.parseInt(siteId, 10);
     const parsedVersion = Number.parseInt(hotjarVersion, 10);
-    
+
     if (Number.isNaN(parsedSiteId) || Number.isNaN(parsedVersion)) {
-        log.warn("Invalid Hotjar configuration");
+        log.warn('Invalid Hotjar configuration');
         return;
     }
-    
+
     Hotjar.init(parsedSiteId, parsedVersion, {
-        debug: process.env.NODE_ENV === "development",
+        debug: process.env.NODE_ENV === 'development',
     });
 } catch (error) {
-    log.warn({ error }, "Failed to initialize Hotjar");
+    log.warn({ error }, 'Failed to initialize Hotjar');
 }
 ```
 
@@ -117,16 +123,19 @@ fly apps restart vtchat
 ## Verification
 
 ### 1. Structured Output Extract
+
 - ✅ VT+ users can use structured extraction without BYOK
 - ✅ Non-VT+ users get clear error message with upgrade path
 - ✅ Users with BYOK keys can use the feature regardless of subscription
 
 ### 2. PDF/Image Extract
+
 - ✅ No more JavaScript errors in browser console
 - ✅ Hotjar initializes gracefully or fails silently
 - ✅ PDF and image extraction functionality restored
 
 ### 3. Web Search
+
 - ✅ Production web search works with system API key
 - ✅ Debug endpoint shows configuration status
 - ✅ Clear documentation for troubleshooting
@@ -134,11 +143,13 @@ fly apps restart vtchat
 ## Impact
 
 **Before Fix**:
+
 - ❌ Structured extraction broken for users with BYOK keys
 - ❌ PDF/Image extraction causing JavaScript errors
 - ❌ Web search completely non-functional on production
 
 **After Fix**:
+
 - ✅ All AI features working correctly
 - ✅ Proper BYOK support for all features
 - ✅ Graceful error handling and user messaging

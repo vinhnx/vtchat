@@ -32,7 +32,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
 
         return (
             <LinkPreviewPopover source={source}>
-                <span className="bg-gradient-to-br from-brand/15 to-brand/5 text-brand border-brand/30 hover:from-brand hover:to-brand hover:border-brand group mx-1 inline-flex size-6 flex-row items-center justify-center gap-1 rounded-lg border text-xs font-bold transition-all duration-300 hover:text-white hover:shadow-lg hover:shadow-brand/25 hover:scale-105">
+                <span className="from-brand/15 to-brand/5 text-brand border-brand/30 hover:from-brand hover:to-brand hover:border-brand hover:shadow-brand/25 group mx-1 inline-flex size-6 flex-row items-center justify-center gap-1 rounded-lg border bg-gradient-to-br text-xs font-bold transition-all duration-300 hover:scale-105 hover:text-white hover:shadow-lg">
                     {source.index}
                 </span>
             </LinkPreviewPopover>
@@ -115,7 +115,7 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>["components"] = {
                 fallback={
                     <div className="border-warning bg-warning/10 text-warning my-4 rounded-md border p-4">
                         <div className="text-sm font-medium">Table Rendering Issue</div>
-                        <div className="text-xs opacity-80 mt-1">
+                        <div className="mt-1 text-xs opacity-80">
                             This table couldn't be rendered properly. Content continues below.
                         </div>
                     </div>

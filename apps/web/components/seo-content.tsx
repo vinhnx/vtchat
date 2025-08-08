@@ -18,7 +18,7 @@ export function SEOContent({ showOnHomepage = false, className = "" }: SEOConten
     return (
         <div className={`seo-content ${className}`}>
             {/* Additional structured content for search engines - completely hidden */}
-            <div className="sr-only absolute opacity-0 invisible h-0 w-0 overflow-hidden pointer-events-none">
+            <div className="sr-only pointer-events-none invisible absolute h-0 w-0 overflow-hidden opacity-0">
                 <article>
                     <h2>Complete Guide to Artificial Intelligence (AI)</h2>
                     <p>

@@ -86,11 +86,11 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                 <div
                     className={cn(
                         "relative rounded-2xl transition-all duration-200 ease-out",
-                        "border border-border/50 bg-gradient-to-br from-primary/5 to-primary/10",
+                        "border-border/50 from-primary/5 to-primary/10 border bg-gradient-to-br",
                         "shadow-sm hover:shadow-md",
                         "backdrop-blur-sm",
                         "message-bubble",
-                        isEditing && "ring-2 ring-primary/30 ring-offset-2",
+                        isEditing && "ring-primary/30 ring-2 ring-offset-2",
                     )}
                 >
                     {/* Message content */}
@@ -98,7 +98,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                         className={cn(
                             "relative px-4 py-3 text-[15px] leading-relaxed",
                             "text-foreground selection:bg-primary/20",
-                            "break-words whitespace-pre-wrap overflow-hidden", // Add word wrapping and overflow control
+                            "overflow-hidden whitespace-pre-wrap break-words", // Add word wrapping and overflow control
                             {
                                 "pb-14": isExpanded,
                                 markdownStyles,
@@ -122,7 +122,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                             "message-actions",
                         )}
                     >
-                        <div className="flex items-center gap-1 rounded-lg bg-background/80 p-1 shadow-lg backdrop-blur-md border border-border/20">
+                        <div className="bg-background/80 border-border/20 flex items-center gap-1 rounded-lg border p-1 shadow-lg backdrop-blur-md">
                             <Button
                                 onClick={handleCopy}
                                 size="xs"
@@ -152,7 +152,7 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                     {/* Expand button for long messages */}
                     {showExpandButton && (
                         <div className="absolute bottom-2 right-2">
-                            <div className="rounded-lg bg-background/80 p-1 shadow-lg backdrop-blur-md border border-border/20">
+                            <div className="bg-background/80 border-border/20 rounded-lg border p-1 shadow-lg backdrop-blur-md">
                                 <Button
                                     onClick={handleToggleExpand}
                                     size="xs"
@@ -206,13 +206,13 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
                         className={cn(
                             "border-2 shadow-sm",
                             "border-[#D99A4E] dark:border-[#BFB38F]",
-                            "ring-2 ring-background",
+                            "ring-background ring-2",
                             "transition-all duration-200",
-                            "hover:border-[#D99A4E]/80 dark:hover:border-[#BFB38F]/80 hover:shadow-md",
+                            "hover:border-[#D99A4E]/80 hover:shadow-md dark:hover:border-[#BFB38F]/80",
                             "message-avatar",
                         )}
                         fallback={
-                            <div className="flex h-full w-full items-center justify-center bg-primary/10 text-primary">
+                            <div className="bg-primary/10 text-primary flex h-full w-full items-center justify-center">
                                 <User className="h-4 w-4" />
                             </div>
                         }
@@ -309,7 +309,7 @@ const EditUserMessage = memo(({ message, onCancel, threadItem, width }: EditUser
         >
             <div
                 className={cn(
-                    "relative max-w-[85%] rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 backdrop-blur-sm sm:max-w-[75%]",
+                    "border-primary/30 bg-primary/5 relative max-w-[85%] rounded-2xl border px-4 py-3 backdrop-blur-sm sm:max-w-[75%]",
                     "transform-gpu will-change-transform",
                 )}
                 style={{
@@ -319,7 +319,7 @@ const EditUserMessage = memo(({ message, onCancel, threadItem, width }: EditUser
             >
                 <ChatEditor
                     className={cn(
-                        "max-w-full overflow-y-auto border-none !p-0 text-foreground placeholder:text-muted-foreground focus:ring-0",
+                        "text-foreground placeholder:text-muted-foreground max-w-full overflow-y-auto border-none !p-0 focus:ring-0",
                         markdownStyles,
                     )}
                     editor={editor}

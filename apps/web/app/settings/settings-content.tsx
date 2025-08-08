@@ -60,7 +60,7 @@ export function SettingsContent() {
                     </p>
                     <a
                         href="/login?redirect=/settings"
-                        className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium"
                     >
                         Sign In
                     </a>
@@ -118,11 +118,11 @@ export function SettingsContent() {
         <div className="mx-auto max-w-6xl">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 {/* Horizontal tabs for mobile, vertical for desktop */}
-                <div className="flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8">
+                <div className="flex flex-col gap-4 md:gap-6 lg:flex-row lg:gap-8">
                     {/* Sidebar Navigation */}
-                    <div className="lg:w-72 xl:w-80 flex-shrink-0">
+                    <div className="flex-shrink-0 lg:w-72 xl:w-80">
                         {/* Mobile Dropdown */}
-                        <div className="lg:hidden mb-6">
+                        <div className="mb-6 lg:hidden">
                             <div className="sticky top-4 z-[50]">
                                 <Popover open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                                     <PopoverTrigger asChild>
@@ -130,14 +130,14 @@ export function SettingsContent() {
                                             variant="outline"
                                             role="combobox"
                                             aria-expanded={mobileMenuOpen}
-                                            className="w-full justify-between bg-background/95 backdrop-blur-sm border shadow-sm"
+                                            className="bg-background/95 w-full justify-between border shadow-sm backdrop-blur-sm"
                                         >
                                             {settingTabs.find((tab) => tab.id === activeTab)?.label}
                                             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent
-                                        className="w-[var(--radix-popover-trigger-width)] p-0 z-[60]"
+                                        className="z-[60] w-[var(--radix-popover-trigger-width)] p-0"
                                         align="start"
                                         sideOffset={4}
                                     >
@@ -151,15 +151,15 @@ export function SettingsContent() {
                                                         setMobileMenuOpen(false);
                                                     }}
                                                     className={cn(
-                                                        "w-full px-4 py-3 text-left hover:bg-muted/50 transition-colors",
-                                                        "border-b border-border/50 last:border-b-0",
+                                                        "hover:bg-muted/50 w-full px-4 py-3 text-left transition-colors",
+                                                        "border-border/50 border-b last:border-b-0",
                                                         activeTab === tab.id && "bg-muted",
                                                     )}
                                                 >
-                                                    <div className="font-medium text-sm">
+                                                    <div className="text-sm font-medium">
                                                         {tab.label}
                                                     </div>
-                                                    <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                                    <div className="text-muted-foreground mt-1 line-clamp-2 text-xs">
                                                         {tab.description}
                                                     </div>
                                                 </button>
@@ -171,23 +171,23 @@ export function SettingsContent() {
                         </div>
 
                         {/* Desktop Sidebar */}
-                        <TabsList className="hidden lg:grid lg:grid-cols-1 lg:h-auto lg:space-y-1 lg:bg-transparent lg:p-0">
+                        <TabsList className="hidden lg:grid lg:h-auto lg:grid-cols-1 lg:space-y-1 lg:bg-transparent lg:p-0">
                             {settingTabs.map((tab) => (
                                 <TabsTrigger
                                     key={tab.id}
                                     value={tab.id}
                                     className={cn(
-                                        "w-full justify-start text-left h-auto p-3 lg:p-4 rounded-lg min-h-[3.5rem] lg:min-h-[4rem]",
+                                        "h-auto min-h-[3.5rem] w-full justify-start rounded-lg p-3 text-left lg:min-h-[4rem] lg:p-4",
                                         "data-[state=active]:bg-muted data-[state=active]:shadow-sm",
-                                        "data-[state=inactive]:bg-transparent hover:bg-muted/50",
+                                        "hover:bg-muted/50 data-[state=inactive]:bg-transparent",
                                         "transition-all duration-200",
                                     )}
                                 >
-                                    <div className="flex flex-col items-start w-full">
-                                        <div className="font-medium text-sm lg:text-base">
+                                    <div className="flex w-full flex-col items-start">
+                                        <div className="text-sm font-medium lg:text-base">
                                             {tab.label}
                                         </div>
-                                        <div className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                                        <div className="text-muted-foreground mt-1 text-xs leading-relaxed">
                                             {tab.description}
                                         </div>
                                     </div>
@@ -197,10 +197,10 @@ export function SettingsContent() {
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                         {settingTabs.map((tab) => (
                             <TabsContent key={tab.id} value={tab.id} className="mt-0 space-y-6">
-                                <div className="bg-background rounded-lg border p-4 md:p-6 shadow-sm">
+                                <div className="bg-background rounded-lg border p-4 shadow-sm md:p-6">
                                     {tab.component}
                                 </div>
                             </TabsContent>

@@ -203,7 +203,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                             status.cachedAt = new Date(status.cachedAt);
                         }
 
-                        // Guarantee isPlusSubscriber boolean flag (Oracle's fix)
+                        // Guarantee isPlusSubscriber boolean flag
                         if (status.isPlusSubscriber === undefined) {
                             status.isPlusSubscriber = status.plan === PlanSlug.VT_PLUS;
                         }

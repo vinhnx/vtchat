@@ -401,7 +401,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                         variant="ghost"
                         size="sm"
                         onClick={() => router.push("/")}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
                     >
                         <ArrowLeft size={16} />
                         <span className="hidden sm:inline">VT</span>
@@ -410,7 +410,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
                     {/* Thread title or status */}
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-muted-foreground text-sm">
                             {isGenerating ? "Generating..." : ""}
                         </span>
                     </div>
@@ -428,7 +428,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     }}
                 >
                     <div
-                        className="mx-auto w-[95%] max-w-3xl px-4 pb-18 pt-2 md:w-full"
+                        className="pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full"
                         ref={contentRef}
                         style={{
                             // Remove containment to allow dynamic expansion during streaming

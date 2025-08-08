@@ -5,27 +5,33 @@ This directory contains badge components for displaying VT's recognition and com
 ## Components
 
 ### BadgesSection
+
 The main container component that organizes all badges in a responsive layout.
 
 **Features:**
+
 - Responsive design with proper spacing
 - Consistent hover animations
 - Accessibility support
 - Performance optimizations
 
 ### AiToolsBadge
+
 Displays the AI Tools directory badge with external SVG loading.
 
 **Features:**
+
 - External SVG loading with error handling
 - Loading states with skeleton animation
 - Lazy loading for performance
 - Proper accessibility attributes
 
 ### GoodFirmsBadge
+
 Displays the GoodFirms directory badge with local SVG and fallback.
 
 **Features:**
+
 - Local SVG loading with fallback text badge
 - Error handling with graceful degradation
 - Loading states with skeleton animation
@@ -45,7 +51,7 @@ Displays the GoodFirms directory badge with local SVG and fallback.
 import { BadgesSection } from '@/components/badges-section';
 
 // Use in your component
-<BadgesSection className="my-custom-class" />
+<BadgesSection className="my-custom-class" />;
 ```
 
 ## File Structure
@@ -62,6 +68,7 @@ components/
 ## Accessibility
 
 All badge components include:
+
 - Proper ARIA labels
 - Semantic HTML structure
 - Keyboard navigation support
@@ -70,6 +77,7 @@ All badge components include:
 ## Testing
 
 Run tests with:
+
 ```bash
 bun test components/__tests__/badges.test.tsx
 ```

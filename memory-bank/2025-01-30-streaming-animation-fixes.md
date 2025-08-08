@@ -2,7 +2,7 @@
 
 **Date**: January 30, 2025  
 **Status**: ✅ COMPLETED  
-**Issue**: Jiggering and flashing animations during web search text streaming  
+**Issue**: Jiggering and flashing animations during web search text streaming
 
 ## Problem Analysis
 
@@ -16,18 +16,21 @@ The VT Chat application was experiencing visual glitches during text streaming, 
 ## Root Causes Identified
 
 ### 1. useAnimatedText Hook Issues
+
 - **16ms Throttling**: Used `setTimeout` with 16ms delay causing micro-stutters
 - **Linear Easing**: Too mechanical, not natural like ChatGPT/Claude
 - **Poor Timing**: Inconsistent character appearance timing
 - **No Hardware Acceleration**: Missing GPU optimization
 
 ### 2. MarkdownContent Component Problems
+
 - **Unnecessary Re-serialization**: MDX content re-processed on every update
 - **Layout Shifts**: Content changes caused visual jumps
 - **Missing Optimization**: No hardware acceleration or containment
 - **Unstable Keys**: React reconciliation issues
 
 ### 3. Missing Performance Optimizations
+
 - **No GPU Acceleration**: Missing `transform-gpu` and `will-change` properties
 - **Layout Thrashing**: Changes triggered expensive reflows
 - **Poor Mobile Support**: No mobile-specific optimizations
@@ -39,6 +42,7 @@ The VT Chat application was experiencing visual glitches during text streaming, 
 **File**: `packages/common/hooks/use-animate-text.tsx`
 
 **Key Improvements**:
+
 - ✅ Replaced 16ms throttling with `requestAnimationFrame`
 - ✅ Changed easing from "linear" to "easeOut" for natural appearance
 - ✅ Optimized timing calculation: `Math.max(0.2, Math.min(1.5, remainingChars * 0.012))`
@@ -55,7 +59,7 @@ if (now - lastUpdateRef.current > 16) {
 const updateCursor = useCallback((latest: number) => {
     rafRef.current = requestAnimationFrame(() => {
         const newCursor = Math.floor(latest);
-        setCursor(prev => newCursor !== prev ? newCursor : prev);
+        setCursor(prev => (newCursor !== prev ? newCursor : prev));
     });
 }, []);
 ```
@@ -65,6 +69,7 @@ const updateCursor = useCallback((latest: number) => {
 **File**: `packages/common/components/thread/components/markdown-content.tsx`
 
 **Key Improvements**:
+
 - ✅ Added content memoization to prevent unnecessary re-serialization
 - ✅ Implemented stable key generation for better React reconciliation
 - ✅ Added hardware acceleration with `transform-gpu` class
@@ -83,6 +88,7 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 **File**: `packages/common/components/thread/components/markdown-content.css`
 
 **Added CSS Properties**:
+
 ```css
 .markdown-content {
     transform: translateZ(0);
@@ -104,6 +110,7 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 **File**: `packages/common/components/streaming-text.tsx`
 
 **Features**:
+
 - ✅ Pure RAF-based animation for 60fps performance
 - ✅ Hardware acceleration built-in
 - ✅ Configurable speed (characters per second)
@@ -115,6 +122,7 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 **File**: `packages/common/components/thread/thread-item.tsx`
 
 **Improvements**:
+
 - ✅ Added `transform-gpu` class to message container
 - ✅ Maintained existing animation logic while improving performance
 
@@ -122,13 +130,13 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 
 ### Before vs After Metrics
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Animation Smoothness | Stuttering | Smooth 60fps | ✅ Significant |
-| Layout Shifts | Frequent | Minimal | ✅ Major |
-| Mobile Performance | Poor | Optimized | ✅ Excellent |
-| Memory Usage | High (leaks) | Optimized | ✅ Improved |
-| CPU Usage | High | Reduced | ✅ Better |
+| Metric               | Before       | After        | Improvement    |
+| -------------------- | ------------ | ------------ | -------------- |
+| Animation Smoothness | Stuttering   | Smooth 60fps | ✅ Significant |
+| Layout Shifts        | Frequent     | Minimal      | ✅ Major       |
+| Mobile Performance   | Poor         | Optimized    | ✅ Excellent   |
+| Memory Usage         | High (leaks) | Optimized    | ✅ Improved    |
+| CPU Usage            | High         | Reduced      | ✅ Better      |
 
 ### Technical Improvements
 
@@ -143,6 +151,7 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 **Test File**: `apps/web/app/tests/streaming-animation-fix.test.ts`
 
 **Coverage**:
+
 - ✅ 18 test cases covering all improvements
 - ✅ Animation performance validation
 - ✅ Hardware acceleration verification
@@ -155,17 +164,20 @@ setStableKey(`content-${Date.now()}-${contentWithCitations.length}`);
 ## User Experience Impact
 
 ### Web Search Streaming
+
 - ✅ **Smooth Text Appearance**: Characters appear naturally without stuttering
 - ✅ **No Layout Shifts**: Content updates don't cause visual jumps
 - ✅ **Consistent Performance**: Same smooth experience across all devices
 - ✅ **ChatGPT-like Feel**: Professional, polished streaming animation
 
 ### Mobile Experience
+
 - ✅ **60fps Performance**: Smooth animations on mobile devices
 - ✅ **Reduced Battery Usage**: Hardware acceleration reduces CPU load
 - ✅ **Better Touch Response**: No animation interference with interactions
 
 ### Accessibility
+
 - ✅ **Reduced Motion Support**: Respects user preferences
 - ✅ **Screen Reader Friendly**: Proper ARIA attributes maintained
 - ✅ **High Contrast Support**: Works with accessibility themes

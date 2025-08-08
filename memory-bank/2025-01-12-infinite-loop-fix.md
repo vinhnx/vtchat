@@ -2,7 +2,7 @@
 
 _Date: 2025-01-12_
 
-## Problem Diagnosed by Oracle
+## Problem Diagnosis
 
 The admin users page (`/admin/users`) was experiencing an infinite loop of API calls to `/api/auth/admin/list-users`, causing continuous database queries and performance issues.
 

@@ -126,13 +126,13 @@ export function PWAManager() {
         <>
             {/* Install Banner */}
             {showBanner && (
-                <div className="pwa-install-banner fixed bottom-0 left-0 right-0 z-[90] bg-background border-t border-border p-3 pb-safe-area-inset-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:hidden">
+                <div className="pwa-install-banner bg-background border-border pb-safe-area-inset-bottom fixed bottom-0 left-0 right-0 z-[90] border-t p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] md:hidden">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                            <Smartphone className="h-6 w-6 flex-shrink-0 text-primary" />
+                            <Smartphone className="text-primary h-6 w-6 flex-shrink-0" />
                             <div className="flex flex-col">
                                 <span className="text-sm font-medium">Install VT App</span>
-                                <span className="text-xs text-muted-foreground">
+                                <span className="text-muted-foreground text-xs">
                                     Get a better experience, offline access.
                                 </span>
                             </div>
@@ -151,7 +151,7 @@ export function PWAManager() {
                                 size="sm"
                                 className="flex-shrink-0"
                             >
-                                <Download className="h-4 w-4 mr-1" />
+                                <Download className="mr-1 h-4 w-4" />
                                 Install
                             </Button>
                         </div>
@@ -162,7 +162,7 @@ export function PWAManager() {
             {/* iOS Instructions Modal */}
             {showIOSInstructions && (
                 <div className="fixed inset-0 z-[250] flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-background max-w-sm rounded-lg p-6 shadow-xl border border-border">
+                    <div className="bg-background border-border max-w-sm rounded-lg border p-6 shadow-xl">
                         <div className="mb-4 flex items-center justify-between">
                             <h3 className="text-lg font-semibold">Install VT</h3>
                             <Button
@@ -176,28 +176,28 @@ export function PWAManager() {
 
                         <div className="space-y-4">
                             <div className="flex items-center gap-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full">
                                     1
                                 </div>
                                 <p className="text-sm">
                                     Tap the <strong>Share</strong> button{" "}
-                                    <span className="inline-block text-primary">⎋</span> at the
+                                    <span className="text-primary inline-block">⎋</span> at the
                                     bottom
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full">
                                     2
                                 </div>
                                 <p className="text-sm">
                                     Select <strong>"Add to Home Screen"</strong>{" "}
-                                    <span className="inline-block text-primary">➕</span>
+                                    <span className="text-primary inline-block">➕</span>
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full">
                                     3
                                 </div>
                                 <p className="text-sm">
@@ -206,9 +206,9 @@ export function PWAManager() {
                             </div>
                         </div>
 
-                        <div className="mt-6 flex items-center gap-2 rounded-lg bg-muted p-3">
-                            <Smartphone className="h-5 w-5 text-primary" />
-                            <p className="text-xs text-muted-foreground">
+                        <div className="bg-muted mt-6 flex items-center gap-2 rounded-lg p-3">
+                            <Smartphone className="text-primary h-5 w-5" />
+                            <p className="text-muted-foreground text-xs">
                                 Once installed, VT will work like a native app with offline support!
                             </p>
                         </div>

@@ -42,7 +42,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
             {/* Waterfall Layout with Horizontal Scroll */}
             <div className="relative">
                 <div
-                    className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border/30 hover:scrollbar-thumb-border/60"
+                    className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border/30 hover:scrollbar-thumb-border/60 flex gap-4 overflow-x-auto pb-4"
                     style={{
                         scrollSnapType: "x mandatory",
                         WebkitOverflowScrolling: "touch",
@@ -51,12 +51,12 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     {validSources.map((source) => (
                         <div
                             key={`${source.link}-${source.index}`}
-                            className="group relative flex-shrink-0 w-[200px] sm:w-[240px]"
+                            className="group relative w-[200px] flex-shrink-0 sm:w-[240px]"
                             style={{ scrollSnapAlign: "start" }}
                         >
                             <button
                                 type="button"
-                                className="bg-card/80 hover:bg-card backdrop-blur-sm cursor-pointer rounded-xl border border-border/20 hover:border-border/40 shadow-sm hover:shadow-md transition-all duration-300 ease-out overflow-hidden group-hover:scale-[1.02] h-full w-full text-left"
+                                className="bg-card/80 hover:bg-card border-border/20 hover:border-border/40 h-full w-full cursor-pointer overflow-hidden rounded-xl border text-left shadow-sm backdrop-blur-sm transition-all duration-300 ease-out hover:shadow-md group-hover:scale-[1.02]"
                                 onClick={() => {
                                     window?.open(source?.link, "_blank");
                                 }}
@@ -65,7 +65,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                                 <LinkPreview source={source} />
 
                                 {/* Source Index Badge */}
-                                <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium backdrop-blur-sm">
+                                <div className="bg-primary/90 text-primary-foreground absolute left-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium backdrop-blur-sm">
                                     {source.index}
                                 </div>
                             </button>
@@ -75,12 +75,12 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                     {/* View All Button */}
                     {validSources.length > 6 && (
                         <div
-                            className="flex-shrink-0 w-[200px]"
+                            className="w-[200px] flex-shrink-0"
                             style={{ scrollSnapAlign: "start" }}
                         >
                             <button
                                 type="button"
-                                className="bg-card/60 hover:bg-card backdrop-blur-sm border border-border/20 hover:border-border/40 w-full h-full min-h-[200px] rounded-xl p-6 cursor-pointer flex flex-col items-center justify-center gap-3 transition-all duration-300 ease-out hover:shadow-md hover:scale-[1.02] group"
+                                className="bg-card/60 hover:bg-card border-border/20 hover:border-border/40 group flex h-full min-h-[200px] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border p-6 backdrop-blur-sm transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-md"
                                 onClick={() => {
                                     openSideDrawer({
                                         title: "Sources",
@@ -105,10 +105,10 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                                 aria-label={`View all ${validSources.length} sources`}
                             >
                                 {/* Preview Icons */}
-                                <div className="flex flex-wrap gap-2 justify-center max-w-[120px]">
+                                <div className="flex max-w-[120px] flex-wrap justify-center gap-2">
                                     {validSources.slice(6, 15).map((source) => (
                                         <div
-                                            className="ring-1 ring-border/20 rounded-full p-1 bg-background/60"
+                                            className="ring-border/20 bg-background/60 rounded-full p-1 ring-1"
                                             key={`preview-${source.link}`}
                                         >
                                             <LinkFavicon link={source?.link} size="sm" />
@@ -118,7 +118,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
 
                                 {/* Text */}
                                 <div className="text-center">
-                                    <p className="text-sm font-medium text-foreground mb-1">
+                                    <p className="text-foreground mb-1 text-sm font-medium">
                                         View All Sources
                                     </p>
                                     <p className="text-muted-foreground text-xs">
@@ -131,7 +131,7 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
                 </div>
 
                 {/* Gradient Fade for Scroll Indicator */}
-                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent pointer-events-none" />
+                <div className="from-background/80 pointer-events-none absolute bottom-0 right-0 top-0 w-8 bg-gradient-to-l to-transparent" />
             </div>
         </div>
     );

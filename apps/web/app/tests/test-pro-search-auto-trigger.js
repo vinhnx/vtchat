@@ -124,12 +124,6 @@ const testCases = [
         expectedRoute: "gemini-web-search",
         description: "Stock price query should trigger web search",
     },
-    {
-        query: "what's the latest update on GPT-5",
-        mode: ChatMode.Pro,
-        expectedRoute: "gemini-web-search",
-        description: "Tech update query should trigger web search",
-    },
 
     // Should NOT trigger web search (skip examples)
     {
