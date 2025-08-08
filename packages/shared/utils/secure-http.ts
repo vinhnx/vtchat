@@ -61,7 +61,18 @@ export async function secureFetch<T = any>(
     });
 
     // Create request body without API keys
-    const requestBody = body ? JSON.stringify(body) : undefined;
+    let requestBody: string | undefined;
+    if (body) {
+        const sanitizedBody = typeof body === "object" && body !== null ? { ...body } : body;
+        if (typeof sanitizedBody === "object") {
+            Object.keys(API_KEY_TO_HEADER_MAP).forEach((key) => {
+                if (key in sanitizedBody) {
+                    delete (sanitizedBody as Record<string, unknown>)[key];
+                }
+            });
+        }
+        requestBody = JSON.stringify(sanitizedBody);
+    }
 
     // SECURITY: Log request without exposing sensitive information
     log.info("Secure API request initiated", {
