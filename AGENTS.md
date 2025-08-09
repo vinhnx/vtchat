@@ -7,6 +7,7 @@
     - `@repo/shared`: types, utils, logger (`@repo/shared/lib/logger`).
     - `@repo/common` and `@repo/ui`: reusable hooks/components.
 - Tests live under `apps/web/app/tests/`. Avoid adding debug/test files in repo root.
+- Large prebuilt assets (e.g., the PDF.js worker) should be loaded from a CDN, not committed.
 
 ## Build, Test, and Development Commands
 

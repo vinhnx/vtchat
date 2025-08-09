@@ -9,6 +9,7 @@ import { z } from "zod";
 import { useChatStore } from "../store";
 import { useApiKeysStore } from "../store/api-keys.store";
 import { isGeminiModel } from "../utils";
+import { getPdfWorkerUrl, pdfWorkerVersion } from "../constants/pdf-worker";
 
 // Dynamic import for pdfjs-dist to handle browser environment
 let pdfjsLib: typeof import("pdfjs-dist") | null = null;
@@ -17,14 +18,10 @@ const initPdfJs = async () => {
     if (!pdfjsLib && typeof window !== "undefined") {
         try {
             pdfjsLib = await import("pdfjs-dist");
-
-            // Use CDN worker for version consistency
-            const version = "5.4.54"; // Match our installed version
-            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`;
-
-            log.info("PDF.js initialized successfully", { version });
+            pdfjsLib.GlobalWorkerOptions.workerSrc = getPdfWorkerUrl();
+            log.info({ version: pdfWorkerVersion }, "PDF.js initialized successfully");
         } catch (error) {
-            log.error("Failed to initialize PDF.js", { error });
+            log.error({ error }, "Failed to initialize PDF.js");
             throw new Error("PDF.js initialization failed");
         }
     }
