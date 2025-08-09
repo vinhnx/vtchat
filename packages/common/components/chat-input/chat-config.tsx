@@ -1,4 +1,5 @@
-import { type Model, models } from "@repo/ai/models";
+import { Anthropic, Fireworks, Gemini, OpenAI, OpenRouter, XAI } from "@lobehub/icons";
+import { models, type Model } from "@repo/ai/models";
 import type { ApiKeys } from "@repo/common/store/api-keys.store";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import type { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
@@ -116,6 +117,28 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
     return providerApiKeyMap[provider] || "BYOK_API_KEY";
 };
 
+// Helper function to get provider icon
+export const getProviderIcon = (provider: string, size = 16) => {
+    const iconProps = { size, className: "flex-shrink-0" };
+
+    switch (provider.toLowerCase()) {
+        case "anthropic":
+            return <Anthropic {...iconProps} />;
+        case "google":
+            return <Gemini {...iconProps} />;
+        case "openai":
+            return <OpenAI {...iconProps} />;
+        case "openrouter":
+            return <OpenRouter {...iconProps} />;
+        case "fireworks":
+            return <Fireworks {...iconProps} />;
+        case "xai":
+            return <XAI {...iconProps} />;
+        default:
+            return null;
+    }
+};
+
 // Helper function to generate model options from models array
 export const generateModelOptionsForProvider = (provider: string, excludePreview = false) => {
     return models
@@ -169,6 +192,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.CLAUDE_4_1_OPUS,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("anthropic", 14),
             requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
         },
         {
@@ -176,6 +200,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.CLAUDE_4_SONNET,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("anthropic", 14),
             requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
         },
         {
@@ -183,6 +208,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.CLAUDE_4_OPUS,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("anthropic", 14),
             requiredApiKey: "ANTHROPIC_API_KEY" as keyof ApiKeys,
         },
     ],
@@ -193,6 +219,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
+            providerIcon: getProviderIcon("google", 14),
             description: "Free model",
             isFreeModel: true,
         },
@@ -201,6 +228,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GEMINI_2_5_FLASH,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("google", 14),
             requiredApiKey: "GEMINI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -208,6 +236,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GEMINI_2_5_PRO,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("google", 14),
             requiredApiKey: "GEMINI_API_KEY" as keyof ApiKeys,
         },
     ],
@@ -217,6 +246,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_5,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -224,6 +254,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4o_Mini,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -231,6 +262,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4_1_Nano,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -238,6 +270,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4_1_Mini,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -245,6 +278,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4_1,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -252,6 +286,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_4o,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -259,6 +294,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.O3,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -266,6 +302,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.O3_Mini,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -273,6 +310,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.O4_Mini,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("openai", 14),
             requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
         },
     ],
@@ -283,6 +321,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_OSS_120B,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -290,6 +329,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GPT_OSS_20B,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -297,6 +337,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.KIMI_K2,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -304,6 +345,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.DEEPSEEK_V3_0324,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -311,6 +353,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.DEEPSEEK_R1,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -318,6 +361,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.QWEN3_235B_A22B,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -325,6 +369,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.QWEN3_32B,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -332,6 +377,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.MISTRAL_NEMO,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
         {
@@ -339,6 +385,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.QWEN3_14B,
             webSearch: true,
             icon: <Gift className="text-green-500" size={16} />,
+            providerIcon: getProviderIcon("openrouter", 14),
             requiredApiKey: "OPENROUTER_API_KEY" as keyof ApiKeys,
         },
     ],
@@ -348,6 +395,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.DEEPSEEK_R1_FIREWORKS,
             webSearch: true,
             icon: <Brain className="text-purple-500" size={16} />,
+            providerIcon: getProviderIcon("fireworks", 14),
             requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
         },
         {
@@ -355,6 +403,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.KIMI_K2_INSTRUCT_FIREWORKS,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("fireworks", 14),
             requiredApiKey: "FIREWORKS_API_KEY" as keyof ApiKeys,
         },
     ],
@@ -364,6 +413,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GROK_4,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("xai", 14),
             requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -371,6 +421,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GROK_3,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("xai", 14),
             requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
         {
@@ -378,6 +429,7 @@ export const modelOptionsByProvider = {
             value: ChatMode.GROK_3_MINI,
             webSearch: true,
             icon: undefined,
+            providerIcon: getProviderIcon("xai", 14),
             requiredApiKey: "XAI_API_KEY" as keyof ApiKeys,
         },
     ],

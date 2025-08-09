@@ -7,7 +7,7 @@ import {
     supportsWebSearch,
 } from "@repo/ai/models";
 import { useSubscriptionAccess, useVtPlusAccess } from "@repo/common/hooks";
-import { type ApiKeys, useApiKeysStore } from "@repo/common/store";
+import { useApiKeysStore, type ApiKeys } from "@repo/common/store";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
 import { useSession } from "@repo/shared/lib/auth-client";
@@ -281,6 +281,12 @@ export function ChatModeOptions({
                                         onSelect={() => handleDropdownSelect(option.value)}
                                     >
                                         <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                            {/* Provider icon */}
+                                            {(option as any).providerIcon && (
+                                                <div className="flex items-center">
+                                                    {(option as any).providerIcon}
+                                                </div>
+                                            )}
                                             <div className="flex flex-col gap-0">
                                                 <p className="text-sm font-medium">
                                                     {option.label}

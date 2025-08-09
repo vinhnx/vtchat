@@ -102,6 +102,7 @@
         "@ai-sdk/togetherai": "^1.0.3",
         "@ai-sdk/xai": "^2.0.3",
         "@better-auth/utils": "^0.2.6",
+        "@lobehub/icons": "^2.26.0",
         "@mozilla/readability": "^0.6.0",
         "@neondatabase/serverless": "^1.0.1",
         "@tanstack/react-table": "^8.21.3",

@@ -17,10 +17,6 @@ add search to model dropdown
 
 --
 
-add model provider icons to model dropdown (use lobechat?)
-
---
-
 check document understanding doesn't work
 
 --

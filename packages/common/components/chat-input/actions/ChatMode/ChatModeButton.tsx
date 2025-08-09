@@ -43,6 +43,9 @@ export function ChatModeButton() {
             ? getIconByName(selectedOption.iconName as string)
             : selectedOption?.icon;
 
+    // Get the provider icon for the selected option
+    const selectedProviderIcon = (selectedOption as any)?.providerIcon;
+
     const handleGatedFeature = React.useCallback(
         (gateInfo: { feature?: string; plan?: string; title: string; message: string }) => {
             setShowGateAlert(gateInfo);
@@ -60,6 +63,7 @@ export function ChatModeButton() {
                         size="xs"
                         variant={"secondary"}
                     >
+                        {selectedProviderIcon && <div className="mr-1">{selectedProviderIcon}</div>}
                         {selectedIcon}
                         {selectedOption?.label}
                         <ChevronDown size={14} strokeWidth={2} />
