@@ -1463,7 +1463,6 @@ export const selectAvailableModel = (
             [ModelEnum.KIMI_K2]: "OPENROUTER_API_KEY",
             [ModelEnum.GPT_OSS_120B]: "OPENROUTER_API_KEY",
             [ModelEnum.GPT_OSS_20B]: "OPENROUTER_API_KEY",
-            [ModelEnum.GPT_5_OPENROUTER]: "OPENROUTER_API_KEY",
         };
 
         const requiredKey = providers[model];

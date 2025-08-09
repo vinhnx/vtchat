@@ -59,7 +59,6 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.KIMI_K2]: "OPENROUTER_API_KEY",
     [ChatMode.GPT_OSS_120B]: "OPENROUTER_API_KEY",
     [ChatMode.GPT_OSS_20B]: "OPENROUTER_API_KEY",
-    [ChatMode.GPT_5_OPENROUTER]: "OPENROUTER_API_KEY",
 } as const;
 
 const PROVIDER_NAMES = {

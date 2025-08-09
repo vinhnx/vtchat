@@ -38,7 +38,6 @@ export const ChatMode = {
     KIMI_K2: "kimi-k2",
     GPT_OSS_120B: "gpt-oss-120b",
     GPT_OSS_20B: "gpt-oss-20b",
-    GPT_5_OPENROUTER: "gpt-5",
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
@@ -318,14 +317,6 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
         isNew: true,
     },
-    [ChatMode.GPT_5_OPENROUTER]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-        isNew: true,
-    },
 };
 
 // Previously deprecated hasChatModeAccess function removed
@@ -480,8 +471,6 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI gpt-oss-120b (via OpenRouter)";
         case ChatMode.GPT_OSS_20B:
             return "OpenAI gpt-oss-20b (via OpenRouter)";
-        case ChatMode.GPT_5_OPENROUTER:
-            return "OpenAI GPT-5 (via OpenRouter)";
         case ChatMode.DEEPSEEK_V3_0324:
             return "OpenRouter DeepSeek V3 0324";
         case ChatMode.DEEPSEEK_R1:

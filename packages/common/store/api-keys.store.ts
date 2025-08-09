@@ -267,7 +267,6 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.KIMI_K2:
                     case ChatMode.GPT_OSS_120B:
                     case ChatMode.GPT_OSS_20B:
-                    case ChatMode.GPT_5_OPENROUTER:
                         return isValidKey(apiKeys.OPENROUTER_API_KEY);
                     default:
                         return false;

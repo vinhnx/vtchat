@@ -174,23 +174,8 @@ export async function POST(request: NextRequest) {
                         "@repo/ai/services/error-messages"
                     );
 
-                    // Map common model prefixes to provider names
-                    const providerMapping: Record<string, string> = {
-                        gpt: "openai",
-                        o1: "openai",
-                        o3: "openai",
-                        o4: "openai",
-                        claude: "anthropic",
-                        gemini: "google",
-                        grok: "xai",
-                        deepseek: "fireworks", // or openrouter depending on model
-                        qwen: "openrouter",
-                        mistral: "openrouter",
-                        openai: "openrouter", // OpenRouter models with openai/ prefix
-                        moonshot: "openrouter", // OpenRouter models with moonshot/ prefix
-                    };
-
-                    const providerName = providerMapping[modelProvider] || modelProvider;
+                    // Use the provider directly from model configuration
+                    const providerName = modelProvider;
 
                     if (
                         providerName &&

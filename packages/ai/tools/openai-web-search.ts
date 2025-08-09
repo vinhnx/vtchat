@@ -101,11 +101,7 @@ export const openaiWebSearchTool = () =>
  * Currently available for GPT-4o Mini and other supported models
  */
 export const supportsOpenAIWebSearch = (modelId: string): boolean => {
-    const supportedModels = [
-        "gpt-4o-mini",
-        "gpt-4o",
-        // Add other models as they become available for Responses API
-    ];
+    const supportedModels = ["gpt-4o-mini", "gpt-4o"];
 
     return supportedModels.includes(modelId);
 };

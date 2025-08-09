@@ -6,32 +6,6 @@
         "name": "OpenAI",
         "doc": "https://platform.openai.com/docs/models",
         "models": {
-            "gpt-5-2025-08-07": {
-                "id": "gpt-5-2025-08-07",
-                "name": "GPT-5",
-                "attachment": true,
-                "reasoning": true,
-                "temperature": true,
-                "tool_call": true,
-                "knowledge": "2024-10",
-                "input_modalities": ["text", "image"],
-                "output_modalities": ["text"],
-                "cost": {
-                    "input": 5,
-                    "output": 20,
-                    "cache_read": 1.25
-                },
-                "limit": {
-                    "context": 400000,
-                    "output": 128000
-                },
-                "app_capabilities": {
-                    "web_search": true,
-                    "math_calculator": true,
-                    "charts": true,
-                    "multi_modal": true
-                }
-            },
             "gpt-4.1-mini": {
                 "id": "gpt-4.1-mini",
                 "name": "GPT-4.1 Mini",
