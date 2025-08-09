@@ -18,9 +18,3 @@ add search to model dropdown
 --
 
 check document understanding doesn't work
-
---
-
-add gpt-5
-
-https://platform.openai.com/docs/models/gpt-5
