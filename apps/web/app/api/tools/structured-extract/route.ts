@@ -4,7 +4,8 @@ import { log } from "@repo/shared/logger";
 import { generateObject } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkVTPlusAccess } from "../../subscription/access-control";
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../../subscription/access-control";
+import { auth } from "@/lib/auth-server";
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({
@@ -163,11 +164,31 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Check if user has VT+ access
-        const { hasAccess: hasVtPlusAccess } = await checkVTPlusAccess(request);
+        // Get session to check if user is authenticated
+        const session = await auth.api.getSession({
+            headers: request.headers,
+        });
+        
+        const userId = session?.user?.id;
+        
+        // Check if user has access to structured output feature (available to all signed-in users)
+        const { hasAccess: hasFeatureAccess } = await checkSignedInFeatureAccess({ userId });
+        
+        if (!hasFeatureAccess) {
+            return NextResponse.json(
+                { 
+                    error: "Authentication required", 
+                    message: "Please sign in to use structured output extraction functionality." 
+                },
+                { status: 403 },
+            );
+        }
 
-        // Handle API key logic: VT+ users can use system key, others need BYOK
+        // Handle API key logic: Signed-in users can use system key, others need BYOK
         let effectiveApiKeys = userApiKeys || {};
+
+        // Check if user has VT+ access for system key usage
+        const { hasAccess: hasVtPlusAccess } = await checkVTPlusAccess({ userId });
 
         if (hasVtPlusAccess) {
             // VT+ users: Use system API key if they don't have their own

@@ -386,9 +386,9 @@ Please help me analyze this data and provide insights or answer any questions ab
 
         if (!hasStructuredOutputAccess) {
             toast({
-                title: "VT+ Required",
+                title: "Sign In Required",
                 description:
-                    "Structured output extraction is a VT+ feature. Please upgrade to access this functionality.",
+                    "Structured output extraction requires you to be signed in. Please sign in to access this functionality.",
                 variant: "destructive",
             });
             return;
