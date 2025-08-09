@@ -262,7 +262,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         const hasPDFAttachment = messages.some((message: any) => 
             Array.isArray(message.content) && 
             message.content.some((part: any) => 
-                part.type === 'image' && part.mimeType === 'application/pdf'
+                part.type === 'file' && part.mediaType === 'application/pdf'
             )
         );
 
