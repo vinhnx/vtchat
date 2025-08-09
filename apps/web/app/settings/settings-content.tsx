@@ -36,6 +36,7 @@ export function SettingsContent() {
     // Set default tab based on URL parameter
     const getDefaultTab = () => {
         if (tabParam === "profile") return SETTING_TABS.PROFILE;
+        if (tabParam === "usage") return SETTING_TABS.USAGE;
         return SETTING_TABS.ACCESSIBILITY;
     };
 
@@ -46,6 +47,8 @@ export function SettingsContent() {
     useEffect(() => {
         if (tabParam === "profile") {
             setActiveTab(SETTING_TABS.PROFILE);
+        } else if (tabParam === "usage") {
+            setActiveTab(SETTING_TABS.USAGE);
         }
     }, [tabParam]);
 
@@ -83,6 +86,12 @@ export function SettingsContent() {
             component: <CombinedSubscriptionSettings onClose={() => {}} />,
         },
         {
+            id: SETTING_TABS.API_KEYS,
+            label: "API Keys",
+            description: "Connect your own AI providers",
+            component: <ApiKeySettings />,
+        },
+        {
             id: SETTING_TABS.USAGE,
             label: "Usage",
             description: "View your LLMs usage",
@@ -99,12 +108,6 @@ export function SettingsContent() {
             label: "Preferences",
             description: "Customize your VT experience",
             component: <PersonalizationSettings onClose={() => {}} />,
-        },
-        {
-            id: SETTING_TABS.API_KEYS,
-            label: "API Keys",
-            description: "Connect your own AI providers",
-            component: <ApiKeySettings />,
         },
         {
             id: SETTING_TABS.CACHE,

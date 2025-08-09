@@ -111,6 +111,30 @@ export async function handleStreamError({
     const errorString = error instanceof Error ? error.message : String(error);
     const errorName = error instanceof Error ? error.name : ErrorName.UNKNOWN_ERROR;
 
+    // Check for enhanced provider errors first
+    const errorObj = error as any;
+    if (errorObj.provider && errorObj.errorCode && errorObj.suggestedAction) {
+        log.error("Enhanced provider error detected:", {
+            provider: errorObj.provider,
+            errorCode: errorObj.errorCode,
+            userMessage: errorObj.message,
+            isRetryable: errorObj.isRetryable,
+            userId,
+            threadId: data.threadId,
+        });
+
+        const response: StreamErrorResponse = {
+            type: StreamResponseType.DONE,
+            status: StreamErrorStatus.ERROR,
+            error: `${errorObj.message}\n\n${errorObj.suggestedAction}`,
+            threadId: data.threadId,
+            threadItemId: data.threadItemId,
+            parentThreadItemId: data.parentThreadItemId,
+        };
+        await sendMessage(controller, encoder, response);
+        return response;
+    }
+
     // Abort/Cancellation errors
     if (abortController.signal.aborted) {
         log.info({ userId, threadId: data.threadId }, "Request aborted by client or timeout");

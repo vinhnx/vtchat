@@ -1531,11 +1531,12 @@ export const selectAvailableModel = (
 
     // Fallback priority list - most reliable and cost-effective models first
     const fallbackModels = [
-        ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model
         ModelEnum.GEMINI_2_5_FLASH_LITE, // Free Gemini model
-        ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
-        ModelEnum.GPT_4o, // More expensive but reliable
         ModelEnum.GEMINI_2_5_FLASH, // Newer Gemini
+        ModelEnum.GPT_5, // GPT-5 as top priority for OpenAI models
+        ModelEnum.GPT_4o, // More expensive but reliable
+        ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model
+        ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
     ];
 
     for (const model of fallbackModels) {

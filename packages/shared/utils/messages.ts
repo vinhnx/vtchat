@@ -2,9 +2,10 @@ import type { Attachment, DocumentAttachment, ThreadItem } from "@repo/shared/ty
 
 type MessageContent =
     | { type: "text"; text: string }
-    // Use image part for both images and documents (e.g., PDFs) per AI SDK schema
-    // When sending documents, include mimeType (e.g., 'application/pdf')
-    | { type: "image"; image: string; mimeType?: string };
+    // Use image part for images
+    | { type: "image"; image: string }
+    // Use file part for documents (e.g., PDFs) with proper data URI and media type
+    | { type: "file"; data: string; mediaType: string };
 
 export const buildCoreMessagesFromThreadItems = ({
     messages,
@@ -27,11 +28,11 @@ export const buildCoreMessagesFromThreadItems = ({
         }
 
         if (item.documentAttachment) {
-            // For document attachments (e.g., PDF), include as image part with mimeType
+            // For document attachments (e.g., PDF), include as file part with mediaType
             content.push({
-                type: "image",
-                image: item.documentAttachment.base64,
-                mimeType: item.documentAttachment.mimeType,
+                type: "file",
+                data: item.documentAttachment.base64,
+                mediaType: item.documentAttachment.mimeType,
             });
         }
 
@@ -41,11 +42,11 @@ export const buildCoreMessagesFromThreadItems = ({
                 if (attachment.contentType.startsWith("image/")) {
                     content.push({ type: "image", image: attachment.url });
                 } else if (attachment.contentType === "application/pdf") {
-                    // For PDF attachments, include as image part with mimeType
+                    // For PDF attachments, include as file part with mediaType
                     content.push({
-                        type: "image",
-                        image: attachment.url,
-                        mimeType: attachment.contentType,
+                        type: "file",
+                        data: attachment.url,
+                        mediaType: attachment.contentType,
                     });
                 }
             });
@@ -71,11 +72,11 @@ export const buildCoreMessagesFromThreadItems = ({
     }
 
     if (documentAttachment) {
-        // For document attachments (e.g., PDF), include as image part with mimeType
+        // For document attachments (e.g., PDF), include as file part with mediaType
         currentContent.push({
-            type: "image",
-            image: documentAttachment.base64,
-            mimeType: documentAttachment.mimeType,
+            type: "file",
+            data: documentAttachment.base64,
+            mediaType: documentAttachment.mimeType,
         });
     }
 
@@ -85,11 +86,11 @@ export const buildCoreMessagesFromThreadItems = ({
             if (attachment.contentType.startsWith("image/")) {
                 currentContent.push({ type: "image", image: attachment.url });
             } else if (attachment.contentType === "application/pdf") {
-                // For PDF attachments, include as image part with mimeType
+                // For PDF attachments, include as file part with mediaType
                 currentContent.push({
-                    type: "image",
-                    image: attachment.url,
-                    mimeType: attachment.contentType,
+                    type: "file",
+                    data: attachment.url,
+                    mediaType: attachment.contentType,
                 });
             }
         });

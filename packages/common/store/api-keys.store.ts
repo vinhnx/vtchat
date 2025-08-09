@@ -226,6 +226,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 };
 
                 switch (chatMode) {
+                    case ChatMode.GPT_5:
                     case ChatMode.O3:
                     case ChatMode.O3_Mini:
                     case ChatMode.O4_Mini:

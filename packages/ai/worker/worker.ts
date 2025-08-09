@@ -109,6 +109,8 @@ ctx.addEventListener("message", async (event: MessageEvent) => {
                 log.info(
                     {
                         mode,
+                        hasOpenAiKey: !!apiKeys.OPENAI_API_KEY,
+                        openAiKeyLength: apiKeys.OPENAI_API_KEY?.length || 0,
                         apiKeySetupCompleted: true,
                     },
                     "Worker API keys configured",

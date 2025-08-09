@@ -1,6 +1,8 @@
+"use client";
+
 import { Alert, AlertDescription, Button } from "@repo/ui";
 import { AlertCircle, ArrowRight, Mail, Settings, Sparkles } from "lucide-react";
-import { SETTING_TABS, useAppStore } from "../store";
+import { useRouter } from "next/navigation";
 
 interface RateLimitErrorAlertProps {
     error: string;
@@ -8,11 +10,10 @@ interface RateLimitErrorAlertProps {
 }
 
 export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertProps) {
-    const { setSettingTab, setIsSettingsOpen } = useAppStore();
+    const router = useRouter();
 
     const handleOpenUsageSettings = () => {
-        setSettingTab(SETTING_TABS.USAGE);
-        setIsSettingsOpen(true);
+        router.push("/settings?tab=usage");
     };
 
     const handleUpgrade = () => {
@@ -54,7 +55,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                                     <p className="mb-2 text-sm font-medium">Try these steps:</p>
                                     <ul className="list-disc space-y-1 pl-4 text-sm">
                                         {suggestions.map((suggestion, index) => (
-                                            <li className="text-300" key={index}>
+                                            <li className="text-300" key={`suggestion-${index}`}>
                                                 {suggestion.replace(/^\d+\.\s*/, "")}
                                             </li>
                                         ))}
