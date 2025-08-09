@@ -1,6 +1,7 @@
-import { experimental_generateSpeech as generateSpeech } from "ai";
+import { generateSpeech } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { NextRequest, NextResponse } from "next/server";
+import { log } from "@repo/shared/lib/logger";
 
 // This route handler will generate speech using the user's OpenAI API key
 export async function POST(req: NextRequest) {
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
         // We need to convert it to a format suitable for NextResponse.
         // For now, let's assume it's a Uint8Array or can be converted to one.
         // If it's a ReadableStream, we might need to buffer it first.
-        // The Vercel AI SDK documentation for `experimental_generateSpeech`
+        // The Vercel AI SDK documentation for `generateSpeech`
         // should specify the exact type of `audio`.
         // Let's assume for now it returns an ArrayBuffer or Uint8Array.
 
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
             },
         });
     } catch (error) {
-        console.error("Error generating speech:", error);
+        log.error({ error }, "Error generating speech");
         if (error instanceof Error && error.message.includes("API key")) {
             return NextResponse.json(
                 { error: "Invalid OpenAI API key. Please check your key in settings." },
