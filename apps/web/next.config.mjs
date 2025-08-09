@@ -19,6 +19,9 @@ const nextConfig = {
     // Disable Vercel Analytics auto-injection
     // Note: analyticsId is not a valid Next.js config option
 
+    // Server configuration is set via environment variables
+    // PORT, HOST, and NEXT_PUBLIC_ALLOW_IFRAME
+
     // Server-side optimizations - exclude workspace packages from bundling
     serverExternalPackages: ["@repo/shared", "@repo/common", "@repo/orchestrator"],
 
@@ -354,7 +357,7 @@ const nextConfig = {
                     },
                     {
                         key: "X-Frame-Options",
-                        value: "DENY",
+                        value: process.env.NEXT_PUBLIC_ALLOW_IFRAME === 'true' ? "ALLOWALL" : "DENY",
                     },
                     {
                         key: "X-Content-Type-Options",
