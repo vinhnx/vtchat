@@ -64,7 +64,14 @@ const getApiKey = (
         };
 
         const byokKey = byokKeys[keyMapping[provider]];
-        if (byokKey) return byokKey;
+        if (byokKey) {
+            log.info("getApiKey: Found BYOK key for provider", { 
+                provider, 
+                hasByKey: !!byokKey,
+                keyLength: byokKey.length 
+            });
+            return byokKey;
+        }
     }
 
     // Server-funded keys only for whitelisted providers (VT+ policy)
@@ -81,11 +88,17 @@ const getApiKey = (
                     if (geminiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
                         process.env.GOOGLE_GENERATIVE_AI_API_KEY = geminiKey;
                     }
+                    log.info("getApiKey: Using server-funded Gemini key", { 
+                        hasKey: !!geminiKey,
+                        keyLength: geminiKey.length 
+                    });
                     return geminiKey;
                 }
+                log.info("getApiKey: No server-funded key for Gemini (non-VT+ user)");
                 return "";
             default:
                 // All other providers MUST use BYOK - no server-funded keys
+                log.info("getApiKey: Provider requires BYOK", { provider });
                 return "";
         }
     }
@@ -95,19 +108,32 @@ const getApiKey = (
         // Check if AI_API_KEYS exists on self (worker environment)
         const workerSelf = self as unknown as WorkerGlobalScope;
         if (workerSelf.AI_API_KEYS?.[provider]) {
+            log.info("getApiKey: Found worker AI_API_KEYS for provider", { 
+                provider, 
+                hasKey: !!workerSelf.AI_API_KEYS[provider],
+                keyLength: workerSelf.AI_API_KEYS[provider].length 
+            });
             return workerSelf.AI_API_KEYS[provider];
         }
 
         // For browser environments (self is also defined in browser)
         try {
-            if (typeof window !== "undefined" && window.AI_API_KEYS) {
-                return window.AI_API_KEYS[provider] || "";
+            if (typeof window !== "undefined" && (window as any).AI_API_KEYS) {
+                const windowApiKey = (window as any).AI_API_KEYS[provider] || "";
+                log.info("getApiKey: Found window AI_API_KEYS for provider", { 
+                    provider, 
+                    hasKey: !!windowApiKey,
+                    keyLength: windowApiKey.length 
+                });
+                return windowApiKey;
             }
         } catch {
             // window is not available in this environment
+            log.info("getApiKey: Window not available for API key lookup");
         }
     }
 
+    log.info("getApiKey: No API key found for provider", { provider });
     return "";
 };
 
@@ -177,6 +203,18 @@ export const getProviderInstance = (
             validateApiKey(Providers.OPENAI);
             return createOpenAI({
                 apiKey,
+                // Add fetch options to prevent multiple requests
+                fetch: (input, init) => {
+                    // Add deduplication headers to prevent caching issues
+                    const headers = new Headers(init?.headers);
+                    headers.set('Cache-Control', 'no-store');
+                    headers.set('Pragma', 'no-cache');
+                    
+                    return globalThis.fetch(input, {
+                        ...init,
+                        headers,
+                    });
+                },
             });
         case "anthropic": {
             validateApiKey(Providers.ANTHROPIC);
@@ -258,6 +296,7 @@ export const getLanguageModel = (
         hasByokKeys: !!byokKeys,
         byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         useSearchGrounding,
+        isVtPlus,
     });
 
     const model = models.find((model) => model.id === m);
@@ -291,7 +330,13 @@ export const getLanguageModel = (
         if (model?.provider === "google" && (useSearchGrounding || cachedContent)) {
             log.info("Creating Gemini model with special options...");
             const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-            log.info("Using model ID:", { data: modelId });
+            const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
+            log.info("Using model ID:", { 
+                data: modelId,
+                originalModelId,
+                provider: model?.provider,
+                wasMapped: modelId !== originalModelId
+            });
 
             try {
                 const modelOptions: {
@@ -343,7 +388,20 @@ export const getLanguageModel = (
 
         log.info("Creating standard model...");
         const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-        log.info("Using model ID:", { data: modelId });
+        
+        const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
+        log.info("Using model ID:", { 
+            data: modelId,
+            originalModelId,
+            provider: model?.provider,
+            wasMapped: modelId !== originalModelId
+        });
+        log.info("Model details:", { 
+            modelId: model?.id, 
+            modelName: model?.name, 
+            modelProvider: model?.provider,
+            isGpt5: model?.id === "gpt-5-2025-08-07"
+        });
 
         try {
             const createModel = instance as (id: string) => LanguageModelV1;
@@ -351,6 +409,8 @@ export const getLanguageModel = (
             log.info("Standard model created:", {
                 hasModel: !!selectedModel,
                 modelType: typeof selectedModel,
+                modelId: model?.id,
+                modelName: model?.name,
             });
 
             if (middleware) {

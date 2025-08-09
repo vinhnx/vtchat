@@ -15,6 +15,7 @@
         "./providers": "./providers.ts",
         "./services/api-key-mapper": "./services/api-key-mapper.ts",
         "./services/error-messages": "./services/error-messages.ts",
+        "./services/provider-error-extractor": "./services/provider-error-extractor.ts",
         "./tools": "./tools/index.ts",
         "./workflow": "./workflow/flow.ts",
         "./workflow/utils": "./workflow/utils.ts",

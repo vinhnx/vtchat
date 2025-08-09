@@ -126,7 +126,7 @@ vtchat/
 
 ## 🎯 Feature Comparison
 
-| Feature                     | VT_BASE (Free)                     | VT+ ($10/month)               |
+| Feature                     | VT_BASE (Free)                     | VT+ ($5.99/month)             |
 | --------------------------- | ---------------------------------- | ----------------------------- |
 | **AI Models**               | 9 Models (5 Gemini + 4 OpenRouter) | All Models + Premium Features |
 | **Basic Chat**              | ✅                                 | ✅                            |

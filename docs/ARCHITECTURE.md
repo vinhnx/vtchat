@@ -121,7 +121,7 @@ graph LR
 graph TD
     User[User] --> Tier{Subscription Tier}
     Tier --> Free[VT_BASE<br/>Free Tier]
-    Tier --> Premium[VT_PLUS<br/>$10/month]
+    Tier --> Premium[VT_PLUS<br/>$5.99/month]
 
     Free --> FreeFeatures[9 AI Models<br/>Calculator<br/>Basic Chat<br/>Local Privacy]
     Premium --> PremiumFeatures[All Free Features<br/>+ Reasoning Mode<br/>+ Dark Theme<br/>+ Web Search<br/>+ Document Upload<br/>+ Structured Extraction]

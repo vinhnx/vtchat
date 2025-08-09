@@ -1,4 +1,4 @@
-import { getModelFromChatMode, type ModelEnum } from "@repo/ai/models";
+import { getModelFromChatMode, models, type ModelEnum } from "@repo/ai/models";
 import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
@@ -142,29 +142,9 @@ export async function POST(request: NextRequest) {
                 // Validate API keys for the selected model's provider
                 const selectedModel = getModelFromChatMode(data.mode);
 
-                // Extract provider from model name - handle multiple formats
-                let modelProvider: string | undefined;
-                if (selectedModel?.includes("/")) {
-                    // OpenRouter format: "openai/gpt-oss-120b" -> "openai"
-                    modelProvider = selectedModel.split("/")[0]?.toLowerCase();
-                } else if (selectedModel?.includes("_")) {
-                    // Standard format: "CLAUDE_4_SONNET" -> "claude"
-                    modelProvider = selectedModel.split("_")[0]?.toLowerCase();
-                } else if (selectedModel?.startsWith("claude-")) {
-                    // Claude format: "claude-4-opus-20250514" -> "claude"
-                    modelProvider = "claude";
-                } else if (
-                    selectedModel?.startsWith("gpt-") ||
-                    selectedModel?.startsWith("o1-") ||
-                    selectedModel?.startsWith("o3-") ||
-                    selectedModel?.startsWith("o4-")
-                ) {
-                    // OpenAI format: "gpt-4o", "o1-mini" -> "gpt"/"o1"/"o3"/"o4"
-                    modelProvider = selectedModel.split("-")[0]?.toLowerCase();
-                } else {
-                    // Fallback: try to extract first part before dash
-                    modelProvider = selectedModel?.split("-")[0]?.toLowerCase();
-                }
+                // Get the model object to access its provider property
+                const modelObject = models.find((m) => m.id === selectedModel);
+                const modelProvider = modelObject?.provider;
 
                 if (modelProvider && transformedApiKeys) {
                     // Import validation functions

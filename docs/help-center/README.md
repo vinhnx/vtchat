@@ -34,7 +34,7 @@ Available to all logged-in users:
 - Local privacy protection
 - security
 
-### VT+ ($10/month)
+### VT+ ($5.99/month)
 
 All free features plus professional research and productivity tools:
 

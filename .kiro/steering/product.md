@@ -29,7 +29,7 @@ VT delivers powerful AI conversations with complete privacy protection—startin
 - 9 free server models (no API keys required)
 - Local AI support (Ollama, LM Studio)
 
-### VT+ ($10/month)
+### VT+ ($5.99/month)
 
 - **Enhanced Research Tools**: Pro Search (50/day), Deep Research (25/day)
 - **Advanced Document Processing**: Up to 25MB files, batch processing, enhanced extraction

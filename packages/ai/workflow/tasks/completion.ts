@@ -5,6 +5,7 @@ import { calculatorTools } from "../../../../apps/web/lib/tools/math";
 import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from "../../models";
 import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
 import { getWebSearchTool } from "../../tools";
+import { handlePDFProcessingError, shouldRetryPDFProcessing } from "../../utils/pdf-error-handler";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
     ChunkBuffer,
@@ -35,7 +36,12 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 ?.filter(
                     (message) =>
                         (message.role === "user" || message.role === "assistant") &&
-                        !!message.content,
+                        (!!message.content && 
+                         (typeof message.content === "string" 
+                          ? message.content.trim() !== "" 
+                          : Array.isArray(message.content) 
+                          ? message.content.length > 0 
+                          : false)),
                 ) || [];
 
         if (
@@ -252,7 +258,18 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         // Track last math calculation result to enable fallback post-processing if needed
         let lastMathResult: { toolName?: string; result?: any } | null = null;
 
-        const response = await generateText({
+        // Check if messages contain PDF attachments for enhanced error handling
+        const hasPDFAttachment = messages.some((message: any) => 
+            Array.isArray(message.content) && 
+            message.content.some((part: any) => 
+                part.type === 'image' && part.mimeType === 'application/pdf'
+            )
+        );
+
+        let response: string;
+        
+        try {
+            response = await generateText({
             model,
             messages,
             prompt,
@@ -439,6 +456,71 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                 ]);
             },
         });
+
+        } catch (error) {
+            // Handle PDF-specific errors with enhanced messaging
+            if (hasPDFAttachment) {
+                const pdfError = handlePDFProcessingError(error);
+                
+                log.error('PDF processing error', {
+                    type: pdfError.type,
+                    message: pdfError.message,
+                    userMessage: pdfError.userMessage
+                });
+
+                // Provide user-friendly error message
+                events?.update("error", (_prev) => ({
+                    error: pdfError.userMessage,
+                    suggestion: pdfError.suggestion,
+                    type: pdfError.type,
+                    status: "ERROR",
+                }));
+
+                // Also update the answer with error information
+                events?.update("answer", (prev) => ({
+                    ...prev,
+                    text: `I'm sorry, but I encountered an issue processing your PDF document: ${pdfError.userMessage}\n\n${pdfError.suggestion}`,
+                    status: "ERROR",
+                }));
+
+                // End buffers and return
+                reasoningBuffer.end();
+                chunkBuffer.end();
+                return;
+            }
+
+            // Provide more descriptive error messages for API key issues
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes("api key") || errorMessage.includes("unauthorized")) {
+                    const modelInfo = models.find(m => m.id === model);
+                    if (modelInfo) {
+                        const providerName = modelInfo.provider;
+                        events?.update("error", (_prev) => ({
+                            error: `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
+                            suggestion: `Go to Settings → API Keys and add your ${providerName} API key to use this model.`,
+                            type: "API_KEY_ERROR",
+                            status: "ERROR",
+                        }));
+
+                        // Also update the answer with error information
+                        events?.update("answer", (prev) => ({
+                            ...prev,
+                            text: `I'm sorry, but I need an API key for ${modelInfo.name} to continue. Please add your ${providerName} API key in Settings.`,
+                            status: "ERROR",
+                        }));
+
+                        // End buffers and return
+                        reasoningBuffer.end();
+                        chunkBuffer.end();
+                        return;
+                    }
+                }
+            }
+
+            // For non-PDF errors, re-throw to use existing error handling
+            throw error;
+        }
 
         reasoningBuffer.end();
         chunkBuffer.end();

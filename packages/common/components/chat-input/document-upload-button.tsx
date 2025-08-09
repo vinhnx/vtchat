@@ -84,13 +84,13 @@ export const DocumentUploadButton = () => {
                 error: validation.error,
                 suggestion: 'Please select a valid document file and try again.'
             });
-            
+
             toast({
                 title: "Invalid file",
                 description: validation.error,
                 variant: "destructive",
             });
-            
+
             // Reset input
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
@@ -109,7 +109,7 @@ export const DocumentUploadButton = () => {
 
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-            
+
             useChatStore.getState().setPdfProcessingStatus({
                 status: 'error',
                 error: errorMessage,
@@ -131,7 +131,7 @@ export const DocumentUploadButton = () => {
 
     const handleRemoveDocument = () => {
         clearAttachment();
-        
+
         toast({
             title: "Document removed",
             description: "The attached document has been removed.",
@@ -166,7 +166,7 @@ export const DocumentUploadButton = () => {
             case 'processing':
                 return 'Processing document...';
             case 'success':
-                return hasDocument 
+                return hasDocument
                     ? `Document ready: ${documentAttachment?.fileName}`
                     : 'Document Upload (PDF, DOC, TXT)';
             case 'error':
@@ -216,20 +216,6 @@ export const DocumentUploadButton = () => {
                         </Button>
                     )}
                 </div>
-
-                {/* PDF Help Dialog */}
-                <PDFHelpDialog 
-                    trigger={
-                        <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            className="text-muted-foreground hover:text-foreground"
-                            tooltip="PDF format help and troubleshooting"
-                        >
-                            <HelpCircle size={14} />
-                        </Button>
-                    }
-                />
             </div>
 
             <input

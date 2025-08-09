@@ -195,6 +195,11 @@ type State = {
         mimeType?: string;
         fileName?: string;
     };
+    pdfProcessingStatus: {
+        status: 'idle' | 'processing' | 'success' | 'error';
+        error?: string;
+        suggestion?: string;
+    };
     structuredData: {
         data?: any;
         type?: string;
@@ -243,6 +248,11 @@ type Actions = {
         fileName?: string;
     }) => void;
     clearDocumentAttachment: () => void;
+    setPdfProcessingStatus: (status: {
+        status: 'idle' | 'processing' | 'success' | 'error';
+        error?: string;
+        suggestion?: string;
+    }) => void;
     setStructuredData: (structuredData: {
         data?: any;
         type?: string;
@@ -827,6 +837,11 @@ export const useChatStore = create(
             mimeType: undefined,
             fileName: undefined,
         },
+        pdfProcessingStatus: {
+            status: 'idle',
+            error: undefined,
+            suggestion: undefined,
+        },
         structuredData: null,
         messageGroups: [],
         abortController: null,
@@ -897,6 +912,21 @@ export const useChatStore = create(
                     mimeType: undefined,
                     fileName: undefined,
                 };
+                state.pdfProcessingStatus = {
+                    status: 'idle',
+                    error: undefined,
+                    suggestion: undefined,
+                };
+            });
+        },
+
+        setPdfProcessingStatus: (status: {
+            status: 'idle' | 'processing' | 'success' | 'error';
+            error?: string;
+            suggestion?: string;
+        }) => {
+            set((state) => {
+                state.pdfProcessingStatus = status;
             });
         },
 

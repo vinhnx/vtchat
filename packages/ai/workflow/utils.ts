@@ -289,9 +289,14 @@ export const generateTextWithGeminiSearch = async ({
 
             const streamTextConfig = filteredMessages?.length
                 ? {
-                      system: prompt,
                       model: selectedModel,
-                      messages: filteredMessages,
+                      messages: [
+                          {
+                              role: "system",
+                              content: prompt,
+                          },
+                          ...filteredMessages,
+                      ],
                       abortSignal: signal,
                       ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                   }
@@ -351,6 +356,32 @@ export const generateTextWithGeminiSearch = async ({
         } catch (error: any) {
             log.error("Error creating streamText:", { data: error });
             log.error("Error stack:", { data: error.stack });
+
+            // Enhanced error handling with provider-specific error extraction
+            const { ProviderErrorExtractor } = await import("../services/provider-error-extractor");
+            const errorResult = ProviderErrorExtractor.extractError(error, model?.provider as any);
+
+            if (errorResult.success && errorResult.error) {
+                const providerError = errorResult.error;
+                log.error("Provider error extracted:", {
+                    provider: providerError.provider,
+                    errorCode: providerError.errorCode,
+                    userMessage: providerError.userMessage,
+                    isRetryable: providerError.isRetryable,
+                });
+
+                // Create a user-friendly error with provider details
+                const enhancedError = new Error(providerError.userMessage);
+                (enhancedError as any).provider = providerError.provider;
+                (enhancedError as any).errorCode = providerError.errorCode;
+                (enhancedError as any).isRetryable = providerError.isRetryable;
+                (enhancedError as any).suggestedAction = providerError.suggestedAction;
+                (enhancedError as any).originalError = providerError.originalError;
+
+                throw enhancedError;
+            }
+
+            // Fallback for legacy error handling
             if (error.message?.includes("undefined to object")) {
                 throw new Error(
                     "Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.",
@@ -510,6 +541,13 @@ export const generateTextWithGeminiSearch = async ({
     }
 };
 
+// Cache for generated text to prevent multiple identical requests
+const textGenerationCache = new Map<string, any>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// In-flight request tracking to prevent multiple concurrent requests
+const inFlightRequests = new Map<string, Promise<any>>();
+
 export const generateText = async ({
     prompt,
     model,
@@ -550,6 +588,28 @@ export const generateText = async ({
     mode?: string;
 }) => {
     try {
+        // Create a cache key from the parameters
+        const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${JSON.stringify(tools || {})}:${toolChoice}:${maxSteps}`;
+        
+        // Check cache first
+        const cachedResult = textGenerationCache.get(cacheKey);
+        if (cachedResult) {
+            const { timestamp, result } = cachedResult;
+            if (Date.now() - timestamp < CACHE_TTL) {
+                log.info({ model, prompt: prompt.substring(0, 50) }, "Returning cached generateText result");
+                return result;
+            } else {
+                // Expired cache, remove it
+                textGenerationCache.delete(cacheKey);
+            }
+        }
+
+        // Check if there's already an in-flight request for this query
+        if (inFlightRequests.has(cacheKey)) {
+            log.info({ model, prompt: prompt.substring(0, 50) }, "Returning existing in-flight generateText request");
+            return await inFlightRequests.get(cacheKey);
+        }
+
         log.info(
             {
                 model: model.toString(),
@@ -668,9 +728,14 @@ export const generateText = async ({
 
         const streamConfig = filteredMessages?.length
             ? {
-                  system: prompt,
                   model: selectedModel,
-                  messages: filteredMessages,
+                  messages: [
+                      {
+                          role: "system",
+                          content: prompt,
+                      },
+                      ...filteredMessages,
+                  ],
                   tools,
                   maxSteps,
                   toolChoice: toolChoice as any,
@@ -689,7 +754,7 @@ export const generateText = async ({
 
         // Use quota-enforced streamText for VT+ users with correct feature based on mode
         let streamResult;
-        const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN };
+        const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN } as const;
         const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
 
         // Determine if this mode requires VT+ quota consumption
@@ -717,7 +782,55 @@ export const generateText = async ({
             });
         } else {
             // Regular chat or VT+ user with unlimited models
-            streamResult = streamText(streamConfig);
+            try {
+                streamResult = streamText(streamConfig);
+            } catch (error: any) {
+                log.error("Error in streamText call:", { error: error.message });
+
+                // Enhanced error handling with provider-specific error extraction
+                const { ProviderErrorExtractor } = await import(
+                    "../services/provider-error-extractor"
+                );
+                const errorResult = ProviderErrorExtractor.extractError(
+                    error,
+                    model?.provider as any,
+                );
+
+                if (errorResult.success && errorResult.error) {
+                    const providerError = errorResult.error;
+                    log.error("Provider error extracted:", {
+                        provider: providerError.provider,
+                        errorCode: providerError.errorCode,
+                        userMessage: providerError.userMessage,
+                        isRetryable: providerError.isRetryable,
+                    });
+
+                    // Create a user-friendly error with provider details
+                    const enhancedError = new Error(providerError.userMessage);
+                    (enhancedError as any).provider = providerError.provider;
+                    (enhancedError as any).errorCode = providerError.errorCode;
+                    (enhancedError as any).isRetryable = providerError.isRetryable;
+                    (enhancedError as any).suggestedAction = providerError.suggestedAction;
+                    (enhancedError as any).originalError = providerError.originalError;
+
+                    throw enhancedError;
+                }
+
+                // Fallback to more descriptive error message if we can determine the provider
+                if (model) {
+                    const modelInfo = models.find(m => m.id === model);
+                    if (modelInfo) {
+                        const providerName = modelInfo.provider;
+                        const hasApiKey = byokKeys && Object.keys(byokKeys).length > 0;
+                        
+                        if (!hasApiKey) {
+                            throw new Error(`API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`);
+                        }
+                    }
+                }
+
+                throw error;
+            }
         }
         const { fullStream } = streamResult;
         let fullText = "";
@@ -761,7 +874,272 @@ export const generateText = async ({
             log.warn("Failed to resolve reasoningDetails:", { data: error });
         }
 
-        return Promise.resolve(fullText);
+        // Create a new request promise
+        const requestPromise = (async () => {
+            try {
+                if (signal?.aborted) {
+                    throw new Error("Operation aborted");
+                }
+
+                // Filter out messages with empty content to prevent Gemini API errors
+                let filteredMessages = messages;
+                if (messages?.length) {
+                    filteredMessages = messages.filter((message) => {
+                        const hasContent =
+                            message.content &&
+                            (typeof message.content === "string"
+                                ? message.content.trim() !== ""
+                                : Array.isArray(message.content)
+                                  ? message.content.length > 0
+                                  : true);
+                        return hasContent;
+                    });
+                }
+
+                // Import reasoning utilities
+                const { supportsReasoning, getReasoningType, getReasoningTagName } = await import(
+                    "../models"
+                );
+
+                // Set up middleware based on model's reasoning capabilities
+                let middleware: any;
+                const reasoningTagName = getReasoningTagName(model);
+
+                if (reasoningTagName && supportsReasoning(model)) {
+                    middleware = extractReasoningMiddleware({
+                        tagName: reasoningTagName,
+                        separator: "\n",
+                    });
+                }
+
+                // Handle API key logic for VT+ users and Gemini models
+                const isGeminiModel = model.toString().toLowerCase().includes("gemini");
+                const isVtPlusUser = userTier === UserTier.PLUS;
+
+                if (isGeminiModel && isVtPlusUser) {
+                    // For VT+ users with Gemini models, check if they have BYOK
+                    const hasUserGeminiKey =
+                        byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
+                    const hasSystemGeminiKey =
+                        typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
+
+                    if (!hasUserGeminiKey && hasSystemGeminiKey) {
+                        // VT+ user without BYOK - use system key
+                        byokKeys = undefined;
+                        log.info("VT+ user without BYOK - using system API key for generateText");
+                    }
+                }
+
+                const selectedModel = getLanguageModel(
+                    model,
+                    middleware,
+                    byokKeys,
+                    useSearchGrounding,
+                    undefined,
+                    thinkingMode?.claude4InterleavedThinking,
+                    isVtPlusUser,
+                );
+
+                // Set up provider options based on model's reasoning type
+                const providerOptions: any = {};
+                const reasoningType = getReasoningType(model);
+
+                if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
+                    switch (reasoningType) {
+                        case "gemini-thinking":
+                            // Gemini models use thinkingConfig
+                            providerOptions.google = {
+                                thinkingConfig: {
+                                    includeThoughts: thinkingMode.includeThoughts ?? true,
+                                    maxOutputTokens: thinkingMode.budget,
+                                },
+                            };
+                            break;
+
+                        case "anthropic-reasoning":
+                            // Anthropic Claude 4 models support reasoning through beta features
+                            providerOptions.anthropic = {
+                                reasoning: true,
+                            };
+                            break;
+
+                        case "deepseek-reasoning":
+                            // DeepSeek reasoning models work through middleware extraction
+                            // No special provider options needed as middleware handles <tool_call> tags
+                            break;
+                    }
+                }
+
+                const streamConfig = filteredMessages?.length
+                    ? {
+                          model: selectedModel,
+                          messages: [
+                              {
+                                  role: "system",
+                                  content: prompt,
+                              },
+                              ...filteredMessages,
+                          ],
+                          tools,
+                          maxSteps,
+                          toolChoice: toolChoice as any,
+                          abortSignal: signal,
+                          ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                      }
+                    : {
+                          prompt,
+                          model: selectedModel,
+                          tools,
+                          maxSteps,
+                          toolChoice: toolChoice as any,
+                          abortSignal: signal,
+                          ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                      };
+
+                // Use quota-enforced streamText for VT+ users with correct feature based on mode
+                let streamResult;
+                const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN } as const;
+                const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
+
+                // Determine if this mode requires VT+ quota consumption
+                const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
+                const requiresQuotaConsumption =
+                    userId &&
+                    userTier === "PLUS" &&
+                    isEligibleForQuotaConsumption(user, isByokKey) &&
+                    vtplusFeature !== null;
+
+                if (requiresQuotaConsumption) {
+                    const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
+                    const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
+                    const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
+
+                    // Convert string feature code to enum
+                    const feature =
+                        vtplusFeature === "DR" ? VtPlusFeature.DEEP_RESEARCH : VtPlusFeature.PRO_SEARCH;
+
+                    streamResult = await streamTextWithQuota(streamConfig, {
+                        user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
+                        feature: feature,
+                        amount: 1,
+                        isByokKey: isUsingByokKeys(byokKeys),
+                    });
+                } else {
+                    // Regular chat or VT+ user with unlimited models
+                    try {
+                        streamResult = streamText(streamConfig);
+                    } catch (error: any) {
+                        log.error("Error in streamText call:", { error: error.message });
+
+                        // Enhanced error handling with provider-specific error extraction
+                        const { ProviderErrorExtractor } = await import(
+                            "../services/provider-error-extractor"
+                        );
+                        const errorResult = ProviderErrorExtractor.extractError(
+                            error,
+                            model?.provider as any,
+                        );
+
+                        if (errorResult.success && errorResult.error) {
+                            const providerError = errorResult.error;
+                            log.error("Provider error extracted:", {
+                                provider: providerError.provider,
+                                errorCode: providerError.errorCode,
+                                userMessage: providerError.userMessage,
+                                isRetryable: providerError.isRetryable,
+                            });
+
+                            // Create a user-friendly error with provider details
+                            const enhancedError = new Error(providerError.userMessage);
+                            (enhancedError as any).provider = providerError.provider;
+                            (enhancedError as any).errorCode = providerError.errorCode;
+                            (enhancedError as any).isRetryable = providerError.isRetryable;
+                            (enhancedError as any).suggestedAction = providerError.suggestedAction;
+                            (enhancedError as any).originalError = providerError.originalError;
+
+                            throw enhancedError;
+                        }
+
+                        // Fallback to more descriptive error message if we can determine the provider
+                        if (model) {
+                            const modelInfo = models.find(m => m.id === model);
+                            if (modelInfo) {
+                                const providerName = modelInfo.provider;
+                                const hasApiKey = byokKeys && Object.keys(byokKeys).length > 0;
+                                
+                                if (!hasApiKey) {
+                                    throw new Error(`API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`);
+                                }
+                            }
+                        }
+
+                        throw error;
+                    }
+                }
+                const { fullStream } = streamResult;
+                let fullText = "";
+                let reasoning = "";
+
+                for await (const chunk of fullStream) {
+                    if (signal?.aborted) {
+                        throw new Error("Operation aborted");
+                    }
+
+                    if (chunk.type === "text-delta") {
+                        fullText += chunk.textDelta;
+                        onChunk?.(chunk.textDelta, fullText);
+                    }
+                    if (chunk.type === "reasoning") {
+                        reasoning += chunk.textDelta;
+                        onReasoning?.(chunk.textDelta, reasoning);
+                    }
+                    if (chunk.type === "tool-call") {
+                        onToolCall?.(chunk);
+                    }
+                    if (chunk.type === ("tool-result" as any)) {
+                        onToolResult?.(chunk);
+                    }
+
+                    if (chunk.type === "error") {
+                        log.error(chunk.error);
+                        return Promise.reject(chunk.error);
+                    }
+                }
+
+                // Extract reasoning details if available
+                try {
+                    if (streamResult?.reasoningDetails) {
+                        const reasoningDetails = (await streamResult.reasoningDetails) || [];
+                        if (reasoningDetails.length > 0) {
+                            onReasoningDetails?.(reasoningDetails);
+                        }
+                    }
+                } catch (error) {
+                    log.warn("Failed to resolve reasoningDetails:", { data: error });
+                }
+
+                // Cache the result before returning
+                textGenerationCache.set(cacheKey, {
+                    timestamp: Date.now(),
+                    result: fullText,
+                });
+
+                return Promise.resolve(fullText);
+            } catch (error) {
+                log.error(error);
+                throw error;
+            } finally {
+                // Remove the in-flight request when done
+                inFlightRequests.delete(cacheKey);
+            }
+        })();
+
+        // Store the in-flight request
+        inFlightRequests.set(cacheKey, requestPromise);
+
+        // Wait for the request to complete and return the result
+        const result = await requestPromise;
+        return result;
     } catch (error) {
         log.error(error);
         return Promise.reject(error);
@@ -931,10 +1309,15 @@ export const generateObject = async ({
 
         const generateConfig = filteredMessages?.length
             ? {
-                  system: prompt,
                   model: selectedModel,
                   schema,
-                  messages: filteredMessages,
+                  messages: [
+                      {
+                          role: "system",
+                          content: prompt,
+                      },
+                      ...filteredMessages,
+                  ],
                   abortSignal: signal,
                   ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
               }
@@ -1432,6 +1815,7 @@ export const selectAvailableModel = (
             [ModelEnum.GEMINI_2_5_FLASH_LITE]: "GEMINI_API_KEY",
             [ModelEnum.GEMINI_2_5_PRO]: "GEMINI_API_KEY",
             // OpenAI models
+            [ModelEnum.GPT_5]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o_Mini]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4o]: "OPENAI_API_KEY",
             [ModelEnum.GPT_4_1]: "OPENAI_API_KEY",
@@ -1465,62 +1849,11 @@ export const selectAvailableModel = (
             [ModelEnum.GPT_OSS_20B]: "OPENROUTER_API_KEY",
         };
 
-        const requiredKey = providers[model];
-        if (!requiredKey) return false;
+        const requiredApiKey = providers[model];
+        if (!requiredApiKey) return false;
 
-        // Check BYOK keys first
-        if (byokKeys?.[requiredKey]) return true;
-
-        // Check environment variables
-        if (typeof process !== "undefined" && process.env?.[requiredKey]) return true;
-
-        // Check self (worker environment)
-        try {
-            if (typeof self !== "undefined" && (self as any).AI_API_KEYS) {
-                // Map API key names to provider names
-                const providerMap: Record<string, string> = {
-                    GEMINI_API_KEY: "google",
-                    OPENAI_API_KEY: "openai",
-                    ANTHROPIC_API_KEY: "anthropic",
-                    FIREWORKS_API_KEY: "fireworks",
-                    TOGETHER_API_KEY: "together",
-                    XAI_API_KEY: "xai",
-                    OPENROUTER_API_KEY: "openrouter",
-                };
-
-                const providerName = providerMap[requiredKey];
-                if (providerName && (self as any).AI_API_KEYS[providerName]) {
-                    return true;
-                }
-            }
-        } catch {
-            // self not available
-        }
-
-        // Check window (browser environment)
-        try {
-            if (typeof window !== "undefined" && (window as any).AI_API_KEYS) {
-                // Map API key names to provider names
-                const providerMap: Record<string, string> = {
-                    GEMINI_API_KEY: "google",
-                    OPENAI_API_KEY: "openai",
-                    ANTHROPIC_API_KEY: "anthropic",
-                    FIREWORKS_API_KEY: "fireworks",
-                    TOGETHER_API_KEY: "together",
-                    XAI_API_KEY: "xai",
-                    OPENROUTER_API_KEY: "openrouter",
-                };
-
-                const providerName = providerMap[requiredKey];
-                if (providerName && ((window as any).AI_API_KEYS as any)[providerName]) {
-                    return true;
-                }
-            }
-        } catch {
-            // window not available
-        }
-
-        return false;
+        const apiKey = byokKeys?.[requiredApiKey];
+        return !!(apiKey && apiKey.trim().length > 0);
     };
 
     // Try preferred model first
@@ -1544,6 +1877,13 @@ export const selectAvailableModel = (
             log.info("Using fallback model:", { data: model });
             return model;
         }
+    }
+
+    // Check if we have server-funded keys available for free models
+    const hasServerFundedGeminiKey = typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
+    if (hasServerFundedGeminiKey) {
+        log.info("Using server-funded Gemini model");
+        return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
 
     log.warn("No API key found for any model, will fail with clear error message");

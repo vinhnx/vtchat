@@ -110,7 +110,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - security protection
 - Basic chat functionality
 
-### Premium Tier (VT_PLUS - $10/month)
+### Premium Tier (VT_PLUS - $5.99/month)
 
 - All free features included
 - **Reasoning Mode**: AI thinking process transparency

@@ -121,7 +121,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 ### Sophisticated Subscription Tiers
 
 - **Free Tier**: VT offers free tier, and with VT+ focusing on professional research capabilities and advanced features.
-- **VT+ ($10/month)**: All free features + professional research tools: Enhanced Web Search (PRO_SEARCH - 50/day), Deep Research (DEEP_RESEARCH - 25/day), advanced document processing (25MB files), priority AI access, custom workflows, premium exports, extended chat history, and priority support
+- **VT+ ($5.99/month)**: All free features + professional research tools: Enhanced Web Search (PRO_SEARCH - 50/day), Deep Research (DEEP_RESEARCH - 25/day), advanced document processing (25MB files), priority AI access, custom workflows, premium exports, extended chat history, and priority support
 
 ### Advanced Payment Integration
 
@@ -253,7 +253,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ## 📋 Feature Comparison Matrix
 
-| Feature                           | Free Tier                              | VT+ ($10/month)                                                 |
+| Feature                           | Free Tier                              | VT+ ($5.99/month)                                               |
 | --------------------------------- | -------------------------------------- | --------------------------------------------------------------- |
 | **Basic AI Models**               | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅                                                              |
 | **Premium AI Models**             | ❌                                     | ✅ (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) |

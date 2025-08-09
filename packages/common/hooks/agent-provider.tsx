@@ -27,6 +27,8 @@ import { isGeminiModel } from "../utils/document-processing";
 
 import { useGenerationTimeout } from "./use-generation-timeout";
 import { useVtPlusAccess } from "./use-subscription-access";
+import { useToast } from "@repo/ui/src/components/use-sonner-toast";
+import { ProviderErrorExtractor } from "@repo/ai/services/provider-error-extractor";
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -83,6 +85,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const getAllKeys = useApiKeysStore((state) => state.getAllKeys);
     const hasApiKeyForChatMode = useApiKeysStore((state) => state.hasApiKeyForChatMode);
     const hasVtPlusAccess = useVtPlusAccess();
+    const { toast } = useToast();
 
     // Track active abort controllers for cleanup
     const activeControllersRef = useRef<Set<AbortController>>(new Set());
@@ -306,12 +309,25 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 if (!response.ok) {
                     const errorText = await response.text();
+                    
+                    // Use ProviderErrorExtractor to get structured error information
                     let finalErrorMessage = errorText;
-
-                    // Try to parse JSON error response to extract meaningful message
+                    let errorTitle = "API Error";
+                    
                     try {
                         const errorData = JSON.parse(errorText);
-                        if (errorData.message) {
+                        const errorResult = ProviderErrorExtractor.extractError(errorData);
+                        
+                        if (errorResult.success && errorResult.error) {
+                            finalErrorMessage = errorResult.error.userMessage;
+                            // Add suggested action to the error message for better user guidance
+                            if (errorResult.error.suggestedAction) {
+                                finalErrorMessage += ` ${errorResult.error.suggestedAction}`;
+                            }
+                            errorTitle = `${errorResult.error.provider} Error`;
+                        } else if (errorResult.fallbackMessage) {
+                            finalErrorMessage = errorResult.fallbackMessage;
+                        } else if (errorData.message) {
                             finalErrorMessage = errorData.message;
                         } else if (errorData.error?.message) {
                             finalErrorMessage = errorData.error.message;
@@ -319,8 +335,17 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                             finalErrorMessage = errorData.detail;
                         }
                     } catch {
-                        // Use raw text if JSON parsing fails
-                        finalErrorMessage = errorText;
+                        // If JSON parsing or extraction fails, try to extract error with ProviderErrorExtractor directly
+                        const errorResult = ProviderErrorExtractor.extractError(errorText);
+                        if (errorResult.success && errorResult.error) {
+                            finalErrorMessage = errorResult.error.userMessage;
+                            if (errorResult.error.suggestedAction) {
+                                finalErrorMessage += ` ${errorResult.error.suggestedAction}`;
+                            }
+                            errorTitle = `${errorResult.error.provider} Error`;
+                        } else if (errorResult.fallbackMessage) {
+                            finalErrorMessage = errorResult.fallbackMessage;
+                        }
                     }
 
                     // Handle specific error status codes
@@ -399,6 +424,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         persistToDB: true,
                     });
                     log.error({ errorText, status: response.status }, "Error response received");
+                    
+                    // Show error message to user using Sonner
+                    toast({
+                        title: errorTitle,
+                        description: finalErrorMessage,
+                        variant: "destructive",
+                        duration: 5000,
+                    });
+                    
                     // Throw the parsed error message instead of generic HTTP status
                     throw new Error(finalErrorMessage || `HTTP error! status: ${response.status}`);
                 }
@@ -556,8 +590,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 );
                 setIsGenerating(false);
 
-                // Extract meaningful error message
+                // Extract meaningful error message using ProviderErrorExtractor
                 let errorMessage = "Something went wrong. Please try again.";
+                let errorTitle = "Stream Error";
 
                 if (streamError.name === "AbortError") {
                     updateThreadItem(body.threadId, {
@@ -569,8 +604,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     return; // Early return for abort errors
                 }
 
-                // Check for specific API errors in the error message
-                if (streamError.message) {
+                // Use ProviderErrorExtractor to get structured error information
+                const errorResult = ProviderErrorExtractor.extractError(streamError);
+                
+                if (errorResult.success && errorResult.error) {
+                    errorMessage = errorResult.error.userMessage;
+                    // Add suggested action to the error message for better user guidance
+                    if (errorResult.error.suggestedAction) {
+                        errorMessage += ` ${errorResult.error.suggestedAction}`;
+                    }
+                    errorTitle = `${errorResult.error.provider} Error`;
+                } else if (errorResult.fallbackMessage) {
+                    errorMessage = errorResult.fallbackMessage;
+                } else if (streamError.message) {
                     const errorMsg = streamError.message.toLowerCase();
 
                     if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
@@ -607,6 +653,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     status: "ERROR",
                     error: errorMessage,
                     persistToDB: true,
+                });
+                
+                // Show error message to user using Sonner
+                toast({
+                    title: errorTitle,
+                    description: errorMessage,
+                    variant: "destructive",
+                    duration: 5000,
                 });
             } finally {
                 setIsGenerating(false);
