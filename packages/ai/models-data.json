@@ -11,7 +11,7 @@
                 "name": "GPT-5",
                 "attachment": true,
                 "reasoning": true,
-                "temperature": true,
+                "temperature": false,
                 "tool_call": true,
                 "knowledge": "2024-10",
                 "input_modalities": ["text", "image"],

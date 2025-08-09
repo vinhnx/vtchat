@@ -38,6 +38,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "GPT-4.1": ChatMode.GPT_4_1,
         "GPT-4.1 Mini": ChatMode.GPT_4_1_Mini,
         "GPT-4.1 Nano": ChatMode.GPT_4_1_Nano,
+        "GPT-5": ChatMode.GPT_5,
         o3: ChatMode.O3,
         "o3 mini": ChatMode.O3_Mini,
         "o4 mini": ChatMode.O4_Mini,
@@ -61,6 +62,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         "openai/gpt-oss-120b": ChatMode.GPT_OSS_120B,
         "openai/gpt-oss-20b": ChatMode.GPT_OSS_20B,
         "openai/gpt-5": ChatMode.GPT_5_OPENROUTER,
+        "gpt-5-2025-08-07": ChatMode.GPT_5,
     };
 
     // First try model name mapping
@@ -213,6 +215,13 @@ export const modelOptionsByProvider = {
         },
     ],
     OpenAI: [
+        {
+            label: "GPT 5",
+            value: ChatMode.GPT_5,
+            webSearch: true,
+            icon: undefined,
+            requiredApiKey: "OPENAI_API_KEY" as keyof ApiKeys,
+        },
         {
             label: "GPT 4o Mini",
             value: ChatMode.GPT_4o_Mini,
