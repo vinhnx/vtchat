@@ -21,6 +21,10 @@ add model provider icons to model dropdown (use lobechat?)
 
 --
 
+check document understanding doesn't work
+
+--
+
 add gpt-5
 
 https://platform.openai.com/docs/models/gpt-5
