@@ -7,9 +7,18 @@ export function PerformanceOptimizations() {
             {/* DNS prefetch for external domains */}
             <link href="//www.google.com" rel="dns-prefetch" />
 
-            {/* Resource hints for better performance */}
+            {/* Preload critical assets for LCP */}
+            <link href="/icon-192x192.png" rel="preload" as="image" />
+            <link href="/icons/peerlist_badge.svg" rel="preload" as="image" />
             <link href="/api/health" rel="prefetch" />
             <link href="/favicon.ico" rel="preload" as="image" />
+
+            {/* Preload critical fonts */}
+            <link 
+                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
+                rel="preload" 
+                as="style" 
+            />
 
             {/* Optimize viewport for mobile */}
             <meta content="#000000" name="theme-color" />

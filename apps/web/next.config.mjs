@@ -43,6 +43,7 @@ const nextConfig = {
         // Development optimizations
         typedEnv: true,
         inlineCss: true,
+        optimizeCss: true,
     },
 
     // Temporarily remove outputFileTracingRoot for Turbopack compatibility
@@ -367,6 +368,10 @@ const nextConfig = {
                     {
                         key: "Permissions-Policy",
                         value: "camera=(), microphone=(), geolocation=()",
+                    },
+                    {
+                        key: "Link",
+                        value: "</icon-192x192.png>; rel=preload; as=image, </icons/peerlist_badge.svg>; rel=preload; as=image",
                     },
                 ],
             },

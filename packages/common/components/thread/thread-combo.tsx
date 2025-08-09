@@ -3,12 +3,21 @@
 import { ThreadItem } from "@repo/common/components";
 import { useChatStore } from "@repo/common/store";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export function Thread() {
     const { threadId } = useParams();
     const currentThreadId = threadId?.toString() ?? "";
+    
+    // Show skeleton on initial load for better LCP
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    
+    useEffect(() => {
+        // Set initial load to false after first render
+        const timer = setTimeout(() => setIsInitialLoad(false), 50);
+        return () => clearTimeout(timer);
+    }, []);
 
     // Only call getPreviousThreadItems if we have a valid threadId
     const previousThreadItems = useChatStore(
@@ -43,6 +52,22 @@ export function Thread() {
             </div>
         ));
     }, [previousThreadItems]);
+
+    // Show skeleton during initial load for better LCP
+    if (isInitialLoad) {
+        return (
+            <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
+                {/* Skeleton for first message */}
+                <div className="flex animate-pulse space-x-4">
+                    <div className="bg-muted-foreground/20 rounded-full h-10 w-10" />
+                    <div className="flex-1 space-y-2">
+                        <div className="bg-muted-foreground/20 h-4 rounded w-3/4" />
+                        <div className="bg-muted-foreground/20 h-4 rounded" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Memoize current thread item to prevent unnecessary re-renders
     const memoizedCurrentThreadItem = useMemo(() => {
@@ -89,6 +114,8 @@ export function Thread() {
                                     width={20}
                                     height={20}
                                     className="object-contain"
+                                    fetchPriority="high"
+                                    decoding="async"
                                 />
                                 {/* Status indicator */}
                                 <div className="bg-muted-foreground/40 absolute -right-1 -top-1 h-4 w-4 rounded-full">
