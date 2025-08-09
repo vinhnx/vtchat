@@ -20,6 +20,7 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
+    Input,
 } from "@repo/ui";
 import { Brain, Globe, Wrench } from "lucide-react";
 
@@ -106,6 +107,9 @@ export function ChatModeOptions({
 
         return !hasRequiredAccess;
     };
+
+    // Search state for filtering models
+    const [searchQuery, setSearchQuery] = useState("");
 
     // BYOK modal state
     const [byokModalOpen, setBYOKModalOpen] = useState(false);
@@ -209,6 +213,17 @@ export function ChatModeOptions({
                 className="no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]"
                 side="bottom"
             >
+                {/* Search input (filters Models section) */}
+                <div className="sticky top-0 z-10 bg-popover p-2 pb-2">
+                    <Input
+                        autoFocus
+                        className="h-8"
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        placeholder="Search models..."
+                        value={searchQuery}
+                    />
+                </div>
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
                     {chatOptions.map((option) => {
@@ -264,92 +279,112 @@ export function ChatModeOptions({
                 </DropdownMenuGroup>
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Models</DropdownMenuLabel>
-                    {Object.entries(modelOptionsByProvider).map(([providerName, options]) => (
-                        <div key={providerName}>
-                            <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
-                                {providerName}
-                            </DropdownMenuLabel>
-                            {options.map((option) => {
-                                return (
-                                    <DropdownMenuItem
-                                        className={cn(
-                                            "h-auto pl-4",
-                                            option.value === _chatMode &&
-                                                "border-muted-foreground/30 border",
-                                        )}
-                                        key={`model-${option.value}`}
-                                        onSelect={() => handleDropdownSelect(option.value)}
-                                    >
-                                        <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
-                                            {/* Provider icon */}
-                                            {(option as any).providerIcon && (
-                                                <div className="flex items-center">
-                                                    {(option as any).providerIcon}
-                                                </div>
-                                            )}
-                                            <div className="flex flex-col gap-0">
-                                                <p className="text-sm font-medium">
-                                                    {option.label}
-                                                </p>
-                                                {(option as any).description && (
-                                                    <p className="text-muted-foreground text-xs">
-                                                        {(option as any).description}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <div className="flex-1" />
-                                            <div className="flex items-center gap-1">
-                                                {/* Model capability indicators */}
-                                                {(() => {
-                                                    const model = getModelFromChatMode(
-                                                        option.value,
-                                                    );
-                                                    if (!model) return null;
+                    {(() => {
+                        const q = searchQuery.trim().toLowerCase();
+                        const entries = Object.entries(modelOptionsByProvider).map(
+                            ([providerName, options]) => {
+                                const filtered = q
+                                    ? options.filter((opt) =>
+                                          opt.label.toLowerCase().includes(q),
+                                      )
+                                    : options;
+                                return [providerName, filtered] as const;
+                            },
+                        );
+                        const visible = entries.filter(([, opts]) => opts.length > 0);
 
-                                                    return (
-                                                        <>
-                                                            {supportsTools(model) && (
-                                                                <Wrench
-                                                                    className={cn(
-                                                                        "text-gray-500",
-                                                                        option.value ===
-                                                                            _chatMode &&
-                                                                            "text-blue-500",
-                                                                    )}
-                                                                    size={12}
-                                                                    title="Supports Tools"
-                                                                />
-                                                            )}
-                                                            {supportsReasoning(model) && (
-                                                                <Brain
-                                                                    className="text-purple-500"
-                                                                    size={12}
-                                                                    title="Reasoning Model"
-                                                                />
-                                                            )}
-                                                            {supportsWebSearch(model) && (
-                                                                <Globe
-                                                                    className="text-blue-500"
-                                                                    size={12}
-                                                                    title="Web Search"
-                                                                />
-                                                            )}
-                                                        </>
-                                                    );
-                                                })()}
-                                                {/* Original icon (free/gift) */}
-                                                {option.icon && (
+                        if (q && visible.length === 0) {
+                            return (
+                                <div className="text-muted-foreground px-3 py-2 text-xs">
+                                    No models found
+                                </div>
+                            );
+                        }
+
+                        return visible.map(([providerName, options]) => (
+                            <div key={providerName}>
+                                <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
+                                    {providerName}
+                                </DropdownMenuLabel>
+                                {options.map((option) => {
+                                    return (
+                                        <DropdownMenuItem
+                                            className={cn(
+                                                "h-auto pl-4",
+                                                option.value === _chatMode &&
+                                                    "border-muted-foreground/30 border",
+                                            )}
+                                            key={`model-${option.value}`}
+                                            onSelect={() => handleDropdownSelect(option.value)}
+                                        >
+                                            <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                                {(option as any).providerIcon && (
                                                     <div className="flex items-center">
-                                                        {option.icon}
+                                                        {(option as any).providerIcon}
                                                     </div>
                                                 )}
+                                                <div className="flex flex-col gap-0">
+                                                    <p className="text-sm font-medium">
+                                                        {option.label}
+                                                    </p>
+                                                    {(option as any).description && (
+                                                        <p className="text-muted-foreground text-xs">
+                                                            {(option as any).description}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1" />
+                                                <div className="flex items-center gap-1">
+                                                    {(() => {
+                                                        const model = getModelFromChatMode(
+                                                            option.value,
+                                                        );
+                                                        if (!model) return null;
+
+                                                        return (
+                                                            <>
+                                                                {supportsTools(model) && (
+                                                                    <Wrench
+                                                                        className={cn(
+                                                                            "text-gray-500",
+                                                                            option.value ===
+                                                                                _chatMode &&
+                                                                                "text-blue-500",
+                                                                        )}
+                                                                        size={12}
+                                                                        title="Supports Tools"
+                                                                    />
+                                                                )}
+                                                                {supportsReasoning(model) && (
+                                                                    <Brain
+                                                                        className="text-purple-500"
+                                                                        size={12}
+                                                                        title="Reasoning Model"
+                                                                    />
+                                                                )}
+                                                                {supportsWebSearch(model) && (
+                                                                    <Globe
+                                                                        className="text-blue-500"
+                                                                        size={12}
+                                                                        title="Web Search"
+                                                                    />
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                    {option.icon && (
+                                                        <div className="flex items-center">
+                                                            {option.icon}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </DropdownMenuItem>
-                                );
-                            })}
-                        </div>
-                    ))}
+                                        </DropdownMenuItem>
+                                    );
+                                })}
+                            </div>
+                        ));
+                    })()}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
 
