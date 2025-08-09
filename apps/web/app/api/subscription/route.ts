@@ -1,7 +1,7 @@
+import { log } from "@repo/shared/lib/logger";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { getUserWithSubscription } from "@/lib/database/queries";
-import { log } from "@repo/shared/lib/logger";
-import { NextResponse, type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 

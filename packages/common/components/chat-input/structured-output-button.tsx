@@ -13,6 +13,7 @@ import { Button, cn, useToast } from "@repo/ui";
 import { FileUp, ScanText, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
 import { z } from "zod";
+import { getPdfWorkerUrl } from "../../constants/pdf-worker";
 import { useApiKeysStore } from "../../store/api-keys.store";
 import { LoginRequiredDialog } from "../login-required-dialog";
 
@@ -236,8 +237,7 @@ const StructuredOutputButton = () => {
         if (fileType === "application/pdf") {
             // Use PDF.js for PDF extraction with CDN worker for version consistency
             const pdfjsLib = await import("pdfjs-dist");
-            const version = "5.4.54"; // Match our installed version
-            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.mjs`;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = getPdfWorkerUrl();
 
             const arrayBuffer = await file.arrayBuffer();
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -386,9 +386,9 @@ Please help me analyze this data and provide insights or answer any questions ab
 
         if (!hasStructuredOutputAccess) {
             toast({
-                title: "VT+ Required",
+                title: "Sign In Required",
                 description:
-                    "Structured output extraction is a VT+ feature. Please upgrade to access this functionality.",
+                    "Structured output extraction requires you to be signed in. Please sign in to access this functionality.",
                 variant: "destructive",
             });
             return;

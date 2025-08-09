@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ReasoningType } from "../constants/reasoning";
-import { ModelEnum, getReasoningType, supportsReasoning, supportsTools } from "../models";
+import { getReasoningType, ModelEnum, supportsReasoning, supportsTools } from "../models";
 
 describe("Reasoning Support", () => {
     describe("supportsReasoning", () => {

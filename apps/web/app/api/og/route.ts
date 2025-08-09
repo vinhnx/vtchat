@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { log } from "@repo/shared/lib/logger";
+import { type NextRequest, NextResponse } from "next/server";
 
 interface OGData {
     title?: string;

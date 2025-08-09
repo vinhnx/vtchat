@@ -4,9 +4,9 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
+    type QuotaWindow,
     VT_PLUS_LIMITS,
     VtPlusFeature,
-    type QuotaWindow,
 } from "../config/vtPlusLimits";
 
 /**

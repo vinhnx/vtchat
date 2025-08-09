@@ -1,5 +1,5 @@
 import { log } from "@repo/shared/lib/logger";
-import { PLANS, PlanSlug, type FeatureSlug } from "@repo/shared/types/subscription";
+import { type FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
 import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

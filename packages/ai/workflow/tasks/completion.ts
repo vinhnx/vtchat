@@ -249,13 +249,17 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
         log.info({ data: finalTools ? Object.keys(finalTools) : "none" }, "🔧 Final tools for AI");
 
+        // Track last math calculation result to enable fallback post-processing if needed
+        let lastMathResult: { toolName?: string; result?: any } | null = null;
+
         const response = await generateText({
             model,
             messages,
             prompt,
             signal,
             toolChoice: "auto",
-            maxSteps: 2,
+            // Allow enough steps for: tool call(s) + final answer synthesis
+            maxSteps: 4,
             tools: finalTools,
             byokKeys: context?.get("apiKeys"),
             thinkingMode: context?.get("thinkingMode"),
@@ -382,6 +386,18 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     });
                 }
 
+                // Track math tool results for potential fallback post-processing
+                if (
+                    (mathCalculator &&
+                        Object.keys(calculatorTools()).includes(toolResult.toolName || "")) ||
+                    toolResult.toolName === "evaluateExpression"
+                ) {
+                    lastMathResult = {
+                        toolName: toolResult.toolName,
+                        result: toolResult.result,
+                    };
+                }
+
                 // Send tool result event to UI
                 events?.update("steps", (prev) => ({
                     ...prev,
@@ -427,14 +443,61 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         reasoningBuffer.end();
         chunkBuffer.end();
 
+        let finalResponse = response;
+
+        // Fallback: if model didn't produce a response but we have a math result,
+        // ask the model to briefly explain and present the result as markdown
+        if ((!finalResponse || finalResponse.trim().length === 0) && lastMathResult) {
+            try {
+                const fallbackPrompt = `You performed a mathematical calculation using tool "${
+                    lastMathResult.toolName || "math_calculator"
+                }" and obtained this JSON output. Write a concise, user-friendly markdown answer that:
+
+1) States the final numeric result clearly (bold the number)
+2) Shows the minimal steps, if helpful
+3) Avoids mentioning internal tools or JSON
+
+Tool output JSON:\n\n${
+                    typeof lastMathResult.result === "string"
+                        ? lastMathResult.result
+                        : JSON.stringify(lastMathResult.result)
+                }`;
+
+                const fallback = await generateText({
+                    model,
+                    prompt: fallbackPrompt,
+                    signal,
+                    toolChoice: "none",
+                    maxSteps: 1,
+                    byokKeys: context?.get("apiKeys"),
+                    thinkingMode: context?.get("thinkingMode"),
+                    userTier: context?.get("userTier"),
+                    userId: context?.get("userId"),
+                    mode: context?.get("mode"),
+                });
+
+                if (fallback && fallback.trim().length > 0) {
+                    finalResponse = fallback;
+                }
+            } catch (fallbackError) {
+                log.warn(
+                    {
+                        error:
+                            fallbackError instanceof Error ? fallbackError.message : fallbackError,
+                    },
+                    "Math fallback post-processing failed",
+                );
+            }
+        }
+
         events?.update("answer", (prev) => ({
             ...prev,
             text: "",
-            fullText: response,
+            fullText: finalResponse,
             status: "COMPLETED",
         }));
 
-        context.update("answer", (_) => response);
+        context.update("answer", (_) => finalResponse);
 
         events?.update("status", (_prev) => "COMPLETED");
 

@@ -13,6 +13,7 @@
 - Named exports preferred over default exports
 - Use oxlint for fast comprehensive linting (run `bun run lint`)
 - Use Prettier for markdown files only (run `bun run format`)
+- Large prebuilt assets (e.g., PDF.js worker) must be loaded from a CDN rather than committed.
 
 ## UI/UX Design Principles
 

@@ -69,3 +69,6 @@ apps/web/e2e/session-cookies.json
 apps/web/test-results/
 apps/web/playwright-report/
 package-lock.json
+
+# PDF.js worker served from CDN
+apps/web/public/pdf.worker.min.js

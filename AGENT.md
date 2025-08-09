@@ -14,6 +14,7 @@ This file is intentionally short to reduce context size. For the complete contri
 
 - Apps in `apps/` (web app in `apps/web`); shared code in `packages/` (`@repo/shared`, `@repo/common`, `@repo/ui`).
 - Tests live under `apps/web/app/tests/`.
+- Load large prebuilt assets like the PDF.js worker from a CDN instead of committing binaries.
 
 ## Commands
 

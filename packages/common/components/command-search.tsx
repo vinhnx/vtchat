@@ -15,6 +15,7 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
+    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -22,7 +23,6 @@ import {
     DialogHeader,
     DialogTitle,
     Kbd,
-    cn,
     useToast,
 } from "@repo/ui";
 import {
@@ -36,8 +36,8 @@ import {
     Settings,
     Trash,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useFeatureAccess } from "../hooks/use-subscription-access";
 import { GatedFeatureAlert } from "./gated-feature-alert";

@@ -1,6 +1,6 @@
-import { experimental_generateSpeech as generateSpeech } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { NextRequest, NextResponse } from "next/server";
+import { experimental_generateSpeech as generateSpeech } from "ai";
+import { type NextRequest, NextResponse } from "next/server";
 
 // This route handler will generate speech using the user's OpenAI API key
 export async function POST(req: NextRequest) {

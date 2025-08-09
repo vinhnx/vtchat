@@ -1,7 +1,7 @@
-import { db } from "@/lib/database";
-import { providerUsage } from "@/lib/database/schema";
 import { log } from "@repo/shared/logger";
 import { and, eq, gte, sql } from "drizzle-orm";
+import { db } from "@/lib/database";
+import { providerUsage } from "@/lib/database/schema";
 
 /**
  * Record a request for provider usage tracking (rate limits only)

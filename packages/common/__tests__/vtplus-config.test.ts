@@ -2,10 +2,10 @@
 import { describe, expect, it } from "vitest";
 import {
     QUOTA_WINDOW,
+    type QuotaConfig,
     QuotaExceededError,
     VT_PLUS_LIMITS,
     VtPlusFeature,
-    type QuotaConfig,
 } from "../src/config/vtPlusLimits";
 
 describe("VT+ Configuration", () => {

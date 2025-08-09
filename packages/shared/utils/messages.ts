@@ -1,6 +1,10 @@
 import type { Attachment, DocumentAttachment, ThreadItem } from "@repo/shared/types";
 
-type MessageContent = { type: "text"; text: string } | { type: "image"; image: string };
+type MessageContent =
+    | { type: "text"; text: string }
+    // Use image part for both images and documents (e.g., PDFs) per AI SDK schema
+    // When sending documents, include mimeType (e.g., 'application/pdf')
+    | { type: "image"; image: string; mimeType?: string };
 
 export const buildCoreMessagesFromThreadItems = ({
     messages,
@@ -23,11 +27,11 @@ export const buildCoreMessagesFromThreadItems = ({
         }
 
         if (item.documentAttachment) {
-            // For document attachments, include as text content since AI SDK doesn't support file type
-            // The document content should be extracted and included as text
+            // For document attachments (e.g., PDF), include as image part with mimeType
             content.push({
-                type: "text",
-                text: `[Document: ${item.documentAttachment.fileName || "document"} (${item.documentAttachment.mimeType})]`,
+                type: "image",
+                image: item.documentAttachment.base64,
+                mimeType: item.documentAttachment.mimeType,
             });
         }
 
@@ -37,10 +41,11 @@ export const buildCoreMessagesFromThreadItems = ({
                 if (attachment.contentType.startsWith("image/")) {
                     content.push({ type: "image", image: attachment.url });
                 } else if (attachment.contentType === "application/pdf") {
-                    // For PDF attachments, include as text reference since AI SDK doesn't support file type
+                    // For PDF attachments, include as image part with mimeType
                     content.push({
-                        type: "text",
-                        text: `[PDF Document: ${attachment.name}]`,
+                        type: "image",
+                        image: attachment.url,
+                        mimeType: attachment.contentType,
                     });
                 }
             });
@@ -66,10 +71,11 @@ export const buildCoreMessagesFromThreadItems = ({
     }
 
     if (documentAttachment) {
-        // For document attachments, include as text reference since AI SDK doesn't support file type
+        // For document attachments (e.g., PDF), include as image part with mimeType
         currentContent.push({
-            type: "text",
-            text: `[Document: ${documentAttachment.fileName || "document"} (${documentAttachment.mimeType})]`,
+            type: "image",
+            image: documentAttachment.base64,
+            mimeType: documentAttachment.mimeType,
         });
     }
 
@@ -79,10 +85,11 @@ export const buildCoreMessagesFromThreadItems = ({
             if (attachment.contentType.startsWith("image/")) {
                 currentContent.push({ type: "image", image: attachment.url });
             } else if (attachment.contentType === "application/pdf") {
-                // For PDF attachments, include as text reference since AI SDK doesn't support file type
+                // For PDF attachments, include as image part with mimeType
                 currentContent.push({
-                    type: "text",
-                    text: `[PDF Document: ${attachment.name}]`,
+                    type: "image",
+                    image: attachment.url,
+                    mimeType: attachment.contentType,
                 });
             }
         });
