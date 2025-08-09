@@ -930,3 +930,9 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 - **Build Status**: ✅ All changes compile successfully with no breaking changes
 
 **Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search.
+
+### 2025-07-17
+- Integrated OpenAI GPT-5 model and configuration
+- Added ChatMode and model options for GPT-5 under OpenAI provider
+- Ensured OpenAI requests omit temperature parameter and updated tests
+

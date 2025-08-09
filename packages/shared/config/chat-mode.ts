@@ -15,6 +15,7 @@ export const ChatMode = {
     GPT_4_1_Nano: "gpt-4.1-nano",
     GPT_4o: "gpt-4o",
     GPT_4o_Mini: "gpt-4o-mini",
+    GPT_5: "gpt-5-2025-08-07",
     GEMINI_2_5_PRO: "gemini-2.5-pro",
     GEMINI_2_5_FLASH: "gemini-2.5-flash",
     GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
@@ -135,6 +136,14 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isAuthRequired: true,
+    },
+    [ChatMode.GPT_5]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+        isNew: true,
     },
     [ChatMode.CLAUDE_4_1_OPUS]: {
         webSearch: true,
@@ -440,6 +449,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI GPT 4o Mini";
         case ChatMode.GPT_4o:
             return "OpenAI GPT 4o";
+        case ChatMode.GPT_5:
+            return "OpenAI GPT 5";
         case ChatMode.CLAUDE_4_1_OPUS:
             return "Anthropic Claude 4.1 Opus";
         case ChatMode.CLAUDE_4_SONNET:

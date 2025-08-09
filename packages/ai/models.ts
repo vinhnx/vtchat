@@ -15,6 +15,7 @@ export const ModelEnum = {
     GPT_4_1_Mini: "gpt-4.1-mini",
     GPT_4_1_Nano: "gpt-4.1-nano",
     GPT_4_1: "gpt-4.1",
+    GPT_5: "gpt-5-2025-08-07",
     O3: "o3",
     O3_Mini: "o3-mini",
     O4_Mini: "o4-mini",
@@ -71,6 +72,13 @@ export const models: Model[] = [
         provider: "openai",
         maxTokens: 32_768,
         contextWindow: 1_047_576,
+    },
+    {
+        id: ModelEnum.GPT_5,
+        name: "GPT-5",
+        provider: "openai",
+        maxTokens: 128_000,
+        contextWindow: 400_000,
     },
     {
         id: ModelEnum.O3,
@@ -308,6 +316,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GPT_4_1_Mini;
         case ChatMode.GPT_4_1_Nano:
             return ModelEnum.GPT_4_1_Nano;
+        case ChatMode.GPT_5:
+            return ModelEnum.GPT_5;
         case ChatMode.O3:
             return ModelEnum.O3;
         case ChatMode.O3_Mini:
@@ -370,6 +380,8 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
             return 128_000;
         case ChatMode.GPT_4o:
             return 128_000;
+        case ChatMode.GPT_5:
+            return 400_000;
         case ChatMode.GPT_4_1_Mini:
         case ChatMode.GPT_4_1:
         case ChatMode.GPT_4_1_Nano:
@@ -447,6 +459,7 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     const openaiWebSearchModels = [
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4o,
+        ModelEnum.GPT_5,
         ModelEnum.O3,
         ModelEnum.O3_Mini,
         // OpenAI models via OpenRouter also support OpenAI web search tools
@@ -544,6 +557,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.O4_Mini,
         ModelEnum.O1_MINI,
         ModelEnum.O1,
+        ModelEnum.GPT_5,
     ];
 
     return [
@@ -566,6 +580,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.GPT_4_1,
         ModelEnum.GPT_4_1_Mini,
         ModelEnum.GPT_4_1_Nano,
+        ModelEnum.GPT_5,
         // Note: O1/O3 models do NOT support tools
     ];
 

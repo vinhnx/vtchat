@@ -24,6 +24,7 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             expect(getModelFromChatMode(ChatMode.KIMI_K2)).toBe(ModelEnum.KIMI_K2);
             expect(getModelFromChatMode(ChatMode.GPT_OSS_120B)).toBe(ModelEnum.GPT_OSS_120B);
             expect(getModelFromChatMode(ChatMode.GPT_OSS_20B)).toBe(ModelEnum.GPT_OSS_20B);
+            expect(getModelFromChatMode(ChatMode.GPT_5)).toBe(ModelEnum.GPT_5);
         });
     });
 
@@ -62,6 +63,7 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             expect(getModelDisplayName(ChatMode.GPT_OSS_20B)).toBe(
                 "OpenAI gpt-oss-20b (via OpenRouter)",
             );
+            expect(getModelDisplayName(ChatMode.GPT_5)).toBe("OpenAI GPT 5");
 
             // Test fallback for unknown mode
             expect(getModelDisplayName("unknown-mode")).toBe("VT Assistant");
@@ -123,6 +125,13 @@ describe("ChatMode and ModelEnum Synchronization", () => {
             const modelIds = models.map((m) => m.id);
             expect(modelIds).toContain(ModelEnum.GPT_OSS_120B);
             expect(modelIds).toContain(ModelEnum.GPT_OSS_20B);
+        });
+
+        it("should have GPT 5 model", () => {
+            expect(ModelEnum.GPT_5).toBe("gpt-5-2025-08-07");
+
+            const modelIds = models.map((m) => m.id);
+            expect(modelIds).toContain(ModelEnum.GPT_5);
         });
     });
 });
