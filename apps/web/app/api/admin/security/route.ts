@@ -1,9 +1,9 @@
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { providerUsage, sessions, users } from "@/lib/database/schema";
 import { log } from "@repo/shared/lib/logger";
 import { and, count, desc, eq, gte, isNotNull, ne, or, sql } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
+import { db } from "@/lib/database";
+import { providerUsage, sessions, users } from "@/lib/database/schema";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({

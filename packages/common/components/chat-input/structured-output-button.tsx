@@ -12,8 +12,8 @@ import { Button, cn, useToast } from "@repo/ui";
 // Removed unused generateObject import - now using server-side API route
 import { FileUp, ScanText, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
-import { getPdfWorkerUrl } from "../../constants/pdf-worker";
 import { z } from "zod";
+import { getPdfWorkerUrl } from "../../constants/pdf-worker";
 import { useApiKeysStore } from "../../store/api-keys.store";
 import { LoginRequiredDialog } from "../login-required-dialog";
 

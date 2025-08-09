@@ -1,12 +1,12 @@
-import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
-import { auth } from "@/lib/auth-server";
-import { userRateLimits } from "@/lib/database/schema";
-import { getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 import type { ModelEnum } from "@repo/ai/models";
 import { db } from "@repo/shared/lib/database";
 import { log } from "@repo/shared/logger";
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
+import { checkVTPlusAccess } from "@/app/api/subscription/access-control";
+import { auth } from "@/lib/auth-server";
+import { userRateLimits } from "@/lib/database/schema";
+import { getRateLimitStatus, recordRequest } from "@/lib/services/rate-limit";
 
 export async function GET(request: NextRequest) {
     try {

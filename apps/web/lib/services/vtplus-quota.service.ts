@@ -1,14 +1,14 @@
-import { db } from "@/lib/database";
-import { vtplusUsage } from "@/lib/database/schema";
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
-    VtPlusFeature,
     type QuotaWindow,
+    VtPlusFeature,
 } from "@repo/common/config/vtPlusLimits";
 import { log } from "@repo/shared/lib/logger";
 import type { PlanSlug } from "@repo/shared/types/subscription";
 import { and, eq, inArray, sql } from "drizzle-orm";
+import { db } from "@/lib/database";
+import { vtplusUsage } from "@/lib/database/schema";
 import { getQuotaConfig } from "./quota-config.service";
 
 /**

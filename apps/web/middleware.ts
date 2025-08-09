@@ -1,6 +1,6 @@
 import { isPublicRoute } from "@repo/shared/constants";
 import { log } from "@repo/shared/logger";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;

@@ -18,6 +18,7 @@ import {
 import {
     Badge,
     Button,
+    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -26,15 +27,14 @@ import {
     DropdownMenuTrigger,
     Flex,
     UnifiedAvatar,
-    cn,
     useToast,
 } from "@repo/ui";
 import { motion } from "framer-motion";
 import {
     ChevronLeft,
     ChevronRight,
-    ChevronUp,
     ChevronsUpDown,
+    ChevronUp,
     Command,
     ExternalLink,
     FileText,

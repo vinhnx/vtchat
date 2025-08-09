@@ -14,7 +14,7 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
 import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
-import { Flex, cn, useToast } from "@repo/ui";
+import { cn, Flex, useToast } from "@repo/ui";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";

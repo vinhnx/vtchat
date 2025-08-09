@@ -1,8 +1,8 @@
 "use client";
 
 import { MarkdownContent, markdownStyles } from "@repo/common/components";
-import type { ThreadItem } from "@repo/shared/types";
 import { getModelDisplayName } from "@repo/shared/config";
+import type { ThreadItem } from "@repo/shared/types";
 import { cn } from "@repo/ui";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";

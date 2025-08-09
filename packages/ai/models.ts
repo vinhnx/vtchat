@@ -15,6 +15,7 @@ export const ModelEnum = {
     GPT_4_1_Mini: "gpt-4.1-mini",
     GPT_4_1_Nano: "gpt-4.1-nano",
     GPT_4_1: "gpt-4.1",
+    GPT_5: "gpt-5-2025-08-07",
     O3: "o3",
     O3_Mini: "o3-mini",
     O4_Mini: "o4-mini",
@@ -51,6 +52,13 @@ export type Model = {
 };
 
 export const models: Model[] = [
+    {
+        id: ModelEnum.GPT_5,
+        name: "GPT-5",
+        provider: "openai",
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
     {
         id: ModelEnum.GPT_4o,
         name: "GPT-4o",
@@ -304,6 +312,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GPT_4o;
         case ChatMode.GPT_4_1:
             return ModelEnum.GPT_4_1;
+        case ChatMode.GPT_5:
+            return ModelEnum.GPT_5;
         case ChatMode.GPT_4_1_Mini:
             return ModelEnum.GPT_4_1_Mini;
         case ChatMode.GPT_4_1_Nano:
@@ -445,6 +455,7 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
 
 export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     const openaiWebSearchModels = [
+        ModelEnum.GPT_5,
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4o,
         ModelEnum.O3,
@@ -539,6 +550,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // OpenAI reasoning models
     const openaiReasoningModels = [
+        ModelEnum.GPT_5,
         ModelEnum.O3,
         ModelEnum.O3_Mini,
         ModelEnum.O4_Mini,
@@ -561,6 +573,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 export const supportsTools = (model: ModelEnum): boolean => {
     // OpenAI models that support tools
     const openaiToolModels = [
+        ModelEnum.GPT_5,
         ModelEnum.GPT_4o,
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4_1,

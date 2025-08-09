@@ -6,10 +6,10 @@ import { useToast } from "@repo/ui";
 import { generateObject } from "ai";
 import { useCallback } from "react";
 import { z } from "zod";
+import { getPdfWorkerUrl, pdfWorkerVersion } from "../constants/pdf-worker";
 import { useChatStore } from "../store";
 import { useApiKeysStore } from "../store/api-keys.store";
 import { isGeminiModel } from "../utils";
-import { getPdfWorkerUrl, pdfWorkerVersion } from "../constants/pdf-worker";
 
 // Dynamic import for pdfjs-dist to handle browser environment
 let pdfjsLib: typeof import("pdfjs-dist") | null = null;

@@ -1,9 +1,9 @@
 import { log } from "@repo/shared/logger";
 import { EnvironmentType } from "@repo/shared/types/environment";
 import { betterAuth } from "better-auth";
-import { emailHarmony } from "better-auth-harmony";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, multiSession } from "better-auth/plugins";
+import { emailHarmony } from "better-auth-harmony";
 import { botDetection } from "./bot-detection-plugin";
 import { db } from "./database";
 import * as schema from "./database/schema";

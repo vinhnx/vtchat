@@ -88,7 +88,7 @@ const finalSources = updateSourcesWithDeduplication(existingSources, mockGeminiR
 
 console.log("\n📊 Results:");
 console.log(`- Total sources after processing: ${finalSources.length}`);
-console.log(`- Expected: 3 (1 existing + 2 new unique sources)`);
+console.log("- Expected: 3 (1 existing + 2 new unique sources)");
 
 console.log("\n📝 Detailed Results:");
 finalSources.forEach((source, index) => {

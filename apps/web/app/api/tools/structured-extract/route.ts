@@ -4,8 +4,8 @@ import { log } from "@repo/shared/logger";
 import { generateObject } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../../subscription/access-control";
 import { auth } from "@/lib/auth-server";
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../../subscription/access-control";
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({
@@ -168,17 +168,17 @@ export async function POST(request: NextRequest) {
         const session = await auth.api.getSession({
             headers: request.headers,
         });
-        
+
         const userId = session?.user?.id;
-        
+
         // Check if user has access to structured output feature (available to all signed-in users)
         const { hasAccess: hasFeatureAccess } = await checkSignedInFeatureAccess({ userId });
-        
+
         if (!hasFeatureAccess) {
             return NextResponse.json(
-                { 
-                    error: "Authentication required", 
-                    message: "Please sign in to use structured output extraction functionality." 
+                {
+                    error: "Authentication required",
+                    message: "Please sign in to use structured output extraction functionality.",
                 },
                 { status: 403 },
             );

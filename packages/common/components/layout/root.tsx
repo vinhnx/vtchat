@@ -10,6 +10,7 @@ import {
     AvatarLegacy as Avatar,
     Badge,
     Button,
+    cn,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -17,7 +18,6 @@ import {
     DropdownMenuTrigger,
     Flex,
     SonnerToaster,
-    cn,
 } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -33,7 +33,7 @@ import {
     X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, type FC } from "react";
+import React, { type FC, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { BasicSidebar } from "../basic-sidebar";

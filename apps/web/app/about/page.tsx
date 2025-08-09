@@ -1,9 +1,9 @@
-import { BadgesSection } from "@/components/badges";
 import { Footer } from "@repo/common/components";
 import { Button } from "@repo/ui";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BadgesSection } from "@/components/badges";
 
 // This page can be statically generated for better performance
 export const dynamic = "force-static";

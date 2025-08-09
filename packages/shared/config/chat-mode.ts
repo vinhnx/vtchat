@@ -13,6 +13,7 @@ export const ChatMode = {
     GPT_4_1: "gpt-4.1",
     GPT_4_1_Mini: "gpt-4.1-mini",
     GPT_4_1_Nano: "gpt-4.1-nano",
+    GPT_5: "gpt-5-2025-08-07",
     GPT_4o: "gpt-4o",
     GPT_4o_Mini: "gpt-4o-mini",
     GEMINI_2_5_PRO: "gemini-2.5-pro",
@@ -91,6 +92,14 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
     [ChatMode.GPT_4_1_Nano]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
@@ -436,6 +445,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return "OpenAI GPT 4.1 Mini";
         case ChatMode.GPT_4_1_Nano:
             return "OpenAI GPT 4.1 Nano";
+        case ChatMode.GPT_5:
+            return "OpenAI GPT-5";
         case ChatMode.GPT_4o_Mini:
             return "OpenAI GPT 4o Mini";
         case ChatMode.GPT_4o:

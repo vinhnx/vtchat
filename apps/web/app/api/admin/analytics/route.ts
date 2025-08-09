@@ -1,3 +1,6 @@
+import { log } from "@repo/shared/lib/logger";
+import { count, eq, gte, sql, sum } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth-server";
 import { db } from "@/lib/database";
 import {
@@ -8,9 +11,6 @@ import {
     users,
     vtplusUsage,
 } from "@/lib/database/schema";
-import { log } from "@repo/shared/lib/logger";
-import { count, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
