@@ -1,9 +1,10 @@
 "use client";
 
 import { useSession } from "@repo/shared/lib/auth-client";
+import log from "@repo/shared/logger";
 import NextDynamic from "next/dynamic";
-import { SEOContent } from "../components/seo-content";
 import { useEffect } from "react";
+import { SEOContent } from "../components/seo-content";
 
 // This page needs dynamic rendering due to real-time chat functionality
 export const dynamic = "force-dynamic";
@@ -52,24 +53,24 @@ const FooterWithSuspense = NextDynamic(
 
 export default function HomePage() {
     const { data: session, isPending } = useSession();
-    
+
     // Log LCP optimization verification in development
     useEffect(() => {
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === "development") {
             // Simple check for preload directives
             const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]');
-            const preloadHrefs = Array.from(preloadLinks).map(link => link.getAttribute('href'));
-            
+            const preloadHrefs = Array.from(preloadLinks).map((link) => link.getAttribute("href"));
+
             const hasCriticalResources = [
-                '/icon-192x192.png',
-                '/icons/peerlist_badge.svg',
-                '/favicon.ico'
-            ].every(resource => preloadHrefs.includes(resource));
-            
+                "/icon-192x192.png",
+                "/icons/peerlist_badge.svg",
+                "/favicon.ico",
+            ].every((resource) => preloadHrefs.includes(resource));
+
             if (hasCriticalResources) {
-                console.log('✅ LCP: Critical resources are properly preloaded');
+                log.info("✅ LCP: Critical resources are properly preloaded");
             } else {
-                console.warn('⚠️ LCP: Some critical resources may not be preloaded');
+                log.info("⚠️ LCP: Some critical resources may not be preloaded");
             }
         }
     }, []);

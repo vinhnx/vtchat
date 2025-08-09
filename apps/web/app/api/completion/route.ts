@@ -326,28 +326,32 @@ export async function POST(request: NextRequest) {
                 }
                 // Require authentication for server-funded model access
                 if (!userId) {
-                    return new Response(
-                        JSON.stringify({
-                            error: "Authentication required",
-                            message:
-                                "Please register to use Gemini models or provide your own API key.",
-                            redirect: "/auth/login",
-                        }),
-                        {
-                            status: 401,
-                            headers: { "Content-Type": "application/json" },
-                        },
-                    );
+                    // Special case: GEMINI_2_5_FLASH_LITE is free for all users, no auth required
+                    if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE) {
+                        return new Response(
+                            JSON.stringify({
+                                error: "Authentication required",
+                                message:
+                                    "Please register to use Gemini models or provide your own API key.",
+                                redirect: "/auth/login",
+                            }),
+                            {
+                                status: 401,
+                                headers: { "Content-Type": "application/json" },
+                            },
+                        );
+                    }
                 }
 
                 // SPECIAL CASES:
-                // 1. GEMINI_2_5_FLASH_LITE is free for all authenticated users
+                // 1. GEMINI_2_5_FLASH_LITE is free for all users (no VT+ required)
                 // 2. Deep Research and Pro Search modes have their own access control logic below
                 // 3. Other Gemini models require VT+ subscription for server-side access
                 const isDeepResearchOrProSearch =
                     data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
+                const isFlashLite = data.mode === ChatMode.GEMINI_2_5_FLASH_LITE;
 
-                if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE && !isDeepResearchOrProSearch) {
+                if (!isFlashLite && data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE && !isDeepResearchOrProSearch) {
                     // VT+ REQUIRED for server-funded Gemini access (except Flash Lite and Deep/Pro modes)
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                     if (!vtPlusAccess.hasAccess) {

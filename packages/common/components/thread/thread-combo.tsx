@@ -31,6 +31,8 @@ export function Thread() {
         ),
     );
     const isGenerating = useChatStore(useShallow((state) => state.isGenerating));
+    
+    // Memoize previous thread items to prevent unnecessary re-renders
     const memoizedPreviousThreadItems = useMemo(() => {
         return previousThreadItems.map((threadItem) => (
             <div
@@ -52,22 +54,6 @@ export function Thread() {
             </div>
         ));
     }, [previousThreadItems]);
-
-    // Show skeleton during initial load for better LCP
-    if (isInitialLoad) {
-        return (
-            <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
-                {/* Skeleton for first message */}
-                <div className="flex animate-pulse space-x-4">
-                    <div className="bg-muted-foreground/20 rounded-full h-10 w-10" />
-                    <div className="flex-1 space-y-2">
-                        <div className="bg-muted-foreground/20 h-4 rounded w-3/4" />
-                        <div className="bg-muted-foreground/20 h-4 rounded" />
-                    </div>
-                </div>
-            </div>
-        );
-    }
 
     // Memoize current thread item to prevent unnecessary re-renders
     const memoizedCurrentThreadItem = useMemo(() => {
@@ -99,45 +85,57 @@ export function Thread() {
     return (
         <div className="relative" id="thread-container">
             <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
-                {" "}
-                {/* Reduced gap between thread items to prevent overlap */}
-                {memoizedPreviousThreadItems}
-                {memoizedCurrentThreadItem}
-                {showNewThreadLoadingIndicator && (
-                    <div className="min-h-[calc(100dvh-16rem)]">
-                        <div className="flex w-full items-start gap-2 pt-4 md:gap-3">
-                            {/* Avatar with VT icon */}
-                            <div className="bg-muted border-muted-foreground/20 relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border shadow-sm md:h-10 md:w-10">
-                                <img
-                                    src="/icon-192x192.png"
-                                    alt="VT"
-                                    width={20}
-                                    height={20}
-                                    className="object-contain"
-                                    fetchPriority="high"
-                                    decoding="async"
-                                />
-                                {/* Status indicator */}
-                                <div className="bg-muted-foreground/40 absolute -right-1 -top-1 h-4 w-4 rounded-full">
-                                    <div className="bg-background/60 h-full w-full rounded-full" />
-                                </div>
-                            </div>
-
-                            {/* Loading content */}
-                            <div className="flex-1 space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex space-x-1">
-                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]"></div>
-                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]"></div>
-                                        <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full"></div>
-                                    </div>
-                                    <span className="text-muted-foreground text-sm">
-                                        Thinking...
-                                    </span>
-                                </div>
-                            </div>
+                {/* Show skeleton during initial load for better LCP */}
+                {isInitialLoad ? (
+                    <div className="flex animate-pulse space-x-4">
+                        <div className="bg-muted-foreground/20 rounded-full h-10 w-10" />
+                        <div className="flex-1 space-y-2">
+                            <div className="bg-muted-foreground/20 h-4 rounded w-3/4" />
+                            <div className="bg-muted-foreground/20 h-4 rounded" />
                         </div>
                     </div>
+                ) : (
+                    <>
+                        {/* Reduced gap between thread items to prevent overlap */}
+                        {memoizedPreviousThreadItems}
+                        {memoizedCurrentThreadItem}
+                        {showNewThreadLoadingIndicator && (
+                            <div className="min-h-[calc(100dvh-16rem)]">
+                                <div className="flex w-full items-start gap-2 pt-4 md:gap-3">
+                                    {/* Avatar with VT icon */}
+                                    <div className="bg-muted border-muted-foreground/20 relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border shadow-sm md:h-10 md:w-10">
+                                        <img
+                                            src="/icon-192x192.png"
+                                            alt="VT"
+                                            width={20}
+                                            height={20}
+                                            className="object-contain"
+                                            fetchPriority="high"
+                                            decoding="async"
+                                        />
+                                        {/* Status indicator */}
+                                        <div className="bg-muted-foreground/40 absolute -right-1 -top-1 h-4 w-4 rounded-full">
+                                            <div className="bg-background/60 h-full w-full rounded-full" />
+                                        </div>
+                                    </div>
+
+                                    {/* Loading content */}
+                                    <div className="flex-1 space-y-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex space-x-1">
+                                                <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]"></div>
+                                                <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]"></div>
+                                                <div className="bg-muted-foreground/60 h-2 w-2 animate-bounce rounded-full"></div>
+                                            </div>
+                                            <span className="text-muted-foreground text-sm">
+                                                Thinking...
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>
