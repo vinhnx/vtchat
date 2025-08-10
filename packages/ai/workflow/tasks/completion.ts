@@ -5,7 +5,7 @@ import { calculatorTools } from "../../../../apps/web/lib/tools/math";
 import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from "../../models";
 import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
 import { getWebSearchTool } from "../../tools";
-import { handlePDFProcessingError, shouldRetryPDFProcessing } from "../../utils/pdf-error-handler";
+import { handlePDFProcessingError } from "../../utils/pdf-error-handler";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
     ChunkBuffer,
@@ -36,12 +36,12 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 ?.filter(
                     (message) =>
                         (message.role === "user" || message.role === "assistant") &&
-                        (!!message.content && 
-                         (typeof message.content === "string" 
-                          ? message.content.trim() !== "" 
-                          : Array.isArray(message.content) 
-                          ? message.content.length > 0 
-                          : false)),
+                        !!message.content &&
+                        (typeof message.content === "string"
+                            ? message.content.trim() !== ""
+                            : Array.isArray(message.content)
+                              ? message.content.length > 0
+                              : false),
                 ) || [];
 
         if (
@@ -211,10 +211,20 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         const chunkBuffer = new ChunkBuffer({
             threshold: 200,
             breakOn: ["\n"],
-            onFlush: (text: string) => {
+            onFlush: (bufferText: string, fullText: string) => {
+                log.debug("🔄 ChunkBuffer onFlush called", {
+                    bufferTextLength: bufferText?.length || 0,
+                    fullTextLength: fullText?.length || 0,
+                    bufferPreview: bufferText?.substring(0, 50) + "...",
+                    fullTextPreview: fullText?.substring(0, 50) + "...",
+                    threadItemId: context?.get("threadItemId"),
+                });
+
+                // Send incremental text updates for streaming display
+                // Use the buffer content for incremental updates
                 events?.update("answer", (current) => ({
                     ...current,
-                    text,
+                    text: bufferText,
                     status: "PENDING" as const,
                 }));
             },
@@ -259,213 +269,221 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         let lastMathResult: { toolName?: string; result?: any } | null = null;
 
         // Check if messages contain PDF attachments for enhanced error handling
-        const hasPDFAttachment = messages.some((message: any) => 
-            Array.isArray(message.content) && 
-            message.content.some((part: any) => 
-                part.type === 'file' && part.mediaType === 'application/pdf'
-            )
+        const hasPDFAttachment = messages.some(
+            (message: any) =>
+                Array.isArray(message.content) &&
+                message.content.some(
+                    (part: any) => part.type === "file" && part.mediaType === "application/pdf",
+                ),
         );
 
         let response: string;
-        
+
         try {
             response = await generateText({
-            model,
-            messages,
-            prompt,
-            signal,
-            toolChoice: "auto",
-            // Allow enough steps for: tool call(s) + final answer synthesis
-            maxSteps: 4,
-            tools: finalTools,
-            byokKeys: context?.get("apiKeys"),
-            thinkingMode: context?.get("thinkingMode"),
-            userTier: context?.get("userTier"),
-            userId: context?.get("userId"),
-            mode: context?.get("mode"),
-            onReasoning: (chunk, _fullText) => {
-                reasoningBuffer.add(chunk);
-            },
-            onReasoningDetails: (details) => {
-                events?.update("steps", (prev) => ({
-                    ...prev,
-                    0: {
-                        ...prev?.[0],
-                        id: 0,
-                        status: "COMPLETED",
-                        steps: {
-                            ...prev?.[0]?.steps,
-                            reasoningDetails: {
-                                data: details,
-                                status: "COMPLETED",
-                            },
-                        },
-                    },
-                }));
-            },
-            onChunk: (chunk, _fullText) => {
-                chunkBuffer.add(chunk);
-            },
-            onToolCall: (toolCall) => {
-                log.info({ toolName: toolCall.toolName, args: toolCall.args }, "Tool call");
-                // Send tool call event to UI
-                events?.update("steps", (prev) => ({
-                    ...prev,
-                    0: {
-                        ...prev?.[0],
-                        id: 0,
-                        status: "COMPLETED",
-                        steps: {
-                            ...prev?.[0]?.steps,
-                            toolCall: {
-                                data: {
-                                    toolName: toolCall.toolName,
-                                    args: toolCall.args,
-                                    type:
-                                        charts &&
-                                        Object.keys(chartTools()).includes(toolCall.toolName)
-                                            ? "charts"
-                                            : mathCalculator
-                                              ? "math_calculator"
-                                              : "unknown",
+                model,
+                messages,
+                prompt,
+                signal,
+                toolChoice: "auto",
+                // Allow enough steps for: tool call(s) + final answer synthesis
+                maxSteps: 4,
+                tools: finalTools,
+                byokKeys: context?.get("apiKeys"),
+                thinkingMode: context?.get("thinkingMode"),
+                userTier: context?.get("userTier"),
+                userId: context?.get("userId"),
+                mode: context?.get("mode"),
+                onReasoning: (chunk, _fullText) => {
+                    reasoningBuffer.add(chunk);
+                },
+                onReasoningDetails: (details) => {
+                    events?.update("steps", (prev) => ({
+                        ...prev,
+                        0: {
+                            ...prev?.[0],
+                            id: 0,
+                            status: "COMPLETED",
+                            steps: {
+                                ...prev?.[0]?.steps,
+                                reasoningDetails: {
+                                    data: details,
+                                    status: "COMPLETED",
                                 },
-                                status: "COMPLETED",
                             },
                         },
-                    },
-                }));
-
-                // Also update toolCalls for threadItem
-                events?.update("toolCalls", (prev) => [
-                    ...(prev || []),
-                    {
-                        toolCallId: toolCall.toolCallId,
-                        toolName: toolCall.toolName,
-                        args: toolCall.args,
-                    },
-                ]);
-            },
-            onToolResult: (toolResult) => {
-                log.info(
-                    { toolName: toolResult.toolName, result: toolResult.result },
-                    "Tool result for",
-                );
-
-                // Handle web search tool results - extract and add sources
-                if (toolResult.toolName === "web_search" && toolResult.result?.sources) {
-                    log.info(
-                        {
-                            toolName: toolResult.toolName,
-                            sourcesCount: toolResult.result.sources.length,
-                            sources: toolResult.result.sources.map((source: any) => ({
-                                title: source.title,
-                                url: source.url,
-                                snippet: source.snippet?.substring(0, 100) + "...",
-                            })),
+                    }));
+                },
+                onChunk: (chunk, fullText) => {
+                    log.debug("📝 onChunk called", {
+                        chunkLength: chunk?.length || 0,
+                        fullTextLength: fullText?.length || 0,
+                        chunkPreview: chunk?.substring(0, 50) + "...",
+                        threadItemId: context?.get("threadItemId"),
+                    });
+                    chunkBuffer.add(chunk);
+                },
+                onToolCall: (toolCall) => {
+                    log.info({ toolName: toolCall.toolName, args: toolCall.args }, "Tool call");
+                    // Send tool call event to UI
+                    events?.update("steps", (prev) => ({
+                        ...prev,
+                        0: {
+                            ...prev?.[0],
+                            id: 0,
+                            status: "COMPLETED",
+                            steps: {
+                                ...prev?.[0]?.steps,
+                                toolCall: {
+                                    data: {
+                                        toolName: toolCall.toolName,
+                                        args: toolCall.args,
+                                        type:
+                                            charts &&
+                                            Object.keys(chartTools()).includes(toolCall.toolName)
+                                                ? "charts"
+                                                : mathCalculator
+                                                  ? "math_calculator"
+                                                  : "unknown",
+                                    },
+                                    status: "COMPLETED",
+                                },
+                            },
                         },
-                        "Processing web search sources from tool result",
+                    }));
+
+                    // Also update toolCalls for threadItem
+                    events?.update("toolCalls", (prev) => [
+                        ...(prev || []),
+                        {
+                            toolCallId: toolCall.toolCallId,
+                            toolName: toolCall.toolName,
+                            args: toolCall.args,
+                        },
+                    ]);
+                },
+                onToolResult: (toolResult) => {
+                    log.info(
+                        { toolName: toolResult.toolName, result: toolResult.result },
+                        "Tool result for",
                     );
 
-                    // Add sources to context with proper deduplication
-                    context?.update("sources", (current) => {
-                        const existingSources = current ?? [];
-
-                        // Filter out duplicates within the new sources first
-                        const uniqueNewSources = [];
-                        const seenUrls = new Set(existingSources.map((source) => source.link));
-
-                        for (const source of toolResult.result.sources) {
-                            if (source?.url && !seenUrls.has(source.url)) {
-                                seenUrls.add(source.url);
-                                uniqueNewSources.push(source);
-                            }
-                        }
-
-                        const newSources = uniqueNewSources.map((source: any, index: number) => ({
-                            title: source.title || "Untitled",
-                            link: source.url,
-                            snippet: source.snippet || source.description || "",
-                            index: index + (existingSources.length || 0) + 1,
-                        }));
-
+                    // Handle web search tool results - extract and add sources
+                    if (toolResult.toolName === "web_search" && toolResult.result?.sources) {
                         log.info(
                             {
-                                existingCount: existingSources.length,
-                                originalNewCount: toolResult.result.sources.length,
-                                filteredNewCount: newSources?.length || 0,
-                                totalCount:
-                                    (existingSources.length || 0) + (newSources?.length || 0),
+                                toolName: toolResult.toolName,
+                                sourcesCount: toolResult.result.sources.length,
+                                sources: toolResult.result.sources.map((source: any) => ({
+                                    title: source.title,
+                                    url: source.url,
+                                    snippet: source.snippet?.substring(0, 100) + "...",
+                                })),
                             },
-                            "Updated sources from web search tool with deduplication",
+                            "Processing web search sources from tool result",
                         );
 
-                        return [...existingSources, ...(newSources || [])];
-                    });
-                }
+                        // Add sources to context with proper deduplication
+                        context?.update("sources", (current) => {
+                            const existingSources = current ?? [];
 
-                // Track math tool results for potential fallback post-processing
-                if (
-                    (mathCalculator &&
-                        Object.keys(calculatorTools()).includes(toolResult.toolName || "")) ||
-                    toolResult.toolName === "evaluateExpression"
-                ) {
-                    lastMathResult = {
-                        toolName: toolResult.toolName,
-                        result: toolResult.result,
-                    };
-                }
+                            // Filter out duplicates within the new sources first
+                            const uniqueNewSources = [];
+                            const seenUrls = new Set(existingSources.map((source) => source.link));
 
-                // Send tool result event to UI
-                events?.update("steps", (prev) => ({
-                    ...prev,
-                    0: {
-                        ...prev?.[0],
-                        id: 0,
-                        status: "COMPLETED",
-                        steps: {
-                            ...prev?.[0]?.steps,
-                            toolResult: {
-                                data: {
-                                    result: toolResult.result,
-                                    type:
-                                        charts &&
-                                        Object.keys(chartTools()).includes(
-                                            toolResult.toolName || "",
-                                        )
-                                            ? "charts"
-                                            : mathCalculator
-                                              ? "math_calculator"
-                                              : toolResult.toolName === "web_search"
-                                                ? "web_search"
-                                                : "unknown",
+                            for (const source of toolResult.result.sources) {
+                                if (source?.url && !seenUrls.has(source.url)) {
+                                    seenUrls.add(source.url);
+                                    uniqueNewSources.push(source);
+                                }
+                            }
+
+                            const newSources = uniqueNewSources.map(
+                                (source: any, index: number) => ({
+                                    title: source.title || "Untitled",
+                                    link: source.url,
+                                    snippet: source.snippet || source.description || "",
+                                    index: index + (existingSources.length || 0) + 1,
+                                }),
+                            );
+
+                            log.info(
+                                {
+                                    existingCount: existingSources.length,
+                                    originalNewCount: toolResult.result.sources.length,
+                                    filteredNewCount: newSources?.length || 0,
+                                    totalCount:
+                                        (existingSources.length || 0) + (newSources?.length || 0),
                                 },
-                                status: "COMPLETED",
+                                "Updated sources from web search tool with deduplication",
+                            );
+
+                            return [...existingSources, ...(newSources || [])];
+                        });
+                    }
+
+                    // Track math tool results for potential fallback post-processing
+                    if (
+                        (mathCalculator &&
+                            Object.keys(calculatorTools()).includes(toolResult.toolName || "")) ||
+                        toolResult.toolName === "evaluateExpression"
+                    ) {
+                        lastMathResult = {
+                            toolName: toolResult.toolName,
+                            result: toolResult.result,
+                        };
+                    }
+
+                    // Send tool result event to UI
+                    events?.update("steps", (prev) => ({
+                        ...prev,
+                        0: {
+                            ...prev?.[0],
+                            id: 0,
+                            status: "COMPLETED",
+                            steps: {
+                                ...prev?.[0]?.steps,
+                                toolResult: {
+                                    data: {
+                                        result: toolResult.result,
+                                        type:
+                                            charts &&
+                                            Object.keys(chartTools()).includes(
+                                                toolResult.toolName || "",
+                                            )
+                                                ? "charts"
+                                                : mathCalculator
+                                                  ? "math_calculator"
+                                                  : toolResult.toolName === "web_search"
+                                                    ? "web_search"
+                                                    : "unknown",
+                                    },
+                                    status: "COMPLETED",
+                                },
                             },
                         },
-                    },
-                }));
+                    }));
 
-                // Also update toolResults for threadItem
-                events?.update("toolResults", (prev) => [
-                    ...(prev || []),
-                    {
-                        toolCallId: toolResult.toolCallId,
-                        toolName: toolResult.toolName || "unknown",
-                        result: toolResult.result,
-                    },
-                ]);
-            },
-        });
-
+                    // Also update toolResults for threadItem
+                    events?.update("toolResults", (prev) => [
+                        ...(prev || []),
+                        {
+                            toolCallId: toolResult.toolCallId,
+                            toolName: toolResult.toolName || "unknown",
+                            result: toolResult.result,
+                        },
+                    ]);
+                },
+            });
         } catch (error) {
             // Handle PDF-specific errors with enhanced messaging
             if (hasPDFAttachment) {
                 const pdfError = handlePDFProcessingError(error);
-                
-                log.error('PDF processing error', {
+
+                log.error("PDF processing error", {
                     type: pdfError.type,
                     message: pdfError.message,
-                    userMessage: pdfError.userMessage
+                    userMessage: pdfError.userMessage,
                 });
 
                 // Provide user-friendly error message
@@ -493,7 +511,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             if (error instanceof Error) {
                 const errorMessage = error.message.toLowerCase();
                 if (errorMessage.includes("api key") || errorMessage.includes("unauthorized")) {
-                    const modelInfo = models.find(m => m.id === model);
+                    const modelInfo = models.find((m) => m.id === model);
                     if (modelInfo) {
                         const providerName = modelInfo.provider;
                         events?.update("error", (_prev) => ({
@@ -572,10 +590,16 @@ Tool output JSON:\n\n${
             }
         }
 
+        log.debug("🏁 Final response update", {
+            finalResponseLength: finalResponse?.length || 0,
+            finalResponsePreview: finalResponse?.substring(0, 100) + "...",
+            threadItemId: context?.get("threadItemId"),
+        });
+
         events?.update("answer", (prev) => ({
             ...prev,
-            text: "",
-            fullText: finalResponse,
+            text: finalResponse, // Set the complete final text
+            fullText: finalResponse, // Also set fullText for compatibility
             status: "COMPLETED",
         }));
 

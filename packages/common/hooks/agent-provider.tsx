@@ -170,10 +170,39 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     ? {
                           answer: {
                               ...eventData.answer,
-                              // Check if this is a complete text (fullText) or incremental chunk
-                              text: eventData.answer.fullText
-                                  ? eventData.answer.fullText // Use complete text directly
-                                  : (prevItem.answer?.text || "") + eventData.answer.text, // Concatenate chunks
+                              // Check if this is a complete/final text or incremental chunk
+                              text: (() => {
+                                  const isCompleted = eventData.answer.status === "COMPLETED";
+                                  const hasFullText = !!eventData.answer.fullText;
+                                  const incomingText = eventData.answer.text || "";
+                                  const previousText = prevItem.answer?.text || "";
+
+                                  let resultText;
+                                  if (isCompleted && hasFullText) {
+                                      resultText = eventData.answer.fullText; // Use complete final text directly
+                                  } else if (hasFullText) {
+                                      resultText = eventData.answer.fullText; // Use complete text directly
+                                  } else {
+                                      resultText = previousText + incomingText; // Concatenate incremental chunks
+                                  }
+
+                                  log.debug("📝 Answer text update decision", {
+                                      isCompleted,
+                                      hasFullText,
+                                      incomingTextLength: incomingText.length,
+                                      previousTextLength: previousText.length,
+                                      resultTextLength: resultText.length,
+                                      strategy:
+                                          isCompleted && hasFullText
+                                              ? "final-complete"
+                                              : hasFullText
+                                                ? "complete"
+                                                : "concatenate",
+                                      threadItemId,
+                                  });
+
+                                  return resultText;
+                              })(),
                           },
                       }
                     : { [eventType]: eventData[eventType] }),
