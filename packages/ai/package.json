@@ -43,6 +43,7 @@
         "ai": "^4.3.19",
         "braintrust": "^0.0.206",
         "dotenv": "^16.5.0",
+        "@e2b/code-interpreter": "^1.5.1",
         "js-tiktoken": "^1.0.20",
         "json-schema-to-zod": "^2.6.1",
         "openai": "^5.8.3",
