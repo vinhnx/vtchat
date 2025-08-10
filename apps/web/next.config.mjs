@@ -29,21 +29,25 @@ const nextConfig = {
         // Re-enable externalDir for monorepo support now that Turbopack works
         externalDir: true,
 
-        // Conservative memory optimizations for Next.js 15
-        webpackMemoryOptimizations: false, // Disable temporarily due to build issues
-        webpackBuildWorker: false,
+        // Aggressive memory optimizations for Next.js 15
+        webpackMemoryOptimizations: true, // Re-enable for memory savings
+        webpackBuildWorker: false, // Keep disabled to reduce memory usage
         preloadEntriesOnStart: false,
 
         // Improve stability for SWC/Turbopack
         swcTraceProfiling: false,
 
-        // Forward browser logs to terminal for easier debugging
-        browserDebugInfoInTerminal: true,
+        // Disable browser debug info to save memory during build
+        browserDebugInfoInTerminal: false,
 
         // Development optimizations
         typedEnv: true,
         inlineCss: true,
         optimizeCss: true,
+
+        // Additional memory optimizations
+        optimizePackageImports: ["@repo/shared", "@repo/common", "@repo/ui"],
+        serverMinification: true,
     },
 
     // Temporarily remove outputFileTracingRoot for Turbopack compatibility
@@ -147,14 +151,21 @@ const nextConfig = {
 
             // Enhanced memory optimizations for Next.js 15
             if (!dev) {
-                // Use memory cache type instead of disabling completely
-                config.cache = Object.freeze({
-                    type: "memory",
-                });
+                // Disable cache completely to save memory during build
+                config.cache = false;
             }
 
             // Minimize parallel processing to reduce memory usage
             config.parallelism = 1;
+
+            // Additional memory optimizations
+            config.optimization = {
+                ...config.optimization,
+                // Reduce memory usage during build
+                minimize: true,
+                // Use single-threaded optimization
+                minimizer: config.optimization.minimizer?.slice(0, 1),
+            };
 
             // Ensure undici is bundled for standalone production builds
             if (isServer && !dev) {
@@ -530,6 +541,8 @@ const nextConfig = {
         experimental: {
             // Disable source maps in production to save memory
             serverSourceMaps: false,
+            // Optimize for memory-constrained environments
+            optimizeServerReact: true,
         },
     }),
 

@@ -9,7 +9,12 @@ const requestDeduplicator =
 
 // Ensure proper URL formatting for Better Auth
 const getBaseURL = () => {
-    // Use environment variables in order of preference
+    // In production, always use the production URL
+    if (process.env.NODE_ENV === "production") {
+        return "https://vtchat.io.vn";
+    }
+
+    // Use environment variables in order of preference for development
     if (process.env.NEXT_PUBLIC_BETTER_AUTH_URL) {
         return process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
     }
@@ -20,13 +25,13 @@ const getBaseURL = () => {
         return process.env.NEXT_PUBLIC_APP_URL;
     }
 
-    // In development, use localhost
+    // In development, use localhost or window origin
     if (typeof window !== "undefined") {
         return window.location.origin;
     }
 
-    // Server-side fallback
-    return process.env.NEXT_PUBLIC_BASE_URL;
+    // Server-side fallback for development
+    return "http://localhost:3000";
 };
 
 // Create the auth client that will be used across all packages

@@ -1,31 +1,23 @@
-# Fly.io optimized .dockerignore
-# Exclude development files and build artifacts
+# Minimal .dockerignore for pre-built deployment
+# Only exclude what we don't need
 
-# Dependencies (will be installed in container)
+# Dependencies (will be copied from standalone)
+# Exclude root and package node_modules but allow standalone node_modules
 node_modules
-*/node_modules
-**/node_modules
+packages/*/node_modules
+apps/*/node_modules
+# Allow standalone node_modules
+!apps/web/.next/standalone/**/node_modules
 
-# Build outputs (will be generated in container)
-.next
-apps/web/.next
-packages/*/.next
+# Exclude build cache but keep built files
 .turbo
-dist
-build
-
-# Additional optimization - exclude more dev files
-.git
-.github
-**/.git
-**/.github
-*.log
-**/*.log
 .build-cache-warmed
 
 # Version control
 .git
-.gitignore
+.github
+**/.git
+**/.github
 
 # Environment files (secrets managed by Fly.io)
 .env*

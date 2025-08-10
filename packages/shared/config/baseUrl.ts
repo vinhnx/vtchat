@@ -69,7 +69,10 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
     }
 
     // Normalize URL (remove trailing slashes)
-    return url?.replace(/\/+$/, "") || "http://localhost:3000";
+    return (
+        url?.replace(/\/+$/, "") ||
+        (process.env.NODE_ENV === "production" ? "https://vtchat.io.vn" : "http://localhost:3000")
+    );
 }
 
 /**
@@ -80,7 +83,9 @@ export function getPublicBaseURL(): string {
     const result = getBaseURL({ public: true });
     if (!result) {
         // This should never happen due to fallback logic, but just in case
-        return "http://localhost:3000";
+        return process.env.NODE_ENV === "production"
+            ? "https://vtchat.io.vn"
+            : "http://localhost:3000";
     }
     return result;
 }

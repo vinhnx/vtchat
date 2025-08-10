@@ -71,15 +71,27 @@ log.info(
     "Server environment configured",
 );
 
-// Verify server.js exists - Next.js standalone generates it at the root in production
-const serverPath = path.join(process.cwd(), "server.js");
-log.info({ serverPath }, "Checking for server file");
+// Verify server.js exists - check multiple possible locations
+const possibleServerPaths = [
+    path.join(process.cwd(), "server.js"), // Root level (expected in standalone)
+    path.join(process.cwd(), "apps/web/server.js"), // In apps/web directory
+    path.join(__dirname, "server.js"), // Same directory as custom-server.js
+];
 
-try {
-    require("node:fs").accessSync(serverPath);
-    log.info("Server file found");
-} catch (error) {
-    log.error({ error: error.message }, "Server file not found");
+let serverPath = null;
+for (const testPath of possibleServerPaths) {
+    try {
+        require("node:fs").accessSync(testPath);
+        serverPath = testPath;
+        log.info({ serverPath }, "Server file found");
+        break;
+    } catch {
+        // Continue to next path
+    }
+}
+
+if (!serverPath) {
+    log.error("Server file not found in any expected location");
     log.info("Directory contents:");
     execSync("ls -la", { stdio: "inherit" });
     log.info("apps/web contents:");
@@ -91,8 +103,8 @@ try {
 process.env.PORT = PORT;
 process.env.HOSTNAME = HOSTNAME;
 
-log.info({ HOSTNAME, PORT }, "Starting Next.js server");
+log.info({ HOSTNAME, PORT, serverPath }, "Starting Next.js server");
 log.info("===========================");
 
-// Start the Next.js standalone server - it's at the root in production
-require("./server.js");
+// Start the Next.js standalone server
+require(serverPath);

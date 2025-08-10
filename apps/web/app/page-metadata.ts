@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://vtchat.io.vn";
+const baseUrl =
+    process.env.NODE_ENV === "production"
+        ? "https://vtchat.io.vn"
+        : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export const defaultMetadata: Metadata = {
     metadataBase: new URL(baseUrl),
