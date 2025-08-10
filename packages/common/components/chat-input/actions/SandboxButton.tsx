@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@repo/ui/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import { Terminal } from "lucide-react";
 import { useState } from "react";
 import { SandboxDisplay } from "../../sandbox/SandboxDisplay";

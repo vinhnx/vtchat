@@ -37,7 +37,7 @@ export const openaiWebSearchTool = () =>
                 // Check cache first to prevent duplicate requests
                 const cacheKey = `openai-web-search:${query}`;
                 const cachedResult = webSearchCache.get(cacheKey);
-                
+
                 if (cachedResult) {
                     const { timestamp, result } = cachedResult;
                     if (Date.now() - timestamp < CACHE_TTL) {
@@ -120,7 +120,7 @@ export const openaiWebSearchTool = () =>
                         // Cache the result
                         webSearchCache.set(cacheKey, {
                             timestamp: Date.now(),
-                            result
+                            result,
                         });
 
                         return result;
@@ -177,11 +177,14 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
                 // Check cache first to prevent duplicate requests
                 const cacheKey = `openai-web-search-${modelId}:${query}:${maxResults}`;
                 const cachedResult = webSearchCache.get(cacheKey);
-                
+
                 if (cachedResult) {
                     const { timestamp, result } = cachedResult;
                     if (Date.now() - timestamp < CACHE_TTL) {
-                        log.info({ query, modelId }, "Returning cached OpenAI web search result with model");
+                        log.info(
+                            { query, modelId },
+                            "Returning cached OpenAI web search result with model",
+                        );
                         return result;
                     } else {
                         // Expired cache, remove it
@@ -191,7 +194,10 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
 
                 // Check if there's already an in-flight request for this query
                 if (inFlightRequests.has(cacheKey)) {
-                    log.info({ query, modelId }, "Returning existing in-flight OpenAI web search request with model");
+                    log.info(
+                        { query, modelId },
+                        "Returning existing in-flight OpenAI web search request with model",
+                    );
                     return await inFlightRequests.get(cacheKey);
                 }
 
@@ -225,12 +231,15 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
                         // Cache the result
                         webSearchCache.set(cacheKey, {
                             timestamp: Date.now(),
-                            result
+                            result,
                         });
 
                         return result;
                     } catch (error: any) {
-                        log.error({ modelId, error }, `Error in OpenAI web search with model ${modelId}`);
+                        log.error(
+                            { modelId, error },
+                            `Error in OpenAI web search with model ${modelId}`,
+                        );
                         throw error;
                     } finally {
                         // Remove the in-flight request when done

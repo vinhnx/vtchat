@@ -101,12 +101,14 @@ const loadInitialData = async () => {
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
+                useSandbox: false,
                 showSuggestions: true,
                 chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
             },
             useWebSearch: false,
             useMathCalculator: false,
             useCharts: false,
+            useSandbox: false,
             chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
             customInstructions: "",
             showSuggestions: false,
@@ -183,6 +185,7 @@ type State = {
     useWebSearch: boolean;
     useMathCalculator: boolean;
     useCharts: boolean;
+    useSandbox: boolean;
     customInstructions: string;
     showSuggestions: boolean;
     editor: any;
@@ -196,7 +199,7 @@ type State = {
         fileName?: string;
     };
     pdfProcessingStatus: {
-        status: 'idle' | 'processing' | 'success' | 'error';
+        status: "idle" | "processing" | "success" | "error";
         error?: string;
         suggestion?: string;
     };
@@ -249,7 +252,7 @@ type Actions = {
     }) => void;
     clearDocumentAttachment: () => void;
     setPdfProcessingStatus: (status: {
-        status: 'idle' | 'processing' | 'success' | 'error';
+        status: "idle" | "processing" | "success" | "error";
         error?: string;
         suggestion?: string;
     }) => void;
@@ -290,6 +293,7 @@ type Actions = {
     setUseWebSearch: (useWebSearch: boolean) => void;
     setUseMathCalculator: (useMathCalculator: boolean) => void;
     setUseCharts: (useCharts: boolean) => void;
+    setUseSandbox: (useSandbox: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
     // Button selection management
     setActiveButton: (button: ActiveButtonType) => void;
@@ -825,6 +829,7 @@ export const useChatStore = create(
         useWebSearch: false,
         useMathCalculator: false,
         useCharts: false,
+        useSandbox: false,
         customInstructions: "",
         currentThreadId: null,
         activeThreadItemView: null,
@@ -838,7 +843,7 @@ export const useChatStore = create(
             fileName: undefined,
         },
         pdfProcessingStatus: {
-            status: 'idle',
+            status: "idle",
             error: undefined,
             suggestion: undefined,
         },
@@ -913,7 +918,7 @@ export const useChatStore = create(
                     fileName: undefined,
                 };
                 state.pdfProcessingStatus = {
-                    status: 'idle',
+                    status: "idle",
                     error: undefined,
                     suggestion: undefined,
                 };
@@ -921,7 +926,7 @@ export const useChatStore = create(
         },
 
         setPdfProcessingStatus: (status: {
-            status: 'idle' | 'processing' | 'success' | 'error';
+            status: "idle" | "processing" | "success" | "error";
             error?: string;
             suggestion?: string;
         }) => {
@@ -1001,15 +1006,14 @@ export const useChatStore = create(
             });
         },
 
-        setUseCharts: (useCharts: boolean) => {
-            // Save to simple settings
-            useAppStore.getState().setUseCharts(useCharts);
-
-            // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
-            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
+        setUseSandbox: (useSandbox: boolean) => {
+            useAppStore.getState().setUseSandbox(useSandbox);
+            const existingConfig = JSON.parse(
+                localStorage.getItem(CONFIG_KEY) || JSON.stringify({}),
+            );
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useSandbox }));
             set((state) => {
-                state.useCharts = useCharts;
+                state.useSandbox = useSandbox;
             });
         },
 
@@ -1046,6 +1050,15 @@ export const useChatStore = create(
                     if (state.useCharts) {
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
+                    }
+                } else if (button === "sandbox") {
+                    // Toggle sandbox feature
+                    state.activeButton = state.useSandbox ? null : "sandbox";
+                    state.useSandbox = !state.useSandbox;
+                    if (state.useSandbox) {
+                        state.useWebSearch = false;
+                        state.useMathCalculator = false;
+                        state.useCharts = false;
                     }
                 } else if (button === "structuredOutput") {
                     // For structured output, we'll just set it as active

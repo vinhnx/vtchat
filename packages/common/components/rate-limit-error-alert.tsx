@@ -30,7 +30,8 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
 
     // Handle both string errors and structured ProviderError objects
     const errorMessage = typeof error === "string" ? error : error.userMessage;
-    const suggestedAction = typeof error === "object" && "suggestedAction" in error ? error.suggestedAction : "";
+    const suggestedAction =
+        typeof error === "object" && "suggestedAction" in error ? error.suggestedAction : "";
 
     // Check if this is a rate limit error
     const isRateLimitError =

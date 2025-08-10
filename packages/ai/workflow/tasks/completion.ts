@@ -5,6 +5,7 @@ import { calculatorTools } from "../../../../apps/web/lib/tools/math";
 import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from "../../models";
 import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
 import { getWebSearchTool } from "../../tools";
+import { openSandbox, startSandbox, stopSandbox } from "../../tools/sandbox";
 import { handlePDFProcessingError } from "../../utils/pdf-error-handler";
 import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
 import {
@@ -29,6 +30,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         const webSearch = context.get("webSearch");
         const mathCalculator = context.get("mathCalculator");
         const charts = context.get("charts");
+        const codeSandbox = context.get("codeSandbox");
 
         let messages =
             context
@@ -172,6 +174,14 @@ ${
 - Search the web for current information rather than relying on training data
 - Process documents thoroughly when uploaded
 
+### Sandbox Guidance
+- When producing runnable code, prefer a lightweight client sandbox via the openSandbox tool with minimal files:
+  - JS/HTML: /index.html, /main.{js,ts}
+  - React: /App.tsx, /index.tsx
+  - Python: /main.py
+- If native packages or long-running processes are needed, use the startSandbox tool with { template, files, cmd, port }.
+- Keep examples small (<300 KB total). Apply edits incrementally to reduce churn.
+
 ### Privacy & Security
 - Respect user privacy and data confidentiality
 - Handle uploaded documents securely
@@ -258,6 +268,22 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             const webSearchTools = getWebSearchTool(model);
             if (webSearchTools) {
                 tools = { ...tools, ...webSearchTools };
+            }
+        }
+
+        // Sandbox tools: client-only is available to all; server E2B is premium-gated
+        try {
+            tools = { ...tools, openSandbox: openSandbox() };
+        } catch {
+            // No-op if tool factory fails
+        }
+
+        const userTier = context?.get("userTier");
+        if (userTier === "PLUS" || codeSandbox) {
+            try {
+                tools = { ...tools, startSandbox: startSandbox(), stopSandbox: stopSandbox() };
+            } catch {
+                // No-op if tool factory fails
             }
         }
 
@@ -353,14 +379,14 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     }));
 
                     // Also update toolCalls for threadItem
-                    events?.update("toolCalls", (prev) => [
-                        ...(prev || []),
-                        {
+                    events?.update("toolCalls", (prev) => ({
+                        ...prev,
+                        [toolCall.toolCallId]: {
                             toolCallId: toolCall.toolCallId,
                             toolName: toolCall.toolName,
                             args: toolCall.args,
                         },
-                    ]);
+                    }));
                 },
                 onToolResult: (toolResult) => {
                     log.info(
@@ -465,14 +491,14 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     }));
 
                     // Also update toolResults for threadItem
-                    events?.update("toolResults", (prev) => [
-                        ...(prev || []),
-                        {
+                    events?.update("toolResults", (prev) => ({
+                        ...prev,
+                        [toolResult.toolCallId]: {
                             toolCallId: toolResult.toolCallId,
                             toolName: toolResult.toolName || "unknown",
                             result: toolResult.result,
                         },
-                    ]);
+                    }));
                 },
             });
         } catch (error) {

@@ -2,8 +2,8 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { executeCode, getRemainingExecutions } from "../app/actions/sandbox";
-import { Button } from "@repo/ui/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
+import { Button } from "@repo/ui/components/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/card";
 import { PlayIcon } from "lucide-react";
 
 export function SandboxPanel({

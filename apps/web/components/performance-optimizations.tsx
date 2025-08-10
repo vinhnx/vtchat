@@ -14,10 +14,10 @@ export function PerformanceOptimizations() {
             <link href="/favicon.ico" rel="preload" as="image" />
 
             {/* Preload critical fonts */}
-            <link 
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-                rel="preload" 
-                as="style" 
+            <link
+                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+                rel="preload"
+                as="style"
             />
 
             {/* Optimize viewport for mobile */}

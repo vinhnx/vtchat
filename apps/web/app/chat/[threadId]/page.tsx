@@ -6,6 +6,8 @@ import { log } from "@repo/shared/logger";
 import { Button } from "@repo/ui";
 import { ArrowLeft, Home } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useMemo } from "react";
+import { E2BSandboxPanel } from "@/components/E2BSandboxPanel";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import { useStickToBottom } from "use-stick-to-bottom";
@@ -260,6 +262,56 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     // Get thread items to trigger scroll when content changes
     const threadItems = useChatStore((state) => state.threadItems);
 
+    // Derive sandbox artifacts from the current thread item's tool results
+    const currentThreadItem = useChatStore((state) => state.getCurrentThreadItem)(threadId);
+    const [stoppedSandboxId, setStoppedSandboxId] = useState<string | null>(null);
+    const [isStopping, setIsStopping] = useState(false);
+
+    const { clientArtifact, serverArtifact } = useMemo(() => {
+        const init = {
+            clientArtifact: null as null | {
+                lang: "js" | "html" | "python";
+                files: Record<string, string>;
+                title?: string;
+            },
+            serverArtifact: null as null | { 
+                sandboxId: string; 
+                host: string | null;
+                files?: Record<string, string>;
+                cmd?: string;
+                port?: number;
+            },
+        };
+        if (!currentThreadItem?.toolResults) return init;
+        const results = Object.values(currentThreadItem.toolResults);
+        // Prefer the latest sandbox-related result
+        for (let i = results.length - 1; i >= 0; i--) {
+            const r = results[i];
+            if (r.toolName === "openSandbox" && r.result && r.result.files) {
+                const { lang, files, title } = r.result || {};
+                if (lang && files)
+                    return { clientArtifact: { lang, files, title }, serverArtifact: null };
+            }
+            if (r.toolName === "startSandbox" && r.result && "sandboxId" in r.result) {
+                const { sandboxId, host, files, cmd, port } = r.result as any;
+                if (stoppedSandboxId && sandboxId === stoppedSandboxId) {
+                    return init;
+                }
+                return { 
+                    clientArtifact: null, 
+                    serverArtifact: { 
+                        sandboxId, 
+                        host: host ?? null,
+                        files: files ?? undefined,
+                        cmd: cmd ?? undefined,
+                        port: port ?? undefined
+                    } 
+                };
+            }
+        }
+        return init;
+    }, [currentThreadItem, stoppedSandboxId, threadItems]);
+
     // Scroll to bottom when thread items change (for initial load)
     useEffect(() => {
         if (threadItems.length > 0 && !hasScrolledToBottom.current && isThreadLoaded) {
@@ -419,38 +471,130 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
             <div className="thread-content-with-header flex-1 overflow-hidden">
                 <div
-                    className="scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
-                    ref={scrollRef}
-                    style={{
-                        // Reduce containment to allow dynamic content expansion
-                        contain: "layout",
-                        overflowAnchor: "auto",
-                    }}
+                    className={
+                        clientArtifact || serverArtifact
+                            ? "grid h-full grid-cols-1 gap-4 px-4 md:px-8 lg:grid-cols-[1fr_520px]"
+                            : "px-4 md:px-8"
+                    }
                 >
-                    <div
-                        className="pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full"
-                        ref={contentRef}
-                        style={{
-                            // Remove containment to allow dynamic expansion during streaming
-                            contain: "none",
-                            isolation: "isolate",
-                        }}
-                    >
-                        <Thread />
+                    {/* Left: chat */}
+                    <div className="col-span-1">
+                        <div
+                            className="scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto"
+                            ref={scrollRef}
+                            style={{ contain: "layout", overflowAnchor: "auto" }}
+                        >
+                            <div
+                                className="pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full"
+                                ref={contentRef}
+                                style={{ contain: "none", isolation: "isolate" }}
+                            >
+                                <Thread />
+                            </div>
+
+                            {/* Footer inside the white container for non-logged users */}
+                            {!(isPending || session) && (
+                                <div className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] md:w-full">
+                                    <Footer />
+                                </div>
+                            )}
+
+                            <TableOfMessages />
+                        </div>
+                        <div className="pb-safe-area-inset-bottom flex-shrink-0">
+                            <ChatInput />
+                        </div>
                     </div>
 
-                    {/* Footer inside the white container for non-logged users */}
-                    {!(isPending || session) && (
-                        <div className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] md:w-full">
-                            <Footer />
+                    {/* Right: sandbox preview panel */}
+                    {(clientArtifact || serverArtifact) && (
+                        <div className="border-muted/40 bg-background sticky top-0 hidden h-[calc(100dvh-110px)] overflow-hidden rounded-xl border lg:block">
+                            {serverArtifact ? (
+                                serverArtifact.host ? (
+                                    // Prioritize iframe when host is available
+                                    <div className="flex h-full flex-col">
+                                        <iframe src={serverArtifact.host} className="w-full flex-1" />
+                                        <div className="border-muted/40 flex items-center gap-2 border-t p-2">
+                                            <a
+                                                href={serverArtifact.host}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-muted-foreground hover:text-foreground text-xs underline"
+                                            >
+                                                Open in new tab
+                                            </a>
+                                            <div className="flex-1" />
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                disabled={isStopping}
+                                                onClick={async () => {
+                                                    if (!serverArtifact?.sandboxId) return;
+                                                    setIsStopping(true);
+                                                    try {
+                                                        const res = await fetch("/api/sandbox/stop", {
+                                                            method: "POST",
+                                                            headers: {
+                                                                "Content-Type": "application/json",
+                                                            },
+                                                            body: JSON.stringify({
+                                                                sandboxId: serverArtifact.sandboxId,
+                                                            }),
+                                                        });
+                                                        if (res.ok) {
+                                                            setStoppedSandboxId(
+                                                                serverArtifact.sandboxId,
+                                                            );
+                                                        }
+                                                    } finally {
+                                                        setIsStopping(false);
+                                                    }
+                                                }}
+                                            >
+                                                {isStopping ? "Stopping…" : "Stop sandbox"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : serverArtifact.files ? (
+                                    // Show files when no host is available
+                                    <div className="flex h-full flex-col">
+                                        <div className="p-2 flex-1 overflow-auto">
+                                            <E2BSandboxPanel
+                                                toolResult={{
+                                                    toolName: "startSandbox",
+                                                    result: {
+                                                        sandboxId: serverArtifact.sandboxId,
+                                                        files: serverArtifact.files
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="p-6 text-sm text-muted-foreground">
+                                        Server sandbox started but no preview available.
+                                    </div>
+                                )
+                            ) : clientArtifact ? (
+                                <div className="p-2">
+                                    <E2BSandboxPanel
+                                        toolResult={{
+                                            toolName: "openSandbox",
+                                            result: {
+                                                files: clientArtifact.files,
+                                                language: "javascript"
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="p-6 text-sm text-muted-foreground">
+                                    Sandboxes will appear here.
+                                </div>
+                            )}
                         </div>
                     )}
-
-                    <TableOfMessages />
                 </div>
-            </div>
-            <div className="pb-safe-area-inset-bottom flex-shrink-0">
-                <ChatInput />
             </div>
         </div>
     );

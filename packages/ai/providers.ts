@@ -65,10 +65,10 @@ const getApiKey = (
 
         const byokKey = byokKeys[keyMapping[provider]];
         if (byokKey) {
-            log.info("getApiKey: Found BYOK key for provider", { 
-                provider, 
+            log.info("getApiKey: Found BYOK key for provider", {
+                provider,
                 hasByKey: !!byokKey,
-                keyLength: byokKey.length 
+                keyLength: byokKey.length,
             });
             return byokKey;
         }
@@ -88,9 +88,9 @@ const getApiKey = (
                     if (geminiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
                         process.env.GOOGLE_GENERATIVE_AI_API_KEY = geminiKey;
                     }
-                    log.info("getApiKey: Using server-funded Gemini key", { 
+                    log.info("getApiKey: Using server-funded Gemini key", {
                         hasKey: !!geminiKey,
-                        keyLength: geminiKey.length 
+                        keyLength: geminiKey.length,
                     });
                     return geminiKey;
                 }
@@ -108,10 +108,10 @@ const getApiKey = (
         // Check if AI_API_KEYS exists on self (worker environment)
         const workerSelf = self as unknown as WorkerGlobalScope;
         if (workerSelf.AI_API_KEYS?.[provider]) {
-            log.info("getApiKey: Found worker AI_API_KEYS for provider", { 
-                provider, 
+            log.info("getApiKey: Found worker AI_API_KEYS for provider", {
+                provider,
                 hasKey: !!workerSelf.AI_API_KEYS[provider],
-                keyLength: workerSelf.AI_API_KEYS[provider].length 
+                keyLength: workerSelf.AI_API_KEYS[provider].length,
             });
             return workerSelf.AI_API_KEYS[provider];
         }
@@ -120,10 +120,10 @@ const getApiKey = (
         try {
             if (typeof window !== "undefined" && (window as any).AI_API_KEYS) {
                 const windowApiKey = (window as any).AI_API_KEYS[provider] || "";
-                log.info("getApiKey: Found window AI_API_KEYS for provider", { 
-                    provider, 
+                log.info("getApiKey: Found window AI_API_KEYS for provider", {
+                    provider,
                     hasKey: !!windowApiKey,
-                    keyLength: windowApiKey.length 
+                    keyLength: windowApiKey.length,
                 });
                 return windowApiKey;
             }
@@ -207,9 +207,9 @@ export const getProviderInstance = (
                 fetch: (input, init) => {
                     // Add deduplication headers to prevent caching issues
                     const headers = new Headers(init?.headers);
-                    headers.set('Cache-Control', 'no-store');
-                    headers.set('Pragma', 'no-cache');
-                    
+                    headers.set("Cache-Control", "no-store");
+                    headers.set("Pragma", "no-cache");
+
                     return globalThis.fetch(input, {
                         ...init,
                         headers,
@@ -331,11 +331,11 @@ export const getLanguageModel = (
             log.info("Creating Gemini model with special options...");
             const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
             const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-            log.info("Using model ID:", { 
+            log.info("Using model ID:", {
                 data: modelId,
                 originalModelId,
                 provider: model?.provider,
-                wasMapped: modelId !== originalModelId
+                wasMapped: modelId !== originalModelId,
             });
 
             try {
@@ -388,19 +388,19 @@ export const getLanguageModel = (
 
         log.info("Creating standard model...");
         const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-        
+
         const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-        log.info("Using model ID:", { 
+        log.info("Using model ID:", {
             data: modelId,
             originalModelId,
             provider: model?.provider,
-            wasMapped: modelId !== originalModelId
+            wasMapped: modelId !== originalModelId,
         });
-        log.info("Model details:", { 
-            modelId: model?.id, 
-            modelName: model?.name, 
+        log.info("Model details:", {
+            modelId: model?.id,
+            modelName: model?.name,
             modelProvider: model?.provider,
-            isGpt5: model?.id === "gpt-5-2025-08-07"
+            isGpt5: model?.id === "gpt-5-2025-08-07",
         });
 
         try {

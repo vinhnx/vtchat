@@ -90,6 +90,7 @@ export type WorkflowContextSchema = {
     webSearch: boolean;
     mathCalculator: boolean;
     charts: boolean;
+    codeSandbox: boolean;
     queries: string[];
     summaries: string[];
     gl?: Geo;
@@ -125,6 +126,7 @@ export const runWorkflow = ({
     webSearch = false,
     mathCalculator = false,
     charts = false,
+    codeSandbox = false,
     showSuggestions = false,
     onFinish,
     customInstructions,
@@ -200,6 +202,8 @@ export const runWorkflow = ({
         webSearch,
         mathCalculator,
         charts, // Charts now available to all users
+        codeSandbox, // Sandbox feature
+        codeSandbox: false, // Sandbox is disabled by default
         search_queries: [],
         messages: messages as any,
         goals: [],

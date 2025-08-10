@@ -20,9 +20,7 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                {trigger || defaultTrigger}
-            </DialogTrigger>
+            <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -30,38 +28,55 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                         PDF Document Support
                     </DialogTitle>
                 </DialogHeader>
-                
+
                 <div className="space-y-6">
                     {/* Supported Formats */}
                     <div>
                         <h3 className="text-lg font-semibold mb-3">Supported PDF Formats</h3>
                         <div className="space-y-3">
                             <div className="flex items-start gap-3">
-                                <CheckCircle size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
+                                <CheckCircle
+                                    size={16}
+                                    className="text-green-500 mt-0.5 flex-shrink-0"
+                                />
                                 <div>
                                     <div className="font-medium">Text-based PDFs</div>
-                                    <div className="text-sm text-muted-foreground">Documents with selectable text content</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        Documents with selectable text content
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
-                                <CheckCircle size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
+                                <CheckCircle
+                                    size={16}
+                                    className="text-green-500 mt-0.5 flex-shrink-0"
+                                />
                                 <div>
                                     <div className="font-medium">Mixed content PDFs</div>
-                                    <div className="text-sm text-muted-foreground">Documents with both text and images</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        Documents with both text and images
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
-                                <AlertCircle size={16} className="text-yellow-500 mt-0.5 flex-shrink-0" />
+                                <AlertCircle
+                                    size={16}
+                                    className="text-yellow-500 mt-0.5 flex-shrink-0"
+                                />
                                 <div>
                                     <div className="font-medium">Image-only PDFs</div>
-                                    <div className="text-sm text-muted-foreground">Scanned documents (limited accuracy)</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        Scanned documents (limited accuracy)
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
                                 <XCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <div className="font-medium">Password-protected PDFs</div>
-                                    <div className="text-sm text-muted-foreground">Must be unlocked before upload</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        Must be unlocked before upload
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +110,9 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                         <h3 className="text-lg font-semibold mb-3">Common Issues & Solutions</h3>
                         <div className="space-y-4">
                             <div className="border rounded-lg p-4">
-                                <div className="font-medium text-red-600 mb-2">"Document has no pages"</div>
+                                <div className="font-medium text-red-600 mb-2">
+                                    "Document has no pages"
+                                </div>
                                 <div className="text-sm text-muted-foreground mb-2">
                                     PDF file is corrupted or empty
                                 </div>
@@ -110,7 +127,9 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                             </div>
 
                             <div className="border rounded-lg p-4">
-                                <div className="font-medium text-red-600 mb-2">"Unable to process input image"</div>
+                                <div className="font-medium text-red-600 mb-2">
+                                    "Unable to process input image"
+                                </div>
                                 <div className="text-sm text-muted-foreground mb-2">
                                     PDF format not compatible with processing
                                 </div>
@@ -125,7 +144,9 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                             </div>
 
                             <div className="border rounded-lg p-4">
-                                <div className="font-medium text-red-600 mb-2">"File too large"</div>
+                                <div className="font-medium text-red-600 mb-2">
+                                    "File too large"
+                                </div>
                                 <div className="text-sm text-muted-foreground mb-2">
                                     PDF exceeds 10MB size limit
                                 </div>
@@ -171,7 +192,9 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                         <h3 className="text-lg font-semibold mb-3">Alternative Approaches</h3>
                         <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
                             <div className="text-sm space-y-2">
-                                <div><strong>If PDF processing fails:</strong></div>
+                                <div>
+                                    <strong>If PDF processing fails:</strong>
+                                </div>
                                 <ul className="list-disc list-inside space-y-1">
                                     <li>Convert to images (PNG/JPG files)</li>
                                     <li>Extract and paste text content directly</li>
@@ -184,9 +207,7 @@ export const PDFHelpDialog = ({ trigger }: PDFHelpDialogProps) => {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                    <Button onClick={() => setIsOpen(false)}>
-                        Got it
-                    </Button>
+                    <Button onClick={() => setIsOpen(false)}>Got it</Button>
                 </div>
             </DialogContent>
         </Dialog>

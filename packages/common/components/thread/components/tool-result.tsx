@@ -3,24 +3,27 @@
 import { CodeBlock, ToolResultIcon } from "@repo/common/components";
 import { isChartTool } from "@repo/common/constants/chart-tools";
 import { isMathTool } from "@repo/common/constants/math-tools";
-import type { ToolResult as ToolResultType } from "@repo/shared/types";
+import type { ToolCall as ToolCallType, ToolResult as ToolResultType } from "@repo/shared/types";
 import { Badge, Card, DynamicChartRenderer } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Activity, CheckCheck, CheckCircle, ChevronDown } from "lucide-react";
 import { memo, useCallback, useState } from "react";
 
-export type ToolResultProps = {
-    toolResult: ToolResultType;
+export type ToolInvocationProps = {
+    toolCall?: ToolCallType;
+    toolResult?: ToolResultType;
 };
 
-export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
+export const ToolInvocationStep = memo(({ toolCall, toolResult }: ToolInvocationProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
 
-    // Check if this is a math calculator tool result
-    const isResultMathTool = isMathTool(toolResult.toolName);
-    // Check if this is a chart tool result
-    const isResultChartTool = isChartTool(toolResult.toolName);
+    const toolName = toolResult?.toolName || toolCall?.toolName || "unknown";
+    const hasResult = !!toolResult;
+
+    // Check tool category based on available name
+    const isResultMathTool = isMathTool(toolName);
+    const isResultChartTool = isChartTool(toolName);
 
     return (
         <Card className="border-muted/50 bg-muted/20 hover:bg-muted/30 w-full transition-all duration-200">
@@ -45,18 +48,27 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
                             className="border-muted-foreground/20 bg-background/80 text-muted-foreground text-xs font-medium"
                             variant="secondary"
                         >
-                            <CheckCircle className="mr-1" size={10} />
-                            {isResultMathTool ? "Result" : isResultChartTool ? "Chart" : "Result"}
+                            {hasResult ? (
+                                <>
+                                    <CheckCircle className="mr-1" size={10} />
+                                    {isResultMathTool
+                                        ? "Result"
+                                        : isResultChartTool
+                                          ? "Chart"
+                                          : "Result"}
+                                </>
+                            ) : (
+                                <>
+                                    <Activity className="mr-1" size={10} />
+                                    Pending
+                                </>
+                            )}
                         </Badge>
                         <Badge
                             className="border-muted-foreground/10 bg-muted/20 text-muted-foreground text-xs"
                             variant="outline"
                         >
-                            {isResultMathTool
-                                ? `${toolResult.toolName}`
-                                : isResultChartTool
-                                  ? `${toolResult.toolName}`
-                                  : toolResult.toolName}
+                            {toolName}
                         </Badge>
                     </div>
                 </div>
@@ -78,21 +90,39 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
                         transition={{ duration: 0.2 }}
                     >
                         <div className="border-muted/50 border-t p-3 pt-3">
-                            {isResultChartTool ? (
-                                <div className="w-full">
-                                    <DynamicChartRenderer {...(toolResult.result as any)} />
-                                </div>
+                            {hasResult ? (
+                                isResultChartTool ? (
+                                    <div className="w-full">
+                                        <DynamicChartRenderer {...(toolResult!.result as any)} />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div className="mb-2 flex items-center gap-2">
+                                            <Activity className="text-muted-foreground" size={14} />
+                                            <span className="text-muted-foreground text-xs font-medium">
+                                                Output
+                                            </span>
+                                        </div>
+                                        <CodeBlock
+                                            className="border-muted/50 rounded-md"
+                                            code={JSON.stringify(toolResult!.result, null, 2)}
+                                            lang="json"
+                                            showHeader={false}
+                                            variant="secondary"
+                                        />
+                                    </div>
+                                )
                             ) : (
                                 <div>
                                     <div className="mb-2 flex items-center gap-2">
                                         <Activity className="text-muted-foreground" size={14} />
                                         <span className="text-muted-foreground text-xs font-medium">
-                                            Output
+                                            Parameters
                                         </span>
                                     </div>
                                     <CodeBlock
                                         className="border-muted/50 rounded-md"
-                                        code={JSON.stringify(toolResult.result, null, 2)}
+                                        code={JSON.stringify(toolCall?.args ?? {}, null, 2)}
                                         lang="json"
                                         showHeader={false}
                                         variant="secondary"
@@ -110,6 +140,6 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
 ToolInvocationStep.displayName = "ToolInvocationStep";
 
 // Keep the original component for backward compatibility
-export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
+export const ToolResultStep = memo(({ toolResult }: { toolResult: ToolResultType }) => {
     return <ToolInvocationStep toolResult={toolResult} />;
 });

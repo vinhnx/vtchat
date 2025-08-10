@@ -9,10 +9,10 @@ import { useShallow } from "zustand/react/shallow";
 export function Thread() {
     const { threadId } = useParams();
     const currentThreadId = threadId?.toString() ?? "";
-    
+
     // Show skeleton on initial load for better LCP
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    
+
     useEffect(() => {
         // Set initial load to false after first render
         const timer = setTimeout(() => setIsInitialLoad(false), 50);
@@ -31,7 +31,7 @@ export function Thread() {
         ),
     );
     const isGenerating = useChatStore(useShallow((state) => state.isGenerating));
-    
+
     // Memoize previous thread items to prevent unnecessary re-renders
     const memoizedPreviousThreadItems = useMemo(() => {
         return previousThreadItems.map((threadItem) => (

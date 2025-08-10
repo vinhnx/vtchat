@@ -1,7 +1,7 @@
 "use client";
 
 import { SandboxPanel } from "@/components/SandboxPanel";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui/components/dialog";
 
 export function SandboxDisplay({ files, lang, open, onOpenChange }) {
     return (

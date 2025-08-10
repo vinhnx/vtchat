@@ -331,7 +331,11 @@ export async function POST(request: NextRequest) {
                     data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
                 const isFlashLite = data.mode === ChatMode.GEMINI_2_5_FLASH_LITE;
 
-                if (!isFlashLite && data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE && !isDeepResearchOrProSearch) {
+                if (
+                    !isFlashLite &&
+                    data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE &&
+                    !isDeepResearchOrProSearch
+                ) {
                     // VT+ REQUIRED for server-funded Gemini access (except Flash Lite and Deep/Pro modes)
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                     if (!vtPlusAccess.hasAccess) {

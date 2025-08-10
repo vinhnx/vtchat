@@ -31,15 +31,15 @@ const OPENAI_ERROR_PATTERNS = {
     INVALID_API_KEY: /invalid.?api.?key|unauthorized|401/i,
     INSUFFICIENT_QUOTA: /insufficient.?quota|exceeded.?quota|billing/i,
     RATE_LIMIT: /rate.?limit|too.?many.?requests|429/i,
-    
+
     // Model errors
     MODEL_NOT_FOUND: /model.?not.?found|invalid.?model|404/i,
     MODEL_OVERLOADED: /model.?overloaded|service.?unavailable|502|503/i,
-    
+
     // Request errors
     CONTEXT_LENGTH: /context.?length|token.?limit|maximum.?context/i,
     INVALID_REQUEST: /invalid.?request|bad.?request|400/i,
-    
+
     // Content policy
     CONTENT_POLICY: /content.?policy|safety|moderation/i,
 } as const;
@@ -71,7 +71,7 @@ export class ProviderErrorExtractor {
         try {
             const errorString = this.getErrorString(error);
             const statusCode = this.extractStatusCode(error);
-            
+
             log.info("Extracting provider error:", {
                 provider,
                 errorString: errorString.substring(0, 200),
@@ -81,16 +81,21 @@ export class ProviderErrorExtractor {
 
             // Determine provider from error if not provided
             const detectedProvider = provider || this.detectProvider(errorString);
-            
+
             if (!detectedProvider) {
                 return {
                     success: false,
-                    fallbackMessage: "An unexpected error occurred. Please try again or contact support if the issue persists.",
+                    fallbackMessage:
+                        "An unexpected error occurred. Please try again or contact support if the issue persists.",
                 };
             }
 
-            const providerError = this.parseProviderError(errorString, detectedProvider, statusCode);
-            
+            const providerError = this.parseProviderError(
+                errorString,
+                detectedProvider,
+                statusCode,
+            );
+
             return {
                 success: true,
                 error: providerError,
@@ -111,42 +116,42 @@ export class ProviderErrorExtractor {
         if (typeof error === "string") {
             return error;
         }
-        
+
         if (error instanceof Error) {
             // Try to extract more detailed error from API responses
             const errorObj = error as any;
-            
+
             // Check for nested error messages (common in API SDKs)
             if (errorObj.response?.data?.error?.message) {
                 return errorObj.response.data.error.message;
             }
-            
+
             if (errorObj.response?.data?.message) {
                 return errorObj.response.data.message;
             }
-            
+
             if (errorObj.body?.error?.message) {
                 return errorObj.body.error.message;
             }
-            
+
             if (errorObj.error?.message) {
                 return errorObj.error.message;
             }
-            
+
             return error.message;
         }
-        
+
         if (typeof error === "object" && error !== null) {
             const errorObj = error as any;
-            
+
             // Try various common error message paths
             if (errorObj.message) return errorObj.message;
             if (errorObj.error?.message) return errorObj.error.message;
             if (errorObj.details) return errorObj.details;
-            
+
             return JSON.stringify(error);
         }
-        
+
         return String(error);
     }
 
@@ -156,14 +161,14 @@ export class ProviderErrorExtractor {
     private static extractStatusCode(error: unknown): number | undefined {
         if (typeof error === "object" && error !== null) {
             const errorObj = error as any;
-            
+
             // Common status code locations
             if (errorObj.status) return errorObj.status;
             if (errorObj.statusCode) return errorObj.statusCode;
             if (errorObj.response?.status) return errorObj.response.status;
             if (errorObj.response?.statusCode) return errorObj.response.statusCode;
         }
-        
+
         return undefined;
     }
 
@@ -172,35 +177,35 @@ export class ProviderErrorExtractor {
      */
     private static detectProvider(errorString: string): ProviderEnumType | undefined {
         const lowerError = errorString.toLowerCase();
-        
+
         if (lowerError.includes("openai") || lowerError.includes("gpt")) {
             return Providers.OPENAI;
         }
-        
+
         if (lowerError.includes("anthropic") || lowerError.includes("claude")) {
             return Providers.ANTHROPIC;
         }
-        
+
         if (lowerError.includes("google") || lowerError.includes("gemini")) {
             return Providers.GOOGLE;
         }
-        
+
         if (lowerError.includes("openrouter")) {
             return Providers.OPENROUTER;
         }
-        
+
         if (lowerError.includes("fireworks")) {
             return Providers.FIREWORKS;
         }
-        
+
         if (lowerError.includes("together")) {
             return Providers.TOGETHER;
         }
-        
+
         if (lowerError.includes("xai") || lowerError.includes("grok")) {
             return Providers.XAI;
         }
-        
+
         return undefined;
     }
 
@@ -210,7 +215,7 @@ export class ProviderErrorExtractor {
     private static parseProviderError(
         errorString: string,
         provider: ProviderEnumType,
-        statusCode?: number
+        statusCode?: number,
     ): ProviderError {
         switch (provider) {
             case Providers.OPENAI:
@@ -245,7 +250,8 @@ export class ProviderErrorExtractor {
                 userMessage: "Your OpenAI API key is invalid or has expired.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please check your OpenAI API key in Settings → API Keys. Make sure it starts with 'sk-' and is copied correctly.",
+                suggestedAction:
+                    "Please check your OpenAI API key in Settings → API Keys. Make sure it starts with 'sk-' and is copied correctly.",
             };
         }
 
@@ -258,7 +264,8 @@ export class ProviderErrorExtractor {
                 userMessage: "Your OpenAI account has insufficient credits or billing issues.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please add credits to your OpenAI account or check your billing settings at platform.openai.com.",
+                suggestedAction:
+                    "Please add credits to your OpenAI account or check your billing settings at platform.openai.com.",
             };
         }
 
@@ -268,10 +275,12 @@ export class ProviderErrorExtractor {
                 originalError: errorString,
                 statusCode,
                 errorCode: "RATE_LIMIT",
-                userMessage: "You've exceeded OpenAI's rate limits. Please wait a moment before trying again.",
+                userMessage:
+                    "You've exceeded OpenAI's rate limits. Please wait a moment before trying again.",
                 technicalMessage: errorString,
                 isRetryable: true,
-                suggestedAction: "Wait a few seconds and try again. Consider upgrading your OpenAI plan for higher rate limits.",
+                suggestedAction:
+                    "Wait a few seconds and try again. Consider upgrading your OpenAI plan for higher rate limits.",
             };
         }
 
@@ -310,7 +319,8 @@ export class ProviderErrorExtractor {
                 userMessage: "Your request was blocked by OpenAI's content policy.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please rephrase your request to comply with OpenAI's usage policies.",
+                suggestedAction:
+                    "Please rephrase your request to comply with OpenAI's usage policies.",
             };
         }
 
@@ -340,7 +350,8 @@ export class ProviderErrorExtractor {
                 userMessage: "Your Anthropic API key is invalid or has expired.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please check your Anthropic API key in Settings → API Keys. Make sure it starts with 'sk-ant-' and is copied correctly.",
+                suggestedAction:
+                    "Please check your Anthropic API key in Settings → API Keys. Make sure it starts with 'sk-ant-' and is copied correctly.",
             };
         }
 
@@ -350,10 +361,12 @@ export class ProviderErrorExtractor {
                 originalError: errorString,
                 statusCode,
                 errorCode: "RATE_LIMIT",
-                userMessage: "You've exceeded Anthropic's rate limits. Please wait before trying again.",
+                userMessage:
+                    "You've exceeded Anthropic's rate limits. Please wait before trying again.",
                 technicalMessage: errorString,
                 isRetryable: true,
-                suggestedAction: "Wait a moment and try again. Consider upgrading your Anthropic plan for higher limits.",
+                suggestedAction:
+                    "Wait a moment and try again. Consider upgrading your Anthropic plan for higher limits.",
             };
         }
 
@@ -366,7 +379,8 @@ export class ProviderErrorExtractor {
             userMessage: "An error occurred with Anthropic's service.",
             technicalMessage: errorString,
             isRetryable: true,
-            suggestedAction: "Please try again. If the issue persists, check your API key and account status.",
+            suggestedAction:
+                "Please try again. If the issue persists, check your API key and account status.",
         };
     }
 
@@ -380,10 +394,12 @@ export class ProviderErrorExtractor {
                 originalError: errorString,
                 statusCode,
                 errorCode: "INVALID_API_KEY",
-                userMessage: "Your Google API key is invalid or doesn't have the required permissions.",
+                userMessage:
+                    "Your Google API key is invalid or doesn't have the required permissions.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please check your Google API key in Settings → API Keys. Make sure it starts with 'AIza' and has Generative AI permissions enabled.",
+                suggestedAction:
+                    "Please check your Google API key in Settings → API Keys. Make sure it starts with 'AIza' and has Generative AI permissions enabled.",
             };
         }
 
@@ -396,7 +412,8 @@ export class ProviderErrorExtractor {
                 userMessage: "Your request was blocked by Google's safety filters.",
                 technicalMessage: errorString,
                 isRetryable: false,
-                suggestedAction: "Please rephrase your request to avoid content that might trigger safety filters.",
+                suggestedAction:
+                    "Please rephrase your request to avoid content that might trigger safety filters.",
             };
         }
 
@@ -409,7 +426,8 @@ export class ProviderErrorExtractor {
             userMessage: "An error occurred with Google's Gemini service.",
             technicalMessage: errorString,
             isRetryable: true,
-            suggestedAction: "Please try again. If the issue persists, check your API key and quota limits.",
+            suggestedAction:
+                "Please try again. If the issue persists, check your API key and quota limits.",
         };
     }
 
@@ -438,7 +456,7 @@ export class ProviderErrorExtractor {
     private static parseGenericError(
         errorString: string,
         provider: ProviderEnumType,
-        statusCode?: number
+        statusCode?: number,
     ): ProviderError {
         const providerNames = {
             [Providers.OPENAI]: "OpenAI",
@@ -487,7 +505,8 @@ export class ProviderErrorExtractor {
             userMessage: `An error occurred with ${providerName}'s service.`,
             technicalMessage: errorString,
             isRetryable: true,
-            suggestedAction: "Please try again. If the issue persists, check your API key and account status.",
+            suggestedAction:
+                "Please try again. If the issue persists, check your API key and account status.",
         };
     }
 }

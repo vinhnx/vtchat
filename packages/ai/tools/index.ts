@@ -10,6 +10,8 @@ export {
 export * from "./registry";
 // Enhanced streaming utilities
 export * from "./streaming-utils";
+// Sandbox tools
+export { openSandbox, startSandbox, stopSandbox, listSandboxes } from "./sandbox";
 
 import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from "../models";
 import { openaiWebSearchTool } from "./openai-web-search";

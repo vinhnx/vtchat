@@ -116,6 +116,7 @@
         "better-auth-harmony": "^1.2.5",
         "creem": "^0.3.37",
         "date-fns": "3.6.0",
+        "dotenv": "^17.2.1",
         "drizzle-orm": "^0.44.4",
         "husky": "^9.1.7",
         "isbot": "^5.1.29",

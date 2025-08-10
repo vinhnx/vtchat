@@ -13,6 +13,7 @@ export { FeatureToggleButton } from "./actions/FeatureToggleButton";
 export { GeneratingStatus } from "./actions/GeneratingStatus";
 export { MathCalculatorButton } from "./actions/MathCalculatorButton";
 export { NewLineIndicator } from "./actions/NewLineIndicator";
+export { SandboxButton } from "./actions/SandboxButton";
 export { SendStopButton } from "./actions/SendStopButton";
 // Feature Toggle Components
 export { WebSearchButton } from "./actions/WebSearchButton";

@@ -270,5 +270,34 @@ export type ProviderUsage = typeof providerUsage.$inferSelect;
 export type NewProviderUsage = typeof providerUsage.$inferInsert;
 export type VtplusUsage = typeof vtplusUsage.$inferSelect;
 export type NewVtplusUsage = typeof vtplusUsage.$inferInsert;
+// E2B Sandbox usage tracking table for rate limiting and cost management
+export const sandboxUsage = pgTable(
+    "sandbox_usage",
+    {
+        id: uuid("id").primaryKey().defaultRandom(),
+        userId: text("user_id")
+            .notNull()
+            .references(() => users.id, { onDelete: "cascade" }),
+        sandboxId: text("sandbox_id"), // E2B sandbox ID (if successful)
+        success: boolean("success").notNull().default(false), // Whether sandbox was created successfully
+        language: text("language").notNull().default("python"), // Programming language used
+        timeoutMinutes: integer("timeout_minutes").notNull().default(10), // Sandbox timeout
+        internetAccess: boolean("internet_access").notNull().default(false), // Whether internet access was enabled
+        errorMessage: text("error_message"), // Error message if failed
+        metadata: json("metadata"), // Additional metadata (user tier, source, etc.)
+        createdAt: timestamp("created_at").notNull().defaultNow(),
+    },
+    (table) => ({
+        userDateIndex: index("sandbox_usage_user_date_index").on(table.userId, table.createdAt),
+        successIndex: index("sandbox_usage_success_index").on(table.success, table.createdAt),
+        dailyUsageIndex: index("sandbox_usage_daily_index").on(
+            table.userId,
+            sql`date_trunc('day', ${table.createdAt})`,
+        ),
+    }),
+);
+
 export type Resource = typeof resources.$inferSelect;
 export type NewResource = typeof resources.$inferInsert;
+export type SandboxUsage = typeof sandboxUsage.$inferSelect;
+export type NewSandboxUsage = typeof sandboxUsage.$inferInsert;

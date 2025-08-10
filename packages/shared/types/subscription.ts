@@ -38,6 +38,7 @@ export const FeatureSlug = {
     CHART_VISUALIZATION: "chart_visualization",
     MULTI_MODAL_CHAT: "multi_modal_chat",
     GEMINI_MODELS_NO_BYOK: "gemini_models_no_byok",
+    CODE_SANDBOX: "code_sandbox",
 } as const;
 
 export type FeatureSlug = (typeof FeatureSlug)[keyof typeof FeatureSlug];
@@ -124,6 +125,7 @@ export const PLANS: Record<PlanSlug, PlanConfig> = {
             FeatureSlug.GROUNDING_WEB_SEARCH,
             FeatureSlug.ADVANCED_CHAT_MODES,
             FeatureSlug.GEMINI_MODELS_NO_BYOK,
+            FeatureSlug.CODE_SANDBOX,
         ],
     },
 };
@@ -236,6 +238,12 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         name: "All Gemini Models Without BYOK",
         description:
             "Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys",
+    },
+    [FeatureSlug.CODE_SANDBOX]: {
+        slug: FeatureSlug.CODE_SANDBOX,
+        name: "Code Sandbox",
+        description:
+            "Execute code in a secure cloud sandbox environment with E2B integration. Limited to 2 executions per day for VT+ users.",
     },
 };
 

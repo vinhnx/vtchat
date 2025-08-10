@@ -51,6 +51,7 @@ type State = {
     useWebSearch: boolean;
     useMathCalculator: boolean;
     useCharts: boolean;
+    useSandbox: boolean;
     showSuggestions: boolean;
     thinkingMode: {
         enabled: boolean;
@@ -152,7 +153,8 @@ export const useAppStore = create<State & Actions>()(
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
-                showSuggestions: false,
+                useSandbox: false,
+                showSuggestions: true,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
                 profile: {
@@ -267,6 +269,10 @@ export const useAppStore = create<State & Actions>()(
 
                 setUseCharts: (use: boolean) => {
                     set({ useCharts: use });
+                },
+
+                setUseSandbox: (use: boolean) => {
+                    set({ useSandbox: use });
                 },
 
                 setShowSuggestions: (show: boolean) => {

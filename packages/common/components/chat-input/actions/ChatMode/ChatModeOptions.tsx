@@ -284,9 +284,7 @@ export function ChatModeOptions({
                         const entries = Object.entries(modelOptionsByProvider).map(
                             ([providerName, options]) => {
                                 const filtered = q
-                                    ? options.filter((opt) =>
-                                          opt.label.toLowerCase().includes(q),
-                                      )
+                                    ? options.filter((opt) => opt.label.toLowerCase().includes(q))
                                     : options;
                                 return [providerName, filtered] as const;
                             },
