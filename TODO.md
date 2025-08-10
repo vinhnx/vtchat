@@ -163,3 +163,8 @@ https://github.com/e2b-dev/e2b-cookbook/tree/main/examples/anthropic-claude-code
 --
 
 check branch e2b-sandbox
+
+
+-
+
+integrate https://github.com/e2b-dev/fragments/tree/main/sandbox-templates
