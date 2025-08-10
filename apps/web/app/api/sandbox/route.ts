@@ -5,6 +5,7 @@ import { sandboxUsage, users } from "@/lib/database/schema";
 import { and, eq, gte, sql } from "drizzle-orm";
 import { log } from "@repo/shared/logger";
 import { PlanSlug } from "@repo/shared/types/subscription";
+import { createSandbox } from "@repo/ai/tools/e2b-sandbox";
 
 const RATE_LIMITS = {
   [PlanSlug.VT_PLUS]: {
@@ -70,7 +71,10 @@ export const GET = withAuth(async (req, session) => {
     
     // Check usage limits
     const usageCount = await checkSandboxUsage(userId);
-    const limit = RATE_LIMITS[userTier as keyof typeof RATE_LIMITS]?.dailyLimit || 0;
+    const limit =
+      process.env.NODE_ENV === "development"
+        ? Number.MAX_SAFE_INTEGER
+        : RATE_LIMITS[userTier as keyof typeof RATE_LIMITS]?.dailyLimit || 0;
     const remaining = Math.max(0, limit - usageCount);
     
     return NextResponse.json({
@@ -99,52 +103,77 @@ export const POST = withAuth(async (req, session) => {
       }, { status: 403 });
     }
     
-    // Check usage limits
+    // Check usage limits (skip in development for testing)
     const usageCount = await checkSandboxUsage(userId);
-    const limit = RATE_LIMITS[userTier as keyof typeof RATE_LIMITS]?.dailyLimit || 0;
-    
-    if (usageCount >= limit) {
-      return NextResponse.json({ 
-        error: `Daily sandbox limit reached (${usageCount}/${limit})` 
-      }, { status: 429 });
+    const limit =
+      process.env.NODE_ENV === "development"
+        ? Number.MAX_SAFE_INTEGER
+        : RATE_LIMITS[userTier as keyof typeof RATE_LIMITS]?.dailyLimit || 0;
+
+    if (process.env.NODE_ENV !== "development") {
+      if (usageCount >= limit) {
+        return NextResponse.json(
+          { error: `Daily sandbox limit reached (${usageCount}/${limit})` },
+          { status: 429 },
+        );
+      }
     }
     
     const body = await req.json();
-    
+
     // Validate request
-    if (!body.files || typeof body.files !== 'object') {
+    if (!body.files || typeof body.files !== "object") {
       return NextResponse.json({ error: "Invalid files parameter" }, { status: 400 });
     }
-    
-    // In a real implementation, this would actually start an E2B sandbox
-    // For now, we'll simulate a successful response
-    const sandboxId = "sandbox_" + Date.now();
-    
-    // Track usage
+
+    // Enforce internet access policy: OFF by default; allow only if explicitly requested and gated
+    const requestedInternetAccess = Boolean(body.internetAccess);
+    const internetAccess = requestedInternetAccess && userTier === PlanSlug.VT_PLUS ? true : false;
+
+    // Validate E2B API key presence
+    if (!process.env.E2B_API_KEY || process.env.E2B_API_KEY.length < 10) {
+      return NextResponse.json(
+        { error: "Server sandbox unavailable: E2B_API_KEY is not configured on the server." },
+        { status: 503 },
+      );
+    }
+
+    // Cap timeout to plan limit
+    const maxTimeout = RATE_LIMITS[userTier as keyof typeof RATE_LIMITS]?.maxTimeoutMinutes ?? 10;
+    const requestedTimeout = Number(body.timeoutMinutes) || 10;
+    const timeoutMinutes = Math.min(Math.max(1, requestedTimeout), maxTimeout);
+
+    // Create E2B sandbox
+    const sbx = await createSandbox();
+
+    const sandboxId = (sbx as any).id || `sandbox_${Date.now()}`;
+
+    // Track usage as successful start
     await db.insert(sandboxUsage).values({
       userId,
       sandboxId,
       success: true,
       language: body.language || "javascript",
-      timeoutMinutes: 10,
-      internetAccess: false,
+      timeoutMinutes,
+      internetAccess,
       metadata: {
         source: "api-route",
-        userTier
-      }
+        userTier,
+      },
     });
-    
+
     return NextResponse.json({
       sandboxId,
       files: body.files,
       language: body.language || "javascript",
       success: true,
-      message: `Sandbox session started successfully! This counts as ${usageCount + 1} of your ${limit} daily runs.`
+      message: `Sandbox session started successfully! This counts as ${usageCount + 1} of your ${limit} daily runs.`,
     });
   } catch (error) {
-    log.error("Failed to start sandbox", { error });
+    const err = error as any;
+    log.error("Failed to start sandbox", { error: err });
     return NextResponse.json(
-      { error: `Sandbox creation failed: ${error.message || "Unknown error"}` },
+      { error: `Sandbox creation failed: ${err?.message || "Unknown error"}` },
       { status: 500 }
     );
   }
@@ -167,9 +196,10 @@ export const PUT = withAuth(async (req, session) => {
       sandboxId: body.sandboxId,
     });
   } catch (error) {
-    log.error("Failed to stop sandbox", { error });
+    const err = error as any;
+    log.error("Failed to stop sandbox", { error: err });
     return NextResponse.json(
-      { error: `Failed to stop sandbox: ${error.message}` },
+      { error: `Failed to stop sandbox: ${err?.message || "Unknown error"}` },
       { status: 500 }
     );
   }

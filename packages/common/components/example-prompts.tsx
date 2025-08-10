@@ -5,11 +5,16 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { log } from "@repo/shared/logger";
 import { ButtonWithIcon } from "@repo/ui";
 import type { Editor } from "@tiptap/react";
-import { Calculator, HelpCircle, Lightbulb, Pencil, Search } from "lucide-react";
+import { Calculator, HelpCircle, Lightbulb, Pencil, Search, TerminalSquare } from "lucide-react";
 import { useState } from "react";
+import { getGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
 import { LoginRequiredDialog } from "./login-required-dialog";
 
 export const examplePrompts = {
+    sandbox: [
+        "Start a server sandbox. Create /main.py that serves 'Hello VT' on port 8000 bound to 0.0.0.0 and prints a log. Then run it and return the server URL.",
+        "Spin up a Python HTTP server in a sandbox on port 8000 (0.0.0.0). Include a /main.py that responds with 'Hello VT'. Start it and provide the access URL.",
+    ],
     howTo: [
         "How to use AI tools to improve daily productivity?",
         "Search for the latest job market trends in 2025 and create a career roadmap",
@@ -76,6 +81,7 @@ export const getRandomPrompt = (category?: keyof typeof examplePrompts) => {
 
 // Map of category to icon component
 const categoryIcons = {
+    sandbox: { name: "Sandbox", icon: TerminalSquare, color: "!text-muted-foreground" },
     howTo: { name: "How to", icon: HelpCircle, color: "!text-muted-foreground" },
     explainConcepts: {
         name: "Explain Concepts",
@@ -107,6 +113,19 @@ export const ExamplePrompts = () => {
         const randomPrompt = getRandomPrompt(category);
         editor.commands.clearContent();
         editor.commands.insertContent(randomPrompt);
+
+        // Auto-activate sandbox for VT+ users when sandbox category is selected
+        if (category === "sandbox") {
+            const subStatus = getGlobalSubscriptionStatus();
+            const isPlus = subStatus?.isPlusSubscriber === true;
+            const setUseSandbox = useChatStore.getState().setUseSandbox;
+            if (isPlus) {
+                setUseSandbox(true);
+            } else {
+                // Ensure it's off for non-VT+ to avoid accidental enablement
+                setUseSandbox(false);
+            }
+        }
 
         // Auto-activate appropriate tools based on prompt content
         const setActiveButton = useChatStore.getState().setActiveButton;

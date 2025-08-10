@@ -153,32 +153,45 @@ export const startSandbox = () =>
                         actualCmd.includes("python /main.py");
 
                     if (isServerCommand) {
+                        // Use provided port or default to 8000 for server processes
+                        const effectivePort = port || 8000;
                         // Run server commands in background
                         const proc = await sbx.commands.run(actualCmd, { background: true } as any);
 
-                        // Wait for server to start
-                        await new Promise((resolve) => setTimeout(resolve, 3000));
+                        // Give the server some time to boot
+                        await new Promise((resolve) => setTimeout(resolve, 1200));
 
-                        // Test server connectivity
+                        // Test server connectivity with a brief retry loop
                         try {
-                            const testResult = await sbx.commands.run(
-                                `curl -s --max-time 5 http://localhost:${port || 8000} || echo "Server not responding"`,
-                                { background: false } as any,
-                            );
+                            let lastStdout = "";
+                            let success = false;
+                            for (let attempt = 1; attempt <= 3; attempt++) {
+                                const probe = await sbx.commands.run(
+                                    `curl -s --max-time 2 http://localhost:${effectivePort} || echo "Server not responding"`,
+                                    { background: false } as any,
+                                );
+                                lastStdout = probe.stdout || "";
+                                if (lastStdout && !lastStdout.includes("Server not responding")) {
+                                    success = true;
+                                    break;
+                                }
+                                // small backoff before next probe
+                                await new Promise((r) => setTimeout(r, 1000));
+                            }
 
                             returnFiles["/SANDBOX_INFO.md"] = `# Sandbox Information
 
 ## Status
-✅ Server started successfully
+${success ? "✅ Server started successfully" : "⚠️ Server may not be responding"}
 
 ## Command
 \`${actualCmd}\`
 
 ## Port
-${port || 8000}
+${effectivePort}
 
 ## Server Response
-${testResult.stdout || "No response"}
+${lastStdout || "No response"}
 
 ## Initial Output
 STDOUT: ${proc.stdout || "No output"}
@@ -232,7 +245,15 @@ ${proc.exitCode || 0}
                 }
 
                 // 7. GENERATE PUBLIC URL: Get host URL for web servers
-                const host = port ? await (sbx as any).getHost(port) : null;
+                let host: string | null = null;
+                try {
+                    // If a server command is being run, use the effective port (default 8000)
+                    const effectivePort = port || 8000;
+                    host = await (sbx as any).getHost(effectivePort);
+                } catch (hostErr) {
+                    console.warn("[sandbox] getHost failed; continuing without host URL", hostErr);
+                    host = null;
+                }
 
                 // 8. TRACK SUCCESSFUL USAGE: Increment rate limit counter
                 const { trackSandboxUsage } = await import("../utils/sandbox-limits");
@@ -241,6 +262,7 @@ ${proc.exitCode || 0}
                 return {
                     sandboxId: (sbx as any).sandboxId,
                     host: host ? `https://${host}` : null,
+                    port: (typeof port === "number" && port) ? port : 8000,
                     files: returnFiles,
                     language,
                     timeoutMinutes,

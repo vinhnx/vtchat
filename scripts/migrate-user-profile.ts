@@ -11,12 +11,12 @@ import { db } from "../apps/web/lib/database";
 
 async function runMigration() {
     // CLI output for user
-    console.log("🚀 Starting user profile enhancement migration...");
+    log.info("🚀 Starting user profile enhancement migration...");
     log.info("Starting user profile migration");
 
     try {
         // Read and execute the migration SQL
-        console.log("📝 Adding enhanced user profile fields...");
+        log.info("📝 Adding enhanced user profile fields...");
         log.info("Adding enhanced user profile fields");
 
         await db.execute(sql`
@@ -34,7 +34,7 @@ async function runMigration() {
         `);
         log.info("Enhanced user profile fields added");
 
-        console.log("📊 Adding performance indexes...");
+        log.info("📊 Adding performance indexes...");
         log.info("Adding performance indexes");
 
         await db.execute(sql`
@@ -45,7 +45,7 @@ async function runMigration() {
         `);
         log.info("Performance indexes added");
 
-        console.log("🔄 Updating timestamps...");
+        log.info("🔄 Updating timestamps...");
         log.info("Updating timestamps");
 
         await db.execute(sql`
@@ -54,15 +54,15 @@ async function runMigration() {
         `);
         log.info("Timestamps updated");
 
-        console.log("✅ Migration completed successfully!");
-        console.log("🎉 Enhanced user profile fields are now available:");
-        console.log("   - Bio (personal description)");
-        console.log("   - Location (city, country)");
-        console.log("   - Website (personal/company URL)");
-        console.log("   - Company (employer)");
-        console.log("   - Job Title (professional role)");
-        console.log("   - Timezone, Language, Theme preferences");
-        console.log("   - Notification preferences");
+        log.info("✅ Migration completed successfully!");
+        log.info("🎉 Enhanced user profile fields are now available:");
+        log.info("   - Bio (personal description)");
+        log.info("   - Location (city, country)");
+        log.info("   - Website (personal/company URL)");
+        log.info("   - Company (employer)");
+        log.info("   - Job Title (professional role)");
+        log.info("   - Timezone, Language, Theme preferences");
+        log.info("   - Notification preferences");
         log.info("User profile migration completed successfully");
     } catch (error) {
         console.error("❌ Migration failed:", error);

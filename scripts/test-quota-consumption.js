@@ -4,6 +4,7 @@
  * Test script to verify quota consumption logic for VT+ users
  */
 
+import { log } from "@repo/shared/logger";
 import { resolve } from "node:path";
 import { config } from "dotenv";
 
@@ -11,7 +12,7 @@ import { config } from "dotenv";
 config({ path: resolve(process.cwd(), "apps/web/.env.local") });
 
 async function testQuotaConsumption() {
-    console.log("Testing quota consumption logic...");
+    log.info("Testing quota consumption logic...");
 
     try {
         // Import modules
@@ -24,7 +25,7 @@ async function testQuotaConsumption() {
         const { eq, and } = await import("drizzle-orm");
 
         // Test 1: Find users with VT+ subscriptions
-        console.log("\n1. Finding users with VT+ subscriptions...");
+        log.info("1. Finding users with VT+ subscriptions...");
         const vtPlusUsers = await db
             .select({
                 userId: users.id,
@@ -42,21 +43,21 @@ async function testQuotaConsumption() {
                 ),
             );
 
-        console.log(`Found ${vtPlusUsers.length} users with active VT+ subscriptions`);
+        log.info(`Found ${vtPlusUsers.length} users with active VT+ subscriptions`);
 
         if (vtPlusUsers.length > 0) {
-            console.log("\nVT+ Users:");
+            log.info("\nVT+ Users:");
             vtPlusUsers.forEach((user, index) => {
-                console.log(`${index + 1}. ${user.userEmail}`);
-                console.log(`   User planSlug: ${user.planSlug}`);
-                console.log(`   Subscription status: ${user.subscriptionStatus}`);
-                console.log(`   Subscription plan: ${user.subscriptionPlan}`);
-                console.log("");
+                log.info(`${index + 1}. ${user.userEmail}`);
+                log.info(`   User planSlug: ${user.planSlug}`);
+                log.info(`   Subscription status: ${user.subscriptionStatus}`);
+                log.info(`   Subscription plan: ${user.subscriptionPlan}`);
+                log.info("");
             });
         }
 
         // Test 2: Test quota consumption logic
-        console.log("\n2. Testing quota consumption logic...");
+        log.info("2. Testing quota consumption logic...");
 
         // Test with sample user object having VT+ plan
         const sampleVTPlusUser = {
@@ -78,28 +79,28 @@ async function testQuotaConsumption() {
         };
 
         // Test quota consumption eligibility
-        console.log("Testing isEligibleForQuotaConsumption:");
-        console.log(
+        log.info("Testing isEligibleForQuotaConsumption:");
+        log.info(
             `VT+ user (${sampleVTPlusUser.planSlug}): ${isEligibleForQuotaConsumption(sampleVTPlusUser, false)}`,
         );
-        console.log(
+        log.info(
             `Free user (${sampleFreeUser.planSlug}): ${isEligibleForQuotaConsumption(sampleFreeUser, false)}`,
         );
-        console.log(
+        log.info(
             `Undefined user (${sampleUndefinedUser.planSlug}): ${isEligibleForQuotaConsumption(sampleUndefinedUser, false)}`,
         );
 
         // Test with BYOK key
-        console.log("\nTesting with BYOK key:");
-        console.log(`VT+ user with BYOK: ${isEligibleForQuotaConsumption(sampleVTPlusUser, true)}`);
-        console.log(`Free user with BYOK: ${isEligibleForQuotaConsumption(sampleFreeUser, true)}`);
-        console.log(
+        log.info("\nTesting with BYOK key:");
+        log.info(`VT+ user with BYOK: ${isEligibleForQuotaConsumption(sampleVTPlusUser, true)}`);
+        log.info(`Free user with BYOK: ${isEligibleForQuotaConsumption(sampleFreeUser, true)}`);
+        log.info(
             `Undefined user with BYOK: ${isEligibleForQuotaConsumption(sampleUndefinedUser, true)}`,
         );
 
         // Test 3: Test with real database users
         if (vtPlusUsers.length > 0) {
-            console.log("\n3. Testing with real database users...");
+            log.info("3. Testing with real database users...");
 
             for (const user of vtPlusUsers.slice(0, 3)) {
                 // Test first 3 users
@@ -113,19 +114,19 @@ async function testQuotaConsumption() {
                     email: user.userEmail,
                 };
 
-                console.log(`User ${user.userEmail}:`);
-                console.log(`  Original planSlug: ${user.planSlug}`);
-                console.log(`  Effective planSlug: ${userForQuota.planSlug}`);
-                console.log(
+                log.info(`User ${user.userEmail}:`);
+                log.info(`  Original planSlug: ${user.planSlug}`);
+                log.info(`  Effective planSlug: ${userForQuota.planSlug}`);
+                log.info(
                     `  Quota consumption eligible: ${isEligibleForQuotaConsumption(userForQuota, false)}`,
                 );
-                console.log("");
+                log.info("");
             }
         }
 
-        console.log("✓ Quota consumption logic test completed successfully");
+        log.info("✓ Quota consumption logic test completed successfully");
     } catch (error) {
-        console.error("Error testing quota consumption:", error);
+        log.error("Error testing quota consumption:", error);
         throw error;
     }
 }
@@ -133,10 +134,10 @@ async function testQuotaConsumption() {
 // Run the test
 testQuotaConsumption()
     .then(() => {
-        console.log("\nTest completed successfully");
+        log.info("Test completed successfully");
         process.exit(0);
     })
     .catch((error) => {
-        console.error("Test failed:", error);
+        log.error("Test failed:", error);
         process.exit(1);
     });

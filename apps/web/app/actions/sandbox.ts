@@ -2,18 +2,32 @@
 
 import { createSandbox, executeCodeInSandbox, releaseSandbox } from '@repo/ai/tools/e2b-sandbox';
 import { auth } from '@/lib/auth-server';
+import { headers } from 'next/headers';
 import { db } from '@/lib/database';
-import { sandboxUsage } from '@/lib/database/schema';
+import { sandboxUsage, users } from '@/lib/database/schema';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { and, eq, gte } from 'drizzle-orm';
 
-const DAILY_LIMIT = 2;
+const isDev = process.env.NODE_ENV !== 'production';
+const DAILY_LIMIT = isDev ? Number.MAX_SAFE_INTEGER : 2;
 
 export async function getRemainingExecutions() {
-    const session = await auth.getSession();
+    const hdrs = await headers();
+    const session = (await auth.api.getSession({ headers: hdrs })) as any;
 
-    if (!session || session.user.planSlug !== PlanSlug.VT_PLUS) {
-        return 0;
+    if (!session) return 0;
+
+    // Dev: unlimited
+    if (isDev) return DAILY_LIMIT;
+
+    // Check plan from DB to avoid stale/missing planSlug on session
+    const user = await db.query.users.findFirst({ where: eq(users.id, session.user.id) });
+    const isPlus = user?.planSlug === PlanSlug.VT_PLUS;
+    if (!isPlus) return 0;
+
+    // Unlimited in dev for testing
+    if (isDev) {
+        return DAILY_LIMIT;
     }
 
     const today = new Date();
@@ -30,20 +44,28 @@ export async function getRemainingExecutions() {
 }
 
 export async function executeCode(code: string, lang: string) {
-    const session = await auth.getSession();
+    const hdrs = await headers();
+    const session = (await auth.api.getSession({ headers: hdrs })) as any;
 
     if (!session) {
         return { error: 'Unauthorized' };
     }
 
-    if (session.user.planSlug !== PlanSlug.VT_PLUS) {
-        return { error: 'This feature is only available to VT+ users.' };
+    // Dev: bypass gating
+    if (!isDev) {
+        const user = await db.query.users.findFirst({ where: eq(users.id, session.user.id) });
+        const isPlus = user?.planSlug === PlanSlug.VT_PLUS;
+        if (!isPlus) {
+            return { error: 'This feature is only available to VT+ users.' };
+        }
     }
 
-    const remainingExecutions = await getRemainingExecutions();
-
-    if (remainingExecutions <= 0) {
-        return { error: 'You have reached your daily limit of 2 sandbox executions.' };
+    // In development, do not enforce daily execution limit
+    if (!isDev) {
+        const remainingExecutions = await getRemainingExecutions();
+        if (remainingExecutions <= 0) {
+            return { error: 'You have reached your daily limit of 2 sandbox executions.' };
+        }
     }
 
     const sandbox = await createSandbox();
@@ -52,20 +74,21 @@ export async function executeCode(code: string, lang: string) {
         const { stdout, stderr } = await executeCodeInSandbox(sandbox, code);
         await db.insert(sandboxUsage).values({
             userId: session.user.id,
-            sandboxId: sandbox.id,
+            sandboxId: (sandbox as any).id ?? null,
             success: true,
             language: lang,
         });
         return { stdout, stderr };
     } catch (error) {
+        const err = error as any;
         await db.insert(sandboxUsage).values({
             userId: session.user.id,
-            sandboxId: sandbox.id,
+            sandboxId: (sandbox as any).id ?? null,
             success: false,
             language: lang,
-            errorMessage: error.message,
+            errorMessage: err?.message || "Unknown error",
         });
-        return { error: error.message };
+        return { error: err?.message || "Unknown error" };
     } finally {
         await releaseSandbox(sandbox);
     }

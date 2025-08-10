@@ -5,26 +5,17 @@
  * Tests service worker, database optimizations, and maintenance endpoints
  */
 
-const https = require("node:https");
-const fs = require("node:fs");
-const path = require("node:path");
+import https from "node:https";
+import fs from "node:fs";
+import path from "node:path";
+
+const { log } = require("@repo/shared/logger");
 
 const BASE_URL = process.env.BASE_URL || "https://vtchat.io.vn";
 const TEST_TIMEOUT = 30000; // 30 seconds per test
 
 // ANSI color codes for output
-const colors = {
-    reset: "\x1b[0m",
-    red: "\x1b[31m",
-    green: "\x1b[32m",
-    yellow: "\x1b[33m",
-    blue: "\x1b[34m",
-    cyan: "\x1b[36m",
-};
 
-function log(message, color = "reset") {
-    console.log(`${colors[color]}${message}${colors.reset}`);
-}
 
 function makeRequest(url, options = {}) {
     return new Promise((resolve, reject) => {
@@ -268,9 +259,9 @@ const tests = [
 
 // Test runner
 async function runTests() {
-    log("🚀 Starting Database Maintenance System Test Suite", "cyan");
-    log(`📍 Testing against: ${BASE_URL}`, "blue");
-    log("");
+    log.info("🚀 Starting Database Maintenance System Test Suite");
+    log.info(`📍 Testing against: ${BASE_URL}`);
+    log.info("");
 
     const results = {
         total: tests.length,
@@ -281,15 +272,15 @@ async function runTests() {
 
     for (const test of tests) {
         const startTime = Date.now();
-        log(`⏳ Running: ${test.name}`, "yellow");
+        log.info(`⏳ Running: ${test.name}`);
 
         try {
             const result = await test.run();
             const duration = Date.now() - startTime;
 
-            log(`✅ ${test.name} - Passed (${duration}ms)`, "green");
+            log.info(`✅ ${test.name} - Passed (${duration}ms)`);
             if (result && Object.keys(result).length > 0) {
-                log(`   📊 ${JSON.stringify(result)}`, "blue");
+                log.info(`   📊 ${JSON.stringify(result)}`);
             }
 
             results.passed++;
@@ -302,8 +293,8 @@ async function runTests() {
         } catch (error) {
             const duration = Date.now() - startTime;
 
-            log(`❌ ${test.name} - Failed (${duration}ms)`, "red");
-            log(`   💥 ${error.message}`, "red");
+            log.error(`❌ ${test.name} - Failed (${duration}ms)`);
+            log.error(`   💥 ${error.message}`);
 
             results.failed++;
             results.details.push({
@@ -314,14 +305,17 @@ async function runTests() {
             });
         }
 
-        log("");
+    log.info("");
     }
 
     // Summary
-    log("📋 Test Summary", "cyan");
-    log(`✅ Passed: ${results.passed}/${results.total}`, "green");
-    log(`❌ Failed: ${results.failed}/${results.total}`, results.failed > 0 ? "red" : "green");
-    log(`⏱️  Total Duration: ${results.details.reduce((sum, t) => sum + t.duration, 0)}ms`, "blue");
+    log.info("");
+
+    // Summary
+    log.info("📋 Test Summary");
+    log.info(`✅ Passed: ${results.passed}/${results.total}`);
+    log.info(`❌ Failed: ${results.failed}/${results.total}`);
+    log.info(`⏱️  Total Duration: ${results.details.reduce((sum, t) => sum + t.duration, 0)}ms`);
 
     // Write detailed results to file
     const reportPath = path.join(__dirname, "..", "maintenance-test-results.json");
@@ -338,7 +332,7 @@ async function runTests() {
         ),
     );
 
-    log(`📄 Detailed results saved to: ${reportPath}`, "blue");
+    log.info(`📄 Detailed results saved to: ${reportPath}`);
 
     // Exit with appropriate code
     process.exit(results.failed > 0 ? 1 : 0);
@@ -346,12 +340,12 @@ async function runTests() {
 
 // Error handling
 process.on("unhandledRejection", (reason, _promise) => {
-    log(`💥 Unhandled Promise Rejection: ${reason}`, "red");
+    log.error(`💥 Unhandled Promise Rejection: ${reason}`);
     process.exit(1);
 });
 
 process.on("uncaughtException", (error) => {
-    log(`💥 Uncaught Exception: ${error.message}`, "red");
+    log.error(`💥 Uncaught Exception: ${error.message}`);
     process.exit(1);
 });
 

@@ -1,6 +1,17 @@
-import type { ApiKeys } from "@repo/common/store/api-keys.store";
 import { ChatMode } from "@repo/shared/config";
 import type { Attachment, ThreadItem } from "@repo/shared/types";
+
+// Local copy of API key shape to avoid cross-package dependency from shared -> common
+export type ApiKeys = {
+    OPENAI_API_KEY?: string;
+    ANTHROPIC_API_KEY?: string;
+    GEMINI_API_KEY?: string;
+    JINA_API_KEY?: string;
+    FIREWORKS_API_KEY?: string;
+    XAI_API_KEY?: string;
+    OPENROUTER_API_KEY?: string;
+    TOGETHER_API_KEY?: string;
+};
 
 /**
  * Detects if a request contains image attachments that require AI analysis

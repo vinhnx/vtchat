@@ -8,9 +8,9 @@ import { Client } from "pg";
 
 async function applyAdminMigration() {
     if (!process.env.DATABASE_URL) {
-        console.log("❌ DATABASE_URL environment variable is required");
-        console.log("Please set your development database URL and run again.");
-        console.log(
+        log.info("❌ DATABASE_URL environment variable is required");
+        log.info("Please set your development database URL and run again.");
+        log.info(
             'Example: DATABASE_URL="postgresql://..." bun run scripts/apply-admin-migration-dev.js',
         );
         process.exit(1);
@@ -22,7 +22,7 @@ async function applyAdminMigration() {
 
     try {
         await client.connect();
-        console.log("✅ Connected to development database");
+        log.info("✅ Connected to development database");
 
         // Read the SQL migration file
         const migrationSql = readFileSync("./scripts/apply-admin-migration-dev.sql", "utf8");
@@ -33,26 +33,26 @@ async function applyAdminMigration() {
             .map((stmt) => stmt.trim())
             .filter((stmt) => stmt && !stmt.startsWith("--"));
 
-        console.log(`📝 Executing ${statements.length} migration statements...`);
+        log.info(`📝 Executing ${statements.length} migration statements...`);
 
         for (const statement of statements) {
             if (statement) {
-                console.log(`   Running: ${statement.substring(0, 60)}...`);
+                log.info(`   Running: ${statement.substring(0, 60)}...`);
                 await client.query(statement);
             }
         }
 
-        console.log("✅ Admin migration applied successfully to development database!");
-        console.log("🚀 You can now restart your dev server: bun dev");
+        log.info("✅ Admin migration applied successfully to development database!");
+        log.info("🚀 You can now restart your dev server: bun dev");
     } catch (error) {
-        console.error("❌ Error applying admin migration:", error.message);
+        log.error("❌ Error applying admin migration:", error.message);
         if (error.message.includes("already exists")) {
-            console.log("ℹ️  Some columns may already exist - this is normal.");
+            log.info("ℹ️  Some columns may already exist - this is normal.");
         }
         process.exit(1);
     } finally {
         await client.end();
-        console.log("🔌 Database connection closed");
+        log.info("🔌 Database connection closed");
     }
 }
 

@@ -104,21 +104,25 @@ https://github.com/e2b-dev/e2b-cookbook?tab=readme-ov-file
 https://ai-sdk.dev/elements/overview
 
 --
+
 # TASK: E2B Sandbox Integration for Next.js App
 
 ## CONTEXT
+
 Current state: Multiple sandbox environments (pyodide, sandpack) exist
 Goal: Replace with single e2b implementation as premium feature
 
 ## REQUIREMENTS
 
 ### Core Implementation
+
 - **REMOVE**: pyodide, sandpack code sandbox environments
 - **IMPLEMENT**: e2b as sole execution environment
 - **FOLLOW**: Next.js integration patterns from context7
 - **REFINE**: panel component + system prompts for sandbox invocation
 
 ### User Access Control
+
 ```
 VT+ Users: 2 executions/day ✅
 VT Free: No access ❌
@@ -126,31 +130,52 @@ Free Users: No access ❌
 ```
 
 ### UI Requirements
+
 - Dedicated sandbox invoke button in chat input (make it special/distinctive)
 - Enhanced panel component for sandbox management
 - Visual indicators for execution limits
 
 ### Technical Constraints
+
 - Use only e2b free tier
 - Internet access: OFF by default (configurable in /settings)
 - Rate limits: https://e2b.dev/docs/sandbox/rate-limits
 - Efficient lifecycle management to minimize costs
 
 ### Critical Features
+
 1. **Rate Limiting**: Track daily executions per user
 2. **Lifecycle Management**: Smart session reuse, auto-cleanup, timeouts
 3. **Cost Optimization**: Minimize API calls and execution time
 4. **Error Handling**: Graceful degradation when limits exceeded
 
 ## IMPLEMENTATION GUIDES
+
 1. https://github.com/e2b-dev/e2b-cookbook/tree/main/examples/nextjs-code-interpreter
 2. https://e2b.dev/docs/sandbox
 3. https://e2b.dev/docs/sandbox/metadata
 4. https://e2b.dev/docs/sandbox/internet-access
 
 ## OUTPUT FOCUS
+
 - Complete working implementation
 - Efficient sandbox management logic
 - Premium feature gating
 - Rate limiting system
 - Cost-optimized configuration
+
+--
+
+https://github.com/e2b-dev/e2b-cookbook/tree/main/examples/anthropic-claude-code-in-sandbox-js
+
+--
+
+check branch e2b-sandbox
+
+--
+
+update this benefits to all related page, announcement and add to VT tier benefit. update pricing, faq, about, and every document. this feature is VT+ exclusive
+
+--
+
+use mcp neon to update tier quota tracking for sandbox feature

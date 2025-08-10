@@ -42,28 +42,38 @@ export async function requireVTPlusUser(): Promise<void> {
  * Throws error if daily limit exceeded
  */
 export async function checkSandboxRateLimit(): Promise<void> {
+    // In development, skip DB calls entirely to avoid missing-table errors
+    if (process.env.NODE_ENV !== "production") {
+        return;
+    }
     const userId = await getCurrentUserId();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Count successful sandbox runs today
-    const usageToday = await db
-        .select({ count: sql<number>`count(*)` })
-        .from(sandboxUsage)
-        .where(
-            and(
-                eq(sandboxUsage.userId, userId),
-                eq(sandboxUsage.success, true),
-                gte(sandboxUsage.createdAt, today),
-            ),
-        );
+    try {
+        // Count successful sandbox runs today
+        const usageToday = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(sandboxUsage)
+            .where(
+                and(
+                    eq(sandboxUsage.userId, userId),
+                    eq(sandboxUsage.success, true),
+                    gte(sandboxUsage.createdAt, today),
+                ),
+            );
 
-    const todayCount = usageToday[0]?.count || 0;
+        const todayCount = usageToday[0]?.count || 0;
 
-    if (todayCount >= RATE_LIMITS.VT_PLUS.dailyLimit) {
-        throw new Error(
-            `Daily sandbox limit reached (${todayCount}/${RATE_LIMITS.VT_PLUS.dailyLimit}). Limit resets at midnight UTC.`,
-        );
+        if (todayCount >= RATE_LIMITS.VT_PLUS.dailyLimit) {
+            throw new Error(
+                `Daily sandbox limit reached (${todayCount}/${RATE_LIMITS.VT_PLUS.dailyLimit}). Limit resets at midnight UTC.`,
+            );
+        }
+    } catch (err) {
+        // In production, be resilient: log and allow (do not block sandbox)
+        console.warn("[sandbox-limits] Rate limit check failed; allowing sandbox run", err);
+        return;
     }
 }
 
@@ -72,17 +82,26 @@ export async function checkSandboxRateLimit(): Promise<void> {
  * Increments the daily counter
  */
 export async function trackSandboxUsage(): Promise<void> {
+    // In development, skip DB calls entirely to avoid missing-table errors
+    if (process.env.NODE_ENV !== "production") {
+        return;
+    }
     const userId = await getCurrentUserId();
-
-    await db.insert(sandboxUsage).values({
-        userId,
-        success: true,
-        createdAt: new Date(),
-        metadata: {
-            source: "vtchat-ai-tool",
-            tier: "VT_PLUS",
-        },
-    });
+    try {
+        await db.insert(sandboxUsage).values({
+            userId,
+            success: true,
+            createdAt: new Date(),
+            metadata: {
+                source: "vtchat-ai-tool",
+                tier: "VT_PLUS",
+            },
+        });
+    } catch (err) {
+        // Do not fail sandbox creation if tracking fails
+        console.warn("[sandbox-limits] Usage tracking failed; continuing without tracking", err);
+        return;
+    }
 }
 
 /**
@@ -115,6 +134,11 @@ export async function getSandboxUsageStats(): Promise<{
     dailyLimit: number;
     remainingToday: number;
 }> {
+    // In development, return zeroed stats without hitting DB
+    if (process.env.NODE_ENV !== "production") {
+        const dailyLimit = RATE_LIMITS.VT_PLUS.dailyLimit;
+        return { todayUsage: 0, dailyLimit, remainingToday: dailyLimit };
+    }
     const userId = await getCurrentUserId();
     const today = new Date();
     today.setHours(0, 0, 0, 0);

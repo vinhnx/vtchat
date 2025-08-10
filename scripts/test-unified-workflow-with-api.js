@@ -1,19 +1,21 @@
 #!/usr/bin/env bun
 
+import { log } from "@repo/shared/logger";
+
 /**
  * Test script to verify the unified web search workflow with real API key
  */
 
-console.log("🧪 Testing Unified Web Search with Real API Key");
-console.log("=".repeat(60));
+log.info("🧪 Testing Unified Web Search with Real API Key");
+log.info("=".repeat(60));
 
 async function testApiKeyValidation() {
-    console.log("\n📋 Testing API key validation");
+    log.info("\n📋 Testing API key validation");
 
     const hasSystemGeminiKey = typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
 
     if (!hasSystemGeminiKey) {
-        console.log("❌ No API key detected");
+        log.info("❌ No API key detected");
         return false;
     }
 
@@ -21,15 +23,15 @@ async function testApiKeyValidation() {
     const keyPreview = process.env.GEMINI_API_KEY?.substring(0, 10) + "...";
     const isValidFormat = process.env.GEMINI_API_KEY?.startsWith("AIza") && keyLength === 39;
 
-    console.log(`  - Key length: ${keyLength} characters`);
-    console.log(`  - Key preview: ${keyPreview}`);
-    console.log(`  - Valid format: ${isValidFormat ? "✅" : "❌"}`);
+    log.info(`  - Key length: ${keyLength} characters`);
+    log.info(`  - Key preview: ${keyPreview}`);
+    log.info(`  - Valid format: ${isValidFormat ? "✅" : "❌"}`);
 
     return isValidFormat;
 }
 
 async function testBasicWebSearchWorkflow() {
-    console.log("\n📋 Testing Basic Web Search Workflow");
+    log.info("📋 Testing Basic Web Search Workflow");
 
     try {
         // Test the generateTextWithGeminiSearch function directly
@@ -37,7 +39,7 @@ async function testBasicWebSearchWorkflow() {
         const { ModelEnum } = await import("@repo/ai/models");
         const { UserTier } = await import("@repo/shared/constants/user-tiers");
 
-        console.log("✅ Successfully imported modules");
+        log.info("✅ Successfully imported modules");
 
         const testParams = {
             prompt: "Search for information about: who is vinhnx",
@@ -47,10 +49,10 @@ async function testBasicWebSearchWorkflow() {
             userId: "test-user-id",
         };
 
-        console.log("📋 Testing generateTextWithGeminiSearch:");
-        console.log(`  - Model: ${testParams.model}`);
-        console.log(`  - User tier: ${testParams.userTier}`);
-        console.log("  - Using system API key: true");
+        log.info("📋 Testing generateTextWithGeminiSearch:");
+        log.info(`  - Model: ${testParams.model}`);
+        log.info(`  - User tier: ${testParams.userTier}`);
+        log.info("  - Using system API key: true");
 
         // Set a timeout for the test
         const timeoutPromise = new Promise((_, reject) => {
@@ -61,26 +63,26 @@ async function testBasicWebSearchWorkflow() {
 
         const result = await Promise.race([testPromise, timeoutPromise]);
 
-        console.log("✅ SUCCESS: generateTextWithGeminiSearch completed!");
-        console.log(`  - Response length: ${result.text?.length || 0} characters`);
-        console.log(`  - Sources found: ${result.sources?.length || 0}`);
-        console.log(`  - Has grounding metadata: ${!!result.groundingMetadata}`);
+        log.info("✅ SUCCESS: generateTextWithGeminiSearch completed!");
+        log.info(`  - Response length: ${result.text?.length || 0} characters`);
+        log.info(`  - Sources found: ${result.sources?.length || 0}`);
+        log.info(`  - Has grounding metadata: ${!!result.groundingMetadata}`);
 
         return true;
     } catch (error) {
-        console.log("❌ FAILED: generateTextWithGeminiSearch threw an error");
-        console.log(`  - Error type: ${error.constructor.name}`);
-        console.log(`  - Error message: ${error.message}`);
+        log.error("❌ FAILED: generateTextWithGeminiSearch threw an error");
+        log.error(`  - Error type: ${error.constructor.name}`);
+        log.error(`  - Error message: ${error.message}`);
 
         // Analyze the error
         if (error.message.includes("API key")) {
-            console.log("  🔍 API key issue detected");
+            log.info("  🔍 API key issue detected");
         } else if (error.message.includes("quota") || error.message.includes("limit")) {
-            console.log("  🔍 Quota/limit issue detected");
+            log.info("  🔍 Quota/limit issue detected");
         } else if (error.message.includes("timeout")) {
-            console.log("  🔍 Request timeout - API might be slow but working");
+            log.info("  🔍 Request timeout - API might be slow but working");
         } else {
-            console.log("  🔍 Unknown error type");
+            log.info("  🔍 Unknown error type");
         }
 
         return false;
@@ -88,14 +90,14 @@ async function testBasicWebSearchWorkflow() {
 }
 
 async function testWorkflowIntegration() {
-    console.log("\n📋 Testing Workflow Integration");
+    log.info("📋 Testing Workflow Integration");
 
     try {
         // Test the complete workflow routing
         const { modeRoutingTask } = await import("@repo/ai/workflow/tasks/chat-mode-router");
         const { ChatMode } = await import("@repo/shared/config");
 
-        console.log("✅ Successfully imported workflow modules");
+        log.info("✅ Successfully imported workflow modules");
 
         // Test basic web search routing
         const mockContext = {
@@ -129,30 +131,30 @@ async function testWorkflowIntegration() {
             redirectTo: mockRedirectTo,
         });
 
-        console.log(`  - Basic web search routes to: ${routedTo}`);
+        log.info(`  - Basic web search routes to: ${routedTo}`);
 
         if (routedTo === "gemini-web-search") {
-            console.log("  ✅ SUCCESS: Unified workflow routing is correct");
+            log.info("  ✅ SUCCESS: Unified workflow routing is correct");
             return true;
         } else {
-            console.log("  ❌ FAILED: Still routing to old path");
+            log.info("  ❌ FAILED: Still routing to old path");
             return false;
         }
     } catch (error) {
-        console.log("❌ FAILED: Workflow integration test failed");
-        console.log(`  - Error: ${error.message}`);
+        log.error("❌ FAILED: Workflow integration test failed");
+        log.error(`  - Error: ${error.message}`);
         return false;
     }
 }
 
 async function runTests() {
-    console.log("Starting comprehensive unified workflow tests...\n");
+    log.info("Starting comprehensive unified workflow tests...");
 
     const apiKeyValid = await testApiKeyValidation();
 
     if (!apiKeyValid) {
-        console.log("\n❌ Cannot proceed: Invalid or missing API key");
-        console.log("Please ensure a valid Google API key is set in .env.local");
+        log.info("\n❌ Cannot proceed: Invalid or missing API key");
+        log.info("Please ensure a valid Google API key is set in .env.local");
         return;
     }
 
@@ -161,35 +163,35 @@ async function runTests() {
 
     const allTestsPassed = workflowIntegration && basicWorkflow;
 
-    console.log("\n" + "=".repeat(60));
+    log.info("\n" + "=".repeat(60));
     if (allTestsPassed) {
-        console.log("🎉 SUCCESS: Unified web search workflow is fully operational!");
-        console.log("\n✅ Valid API key is configured");
-        console.log("✅ Workflow routing bypasses problematic planner");
-        console.log("✅ Basic web search can execute successfully");
-        console.log("✅ System API key is being used correctly");
+        log.info("🎉 SUCCESS: Unified web search workflow is fully operational!");
+        log.info("✅ Valid API key is configured");
+        log.info("✅ Workflow routing bypasses problematic planner");
+        log.info("✅ Basic web search can execute successfully");
+        log.info("✅ System API key is being used correctly");
 
-        console.log("\n🚀 Ready for browser testing:");
-        console.log("   1. Open http://localhost:3000");
-        console.log("   2. Enable web search toggle");
-        console.log("   3. Ask: 'who is vinhnx?'");
-        console.log("   4. Should work without errors");
+        log.info("🚀 Ready for browser testing:");
+        log.info("   1. Open http://localhost:3000");
+        log.info("   2. Enable web search toggle");
+        log.info("   3. Ask: 'who is vinhnx?'");
+        log.info("   4. Should work without errors");
     } else {
-        console.log("❌ ISSUE: Some tests failed");
-        console.log("\n🔍 Check the test results above for specific issues");
+        log.info("❌ ISSUE: Some tests failed");
+        log.info("\n🔍 Check the test results above for specific issues");
 
         if (workflowIntegration && !basicWorkflow) {
-            console.log("   - Routing is correct but API execution failed");
-            console.log("   - Check API key permissions and quota");
+            log.info("   - Routing is correct but API execution failed");
+            log.info("   - Check API key permissions and quota");
         } else if (!workflowIntegration) {
-            console.log("   - Workflow routing has issues");
-            console.log("   - Check the router task implementation");
+            log.info("   - Workflow routing has issues");
+            log.info("   - Check the router task implementation");
         }
     }
 }
 
 // Run the tests
 runTests().catch((error) => {
-    console.error("❌ Test script failed:", error);
+    log.error("❌ Test script failed:", error);
     process.exit(1);
 });

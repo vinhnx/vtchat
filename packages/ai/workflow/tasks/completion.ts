@@ -182,6 +182,40 @@ ${
 - If native packages or long-running processes are needed, use the startSandbox tool with { template, files, cmd, port }.
 - Keep examples small (<300 KB total). Apply edits incrementally to reduce churn.
 
+## E2B Sandbox Tool Usage (Critical)
+When the user asks you to create, run, or serve code (e.g., "Start a server sandbox. Create /main.py that serves 'Hello VT' print it"), you MUST call the "startSandbox" tool with:
+- files: a record mapping file paths to content. Create minimal runnable files (e.g., "/main.py").
+- language: primary language (default "python").
+- cmd: command to start program (e.g., "python /main.py").
+- port: the server port if serving HTTP (commonly 8000). Bind to 0.0.0.0.
+- internetAccess: false by default. Only enable if explicitly needed and user tier allows.
+- timeoutMinutes: keep small (e.g., 10).
+Important:
+- Ensure server binds to "0.0.0.0" so the preview works.
+- Return minimal output text and rely on the tool result to render the sandbox side panel in chat.
+- Do NOT describe running steps if you can execute them via the tool. Prefer executing.
+- If the user says they are VT+ or dev environment is detected, proceed; otherwise inform about VT+ requirement.
+Example (Python simple server):
+- files:/main.py =
+                \`\`\`python
+                from http.server import HTTPServer, BaseHTTPRequestHandler
+
+                class H(BaseHTTPRequestHandler):
+                    def do_GET(self):
+                        self.send_response(200)
+                        self.send_header('Content-type','text/plain')
+                        self.end_headers()
+                        self.wfile.write(b"Hello VT")
+                        print("Hello VT")
+
+                if __name__ == "__main__":
+                    HTTPServer(("0.0.0.0", 8000), H).serve_forever()
+                \`\`\`
+- language: "python"
+- cmd: "python /main.py"
+- port: 8000
+After the tool call, the UI will show the sandbox preview or files panel automatically.
+
 ### Privacy & Security
 - Respect user privacy and data confidentiality
 - Handle uploaded documents securely
@@ -271,6 +305,34 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             }
         }
 
+        // Detect explicit user intent to start a server sandbox to encourage tool usage
+        const userWantsServerSandbox = messages.some((message: any) => {
+            const text = typeof message.content === "string"
+                ? message.content
+                : Array.isArray(message.content)
+                ? message.content.map((p: any) => (typeof p.text === "string" ? p.text : "")).join("\n")
+                : "";
+
+            // Common intents and technologies
+            const patterns: RegExp[] = [
+                /\b(start|run|launch) (a )?server\b/i,
+                /\bserver sandbox\b/i,
+                /create\s+\/?(main\.py|app\.py|index\.js|server\.js)/i,
+                /\bserve\b/i,
+                /\bstart\s+.*sandbox\b/i,
+                /\b(node|express|flask|fastapi|uvicorn|gunicorn|django|next|vite)\b.*\b(run|dev|serve|start)\b/i,
+                /\b(run|dev|serve|start)\b.*\b(node|express|flask|fastapi|uvicorn|gunicorn|django|next|vite)\b/i,
+                /\bnpm\s+run\s+(dev|start)\b/i,
+                /\byarn\s+(dev|start)\b/i,
+                /\bpnpm\s+(dev|start)\b/i,
+                /\bserve\s+on\s+port\s*\d{2,5}\b/i,
+                /\bport\s*(3000|5173|8000|8080|5000)\b/i,
+                /\b(bind|expose)\s*port\b/i,
+            ];
+
+            return patterns.some((re) => re.test(text));
+        });
+
         // Sandbox tools: client-only is available to all; server E2B is premium-gated
         try {
             tools = { ...tools, openSandbox: openSandbox() };
@@ -279,7 +341,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         }
 
         const userTier = context?.get("userTier");
-        if (userTier === "PLUS" || codeSandbox) {
+        if (userTier === "PLUS" || codeSandbox || userWantsServerSandbox) {
             try {
                 tools = { ...tools, startSandbox: startSandbox(), stopSandbox: stopSandbox() };
             } catch {

@@ -1,0 +1,365 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+import { createTogetherAI } from "@ai-sdk/togetherai";
+import { createXai } from "@ai-sdk/xai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { ChatMode } from "@repo/shared/config";
+import { log } from "@repo/shared/logger";
+import { wrapLanguageModel } from "ai";
+export var Providers = {
+    OPENAI: "openai",
+    ANTHROPIC: "anthropic",
+    TOGETHER: "together",
+    GOOGLE: "google",
+    FIREWORKS: "fireworks",
+    XAI: "xai",
+    OPENROUTER: "openrouter",
+};
+import { CLAUDE_4_CONFIG } from "./constants/reasoning";
+import { models } from "./models";
+import { generateErrorMessage } from "./services/error-messages";
+// Helper function to get API key from env, global, or BYOK keys
+// Note: For LM Studio, this returns the base URL instead of an API key
+var getApiKey = function (provider, byokKeys, isVtPlus, isFreeModel) {
+    var _a;
+    var _b;
+    // First check BYOK keys if provided
+    if (byokKeys) {
+        var keyMapping = (_a = {},
+            _a[Providers.OPENAI] = "OPENAI_API_KEY",
+            _a[Providers.ANTHROPIC] = "ANTHROPIC_API_KEY",
+            _a[Providers.TOGETHER] = "TOGETHER_API_KEY",
+            _a[Providers.GOOGLE] = "GEMINI_API_KEY",
+            _a[Providers.FIREWORKS] = "FIREWORKS_API_KEY",
+            _a[Providers.XAI] = "XAI_API_KEY",
+            _a[Providers.OPENROUTER] = "OPENROUTER_API_KEY",
+            _a);
+        var byokKey = byokKeys[keyMapping[provider]];
+        if (byokKey) {
+            log.info("getApiKey: Found BYOK key for provider", {
+                provider: provider,
+                hasByKey: !!byokKey,
+                keyLength: byokKey.length,
+            });
+            return byokKey;
+        }
+    }
+    // Server-funded keys only for whitelisted providers (VT+ policy)
+    if (typeof process !== "undefined" && process.env) {
+        switch (provider) {
+            case Providers.GOOGLE:
+                // Server-funded API key policy for Google/Gemini:
+                // 1. VT+ users can always use server-funded API key
+                // 2. Free model users can use server-funded API key (counted usage)
+                // 3. Other users must use BYOK
+                if (isVtPlus || isFreeModel) {
+                    // Set both environment variables for compatibility with new Google provider
+                    var geminiKey = process.env.GEMINI_API_KEY || "";
+                    if (geminiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+                        process.env.GOOGLE_GENERATIVE_AI_API_KEY = geminiKey;
+                    }
+                    log.info("getApiKey: Using server-funded Gemini key", {
+                        hasKey: !!geminiKey,
+                        keyLength: geminiKey.length,
+                    });
+                    return geminiKey;
+                }
+                log.info("getApiKey: No server-funded key for Gemini (non-VT+ user)");
+                return "";
+            default:
+                // All other providers MUST use BYOK - no server-funded keys
+                log.info("getApiKey: Provider requires BYOK", { provider: provider });
+                return "";
+        }
+    }
+    // For worker environments (use self) - BYOK only
+    if (typeof self !== "undefined") {
+        // Check if AI_API_KEYS exists on self (worker environment)
+        var workerSelf = self;
+        if ((_b = workerSelf.AI_API_KEYS) === null || _b === void 0 ? void 0 : _b[provider]) {
+            log.info("getApiKey: Found worker AI_API_KEYS for provider", {
+                provider: provider,
+                hasKey: !!workerSelf.AI_API_KEYS[provider],
+                keyLength: workerSelf.AI_API_KEYS[provider].length,
+            });
+            return workerSelf.AI_API_KEYS[provider];
+        }
+        // For browser environments (self is also defined in browser)
+        try {
+            if (typeof window !== "undefined" && window.AI_API_KEYS) {
+                var windowApiKey = window.AI_API_KEYS[provider] || "";
+                log.info("getApiKey: Found window AI_API_KEYS for provider", {
+                    provider: provider,
+                    hasKey: !!windowApiKey,
+                    keyLength: windowApiKey.length,
+                });
+                return windowApiKey;
+            }
+        }
+        catch (_c) {
+            // window is not available in this environment
+            log.info("getApiKey: Window not available for API key lookup");
+        }
+    }
+    log.info("getApiKey: No API key found for provider", { provider: provider });
+    return "";
+};
+export var getProviderInstance = function (provider, byokKeys, isFreeModel, claude4InterleavedThinking, isVtPlus) {
+    var _a;
+    var apiKey = getApiKey(provider, byokKeys, isVtPlus, isFreeModel);
+    log.info("Provider instance debug:", {
+        provider: provider,
+        isFreeModel: isFreeModel,
+        hasApiKey: !!apiKey,
+        hasByokKeys: !!byokKeys,
+        byokKeysKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        apiKeyLength: apiKey ? apiKey.length : 0,
+        isVtPlus: isVtPlus,
+        envGeminiKey: provider === "google" ? !!process.env.GEMINI_API_KEY : undefined,
+    });
+    // Helper function to validate API key and throw consistent errors
+    var validateApiKey = function (providerType) {
+        if (!apiKey) {
+            var errorMsg = generateErrorMessage("API key required", {
+                provider: providerType,
+                hasApiKey: false,
+                isVtPlus: isVtPlus,
+            });
+            // Preserve QuotaExceededError type for proper frontend handling
+            if (error.name === "QuotaExceededError") {
+                var quotaError = new Error(errorMsg.message);
+                quotaError.name = "QuotaExceededError";
+                quotaError.cause = error;
+                throw quotaError;
+            }
+            throw new Error(errorMsg.message);
+        }
+    };
+    // For free models, provide more helpful error messages if no API key is found
+    if (isFreeModel && !apiKey && provider === "google") {
+        log.error("No API key found for free Gemini model - checking environment...");
+        log.error("Process env check:", {
+            hasProcess: typeof process !== "undefined",
+            hasEnv: typeof process !== "undefined" ? !!process.env : false,
+            hasGeminiKey: typeof process !== "undefined" ? !!((_a = process.env) === null || _a === void 0 ? void 0 : _a.GEMINI_API_KEY) : false,
+        });
+    }
+    switch (provider) {
+        case Providers.OPENAI:
+            validateApiKey(Providers.OPENAI);
+            return createOpenAI({
+                apiKey: apiKey,
+                // Add fetch options to prevent multiple requests
+                fetch: function (input, init) {
+                    // Add deduplication headers to prevent caching issues
+                    var headers = new Headers(init === null || init === void 0 ? void 0 : init.headers);
+                    headers.set("Cache-Control", "no-store");
+                    headers.set("Pragma", "no-cache");
+                    return globalThis.fetch(input, __assign(__assign({}, init), { headers: headers }));
+                },
+            });
+        case "anthropic": {
+            validateApiKey(Providers.ANTHROPIC);
+            var headers = {
+                "anthropic-dangerous-direct-browser-access": "true",
+            };
+            // Conditionally add Claude 4 interleaved thinking header
+            if (claude4InterleavedThinking) {
+                headers[CLAUDE_4_CONFIG.BETA_HEADER_KEY] = CLAUDE_4_CONFIG.BETA_HEADER;
+            }
+            return createAnthropic({
+                apiKey: apiKey,
+                headers: headers,
+            });
+        }
+        case "together":
+            validateApiKey(Providers.TOGETHER);
+            return createTogetherAI({
+                apiKey: apiKey,
+            });
+        case "google":
+            validateApiKey(Providers.GOOGLE);
+            // Ensure the environment variable is set for the Google provider
+            if (apiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+                process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+            }
+            return createGoogleGenerativeAI({
+                apiKey: apiKey,
+            });
+        case "fireworks":
+            validateApiKey(Providers.FIREWORKS);
+            // Use OpenAI provider for Fireworks to avoid model ID transformation issues
+            return createOpenAI({
+                baseURL: "https://api.fireworks.ai/inference/v1",
+                apiKey: apiKey,
+            });
+        case "xai":
+            validateApiKey(Providers.XAI);
+            return createXai({
+                apiKey: apiKey,
+            });
+        case "openrouter":
+            validateApiKey(Providers.OPENROUTER);
+            return createOpenRouter({
+                apiKey: apiKey,
+            });
+        default:
+            if (!apiKey) {
+                var errorMsg = generateErrorMessage("API key required", {
+                    provider: provider,
+                    hasApiKey: false,
+                    isVtPlus: isVtPlus,
+                });
+                throw new Error(errorMsg.message);
+            }
+            // Default to OpenAI-compatible for unknown providers
+            return createOpenAI({
+                apiKey: apiKey,
+            });
+    }
+};
+export var getLanguageModel = function (m, middleware, byokKeys, useSearchGrounding, cachedContent, claude4InterleavedThinking, isVtPlus) {
+    log.info("=== getLanguageModel START ===");
+    log.info("Parameters:", {
+        modelEnum: m,
+        hasMiddleware: !!middleware,
+        hasByokKeys: !!byokKeys,
+        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+        useSearchGrounding: useSearchGrounding,
+        isVtPlus: isVtPlus,
+    });
+    var model = models.find(function (model) { return model.id === m; });
+    log.info("Found model:", {
+        found: !!model,
+        modelId: model === null || model === void 0 ? void 0 : model.id,
+        modelName: model === null || model === void 0 ? void 0 : model.name,
+        modelProvider: model === null || model === void 0 ? void 0 : model.provider,
+    });
+    if (!model) {
+        log.error("Model not found:", { data: m });
+        throw new Error("Model ".concat(m, " not found"));
+    }
+    try {
+        log.info("Getting provider instance for:", { data: model.provider });
+        var instance = getProviderInstance(model === null || model === void 0 ? void 0 : model.provider, byokKeys, model === null || model === void 0 ? void 0 : model.isFree, claude4InterleavedThinking, isVtPlus);
+        log.info("Provider instance created:", {
+            hasInstance: !!instance,
+            instanceType: typeof instance,
+        });
+        // Handle Gemini models with search grounding or caching
+        if ((model === null || model === void 0 ? void 0 : model.provider) === "google" && (useSearchGrounding || cachedContent)) {
+            log.info("Creating Gemini model with special options...");
+            var modelId_1 = (model === null || model === void 0 ? void 0 : model.id) || ChatMode.GEMINI_2_5_FLASH_LITE;
+            var originalModelId_1 = (model === null || model === void 0 ? void 0 : model.id) || ChatMode.GEMINI_2_5_FLASH_LITE;
+            log.info("Using model ID:", {
+                data: modelId_1,
+                originalModelId: originalModelId_1,
+                provider: model === null || model === void 0 ? void 0 : model.provider,
+                wasMapped: modelId_1 !== originalModelId_1,
+            });
+            try {
+                var modelOptions = {};
+                if (useSearchGrounding) {
+                    modelOptions.useSearchGrounding = true;
+                }
+                if (cachedContent) {
+                    modelOptions.cachedContent = cachedContent;
+                }
+                // Type assertion for model creation with options
+                var createModel = instance;
+                var selectedModel = createModel(modelId_1, modelOptions);
+                log.info("Gemini model created with options:", {
+                    hasModel: !!selectedModel,
+                    modelType: typeof selectedModel,
+                    useSearchGrounding: useSearchGrounding,
+                    hasCachedContent: !!cachedContent,
+                });
+                if (middleware) {
+                    log.info("Wrapping model with middleware...");
+                    return wrapLanguageModel({
+                        model: selectedModel,
+                        middleware: middleware,
+                    });
+                }
+                return selectedModel;
+            }
+            catch (error) {
+                var errorMessage = error instanceof Error ? error.message : String(error);
+                var errorStack = error instanceof Error ? error.stack : undefined;
+                log.error("Error creating Gemini model with special options:", {
+                    data: errorMessage,
+                });
+                if (errorStack) {
+                    log.error("Error stack:", { data: errorStack });
+                }
+                throw error;
+            }
+        }
+        log.info("Creating standard model...");
+        var modelId = (model === null || model === void 0 ? void 0 : model.id) || ChatMode.GEMINI_2_5_FLASH_LITE;
+        var originalModelId = (model === null || model === void 0 ? void 0 : model.id) || ChatMode.GEMINI_2_5_FLASH_LITE;
+        log.info("Using model ID:", {
+            data: modelId,
+            originalModelId: originalModelId,
+            provider: model === null || model === void 0 ? void 0 : model.provider,
+            wasMapped: modelId !== originalModelId,
+        });
+        log.info("Model details:", {
+            modelId: model === null || model === void 0 ? void 0 : model.id,
+            modelName: model === null || model === void 0 ? void 0 : model.name,
+            modelProvider: model === null || model === void 0 ? void 0 : model.provider,
+            isGpt5: (model === null || model === void 0 ? void 0 : model.id) === "gpt-5-2025-08-07",
+        });
+        try {
+            var createModel = instance;
+            var selectedModel = createModel(modelId);
+            log.info("Standard model created:", {
+                hasModel: !!selectedModel,
+                modelType: typeof selectedModel,
+                modelId: model === null || model === void 0 ? void 0 : model.id,
+                modelName: model === null || model === void 0 ? void 0 : model.name,
+            });
+            if (middleware) {
+                log.info("Wrapping model with middleware...");
+                return wrapLanguageModel({
+                    model: selectedModel,
+                    middleware: middleware,
+                });
+            }
+            log.info("=== getLanguageModel END ===");
+            return selectedModel;
+        }
+        catch (error) {
+            var errorMessage = error instanceof Error ? error.message : String(error);
+            var errorStack = error instanceof Error ? error.stack : undefined;
+            log.error("Error creating standard model:", { data: errorMessage });
+            if (errorStack) {
+                log.error("Error stack:", { data: errorStack });
+            }
+            throw error;
+        }
+    }
+    catch (error) {
+        var errorMessage = error instanceof Error ? error.message : String(error);
+        var errorStack = error instanceof Error ? error.stack : undefined;
+        log.error("Error in getLanguageModel:", { data: errorMessage });
+        if (errorStack) {
+            log.error("Error stack:", { data: errorStack });
+        }
+        // Re-throw the original error without modification to preserve
+        // the clear, actionable error messages from getProviderInstance
+        throw error;
+    }
+};

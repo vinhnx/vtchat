@@ -34,7 +34,6 @@ import {
     ChatModeButton,
     GeneratingStatus,
     MathCalculatorButton,
-    SandboxButton,
     SendStopButton,
     WebSearchButton,
 } from "./chat-actions";
@@ -400,7 +399,6 @@ export const ChatInput = ({
                                             <WebSearchButton />
                                             <ChartsButton />
                                             <MathCalculatorButton />
-                                            <SandboxButton />
 
                                             {/* File Upload Tools Group */}
                                             <div className="bg-border/50 mx-1 h-4 w-px" />

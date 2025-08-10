@@ -10,11 +10,11 @@ import { generateObject } from "@repo/ai/workflow/utils";
 import { UserTier } from "@repo/shared/constants/user-tiers";
 import { z } from "zod";
 
-console.log("🧪 Testing Planner Task Fix for Free Tier Users");
-console.log("=".repeat(60));
+log.info("🧪 Testing Planner Task Fix for Free Tier Users");
+log.info("=".repeat(60));
 
 async function testFreeUserPlannerWithoutApiKey() {
-    console.log("\n📋 Test 1: Free user planner without API key (should fail with clear message)");
+    log.info("\n📋 Test 1: Free user planner without API key (should fail with clear message)");
 
     // Clear system API key to simulate production environment without system key
     delete process.env.GEMINI_API_KEY;
@@ -32,25 +32,25 @@ async function testFreeUserPlannerWithoutApiKey() {
             userId: "test-user-id",
         });
 
-        console.log("❌ FAIL: Expected error but function succeeded");
+        log.info("❌ FAIL: Expected error but function succeeded");
         return false;
     } catch (error) {
         const expectedMessage = "Planning requires an API key";
         if (error.message.includes(expectedMessage)) {
-            console.log("✅ PASS: Got expected error message");
+            log.info("✅ PASS: Got expected error message");
             console.log(`   Error: ${error.message}`);
             return true;
         } else {
-            console.log("❌ FAIL: Got unexpected error message");
-            console.log(`   Expected: Message containing "${expectedMessage}"`);
-            console.log(`   Actual: ${error.message}`);
+            log.info("❌ FAIL: Got unexpected error message");
+            log.info(`   Expected: Message containing "${expectedMessage}"`);
+            log.info(`   Actual: ${error.message}`);
             return false;
         }
     }
 }
 
 async function testFreeUserPlannerWithApiKey() {
-    console.log("\n📋 Test 2: Free user planner with BYOK API key (should work)");
+    log.info("\n📋 Test 2: Free user planner with BYOK API key (should work)");
 
     // Clear system API key
     delete process.env.GEMINI_API_KEY;
@@ -70,7 +70,7 @@ async function testFreeUserPlannerWithApiKey() {
             userId: "test-user-id",
         });
 
-        console.log("✅ PASS: Function accepted user API key (would make API call)");
+        log.info("✅ PASS: Function accepted user API key (would make API call)");
         return true;
     } catch (error) {
         // We expect this to fail due to invalid API key, but NOT due to missing system config
@@ -78,11 +78,11 @@ async function testFreeUserPlannerWithApiKey() {
             error.message.includes("system configuration") ||
             error.message.includes("Planning requires an API key")
         ) {
-            console.log("❌ FAIL: Still getting system configuration or missing API key error");
+            log.info("❌ FAIL: Still getting system configuration or missing API key error");
             console.log(`   Error: ${error.message}`);
             return false;
         } else {
-            console.log(
+            log.info(
                 "✅ PASS: Function accepted user API key (failed due to invalid key, which is expected)",
             );
             console.log(`   Error: ${error.message}`);
@@ -92,7 +92,7 @@ async function testFreeUserPlannerWithApiKey() {
 }
 
 async function testFreeUserPlannerWithSystemKey() {
-    console.log(
+    log.info(
         "\n📋 Test 3: Free user planner without BYOK but with system key available (should work)",
     );
 
@@ -112,7 +112,7 @@ async function testFreeUserPlannerWithSystemKey() {
             userId: "test-user-id",
         });
 
-        console.log("✅ PASS: Function used system API key (would make API call)");
+        log.info("✅ PASS: Function used system API key (would make API call)");
         return true;
     } catch (error) {
         // We expect this to fail due to invalid API key, but NOT due to missing API key
@@ -120,21 +120,21 @@ async function testFreeUserPlannerWithSystemKey() {
             error.message.includes("API key is required") ||
             error.message.includes("Planning requires an API key")
         ) {
-            console.log("❌ FAIL: Still requiring API key when system key is available");
+            log.info("❌ FAIL: Still requiring API key when system key is available");
             console.log(`   Error: ${error.message}`);
             return false;
         } else {
-            console.log(
+            log.info(
                 "✅ PASS: Function used system API key (failed due to invalid key, which is expected)",
             );
-            console.log(`   Error: ${error.message}`);
+            log.info(`   Error: ${error.message}`);
             return true;
         }
     }
 }
 
 async function runTests() {
-    console.log("Starting tests...\n");
+    log.info("Starting tests...\n");
 
     const results = [];
 
@@ -145,24 +145,24 @@ async function runTests() {
     const passedTests = results.filter(Boolean).length;
     const totalTests = results.length;
 
-    console.log("\n" + "=".repeat(60));
-    console.log(`📊 Test Results: ${passedTests}/${totalTests} tests passed`);
+    log.info("\n" + "=".repeat(60));
+    log.info(`📊 Test Results: ${passedTests}/${totalTests} tests passed`);
 
     if (passedTests === totalTests) {
-        console.log("🎉 All tests passed! The planner fix is working correctly.");
-        console.log(
+        log.info("🎉 All tests passed! The planner fix is working correctly.");
+        log.info(
             "\n✅ Free tier users will now get clear error messages when they need to provide API keys for planning",
         );
-        console.log("✅ Free tier users can use planning with their own API keys (BYOK)");
-        console.log("✅ Free tier users can use planning when system keys are available");
+        log.info("✅ Free tier users can use planning with their own API keys (BYOK)");
+        log.info("✅ Free tier users can use planning when system keys are available");
     } else {
-        console.log("❌ Some tests failed. The fix may need additional work.");
+        log.info("❌ Some tests failed. The fix may need additional work.");
         process.exit(1);
     }
 }
 
 // Run the tests
 runTests().catch((error) => {
-    console.error("❌ Test script failed:", error);
+    log.error("❌ Test script failed:", error);
     process.exit(1);
 });

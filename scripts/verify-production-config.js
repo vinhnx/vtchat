@@ -205,7 +205,8 @@ class ProductionVerifier {
     }
 
     async verifyAll() {
-        console.log("🔍 Verifying Production Configuration...\n");
+        log.info("🔍 Verifying Production Configuration...
+");
         log.info("Starting production configuration verification");
 
         // Check environment variables
@@ -220,7 +221,7 @@ class ProductionVerifier {
         log.info("Environment variables checked");
 
         // Check external connections
-        console.log("🔌 Testing External Connections...\n");
+        log.info("🔌 Testing External Connections...\n");
         log.info("Testing external connections");
 
         this.results.database = await this.checkDatabaseConnection();
@@ -262,58 +263,59 @@ class ProductionVerifier {
     }
 
     printReport(report) {
-        console.log("# 🚀 Production Configuration Verification Report\n");
-        console.log(`**Generated:** ${report.timestamp}`);
-        console.log(`**Environment:** ${report.environment}`);
-        console.log(`**Status:** ${report.status === "ready" ? "✅ READY" : "❌ NOT READY"}\n`);
+        log.info("# 🚀 Production Configuration Verification Report\n");
+        log.info(`**Generated:** ${report.timestamp}`);
+        log.info(`**Environment:** ${report.environment}`);
+        log.info(`**Status:** ${report.status === "ready" ? "✅ READY" : "❌ NOT READY"}\n`);
 
-        console.log("## Summary\n");
-        console.log(`- **Errors:** ${report.summary.errors}`);
-        console.log(`- **Warnings:** ${report.summary.warnings}`);
-        console.log(`- **Total Checks:** ${report.summary.total_checks}\n`);
+        log.info("## Summary\n");
+        log.info(`- **Errors:** ${report.summary.errors}`);
+        log.info(`- **Warnings:** ${report.summary.warnings}`);
+        log.info(`- **Total Checks:** ${report.summary.total_checks}\n`);
 
         // Environment Variables
         for (const [category, result] of Object.entries(this.results)) {
             if (result.checks) {
-                console.log(`## ${result.name}\n`);
+                log.info(`## ${result.name}
+`);
                 for (const check of result.checks) {
                     const icon =
                         check.status === "success" ? "✅" : check.status === "error" ? "❌" : "⚠️";
                     const req = check.required ? "(Required)" : "(Optional)";
-                    console.log(`${icon} **${check.name}** ${req}: ${check.message}`);
+                    log.info(`${icon} **${check.name}** ${req}: ${check.message}`);
                 }
-                console.log("");
+                log.info("");
             } else {
                 // External connections
                 const icon =
                     result.status === "success" ? "✅" : result.status === "error" ? "❌" : "⚠️";
-                console.log(
+                log.info(
                     `## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`,
                 );
-                console.log(`${icon} **Status**: ${result.message}\n`);
+                log.info(`${icon} **Status**: ${result.message}\n`);
             }
         }
 
         if (report.errors.length > 0) {
-            console.log("## ❌ Critical Issues\n");
-            report.errors.forEach((error) => console.log(`- ${error}`));
-            console.log("");
+            log.info("## ❌ Critical Issues\n");
+            report.errors.forEach((error) => log.info(`- ${error}`));
+            log.info("");
         }
 
         if (report.warnings.length > 0) {
-            console.log("## ⚠️ Warnings\n");
-            report.warnings.forEach((warning) => console.log(`- ${warning}`));
-            console.log("");
+            log.info("## ⚠️ Warnings\n");
+            report.warnings.forEach((warning) => log.info(`- ${warning}`));
+            log.info("");
         }
 
-        console.log("## Next Steps\n");
+        log.info("## Next Steps\n");
         if (report.status === "ready") {
-            console.log("✅ Configuration is ready for production deployment!");
+            log.info("✅ Configuration is ready for production deployment!");
         } else {
-            console.log("❌ Fix critical issues before deploying to production.");
-            console.log("- Set all required environment variables");
-            console.log("- Verify database connectivity");
-            console.log("- Test external API connections");
+            log.info("❌ Fix critical issues before deploying to production.");
+            log.info("- Set all required environment variables");
+            log.info("- Verify database connectivity");
+            log.info("- Test external API connections");
         }
     }
 }

@@ -4,11 +4,11 @@
  * Test script to verify web search works by making actual requests to the server
  */
 
-console.log("🧪 Testing Web Search via Server Request");
-console.log("=".repeat(60));
+log.info("🧪 Testing Web Search via Server Request");
+log.info("=".repeat(60));
 
 async function testServerWebSearch() {
-    console.log("\n📋 Testing web search via server request");
+    log.info("\n📋 Testing web search via server request");
 
     const requestBody = {
         mode: "gemini-2.5-flash-lite-preview-06-17",
@@ -27,7 +27,7 @@ async function testServerWebSearch() {
     };
 
     try {
-        console.log("Making request to http://localhost:3000/api/completion...");
+        log.info("Making request to http://localhost:3000/api/completion...");
 
         const response = await fetch("http://localhost:3000/api/completion", {
             method: "POST",
@@ -40,18 +40,18 @@ async function testServerWebSearch() {
             body: JSON.stringify(requestBody),
         });
 
-        console.log(`Response status: ${response.status}`);
-        console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+        log.info(`Response status: ${response.status}`);
+        log.info("Response headers:", Object.fromEntries(response.headers.entries()));
 
         if (response.status === 401) {
-            console.log("⚠️  Authentication required - this is expected for the test script");
-            console.log("✅ But the server is running and responding correctly");
-            console.log("✅ The API key should be loaded in the server context");
+            log.info("⚠️  Authentication required - this is expected for the test script");
+            log.info("✅ But the server is running and responding correctly");
+            log.info("✅ The API key should be loaded in the server context");
             return true;
         }
 
         if (response.ok) {
-            console.log("✅ SUCCESS: Request accepted!");
+            log.info("✅ SUCCESS: Request accepted!");
 
             // Read the streaming response to check for workflow execution
             const reader = response.body?.getReader();
@@ -61,7 +61,7 @@ async function testServerWebSearch() {
                 let hasPlanner = false;
                 let hasError = false;
 
-                console.log("\n📋 Analyzing response stream:");
+                log.info("\n📋 Analyzing response stream:");
 
                 while (eventCount < 20) {
                     // Read first 20 events
@@ -86,7 +86,7 @@ async function testServerWebSearch() {
                                 line.includes("planner") ||
                                 line.includes("error")
                             ) {
-                                console.log(
+                                log.info(
                                     `   ${line.substring(0, 100)}${line.length > 100 ? "..." : ""}`,
                                 );
                             }
@@ -96,54 +96,54 @@ async function testServerWebSearch() {
 
                 reader.releaseLock();
 
-                console.log("\n📊 Workflow Analysis:");
-                console.log(`   Events processed: ${eventCount}`);
-                console.log(`   Gemini web search detected: ${hasGeminiWebSearch ? "✅" : "❌"}`);
-                console.log(
+                log.info("\n📊 Workflow Analysis:");
+                log.info(`   Events processed: ${eventCount}`);
+                log.info(`   Gemini web search detected: ${hasGeminiWebSearch ? "✅" : "❌"}`);
+                log.info(
                     `   Planner detected: ${hasPlanner ? "⚠️  (should be bypassed)" : "✅ (correctly bypassed)"}`,
                 );
-                console.log(`   Errors detected: ${hasError ? "❌" : "✅"}`);
+                log.info(`   Errors detected: ${hasError ? "❌" : "✅"}`);
 
                 // Determine success
                 const isSuccess = hasGeminiWebSearch && !hasPlanner && !hasError;
 
                 if (isSuccess) {
-                    console.log("\n🎉 SUCCESS: Unified workflow is working correctly!");
-                    console.log("   - Routes directly to gemini-web-search");
-                    console.log("   - Bypasses the problematic planner");
-                    console.log("   - No errors detected");
+                    log.info("\n🎉 SUCCESS: Unified workflow is working correctly!");
+                    log.info("   - Routes directly to gemini-web-search");
+                    log.info("   - Bypasses the problematic planner");
+                    log.info("   - No errors detected");
                 } else {
-                    console.log("\n⚠️  PARTIAL SUCCESS: Some issues detected");
+                    log.info("⚠️  PARTIAL SUCCESS: Some issues detected");
                     if (hasPlanner)
-                        console.log("   - Still routing through planner (should be fixed)");
-                    if (hasError) console.log("   - Errors detected in workflow");
-                    if (!hasGeminiWebSearch) console.log("   - Gemini web search not detected");
+                        log.info("   - Still routing through planner (should be fixed)");
+                    if (hasError) log.info("   - Errors detected in workflow");
+                    if (!hasGeminiWebSearch) log.info("   - Gemini web search not detected");
                 }
 
                 return isSuccess;
             }
         } else {
             const errorText = await response.text();
-            console.log(`❌ Request failed: ${errorText.substring(0, 200)}...`);
+            log.info(`❌ Request failed: ${errorText.substring(0, 200)}...`);
 
             // Check for specific error types
             if (errorText.includes("API key")) {
-                console.log("⚠️  API key related error");
+                log.info("⚠️  API key related error");
                 return false;
             } else if (errorText.includes("rate limit")) {
-                console.log("⚠️  Rate limit error - system is working but limits reached");
+                log.info("⚠️  Rate limit error - system is working but limits reached");
                 return true;
             } else {
-                console.log("❌ Unexpected error");
+                log.info("❌ Unexpected error");
                 return false;
             }
         }
     } catch (error) {
-        console.log(`❌ Network error: ${error.message}`);
+        log.info(`❌ Network error: ${error.message}`);
 
         if (error.message.includes("ECONNREFUSED")) {
-            console.log("   - Server is not running on port 3000");
-            console.log("   - Make sure 'bun dev' is running");
+            log.info("   - Server is not running on port 3000");
+            log.info("   - Make sure 'bun dev' is running");
         }
 
         return false;
@@ -153,35 +153,35 @@ async function testServerWebSearch() {
 }
 
 async function runTest() {
-    console.log("Starting server-based web search test...\n");
+    log.info("Starting server-based web search test...");
 
     const result = await testServerWebSearch();
 
-    console.log("\n" + "=".repeat(60));
+    log.info("\n" + "=".repeat(60));
     if (result) {
-        console.log("🎉 SUCCESS: Web search functionality is working!");
-        console.log("\n✅ Server is responding correctly");
-        console.log("✅ Unified workflow is operational");
-        console.log("✅ Basic web search should work in the browser");
+        log.info("🎉 SUCCESS: Web search functionality is working!");
+        log.info("✅ Server is responding correctly");
+        log.info("✅ Unified workflow is operational");
+        log.info("✅ Basic web search should work in the browser");
 
-        console.log("\n🚀 Ready for browser testing:");
-        console.log("   1. Open http://localhost:3000");
-        console.log("   2. Enable web search toggle");
-        console.log("   3. Ask: 'who is vinhnx?'");
-        console.log("   4. Should work without planner errors");
+        log.info("\n🚀 Ready for browser testing:");
+        log.info("   1. Open http://localhost:3000");
+        log.info("   2. Enable web search toggle");
+        log.info("   3. Ask: 'who is vinhnx?'");
+        log.info("   4. Should work without planner errors");
     } else {
-        console.log("❌ ISSUE: Web search may not be working correctly");
-        console.log("\n🔍 Possible issues:");
-        console.log("   - Server not running (check 'bun dev')");
-        console.log("   - API key not loaded correctly");
-        console.log("   - Workflow routing issues");
-        console.log("   - Authentication problems");
+        log.info("❌ ISSUE: Web search may not be working correctly");
+        log.info("\n🔍 Possible issues:");
+        log.info("   - Server not running (check 'bun dev')");
+        log.info("   - API key not loaded correctly");
+        log.info("   - Workflow routing issues");
+        log.info("   - Authentication problems");
     }
 }
 
 // Run the test
 runTest().catch((error) => {
-    console.error("❌ Test script failed:", error);
+    log.error("❌ Test script failed:", error);
     process.exit(1);
 });
 /* eslint-disable no-console */

@@ -1,14 +1,16 @@
 #!/usr/bin/env bun
 
+import { log } from "@repo/shared/logger";
+
 /**
  * Test script to verify web search works with the configured API key
  */
 
-console.log("🧪 Testing Web Search with Configured API Key");
-console.log("=".repeat(60));
+log.info("🧪 Testing Web Search with Configured API Key");
+log.info("=".repeat(60));
 
 async function testWebSearchWithServerKey() {
-    console.log("\n📋 Testing web search with server-funded API key");
+    log.info("\n📋 Testing web search with server-funded API key");
 
     const requestBody = {
         mode: "gemini-2.5-flash-lite-preview-06-17",
@@ -27,7 +29,7 @@ async function testWebSearchWithServerKey() {
     };
 
     try {
-        console.log("Making request to http://localhost:3001/api/completion...");
+        log.info("Making request to http://localhost:3001/api/completion...");
 
         const response = await fetch("http://localhost:3001/api/completion", {
             method: "POST",
@@ -39,17 +41,17 @@ async function testWebSearchWithServerKey() {
             body: JSON.stringify(requestBody),
         });
 
-        console.log(`Response status: ${response.status}`);
-        console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+        log.info(`Response status: ${response.status}`);
+        log.info("Response headers:", Object.fromEntries(response.headers.entries()));
 
         if (response.status === 401) {
-            console.log("❌ Authentication required - this is expected for the test script");
-            console.log("✅ But the server is running and responding correctly");
+            log.info("❌ Authentication required - this is expected for the test script");
+            log.info("✅ But the server is running and responding correctly");
             return true;
         }
 
         if (response.ok) {
-            console.log("✅ SUCCESS: Request accepted!");
+            log.info("✅ SUCCESS: Request accepted!");
 
             // Read a bit of the streaming response
             const reader = response.body?.getReader();
@@ -69,7 +71,7 @@ async function testWebSearchWithServerKey() {
                     for (const line of lines) {
                         if (line.startsWith("event: ") || line.startsWith("data: ")) {
                             eventCount++;
-                            console.log(
+                            log.info(
                                 `   ${line.substring(0, 100)}${line.length > 100 ? "..." : ""}`,
                             );
 
@@ -82,32 +84,31 @@ async function testWebSearchWithServerKey() {
 
                 reader.releaseLock();
 
-                console.log("\n📊 Analysis:");
-                console.log(`   Planner task detected: ${hasPlanner ? "✅" : "❌"}`);
-                console.log(`   Web search detected: ${hasWebSearch ? "✅" : "❌"}`);
+                log.info("\n📊 Analysis:");
+                log.info(`   Planner task detected: ${hasPlanner ? "✅" : "❌"}`);
+                log.info(`   Web search detected: ${hasWebSearch ? "✅" : "❌"}`);
 
                 return hasPlanner || hasWebSearch;
             }
         } else {
-            const errorText = await response.text();
-            console.log(`❌ Request failed: ${errorText.substring(0, 200)}...`);
+            log.info(`❌ Request failed: ${errorText.substring(0, 200)}...`);
 
             // Check for specific error types
             if (errorText.includes("API key")) {
-                console.log("⚠️  API key related error - check if the key is valid");
+                log.warn("⚠️  API key related error - check if the key is valid");
                 return false;
             } else if (errorText.includes("rate limit")) {
-                console.log(
+                log.warn(
                     "⚠️  Rate limit error - this means the system is working but limits are reached",
                 );
                 return true;
             } else {
-                console.log("❌ Unexpected error");
+                log.info("❌ Unexpected error");
                 return false;
             }
         }
     } catch (error) {
-        console.log(`❌ Network error: ${error.message}`);
+        log.error(`❌ Network error: ${error.message}`);
         return false;
     }
 
@@ -115,16 +116,16 @@ async function testWebSearchWithServerKey() {
 }
 
 async function runTest() {
-    console.log("Starting web search test...\n");
+    log.info("Starting web search test...");
 
     const result = await testWebSearchWithServerKey();
 
-    console.log("\n" + "=".repeat(60));
+    log.info("\n" + "=".repeat(60));
     if (result) {
-        console.log("🎉 SUCCESS: Web search functionality is working!");
-        console.log("\n✅ The server-funded API key is configured correctly");
-        console.log("✅ Free tier users can now use web search with Gemini Flash Lite");
-        console.log("✅ Rate limiting and quota management are in place");
+        log.info("🎉 SUCCESS: Web search functionality is working!");
+        log.info("✅ The server-funded API key is configured correctly");
+        log.info("✅ Free tier users can now use web search with Gemini Flash Lite");
+        log.info("✅ Rate limiting and quota management are in place");
     } else {
         console.log("❌ ISSUE: Web search may not be working correctly");
         console.log("\n🔍 Check:");

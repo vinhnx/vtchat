@@ -1,3 +1,5 @@
+import { log } from "@repo/shared/logger";
+
 // Reset sidebar state in localStorage
 if (typeof localStorage !== "undefined") {
     try {
@@ -5,8 +7,8 @@ if (typeof localStorage !== "undefined") {
             "sidebar-state",
             JSON.stringify({ isOpen: false, animationDisabled: false }),
         );
-        console.log("Sidebar state reset to closed");
+        log.info("Sidebar state reset to closed");
     } catch (error) {
-        console.error("Failed to reset sidebar state:", error);
+        log.error("Failed to reset sidebar state:", error);
     }
 }

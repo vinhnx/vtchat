@@ -105,7 +105,7 @@ export const VT_BASE_PRODUCT_INFO = {
 
 // Unified Product Definitions keyed by PlanSlug
 // Only VT_PLUS is a purchasable product.
-export const PRODUCTS_BY_PLAN_SLUG: Record<PlanSlug.VT_PLUS, Product> = {
+export const PRODUCTS_BY_PLAN_SLUG: Record<typeof PlanSlug.VT_PLUS, Product> = {
     [PlanSlug.VT_PLUS]: VT_PLUS_PRODUCT,
 };
 
@@ -114,7 +114,7 @@ export const PRODUCTS_BY_PLAN_SLUG: Record<PlanSlug.VT_PLUS, Product> = {
 // This maps the incoming priceId (which should be a PlanSlug) to the PlanSlug itself.
 // This might be redundant if priceId is always a PlanSlug.
 // Only VT_PLUS is expected as a priceId for a purchasable plan.
-export const PRICE_ID_MAPPING: Record<PlanSlug.VT_PLUS, PlanSlug.VT_PLUS> = {
+export const PRICE_ID_MAPPING: Record<typeof PlanSlug.VT_PLUS, typeof PlanSlug.VT_PLUS> = {
     [PlanSlug.VT_PLUS]: PlanSlug.VT_PLUS,
 } as const;
 

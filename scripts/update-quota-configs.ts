@@ -10,7 +10,7 @@ import { db } from "../apps/web/lib/database/index";
 
 async function updateQuotaConfigs() {
     try {
-        console.log("🔄 Updating quota configurations...");
+        log.info("🔄 Updating quota configurations...");
 
         // Update Deep Research quotas
         await db.execute(`
@@ -38,7 +38,7 @@ async function updateQuotaConfigs() {
             WHERE feature = 'PS' AND plan = 'vt_base'
         `);
 
-        console.log("✅ Quota configurations updated successfully!");
+        log.info("✅ Quota configurations updated successfully!");
 
         // Verify the updates
         const result = await db.execute(`
@@ -47,12 +47,12 @@ async function updateQuotaConfigs() {
             ORDER BY feature, plan
         `);
 
-        console.log("\n📊 Current quota configurations:");
-        console.table(result.rows);
+        log.info("\n📊 Current quota configurations:");
+        log.info(JSON.stringify(result.rows, null, 2));
 
         log.info("Quota configurations updated via script");
     } catch (error) {
-        console.error("❌ Failed to update quota configurations:", error);
+        log.error("❌ Failed to update quota configurations:", error);
         log.error({ error }, "Failed to update quota configurations via script");
         process.exit(1);
     }
@@ -61,10 +61,10 @@ async function updateQuotaConfigs() {
 // Run the script
 updateQuotaConfigs()
     .then(() => {
-        console.log("\n🎉 Script completed successfully!");
+        log.info("\n🎉 Script completed successfully!");
         process.exit(0);
     })
     .catch((error) => {
-        console.error("💥 Script failed:", error);
+        log.error("💥 Script failed:", error);
         process.exit(1);
     });

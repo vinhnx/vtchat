@@ -1,0 +1,210 @@
+/**
+ * VT Chat Subscription Plans and Features
+ *
+ * This module defines the subscription plans and features for the VT Chat application.
+ * It includes plan definitions, feature mappings, and utility functions for access control.
+ */
+var _a, _b;
+// Plan slug enumerations
+export var PlanSlug = {
+    ANONYMOUS: "anonymous",
+    VT_BASE: "vt_base",
+    VT_PLUS: "vt_plus",
+};
+// Feature slug enumerations
+export var FeatureSlug = {
+    // Base Plan Features
+    ACCESS_CHAT: "access_chat",
+    BASE_MODELS: "base_models",
+    FREE_MODELS: "free_models",
+    MATH_CALCULATOR: "math_calculator",
+    BASE_FEATURES: "base_features",
+    // VT+ Plan Features
+    DARK_THEME: "dark_theme",
+    DEEP_RESEARCH: "deep_research",
+    PRO_SEARCH: "pro_search",
+    GROUNDING_WEB_SEARCH: "grounding_web_search",
+    ADVANCED_CHAT_MODES: "advanced_chat_modes",
+    STRUCTURED_OUTPUT: "structured_output",
+    THINKING_MODE: "thinking_mode",
+    DOCUMENT_PARSING: "document_parsing",
+    THINKING_MODE_TOGGLE: "thinking_mode_toggle",
+    REASONING_CHAIN: "reasoning_chain",
+    GEMINI_EXPLICIT_CACHING: "gemini_explicit_caching",
+    CHART_VISUALIZATION: "chart_visualization",
+    MULTI_MODAL_CHAT: "multi_modal_chat",
+    GEMINI_MODELS_NO_BYOK: "gemini_models_no_byok",
+    CODE_SANDBOX: "code_sandbox",
+};
+// Plan definitions
+export var PLANS = (_a = {},
+    _a[PlanSlug.ANONYMOUS] = {
+        slug: PlanSlug.ANONYMOUS,
+        name: "Anonymous",
+        description: "Basic chat access for anonymous users",
+        features: [
+            // Only basic chat functionality for anonymous users
+            FeatureSlug.ACCESS_CHAT,
+            FeatureSlug.BASE_MODELS,
+            FeatureSlug.MATH_CALCULATOR,
+        ],
+        isDefault: false,
+    },
+    _a[PlanSlug.VT_BASE] = {
+        slug: PlanSlug.VT_BASE,
+        name: "Base",
+        description: "Perfect for getting started with VT - Access to advanced features with free models and essential tools",
+        features: [
+            // Base features
+            FeatureSlug.ACCESS_CHAT,
+            FeatureSlug.BASE_MODELS,
+            FeatureSlug.FREE_MODELS,
+            FeatureSlug.MATH_CALCULATOR,
+            FeatureSlug.BASE_FEATURES,
+            // Advanced features now available for free (logged in users only)
+            FeatureSlug.DARK_THEME,
+            FeatureSlug.THINKING_MODE_TOGGLE,
+            FeatureSlug.STRUCTURED_OUTPUT,
+            FeatureSlug.THINKING_MODE,
+            FeatureSlug.DOCUMENT_PARSING,
+            FeatureSlug.REASONING_CHAIN,
+            FeatureSlug.GEMINI_EXPLICIT_CACHING,
+            FeatureSlug.MULTI_MODAL_CHAT,
+        ],
+        isDefault: true,
+    },
+    _a[PlanSlug.VT_PLUS] = {
+        slug: PlanSlug.VT_PLUS,
+        name: "VT+",
+        description: "Enhanced experience with premium research capabilities.",
+        features: [
+            // All Base plan features
+            FeatureSlug.ACCESS_CHAT,
+            FeatureSlug.BASE_MODELS,
+            FeatureSlug.FREE_MODELS,
+            FeatureSlug.MATH_CALCULATOR,
+            FeatureSlug.BASE_FEATURES,
+            FeatureSlug.DARK_THEME,
+            FeatureSlug.THINKING_MODE_TOGGLE,
+            FeatureSlug.STRUCTURED_OUTPUT,
+            FeatureSlug.THINKING_MODE,
+            FeatureSlug.DOCUMENT_PARSING,
+            FeatureSlug.REASONING_CHAIN,
+            FeatureSlug.GEMINI_EXPLICIT_CACHING,
+            FeatureSlug.CHART_VISUALIZATION,
+            FeatureSlug.MULTI_MODAL_CHAT,
+            // VT+ exclusive features
+            FeatureSlug.PRO_SEARCH,
+            FeatureSlug.DEEP_RESEARCH,
+            FeatureSlug.GROUNDING_WEB_SEARCH,
+            FeatureSlug.ADVANCED_CHAT_MODES,
+            FeatureSlug.GEMINI_MODELS_NO_BYOK,
+            FeatureSlug.CODE_SANDBOX,
+        ],
+    },
+    _a);
+// Feature definitions
+export var FEATURES = (_b = {},
+    _b[FeatureSlug.ACCESS_CHAT] = {
+        slug: FeatureSlug.ACCESS_CHAT,
+        name: "Chat Access",
+        description: "Access to basic chat functionality",
+    },
+    _b[FeatureSlug.BASE_MODELS] = {
+        slug: FeatureSlug.BASE_MODELS,
+        name: "Base Models",
+        description: "Access to standard AI models",
+    },
+    _b[FeatureSlug.FREE_MODELS] = {
+        slug: FeatureSlug.FREE_MODELS,
+        name: "Access to Free Models",
+        description: "Access to free AI models including DeepSeek V3, DeepSeek R1, and Qwen3 14B via OpenRouter",
+    },
+    _b[FeatureSlug.MATH_CALCULATOR] = {
+        slug: FeatureSlug.MATH_CALCULATOR,
+        name: "Mathematical Calculator Tools",
+        description: "Mathematical calculation tools providing essential mathematical operations including trigonometric functions, logarithms, exponentials, and basic arithmetic calculations",
+    },
+    _b[FeatureSlug.BASE_FEATURES] = {
+        slug: FeatureSlug.BASE_FEATURES,
+        name: "Access to Base Features",
+        description: "Access to base features including local storage privacy, basic AI interactions, and core functionality",
+    },
+    _b[FeatureSlug.DARK_THEME] = {
+        slug: FeatureSlug.DARK_THEME,
+        name: "Dark Theme",
+        description: "Dark theme for better viewing experience",
+    },
+    _b[FeatureSlug.DEEP_RESEARCH] = {
+        slug: FeatureSlug.DEEP_RESEARCH,
+        name: "Grounding Web Search",
+        description: "Advanced research capabilities with comprehensive analysis",
+    },
+    _b[FeatureSlug.PRO_SEARCH] = {
+        slug: FeatureSlug.PRO_SEARCH,
+        name: "Grounding Web Search",
+        description: "Enhanced search with web integration",
+    },
+    _b[FeatureSlug.GROUNDING_WEB_SEARCH] = {
+        slug: FeatureSlug.GROUNDING_WEB_SEARCH,
+        name: "Google Dynamic Retrieval",
+        description: "Advanced AI-powered search with dynamic content retrieval from Google",
+    },
+    _b[FeatureSlug.ADVANCED_CHAT_MODES] = {
+        slug: FeatureSlug.ADVANCED_CHAT_MODES,
+        name: "Advanced Chat Modes",
+        description: "Access to specialized chat modes and advanced AI capabilities",
+    },
+    _b[FeatureSlug.STRUCTURED_OUTPUT] = {
+        slug: FeatureSlug.STRUCTURED_OUTPUT,
+        name: "Structured Data Extraction",
+        description: "AI-powered extraction of structured data from PDF documents using Gemini models",
+    },
+    _b[FeatureSlug.THINKING_MODE] = {
+        slug: FeatureSlug.THINKING_MODE,
+        name: "Thinking Mode",
+        description: "Enhanced AI reasoning with visible thought processes for Gemini models (VT+ exclusive)",
+    },
+    _b[FeatureSlug.DOCUMENT_PARSING] = {
+        slug: FeatureSlug.DOCUMENT_PARSING,
+        name: "Document Parsing",
+        description: "AI-powered parsing and analysis of various document formats including PDFs, Word documents, and more",
+    },
+    _b[FeatureSlug.THINKING_MODE_TOGGLE] = {
+        slug: FeatureSlug.THINKING_MODE_TOGGLE,
+        name: "Thinking Mode Toggle",
+        description: "Ability to toggle thinking mode on/off for customized AI reasoning experience",
+    },
+    _b[FeatureSlug.REASONING_CHAIN] = {
+        slug: FeatureSlug.REASONING_CHAIN,
+        name: "Reasoning Chain",
+        description: "Advanced chain-of-thought reasoning capabilities for complex problem solving and analysis",
+    },
+    _b[FeatureSlug.GEMINI_EXPLICIT_CACHING] = {
+        slug: FeatureSlug.GEMINI_EXPLICIT_CACHING,
+        name: "Gemini Explicit Caching",
+        description: "Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse",
+    },
+    _b[FeatureSlug.CHART_VISUALIZATION] = {
+        slug: FeatureSlug.CHART_VISUALIZATION,
+        name: "Interactive Chart Generation",
+        description: "AI-powered interactive chart creation including bar charts, line charts, area charts, pie charts, and radar charts with beautiful visualizations",
+    },
+    _b[FeatureSlug.MULTI_MODAL_CHAT] = {
+        slug: FeatureSlug.MULTI_MODAL_CHAT,
+        name: "Multi-Modal Chat",
+        description: "Upload and analyze images and PDF documents alongside text conversations using advanced AI models",
+    },
+    _b[FeatureSlug.GEMINI_MODELS_NO_BYOK] = {
+        slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,
+        name: "All Gemini Models Without BYOK",
+        description: "Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys",
+    },
+    _b[FeatureSlug.CODE_SANDBOX] = {
+        slug: FeatureSlug.CODE_SANDBOX,
+        name: "Code Sandbox",
+        description: "Execute code in a secure cloud sandbox environment with E2B integration. Limited to 2 executions per day for VT+ users.",
+    },
+    _b);
+// Default plan slug
+export var DEFAULT_PLAN = PlanSlug.VT_BASE;

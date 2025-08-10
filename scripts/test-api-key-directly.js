@@ -1,14 +1,16 @@
 #!/usr/bin/env bun
 
+import { log } from "@repo/shared/logger";
+
 /**
  * Test script to directly test the Google API key
  */
 
-console.log("🧪 Testing Google API Key Directly");
-console.log("=".repeat(60));
+log.info("🧪 Testing Google API Key Directly");
+log.info("=".repeat(60));
 
 async function testGoogleApiKey() {
-    console.log("\n📋 Testing Google API key with direct API call");
+    log.info("\n📋 Testing Google API key with direct API call");
 
     // Load environment variables like Next.js does
     const fs = await import("fs");
@@ -27,23 +29,23 @@ async function testGoogleApiKey() {
                 ) {
                     const apiKey = line.split("=")[1].trim();
 
-                    console.log(`  - API key found: ${apiKey.substring(0, 10)}...`);
-                    console.log(`  - Key length: ${apiKey.length} characters`);
-                    console.log(
+                    log.info(`  - API key found: ${apiKey.substring(0, 10)}...`);
+                    log.info(`  - Key length: ${apiKey.length} characters`);
+                    log.info(
                         `  - Valid format: ${apiKey.startsWith("AIza") && apiKey.length === 39 ? "✅" : "❌"}`,
                     );
 
                     if (!apiKey.startsWith("AIza") || apiKey.length !== 39) {
-                        console.log("  ❌ Invalid API key format");
-                        console.log("  Expected: AIza... (39 characters)");
-                        console.log(
+                        log.info("  ❌ Invalid API key format");
+                        log.info("  Expected: AIza... (39 characters)");
+                        log.info(
                             `  Actual: ${apiKey.substring(0, 10)}... (${apiKey.length} characters)`,
                         );
                         return false;
                     }
 
                     // Test the API key with a simple request
-                    console.log("\n📋 Testing API key with Google Generative AI API...");
+                    log.info("\n📋 Testing API key with Google Generative AI API...");
 
                     const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
@@ -68,86 +70,88 @@ async function testGoogleApiKey() {
                             body: JSON.stringify(testPayload),
                         });
 
-                        console.log(`  - Response status: ${response.status}`);
+                        log.info(`  - Response status: ${response.status}`);
 
                         if (response.ok) {
                             const data = await response.json();
-                            console.log("  ✅ SUCCESS: API key is working!");
-                            console.log(
-                                `  - Response: ${data.candidates?.[0]?.content?.parts?.[0]?.text || "No text response"}`,
-                            );
+                            log.info("  ✅ SUCCESS: API key is working!");
+                        log.info(
+                            `  - Response: ${data.candidates?.[0]?.content?.parts?.[0]?.text || "No text response"}`,
+                        );
                             return true;
                         } else {
                             const errorData = await response.text();
-                            console.log("  ❌ FAILED: API request failed");
-                            console.log(`  - Error: ${errorData.substring(0, 200)}...`);
+                            log.info("  ❌ FAILED: API request failed");
+                            log.info(`  - Error: ${errorData.substring(0, 200)}...`);
 
                             if (response.status === 400) {
-                                console.log(
+                                log.info(
                                     "  🔍 Bad request - check API key format or request structure",
                                 );
                             } else if (response.status === 401) {
-                                console.log("  🔍 Unauthorized - API key is invalid or expired");
+                                log.info("  🔍 Unauthorized - API key is invalid or expired");
                             } else if (response.status === 403) {
-                                console.log(
+                                log.info(
                                     "  🔍 Forbidden - API key doesn't have permission or quota exceeded",
                                 );
                             } else if (response.status === 429) {
-                                console.log("  🔍 Rate limited - too many requests");
+                                log.info("  🔍 Rate limited - too many requests");
                             }
 
                             return false;
                         }
                     } catch (fetchError) {
-                        console.log("  ❌ FAILED: Network error during API test");
-                        console.log(`  - Error: ${fetchError.message}`);
+                        log.info("  ❌ FAILED: Network error during API test");
+                        log.info(`  - Error: ${fetchError.message}`);
                         return false;
                     }
                 }
             }
 
-            console.log("  ❌ No valid GEMINI_API_KEY found in .env.local");
+            log.info("  ❌ No valid GEMINI_API_KEY found in .env.local");
             return false;
         } else {
-            console.log("  ❌ .env.local file not found");
+            log.info("  ❌ .env.local file not found");
             return false;
         }
     } catch (error) {
-        console.log("  ❌ Error reading .env.local file");
-        console.log(`  - Error: ${error.message}`);
+        log.info("  ❌ Error reading .env.local file");
+        log.info(`  - Error: ${error.message}`);
         return false;
     }
 }
 
 async function runTest() {
-    console.log("Starting direct API key test...\n");
+    log.info("Starting direct API key test...
+");
 
     const result = await testGoogleApiKey();
 
-    console.log("\n" + "=".repeat(60));
+    log.info("\n" + "=".repeat(60));
     if (result) {
-        console.log("🎉 SUCCESS: Google API key is working correctly!");
-        console.log("\n✅ API key is valid and has proper permissions");
-        console.log("✅ Google Generative AI API is accessible");
-        console.log("✅ The issue must be elsewhere in the workflow");
+        log.info("🎉 SUCCESS: Google API key is working correctly!");
+        log.info("✅ API key is valid and has proper permissions");
+        log.info("✅ Google Generative AI API is accessible");
+        log.info("✅ The issue must be elsewhere in the workflow");
 
-        console.log("\n🔍 Next steps:");
-        console.log("   - The API key is working, so the issue is in the application code");
-        console.log("   - Check the detailed error logs when you try web search again");
-        console.log("   - The error might be in the AI SDK integration or model configuration");
+        log.info("\n🔍 Next steps:");
+        log.info("   - The API key is working, so the issue is in the application code");
+        log.info("   - Check the detailed error logs when you try web search again");
+        log.info("   - The error might be in the AI SDK integration or model configuration");
     } else {
-        console.log("❌ ISSUE: Google API key is not working");
-        console.log("\n🔍 Possible solutions:");
-        console.log("   1. Get a new API key from https://aistudio.google.com/app/apikey");
-        console.log("   2. Make sure the API key has Generative AI API permissions");
-        console.log("   3. Check if the API key has sufficient quota");
-        console.log("   4. Verify the API key format (should start with AIza and be 39 chars)");
-        console.log("   5. Make sure billing is enabled in Google Cloud Console");
+        log.info("❌ ISSUE: Google API key is not working");
+        log.info("\n🔍 Possible solutions:");
+        log.info("   1. Get a new API key from https://aistudio.google.com/app/apikey");
+        log.info("   2. Make sure the API key has Generative AI API permissions");
+        log.info("   3. Check if the API key has sufficient quota");
+        log.info("   4. Verify the API key format (should start with AIza and be 39 chars)");
+        log.info("   5. Make sure billing is enabled in Google Cloud Console");
+    }
     }
 }
 
 // Run the test
 runTest().catch((error) => {
-    console.error("❌ Test script failed:", error);
+    log.error("❌ Test script failed:", error);
     process.exit(1);
 });

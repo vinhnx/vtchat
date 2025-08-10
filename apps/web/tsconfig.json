@@ -16,7 +16,8 @@
             "@/config/*": ["./config/*"],
             "@/context": ["./lib/context"],
             "@/services/*": ["./lib/services/*"],
-            "@/*": ["./*"]
+            "@/*": ["./*"],
+            "@repo/ui/components/*": ["../../packages/ui/src/components/*"]
         },
         "baseUrl": "."
     }

@@ -1,0 +1,1 @@
+{"version":3,"file":"timeouts.d.ts","sourceRoot":"","sources":["timeouts.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,eAAO,MAAM,mBAAmB;IAC5B,sDAAsD;;IAGtD,sDAAsD;;IAGtD,6DAA6D;;IAG7D,oDAAoD;;CAE9C,CAAC;AAEX;;GAEG;AACH,eAAO,MAAM,gBAAgB;;;;;CAKnB,CAAC;AAEX;;GAEG;AACH,eAAO,MAAM,cAAc;;;;;CAKjB,CAAC;AAEX,MAAM,MAAM,YAAY,GAAG,CAAC,OAAO,cAAc,CAAC,CAAC,MAAM,OAAO,cAAc,CAAC,CAAC"}

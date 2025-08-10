@@ -5,6 +5,7 @@
  * This ensures consistency between subscription records and user.planSlug field
  */
 
+import { log } from "@repo/shared/logger";
 import { resolve } from "node:path";
 import { config } from "dotenv";
 
@@ -16,7 +17,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 async function updateUserPlanSlug() {
-    console.log("Starting user planSlug update...");
+    log.info("Starting user planSlug update...");
 
     try {
         // Dynamic imports to ensure env vars are loaded first
@@ -49,23 +50,23 @@ async function updateUserPlanSlug() {
                 ),
             );
 
-        console.log(
+        log.info(
             `Found ${usersWithVTPlusAccess.length} users with VT+ access but incorrect planSlug`,
         );
 
         if (usersWithVTPlusAccess.length === 0) {
-            console.log("No users need updating");
+            log.info("No users need updating");
             return;
         }
 
         // Display users to be updated
-        console.log("\nUsers to update:");
+        log.info("\nUsers to update:");
         usersWithVTPlusAccess.forEach((user, index) => {
-            console.log(`${index + 1}. ${user.userEmail} (ID: ${user.userId})`);
-            console.log(`   Current planSlug: ${user.currentPlanSlug}`);
-            console.log(`   Subscription status: ${user.subscriptionStatus}`);
-            console.log(`   Subscription plan: ${user.subscriptionPlan}`);
-            console.log("");
+            log.info(`${index + 1}. ${user.userEmail} (ID: ${user.userId})`);
+            log.info(`   Current planSlug: ${user.currentPlanSlug}`);
+            log.info(`   Subscription status: ${user.subscriptionStatus}`);
+            log.info(`   Subscription plan: ${user.subscriptionPlan}`);
+            log.info("");
         });
 
         // Update users' planSlug to VT_PLUS
@@ -77,19 +78,20 @@ async function updateUserPlanSlug() {
                 .where(eq(users.id, user.userId));
 
             if (result.rowCount > 0) {
-                console.log(`✓ Updated user ${user.userEmail} (ID: ${user.userId})`);
+                log.info(`✓ Updated user ${user.userEmail} (ID: ${user.userId})`);
                 updatedCount++;
             } else {
-                console.log(`✗ Failed to update user ${user.userEmail} (ID: ${user.userId})`);
+                log.info(`✗ Failed to update user ${user.userEmail} (ID: ${user.userId})`);
             }
         }
 
-        console.log(
-            `\nUpdate complete: ${updatedCount}/${usersWithVTPlusAccess.length} users updated`,
+        log.info(
+            `
+Update complete: ${updatedCount}/${usersWithVTPlusAccess.length} users updated`,
         );
 
         // Verify the updates
-        console.log("\nVerifying updates...");
+        log.info("Verifying updates...");
         const verificationResults = await db
             .select({
                 userId: users.id,
@@ -99,11 +101,11 @@ async function updateUserPlanSlug() {
             .from(users)
             .where(and(eq(users.planSlug, PlanSlug.VT_PLUS)));
 
-        console.log(
+        log.info(
             `Verification: ${verificationResults.length} users now have planSlug set to VT_PLUS`,
         );
     } catch (error) {
-        console.error("Error updating user planSlug:", error);
+        log.error({ error }, "Error updating user planSlug:");
         throw error;
     }
 }
@@ -111,10 +113,10 @@ async function updateUserPlanSlug() {
 // Run the script
 updateUserPlanSlug()
     .then(() => {
-        console.log("Script completed successfully");
+        log.info("Script completed successfully");
         process.exit(0);
     })
     .catch((error) => {
-        console.error("Script failed:", error);
+        log.error({ error }, "Script failed:");
         process.exit(1);
     });
