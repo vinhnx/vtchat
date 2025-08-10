@@ -2,8 +2,9 @@
 
 import { useChatStore } from "@repo/common/store";
 import { cn, Flex } from "@repo/ui";
-import { type Editor, EditorContent } from "@tiptap/react";
+import { EditorContent, type Editor } from "@tiptap/react";
 import type { FC } from "react";
+import { useRef } from "react";
 
 export type TChatEditor = {
     sendMessage?: (message: string) => void;
@@ -21,6 +22,7 @@ export const ChatEditor: FC<TChatEditor> = ({
     className,
 }) => {
     const isGenerating = useChatStore((state) => state.isGenerating);
+    const lastEnterTime = useRef<number>(0);
 
     if (!editor) return null;
 
@@ -30,6 +32,16 @@ export const ChatEditor: FC<TChatEditor> = ({
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (isGenerating) return;
         if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Debounce rapid Enter key presses
+            const now = Date.now();
+            if (now - lastEnterTime.current < 500) {
+                console.log("🚫 Rapid Enter key press detected, ignoring");
+                return;
+            }
+            lastEnterTime.current = now;
+
             sendMessage?.(editor.getText());
         }
         if (e.key === "Enter" && e.shiftKey) {

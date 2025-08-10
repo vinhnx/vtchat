@@ -1,6 +1,7 @@
 "use client";
 
 import { getModelFromChatMode } from "@repo/ai/models";
+import { ProviderErrorExtractor } from "@repo/ai/services/provider-error-extractor";
 import { useWorkflowWorker } from "@repo/ai/worker";
 import { ChatMode, ChatModeConfig } from "@repo/shared/config";
 import { getRateLimitMessage } from "@repo/shared/constants";
@@ -9,26 +10,24 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
 import type { ThreadItem } from "@repo/shared/types";
-import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from "@repo/shared/utils";
+import { GEMINI_MODEL_ENUMS_ARRAY, buildCoreMessagesFromThreadItems } from "@repo/shared/utils";
+import { useToast } from "@repo/ui/src/components/use-sonner-toast";
 import { useParams, useRouter } from "next/navigation";
 import {
     createContext,
-    type ReactNode,
     useCallback,
     useContext,
     useEffect,
     useMemo,
     useRef,
     useState,
+    type ReactNode,
 } from "react";
 import { ApiKeyPromptModal } from "../components/api-key-prompt-modal";
 import { useApiKeysStore, useChatStore } from "../store";
 import { isGeminiModel } from "../utils/document-processing";
-
 import { useGenerationTimeout } from "./use-generation-timeout";
 import { useVtPlusAccess } from "./use-subscription-access";
-import { useToast } from "@repo/ui/src/components/use-sonner-toast";
-import { ProviderErrorExtractor } from "@repo/ai/services/provider-error-extractor";
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
@@ -67,6 +66,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
 
+    // Add unique instance ID for debugging
+    const instanceId = useRef(Math.random().toString(36).substring(7));
+
+    useEffect(() => {
+        log.info("🏗️ AgentProvider instance created", { instanceId: instanceId.current });
+        return () => {
+            log.info("🗑️ AgentProvider instance destroyed", { instanceId: instanceId.current });
+        };
+    }, []);
+
     const [showApiKeyModal, setShowApiKeyModal] = useState(false);
     const [modalChatMode, setModalChatMode] = useState<ChatMode>(ChatMode.GPT_4o_Mini);
 
@@ -93,6 +102,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     // Debounce rapid submission attempts
     const lastSubmissionRef = useRef<number>(0);
     const SUBMISSION_DEBOUNCE_MS = 500;
+
+    // Track active submissions to prevent duplicates
+    const activeSubmissionRef = useRef<string | null>(null);
 
     // Store setters for syncing tool states
     const _setUseMathCalculator = useChatStore((state) => state.setUseMathCalculator);
@@ -158,7 +170,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     ? {
                           answer: {
                               ...eventData.answer,
-                              text: (prevItem.answer?.text || "") + eventData.answer.text,
+                              // Check if this is a complete text (fullText) or incremental chunk
+                              text: eventData.answer.fullText
+                                  ? eventData.answer.fullText // Use complete text directly
+                                  : (prevItem.answer?.text || "") + eventData.answer.text, // Concatenate chunks
                           },
                       }
                     : { [eventType]: eventData[eventType] }),
@@ -270,6 +285,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             abortController.signal.addEventListener("abort", () => {
                 log.info({ threadId: body.threadId }, "Abort controller triggered");
                 setIsGenerating(false);
+                log.info("🧹 Clearing active submission in abort handler", {
+                    previousActiveSubmission: activeSubmissionRef.current,
+                });
+                activeSubmissionRef.current = null; // Clear active submission
 
                 // Only mark as ABORTED if the abort was not due to cleanup for new conversation
                 // Check if this is a user-initiated abort vs cleanup abort
@@ -309,15 +328,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    
+
                     // Use ProviderErrorExtractor to get structured error information
                     let finalErrorMessage = errorText;
                     let errorTitle = "API Error";
-                    
+
                     try {
                         const errorData = JSON.parse(errorText);
                         const errorResult = ProviderErrorExtractor.extractError(errorData);
-                        
+
                         if (errorResult.success && errorResult.error) {
                             finalErrorMessage = errorResult.error.userMessage;
                             // Add suggested action to the error message for better user guidance
@@ -424,7 +443,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         persistToDB: true,
                     });
                     log.error({ errorText, status: response.status }, "Error response received");
-                    
+
                     // Show error message to user using Sonner
                     toast({
                         title: errorTitle,
@@ -432,7 +451,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         variant: "destructive",
                         duration: 5000,
                     });
-                    
+
                     // Throw the parsed error message instead of generic HTTP status
                     throw new Error(finalErrorMessage || `HTTP error! status: ${response.status}`);
                 }
@@ -606,7 +625,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 // Use ProviderErrorExtractor to get structured error information
                 const errorResult = ProviderErrorExtractor.extractError(streamError);
-                
+
                 if (errorResult.success && errorResult.error) {
                     errorMessage = errorResult.error.userMessage;
                     // Add suggested action to the error message for better user guidance
@@ -654,7 +673,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     error: errorMessage,
                     persistToDB: true,
                 });
-                
+
                 // Show error message to user using Sonner
                 toast({
                     title: errorTitle,
@@ -664,6 +683,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 });
             } finally {
                 setIsGenerating(false);
+                log.info("🧹 Clearing active submission in runAgent finally block", {
+                    previousActiveSubmission: activeSubmissionRef.current,
+                });
+                activeSubmissionRef.current = null; // Clear active submission
 
                 // Remove from tracking and cleanup
                 activeControllersRef.current.delete(abortController);
@@ -705,6 +728,15 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
+            const query = formData.get("query") as string;
+            log.info("🚀 handleSubmit called", {
+                instanceId: instanceId.current,
+                query: query?.substring(0, 50) + "...",
+                newThreadId,
+                existingThreadItemId,
+                activeSubmission: activeSubmissionRef.current,
+            });
+
             // Stop any existing generation before starting new conversation
             // This prevents old streaming text from continuing when starting new chat
             const { stopGeneration } = useChatStore.getState();
@@ -743,13 +775,32 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             }
 
             const threadId = currentThreadId?.toString() || newThreadId;
+
+            // Create a unique submission ID to prevent duplicates
+            const submissionId = `${threadId}-${query}-${now}`;
+
+            // Check if this exact submission is already in progress
+            if (activeSubmissionRef.current === submissionId) {
+                log.warn("🚫 Duplicate submission detected, ignoring", {
+                    submissionId,
+                    activeSubmission: activeSubmissionRef.current,
+                    query: query.substring(0, 50) + "...",
+                });
+                return;
+            }
+
+            // Mark this submission as active
+            activeSubmissionRef.current = submissionId;
+            log.info("✅ Marking submission as active", {
+                submissionId,
+                query: query.substring(0, 50) + "...",
+            });
             if (!threadId) return;
 
             // Update thread title
-            updateThread({ id: threadId, title: formData.get("query") as string });
+            updateThread({ id: threadId, title: query });
 
             const optimisticAiThreadItemId = existingThreadItemId || (await generateThreadId());
-            const query = formData.get("query") as string;
             const imageAttachment = formData.get("imageAttachment") as string;
             const documentAttachment = formData.get("documentAttachment") as string;
             const documentMimeType = formData.get("documentMimeType") as string;
@@ -838,6 +889,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     log.info({ threadId }, "Abort signal received");
                     setIsGenerating(false);
                     abortWorkflow();
+                    activeSubmissionRef.current = null; // Clear active submission
 
                     // Only mark as ABORTED if not a cleanup abort
                     if (
@@ -866,6 +918,14 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     },
                     "🚀 Starting workflow with API keys",
                 );
+
+                // Clear active submission when workflow completes
+                const originalOnFinish = onFinish;
+                const wrappedOnFinish = (data: any) => {
+                    activeSubmissionRef.current = null;
+                    originalOnFinish?.(data);
+                };
+
                 startWorkflow({
                     mode,
                     question: query,
@@ -890,6 +950,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     setModalChatMode(mode);
                     setShowApiKeyModal(true);
                     setIsGenerating(false);
+                    activeSubmissionRef.current = null; // Clear active submission
                     return;
                 }
 
@@ -918,6 +979,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 } else {
                     log.info({ mode }, "🔑 BYOK model: Kept required provider API key only");
                 }
+
+                // Clear active submission when server API completes
+                const clearActiveSubmission = () => {
+                    activeSubmissionRef.current = null;
+                };
 
                 runAgent({
                     mode: newChatMode || chatMode,

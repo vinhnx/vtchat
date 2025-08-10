@@ -6,7 +6,7 @@ import { memo } from "react";
 type DocumentDisplayProps = {
     documentAttachment: {
         base64: string;
-        mimeType: string;
+        mimeType?: string;
         fileName: string;
     };
     onRemove?: () => void;
@@ -16,6 +16,9 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
     const { fileName, mimeType, base64 } = documentAttachment;
 
     const getFileIcon = () => {
+        if (!mimeType) {
+            return <FileText className="text-gray-500" size={16} />;
+        }
         if (mimeType === "application/pdf") {
             return <FileText className="text-red-500" size={16} />;
         }
@@ -44,7 +47,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: mimeType });
+            const blob = new Blob([byteArray], { type: mimeType || "application/octet-stream" });
 
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
@@ -60,7 +63,7 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
     };
 
     const handlePreview = () => {
-        if (mimeType === "application/pdf") {
+        if (mimeType && mimeType === "application/pdf") {
             try {
                 const byteCharacters = atob(base64.split(",")[1] || base64);
                 const byteNumbers: number[] = [];
@@ -85,12 +88,12 @@ export const DocumentDisplay = memo(({ documentAttachment, onRemove }: DocumentD
             <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{fileName}</p>
                 <p className="text-muted-foreground text-xs">
-                    {mimeType.split("/")[1]?.toUpperCase()} • {getFileSize()}
+                    {mimeType?.split("/")[1]?.toUpperCase() || "FILE"} • {getFileSize()}
                 </p>
             </div>
 
             <div className="flex items-center gap-1">
-                {mimeType === "application/pdf" && (
+                {mimeType && mimeType === "application/pdf" && (
                     <Button
                         onClick={handlePreview}
                         size="icon-sm"

@@ -8,10 +8,10 @@ import {
     isEligibleForQuotaConsumption,
 } from "@repo/shared/utils/access-control";
 import {
-    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
     streamText,
+    type CoreMessage,
     type ToolSet,
 } from "ai";
 import type { ZodSchema } from "zod";
@@ -590,13 +590,16 @@ export const generateText = async ({
     try {
         // Create a cache key from the parameters
         const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${JSON.stringify(tools || {})}:${toolChoice}:${maxSteps}`;
-        
+
         // Check cache first
         const cachedResult = textGenerationCache.get(cacheKey);
         if (cachedResult) {
             const { timestamp, result } = cachedResult;
             if (Date.now() - timestamp < CACHE_TTL) {
-                log.info({ model, prompt: prompt.substring(0, 50) }, "Returning cached generateText result");
+                log.info(
+                    { model, prompt: prompt.substring(0, 50) },
+                    "Returning cached generateText result",
+                );
                 return result;
             } else {
                 // Expired cache, remove it
@@ -606,277 +609,39 @@ export const generateText = async ({
 
         // Check if there's already an in-flight request for this query
         if (inFlightRequests.has(cacheKey)) {
-            log.info({ model, prompt: prompt.substring(0, 50) }, "Returning existing in-flight generateText request");
+            log.info(
+                { model, prompt: prompt.substring(0, 50) },
+                "Returning existing in-flight generateText request",
+            );
             return await inFlightRequests.get(cacheKey);
         }
 
-        log.info(
-            {
-                model: model.toString(),
-                hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
-                anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
-                mode,
-                userTier,
-            },
-            "generateText called",
-        );
-
-        // Debug logging for generateText
-        log.info(
-            {
-                model: model.toString(),
-                hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
-                anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
-                mode,
-                userTier,
-            },
-            "🤖 generateText called",
-        );
-
-        if (signal?.aborted) {
-            throw new Error("Operation aborted");
-        }
-
-        // Filter out messages with empty content to prevent Gemini API errors
-        let filteredMessages = messages;
-        if (messages?.length) {
-            filteredMessages = messages.filter((message) => {
-                const hasContent =
-                    message.content &&
-                    (typeof message.content === "string"
-                        ? message.content.trim() !== ""
-                        : Array.isArray(message.content)
-                          ? message.content.length > 0
-                          : true);
-                return hasContent;
-            });
-        }
-
-        // Import reasoning utilities
-        const { supportsReasoning, getReasoningType, getReasoningTagName } = await import(
-            "../models"
-        );
-
-        // Set up middleware based on model's reasoning capabilities
-        let middleware: any;
-        const reasoningTagName = getReasoningTagName(model);
-
-        if (reasoningTagName && supportsReasoning(model)) {
-            middleware = extractReasoningMiddleware({
-                tagName: reasoningTagName,
-                separator: "\n",
-            });
-        }
-
-        // Handle API key logic for VT+ users and Gemini models
-        const isGeminiModel = model.toString().toLowerCase().includes("gemini");
-        const isVtPlusUser = userTier === UserTier.PLUS;
-
-        if (isGeminiModel && isVtPlusUser) {
-            // For VT+ users with Gemini models, check if they have BYOK
-            const hasUserGeminiKey =
-                byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-            const hasSystemGeminiKey =
-                typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
-
-            if (!hasUserGeminiKey && hasSystemGeminiKey) {
-                // VT+ user without BYOK - use system key
-                byokKeys = undefined;
-                log.info("VT+ user without BYOK - using system API key for generateText");
-            }
-        }
-
-        const selectedModel = getLanguageModel(
-            model,
-            middleware,
-            byokKeys,
-            useSearchGrounding,
-            undefined,
-            thinkingMode?.claude4InterleavedThinking,
-            isVtPlusUser,
-        );
-
-        // Set up provider options based on model's reasoning type
-        const providerOptions: any = {};
-        const reasoningType = getReasoningType(model);
-
-        if (supportsReasoning(model) && thinkingMode?.enabled && thinkingMode.budget > 0) {
-            switch (reasoningType) {
-                case "gemini-thinking":
-                    // Gemini models use thinkingConfig
-                    providerOptions.google = {
-                        thinkingConfig: {
-                            includeThoughts: thinkingMode.includeThoughts ?? true,
-                            maxOutputTokens: thinkingMode.budget,
-                        },
-                    };
-                    break;
-
-                case "anthropic-reasoning":
-                    // Anthropic Claude 4 models support reasoning through beta features
-                    providerOptions.anthropic = {
-                        reasoning: true,
-                    };
-                    break;
-
-                case "deepseek-reasoning":
-                    // DeepSeek reasoning models work through middleware extraction
-                    // No special provider options needed as middleware handles <think> tags
-                    break;
-            }
-        }
-
-        const streamConfig = filteredMessages?.length
-            ? {
-                  model: selectedModel,
-                  messages: [
-                      {
-                          role: "system",
-                          content: prompt,
-                      },
-                      ...filteredMessages,
-                  ],
-                  tools,
-                  maxSteps,
-                  toolChoice: toolChoice as any,
-                  abortSignal: signal,
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-              }
-            : {
-                  prompt,
-                  model: selectedModel,
-                  tools,
-                  maxSteps,
-                  toolChoice: toolChoice as any,
-                  abortSignal: signal,
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-              };
-
-        // Use quota-enforced streamText for VT+ users with correct feature based on mode
-        let streamResult;
-        const user = { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN } as const;
-        const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
-
-        // Determine if this mode requires VT+ quota consumption
-        const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
-        const requiresQuotaConsumption =
-            userId &&
-            userTier === "PLUS" &&
-            isEligibleForQuotaConsumption(user, isByokKey) &&
-            vtplusFeature !== null;
-
-        if (requiresQuotaConsumption) {
-            const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
-            const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
-            const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
-
-            // Convert string feature code to enum
-            const feature =
-                vtplusFeature === "DR" ? VtPlusFeature.DEEP_RESEARCH : VtPlusFeature.PRO_SEARCH;
-
-            streamResult = await streamTextWithQuota(streamConfig, {
-                user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
-                feature: feature,
-                amount: 1,
-                isByokKey: isUsingByokKeys(byokKeys),
-            });
-        } else {
-            // Regular chat or VT+ user with unlimited models
-            try {
-                streamResult = streamText(streamConfig);
-            } catch (error: any) {
-                log.error("Error in streamText call:", { error: error.message });
-
-                // Enhanced error handling with provider-specific error extraction
-                const { ProviderErrorExtractor } = await import(
-                    "../services/provider-error-extractor"
-                );
-                const errorResult = ProviderErrorExtractor.extractError(
-                    error,
-                    model?.provider as any,
-                );
-
-                if (errorResult.success && errorResult.error) {
-                    const providerError = errorResult.error;
-                    log.error("Provider error extracted:", {
-                        provider: providerError.provider,
-                        errorCode: providerError.errorCode,
-                        userMessage: providerError.userMessage,
-                        isRetryable: providerError.isRetryable,
-                    });
-
-                    // Create a user-friendly error with provider details
-                    const enhancedError = new Error(providerError.userMessage);
-                    (enhancedError as any).provider = providerError.provider;
-                    (enhancedError as any).errorCode = providerError.errorCode;
-                    (enhancedError as any).isRetryable = providerError.isRetryable;
-                    (enhancedError as any).suggestedAction = providerError.suggestedAction;
-                    (enhancedError as any).originalError = providerError.originalError;
-
-                    throw enhancedError;
-                }
-
-                // Fallback to more descriptive error message if we can determine the provider
-                if (model) {
-                    const modelInfo = models.find(m => m.id === model);
-                    if (modelInfo) {
-                        const providerName = modelInfo.provider;
-                        const hasApiKey = byokKeys && Object.keys(byokKeys).length > 0;
-                        
-                        if (!hasApiKey) {
-                            throw new Error(`API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`);
-                        }
-                    }
-                }
-
-                throw error;
-            }
-        }
-        const { fullStream } = streamResult;
-        let fullText = "";
-        let reasoning = "";
-
-        for await (const chunk of fullStream) {
-            if (signal?.aborted) {
-                throw new Error("Operation aborted");
-            }
-
-            if (chunk.type === "text-delta") {
-                fullText += chunk.textDelta;
-                onChunk?.(chunk.textDelta, fullText);
-            }
-            if (chunk.type === "reasoning") {
-                reasoning += chunk.textDelta;
-                onReasoning?.(chunk.textDelta, reasoning);
-            }
-            if (chunk.type === "tool-call") {
-                onToolCall?.(chunk);
-            }
-            if (chunk.type === ("tool-result" as any)) {
-                onToolResult?.(chunk);
-            }
-
-            if (chunk.type === "error") {
-                log.error(chunk.error);
-                return Promise.reject(chunk.error);
-            }
-        }
-
-        // Extract reasoning details if available
-        try {
-            if (streamResult?.reasoningDetails) {
-                const reasoningDetails = (await streamResult.reasoningDetails) || [];
-                if (reasoningDetails.length > 0) {
-                    onReasoningDetails?.(reasoningDetails);
-                }
-            }
-        } catch (error) {
-            log.warn("Failed to resolve reasoningDetails:", { data: error });
-        }
-
-        // Create a new request promise
+        // Create a new request promise and store it to prevent concurrent requests
         const requestPromise = (async () => {
             try {
+                log.info(
+                    {
+                        model: model.toString(),
+                        hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
+                        anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
+                        mode,
+                        userTier,
+                    },
+                    "generateText called",
+                );
+
+                // Debug logging for generateText
+                log.info(
+                    {
+                        model: model.toString(),
+                        hasAnthropicKey: !!byokKeys?.ANTHROPIC_API_KEY,
+                        anthropicKeyLength: byokKeys?.ANTHROPIC_API_KEY?.length,
+                        mode,
+                        userTier,
+                    },
+                    "🤖 generateText called",
+                );
+
                 if (signal?.aborted) {
                     throw new Error("Operation aborted");
                 }
@@ -965,7 +730,7 @@ export const generateText = async ({
 
                         case "deepseek-reasoning":
                             // DeepSeek reasoning models work through middleware extraction
-                            // No special provider options needed as middleware handles <tool_call> tags
+                            // No special provider options needed as middleware handles <think> tags
                             break;
                     }
                 }
@@ -1010,13 +775,17 @@ export const generateText = async ({
                     vtplusFeature !== null;
 
                 if (requiresQuotaConsumption) {
-                    const { streamTextWithQuota } = await import("@repo/common/lib/geminiWithQuota");
+                    const { streamTextWithQuota } = await import(
+                        "@repo/common/lib/geminiWithQuota"
+                    );
                     const { isUsingByokKeys } = await import("@repo/common/lib/geminiWithQuota");
                     const { VtPlusFeature } = await import("@repo/common/config/vtPlusLimits");
 
                     // Convert string feature code to enum
                     const feature =
-                        vtplusFeature === "DR" ? VtPlusFeature.DEEP_RESEARCH : VtPlusFeature.PRO_SEARCH;
+                        vtplusFeature === "DR"
+                            ? VtPlusFeature.DEEP_RESEARCH
+                            : VtPlusFeature.PRO_SEARCH;
 
                     streamResult = await streamTextWithQuota(streamConfig, {
                         user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
@@ -1062,13 +831,15 @@ export const generateText = async ({
 
                         // Fallback to more descriptive error message if we can determine the provider
                         if (model) {
-                            const modelInfo = models.find(m => m.id === model);
+                            const modelInfo = models.find((m) => m.id === model);
                             if (modelInfo) {
                                 const providerName = modelInfo.provider;
                                 const hasApiKey = byokKeys && Object.keys(byokKeys).length > 0;
-                                
+
                                 if (!hasApiKey) {
-                                    throw new Error(`API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`);
+                                    throw new Error(
+                                        `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
+                                    );
                                 }
                             }
                         }
@@ -1124,9 +895,9 @@ export const generateText = async ({
                     result: fullText,
                 });
 
-                return Promise.resolve(fullText);
+                return fullText;
             } catch (error) {
-                log.error(error);
+                log.error("Error in generateText:", error);
                 throw error;
             } finally {
                 // Remove the in-flight request when done
@@ -1138,8 +909,7 @@ export const generateText = async ({
         inFlightRequests.set(cacheKey, requestPromise);
 
         // Wait for the request to complete and return the result
-        const result = await requestPromise;
-        return result;
+        return await requestPromise;
     } catch (error) {
         log.error(error);
         return Promise.reject(error);
@@ -1880,7 +1650,8 @@ export const selectAvailableModel = (
     }
 
     // Check if we have server-funded keys available for free models
-    const hasServerFundedGeminiKey = typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
+    const hasServerFundedGeminiKey =
+        typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
     if (hasServerFundedGeminiKey) {
         log.info("Using server-funded Gemini model");
         return ModelEnum.GEMINI_2_5_FLASH_LITE;

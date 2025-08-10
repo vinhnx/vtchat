@@ -91,7 +91,8 @@ export function SendStopButton({
                         <Button
                             aria-label="Send Message"
                             disabled={!hasTextInput}
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent any default behavior
                                 sendMessage();
                             }}
                             size="icon-sm"

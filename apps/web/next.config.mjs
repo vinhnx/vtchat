@@ -14,13 +14,21 @@ const withBundleAnalyzer =
         : (config) => config;
 
 const nextConfig = {
-    transpilePackages: ["next-mdx-remote"],
+    transpilePackages: [
+        "next-mdx-remote",
+        "@repo/shared",
+        "@repo/common",
+        "@repo/ui",
+        "@repo/ai",
+        "@repo/actions",
+        "@repo/orchestrator",
+    ],
 
     // Disable Vercel Analytics auto-injection
     // Note: analyticsId is not a valid Next.js config option
 
-    // Server-side optimizations - exclude workspace packages from bundling
-    serverExternalPackages: ["@repo/shared", "@repo/common", "@repo/orchestrator"],
+    // Server-side optimizations - exclude only external packages from bundling
+    serverExternalPackages: [],
 
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true, // Next.js 15.4 experimental features

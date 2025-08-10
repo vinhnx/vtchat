@@ -14,7 +14,7 @@ import { useSession } from "@repo/shared/lib/auth-client";
 import { generateThreadId } from "@repo/shared/lib/thread-id";
 import { log } from "@repo/shared/logger";
 import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
-import { cn, Flex, useToast } from "@repo/ui";
+import { Flex, cn, useToast } from "@repo/ui";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -59,6 +59,9 @@ export const ChatInput = ({
     const { toast } = useToast();
     const [_pendingMessage, setPendingMessage] = useState<(() => void) | null>(null);
     const router = useRouter(); // Use the full router object for clarity
+
+    // Add flag to prevent multiple rapid sendMessage calls
+    const [isSending, setIsSending] = useState(false);
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
@@ -127,191 +130,216 @@ export const ChatInput = ({
     };
 
     const sendMessage = async () => {
-        if (!isSignedIn) {
-            // This specific check for chat mode auth requirement might be redundant
-            // if the focus prompt already directs to login.
-            // However, keeping it for cases where send is triggered programmatically or by other means.
-            if (ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
-                setShowLoginPrompt(true); // Show prompt instead of direct push
-                return;
-            }
-            // For non-auth-required modes, if any, allow sending.
-            // Or, if all interactions require login, this block can be simplified to:
-            // if (!isSignedIn) { setShowLoginPrompt(true); return; }
-        }
-
         const messageText = editor?.getText();
-        if (!messageText || !editor) {
-            return;
-        }
-
-        // Check if user has valid API key for the selected chat mode
-        // This applies to all users (signed in or not) for modes that require API keys
-        // SPECIAL CASE: VT+ users don't need API keys for any Gemini models
-        const needsApiKeyCheck = (() => {
-            if (isGeminiModel(chatMode)) {
-                // VT+ users don't need API keys for any Gemini models
-                return !isPlusTier;
-            }
-            return true;
-        })();
-
-        if (needsApiKeyCheck && !hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)) {
-            if (isSignedIn) {
-                // For signed-in users, show BYOK dialog
-                setPendingMessage(() => sendMessage);
-                setShowBYOKDialog(true);
-                return;
-            }
-            // For non-signed in users, show login prompt first
-            setShowLoginPrompt(true);
-            return;
-        }
-
-        // Get thread items for BYOK validation
-        const existingThreadItems = currentThreadId
-            ? await getThreadItems(currentThreadId.toString())
-            : [];
-
-        // BYOK validation for image analysis - ALL users must provide their own API keys for image processing
-        const hasImages = hasImageAttachments({
-            imageAttachment,
-            attachments: multiModalAttachments,
-            messages: existingThreadItems || [],
+        log.info("📤 sendMessage called", {
+            messageText: messageText?.substring(0, 50) + "...",
+            isSignedIn,
+            currentThreadId,
+            timestamp: Date.now(),
+            isSending,
         });
 
-        if (hasImages) {
-            const apiKeys = getAllKeys();
-            const validation = validateByokForImageAnalysis({
-                chatMode,
-                apiKeys,
-                hasImageAttachments: hasImages,
-            });
+        // Prevent multiple rapid calls
+        if (isSending) {
+            log.warn("🚫 sendMessage already in progress, ignoring duplicate call");
+            return;
+        }
 
-            if (!validation.isValid) {
-                toast({
-                    title: "API Key Required for Image Analysis",
-                    description: validation.errorMessage,
-                    variant: "destructive",
-                });
+        setIsSending(true);
+
+        try {
+            if (!isSignedIn) {
+                // This specific check for chat mode auth requirement might be redundant
+                // if the focus prompt already directs to login.
+                // However, keeping it for cases where send is triggered programmatically or by other means.
+                if (ChatModeConfig[chatMode as keyof typeof ChatModeConfig]?.isAuthRequired) {
+                    setShowLoginPrompt(true); // Show prompt instead of direct push
+                    return;
+                }
+                // For non-auth-required modes, if any, allow sending.
+                // Or, if all interactions require login, this block can be simplified to:
+                // if (!isSignedIn) { setShowLoginPrompt(true); return; }
+            }
+
+            const messageText = editor?.getText();
+            if (!messageText || !editor) {
                 return;
             }
-        }
 
-        let threadId = currentThreadId?.toString();
-        let optimisticThreadItemId: string | undefined;
+            // Check if user has valid API key for the selected chat mode
+            // This applies to all users (signed in or not) for modes that require API keys
+            // SPECIAL CASE: VT+ users don't need API keys for any Gemini models
+            const needsApiKeyCheck = (() => {
+                if (isGeminiModel(chatMode)) {
+                    // VT+ users don't need API keys for any Gemini models
+                    return !isPlusTier;
+                }
+                return true;
+            })();
 
-        if (!threadId) {
-            const optimisticId = await generateThreadId();
+            if (needsApiKeyCheck && !hasApiKeyForChatMode(chatMode, isSignedIn, isPlusTier)) {
+                if (isSignedIn) {
+                    // For signed-in users, show BYOK dialog
+                    setPendingMessage(() => sendMessage);
+                    setShowBYOKDialog(true);
+                    return;
+                }
+                // For non-signed in users, show login prompt first
+                setShowLoginPrompt(true);
+                return;
+            }
 
-            // Create optimistic user thread item BEFORE creating thread to prevent blank screen
-            optimisticThreadItemId = await generateThreadId();
-            const optimisticUserThreadItem = {
-                id: optimisticThreadItemId,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                status: "QUEUED" as const,
-                threadId: optimisticId,
-                query: editor?.getText() || "",
-                imageAttachment: imageAttachment?.base64 || "",
-                documentAttachment: documentAttachment
-                    ? {
-                          base64: documentAttachment.base64,
-                          mimeType: documentAttachment.mimeType,
-                          fileName: documentAttachment.fileName,
-                      }
-                    : undefined,
-                attachments: multiModalAttachments.length > 0 ? multiModalAttachments : undefined,
-                mode: chatMode,
-            };
+            // Get thread items for BYOK validation
+            const existingThreadItems = currentThreadId
+                ? await getThreadItems(currentThreadId.toString())
+                : [];
 
-            // Create thread first (this sets currentThreadId and clears threadItems)
-            log.info({ optimisticId }, "🆕 Creating new thread");
-            await createThread(optimisticId, {
-                title: editor?.getText() || "New Chat",
+            // BYOK validation for image analysis - ALL users must provide their own API keys for image processing
+            const hasImages = hasImageAttachments({
+                imageAttachment,
+                attachments: multiModalAttachments,
+                messages: existingThreadItems || [],
             });
-            threadId = optimisticId;
 
-            // Add the optimistic thread item to store after thread creation
-            const createThreadItem = useChatStore.getState().createThreadItem;
+            if (hasImages) {
+                const apiKeys = getAllKeys();
+                const validation = validateByokForImageAnalysis({
+                    chatMode,
+                    apiKeys,
+                    hasImageAttachments: hasImages,
+                });
 
-            log.info({ optimisticUserThreadItem }, "📝 Creating optimistic thread item");
-            await createThreadItem(optimisticUserThreadItem);
+                if (!validation.isValid) {
+                    toast({
+                        title: "API Key Required for Image Analysis",
+                        description: validation.errorMessage,
+                        variant: "destructive",
+                    });
+                    return;
+                }
+            }
 
-            // Verify the thread item was created
-            const verifyItem = useChatStore.getState().getCurrentThreadItem(optimisticId);
-            const allThreadItems = useChatStore
-                .getState()
-                .threadItems.filter((item) => item.threadId === optimisticId);
+            let threadId = currentThreadId?.toString();
+            let optimisticThreadItemId: string | undefined;
+
+            if (!threadId) {
+                const optimisticId = await generateThreadId();
+
+                // Create optimistic user thread item BEFORE creating thread to prevent blank screen
+                optimisticThreadItemId = await generateThreadId();
+                const optimisticUserThreadItem = {
+                    id: optimisticThreadItemId,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    status: "QUEUED" as const,
+                    threadId: optimisticId,
+                    query: editor?.getText() || "",
+                    imageAttachment: imageAttachment?.base64 || "",
+                    documentAttachment: documentAttachment
+                        ? {
+                              base64: documentAttachment.base64,
+                              mimeType: documentAttachment.mimeType,
+                              fileName: documentAttachment.fileName,
+                          }
+                        : undefined,
+                    attachments:
+                        multiModalAttachments.length > 0 ? multiModalAttachments : undefined,
+                    mode: chatMode,
+                };
+
+                // Create thread first (this sets currentThreadId and clears threadItems)
+                log.info({ optimisticId }, "🆕 Creating new thread");
+                await createThread(optimisticId, {
+                    title: editor?.getText() || "New Chat",
+                });
+                threadId = optimisticId;
+
+                // Add the optimistic thread item to store after thread creation
+                const createThreadItem = useChatStore.getState().createThreadItem;
+
+                log.info({ optimisticUserThreadItem }, "📝 Creating optimistic thread item");
+                await createThreadItem(optimisticUserThreadItem);
+
+                // Verify the thread item was created
+                const verifyItem = useChatStore.getState().getCurrentThreadItem(optimisticId);
+                const allThreadItems = useChatStore
+                    .getState()
+                    .threadItems.filter((item) => item.threadId === optimisticId);
+                log.info(
+                    {
+                        verifyItem: !!verifyItem,
+                        itemId: verifyItem?.id,
+                        totalItemsForThread: allThreadItems.length,
+                        threadExists: useChatStore
+                            .getState()
+                            .threads.some((t) => t.id === optimisticId),
+                    },
+                    "✅ Verified optimistic thread item and thread state",
+                );
+
+                // Set loading state and navigate - user message will be immediately visible
+                setIsGenerating(true);
+                log.info({ optimisticId }, "🚀 Navigating to thread page");
+                router.push(`/chat/${optimisticId}`);
+            }
+            // Removed duplicated block and misplaced return
+
+            // First submit the message
+            const formData = new FormData();
+            formData.append("query", editor?.getText() || "");
+            imageAttachment?.base64 && formData.append("imageAttachment", imageAttachment?.base64);
+            documentAttachment?.base64 &&
+                formData.append("documentAttachment", documentAttachment?.base64);
+            documentAttachment?.mimeType &&
+                formData.append("documentMimeType", documentAttachment?.mimeType);
+            documentAttachment?.fileName &&
+                formData.append("documentFileName", documentAttachment?.fileName);
+
+            // Add multi-modal attachments
+            if (multiModalAttachments.length > 0) {
+                formData.append("multiModalAttachments", JSON.stringify(multiModalAttachments));
+            }
+
+            const threadItems = currentThreadId
+                ? await getThreadItems(currentThreadId.toString())
+                : [];
+
+            log.info({ data: threadItems }, "threadItems");
+
             log.info(
                 {
-                    verifyItem: !!verifyItem,
-                    itemId: verifyItem?.id,
-                    totalItemsForThread: allThreadItems.length,
-                    threadExists: useChatStore
-                        .getState()
-                        .threads.some((t) => t.id === optimisticId),
+                    useWebSearch,
+                    useMathCalculator,
+                    useCharts,
                 },
-                "✅ Verified optimistic thread item and thread state",
+                "🚀 Sending to handleSubmit with flags",
             );
 
-            // Set loading state and navigate - user message will be immediately visible
-            setIsGenerating(true);
-            log.info({ optimisticId }, "🚀 Navigating to thread page");
-            router.push(`/chat/${optimisticId}`);
-        }
-        // Removed duplicated block and misplaced return
+            // For new threads, pass the optimistic thread item ID to update the existing item
+            const existingThreadItemId = !currentThreadId ? optimisticThreadItemId : undefined;
 
-        // First submit the message
-        const formData = new FormData();
-        formData.append("query", editor?.getText() || "");
-        imageAttachment?.base64 && formData.append("imageAttachment", imageAttachment?.base64);
-        documentAttachment?.base64 &&
-            formData.append("documentAttachment", documentAttachment?.base64);
-        documentAttachment?.mimeType &&
-            formData.append("documentMimeType", documentAttachment?.mimeType);
-        documentAttachment?.fileName &&
-            formData.append("documentFileName", documentAttachment?.fileName);
-
-        // Add multi-modal attachments
-        if (multiModalAttachments.length > 0) {
-            formData.append("multiModalAttachments", JSON.stringify(multiModalAttachments));
-        }
-
-        const threadItems = currentThreadId ? await getThreadItems(currentThreadId.toString()) : [];
-
-        log.info({ data: threadItems }, "threadItems");
-
-        log.info(
-            {
+            handleSubmit({
+                formData,
+                newThreadId: threadId,
+                existingThreadItemId,
+                messages: threadItems.sort(
+                    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                ),
                 useWebSearch,
                 useMathCalculator,
                 useCharts,
-            },
-            "🚀 Sending to handleSubmit with flags",
-        );
+            });
 
-        // For new threads, pass the optimistic thread item ID to update the existing item
-        const existingThreadItemId = !currentThreadId ? optimisticThreadItemId : undefined;
-
-        handleSubmit({
-            formData,
-            newThreadId: threadId,
-            existingThreadItemId,
-            messages: threadItems.sort(
-                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-            ),
-            useWebSearch,
-            useMathCalculator,
-            useCharts,
-        });
-
-        window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
-        editor?.commands.clearContent();
-        clearImageAttachment();
-        // Don't clear document attachment to support structured output after message submission
-        // clearDocumentAttachment();
-        setMultiModalAttachments([]);
+            window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
+            editor?.commands.clearContent();
+            clearImageAttachment();
+            // Don't clear document attachment to support structured output after message submission
+            // clearDocumentAttachment();
+            setMultiModalAttachments([]);
+        } finally {
+            setIsSending(false);
+            log.info("📤 sendMessage completed, resetting isSending flag");
+        }
     };
 
     const renderChatInput = () => (
