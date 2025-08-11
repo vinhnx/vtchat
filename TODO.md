@@ -168,3 +168,14 @@ check branch e2b-sandbox
 -
 
 integrate https://github.com/e2b-dev/fragments/tree/main/sandbox-templates
+
+--
+
+https://x.com/steipete/status/1954732600938950911
+Markdowns for your context are the new currency.
+
+https://react.dev/learn/you-might-not-need-an-effect read this and search through the codebase and improve the code. ultrathink and make a plan first, distill knowledge into docs/react-effect.md
+
+--
+
+check and fix fly deployment failed status
