@@ -1,5 +1,5 @@
-# Minimal Dockerfile for VT - Deploy pre-built standalone files
-# This avoids memory issues during Docker build
+# Dockerfile for VT - Expects pre-built standalone files
+# For CI/CD deployments, build the app first with: bun run build
 
 FROM node:20-alpine AS runner
 

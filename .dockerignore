@@ -1,17 +1,5 @@
-# Minimal .dockerignore for pre-built deployment
-# Only exclude what we don't need
-
-# Dependencies (will be copied from standalone)
-# Exclude root and package node_modules but allow standalone node_modules
-node_modules
-packages/*/node_modules
-apps/*/node_modules
-# Allow standalone node_modules
-!apps/web/.next/standalone/**/node_modules
-
-# Exclude build cache but keep built files
-.turbo
-.build-cache-warmed
+# .dockerignore for multi-stage build
+# Optimized for both local and CI/CD deployments
 
 # Version control
 .git
@@ -32,12 +20,20 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# Development tools
+# Development tools and caches
 .vercel
 .railway
 coverage
 .nyc_output
+.turbo
+.build-cache-warmed
+
+# Next.js build output (will be generated during build)
+apps/web/.next/
+packages/*/.next/
+.next/
 
 # Documentation and development files
 docs/
@@ -54,3 +50,14 @@ terminal
 # IDE files
 .vscode/
 .idea/
+
+# Test files
+**/*.test.*
+**/*.spec.*
+**/tests/
+**/test/
+**/__tests__/
+
+# Temporary files
+tmp/
+temp/

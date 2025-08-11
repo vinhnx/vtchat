@@ -108,18 +108,21 @@ https://ai-sdk.dev/elements/overview
 # TASK: E2B Sandbox Integration for Next.js App
 
 ## CONTEXT
+
 Current state: Multiple sandbox environments (pyodide, sandpack) exist
 Goal: Replace with single e2b implementation as premium feature
 
 ## REQUIREMENTS
 
 ### Core Implementation
+
 - **REMOVE**: pyodide, sandpack code sandbox environments
 - **IMPLEMENT**: e2b as sole execution environment
 - **FOLLOW**: Next.js integration patterns from context7
 - **REFINE**: panel component + system prompts for sandbox invocation
 
 ### User Access Control
+
 ```
 VT+ Users: 2 executions/day ✅
 VT Free: No access ❌
@@ -127,29 +130,34 @@ Free Users: No access ❌
 ```
 
 ### UI Requirements
+
 - Dedicated sandbox invoke button in chat input (make it special/distinctive)
 - Enhanced panel component for sandbox management
 - Visual indicators for execution limits
 
 ### Technical Constraints
+
 - Use only e2b free tier
 - Internet access: OFF by default (configurable in /settings)
 - Rate limits: https://e2b.dev/docs/sandbox/rate-limits
 - Efficient lifecycle management to minimize costs
 
 ### Critical Features
+
 1. **Rate Limiting**: Track daily executions per user
 2. **Lifecycle Management**: Smart session reuse, auto-cleanup, timeouts
 3. **Cost Optimization**: Minimize API calls and execution time
 4. **Error Handling**: Graceful degradation when limits exceeded
 
 ## IMPLEMENTATION GUIDES
+
 1. https://github.com/e2b-dev/e2b-cookbook/tree/main/examples/nextjs-code-interpreter
 2. https://e2b.dev/docs/sandbox
 3. https://e2b.dev/docs/sandbox/metadata
 4. https://e2b.dev/docs/sandbox/internet-access
 
 ## OUTPUT FOCUS
+
 - Complete working implementation
 - Efficient sandbox management logic
 - Premium feature gating
@@ -164,18 +172,10 @@ https://github.com/e2b-dev/e2b-cookbook/tree/main/examples/anthropic-claude-code
 
 check branch e2b-sandbox
 
-
 -
 
 integrate https://github.com/e2b-dev/fragments/tree/main/sandbox-templates
 
 --
 
-https://x.com/steipete/status/1954732600938950911
-Markdowns for your context are the new currency.
-
-https://react.dev/learn/you-might-not-need-an-effect read this and search through the codebase and improve the code. ultrathink and make a plan first, distill knowledge into docs/react-effect.md
-
---
-
-check and fix fly deployment failed status
+https://ai-sdk.dev/cookbook/guides/gemini-2-5
