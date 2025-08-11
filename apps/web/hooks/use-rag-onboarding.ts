@@ -1,29 +1,27 @@
 import { useApiKeysStore } from "@repo/common/store";
 import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useRagOnboarding() {
-    const [showOnboarding, setShowOnboarding] = useState(false);
+    const [isOnboardingDismissed, setIsOnboardingDismissed] = useState(false);
 
     const { getAllKeys } = useApiKeysStore();
     const apiKeys = getAllKeys();
+
+    // Calculate derived state during render - no effect needed
     const hasApiKeys = Object.keys(apiKeys).some(
         (key) => key === API_KEY_NAMES.GOOGLE || key === API_KEY_NAMES.OPENAI,
     );
 
-    useEffect(() => {
-        // Show onboarding if no API keys available
-        if (!hasApiKeys) {
-            setShowOnboarding(true);
-        }
-    }, [hasApiKeys]);
+    // Derive showOnboarding directly from hasApiKeys and dismissal state
+    const showOnboarding = !hasApiKeys && !isOnboardingDismissed;
 
     const completeOnboarding = () => {
-        setShowOnboarding(false);
+        setIsOnboardingDismissed(true);
     };
 
     const skipOnboarding = () => {
-        setShowOnboarding(false);
+        setIsOnboardingDismissed(true);
     };
 
     return {

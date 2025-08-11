@@ -24,7 +24,6 @@ export function PWAManager() {
     const [isIOS, setIsIOS] = useState(false);
     const [showIOSInstructions, setShowIOSInstructions] = useState(false);
     const [bannerDismissed, setBannerDismissed] = useState(false);
-    const [showBanner, setShowBanner] = useState(false);
 
     // Only show PWA banner on homepage
     const isHomepage = pathname === "/";
@@ -71,29 +70,24 @@ export function PWAManager() {
         };
     }, []);
 
-    // Auto-dismiss banner after 4 seconds and handle banner visibility
+    // Derive banner visibility from conditions - no effect needed for this
+    const shouldShowBanner =
+        isSupported && !isInstalled && (deferredPrompt || isIOS) && isHomepage && !bannerDismissed;
+
+    // Separate effect for auto-dismiss timer only
     useEffect(() => {
-        if (
-            isSupported &&
-            !isInstalled &&
-            (deferredPrompt || isIOS) &&
-            isHomepage &&
-            !bannerDismissed
-        ) {
-            // Show banner immediately
-            setShowBanner(true);
+        if (!shouldShowBanner) return;
 
-            // Auto-dismiss after 4 seconds
-            const timer = setTimeout(() => {
-                setShowBanner(false);
-                setBannerDismissed(true);
-            }, 4000);
+        // Auto-dismiss after 4 seconds
+        const timer = setTimeout(() => {
+            setBannerDismissed(true);
+        }, 4000);
 
-            return () => clearTimeout(timer);
-        } else {
-            setShowBanner(false);
-        }
-    }, [isSupported, isInstalled, deferredPrompt, isIOS, isHomepage, bannerDismissed]);
+        return () => clearTimeout(timer);
+    }, [shouldShowBanner]);
+
+    // Use derived state directly - no effect needed
+    const showBanner = shouldShowBanner;
 
     const handleInstallClick = async () => {
         if (deferredPrompt) {
@@ -102,7 +96,6 @@ export function PWAManager() {
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === "accepted") {
                 setDeferredPrompt(null);
-                setShowBanner(false);
                 setBannerDismissed(true);
             }
         } else if (isIOS && !isInstalled) {
@@ -112,7 +105,6 @@ export function PWAManager() {
     };
 
     const handleCloseBanner = () => {
-        setShowBanner(false);
         setBannerDismissed(true);
         setShowIOSInstructions(false);
     };

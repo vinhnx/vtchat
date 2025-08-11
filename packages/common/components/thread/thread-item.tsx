@@ -2,11 +2,11 @@
 
 import { isChartTool } from "@repo/common/constants/chart-tools";
 import { isMathTool } from "@repo/common/constants/math-tools";
-import { useAnimatedText, useMathCalculator } from "@repo/common/hooks";
+import { useAnimatedText, useDebounced, useMathCalculator } from "@repo/common/hooks";
 import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
-import { cn, useToast } from "@repo/ui";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@repo/ui";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { getErrorDiagnosticMessage } from "../../utils/error-diagnostics";
 import { ChartComponent } from "../charts/chart-components";
@@ -51,21 +51,16 @@ export const ThreadItem = memo(
         const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
-        const { toast } = useToast();
 
         // Debounced status to prevent flashing during rapid status changes
-        const [_debouncedStatus, setDebouncedStatus] = useState(threadItem.status);
-        const [_debouncedError, setDebouncedError] = useState(threadItem.error);
+        const debouncedStatus = useDebounced(threadItem.status, 50);
+        const debouncedError = useDebounced(threadItem.error, 50);
 
-        useEffect(() => {
-            // Add a small delay to prevent flashing during rapid status transitions
-            const timer = setTimeout(() => {
-                setDebouncedStatus(threadItem.status);
-                setDebouncedError(threadItem.error);
-            }, 50); // 50ms delay to smooth out rapid changes
-
-            return () => clearTimeout(timer);
-        }, [threadItem.status, threadItem.error]);
+        // Handle error toasts with custom hook
+        useErrorToast({
+            error: threadItem.error,
+            status: threadItem.status,
+        });
 
         // Check if there are active math tool calls
         const hasMathToolCalls = Object.values(threadItem?.toolCalls || {}).some((toolCall) =>
@@ -97,110 +92,23 @@ export const ThreadItem = memo(
             }
         }, [inView, threadItem.id]);
 
-        useEffect(() => {
-            const sources =
+        // Extract sources and update store - using useMemo for derived state
+        const extractedSources = useMemo(() => {
+            return (
                 Object.values(threadItem.steps || {})
                     ?.filter(
                         (step) =>
                             step.steps && "read" in step.steps && !!step.steps?.read?.data?.length,
                     )
                     .flatMap((step) => step.steps?.read?.data?.map((result: any) => result.link))
-                    .filter((link): link is string => link !== undefined) || [];
-            return setCurrentSources(sources);
-        }, [threadItem, setCurrentSources]);
+                    .filter((link): link is string => link !== undefined) || []
+            );
+        }, [threadItem.steps]);
 
-        // Show toast notification for API call failures
+        // Update store when sources change - this is a side effect but necessary for global state
         useEffect(() => {
-            const showErrorToast = async () => {
-                if (
-                    threadItem.error &&
-                    (threadItem.status === "ERROR" || threadItem.status === "ABORTED")
-                ) {
-                    const errorMessage =
-                        typeof threadItem.error === "string"
-                            ? threadItem.error
-                            : getErrorDiagnosticMessage(threadItem.error);
-
-                    // Determine toast variant and title based on error type
-                    let variant: "destructive" | "default" = "destructive";
-                    let title = "API Call Failed";
-
-                    const errorLower = errorMessage.toLowerCase();
-
-                    // Use centralized error message service for consistent error categorization
-                    try {
-                        const { generateErrorMessage } = await import(
-                            "@repo/ai/services/error-messages"
-                        );
-                        const structuredError = generateErrorMessage(errorMessage, {
-                            // Add context if available from thread item
-                            originalError: errorMessage,
-                        });
-                        title = structuredError.title;
-                    } catch {
-                        // Fallback to existing logic if service fails
-                        if (
-                            errorLower.includes("credit balance") ||
-                            errorLower.includes("too low") ||
-                            errorLower.includes("plans & billing")
-                        ) {
-                            title = "Credit Balance Too Low";
-                        } else if (
-                            errorLower.includes("x.ai credits required") ||
-                            errorLower.includes("doesn't have any credits yet") ||
-                            errorLower.includes("console.x.ai")
-                        ) {
-                            title = "X.AI Credits Required";
-                        } else if (
-                            errorLower.includes("rate limit") ||
-                            errorLower.includes("quota")
-                        ) {
-                            title = "Rate Limit Exceeded";
-                        } else if (
-                            errorLower.includes("network") ||
-                            errorLower.includes("connection") ||
-                            errorLower.includes("networkerror")
-                        ) {
-                            title = "Network Error";
-                        } else if (
-                            errorLower.includes("unauthorized") ||
-                            errorLower.includes("invalid api key") ||
-                            errorLower.includes("authentication")
-                        ) {
-                            title = "Authentication Error";
-                        } else if (
-                            errorLower.includes("billing") ||
-                            errorLower.includes("payment") ||
-                            errorLower.includes("plans & billing")
-                        ) {
-                            title = "Billing Issue";
-                        } else if (
-                            errorLower.includes("503") ||
-                            errorLower.includes("service unavailable") ||
-                            errorLower.includes("502")
-                        ) {
-                            title = "Service Unavailable";
-                        } else if (
-                            errorLower.includes("aborted") ||
-                            errorLower.includes("stopped") ||
-                            errorLower.includes("cancelled")
-                        ) {
-                            title = "Request Cancelled";
-                            variant = "default";
-                        }
-                    }
-
-                    toast({
-                        title,
-                        description: errorMessage,
-                        variant,
-                        duration: 6000, // Show for 6 seconds for better readability
-                    });
-                }
-            };
-
-            showErrorToast();
-        }, [threadItem.error, threadItem.status, toast]);
+            setCurrentSources(extractedSources);
+        }, [extractedSources, setCurrentSources]);
 
         const hasAnswer = useMemo(() => {
             return threadItem.answer?.text && threadItem.answer?.text.length > 0;
