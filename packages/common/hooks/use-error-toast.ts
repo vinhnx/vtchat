@@ -17,7 +17,8 @@ export function useErrorToast({ error, status, onError }: ErrorToastOptions) {
     useEffect(() => {
         const showErrorToast = async () => {
             if (error && (status === "ERROR" || status === "ABORTED")) {
-                const errorMessage = typeof error === "string" ? error : JSON.stringify(error);
+                const errorMessage =
+                    typeof error === "string" ? error : getErrorDiagnosticMessage(error);
 
                 // Determine toast variant and title based on error type
                 let variant: "destructive" | "default" = "destructive";

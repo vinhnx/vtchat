@@ -1,58 +1,15 @@
 "use client";
 
-import { log } from "@repo/shared/logger";
 import { Alert, AlertDescription, AlertTitle, Button, cn } from "@repo/ui";
 import { AlertCircle, DollarSign, X } from "lucide-react";
-import { useEffect, useState } from "react";
-
-interface BudgetStatus {
-    global: {
-        status: "ok" | "warning" | "exceeded";
-        totalCostUSD: number;
-        budgetLimitUSD: number;
-        percentageUsed: number;
-        shouldDisable: boolean;
-        requestCount: number;
-    };
-    user: {
-        totalCostUSD: number;
-        requestCount: number;
-        modelBreakdown: Record<string, { cost: number; count: number }>;
-    };
-    month: string;
-}
+import { useBudgetStatus } from "@repo/shared/hooks";
 
 interface BudgetWarningBannerProps {
     className?: string;
 }
 
 export function BudgetWarningBanner({ className }: BudgetWarningBannerProps) {
-    const [budgetStatus, setBudgetStatus] = useState<BudgetStatus | null>(null);
-    const [dismissed, setDismissed] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchBudgetStatus = async () => {
-            try {
-                const response = await fetch("/api/budget/status");
-                if (response.ok) {
-                    const data = await response.json();
-                    setBudgetStatus(data);
-                }
-            } catch (error) {
-                // Silently fail - budget warning is not critical
-                log.warn({ error }, "Failed to fetch budget status");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBudgetStatus();
-
-        // Refresh every 10 minutes
-        const interval = setInterval(fetchBudgetStatus, 10 * 60 * 1000);
-        return () => clearInterval(interval);
-    }, []);
+    const { budgetStatus, dismissed, setDismissed, loading } = useBudgetStatus();
 
     // Don't show anything if loading, dismissed, or no issues
     if (loading || dismissed || !budgetStatus || budgetStatus.global.status === "ok") {

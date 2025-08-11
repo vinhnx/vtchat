@@ -30,7 +30,7 @@ export const RecentThreads = () => {
                 <Button
                     className="text-muted-foreground"
                     onClick={() => setIsCommandSearchOpen(true)}
-                    rounded="full"
+                    roundedSm="full"
                     size="xs"
                     variant="ghost"
                 >
@@ -41,10 +41,16 @@ export const RecentThreads = () => {
                 {threads
                     ?.sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime())
                     .map((thread) => (
-                        <div
-                            className="border-border bg-background flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 text-sm transition-all duration-200 hover:border-yellow-900/20 hover:bg-yellow-700/5 hover:shadow-sm"
+                        <button
+                            type="button"
+                            className="border-border bg-background flex w-full flex-col gap-1 rounded-2xl border p-4 text-sm transition-all duration-200 hover:border-yellow-900/20 hover:bg-yellow-700/5 hover:shadow-sm"
                             key={thread.id}
                             onClick={() => router.push(`/chat/${thread.id}`)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    router.push(`/chat/${thread.id}`);
+                                }
+                            }}
                         >
                             <MessageCircle
                                 className="text-muted-foreground/50"
@@ -60,7 +66,7 @@ export const RecentThreads = () => {
                                     addSuffix: true,
                                 })}
                             </p>
-                        </div>
+                        </button>
                     ))}
             </div>
         </div>

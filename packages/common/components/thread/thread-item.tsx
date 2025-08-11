@@ -2,7 +2,12 @@
 
 import { isChartTool } from "@repo/common/constants/chart-tools";
 import { isMathTool } from "@repo/common/constants/math-tools";
-import { useAnimatedText, useDebounced, useMathCalculator } from "@repo/common/hooks";
+import {
+    useAnimatedText,
+    useDebounced,
+    useErrorToast,
+    useMathCalculator,
+} from "@repo/common/hooks";
 import { useChatStore } from "@repo/common/store";
 import type { ThreadItem as ThreadItemType } from "@repo/shared/types";
 import { cn } from "@repo/ui";
