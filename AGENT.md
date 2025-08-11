@@ -35,4 +35,8 @@ This file is intentionally short to reduce context size. For the complete contri
 - Use Pino: `import { log } from '@repo/shared/lib/logger'`.
 - Log with structured metadata; avoid `console.*`.
 
+## React Best Practices
+
+- For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
+
 For details and examples, follow AGENTS.md.

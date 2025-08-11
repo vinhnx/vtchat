@@ -44,3 +44,7 @@
 - Bun auto-loads `.env`. Do not check secrets into git.
 - Always use the Pino logger: `import { log } from '@repo/shared/lib/logger'`.
 - Log with structured metadata: `log.info({ userId }, 'action')`; avoid `console.*`.
+
+## React Best Practices
+
+- For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).

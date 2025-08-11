@@ -390,6 +390,10 @@ VT implements comprehensive security measures:
 - **Data Protection**: No server-side storage of sensitive chat data
 - **Secure Communication**: HTTPS enforced, secure headers implemented
 
+## React Best Practices
+
+- For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
+
 ## Testing
 
 VT includes comprehensive testing:
