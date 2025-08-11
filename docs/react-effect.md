@@ -235,23 +235,43 @@ The `ThreadItem` component has several effects that could be optimized:
 
 ## Implementation Priority
 
-### High Priority
+### ✅ Completed (High Priority)
 
-1. Fix `useRagOnboarding` hook - simple derived state case
-2. Optimize PWA banner logic - separate concerns
-3. Review thread item effects - multiple optimization opportunities
+1. ✅ Fix `useRagOnboarding` hook - converted to derived state
+2. ✅ Optimize PWA banner logic - separated concerns, removed unnecessary state
+3. ✅ Review thread item effects - extracted error toast hook, optimized sources extraction
+4. ✅ Create reusable `useDebounced` hook for common pattern
+5. ✅ Create reusable `useErrorToast` hook for consistent error handling
 
 ### Medium Priority
 
-1. Audit chat store initialization
+1. Audit chat store initialization - complex state management could be simplified
 2. Review all custom hooks for unnecessary effects
 3. Optimize component re-renders with better memoization
+4. Consider extracting more reusable patterns from remaining effects
 
 ### Low Priority
 
 1. Performance audit with React DevTools
 2. Add ESLint rules for effect best practices
-3. Create reusable effect patterns/hooks
+3. Create additional reusable effect patterns/hooks
+
+## Additional Findings
+
+### ✅ Good Effect Usage Found
+
+Most effects in the codebase are actually following best practices:
+
+1. **DOM Synchronization**: Focus management, scroll behavior, event listeners
+2. **External API Integration**: Service worker registration, network requests
+3. **Browser API Synchronization**: Media queries, storage events
+4. **Cleanup Patterns**: Proper cleanup of timers, event listeners, subscriptions
+
+### Remaining Optimization Opportunities
+
+1. **Chat Store**: Complex initialization logic could potentially be simplified
+2. **Component Memoization**: Some components could benefit from better memoization
+3. **State Derivation**: Look for more cases where computed values are stored in state
 
 ## Best Practices Going Forward
 
