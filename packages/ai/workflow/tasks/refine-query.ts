@@ -128,15 +128,40 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
         });
 
         if (object?.needsClarification) {
+            // Build a robust fallback message when reasoning is missing or empty
+            const hasReasoning = typeof object.reasoning === 'string'
+                && object.reasoning.trim().length > 0;
+            const hasQuestion = !!object?.clarifyingQuestion?.question;
+            const hasOptions = Array.isArray(object?.clarifyingQuestion?.options)
+                && object?.clarifyingQuestion?.options.length > 0;
+
+            const fallbackIntro =
+                'Your query is too broad for Deep Research. Please clarify so I can proceed effectively.';
+
+            let composedMessage = hasReasoning ? object.reasoning!.trim() : fallbackIntro;
+
+            if (hasQuestion) {
+                const q = object.clarifyingQuestion!.question.trim();
+                const optionsList = hasOptions
+                    ? '\n\nOptions:\n'
+                        + object.clarifyingQuestion!.options.map((opt: string, idx: number) =>
+                            `- ${idx + 1}. ${opt}`
+                        ).join('\n')
+                    : '';
+                composedMessage = `${composedMessage}\n\n${q}${optionsList}`;
+            }
+
             updateAnswer({
-                text: object.reasoning,
-                finalText: object.reasoning,
+                text: composedMessage,
+                finalText: composedMessage,
                 status: 'COMPLETED',
             });
-            object?.clarifyingQuestion
-                && updateObject({
-                    clarifyingQuestion: object?.clarifyingQuestion,
+
+            if (object?.clarifyingQuestion) {
+                updateObject({
+                    clarifyingQuestion: object.clarifyingQuestion,
                 });
+            }
 
             updateStatus('COMPLETED');
         } else {

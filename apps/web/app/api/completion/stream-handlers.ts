@@ -157,13 +157,19 @@ export async function executeStream({
     try {
         const { signal } = abortController;
 
+        // Sanitize custom instructions: treat empty/whitespace as undefined
+        const sanitizedCustomInstructions =
+            typeof data.customInstructions === 'string' && data.customInstructions.trim().length > 0
+                ? data.customInstructions
+                : undefined;
+
         const workflow = runWorkflow({
             mode: data.mode,
             question: data.prompt,
             threadId: data.threadId,
             threadItemId: data.threadItemId,
             messages: data.messages,
-            customInstructions: data.customInstructions,
+            customInstructions: sanitizedCustomInstructions,
             webSearch: data.webSearch,
             mathCalculator: data.mathCalculator,
             charts: data.charts,

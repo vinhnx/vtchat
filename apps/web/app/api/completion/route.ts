@@ -20,7 +20,6 @@ import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/a
 export const dynamic = 'force-dynamic';
 
 import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
-import { data } from 'happy-dom/lib/PropertySymbol.js';
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
 import { executeStream, markControllerClosed } from './stream-handlers';
 import { registerStream, unregisterStream } from './stream-registry';
