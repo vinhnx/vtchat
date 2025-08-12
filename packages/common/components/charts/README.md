@@ -23,46 +23,46 @@ import { ChartComponent, type ChartComponentData } from './chart-components';
 
 // Single series area chart
 const areaChartData: ChartComponentData = {
-  type: 'areaChart',
-  title: 'Simple Area Chart',
-  data: [
-    { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-    // ... more data
-  ],
-  xAxisLabel: 'Pages',
-  yAxisLabel: 'Values',
-  series1Name: 'Unique Visitors',
-  dataKey1: 'uv',
+    type: 'areaChart',
+    title: 'Simple Area Chart',
+    data: [
+        { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
+        { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
+        // ... more data
+    ],
+    xAxisLabel: 'Pages',
+    yAxisLabel: 'Values',
+    series1Name: 'Unique Visitors',
+    dataKey1: 'uv',
 };
 
 // Multi-series area chart
 const multiSeriesAreaChart: ChartComponentData = {
-  type: 'areaChart',
-  title: 'Multi-Series Area Chart',
-  data: sampleData,
-  series1Name: 'Unique Visitors',
-  series2Name: 'Page Views',
-  series3Name: 'Amount',
-  dataKey1: 'uv',
-  dataKey2: 'pv',
-  dataKey3: 'amt',
+    type: 'areaChart',
+    title: 'Multi-Series Area Chart',
+    data: sampleData,
+    series1Name: 'Unique Visitors',
+    series2Name: 'Page Views',
+    series3Name: 'Amount',
+    dataKey1: 'uv',
+    dataKey2: 'pv',
+    dataKey3: 'amt',
 };
 
 // Stacked area chart
 const stackedAreaChart: ChartComponentData = {
-  type: 'areaChart',
-  title: 'Stacked Area Chart',
-  data: sampleData,
-  series1Name: 'Series 1',
-  series2Name: 'Series 2',
-  dataKey1: 'uv',
-  dataKey2: 'pv',
-  stacked: true,
+    type: 'areaChart',
+    title: 'Stacked Area Chart',
+    data: sampleData,
+    series1Name: 'Series 1',
+    series2Name: 'Series 2',
+    dataKey1: 'uv',
+    dataKey2: 'pv',
+    stacked: true,
 };
 
 // Render the chart
-<ChartComponent chartData={areaChartData} />
+<ChartComponent chartData={areaChartData} />;
 ```
 
 ### Properties

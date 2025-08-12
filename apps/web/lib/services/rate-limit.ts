@@ -1,11 +1,11 @@
-import { ModelEnum } from "@repo/ai/models";
-import { GEMINI_LIMITS } from "@repo/shared/constants/rate-limits";
-import { db } from "@repo/shared/lib/database";
-import { log } from "@repo/shared/lib/logger";
-import { and, eq } from "drizzle-orm";
-import type { UserRateLimit } from "../database/schema";
-import { userRateLimits } from "../database/schema";
-import { recordProviderUsage } from "./budget-tracking";
+import { ModelEnum } from '@repo/ai/models';
+import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
+import { db } from '@repo/shared/lib/database';
+import { log } from '@repo/shared/lib/logger';
+import { and, eq } from 'drizzle-orm';
+import type { UserRateLimit } from '../database/schema';
+import { userRateLimits } from '../database/schema';
+import { recordProviderUsage } from './budget-tracking';
 
 // Security bounds to prevent integer overflow and malicious data
 const _SECURITY_BOUNDS = {
@@ -46,9 +46,9 @@ function getVtPlusFeatureFromModel(modelId: ModelEnum, isVtPlusUser?: boolean): 
     // Map specific Gemini models used by VT+ features to their identifiers
     switch (modelId) {
         case ModelEnum.GEMINI_2_5_PRO:
-            return "DEEP_RESEARCH";
+            return 'DEEP_RESEARCH';
         case ModelEnum.GEMINI_2_5_FLASH:
-            return "PRO_SEARCH";
+            return 'PRO_SEARCH';
         default:
             return undefined;
     }
@@ -78,8 +78,8 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
             id: crypto.randomUUID(),
             userId,
             modelId,
-            dailyRequestCount: "0",
-            minuteRequestCount: "0",
+            dailyRequestCount: '0',
+            minuteRequestCount: '0',
             lastDailyReset: now,
             lastMinuteReset: now,
             createdAt: now,
@@ -89,12 +89,12 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
             await safeInsertRateLimit(rateLimitRecord);
         } catch (error: unknown) {
             if (
-                error &&
-                typeof error === "object" &&
-                "code" in error &&
-                (error as { code?: string }).code === "23505" &&
-                "constraint" in error &&
-                (error as { constraint?: string }).constraint === "unique_user_model"
+                error
+                && typeof error === 'object'
+                && 'code' in error
+                && (error as { code?: string; }).code === '23505'
+                && 'constraint' in error
+                && (error as { constraint?: string; }).constraint === 'unique_user_model'
             ) {
                 // Fetch the existing record
                 const existingRecord = await db
@@ -122,7 +122,7 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
 
 // Prevent pushing zero-value records in service layer
 function isZeroRateRecord(record: UserRateLimit): boolean {
-    return record.dailyRequestCount === "0" && record.minuteRequestCount === "0";
+    return record.dailyRequestCount === '0' && record.minuteRequestCount === '0';
 }
 
 /**
@@ -135,8 +135,8 @@ function isZeroRateRecord(record: UserRateLimit): boolean {
  */
 async function safeInsertRateLimit(record: UserRateLimit) {
     if (isZeroRateRecord(record)) {
-        log.warn({ record }, "Blocked attempt to insert zero-value rate limit record");
-        throw new Error("Cannot insert zero-value rate limit record");
+        log.warn({ record }, 'Blocked attempt to insert zero-value rate limit record');
+        throw new Error('Cannot insert zero-value rate limit record');
     }
     await db
         .insert(userRateLimits)
@@ -167,8 +167,8 @@ async function incrementRateRecord(
         id: crypto.randomUUID(),
         userId,
         modelId,
-        dailyRequestCount: "1",
-        minuteRequestCount: "1",
+        dailyRequestCount: '1',
+        minuteRequestCount: '1',
         lastDailyReset: now,
         lastMinuteReset: now,
         createdAt: now,
@@ -178,7 +178,7 @@ async function incrementRateRecord(
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     // Use VT+ feature identifier if provided, otherwise use the model ID
     const recordingModelId = vtPlusFeature || modelId;
-    recordProviderUsage(userId, recordingModelId, "gemini").catch((_error) => {
+    recordProviderUsage(userId, recordingModelId, 'gemini').catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -319,7 +319,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
     if (effectiveRemainingDaily <= 0) {
         return {
             allowed: false,
-            reason: "daily_limit_exceeded",
+            reason: 'daily_limit_exceeded',
             remainingDaily: 0,
             remainingMinute: effectiveRemainingMinute,
             resetTime: {
@@ -332,7 +332,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
     if (effectiveRemainingMinute <= 0) {
         return {
             allowed: false,
-            reason: "minute_limit_exceeded",
+            reason: 'minute_limit_exceeded',
             remainingDaily: effectiveRemainingDaily,
             remainingMinute: 0,
             resetTime: {
@@ -355,7 +355,7 @@ async function checkDualQuotaLimits(userId: string, modelId: ModelEnum): Promise
 
 export interface RateLimitResult {
     allowed: boolean;
-    reason?: "daily_limit_exceeded" | "minute_limit_exceeded";
+    reason?: 'daily_limit_exceeded' | 'minute_limit_exceeded';
     remainingDaily: number;
     remainingMinute: number;
     resetTime: {
@@ -417,8 +417,8 @@ export async function checkRateLimit(
 
     // VT+ users using other Gemini models must check both model-specific AND Flash Lite quotas
     if (
-        isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
+        isVTPlusUser
+        && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         return await checkDualQuotaLimits(userId, modelId);
     }
@@ -444,8 +444,8 @@ export async function checkRateLimit(
             id: crypto.randomUUID(),
             userId,
             modelId,
-            dailyRequestCount: "0",
-            minuteRequestCount: "0",
+            dailyRequestCount: '0',
+            minuteRequestCount: '0',
             lastDailyReset: now,
             lastMinuteReset: now,
             createdAt: now,
@@ -482,7 +482,7 @@ export async function checkRateLimit(
     if (remainingDaily <= 0) {
         return {
             allowed: false,
-            reason: "daily_limit_exceeded",
+            reason: 'daily_limit_exceeded',
             remainingDaily: 0,
             remainingMinute,
             resetTime: {
@@ -495,7 +495,7 @@ export async function checkRateLimit(
     if (remainingMinute <= 0) {
         return {
             allowed: false,
-            reason: "minute_limit_exceeded",
+            reason: 'minute_limit_exceeded',
             remainingDaily,
             remainingMinute: 0,
             resetTime: {
@@ -564,7 +564,7 @@ async function updateExistingRateLimitRecord(
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     // Use VT+ feature identifier if provided, otherwise use the model ID
     const recordingModelId = vtPlusFeature || modelId;
-    recordProviderUsage(userId, recordingModelId, "gemini").catch((_error) => {
+    recordProviderUsage(userId, recordingModelId, 'gemini').catch((_error) => {
         // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
     });
 }
@@ -596,8 +596,8 @@ export async function recordRequest(
 
     // VT+ users using other Gemini models must record in both quotas (model-specific + shared Flash Lite quota)
     if (
-        isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
+        isVTPlusUser
+        && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         await recordDualQuotaUsage(userId, modelId, vtPlusFeature);
         return;
@@ -621,8 +621,8 @@ export async function recordRequest(
                 id: crypto.randomUUID(),
                 userId,
                 modelId,
-                dailyRequestCount: "1",
-                minuteRequestCount: "1",
+                dailyRequestCount: '1',
+                minuteRequestCount: '1',
                 lastDailyReset: now,
                 lastMinuteReset: now,
                 createdAt: now,
@@ -631,12 +631,12 @@ export async function recordRequest(
             return;
         } catch (error: unknown) {
             if (
-                error &&
-                typeof error === "object" &&
-                "code" in error &&
-                (error as { code?: string }).code === "23505" &&
-                "constraint" in error &&
-                (error as { constraint?: string }).constraint === "unique_user_model"
+                error
+                && typeof error === 'object'
+                && 'code' in error
+                && (error as { code?: string; }).code === '23505'
+                && 'constraint' in error
+                && (error as { constraint?: string; }).constraint === 'unique_user_model'
             ) {
                 const existingRecord = await db
                     .select()
@@ -719,8 +719,8 @@ export async function getRateLimitStatus(
 
     // VT+ users using other Gemini models need dual quota status
     if (
-        isVTPlusUser &&
-        (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
+        isVTPlusUser
+        && (modelId === ModelEnum.GEMINI_2_5_FLASH || modelId === ModelEnum.GEMINI_2_5_PRO)
     ) {
         return await getDualQuotaStatus(userId, modelId);
     }
@@ -789,9 +789,9 @@ export async function getRateLimitStatus(
 function isNewDay(lastReset: Date | null, now: Date): boolean {
     if (!lastReset) return true;
     return (
-        now.getUTCDate() !== lastReset.getUTCDate() ||
-        now.getUTCMonth() !== lastReset.getUTCMonth() ||
-        now.getUTCFullYear() !== lastReset.getUTCFullYear()
+        now.getUTCDate() !== lastReset.getUTCDate()
+        || now.getUTCMonth() !== lastReset.getUTCMonth()
+        || now.getUTCFullYear() !== lastReset.getUTCFullYear()
     );
 }
 

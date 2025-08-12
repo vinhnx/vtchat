@@ -2,14 +2,14 @@
  * Simplified subscription access - reduced complexity while maintaining critical functionality
  */
 
-import { log } from "@repo/shared/lib/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
-import { desc, eq, inArray, sql } from "drizzle-orm";
-import { redisCache } from "@/lib/cache/redis-cache";
-import { db } from "@/lib/database";
-import { userSubscriptions, users } from "@/lib/database/schema";
+import { redisCache } from '@/lib/cache/redis-cache';
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
+import { log } from '@repo/shared/lib/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
+import { desc, eq, inArray, sql } from 'drizzle-orm';
 
 interface SubscriptionData {
     planSlug: string | null;
@@ -62,8 +62,8 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
             currentPeriodEnd: row.currentPeriodEnd,
         });
 
-        const isPremium =
-            isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+        const isPremium = isActive
+            && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
         const isVtPlus = isPremium;
 
         return {
@@ -77,7 +77,7 @@ async function fetchSubscriptionFromDB(userId: string): Promise<SubscriptionData
             isVtPlus,
         };
     } catch (error) {
-        log.error("Failed to fetch subscription data:", { userId, error });
+        log.error('Failed to fetch subscription data:', { userId, error });
         return null;
     }
 }
@@ -210,9 +210,8 @@ export async function getSubscriptionsBatch(
                     currentPeriodEnd: row.currentPeriodEnd,
                 });
 
-                const isPremium =
-                    isActive &&
-                    (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+                const isPremium = isActive
+                    && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
                 const isVtPlus = isPremium;
 
                 const subscription: SubscriptionData = {
@@ -241,7 +240,7 @@ export async function getSubscriptionsBatch(
                 });
             }
         } catch (error) {
-            log.error("Failed to batch fetch subscription data:", { userIds: uncachedIds, error });
+            log.error('Failed to batch fetch subscription data:', { userIds: uncachedIds, error });
         }
     }
 
@@ -253,7 +252,7 @@ export async function getSubscriptionsBatch(
  */
 export async function invalidateSubscriptionCache(userId: string): Promise<void> {
     await redisCache.invalidateSubscription(userId);
-    log.debug("Invalidated subscription cache", { userId });
+    log.debug('Invalidated subscription cache', { userId });
 }
 
 export type { SubscriptionData };

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
+import type { FC } from 'react';
 
 export type TMinimalLayout = {
     children: React.ReactNode;
@@ -8,8 +8,8 @@ export type TMinimalLayout = {
 
 export const MinimalLayout: FC<TMinimalLayout> = ({ children }) => {
     return (
-        <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
-            <div className="flex w-full flex-col gap-2 overflow-y-auto p-4">{children}</div>
+        <div className='bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden'>
+            <div className='flex w-full flex-col gap-2 overflow-y-auto p-4'>{children}</div>
         </div>
     );
 };

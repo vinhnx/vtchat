@@ -1,9 +1,9 @@
-import { QUOTA_WINDOW, type QuotaConfig, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
-import { log } from "@repo/shared/lib/logger";
-import type { PlanSlug } from "@repo/shared/types/subscription";
-import { and, eq } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { quotaConfigs } from "@/lib/database/schema";
+import { db } from '@/lib/database';
+import { quotaConfigs } from '@/lib/database/schema';
+import { QUOTA_WINDOW, type QuotaConfig, VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { log } from '@repo/shared/lib/logger';
+import type { PlanSlug } from '@repo/shared/types/subscription';
+import { and, eq } from 'drizzle-orm';
 
 // In-memory cache for quota configurations
 const quotaConfigCache: Map<string, QuotaConfig> = new Map();
@@ -34,7 +34,7 @@ async function fetchQuotaConfigsFromDB() {
 
         return configs;
     } catch (error) {
-        log.error({ error }, "[QuotaConfigService] Failed to fetch quota configs from database");
+        log.error({ error }, '[QuotaConfigService] Failed to fetch quota configs from database');
         throw error;
     }
 }
@@ -64,10 +64,10 @@ async function loadQuotaConfigs(): Promise<void> {
         cacheLastUpdated = new Date();
         log.info(
             { configCount: configs.length },
-            "[QuotaConfigService] Quota configs loaded into cache",
+            '[QuotaConfigService] Quota configs loaded into cache',
         );
     } catch (error) {
-        log.error({ error }, "[QuotaConfigService] Failed to load quota configs");
+        log.error({ error }, '[QuotaConfigService] Failed to load quota configs');
         throw error;
     }
 }
@@ -86,7 +86,7 @@ export async function getQuotaConfig(feature: VtPlusFeature, plan: PlanSlug): Pr
 
     if (!config) {
         // Fallback to default values if not found in database
-        log.warn({ feature, plan }, "[QuotaConfigService] No quota config found, using defaults");
+        log.warn({ feature, plan }, '[QuotaConfigService] No quota config found, using defaults');
         return {
             limit: 0, // Default to 0 for safety
             window: QUOTA_WINDOW.DAILY,
@@ -155,11 +155,11 @@ export async function updateQuotaConfig(
         // Invalidate cache to force refresh
         cacheLastUpdated = null;
 
-        log.info({ feature, plan, config }, "[QuotaConfigService] Quota config updated");
+        log.info({ feature, plan, config }, '[QuotaConfigService] Quota config updated');
     } catch (error) {
         log.error(
             { error, feature, plan, config },
-            "[QuotaConfigService] Failed to update quota config",
+            '[QuotaConfigService] Failed to update quota config',
         );
         throw error;
     }
@@ -194,11 +194,11 @@ export async function createQuotaConfig(
         // Invalidate cache to force refresh
         cacheLastUpdated = null;
 
-        log.info({ feature, plan, config }, "[QuotaConfigService] Quota config created/updated");
+        log.info({ feature, plan, config }, '[QuotaConfigService] Quota config created/updated');
     } catch (error) {
         log.error(
             { error, feature, plan, config },
-            "[QuotaConfigService] Failed to create quota config",
+            '[QuotaConfigService] Failed to create quota config',
         );
         throw error;
     }

@@ -1,12 +1,12 @@
 // Reset sidebar state in localStorage
-if (typeof localStorage !== "undefined") {
+if (typeof localStorage !== 'undefined') {
     try {
         localStorage.setItem(
-            "sidebar-state",
+            'sidebar-state',
             JSON.stringify({ isOpen: false, animationDisabled: false }),
         );
-        console.log("Sidebar state reset to closed");
+        console.log('Sidebar state reset to closed');
     } catch (error) {
-        console.error("Failed to reset sidebar state:", error);
+        console.error('Failed to reset sidebar state:', error);
     }
 }

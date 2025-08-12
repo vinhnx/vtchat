@@ -1,4 +1,4 @@
-import { useAppStore } from "../store";
+import { useAppStore } from '../store';
 
 export const useMathCalculator = () => {
     const mathCalculatorEnabled = useAppStore((state) => state.useMathCalculator);

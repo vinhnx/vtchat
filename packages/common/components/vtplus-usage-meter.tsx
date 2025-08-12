@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { QUOTA_WINDOW } from "../src/config/vtPlusLimits";
+import type { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
 
 interface VtPlusUsageData {
     deepResearch: {
@@ -29,15 +29,15 @@ interface VtPlusUsageMeterProps {
 
 export function VtPlusUsageMeter({ userId }: VtPlusUsageMeterProps) {
     return (
-        <div className="space-y-6">
-            <div className="space-y-1">
-                <h3 className="text-lg font-medium">VT+ Usage</h3>
-                <p className="text-muted-foreground text-sm">
+        <div className='space-y-6'>
+            <div className='space-y-1'>
+                <h3 className='text-lg font-medium'>VT+ Usage</h3>
+                <p className='text-muted-foreground text-sm'>
                     Track your VT+ feature usage and quota limits.
                 </p>
             </div>
-            <div className="text-muted-foreground text-sm">
-                VT+ Usage component loaded successfully. User ID: {userId || "Not provided"}
+            <div className='text-muted-foreground text-sm'>
+                VT+ Usage component loaded successfully. User ID: {userId || 'Not provided'}
             </div>
         </div>
     );

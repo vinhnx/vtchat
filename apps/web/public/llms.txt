@@ -34,7 +34,7 @@ vtchat is an AI chat application featuring free and premium tiers (VT+), with ex
 ## Tests & Quality
 - [apps/web/app/tests/](apps/web/app/tests/): Vitest and Testing-Library test suites
 - [vitest.config.ts](vitest.config.ts): Testing configuration
-- [biome.json](biome.json): Code formatting and linting configuration
+- [dprint.json](dprint.json): Code formatting configuration
 
 ## Optional
 - [memory-bank/](memory-bank/): Project context and decision logs (chronological)

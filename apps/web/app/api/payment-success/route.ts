@@ -1,17 +1,17 @@
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/lib/auth-server";
-import { invalidateAllCaches } from "@/lib/cache/cache-invalidation";
-import { db } from "@/lib/database";
-import { userSubscriptions, users } from "@/lib/database/schema";
+import { auth } from '@/lib/auth-server';
+import { invalidateAllCaches } from '@/lib/cache/cache-invalidation';
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Schema for processing payment success
 const PaymentSuccessSchema = z.object({
@@ -23,7 +23,7 @@ const PaymentSuccessSchema = z.object({
     plan: z.string().optional(),
     package: z.string().optional(),
     quantity: z.number().optional().default(1),
-    status: z.string().default("completed"),
+    status: z.string().default('completed'),
     amount: z.number().optional(),
     currency: z.string().optional(),
     session_id: z.string().optional(),
@@ -50,7 +50,7 @@ function mapCreemProductToPlan(
 }
 
 export async function POST(request: NextRequest) {
-    log.info({}, "[Payment Success API] Processing payment success callback...");
+    log.info({}, '[Payment Success API] Processing payment success callback...');
 
     try {
         // Get authenticated user
@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            log.info({}, "[Payment Success API] No authenticated user found");
-            return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+            log.info({}, '[Payment Success API] No authenticated user found');
+            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }
 
         const userId = session.user.id;
@@ -68,11 +68,11 @@ export async function POST(request: NextRequest) {
 
         // Parse request body
         const body = await request.json();
-        log.info({ body }, "[Payment Success API] Request body");
+        log.info({ body }, '[Payment Success API] Request body');
 
         // Validate request
         const validatedData = PaymentSuccessSchema.parse(body);
-        log.info("[Payment Success API] Validated data:", { data: validatedData });
+        log.info('[Payment Success API] Validated data:', { data: validatedData });
 
         // Map plan
         const { planSlug, isSubscription } = mapCreemProductToPlan(
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
             validatedData.package,
         );
 
-        log.info("[Payment Success API] Mapped values:", {
+        log.info('[Payment Success API] Mapped values:', {
             planSlug,
             isSubscription,
         });
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
 
             const currentPlan = currentUser[0]?.planSlug || PlanSlug.VT_BASE;
 
-            log.info("[Payment Success API] Plan update:", {
+            log.info('[Payment Success API] Plan update:', {
                 currentPlan,
                 newPlan: planSlug,
                 isSubscription,
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
                 })
                 .where(eq(users.id, userId));
 
-            log.info("[Payment Success API] Updated user record:", {
+            log.info('[Payment Success API] Updated user record:', {
                 userId,
                 customerId: validatedData.customer_id,
                 planSlug,
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
                         .set(subscriptionData)
                         .where(eq(userSubscriptions.userId, userId));
 
-                    log.info("[Payment Success API] Updated existing subscription");
+                    log.info('[Payment Success API] Updated existing subscription');
                 } else {
                     // Create new subscription
                     await tx.insert(userSubscriptions).values({
@@ -156,21 +156,21 @@ export async function POST(request: NextRequest) {
                         createdAt: new Date(),
                     });
 
-                    log.info("[Payment Success API] Created new subscription");
+                    log.info('[Payment Success API] Created new subscription');
                 }
             }
         });
 
-        log.info("[Payment Success API] Database transaction completed successfully");
+        log.info('[Payment Success API] Database transaction completed successfully');
 
         // Invalidate all caches for the user after successful payment
         await invalidateAllCaches(userId);
 
-        log.info("[Payment Success API] Invalidated all caches for user", { userId });
+        log.info('[Payment Success API] Invalidated all caches for user', { userId });
 
         return NextResponse.json({
             success: true,
-            message: "Payment processed successfully",
+            message: 'Payment processed successfully',
             data: {
                 userId,
                 userEmail,
@@ -180,14 +180,14 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        log.error("[Payment Success API] Error processing payment success:", {
+        log.error('[Payment Success API] Error processing payment success:', {
             error,
         });
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 {
-                    error: "Invalid request data",
+                    error: 'Invalid request data',
                     details: error.errors,
                 },
                 { status: 400 },
@@ -196,8 +196,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(
             {
-                error: "Internal server error",
-                message: error instanceof Error ? error.message : "Unknown error",
+                error: 'Internal server error',
+                message: error instanceof Error ? error.message : 'Unknown error',
             },
             { status: 500 },
         );

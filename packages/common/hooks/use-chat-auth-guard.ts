@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/logger";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useChatStore } from "../store/chat.store";
-import { logAuthError, logAuthRecovery } from "../utils/auth-monitoring";
-import { useEnhancedAuth } from "./use-enhanced-auth";
+import { log } from '@repo/shared/logger';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useChatStore } from '../store/chat.store';
+import { logAuthError, logAuthRecovery } from '../utils/auth-monitoring';
+import { useEnhancedAuth } from './use-enhanced-auth';
 
 interface ChatAuthGuardOptions {
     preserveChatState?: boolean;
@@ -76,9 +76,9 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
 
         // Store in sessionStorage as backup
         try {
-            sessionStorage.setItem("vtchat_preserved_state", JSON.stringify(stateToPreserve));
+            sessionStorage.setItem('vtchat_preserved_state', JSON.stringify(stateToPreserve));
         } catch (error) {
-            log.warn({ error }, "[ChatAuthGuard] Failed to preserve state in sessionStorage");
+            log.warn({ error }, '[ChatAuthGuard] Failed to preserve state in sessionStorage');
         }
 
         log.info(
@@ -87,7 +87,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                 messageCount: threadItems.length,
                 isGenerating,
             },
-            "[ChatAuthGuard] Chat state preserved",
+            '[ChatAuthGuard] Chat state preserved',
         );
     }, [preserveChatState, currentThreadId, threadItems, isGenerating]);
 
@@ -100,12 +100,12 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
         // Try to get from sessionStorage if no in-memory state
         if (!stateToRestore) {
             try {
-                const stored = sessionStorage.getItem("vtchat_preserved_state");
+                const stored = sessionStorage.getItem('vtchat_preserved_state');
                 if (stored) {
                     stateToRestore = JSON.parse(stored);
                 }
             } catch (error) {
-                log.warn({ error }, "[ChatAuthGuard] Failed to restore state from sessionStorage");
+                log.warn({ error }, '[ChatAuthGuard] Failed to restore state from sessionStorage');
             }
         }
 
@@ -115,7 +115,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                     threadId: stateToRestore.threadId,
                     messageCount: stateToRestore.messages?.length || 0,
                 },
-                "[ChatAuthGuard] Restoring chat state",
+                '[ChatAuthGuard] Restoring chat state',
             );
 
             try {
@@ -124,7 +124,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
 
                 // Clear preserved state
                 preservedStateRef.current = null;
-                sessionStorage.removeItem("vtchat_preserved_state");
+                sessionStorage.removeItem('vtchat_preserved_state');
 
                 setAuthState((prev) => ({
                     ...prev,
@@ -132,23 +132,23 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                     preservedMessages: [],
                 }));
 
-                log.info("[ChatAuthGuard] Chat state restored successfully");
+                log.info('[ChatAuthGuard] Chat state restored successfully');
             } catch (error) {
-                log.error({ error }, "[ChatAuthGuard] Failed to restore chat state");
+                log.error({ error }, '[ChatAuthGuard] Failed to restore chat state');
             }
         }
     }, [preserveChatState, switchThread]);
 
     // Handle session expiration
     const handleSessionExpired = useCallback(() => {
-        log.warn("[ChatAuthGuard] Session expired during chat");
+        log.warn('[ChatAuthGuard] Session expired during chat');
 
         preserveChatStateData();
 
         setAuthState((prev) => ({
             ...prev,
             isProtected: true,
-            lastError: "Session expired",
+            lastError: 'Session expired',
         }));
 
         if (autoRecovery && authState.recoveryAttempts < maxRecoveryAttempts) {
@@ -159,7 +159,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
     // Handle authentication errors
     const handleAuthError = useCallback(
         (errorMessage: string) => {
-            log.error({ error: errorMessage }, "[ChatAuthGuard] Authentication error during chat");
+            log.error({ error: errorMessage }, '[ChatAuthGuard] Authentication error during chat');
 
             logAuthError(errorMessage, window.location.pathname, undefined);
 
@@ -190,7 +190,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
 
         log.info(
             { attempt: authState.recoveryAttempts + 1, maxAttempts: maxRecoveryAttempts },
-            "[ChatAuthGuard] Starting authentication recovery",
+            '[ChatAuthGuard] Starting authentication recovery',
         );
 
         // Clear any existing timeout
@@ -214,15 +214,15 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                     lastError: null,
                 }));
 
-                logAuthRecovery(true, "automatic", undefined);
-                log.info("[ChatAuthGuard] Authentication recovery successful");
+                logAuthRecovery(true, 'automatic', undefined);
+                log.info('[ChatAuthGuard] Authentication recovery successful');
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : "Recovery failed";
+                const errorMessage = error instanceof Error ? error.message : 'Recovery failed';
 
-                logAuthRecovery(false, "automatic", undefined);
+                logAuthRecovery(false, 'automatic', undefined);
                 log.error(
                     { error: errorMessage },
-                    "[ChatAuthGuard] Authentication recovery failed",
+                    '[ChatAuthGuard] Authentication recovery failed',
                 );
 
                 setAuthState((prev) => ({
@@ -264,12 +264,12 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                 lastError: null,
             }));
 
-            logAuthRecovery(true, "manual", undefined);
-            log.info("[ChatAuthGuard] Manual recovery successful");
+            logAuthRecovery(true, 'manual', undefined);
+            log.info('[ChatAuthGuard] Manual recovery successful');
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : "Manual recovery failed";
+            const errorMessage = error instanceof Error ? error.message : 'Manual recovery failed';
 
-            logAuthRecovery(false, "manual", undefined);
+            logAuthRecovery(false, 'manual', undefined);
 
             setAuthState((prev) => ({
                 ...prev,
@@ -292,7 +292,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                 redirectUrl: loginUrl,
                 preservedThread: authState.preservedThreadId,
             },
-            "[ChatAuthGuard] Redirecting to login with preserved state",
+            '[ChatAuthGuard] Redirecting to login with preserved state',
         );
 
         router.push(loginUrl);

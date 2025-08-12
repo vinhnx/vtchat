@@ -124,18 +124,18 @@ FROM node:18-alpine AS base
 
 ```toml
 [http_service]
-  min_machines_running = 0  # Scale to zero when idle
-  auto_stop_machines = 'suspend'  # Faster than 'stop'
-  auto_start_machines = true
+min_machines_running = 0 # Scale to zero when idle
+auto_stop_machines = 'suspend' # Faster than 'stop'
+auto_start_machines = true
 ```
 
 #### 3. Health Check Optimization
 
 ```toml
 [[http_service.checks]]
-  interval = "30s"  # Less frequent checks
-  timeout = "10s"
-  grace_period = "30s"
+interval = "30s" # Less frequent checks
+timeout = "10s"
+grace_period = "30s"
 ```
 
 #### 4. Memory Management
@@ -154,15 +154,15 @@ If costs exceed budget:
 
 1. **Immediate**: Scale to zero manually
 
-    ```bash
-    fly scale count 0 --app vtchat
-    ```
+   ```bash
+   fly scale count 0 --app vtchat
+   ```
 
 2. **Temporary**: Suspend all machines
 
-    ```bash
-    fly machine stop --app vtchat $(fly machine list --app vtchat --json | jq -r '.[].id')
-    ```
+   ```bash
+   fly machine stop --app vtchat $(fly machine list --app vtchat --json | jq -r '.[].id')
+   ```
 
 3. **Configure alerts**: Set up billing alerts in Fly.io dashboard
 
@@ -195,23 +195,23 @@ fly logs --app vtchat | grep -E "(memory|cpu)" | tail -10
 
 1. **Deploy with cost-optimized config:**
 
-    ```bash
-    fly deploy --config fly.toml
-    ```
+   ```bash
+   fly deploy --config fly.toml
+   ```
 
 2. **Set up GitHub Actions only (no cron machine):**
 
-    ```bash
-    # Add secrets to GitHub
-    gh secret set CRON_SECRET_TOKEN --body "$(openssl rand -base64 32)"
-    gh secret set FLY_APP_URL --body "https://vtchat.io.vn"
-    ```
+   ```bash
+   # Add secrets to GitHub
+   gh secret set CRON_SECRET_TOKEN --body "$(openssl rand -base64 32)"
+   gh secret set FLY_APP_URL --body "https://vtchat.io.vn"
+   ```
 
 3. **Test manual trigger:**
 
-    ```bash
-    gh workflow run database-maintenance.yml -f maintenance_type=hourly
-    ```
+   ```bash
+   gh workflow run database-maintenance.yml -f maintenance_type=hourly
+   ```
 
 4. **Monitor costs daily for first week**
 

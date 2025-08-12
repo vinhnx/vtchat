@@ -183,7 +183,7 @@ impersonated_by TEXT  -- Tracks admin impersonation
 ### Server-Side Admin Checks
 
 ```typescript
-import { isUserAdmin, requireAdmin, AdminAccessRequiredError } from '@/lib/admin';
+import { AdminAccessRequiredError, isUserAdmin, requireAdmin } from '@/lib/admin';
 
 // Check admin status
 const adminStatus = await isUserAdmin(userId);
@@ -198,16 +198,16 @@ await requireAdmin();
 import { useAdmin } from '@repo/common/hooks';
 
 function MyComponent() {
-  const { isAdmin, loading, invalidateAdminCache } = useAdmin();
+    const { isAdmin, loading, invalidateAdminCache } = useAdmin();
 
-  if (loading) return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
 
-  return (
-    <div>
-      {isAdmin && <AdminPanel />}
-      <button onClick={invalidateAdminCache}>Refresh Admin Status</button>
-    </div>
-  );
+    return (
+        <div>
+            {isAdmin && <AdminPanel />}
+            <button onClick={invalidateAdminCache}>Refresh Admin Status</button>
+        </div>
+    );
 }
 ```
 

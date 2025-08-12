@@ -1,22 +1,22 @@
-import { createTask } from "@repo/orchestrator";
-import { ChatMode } from "@repo/shared/config";
-import { getVTPlusFeatureFromChatMode } from "@repo/shared/utils/access-control";
-import { z } from "zod";
-import { getModelFromChatMode, ModelEnum } from "../../models";
-import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
+import { createTask } from '@repo/orchestrator';
+import { ChatMode } from '@repo/shared/config';
+import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
+import { z } from 'zod';
+import { getModelFromChatMode, ModelEnum } from '../../models';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     generateObject,
     getHumanizedDate,
     handleError,
     selectAvailableModel,
     sendEvents,
-} from "../utils";
+} from '../utils';
 
 export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: "planner",
+    name: 'planner',
     execute: async ({ events, context, signal }) => {
-        const messages = context?.get("messages") || [];
-        const question = context?.get("question") || "";
+        const messages = context?.get('messages') || [];
+        const question = context?.get('question') || '';
         const _currentYear = new Date().getFullYear();
         const { updateStep, nextStepId } = sendEvents(events);
 
@@ -69,14 +69,15 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                         - queries: 2 well-crafted search queries (4-8 words) that targets the most important aspects
                 `;
 
-        const mode = context?.get("mode") || "";
+        const mode = context?.get('mode') || '';
         // For Deep Research workflow, select available model with fallback mechanism
-        const baseModel =
-            mode === ChatMode.Deep ? ModelEnum.GEMINI_2_5_FLASH : getModelFromChatMode(mode);
-        const model = selectAvailableModel(baseModel, context?.get("apiKeys"));
+        const baseModel = mode === ChatMode.Deep
+            ? ModelEnum.GEMINI_2_5_FLASH
+            : getModelFromChatMode(mode);
+        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
         // Determine VT+ feature based on mode
-        const chatMode = context?.get("mode");
+        const chatMode = context?.get('mode');
         const vtplusFeature = getVTPlusFeatureFromChatMode(chatMode);
 
         const object = await generateObject({
@@ -86,25 +87,25 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
                 reasoning: z.string(),
                 queries: z.array(z.string()),
             }),
-            byokKeys: context?.get("apiKeys"),
+            byokKeys: context?.get('apiKeys'),
             messages: messages as any,
             signal,
-            thinkingMode: context?.get("thinkingMode"),
-            userTier: context?.get("userTier"),
-            userId: context?.get("userId"),
+            thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
             feature: vtplusFeature || undefined,
         });
 
-        context?.update("queries", (current) => [...(current ?? []), ...(object?.queries || [])]);
+        context?.update('queries', (current) => [...(current ?? []), ...(object?.queries || [])]);
         // Update flow event with initial goal
 
         updateStep({
             stepId,
             text: object.reasoning,
-            stepStatus: "PENDING",
+            stepStatus: 'PENDING',
             subSteps: {
                 search: {
-                    status: "COMPLETED",
+                    status: 'COMPLETED',
                     data: object.queries,
                 },
             },
@@ -116,5 +117,5 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
         };
     },
     onError: handleError,
-    route: () => "gemini-web-search",
+    route: () => 'gemini-web-search',
 });

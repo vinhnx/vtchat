@@ -1,32 +1,32 @@
-"use client";
-import { Footer, InlineLoader, TableOfMessages, Thread } from "@repo/common/components";
-import { useChatStore } from "@repo/common/store";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { Button } from "@repo/ui";
-import { ArrowLeft, Home } from "lucide-react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { use, useCallback, useEffect, useRef, useState } from "react";
-import { useStickToBottom } from "use-stick-to-bottom";
+'use client';
+import { Footer, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
+import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { Button } from '@repo/ui';
+import { ArrowLeft, Home } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
+import { useStickToBottom } from 'use-stick-to-bottom';
 
 // Dynamically import ChatInput to avoid SSR issues
 const ChatInput = dynamic(
     () =>
-        import("@repo/common/components").then((mod) => ({
+        import('@repo/common/components').then((mod) => ({
             default: mod.ChatInput,
         })),
     {
         ssr: false,
         loading: () => (
-            <div className="flex h-full items-center justify-center">
+            <div className='flex h-full items-center justify-center'>
                 <InlineLoader />
             </div>
         ),
     },
 );
 
-const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
+const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => {
     const params = use(props.params);
     const threadId = params.threadId;
     const router = useRouter();
@@ -51,7 +51,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
         if (scrollRef.current) {
             scrollRef.current.scrollTo({
                 top: scrollRef.current.scrollHeight,
-                behavior: "smooth",
+                behavior: 'smooth',
             });
         }
     }, [scrollRef]);
@@ -64,17 +64,17 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
             try {
                 setIsLoading(true);
                 // Log for debugging
-                log.info({ threadId, currentThreadId }, "Loading thread from URL");
+                log.info({ threadId, currentThreadId }, 'Loading thread from URL');
 
                 // Check if the store initialization is already handling this thread ID
                 let isHandledByStore = false;
                 try {
-                    const handlingThreadId = sessionStorage.getItem("handling_thread_id");
+                    const handlingThreadId = sessionStorage.getItem('handling_thread_id');
                     if (handlingThreadId === threadId) {
-                        log.info({ threadId }, "Thread is being handled by store initialization");
+                        log.info({ threadId }, 'Thread is being handled by store initialization');
                         isHandledByStore = true;
                         // Clear the flag so we don't rely on it for future navigations
-                        sessionStorage.removeItem("handling_thread_id");
+                        sessionStorage.removeItem('handling_thread_id');
                     }
                 } catch (error) {
                     // Ignore sessionStorage errors
@@ -82,11 +82,11 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
                 // If the thread is already being handled by store initialization and matches current thread
                 if (isHandledByStore && currentThreadId === threadId) {
-                    log.info({ threadId }, "Using store-initialized thread");
+                    log.info({ threadId }, 'Using store-initialized thread');
 
                     // Just make sure thread items are loaded
                     const items = await loadThreadItems(threadId);
-                    log.info({ threadId, itemsCount: items.length }, "Verified thread items");
+                    log.info({ threadId, itemsCount: items.length }, 'Verified thread items');
 
                     // Mark thread as loaded
                     setIsThreadLoaded(true);
@@ -107,7 +107,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                 // Also check if we already have the thread loaded in the current state
                 // This helps with navigation between threads and page reloads
                 if (currentThreadId === threadId && threads.some((t) => t.id === threadId)) {
-                    log.info({ threadId }, "Thread already loaded in current state");
+                    log.info({ threadId }, 'Thread already loaded in current state');
 
                     // Check if we already have thread items in memory (optimistic items)
                     const currentThreadItems = useChatStore
@@ -117,7 +117,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     if (currentThreadItems.length > 0) {
                         log.info(
                             { threadId, itemsCount: currentThreadItems.length },
-                            "Using existing thread items from store (optimistic items)",
+                            'Using existing thread items from store (optimistic items)',
                         );
                         // Don't call loadThreadItems - use what's already in store
                     } else {
@@ -125,7 +125,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                         const items = await loadThreadItems(threadId);
                         log.info(
                             { threadId, itemsCount: items.length },
-                            "Loaded thread items from database",
+                            'Loaded thread items from database',
                         );
                     }
 
@@ -161,7 +161,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                         thread = threads.find((t) => t.id === threadId);
                         log.info(
                             { threadId, foundInThreads: !!thread },
-                            "Searched for thread in loaded threads",
+                            'Searched for thread in loaded threads',
                         );
                     }
 
@@ -179,7 +179,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                                     isStoreInitialized,
                                     threadsCount: threads.length,
                                 },
-                                "Thread not found, retrying with exponential backoff...",
+                                'Thread not found, retrying with exponential backoff...',
                             );
                             await new Promise((resolve) => setTimeout(resolve, delay));
                         } else {
@@ -191,7 +191,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                                     isStoreInitialized,
                                     threadsCount: threads.length,
                                 },
-                                "Final retry attempt, waiting longer for IndexedDB initialization...",
+                                'Final retry attempt, waiting longer for IndexedDB initialization...',
                             );
                             await new Promise((resolve) => setTimeout(resolve, 2000));
                         }
@@ -201,14 +201,14 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                 if (thread?.id) {
                     // Only switch thread if it's different from current
                     if (currentThreadId !== thread.id) {
-                        log.info({ threadId, currentThreadId }, "Switching to thread");
+                        log.info({ threadId, currentThreadId }, 'Switching to thread');
                         switchThread(thread.id);
                     }
 
                     // Force load thread items
                     const items = await loadThreadItems(thread.id);
 
-                    log.info({ threadId, itemsCount: items.length }, "Loaded thread items");
+                    log.info({ threadId, itemsCount: items.length }, 'Loaded thread items');
 
                     // Mark thread as loaded even if there are no items
                     setIsThreadLoaded(true);
@@ -222,7 +222,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                         hasScrolledToBottom.current = true;
                     }, 100);
 
-                    log.info({ threadId }, "Successfully loaded thread");
+                    log.info({ threadId }, 'Successfully loaded thread');
                 } else {
                     // Thread doesn't exist after extensive retry attempts
                     // This could be due to:
@@ -231,12 +231,12 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     // 3. Database corruption or migration issues
                     log.warn(
                         { threadId, retryCount, maxRetries },
-                        "Thread not found after extensive retry attempts, redirecting to home",
+                        'Thread not found after extensive retry attempts, redirecting to home',
                     );
-                    router.push("/");
+                    router.push('/');
                 }
             } catch (error) {
-                log.error({ threadId, error }, "Error loading thread");
+                log.error({ threadId, error }, 'Error loading thread');
                 // Don't redirect on error, just show the error state
                 setIsThreadLoaded(true);
             } finally {
@@ -311,7 +311,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     if (currentScrollHeight !== lastScrollHeight && isNearBottom) {
                         scrollRef.current.scrollTo({
                             top: currentScrollHeight,
-                            behavior: "smooth",
+                            behavior: 'smooth',
                         });
                         lastScrollHeight = currentScrollHeight;
                     }
@@ -320,14 +320,14 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
             // Add passive scroll listener to detect user scrolling
             const scrollElement = scrollRef.current;
-            scrollElement.addEventListener("scroll", handleUserScroll, { passive: true });
+            scrollElement.addEventListener('scroll', handleUserScroll, { passive: true });
 
             // Check for content changes periodically (less aggressive than requestAnimationFrame)
             contentCheckInterval = setInterval(checkContentAndScroll, 100);
 
             return () => {
                 if (scrollElement) {
-                    scrollElement.removeEventListener("scroll", handleUserScroll);
+                    scrollElement.removeEventListener('scroll', handleUserScroll);
                 }
                 clearTimeout(scrollTimeout);
                 clearInterval(contentCheckInterval);
@@ -342,12 +342,12 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
             if (threadItems.length === 0) {
                 log.info(
                     { threadId: currentThreadId },
-                    "Loading thread items after thread ID change",
+                    'Loading thread items after thread ID change',
                 );
                 loadThreadItems(currentThreadId).catch((error) => {
                     log.error(
                         { threadId: currentThreadId, error },
-                        "Failed to load thread items after thread ID change",
+                        'Failed to load thread items after thread ID change',
                     );
                 });
             }
@@ -373,67 +373,67 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
     // Show loading while threadId is being resolved
     if (!threadId || isLoading) {
         return (
-            <div className="flex h-full items-center justify-center">
+            <div className='flex h-full items-center justify-center'>
                 <InlineLoader />
             </div>
         );
     }
 
     return (
-        <div className="bg-muted/50 relative flex h-dvh w-full flex-col">
+        <div className='bg-muted/50 relative flex h-dvh w-full flex-col'>
             <h1
                 style={{
-                    position: "absolute",
-                    left: "-10000px",
-                    top: "auto",
-                    width: "1px",
-                    height: "1px",
-                    overflow: "hidden",
+                    position: 'absolute',
+                    left: '-10000px',
+                    top: 'auto',
+                    width: '1px',
+                    height: '1px',
+                    overflow: 'hidden',
                 }}
             >
                 VT AI Chat Thread - Minimal Chat with Deep Research
             </h1>
 
             {/* Header Navigation with Back to Home Button */}
-            <div className="thread-header flex-shrink-0">
-                <div className="flex items-center justify-between px-4 py-3 md:px-6">
+            <div className='thread-header flex-shrink-0'>
+                <div className='flex items-center justify-between px-4 py-3 md:px-6'>
                     <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => router.push("/")}
-                        className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
+                        variant='ghost'
+                        size='sm'
+                        onClick={() => router.push('/')}
+                        className='text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors'
                     >
                         <ArrowLeft size={16} />
-                        <span className="hidden sm:inline">VT</span>
-                        <Home size={16} className="sm:hidden" />
+                        <span className='hidden sm:inline'>VT</span>
+                        <Home size={16} className='sm:hidden' />
                     </Button>
 
                     {/* Thread title or status */}
-                    <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground text-sm">
-                            {isGenerating ? "Generating..." : ""}
+                    <div className='flex items-center gap-2'>
+                        <span className='text-muted-foreground text-sm'>
+                            {isGenerating ? 'Generating...' : ''}
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div className="thread-content-with-header flex-1 overflow-hidden">
+            <div className='thread-content-with-header flex-1 overflow-hidden'>
                 <div
-                    className="scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8"
+                    className='scrollbar-default chat-scroll-container flex h-full w-full flex-1 flex-col items-center overflow-y-auto px-4 md:px-8'
                     ref={scrollRef}
                     style={{
                         // Reduce containment to allow dynamic content expansion
-                        contain: "layout",
-                        overflowAnchor: "auto",
+                        contain: 'layout',
+                        overflowAnchor: 'auto',
                     }}
                 >
                     <div
-                        className="pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full"
+                        className='pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full'
                         ref={contentRef}
                         style={{
                             // Remove containment to allow dynamic expansion during streaming
-                            contain: "none",
-                            isolation: "isolate",
+                            contain: 'none',
+                            isolation: 'isolate',
                         }}
                     >
                         <Thread />
@@ -441,7 +441,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
 
                     {/* Footer inside the white container for non-logged users */}
                     {!(isPending || session) && (
-                        <div className="mx-auto w-[95%] max-w-3xl px-4 pb-[240px] md:w-full">
+                        <div className='mx-auto w-[95%] max-w-3xl px-4 pb-[240px] md:w-full'>
                             <Footer />
                         </div>
                     )}
@@ -449,7 +449,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string }> }) => {
                     <TableOfMessages />
                 </div>
             </div>
-            <div className="pb-safe-area-inset-bottom flex-shrink-0">
+            <div className='pb-safe-area-inset-bottom flex-shrink-0'>
                 <ChatInput />
             </div>
         </div>

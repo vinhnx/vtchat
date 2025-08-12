@@ -8,13 +8,13 @@
  * These routes are accessible without login
  */
 export const PublicRoutes = {
-    HOME: "/",
-    LOGIN: "/login",
-    API_AUTH: "/api/auth",
-    PRIVACY: "/privacy",
-    TERMS: "/terms",
-    HELP: "/help",
-    ABOUT: "/about",
+    HOME: '/',
+    LOGIN: '/login',
+    API_AUTH: '/api/auth',
+    PRIVACY: '/privacy',
+    TERMS: '/terms',
+    HELP: '/help',
+    ABOUT: '/about',
 } as const;
 
 export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
@@ -24,9 +24,9 @@ export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
  * These routes will redirect to login if user is not authenticated
  */
 export const ProtectedRoutes = {
-    SETTINGS: "/settings",
-    PRICING: "/pricing", // VT+ subscription page - requires login
-    SUCCESS: "/success",
+    SETTINGS: '/settings',
+    PRICING: '/pricing', // VT+ subscription page - requires login
+    SUCCESS: '/success',
 } as const;
 
 export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRoutes];
@@ -35,11 +35,11 @@ export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRout
  * API routes that may have different authentication requirements
  */
 export const ApiRoutes = {
-    AUTH: "/api/auth",
-    USER_PROFILE: "/api/user/profile",
-    CHECKOUT: "/api/checkout",
-    WEBHOOK_CREEM: "/api/webhook/creem",
-    SUBSCRIPTION: "/api/subscription",
+    AUTH: '/api/auth',
+    USER_PROFILE: '/api/user/profile',
+    CHECKOUT: '/api/checkout',
+    WEBHOOK_CREEM: '/api/webhook/creem',
+    SUBSCRIPTION: '/api/subscription',
 } as const;
 
 export type ApiRoute = (typeof ApiRoutes)[keyof typeof ApiRoutes];
@@ -62,7 +62,7 @@ export const PROTECTED_ROUTES_ARRAY = Object.values(ProtectedRoutes);
 export function isPublicRoute(pathname: string): boolean {
     // Chat threads (/chat/[threadId]) should be treated as protected routes
     // Only allow exact /chat path to be public (which gets redirected to / anyway)
-    if (pathname.startsWith("/chat/") && pathname !== "/chat") {
+    if (pathname.startsWith('/chat/') && pathname !== '/chat') {
         return false;
     }
 

@@ -1,19 +1,19 @@
-import { useChatStore } from "@repo/common/store";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { vi } from "vitest";
-import { SendStopButton } from "../SendStopButton";
+import { useChatStore } from '@repo/common/store';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
+import { SendStopButton } from '../SendStopButton';
 
 // Mock the store
-vi.mock("@repo/common/store", () => ({
+vi.mock('@repo/common/store', () => ({
     useChatStore: vi.fn(),
 }));
 
 // Mock the useIsChatPage hook
-vi.mock("../../hooks/useIsChatPage", () => ({
+vi.mock('../../hooks/useIsChatPage', () => ({
     useIsChatPage: () => false,
 }));
 
-describe("SendStopButton", () => {
+describe('SendStopButton', () => {
     const mockStopGeneration = vi.fn();
     const mockSendMessage = vi.fn();
 
@@ -28,7 +28,7 @@ describe("SendStopButton", () => {
         });
     });
 
-    it("renders send button when not generating", () => {
+    it('renders send button when not generating', () => {
         render(
             <SendStopButton
                 isGenerating={false}
@@ -38,7 +38,7 @@ describe("SendStopButton", () => {
             />,
         );
 
-        const sendButton = screen.getByLabelText("Send Message");
+        const sendButton = screen.getByLabelText('Send Message');
         expect(sendButton).toBeInTheDocument();
 
         // Click the send button
@@ -46,7 +46,7 @@ describe("SendStopButton", () => {
         expect(mockSendMessage).toHaveBeenCalledTimes(1);
     });
 
-    it("renders stop button when generating", () => {
+    it('renders stop button when generating', () => {
         render(
             <SendStopButton
                 isGenerating={true}
@@ -56,7 +56,7 @@ describe("SendStopButton", () => {
             />,
         );
 
-        const stopButton = screen.getByLabelText("Stop Generation");
+        const stopButton = screen.getByLabelText('Stop Generation');
         expect(stopButton).toBeInTheDocument();
 
         // Click the stop button
@@ -64,7 +64,7 @@ describe("SendStopButton", () => {
         expect(mockStopGeneration).toHaveBeenCalledTimes(1);
     });
 
-    it("disables send button when no text input", () => {
+    it('disables send button when no text input', () => {
         render(
             <SendStopButton
                 isGenerating={false}
@@ -74,11 +74,11 @@ describe("SendStopButton", () => {
             />,
         );
 
-        const sendButton = screen.getByLabelText("Send Message");
+        const sendButton = screen.getByLabelText('Send Message');
         expect(sendButton).toBeDisabled();
     });
 
-    it("shows loading spinner when timeout indicator is active", () => {
+    it('shows loading spinner when timeout indicator is active', () => {
         // Mock the timeout indicator
         (useChatStore as any).mockImplementation((selector) => {
             const state = {
@@ -97,11 +97,11 @@ describe("SendStopButton", () => {
             />,
         );
 
-        const stopButton = screen.getByLabelText("Stop Generation");
+        const stopButton = screen.getByLabelText('Stop Generation');
         expect(stopButton).toBeInTheDocument();
 
         // Check for the spinner element
-        const spinner = document.querySelector(".animate-spin");
+        const spinner = document.querySelector('.animate-spin');
         expect(spinner).toBeInTheDocument();
     });
 });

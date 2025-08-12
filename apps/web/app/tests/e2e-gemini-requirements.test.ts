@@ -1,14 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
 // This would typically use Playwright or similar E2E testing framework
 // For now, we'll create a test structure that verifies the complete user flow
 
-describe("End-to-End Gemini Requirements Tests", () => {
+describe('End-to-End Gemini Requirements Tests', () => {
     // Note: These tests would typically run against a real browser
     // Here we're documenting the test scenarios that should be implemented
 
-    describe("User Flow: Viewing Gemini Usage Meter", () => {
-        it("should display the usage meter with charts instead of progress bars", async () => {
+    describe('User Flow: Viewing Gemini Usage Meter', () => {
+        it('should display the usage meter with charts instead of progress bars', async () => {
             // Test Steps:
             // 1. Navigate to the app
             // 2. Open the usage meter component
@@ -22,7 +22,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should show VT+ dual quota information clearly", async () => {
+        it('should show VT+ dual quota information clearly', async () => {
             // Test Steps:
             // 1. Login as VT+ user
             // 2. Navigate to usage meter
@@ -37,7 +37,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should refresh usage data correctly", async () => {
+        it('should refresh usage data correctly', async () => {
             // Test Steps:
             // 1. Load usage meter
             // 2. Note current usage values
@@ -53,8 +53,8 @@ describe("End-to-End Gemini Requirements Tests", () => {
         });
     });
 
-    describe("User Flow: Rate Limiting in Chat Interface", () => {
-        it("should enforce rate limits for free users", async () => {
+    describe('User Flow: Rate Limiting in Chat Interface', () => {
+        it('should enforce rate limits for free users', async () => {
             // Test Steps:
             // 1. Login as free user
             // 2. Make requests up to daily limit for Gemini Pro
@@ -68,7 +68,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should allow unlimited Flash Lite for VT+ users", async () => {
+        it('should allow unlimited Flash Lite for VT+ users', async () => {
             // Test Steps:
             // 1. Login as VT+ user
             // 2. Make many requests to Flash Lite model
@@ -82,7 +82,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should enforce dual quota for VT+ users on Pro models", async () => {
+        it('should enforce dual quota for VT+ users on Pro models', async () => {
             // Test Steps:
             // 1. Login as VT+ user
             // 2. Use Flash Lite to approach its VT+ limit
@@ -97,8 +97,8 @@ describe("End-to-End Gemini Requirements Tests", () => {
         });
     });
 
-    describe("User Flow: Subscription Status Integration", () => {
-        it("should show different limits based on subscription status", async () => {
+    describe('User Flow: Subscription Status Integration', () => {
+        it('should show different limits based on subscription status', async () => {
             // Test Steps:
             // 1. Login as free user, check limits
             // 2. Logout and login as VT+ user
@@ -112,7 +112,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should handle subscription status changes gracefully", async () => {
+        it('should handle subscription status changes gracefully', async () => {
             // Test Steps:
             // 1. Login as free user
             // 2. Simulate subscription upgrade
@@ -127,8 +127,8 @@ describe("End-to-End Gemini Requirements Tests", () => {
         });
     });
 
-    describe("User Flow: Error Handling and Edge Cases", () => {
-        it("should handle API errors gracefully", async () => {
+    describe('User Flow: Error Handling and Edge Cases', () => {
+        it('should handle API errors gracefully', async () => {
             // Test Steps:
             // 1. Simulate API failure for usage status
             // 2. Verify usage meter shows appropriate error state
@@ -142,7 +142,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should handle authentication issues properly", async () => {
+        it('should handle authentication issues properly', async () => {
             // Test Steps:
             // 1. Start as authenticated user
             // 2. Simulate session expiration
@@ -156,7 +156,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should handle network connectivity issues", async () => {
+        it('should handle network connectivity issues', async () => {
             // Test Steps:
             // 1. Load usage meter successfully
             // 2. Simulate network disconnection
@@ -171,8 +171,8 @@ describe("End-to-End Gemini Requirements Tests", () => {
         });
     });
 
-    describe("User Flow: Visual and Accessibility Requirements", () => {
-        it("should meet accessibility standards", async () => {
+    describe('User Flow: Visual and Accessibility Requirements', () => {
+        it('should meet accessibility standards', async () => {
             // Test Steps:
             // 1. Run accessibility audit on usage meter
             // 2. Test keyboard navigation
@@ -187,7 +187,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should display correctly on different screen sizes", async () => {
+        it('should display correctly on different screen sizes', async () => {
             // Test Steps:
             // 1. View usage meter on desktop
             // 2. Resize to tablet dimensions
@@ -201,7 +201,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should provide clear visual feedback for user actions", async () => {
+        it('should provide clear visual feedback for user actions', async () => {
             // Test Steps:
             // 1. Hover over interactive elements
             // 2. Click refresh button
@@ -216,8 +216,8 @@ describe("End-to-End Gemini Requirements Tests", () => {
         });
     });
 
-    describe("User Flow: Performance and User Experience", () => {
-        it("should load usage data quickly", async () => {
+    describe('User Flow: Performance and User Experience', () => {
+        it('should load usage data quickly', async () => {
             // Test Steps:
             // 1. Navigate to usage meter
             // 2. Measure time to first meaningful paint
@@ -231,7 +231,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should provide smooth interactions", async () => {
+        it('should provide smooth interactions', async () => {
             // Test Steps:
             // 1. Interact with chart elements
             // 2. Scroll through usage information
@@ -245,7 +245,7 @@ describe("End-to-End Gemini Requirements Tests", () => {
             expect(true).toBe(true); // Placeholder for actual test
         });
 
-        it("should handle concurrent users efficiently", async () => {
+        it('should handle concurrent users efficiently', async () => {
             // Test Steps:
             // 1. Simulate multiple users accessing usage meter
             // 2. Verify no conflicts in data display
@@ -273,7 +273,7 @@ export class GeminiE2ETestHelpers {
         // Would integrate with auth system
     }
 
-    static async makeRequestsToLimit(_modelId: string, _userType: "free" | "vtplus") {
+    static async makeRequestsToLimit(_modelId: string, _userType: 'free' | 'vtplus') {
         // Helper to make requests up to rate limit
         // Would make actual API calls
     }

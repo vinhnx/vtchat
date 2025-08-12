@@ -12,16 +12,16 @@
  * 5. Verify user stays on thread page (no redirect to homepage)
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
-describe("Thread Page Server Restart Fix", () => {
-    it("should have increased retry count to 20 for better reliability", () => {
+describe('Thread Page Server Restart Fix', () => {
+    it('should have increased retry count to 20 for better reliability', () => {
         // This verifies the retry logic has been improved
         const expectedMaxRetries = 20;
         expect(expectedMaxRetries).toBe(20);
     });
 
-    it("should have exponential backoff in retry logic", () => {
+    it('should have exponential backoff in retry logic', () => {
         // Test the exponential backoff calculation
         const calculateDelay = (retryCount) => Math.min(100 * 1.5 ** retryCount, 1000);
 
@@ -32,33 +32,33 @@ describe("Thread Page Server Restart Fix", () => {
         expect(calculateDelay(10)).toBe(1000); // Capped at 1000ms
     });
 
-    it("should have store initialization state tracking", () => {
+    it('should have store initialization state tracking', () => {
         // This verifies the store has initialization tracking
         const storeHasInitFlag = true; // This would be checked in actual implementation
         expect(storeHasInitFlag).toBe(true);
     });
 
-    it("should have improved error logging with context", () => {
+    it('should have improved error logging with context', () => {
         // Verify that error logging includes relevant context
         const logContext = {
-            threadId: "test-thread-id",
+            threadId: 'test-thread-id',
             retryCount: 5,
             isStoreInitialized: false,
             threadsCount: 0,
         };
 
         // All required context fields should be present
-        expect(logContext).toHaveProperty("threadId");
-        expect(logContext).toHaveProperty("retryCount");
-        expect(logContext).toHaveProperty("isStoreInitialized");
-        expect(logContext).toHaveProperty("threadsCount");
+        expect(logContext).toHaveProperty('threadId');
+        expect(logContext).toHaveProperty('retryCount');
+        expect(logContext).toHaveProperty('isStoreInitialized');
+        expect(logContext).toHaveProperty('threadsCount');
     });
 
-    it("should have correct loadThreadItems return type", () => {
+    it('should have correct loadThreadItems return type', () => {
         // This test verifies the type definition fix
         // The function should return Promise<ThreadItem[]> not Promise<void>
-        const expectedReturnType = "Promise<ThreadItem[]>";
-        expect(expectedReturnType).toBe("Promise<ThreadItem[]>");
+        const expectedReturnType = 'Promise<ThreadItem[]>';
+        expect(expectedReturnType).toBe('Promise<ThreadItem[]>');
     });
 });
 

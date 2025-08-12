@@ -32,10 +32,10 @@
 
 ## Key Features
 
-✅ **62MB Final Image** (down from previous larger images)  
-✅ **Security Hardened** with distroless base  
-✅ **Fast Builds** with Bun and optimized caching  
-✅ **Production Ready** with proper environment separation  
+✅ **62MB Final Image** (down from previous larger images)\
+✅ **Security Hardened** with distroless base\
+✅ **Fast Builds** with Bun and optimized caching\
+✅ **Production Ready** with proper environment separation\
 ✅ **Cost Optimized** with scale-to-zero capability
 
 ## Monitoring & Health Checks

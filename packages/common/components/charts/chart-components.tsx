@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Card,
@@ -12,8 +12,8 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from "@repo/ui";
-import { BarChart3, TrendingUp } from "lucide-react";
+} from '@repo/ui';
+import { BarChart3, TrendingUp } from 'lucide-react';
 import {
     Area,
     AreaChart,
@@ -31,11 +31,11 @@ import {
     RadarChart,
     XAxis,
     YAxis,
-} from "recharts";
+} from 'recharts';
 
 // Type definitions for chart data
 export type ChartComponentData = {
-    type: "barChart" | "lineChart" | "areaChart" | "pieChart" | "radarChart";
+    type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
     title: string;
     data: any[];
     // Area chart specific properties
@@ -53,39 +53,39 @@ export type ChartComponentData = {
 
 // Color scheme for charts
 const CHART_COLORS = {
-    primary: "hsl(var(--chart-1))",
-    secondary: "hsl(var(--chart-2))",
-    tertiary: "hsl(var(--chart-3))",
-    quaternary: "hsl(var(--chart-4))",
-    quinary: "hsl(var(--chart-5))",
+    primary: 'hsl(var(--chart-1))',
+    secondary: 'hsl(var(--chart-2))',
+    tertiary: 'hsl(var(--chart-3))',
+    quaternary: 'hsl(var(--chart-4))',
+    quinary: 'hsl(var(--chart-5))',
 };
 
 // Bar Chart Component
 const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel }: any) => {
     const chartConfig = {
         value: {
-            label: yAxisLabel || "Value",
+            label: yAxisLabel || 'Value',
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
 
     return (
-        <Card className="w-full">
-            <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-8 py-6 sm:py-8">
-                    <CardTitle className="flex items-center gap-2">
-                        <BarChart3 className="h-4 w-4" />
+        <Card className='w-full'>
+            <CardHeader className='flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row'>
+                <div className='flex flex-1 flex-col justify-center gap-1 px-8 py-6 sm:py-8'>
+                    <CardTitle className='flex items-center gap-2'>
+                        <BarChart3 className='h-4 w-4' />
                         {title}
                     </CardTitle>
                     <CardDescription>
                         {xAxisLabel && yAxisLabel
                             ? `${xAxisLabel} vs ${yAxisLabel}`
-                            : "Data visualization"}
+                            : 'Data visualization'}
                     </CardDescription>
                 </div>
             </CardHeader>
-            <CardContent className="px-8 py-8">
-                <ChartContainer className="aspect-auto h-[250px] w-full" config={chartConfig}>
+            <CardContent className='px-8 py-8'>
+                <ChartContainer className='aspect-auto h-[250px] w-full' config={chartConfig}>
                     <BarChart
                         accessibilityLayer
                         data={data}
@@ -97,19 +97,19 @@ const InteractiveBarChart = ({ title, data, xAxisLabel, yAxisLabel }: any) => {
                         <CartesianGrid vertical={false} />
                         <XAxis
                             axisLine={false}
-                            dataKey="name"
+                            dataKey='name'
                             minTickGap={32}
                             tickLine={false}
                             tickMargin={8}
                         />
                         <YAxis axisLine={false} tickLine={false} tickMargin={8} />
                         <ChartTooltip
-                            content={<ChartTooltipContent className="w-[150px]" nameKey="value" />}
+                            content={<ChartTooltipContent className='w-[150px]' nameKey='value' />}
                         />
                         <Bar
-                            className="transition-opacity hover:opacity-80"
-                            dataKey="value"
-                            fill="var(--color-value)"
+                            className='transition-opacity hover:opacity-80'
+                            dataKey='value'
+                            fill='var(--color-value)'
                             radius={[4, 4, 0, 0]}
                         />
                     </BarChart>
@@ -131,7 +131,7 @@ const InteractiveLineChart = ({
 }: any) => {
     const chartConfig = {
         series1: {
-            label: series1Name || "Series 1",
+            label: series1Name || 'Series 1',
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
@@ -149,20 +149,20 @@ const InteractiveLineChart = ({
     } satisfies ChartConfig;
 
     return (
-        <Card className="w-full">
-            <CardHeader className="px-8 py-6">
-                <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
+        <Card className='w-full'>
+            <CardHeader className='px-8 py-6'>
+                <CardTitle className='flex items-center gap-2'>
+                    <TrendingUp className='h-4 w-4' />
                     {title}
                 </CardTitle>
                 <CardDescription>
                     {xAxisLabel && yAxisLabel
                         ? `${xAxisLabel} vs ${yAxisLabel}`
-                        : "Trending data over time"}
+                        : 'Trending data over time'}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="px-8 py-8">
-                <ChartContainer className="h-[300px] w-full" config={chartConfig}>
+            <CardContent className='px-8 py-8'>
+                <ChartContainer className='h-[300px] w-full' config={chartConfig}>
                     <LineChart
                         accessibilityLayer
                         data={data}
@@ -172,7 +172,7 @@ const InteractiveLineChart = ({
                         }}
                     >
                         <CartesianGrid vertical={false} />
-                        <XAxis axisLine={false} dataKey="name" tickLine={false} tickMargin={8} />
+                        <XAxis axisLine={false} dataKey='name' tickLine={false} tickMargin={8} />
                         <YAxis axisLine={false} tickLine={false} tickMargin={8} />
                         <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
                         <ChartLegend content={<ChartLegendContent />} />
@@ -181,16 +181,16 @@ const InteractiveLineChart = ({
                                 r: 6,
                                 strokeWidth: 0,
                             }}
-                            className="drop-shadow-sm"
-                            dataKey="series1"
+                            className='drop-shadow-sm'
+                            dataKey='series1'
                             dot={{
-                                fill: "var(--color-series1)",
+                                fill: 'var(--color-series1)',
                                 strokeWidth: 2,
                                 r: 4,
                             }}
-                            stroke="var(--color-series1)"
+                            stroke='var(--color-series1)'
                             strokeWidth={2}
-                            type="monotone"
+                            type='monotone'
                         />
                         {series2Name && (
                             <Line
@@ -198,16 +198,16 @@ const InteractiveLineChart = ({
                                     r: 6,
                                     strokeWidth: 0,
                                 }}
-                                className="drop-shadow-sm"
-                                dataKey="series2"
+                                className='drop-shadow-sm'
+                                dataKey='series2'
                                 dot={{
-                                    fill: "var(--color-series2)",
+                                    fill: 'var(--color-series2)',
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
-                                stroke="var(--color-series2)"
+                                stroke='var(--color-series2)'
                                 strokeWidth={2}
-                                type="monotone"
+                                type='monotone'
                             />
                         )}
                         {series3Name && (
@@ -216,16 +216,16 @@ const InteractiveLineChart = ({
                                     r: 6,
                                     strokeWidth: 0,
                                 }}
-                                className="drop-shadow-sm"
-                                dataKey="series3"
+                                className='drop-shadow-sm'
+                                dataKey='series3'
                                 dot={{
-                                    fill: "var(--color-series3)",
+                                    fill: 'var(--color-series3)',
                                     strokeWidth: 2,
                                     r: 4,
                                 }}
-                                stroke="var(--color-series3)"
+                                stroke='var(--color-series3)'
                                 strokeWidth={2}
-                                type="monotone"
+                                type='monotone'
                             />
                         )}
                     </LineChart>
@@ -250,18 +250,18 @@ const InteractiveAreaChart = ({
     dataKey3,
 }: any) => {
     const chartConfig = {
-        [dataKey1 || "uv"]: {
-            label: series1Name || "Series 1",
+        [dataKey1 || 'uv']: {
+            label: series1Name || 'Series 1',
             color: CHART_COLORS.primary,
         },
         ...(series2Name && {
-            [dataKey2 || "pv"]: {
+            [dataKey2 || 'pv']: {
                 label: series2Name,
                 color: CHART_COLORS.secondary,
             },
         }),
         ...(series3Name && {
-            [dataKey3 || "amt"]: {
+            [dataKey3 || 'amt']: {
                 label: series3Name,
                 color: CHART_COLORS.tertiary,
             },
@@ -269,19 +269,19 @@ const InteractiveAreaChart = ({
     } satisfies ChartConfig;
 
     return (
-        <Card className="w-full">
-            <CardHeader className="px-8 py-6">
+        <Card className='w-full'>
+            <CardHeader className='px-8 py-6'>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
                     {xAxisLabel && yAxisLabel
                         ? `${xAxisLabel} vs ${yAxisLabel}`
-                        : "Area visualization"}
-                    {stacked && " (Stacked)"}
+                        : 'Area visualization'}
+                    {stacked && ' (Stacked)'}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="px-8 py-8">
-                <div style={{ width: "100%", height: 300 }}>
-                    <ChartContainer className="h-full w-full" config={chartConfig}>
+            <CardContent className='px-8 py-8'>
+                <div style={{ width: '100%', height: 300 }}>
+                    <ChartContainer className='h-full w-full' config={chartConfig}>
                         <AreaChart
                             accessibilityLayer
                             data={data}
@@ -292,9 +292,9 @@ const InteractiveAreaChart = ({
                                 bottom: 0,
                             }}
                         >
-                            <CartesianGrid strokeDasharray="3 3" />
+                            <CartesianGrid strokeDasharray='3 3' />
                             <XAxis
-                                dataKey="name"
+                                dataKey='name'
                                 axisLine={false}
                                 tickLine={false}
                                 tickMargin={8}
@@ -305,37 +305,37 @@ const InteractiveAreaChart = ({
                                 <ChartLegend content={<ChartLegendContent />} />
                             )}
                             <Area
-                                type="monotone"
-                                dataKey={dataKey1 || "uv"}
-                                stroke="var(--color-uv)"
-                                fill="var(--color-uv)"
+                                type='monotone'
+                                dataKey={dataKey1 || 'uv'}
+                                stroke='var(--color-uv)'
+                                fill='var(--color-uv)'
                                 fillOpacity={0.6}
                                 strokeWidth={2}
-                                stackId={stacked ? "stack" : undefined}
-                                className="drop-shadow-sm"
+                                stackId={stacked ? 'stack' : undefined}
+                                className='drop-shadow-sm'
                             />
                             {series2Name && (
                                 <Area
-                                    type="monotone"
-                                    dataKey={dataKey2 || "pv"}
-                                    stroke="var(--color-pv)"
-                                    fill="var(--color-pv)"
+                                    type='monotone'
+                                    dataKey={dataKey2 || 'pv'}
+                                    stroke='var(--color-pv)'
+                                    fill='var(--color-pv)'
                                     fillOpacity={0.6}
                                     strokeWidth={2}
-                                    stackId={stacked ? "stack" : undefined}
-                                    className="drop-shadow-sm"
+                                    stackId={stacked ? 'stack' : undefined}
+                                    className='drop-shadow-sm'
                                 />
                             )}
                             {series3Name && (
                                 <Area
-                                    type="monotone"
-                                    dataKey={dataKey3 || "amt"}
-                                    stroke="var(--color-amt)"
-                                    fill="var(--color-amt)"
+                                    type='monotone'
+                                    dataKey={dataKey3 || 'amt'}
+                                    stroke='var(--color-amt)'
+                                    fill='var(--color-amt)'
                                     fillOpacity={0.6}
                                     strokeWidth={2}
-                                    stackId={stacked ? "stack" : undefined}
-                                    className="drop-shadow-sm"
+                                    stackId={stacked ? 'stack' : undefined}
+                                    className='drop-shadow-sm'
                                 />
                             )}
                         </AreaChart>
@@ -351,7 +351,7 @@ const InteractivePieChart = ({ title, data }: any) => {
     const chartConfig = data.reduce((config: any, item: any, index: number) => {
         const colorKeys = Object.keys(CHART_COLORS);
         const colorKey = colorKeys[index % colorKeys.length];
-        config[item.name.toLowerCase().replace(/\s+/g, "")] = {
+        config[item.name.toLowerCase().replace(/\s+/g, '')] = {
             label: item.name,
             color: CHART_COLORS[colorKey as keyof typeof CHART_COLORS],
         };
@@ -361,24 +361,24 @@ const InteractivePieChart = ({ title, data }: any) => {
     const total = data.reduce((acc: number, item: any) => acc + item.value, 0);
 
     return (
-        <Card className="w-full">
-            <CardHeader className="items-center px-8 py-6">
+        <Card className='w-full'>
+            <CardHeader className='items-center px-8 py-6'>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>Distribution across {data.length} categories</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 px-8 py-8">
+            <CardContent className='flex-1 px-8 py-8'>
                 <ChartContainer
-                    className="mx-auto aspect-square max-h-[300px]"
+                    className='mx-auto aspect-square max-h-[300px]'
                     config={chartConfig}
                 >
                     <PieChart>
                         <ChartTooltip content={<ChartTooltipContent hideLabel />} cursor={false} />
                         <Pie
-                            className="focus:outline-none"
+                            className='focus:outline-none'
                             data={data}
-                            dataKey="value"
+                            dataKey='value'
                             innerRadius={60}
-                            nameKey="name"
+                            nameKey='name'
                             strokeWidth={2}
                         >
                             {data.map((_entry: any, index: number) => {
@@ -386,7 +386,7 @@ const InteractivePieChart = ({ title, data }: any) => {
                                 const colorKey = colorKeys[index % colorKeys.length];
                                 return (
                                     <Cell
-                                        className="cursor-pointer transition-opacity hover:opacity-80"
+                                        className='cursor-pointer transition-opacity hover:opacity-80'
                                         fill={CHART_COLORS[colorKey as keyof typeof CHART_COLORS]}
                                         key={`cell-${index}`}
                                     />
@@ -395,11 +395,11 @@ const InteractivePieChart = ({ title, data }: any) => {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-                <div className="flex-col gap-2 text-sm">
-                    <div className="flex items-center gap-2 font-medium leading-none">
+                <div className='flex-col gap-2 text-sm'>
+                    <div className='flex items-center gap-2 font-medium leading-none'>
                         Total: {total.toLocaleString()} items
                     </div>
-                    <div className="text-muted-foreground flex items-center gap-2 leading-none">
+                    <div className='text-muted-foreground flex items-center gap-2 leading-none'>
                         Showing distribution of {data.length} categories
                     </div>
                 </div>
@@ -412,34 +412,34 @@ const InteractivePieChart = ({ title, data }: any) => {
 const InteractiveRadarChart = ({ title, data }: any) => {
     const chartConfig = {
         value: {
-            label: "Value",
+            label: 'Value',
             color: CHART_COLORS.primary,
         },
     } satisfies ChartConfig;
 
     return (
-        <Card className="w-full">
-            <CardHeader className="items-center px-8 py-6">
+        <Card className='w-full'>
+            <CardHeader className='items-center px-8 py-6'>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
                     Multi-dimensional analysis across {data.length} metrics
                 </CardDescription>
             </CardHeader>
-            <CardContent className="px-8 py-8">
+            <CardContent className='px-8 py-8'>
                 <ChartContainer
-                    className="mx-auto aspect-square max-h-[300px]"
+                    className='mx-auto aspect-square max-h-[300px]'
                     config={chartConfig}
                 >
                     <RadarChart data={data}>
                         <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
-                        <PolarAngleAxis dataKey="category" />
-                        <PolarGrid gridType="polygon" />
+                        <PolarAngleAxis dataKey='category' />
+                        <PolarGrid gridType='polygon' />
                         <Radar
-                            className="drop-shadow-sm"
-                            dataKey="value"
-                            fill="var(--color-value)"
+                            className='drop-shadow-sm'
+                            dataKey='value'
+                            fill='var(--color-value)'
                             fillOpacity={0.4}
-                            stroke="var(--color-value)"
+                            stroke='var(--color-value)'
                             strokeWidth={2}
                         />
                     </RadarChart>
@@ -450,23 +450,23 @@ const InteractiveRadarChart = ({ title, data }: any) => {
 };
 
 // Main Chart Component with improved interactivity
-export const ChartComponent = ({ chartData }: { chartData: ChartComponentData }) => {
+export const ChartComponent = ({ chartData }: { chartData: ChartComponentData; }) => {
     switch (chartData.type) {
-        case "barChart":
+        case 'barChart':
             return <InteractiveBarChart {...chartData} />;
-        case "lineChart":
+        case 'lineChart':
             return <InteractiveLineChart {...chartData} />;
-        case "areaChart":
+        case 'areaChart':
             return <InteractiveAreaChart {...chartData} />;
-        case "pieChart":
+        case 'pieChart':
             return <InteractivePieChart {...chartData} />;
-        case "radarChart":
+        case 'radarChart':
             return <InteractiveRadarChart {...chartData} />;
         default:
             return (
-                <Card className="w-full">
-                    <CardContent className="flex h-[200px] items-center justify-center px-8 py-8">
-                        <p className="text-muted-foreground">
+                <Card className='w-full'>
+                    <CardContent className='flex h-[200px] items-center justify-center px-8 py-8'>
+                        <p className='text-muted-foreground'>
                             Unsupported chart type: {chartData.type}
                         </p>
                     </CardContent>

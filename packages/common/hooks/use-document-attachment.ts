@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useChatStore } from "@repo/common/store";
-import { DOCUMENT_UPLOAD_CONFIG } from "@repo/shared/constants/document-upload";
-import { useToast } from "@repo/ui";
-import { type ChangeEvent, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import { useChatStore } from '@repo/common/store';
+import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
+import { useToast } from '@repo/ui';
+import { type ChangeEvent, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 export const useDocumentAttachment = () => {
     const documentAttachment = useChatStore((state) => state.documentAttachment);
@@ -13,12 +13,14 @@ export const useDocumentAttachment = () => {
     const setPdfProcessingStatus = useChatStore((state) => state.setPdfProcessingStatus);
     const { toast } = useToast();
 
-    const validateFile = useCallback((file: File): { valid: boolean; error?: string } => {
+    const validateFile = useCallback((file: File): { valid: boolean; error?: string; } => {
         // Check file size
         if (file.size > DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE) {
             return {
                 valid: false,
-                error: `File is too large. Maximum size is ${DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE / (1024 * 1024)}MB.`
+                error: `File is too large. Maximum size is ${
+                    DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE / (1024 * 1024)
+                }MB.`,
             };
         }
 
@@ -26,7 +28,7 @@ export const useDocumentAttachment = () => {
         if (!Object.keys(DOCUMENT_UPLOAD_CONFIG.ACCEPTED_TYPES).includes(file.type)) {
             return {
                 valid: false,
-                error: 'Unsupported file type. Please upload PDF, DOC, DOCX, TXT, or MD files.'
+                error: 'Unsupported file type. Please upload PDF, DOC, DOCX, TXT, or MD files.',
             };
         }
 
@@ -36,7 +38,7 @@ export const useDocumentAttachment = () => {
             if (!file.name.toLowerCase().endsWith('.pdf')) {
                 return {
                     valid: false,
-                    error: 'Invalid PDF file. Please ensure the file has a .pdf extension.'
+                    error: 'Invalid PDF file. Please ensure the file has a .pdf extension.',
                 };
             }
         }
@@ -47,20 +49,20 @@ export const useDocumentAttachment = () => {
     const handleFileReadWithRetry = useCallback(
         async (file: File, retryCount = 0): Promise<void> => {
             const maxRetries = file.type === 'application/pdf' ? 2 : 0;
-            
+
             // Validate file first
             const validation = validateFile(file);
             if (!validation.valid) {
                 setPdfProcessingStatus({
                     status: 'error',
                     error: validation.error,
-                    suggestion: 'Please select a valid document file and try again.'
+                    suggestion: 'Please select a valid document file and try again.',
                 });
-                
+
                 toast({
-                    title: "Invalid file",
+                    title: 'Invalid file',
                     description: validation.error,
-                    variant: "destructive",
+                    variant: 'destructive',
                 });
                 return;
             }
@@ -72,10 +74,10 @@ export const useDocumentAttachment = () => {
 
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                
+
                 reader.onload = (event: ProgressEvent<FileReader>) => {
                     const result = event.target?.result;
-                    if (typeof result === "string") {
+                    if (typeof result === 'string') {
                         setDocumentAttachment({
                             base64: result,
                             file,
@@ -85,13 +87,13 @@ export const useDocumentAttachment = () => {
 
                         // Set success status
                         setPdfProcessingStatus({ status: 'success' });
-                        
+
                         toast({
-                            title: "Document uploaded",
+                            title: 'Document uploaded',
                             description: `${file.name} is ready for analysis.`,
-                            variant: "default",
+                            variant: 'default',
                         });
-                        
+
                         resolve();
                     } else {
                         reject(new Error('Failed to read file'));
@@ -100,7 +102,7 @@ export const useDocumentAttachment = () => {
 
                 reader.onerror = () => {
                     const error = new Error('Failed to read file');
-                    
+
                     // Retry logic for transient failures
                     if (retryCount < maxRetries) {
                         console.log(`Retrying file read (attempt ${retryCount + 1}/${maxRetries})`);
@@ -115,22 +117,23 @@ export const useDocumentAttachment = () => {
                     setPdfProcessingStatus({
                         status: 'error',
                         error: 'Failed to read the file',
-                        suggestion: 'Please try uploading the file again, or use a different document.'
+                        suggestion:
+                            'Please try uploading the file again, or use a different document.',
                     });
 
                     toast({
-                        title: "Upload failed",
-                        description: "Failed to read the file. Please try again.",
-                        variant: "destructive",
+                        title: 'Upload failed',
+                        description: 'Failed to read the file. Please try again.',
+                        variant: 'destructive',
                     });
-                    
+
                     reject(error);
                 };
 
                 reader.readAsDataURL(file);
             });
         },
-        [setDocumentAttachment, setPdfProcessingStatus, toast, validateFile]
+        [setDocumentAttachment, setPdfProcessingStatus, toast, validateFile],
     );
 
     const handleFileRead = useCallback(
@@ -139,7 +142,7 @@ export const useDocumentAttachment = () => {
                 console.error('File upload failed:', error);
             });
         },
-        [handleFileReadWithRetry]
+        [handleFileReadWithRetry],
     );
 
     const onDrop = useCallback(

@@ -1,7 +1,7 @@
-import { openai } from "@ai-sdk/openai";
-import { log } from "@repo/shared/lib/logger";
-import { generateText, tool } from "ai";
-import { z } from "zod";
+import { openai } from '@ai-sdk/openai';
+import { log } from '@repo/shared/lib/logger';
+import { generateText, tool } from 'ai';
+import { z } from 'zod';
 
 // Cache for web search results to prevent multiple identical requests
 const webSearchCache = new Map<string, any>();
@@ -28,20 +28,20 @@ const inFlightRequests = new Map<string, Promise<any>>();
 export const openaiWebSearchTool = () =>
     tool({
         description:
-            "Search the web for current information and return relevant results with sources",
+            'Search the web for current information and return relevant results with sources',
         parameters: z.object({
-            query: z.string().describe("The search query to find information about"),
+            query: z.string().describe('The search query to find information about'),
         }),
         execute: async ({ query }) => {
             try {
                 // Check cache first to prevent duplicate requests
                 const cacheKey = `openai-web-search:${query}`;
                 const cachedResult = webSearchCache.get(cacheKey);
-                
+
                 if (cachedResult) {
                     const { timestamp, result } = cachedResult;
                     if (Date.now() - timestamp < CACHE_TTL) {
-                        log.info({ query }, "Returning cached OpenAI web search result");
+                        log.info({ query }, 'Returning cached OpenAI web search result');
                         return result;
                     } else {
                         // Expired cache, remove it
@@ -51,7 +51,7 @@ export const openaiWebSearchTool = () =>
 
                 // Check if there's already an in-flight request for this query
                 if (inFlightRequests.has(cacheKey)) {
-                    log.info({ query }, "Returning existing in-flight OpenAI web search request");
+                    log.info({ query }, 'Returning existing in-flight OpenAI web search request');
                     return await inFlightRequests.get(cacheKey);
                 }
 
@@ -59,7 +59,7 @@ export const openaiWebSearchTool = () =>
                 const requestPromise = (async () => {
                     try {
                         const { text, sources } = await generateText({
-                            model: openai.responses("gpt-4o-mini"),
+                            model: openai.responses('gpt-4o-mini'),
                             prompt: query,
                             tools: {
                                 web_search_preview: openai.tools.webSearchPreview(),
@@ -71,22 +71,20 @@ export const openaiWebSearchTool = () =>
                             {
                                 query,
                                 sourcesReceived: sources?.length || 0,
-                                sourcesData:
-                                    sources?.map((source: any) => ({
-                                        title: source?.title,
-                                        url: source?.url,
-                                        snippet: source?.snippet?.substring(0, 100) + "...",
-                                    })) || [],
+                                sourcesData: sources?.map((source: any) => ({
+                                    title: source?.title,
+                                    url: source?.url,
+                                    snippet: source?.snippet?.substring(0, 100) + '...',
+                                })) || [],
                             },
-                            "OpenAI web search sources received",
+                            'OpenAI web search sources received',
                         );
 
                         // Validate and clean sources
                         const validSources = (sources || []).filter((source: any) => {
-                            const hasValidUrl =
-                                source?.url &&
-                                typeof source.url === "string" &&
-                                source.url.trim().length > 0;
+                            const hasValidUrl = source?.url
+                                && typeof source.url === 'string'
+                                && source.url.trim().length > 0;
                             if (!hasValidUrl) {
                                 log.warn(
                                     {
@@ -95,7 +93,7 @@ export const openaiWebSearchTool = () =>
                                         urlType: typeof source?.url,
                                         urlLength: source?.url?.length || 0,
                                     },
-                                    "Invalid source detected - missing or invalid URL",
+                                    'Invalid source detected - missing or invalid URL',
                                 );
                             }
                             return hasValidUrl;
@@ -107,7 +105,7 @@ export const openaiWebSearchTool = () =>
                                 validCount: validSources.length,
                                 filteredOut: (sources?.length || 0) - validSources.length,
                             },
-                            "Source validation results",
+                            'Source validation results',
                         );
 
                         const result = {
@@ -120,12 +118,12 @@ export const openaiWebSearchTool = () =>
                         // Cache the result
                         webSearchCache.set(cacheKey, {
                             timestamp: Date.now(),
-                            result
+                            result,
                         });
 
                         return result;
                     } catch (error: any) {
-                        log.error({ error }, "Error in OpenAI web search");
+                        log.error({ error }, 'Error in OpenAI web search');
                         throw error;
                     } finally {
                         // Remove the in-flight request when done
@@ -142,7 +140,7 @@ export const openaiWebSearchTool = () =>
             } catch (error: any) {
                 return {
                     success: false,
-                    error: error.message || "Failed to perform web search",
+                    error: error.message || 'Failed to perform web search',
                     query,
                 };
             }
@@ -154,7 +152,7 @@ export const openaiWebSearchTool = () =>
  * Currently available for GPT-4o Mini and other supported models
  */
 export const supportsOpenAIWebSearch = (modelId: string): boolean => {
-    const supportedModels = ["gpt-4o-mini", "gpt-4o"];
+    const supportedModels = ['gpt-4o-mini', 'gpt-4o'];
 
     return supportedModels.includes(modelId);
 };
@@ -162,26 +160,30 @@ export const supportsOpenAIWebSearch = (modelId: string): boolean => {
 /**
  * Advanced web search with custom model selection for Responses API
  */
-export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
+export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
     tool({
-        description: `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
+        description:
+            `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
         parameters: z.object({
-            query: z.string().describe("The search query to find information about"),
+            query: z.string().describe('The search query to find information about'),
             maxResults: z
                 .number()
                 .optional()
-                .describe("Maximum number of results to return (if supported)"),
+                .describe('Maximum number of results to return (if supported)'),
         }),
         execute: async ({ query, maxResults }) => {
             try {
                 // Check cache first to prevent duplicate requests
                 const cacheKey = `openai-web-search-${modelId}:${query}:${maxResults}`;
                 const cachedResult = webSearchCache.get(cacheKey);
-                
+
                 if (cachedResult) {
                     const { timestamp, result } = cachedResult;
                     if (Date.now() - timestamp < CACHE_TTL) {
-                        log.info({ query, modelId }, "Returning cached OpenAI web search result with model");
+                        log.info(
+                            { query, modelId },
+                            'Returning cached OpenAI web search result with model',
+                        );
                         return result;
                     } else {
                         // Expired cache, remove it
@@ -191,7 +193,10 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
 
                 // Check if there's already an in-flight request for this query
                 if (inFlightRequests.has(cacheKey)) {
-                    log.info({ query, modelId }, "Returning existing in-flight OpenAI web search request with model");
+                    log.info(
+                        { query, modelId },
+                        'Returning existing in-flight OpenAI web search request with model',
+                    );
                     return await inFlightRequests.get(cacheKey);
                 }
 
@@ -225,12 +230,15 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
                         // Cache the result
                         webSearchCache.set(cacheKey, {
                             timestamp: Date.now(),
-                            result
+                            result,
                         });
 
                         return result;
                     } catch (error: any) {
-                        log.error({ modelId, error }, `Error in OpenAI web search with model ${modelId}`);
+                        log.error(
+                            { modelId, error },
+                            `Error in OpenAI web search with model ${modelId}`,
+                        );
                         throw error;
                     } finally {
                         // Remove the in-flight request when done
@@ -247,7 +255,7 @@ export const openaiWebSearchWithModel = (modelId = "gpt-4o-mini") =>
             } catch (error: any) {
                 return {
                     success: false,
-                    error: error.message || "Failed to perform web search",
+                    error: error.message || 'Failed to perform web search',
                     query,
                     modelUsed: modelId,
                 };

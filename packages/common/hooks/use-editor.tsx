@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { DisableEnter, ShiftEnterToLineBreak } from "@repo/shared/utils";
-import CharacterCount from "@tiptap/extension-character-count";
-import { Document } from "@tiptap/extension-document";
-import { HardBreak } from "@tiptap/extension-hard-break";
-import { Highlight } from "@tiptap/extension-highlight";
-import { Paragraph } from "@tiptap/extension-paragraph";
-import { Placeholder } from "@tiptap/extension-placeholder";
-import { Text } from "@tiptap/extension-text";
+import { DisableEnter, ShiftEnterToLineBreak } from '@repo/shared/utils';
+import CharacterCount from '@tiptap/extension-character-count';
+import { Document } from '@tiptap/extension-document';
+import { HardBreak } from '@tiptap/extension-hard-break';
+import { Highlight } from '@tiptap/extension-highlight';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { Placeholder } from '@tiptap/extension-placeholder';
+import { Text } from '@tiptap/extension-text';
 
-import { type Editor, useEditor } from "@tiptap/react";
-import { useEffect } from "react";
-import { useChatStore } from "../store";
+import { type Editor, useEditor } from '@tiptap/react';
+import { useEffect } from 'react';
+import { useChatStore } from '../store';
 
 export const useChatEditor = (editorProps: {
     placeholder?: string;
     defaultContent?: string;
     charLimit?: number;
     enableEnter?: boolean;
-    onInit?: (props: { editor: Editor }) => void;
-    onUpdate?: (props: { editor: Editor }) => void;
+    onInit?: (props: { editor: Editor; }) => void;
+    onUpdate?: (props: { editor: Editor; }) => void;
 }) => {
     const setEditor = useChatStore((state) => state.setEditor);
     const editor = useEditor({
@@ -28,7 +28,7 @@ export const useChatEditor = (editorProps: {
             Paragraph,
             Text,
             Placeholder.configure({
-                placeholder: editorProps?.placeholder || "Ask anything",
+                placeholder: editorProps?.placeholder || 'Ask anything',
             }),
             CharacterCount.configure({
                 limit: editorProps?.charLimit || 400_000,
@@ -36,20 +36,20 @@ export const useChatEditor = (editorProps: {
             ...(editorProps?.enableEnter ? [] : [ShiftEnterToLineBreak, DisableEnter]),
             Highlight.configure({
                 HTMLAttributes: {
-                    class: "prompt-highlight",
+                    class: 'prompt-highlight',
                 },
             }),
             HardBreak,
         ],
         immediatelyRender: false,
-        content: "",
+        content: '',
         autofocus: true,
 
         onTransaction(props) {
             const { editor } = props;
             const text = editor.getText();
             const html = editor.getHTML();
-            if (text === "/") {
+            if (text === '/') {
                 // setOpenPromptsBotCombo(true);
             } else {
                 const newHTML = html.replace(/::((?:(?!::).)+)::/g, (_, content) => {
@@ -66,7 +66,7 @@ export const useChatEditor = (editorProps: {
         },
         onCreate(props) {
             if (editorProps?.defaultContent) {
-                props.editor.commands.setContent(editorProps?.defaultContent || "", true, {
+                props.editor.commands.setContent(editorProps?.defaultContent || '', true, {
                     preserveWhitespace: true,
                 });
             }
@@ -82,7 +82,7 @@ export const useChatEditor = (editorProps: {
         },
 
         parseOptions: {
-            preserveWhitespace: "full",
+            preserveWhitespace: 'full',
         },
     });
 
@@ -92,7 +92,7 @@ export const useChatEditor = (editorProps: {
 
     useEffect(() => {
         if (editor) {
-            editor.commands.focus("end");
+            editor.commands.focus('end');
         }
     }, [editor]);
 

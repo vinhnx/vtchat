@@ -1,64 +1,65 @@
-import { createTask } from "@repo/orchestrator";
-import { log } from "@repo/shared/logger";
-import { chartTools } from "../../../../apps/web/lib/tools/charts";
-import { calculatorTools } from "../../../../apps/web/lib/tools/math";
-import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from "../../models";
-import { MATH_CALCULATOR_PROMPT } from "../../prompts/math-calculator";
-import { getWebSearchTool } from "../../tools";
-import { handlePDFProcessingError } from "../../utils/pdf-error-handler";
-import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
+import { createTask } from '@repo/orchestrator';
+import { log } from '@repo/shared/logger';
+import { chartTools } from '../../../../apps/web/lib/tools/charts';
+import { calculatorTools } from '../../../../apps/web/lib/tools/math';
+import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from '../../models';
+import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
+import { getWebSearchTool } from '../../tools';
+import { handlePDFProcessingError } from '../../utils/pdf-error-handler';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     ChunkBuffer,
     generateText,
     getHumanizedDate,
     handleError,
     selectAvailableModel,
-} from "../utils";
+} from '../utils';
 
 const MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH = 6000;
 
 export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: "completion",
+    name: 'completion',
     execute: async ({ events, context, signal, redirectTo }) => {
         if (!context) {
-            throw new Error("Context is required but was not provided");
+            throw new Error('Context is required but was not provided');
         }
 
-        const customInstructions = context?.get("customInstructions");
-        const mode = context.get("mode");
-        const webSearch = context.get("webSearch");
-        const mathCalculator = context.get("mathCalculator");
-        const charts = context.get("charts");
+        const customInstructions = context?.get('customInstructions');
+        const mode = context.get('mode');
+        const webSearch = context.get('webSearch');
+        const mathCalculator = context.get('mathCalculator');
+        const charts = context.get('charts');
 
-        let messages =
-            context
-                .get("messages")
-                ?.filter(
-                    (message) =>
-                        (message.role === "user" || message.role === "assistant") &&
-                        !!message.content &&
-                        (typeof message.content === "string"
-                            ? message.content.trim() !== ""
-                            : Array.isArray(message.content)
-                              ? message.content.length > 0
-                              : false),
-                ) || [];
+        let messages = context
+            .get('messages')
+            ?.filter(
+                (message) =>
+                    (message.role === 'user' || message.role === 'assistant')
+                    && !!message.content
+                    && (typeof message.content === 'string'
+                        ? message.content.trim() !== ''
+                        : Array.isArray(message.content)
+                        ? message.content.length > 0
+                        : false),
+            ) || [];
 
         if (
-            customInstructions &&
-            customInstructions?.length < MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH
+            customInstructions
+            && customInstructions?.length < MAX_ALLOWED_CUSTOM_INSTRUCTIONS_LENGTH
         ) {
             messages = [
                 {
-                    role: "system",
-                    content: `Today is ${getHumanizedDate()}. and current location is ${context.get("gl")?.city}, ${context.get("gl")?.country}. \n\n ${customInstructions}`,
+                    role: 'system',
+                    content: `Today is ${getHumanizedDate()}. and current location is ${
+                        context.get('gl')?.city
+                    }, ${context.get('gl')?.country}. \n\n ${customInstructions}`,
                 },
                 ...messages,
             ];
         }
 
         const baseModel = getModelFromChatMode(mode);
-        const model = selectAvailableModel(baseModel, context?.get("apiKeys"));
+        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
         const modelName = models.find((m) => m.id === model)?.name || model;
 
         // Debug logging for model selection
@@ -69,22 +70,27 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
                 modelName,
                 modelFromFunction: getModelFromChatMode(mode),
             },
-            "🔍 Completion task model selection",
+            '🔍 Completion task model selection',
         );
 
         // Check if model supports OpenAI web search when web search is enabled
         const supportsOpenAISearch = supportsOpenAIWebSearch(model);
         if (webSearch && !supportsOpenAISearch) {
             // For non-OpenAI models with web search, redirect to planner (or handle appropriately)
-            redirectTo("planner");
+            redirectTo('planner');
             return;
         }
 
-        const prompt = `You are VT Chat AI, an advanced AI assistant powered by ${modelName}. You are designed to help users with a wide range of tasks and questions. You have access to multiple powerful capabilities and tools to provide comprehensive, accurate, and helpful responses.
+        const prompt =
+            `You are VT Chat AI, an advanced AI assistant powered by ${modelName}. You are designed to help users with a wide range of tasks and questions. You have access to multiple powerful capabilities and tools to provide comprehensive, accurate, and helpful responses.
 
 ## Current Context
 - Today is ${getHumanizedDate()}
-- User location: ${context.get("gl")?.city ? `${context.get("gl")?.city}, ${context.get("gl")?.country}` : "Not specified"}
+- User location: ${
+                context.get('gl')?.city
+                    ? `${context.get('gl')?.city}, ${context.get('gl')?.country}`
+                    : 'Not specified'
+            }
 
 ## Core Capabilities
 
@@ -103,12 +109,12 @@ When users upload documents, you can:
 - Extract structured data (resumes, invoices, contracts, etc.)
 - Maintain context across document-based conversations
 
-${mathCalculator ? MATH_CALCULATOR_PROMPT : ""}
+${mathCalculator ? MATH_CALCULATOR_PROMPT : ''}
 
 ### Data Visualization
 ${
-    charts
-        ? `You have access to advanced chart creation tools. Use these tools when users ask for:
+                charts
+                    ? `You have access to advanced chart creation tools. Use these tools when users ask for:
 - Data visualization and graphical representations
 - Charts, graphs, and plots (bar charts, line graphs, pie charts, scatter plots)
 - Trend analysis and comparisons
@@ -116,13 +122,13 @@ ${
 - Any scenario where visual representation would enhance understanding
 
 Always create charts when numerical data would be more effective as a visual representation.`
-        : "You can describe data visualization concepts, but chart creation tools are not currently enabled."
-}
+                    : 'You can describe data visualization concepts, but chart creation tools are not currently enabled.'
+            }
 
 ### Web Search & Real-Time Information
 ${
-    webSearch && supportsOpenAISearch
-        ? `
+                webSearch && supportsOpenAISearch
+                    ? `
 🌐 IMPORTANT: You have access to real-time web search capabilities. ALWAYS use web search tools when users ask about:
 
 **Current & Time-Sensitive Information:**
@@ -149,8 +155,8 @@ ${
 - "What is happening in [location] right now?"
 
 **Critical Rule:** Do NOT answer these types of questions without using web search first, even if you think you know the answer. Always verify current information with web search.`
-        : "Web search capabilities are not currently enabled for this session."
-}
+                    : 'Web search capabilities are not currently enabled for this session.'
+            }
 
 ## Response Guidelines
 
@@ -188,19 +194,19 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
         const reasoningBuffer = new ChunkBuffer({
             threshold: 200,
-            breakOn: ["\n\n"],
+            breakOn: ['\n\n'],
             onFlush: (_chunk: string, fullText: string) => {
-                events?.update("steps", (prev) => ({
+                events?.update('steps', (prev) => ({
                     ...prev,
                     0: {
                         ...prev?.[0],
                         id: 0,
-                        status: "COMPLETED",
+                        status: 'COMPLETED',
                         steps: {
                             ...prev?.[0]?.steps,
                             reasoning: {
                                 data: fullText,
-                                status: "COMPLETED",
+                                status: 'COMPLETED',
                             },
                         },
                     },
@@ -210,22 +216,22 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
         const chunkBuffer = new ChunkBuffer({
             threshold: 200,
-            breakOn: ["\n"],
+            breakOn: ['\n'],
             onFlush: (bufferText: string, fullText: string) => {
-                log.debug("🔄 ChunkBuffer onFlush called", {
+                log.debug('🔄 ChunkBuffer onFlush called', {
                     bufferTextLength: bufferText?.length || 0,
                     fullTextLength: fullText?.length || 0,
-                    bufferPreview: bufferText?.substring(0, 50) + "...",
-                    fullTextPreview: fullText?.substring(0, 50) + "...",
-                    threadItemId: context?.get("threadItemId"),
+                    bufferPreview: bufferText?.substring(0, 50) + '...',
+                    fullTextPreview: fullText?.substring(0, 50) + '...',
+                    threadItemId: context?.get('threadItemId'),
                 });
 
                 // Send incremental text updates for streaming display
                 // Use the buffer content for incremental updates
-                events?.update("answer", (current) => ({
+                events?.update('answer', (current) => ({
                     ...current,
                     text: bufferText,
-                    status: "PENDING" as const,
+                    status: 'PENDING' as const,
                 }));
             },
         });
@@ -234,22 +240,22 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         let tools: any = {};
 
         if (mathCalculator) {
-            log.info({}, "Math calculator enabled, adding calculator tools...");
+            log.info({}, 'Math calculator enabled, adding calculator tools...');
             const mathToolsObj = calculatorTools();
-            log.info({ data: Object.keys(mathToolsObj) }, "🔢 Available math tools");
+            log.info({ data: Object.keys(mathToolsObj) }, '🔢 Available math tools');
             tools = { ...tools, ...mathToolsObj };
         }
 
         if (charts) {
-            log.info({ model }, "🎨 Charts enabled for model, adding chart tools...");
+            log.info({ model }, '🎨 Charts enabled for model, adding chart tools...');
             const chartToolsObj = chartTools();
             log.info(
                 {
                     chartTools: Object.keys(chartToolsObj),
                     model,
-                    supportsTools: supportsTools ? supportsTools(model) : "unknown",
+                    supportsTools: supportsTools ? supportsTools(model) : 'unknown',
                 },
-                "📊 Available chart tools for model",
+                '📊 Available chart tools for model',
             );
             tools = { ...tools, ...chartToolsObj };
         }
@@ -263,17 +269,17 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
         // Convert to undefined if no tools are enabled
         const finalTools = Object.keys(tools).length > 0 ? tools : undefined;
-        log.info({ data: finalTools ? Object.keys(finalTools) : "none" }, "🔧 Final tools for AI");
+        log.info({ data: finalTools ? Object.keys(finalTools) : 'none' }, '🔧 Final tools for AI');
 
         // Track last math calculation result to enable fallback post-processing if needed
-        let lastMathResult: { toolName?: string; result?: any } | null = null;
+        let lastMathResult: { toolName?: string; result?: any; } | null = null;
 
         // Check if messages contain PDF attachments for enhanced error handling
         const hasPDFAttachment = messages.some(
             (message: any) =>
-                Array.isArray(message.content) &&
-                message.content.some(
-                    (part: any) => part.type === "file" && part.mediaType === "application/pdf",
+                Array.isArray(message.content)
+                && message.content.some(
+                    (part: any) => part.type === 'file' && part.mediaType === 'application/pdf',
                 ),
         );
 
@@ -285,75 +291,76 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                 messages,
                 prompt,
                 signal,
-                toolChoice: "auto",
+                toolChoice: 'auto',
                 // Allow enough steps for: tool call(s) + final answer synthesis
                 maxSteps: 4,
                 tools: finalTools,
-                byokKeys: context?.get("apiKeys"),
-                thinkingMode: context?.get("thinkingMode"),
-                userTier: context?.get("userTier"),
-                userId: context?.get("userId"),
-                mode: context?.get("mode"),
+                byokKeys: context?.get('apiKeys'),
+                thinkingMode: context?.get('thinkingMode'),
+                userTier: context?.get('userTier'),
+                userId: context?.get('userId'),
+                mode: context?.get('mode'),
                 onReasoning: (chunk, _fullText) => {
                     reasoningBuffer.add(chunk);
                 },
                 onReasoningDetails: (details) => {
-                    events?.update("steps", (prev) => ({
+                    events?.update('steps', (prev) => ({
                         ...prev,
                         0: {
                             ...prev?.[0],
                             id: 0,
-                            status: "COMPLETED",
+                            status: 'COMPLETED',
                             steps: {
                                 ...prev?.[0]?.steps,
                                 reasoningDetails: {
                                     data: details,
-                                    status: "COMPLETED",
+                                    status: 'COMPLETED',
                                 },
                             },
                         },
                     }));
                 },
                 onChunk: (chunk, fullText) => {
-                    log.debug("📝 onChunk called", {
+                    log.debug('📝 onChunk called', {
                         chunkLength: chunk?.length || 0,
                         fullTextLength: fullText?.length || 0,
-                        chunkPreview: chunk?.substring(0, 50) + "...",
-                        threadItemId: context?.get("threadItemId"),
+                        chunkPreview: chunk?.substring(0, 50) + '...',
+                        threadItemId: context?.get('threadItemId'),
                     });
                     chunkBuffer.add(chunk);
                 },
                 onToolCall: (toolCall) => {
-                    log.info({ toolName: toolCall.toolName, args: toolCall.args }, "Tool call");
+                    log.info({ toolName: toolCall.toolName, args: toolCall.args }, 'Tool call');
                     // Send tool call event to UI
-                    events?.update("steps", (prev) => ({
+                    events?.update('steps', (prev) => ({
                         ...prev,
                         0: {
                             ...prev?.[0],
                             id: 0,
-                            status: "COMPLETED",
+                            status: 'COMPLETED',
                             steps: {
                                 ...prev?.[0]?.steps,
                                 toolCall: {
                                     data: {
                                         toolName: toolCall.toolName,
                                         args: toolCall.args,
-                                        type:
-                                            charts &&
-                                            Object.keys(chartTools()).includes(toolCall.toolName)
-                                                ? "charts"
-                                                : mathCalculator
-                                                  ? "math_calculator"
-                                                  : "unknown",
+                                        type: charts
+                                                && Object.keys(chartTools()).includes(
+                                                    toolCall.toolName,
+                                                )
+                                            ? 'charts'
+                                            : mathCalculator
+                                            ? 'math_calculator'
+                                            : 'unknown',
                                     },
-                                    status: "COMPLETED",
+                                    status: 'COMPLETED',
                                 },
                             },
                         },
                     }));
 
                     // Also update toolCalls for threadItem
-                    events?.update("toolCalls", (prev) => [
+                    events?.update('toolCalls', (prev) => [
                         ...(prev || []),
                         {
                             toolCallId: toolCall.toolCallId,
@@ -365,11 +372,11 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                 onToolResult: (toolResult) => {
                     log.info(
                         { toolName: toolResult.toolName, result: toolResult.result },
-                        "Tool result for",
+                        'Tool result for',
                     );
 
                     // Handle web search tool results - extract and add sources
-                    if (toolResult.toolName === "web_search" && toolResult.result?.sources) {
+                    if (toolResult.toolName === 'web_search' && toolResult.result?.sources) {
                         log.info(
                             {
                                 toolName: toolResult.toolName,
@@ -377,14 +384,14 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                 sources: toolResult.result.sources.map((source: any) => ({
                                     title: source.title,
                                     url: source.url,
-                                    snippet: source.snippet?.substring(0, 100) + "...",
+                                    snippet: source.snippet?.substring(0, 100) + '...',
                                 })),
                             },
-                            "Processing web search sources from tool result",
+                            'Processing web search sources from tool result',
                         );
 
                         // Add sources to context with proper deduplication
-                        context?.update("sources", (current) => {
+                        context?.update('sources', (current) => {
                             const existingSources = current ?? [];
 
                             // Filter out duplicates within the new sources first
@@ -400,9 +407,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
                             const newSources = uniqueNewSources.map(
                                 (source: any, index: number) => ({
-                                    title: source.title || "Untitled",
+                                    title: source.title || 'Untitled',
                                     link: source.url,
-                                    snippet: source.snippet || source.description || "",
+                                    snippet: source.snippet || source.description || '',
                                     index: index + (existingSources.length || 0) + 1,
                                 }),
                             );
@@ -412,10 +419,10 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                     existingCount: existingSources.length,
                                     originalNewCount: toolResult.result.sources.length,
                                     filteredNewCount: newSources?.length || 0,
-                                    totalCount:
-                                        (existingSources.length || 0) + (newSources?.length || 0),
+                                    totalCount: (existingSources.length || 0)
+                                        + (newSources?.length || 0),
                                 },
-                                "Updated sources from web search tool with deduplication",
+                                'Updated sources from web search tool with deduplication',
                             );
 
                             return [...existingSources, ...(newSources || [])];
@@ -424,9 +431,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
                     // Track math tool results for potential fallback post-processing
                     if (
-                        (mathCalculator &&
-                            Object.keys(calculatorTools()).includes(toolResult.toolName || "")) ||
-                        toolResult.toolName === "evaluateExpression"
+                        (mathCalculator
+                            && Object.keys(calculatorTools()).includes(toolResult.toolName || ''))
+                        || toolResult.toolName === 'evaluateExpression'
                     ) {
                         lastMathResult = {
                             toolName: toolResult.toolName,
@@ -435,41 +442,40 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     }
 
                     // Send tool result event to UI
-                    events?.update("steps", (prev) => ({
+                    events?.update('steps', (prev) => ({
                         ...prev,
                         0: {
                             ...prev?.[0],
                             id: 0,
-                            status: "COMPLETED",
+                            status: 'COMPLETED',
                             steps: {
                                 ...prev?.[0]?.steps,
                                 toolResult: {
                                     data: {
                                         result: toolResult.result,
-                                        type:
-                                            charts &&
-                                            Object.keys(chartTools()).includes(
-                                                toolResult.toolName || "",
-                                            )
-                                                ? "charts"
-                                                : mathCalculator
-                                                  ? "math_calculator"
-                                                  : toolResult.toolName === "web_search"
-                                                    ? "web_search"
-                                                    : "unknown",
+                                        type: charts
+                                                && Object.keys(chartTools()).includes(
+                                                    toolResult.toolName || '',
+                                                )
+                                            ? 'charts'
+                                            : mathCalculator
+                                            ? 'math_calculator'
+                                            : toolResult.toolName === 'web_search'
+                                            ? 'web_search'
+                                            : 'unknown',
                                     },
-                                    status: "COMPLETED",
+                                    status: 'COMPLETED',
                                 },
                             },
                         },
                     }));
 
                     // Also update toolResults for threadItem
-                    events?.update("toolResults", (prev) => [
+                    events?.update('toolResults', (prev) => [
                         ...(prev || []),
                         {
                             toolCallId: toolResult.toolCallId,
-                            toolName: toolResult.toolName || "unknown",
+                            toolName: toolResult.toolName || 'unknown',
                             result: toolResult.result,
                         },
                     ]);
@@ -480,25 +486,26 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             if (hasPDFAttachment) {
                 const pdfError = handlePDFProcessingError(error);
 
-                log.error("PDF processing error", {
+                log.error('PDF processing error', {
                     type: pdfError.type,
                     message: pdfError.message,
                     userMessage: pdfError.userMessage,
                 });
 
                 // Provide user-friendly error message
-                events?.update("error", (_prev) => ({
+                events?.update('error', (_prev) => ({
                     error: pdfError.userMessage,
                     suggestion: pdfError.suggestion,
                     type: pdfError.type,
-                    status: "ERROR",
+                    status: 'ERROR',
                 }));
 
                 // Also update the answer with error information
-                events?.update("answer", (prev) => ({
+                events?.update('answer', (prev) => ({
                     ...prev,
-                    text: `I'm sorry, but I encountered an issue processing your PDF document: ${pdfError.userMessage}\n\n${pdfError.suggestion}`,
-                    status: "ERROR",
+                    text:
+                        `I'm sorry, but I encountered an issue processing your PDF document: ${pdfError.userMessage}\n\n${pdfError.suggestion}`,
+                    status: 'ERROR',
                 }));
 
                 // End buffers and return
@@ -510,22 +517,25 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             // Provide more descriptive error messages for API key issues
             if (error instanceof Error) {
                 const errorMessage = error.message.toLowerCase();
-                if (errorMessage.includes("api key") || errorMessage.includes("unauthorized")) {
+                if (errorMessage.includes('api key') || errorMessage.includes('unauthorized')) {
                     const modelInfo = models.find((m) => m.id === model);
                     if (modelInfo) {
                         const providerName = modelInfo.provider;
-                        events?.update("error", (_prev) => ({
-                            error: `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
-                            suggestion: `Go to Settings → API Keys and add your ${providerName} API key to use this model.`,
-                            type: "API_KEY_ERROR",
-                            status: "ERROR",
+                        events?.update('error', (_prev) => ({
+                            error:
+                                `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
+                            suggestion:
+                                `Go to Settings → API Keys and add your ${providerName} API key to use this model.`,
+                            type: 'API_KEY_ERROR',
+                            status: 'ERROR',
                         }));
 
                         // Also update the answer with error information
-                        events?.update("answer", (prev) => ({
+                        events?.update('answer', (prev) => ({
                             ...prev,
-                            text: `I'm sorry, but I need an API key for ${modelInfo.name} to continue. Please add your ${providerName} API key in Settings.`,
-                            status: "ERROR",
+                            text:
+                                `I'm sorry, but I need an API key for ${modelInfo.name} to continue. Please add your ${providerName} API key in Settings.`,
+                            status: 'ERROR',
                         }));
 
                         // End buffers and return
@@ -550,7 +560,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         if ((!finalResponse || finalResponse.trim().length === 0) && lastMathResult) {
             try {
                 const fallbackPrompt = `You performed a mathematical calculation using tool "${
-                    lastMathResult.toolName || "math_calculator"
+                    lastMathResult.toolName || 'math_calculator'
                 }" and obtained this JSON output. Write a concise, user-friendly markdown answer that:
 
 1) States the final numeric result clearly (bold the number)
@@ -558,7 +568,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 3) Avoids mentioning internal tools or JSON
 
 Tool output JSON:\n\n${
-                    typeof lastMathResult.result === "string"
+                    typeof lastMathResult.result === 'string'
                         ? lastMathResult.result
                         : JSON.stringify(lastMathResult.result)
                 }`;
@@ -567,13 +577,13 @@ Tool output JSON:\n\n${
                     model,
                     prompt: fallbackPrompt,
                     signal,
-                    toolChoice: "none",
+                    toolChoice: 'none',
                     maxSteps: 1,
-                    byokKeys: context?.get("apiKeys"),
-                    thinkingMode: context?.get("thinkingMode"),
-                    userTier: context?.get("userTier"),
-                    userId: context?.get("userId"),
-                    mode: context?.get("mode"),
+                    byokKeys: context?.get('apiKeys'),
+                    thinkingMode: context?.get('thinkingMode'),
+                    userTier: context?.get('userTier'),
+                    userId: context?.get('userId'),
+                    mode: context?.get('mode'),
                 });
 
                 if (fallback && fallback.trim().length > 0) {
@@ -582,46 +592,47 @@ Tool output JSON:\n\n${
             } catch (fallbackError) {
                 log.warn(
                     {
-                        error:
-                            fallbackError instanceof Error ? fallbackError.message : fallbackError,
+                        error: fallbackError instanceof Error
+                            ? fallbackError.message
+                            : fallbackError,
                     },
-                    "Math fallback post-processing failed",
+                    'Math fallback post-processing failed',
                 );
             }
         }
 
-        log.debug("🏁 Final response update", {
+        log.debug('🏁 Final response update', {
             finalResponseLength: finalResponse?.length || 0,
-            finalResponsePreview: finalResponse?.substring(0, 100) + "...",
-            threadItemId: context?.get("threadItemId"),
+            finalResponsePreview: finalResponse?.substring(0, 100) + '...',
+            threadItemId: context?.get('threadItemId'),
         });
 
-        events?.update("answer", (prev) => ({
+        events?.update('answer', (prev) => ({
             ...prev,
             text: finalResponse, // Set the complete final text
             fullText: finalResponse, // Also set fullText for compatibility
-            status: "COMPLETED",
+            status: 'COMPLETED',
         }));
 
-        context.update("answer", (_) => finalResponse);
+        context.update('answer', (_) => finalResponse);
 
-        events?.update("status", (_prev) => "COMPLETED");
+        events?.update('status', (_prev) => 'COMPLETED');
 
-        const onFinish = context.get("onFinish");
+        const onFinish = context.get('onFinish');
         if (onFinish) {
             onFinish({
                 answer: response,
-                threadId: context.get("threadId"),
-                threadItemId: context.get("threadItemId"),
+                threadId: context.get('threadId'),
+                threadItemId: context.get('threadItemId'),
             });
         }
         return;
     },
     onError: handleError,
     route: ({ context }) => {
-        if (context?.get("showSuggestions") && context.get("answer")) {
-            return "suggestions";
+        if (context?.get('showSuggestions') && context.get('answer')) {
+            return 'suggestions';
         }
-        return "end";
+        return 'end';
     },
 });

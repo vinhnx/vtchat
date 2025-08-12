@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useChatStore } from "@repo/common/store";
-import { useToast } from "@repo/ui";
-import { type ChangeEvent, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import { useChatStore } from '@repo/common/store';
+import { useToast } from '@repo/ui';
+import { type ChangeEvent, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 // const resizeFile = (file: File) =>
 //   new Promise((resolve) => {
 //     Resizer.imageFileResizer(
@@ -45,12 +45,12 @@ export const useImageAttachment = () => {
     const readImageFile = async (file?: File) => {
         const reader = new FileReader();
 
-        const fileTypes = ["image/jpeg", "image/png", "image/gif"];
+        const fileTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (file && !fileTypes.includes(file?.type)) {
             toast({
-                title: "Invalid format",
-                description: "Please select a valid image (JPEG, PNG, GIF).",
-                variant: "destructive",
+                title: 'Invalid format',
+                description: 'Please select a valid image (JPEG, PNG, GIF).',
+                variant: 'destructive',
             });
             return;
         }
@@ -58,16 +58,16 @@ export const useImageAttachment = () => {
         const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes
         if (file && file.size > MAX_FILE_SIZE) {
             toast({
-                title: "File too large",
-                description: "Image size should be less than 3MB.",
-                variant: "destructive",
+                title: 'File too large',
+                description: 'Image size should be less than 3MB.',
+                variant: 'destructive',
             });
             return;
         }
 
         reader.onload = () => {
-            if (typeof reader.result !== "string") return;
-            const base64String = reader?.result?.split(",")[1];
+            if (typeof reader.result !== 'string') return;
+            const base64String = reader?.result?.split(',')[1];
             setImageAttachment({
                 base64: `data:${file?.type};base64,${base64String}`,
             });

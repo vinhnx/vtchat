@@ -4,8 +4,8 @@
 
 - Monorepo with Turborepo. Top-level workspace folders: `apps/` and `packages/`.
 - Web app lives in `apps/web`; shared libraries in `packages/`:
-    - `@repo/shared`: types, utils, logger (`@repo/shared/lib/logger`).
-    - `@repo/common` and `@repo/ui`: reusable hooks/components.
+  - `@repo/shared`: types, utils, logger (`@repo/shared/lib/logger`).
+  - `@repo/common` and `@repo/ui`: reusable hooks/components.
 - Tests live under `apps/web/app/tests/`. Avoid adding debug/test files in repo root.
 - Large prebuilt assets (e.g., the PDF.js worker) should be loaded from a CDN, not committed.
 
@@ -16,7 +16,7 @@
 - Build: `bun run build`
 - Lint (oxlint): `bun run lint`
 - Format Markdown only (Prettier): `bun run format`
-- Biome autofix: `bun run biome:format`
+- Code format (dprint): `bun run fmt`
 - Tests (Vitest via Bun): `bun test` or `bun run test`
 
 ## Coding Style & Naming Conventions
@@ -37,7 +37,7 @@
 
 - Do not commit or deploy without approval. Never run `./deploy-fly.sh` without explicit consent.
 - PRs should include: clear description, linked issues, screenshots for UI changes, and test notes.
-- Run `bun run lint`, `bun run biome:format`, and `bun run build` before opening a PR.
+- Run `bun run lint`, `bun run fmt`, and `bun run build` before opening a PR.
 
 ## Security & Configuration Tips
 

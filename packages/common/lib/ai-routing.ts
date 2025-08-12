@@ -1,5 +1,5 @@
-import { ChatMode } from "@repo/shared/config";
-import { isGeminiModel } from "@repo/shared/utils";
+import { ChatMode } from '@repo/shared/config';
+import { isGeminiModel } from '@repo/shared/utils';
 
 const FREE_SERVER_MODELS: ChatMode[] = [ChatMode.GEMINI_2_5_FLASH_LITE];
 
@@ -61,15 +61,15 @@ export function needsServerSideForPlus(mode: ChatMode): boolean {
  * List of all provider API keys that should be removed for server-side calls
  */
 const PROVIDER_API_KEYS = [
-    "ANTHROPIC_API_KEY",
-    "OPENAI_API_KEY",
-    "GEMINI_API_KEY",
-    "XAI_API_KEY",
+    'ANTHROPIC_API_KEY',
+    'OPENAI_API_KEY',
+    'GEMINI_API_KEY',
+    'XAI_API_KEY',
 
-    "DEEPSEEK_API_KEY",
-    "FIREWORKS_API_KEY",
-    "OPENROUTER_API_KEY",
-    "TOGETHER_API_KEY",
+    'DEEPSEEK_API_KEY',
+    'FIREWORKS_API_KEY',
+    'OPENROUTER_API_KEY',
+    'TOGETHER_API_KEY',
 ];
 
 /**
@@ -78,32 +78,33 @@ const PROVIDER_API_KEYS = [
  */
 export function getProviderKeyToRemove(mode: ChatMode): string | null {
     if (isGeminiModel(mode)) {
-        return "GEMINI_API_KEY";
+        return 'GEMINI_API_KEY';
     }
-    if (typeof mode === "string" && mode.includes("claude")) {
-        return "ANTHROPIC_API_KEY";
+    if (typeof mode === 'string' && mode.includes('claude')) {
+        return 'ANTHROPIC_API_KEY';
     }
     if (
-        typeof mode === "string" &&
-        (mode.includes("gpt") || mode.includes("o1") || mode.includes("o3") || mode.includes("o4"))
+        typeof mode === 'string'
+        && (mode.includes('gpt') || mode.includes('o1') || mode.includes('o3')
+            || mode.includes('o4'))
     ) {
-        return "OPENAI_API_KEY";
+        return 'OPENAI_API_KEY';
     }
-    if (typeof mode === "string" && mode.includes("grok")) {
-        return "XAI_API_KEY";
+    if (typeof mode === 'string' && mode.includes('grok')) {
+        return 'XAI_API_KEY';
     }
-    if (typeof mode === "string" && mode.includes("fireworks")) {
-        return "FIREWORKS_API_KEY";
+    if (typeof mode === 'string' && mode.includes('fireworks')) {
+        return 'FIREWORKS_API_KEY';
     }
     // OpenRouter models
     if (
-        typeof mode === "string" &&
-        (mode.includes("deepseek") ||
-            mode.includes("qwen") ||
-            mode.includes("mistral") ||
-            mode.includes("kimi"))
+        typeof mode === 'string'
+        && (mode.includes('deepseek')
+            || mode.includes('qwen')
+            || mode.includes('mistral')
+            || mode.includes('kimi'))
     ) {
-        return "OPENROUTER_API_KEY";
+        return 'OPENROUTER_API_KEY';
     }
     return null;
 }

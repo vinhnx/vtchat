@@ -1,20 +1,20 @@
 // Test file for OG placeholder alignment
 // Run this to test: bun apps/web/app/tests/test-og-placeholder-alignment.js
 
-console.log("Testing OG Card Placeholder Alignment...");
+console.log('Testing OG Card Placeholder Alignment...');
 
 // Test that the bg_vt.jpeg file exists
-const bgImagePath = "apps/web/public/bg/bg_vt.jpeg";
-const fs = require("fs");
+const bgImagePath = 'apps/web/public/bg/bg_vt.jpeg';
+const fs = require('fs');
 
 try {
     if (fs.existsSync(bgImagePath)) {
-        console.log("✅ Background image exists at:", bgImagePath);
+        console.log('✅ Background image exists at:', bgImagePath);
     } else {
-        console.log("❌ Background image not found at:", bgImagePath);
+        console.log('❌ Background image not found at:', bgImagePath);
     }
 } catch (error) {
-    console.log("❌ Error checking background image:", error.message);
+    console.log('❌ Error checking background image:', error.message);
 }
 
 // Test the LinkPreview component structure
@@ -36,31 +36,31 @@ console.log(LinkPreviewCode);
 
 // Simulate testing different scenarios
 const testScenarios = [
-    { name: "With OG Image", hasImage: true, imageError: false },
-    { name: "With Image Error", hasImage: true, imageError: true },
-    { name: "Without OG Image", hasImage: false, imageError: false },
-    { name: "Loading State", isLoading: true },
+    { name: 'With OG Image', hasImage: true, imageError: false },
+    { name: 'With Image Error', hasImage: true, imageError: true },
+    { name: 'Without OG Image', hasImage: false, imageError: false },
+    { name: 'Loading State', isLoading: true },
 ];
 
-console.log("\nTest Scenarios for OG Card Alignment:");
+console.log('\nTest Scenarios for OG Card Alignment:');
 testScenarios.forEach((scenario) => {
     console.log(`\n${scenario.name}:`);
     if (scenario.isLoading) {
-        console.log("  - Shows skeleton with fixed h-32 height");
-        console.log("  - Maintains consistent card structure");
+        console.log('  - Shows skeleton with fixed h-32 height');
+        console.log('  - Maintains consistent card structure');
     } else if (scenario.hasImage && !scenario.imageError) {
-        console.log("  - Shows actual OG image with h-32 height");
-        console.log("  - Uses object-cover for proper aspect ratio");
+        console.log('  - Shows actual OG image with h-32 height');
+        console.log('  - Uses object-cover for proper aspect ratio');
     } else {
-        console.log("  - Shows bg_vt.jpeg placeholder with h-32 height");
-        console.log("  - Uses opacity-30 for subtle background");
-        console.log("  - Maintains consistent card alignment");
+        console.log('  - Shows bg_vt.jpeg placeholder with h-32 height');
+        console.log('  - Uses opacity-30 for subtle background');
+        console.log('  - Maintains consistent card alignment');
     }
 });
 
-console.log("\n✅ OG Card Placeholder Test Complete");
-console.log("All cards should now have:");
-console.log("- Consistent 128px (h-32) image height");
-console.log("- Consistent 120px (min-h-[120px]) content height");
-console.log("- Placeholder text for missing titles and descriptions");
-console.log("- Perfect grid alignment regardless of content availability");
+console.log('\n✅ OG Card Placeholder Test Complete');
+console.log('All cards should now have:');
+console.log('- Consistent 128px (h-32) image height');
+console.log('- Consistent 120px (min-h-[120px]) content height');
+console.log('- Placeholder text for missing titles and descriptions');
+console.log('- Perfect grid alignment regardless of content availability');

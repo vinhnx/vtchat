@@ -3,7 +3,7 @@
  * Used consistently across all subscription access checks
  */
 
-import { SubscriptionStatusEnum } from "../types/subscription-status";
+import { SubscriptionStatusEnum } from '../types/subscription-status';
 
 export interface SubscriptionWithPeriod {
     status: SubscriptionStatusEnum;

@@ -1,7 +1,7 @@
 # Zod Validation Error Fix - AI SDK Message Format
 
-**Date**: January 30, 2025  
-**Status**: ✅ RESOLVED  
+**Date**: January 30, 2025\
+**Status**: ✅ RESOLVED\
 **Priority**: Critical - Blocking AI chat functionality
 
 ## Issue Description
@@ -58,7 +58,9 @@ content.push({
 // Document attachments
 content.push({
     type: 'text', // ✅ Supported by AI SDK
-    text: `[Document: ${item.documentAttachment.fileName || 'document'} (${item.documentAttachment.mimeType})]`,
+    text: `[Document: ${
+        item.documentAttachment.fileName || 'document'
+    } (${item.documentAttachment.mimeType})]`,
 });
 
 // PDF attachments
@@ -77,7 +79,7 @@ Also improved TypeScript type safety by:
 - Ensuring all content follows AI SDK schema
 
 ```typescript
-type MessageContent = { type: 'text'; text: string } | { type: 'image'; image: string };
+type MessageContent = { type: 'text'; text: string; } | { type: 'image'; image: string; };
 
 const content: MessageContent[] = [{ type: 'text', text: item.query || '' }];
 ```

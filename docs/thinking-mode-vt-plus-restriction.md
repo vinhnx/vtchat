@@ -18,45 +18,45 @@ This document outlines the implementation of restricting "thinking mode" (AI rea
 
 1. **Request Schema Validation**: Added `thinkingMode` field to `completionRequestSchema` in `types.ts`:
 
-    ```typescript
-    thinkingMode: z
-        .object({
-            enabled: z.boolean(),
-            budget: z.number(),
-            includeThoughts: z.boolean(),
-        })
-        .optional(),
-    ```
+   ```typescript
+   thinkingMode: z
+       .object({
+           enabled: z.boolean(),
+           budget: z.number(),
+           includeThoughts: z.boolean(),
+       })
+       .optional(),
+   ```
 
 2. **API Route Enforcement**: Added VT+ access check in `route.ts`:
 
-    ```typescript
-    // Backend enforcement: Thinking mode is restricted to VT+ users only
-    if (data.thinkingMode?.enabled) {
-        const accessResult = await checkVTPlusAccess({ userId, ip });
-        if (!accessResult.hasAccess) {
-            return new Response(
-                JSON.stringify({
-                    error: 'VT+ subscription required for thinking mode',
-                    reason: 'Thinking mode is a VT+ exclusive feature',
-                    requiredFeature: 'THINKING_MODE',
-                }),
-                {
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-        }
-    }
-    ```
+   ```typescript
+   // Backend enforcement: Thinking mode is restricted to VT+ users only
+   if (data.thinkingMode?.enabled) {
+       const accessResult = await checkVTPlusAccess({ userId, ip });
+       if (!accessResult.hasAccess) {
+           return new Response(
+               JSON.stringify({
+                   error: 'VT+ subscription required for thinking mode',
+                   reason: 'Thinking mode is a VT+ exclusive feature',
+                   requiredFeature: 'THINKING_MODE',
+               }),
+               {
+                   status: 403,
+                   headers: { 'Content-Type': 'application/json' },
+               },
+           );
+       }
+   }
+   ```
 
 3. **Workflow Integration**: Updated `stream-handlers.ts` to pass `thinkingMode` to the workflow:
-    ```typescript
-    const workflow = runWorkflow({
-        // ...other params
-        thinkingMode: data.thinkingMode,
-    });
-    ```
+   ```typescript
+   const workflow = runWorkflow({
+       // ...other params
+       thinkingMode: data.thinkingMode,
+   });
+   ```
 
 ### 2. Client-Side Protection (UI Level)
 

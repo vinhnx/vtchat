@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { LOADING_MESSAGES } from "@repo/shared/constants";
-import { Card } from "@repo/ui";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { LOADING_MESSAGES } from '@repo/shared/constants';
+import { Card } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface PortalReturnIndicatorProps {
     isVisible: boolean;
@@ -16,15 +16,15 @@ interface PortalReturnIndicatorProps {
  * and subscription status is being refreshed
  */
 export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnIndicatorProps) {
-    const [stage, setStage] = useState<"loading" | "success">("loading");
+    const [stage, setStage] = useState<'loading' | 'success'>('loading');
 
     useEffect(() => {
         if (isVisible) {
-            setStage("loading");
+            setStage('loading');
 
             // After 2 seconds, show success and auto-hide
             const timer = setTimeout(() => {
-                setStage("success");
+                setStage('success');
 
                 // Hide after showing success for 1 second
                 const hideTimer = setTimeout(() => {
@@ -43,36 +43,38 @@ export function PortalReturnIndicator({ isVisible, onComplete }: PortalReturnInd
             {isVisible && (
                 <motion.div
                     animate={{ opacity: 1, y: 0 }}
-                    className="fixed right-4 top-4 z-50"
+                    className='fixed right-4 top-4 z-50'
                     exit={{ opacity: 0, y: -50 }}
                     initial={{ opacity: 0, y: 50 }}
                 >
-                    <Card className="flex items-center gap-3 p-4 shadow-lg">
-                        {stage === "loading" ? (
-                            <>
-                                <Loader2 className="animate-spin text-blue-500" size={20} />
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-medium">
-                                        {LOADING_MESSAGES.SYNCING_SUBSCRIPTION}
-                                    </span>
-                                    <span className="text-muted-foreground text-xs">
-                                        {LOADING_MESSAGES.UPDATING_STATUS}
-                                    </span>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <Check className="text-green-500" size={20} />
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-medium">
-                                        {LOADING_MESSAGES.SUBSCRIPTION_UPDATED}
-                                    </span>
-                                    <span className="text-muted-foreground text-xs">
-                                        {LOADING_MESSAGES.ACCOUNT_IN_SYNC}
-                                    </span>
-                                </div>
-                            </>
-                        )}
+                    <Card className='flex items-center gap-3 p-4 shadow-lg'>
+                        {stage === 'loading'
+                            ? (
+                                <>
+                                    <Loader2 className='animate-spin text-blue-500' size={20} />
+                                    <div className='flex flex-col'>
+                                        <span className='text-sm font-medium'>
+                                            {LOADING_MESSAGES.SYNCING_SUBSCRIPTION}
+                                        </span>
+                                        <span className='text-muted-foreground text-xs'>
+                                            {LOADING_MESSAGES.UPDATING_STATUS}
+                                        </span>
+                                    </div>
+                                </>
+                            )
+                            : (
+                                <>
+                                    <Check className='text-green-500' size={20} />
+                                    <div className='flex flex-col'>
+                                        <span className='text-sm font-medium'>
+                                            {LOADING_MESSAGES.SUBSCRIPTION_UPDATED}
+                                        </span>
+                                        <span className='text-muted-foreground text-xs'>
+                                            {LOADING_MESSAGES.ACCOUNT_IN_SYNC}
+                                        </span>
+                                    </div>
+                                </>
+                            )}
                     </Card>
                 </motion.div>
             )}

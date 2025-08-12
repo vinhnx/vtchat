@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { ChartRenderer, Dialog, DialogContent, DialogHeader, DialogTitle } from "@repo/ui";
-import { BarChart3, X } from "lucide-react";
-import { useState } from "react";
+import { ChartRenderer, Dialog, DialogContent, DialogHeader, DialogTitle } from '@repo/ui';
+import { BarChart3, X } from 'lucide-react';
+import { useState } from 'react';
 
 export type ChartData = {
-    type: "barChart" | "lineChart" | "areaChart" | "pieChart" | "radarChart";
+    type: 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
     title: string;
     data: any[];
     [key: string]: any;
@@ -22,20 +22,20 @@ export const ChartPopup = ({ chartData, isOpen, onClose }: ChartPopupProps) => {
 
     return (
         <Dialog onOpenChange={onClose} open={isOpen}>
-            <DialogContent className="max-h-[80vh] max-w-[95vw] overflow-y-auto sm:max-w-2xl lg:max-w-4xl">
-                <DialogHeader className="flex flex-row items-center justify-between">
-                    <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
+            <DialogContent className='max-h-[80vh] max-w-[95vw] overflow-y-auto sm:max-w-2xl lg:max-w-4xl'>
+                <DialogHeader className='flex flex-row items-center justify-between'>
+                    <DialogTitle className='flex items-center gap-2 text-lg font-semibold'>
                         <BarChart3 size={18} />
                         {chartData.title}
                     </DialogTitle>
                     <button
-                        className="rounded-md p-1 transition-colors hover:bg-gray-100"
+                        className='rounded-md p-1 transition-colors hover:bg-gray-100'
                         onClick={onClose}
                     >
                         <X size={16} />
                     </button>
                 </DialogHeader>
-                <div className="mt-4">
+                <div className='mt-4'>
                     <ChartRenderer {...chartData} />
                 </div>
             </DialogContent>

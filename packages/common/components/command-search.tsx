@@ -1,21 +1,21 @@
-"use client";
-import { useRootContext } from "@repo/common/context";
+'use client';
+import { useRootContext } from '@repo/common/context';
 
-import { useChatStore } from "@repo/common/store";
-import { useSession } from "@repo/shared/lib/auth-client";
+import { useChatStore } from '@repo/common/store';
+import { useSession } from '@repo/shared/lib/auth-client';
 
-import { log } from "@repo/shared/logger";
-import { FeatureSlug } from "@repo/shared/types/subscription";
-import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from "@repo/shared/utils";
+import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
 import {
     Button,
+    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -24,7 +24,7 @@ import {
     DialogTitle,
     Kbd,
     useToast,
-} from "@repo/ui";
+} from '@repo/ui';
 import {
     Command,
     FileText,
@@ -35,13 +35,13 @@ import {
     Plus,
     Settings,
     Trash,
-} from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { useFeatureAccess } from "../hooks/use-subscription-access";
-import { GatedFeatureAlert } from "./gated-feature-alert";
-import { LoginRequiredDialog, useLoginRequired } from "./login-required-dialog";
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useFeatureAccess } from '../hooks/use-subscription-access';
+import { GatedFeatureAlert } from './gated-feature-alert';
+import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 
 export const CommandSearch = () => {
     const { threadId: currentThreadId } = useParams();
@@ -86,7 +86,7 @@ export const CommandSearch = () => {
     });
 
     useEffect(() => {
-        router.prefetch("/");
+        router.prefetch('/');
     }, [isCommandSearchOpen, threads, router]);
 
     useEffect(() => {
@@ -99,31 +99,31 @@ export const CommandSearch = () => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Command+K for command search
-            if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+            if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
                 setIsCommandSearchOpen(true);
                 return;
             }
 
             // Command+Ctrl+Option+N for new chat
-            if (e.key === "n" && e.metaKey && e.ctrlKey && e.altKey) {
+            if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
                 e.preventDefault();
-                log.info({}, "🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)");
+                log.info({}, '🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
 
                 // Show toast notification
                 toast({
-                    title: "New Chat",
-                    description: "Starting a new conversation...",
+                    title: 'New Chat',
+                    description: 'Starting a new conversation...',
                     duration: 2000,
                 });
 
-                router.push("/");
+                router.push('/');
                 return;
             }
         };
 
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
     }, [setIsCommandSearchOpen, router, toast]);
 
     type ActionItem = {
@@ -135,21 +135,21 @@ export const CommandSearch = () => {
 
     const actions: ActionItem[] = [
         {
-            name: "New Thread",
+            name: 'New Thread',
             icon: Plus,
             action: () => {
-                router.push("/");
+                router.push('/');
                 onClose();
             },
         },
         {
-            name: "Change Theme",
+            name: 'Change Theme',
             icon: Palette,
             action: () => {
                 // Check if user is trying to switch to dark mode without VT+ access
-                const nextTheme = theme === "light" ? "dark" : "light";
+                const nextTheme = theme === 'light' ? 'dark' : 'light';
 
-                if (nextTheme === "dark" && !hasThemeAccess) {
+                if (nextTheme === 'dark' && !hasThemeAccess) {
                     setShowSubscriptionDialog(true);
                     return;
                 }
@@ -160,61 +160,61 @@ export const CommandSearch = () => {
             requiresAuth: false,
         },
         {
-            name: "Settings",
+            name: 'Settings',
             icon: Settings,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
                     return;
                 }
-                router.push("/settings");
+                router.push('/settings');
                 onClose();
             },
             requiresAuth: true,
         },
         {
-            name: "Use your own API key",
+            name: 'Use your own API key',
             icon: Key,
             action: () => {
                 if (!isSignedIn) {
                     requireLogin();
                     return;
                 }
-                router.push("/settings");
+                router.push('/settings');
                 onClose();
             },
             requiresAuth: true,
         },
         {
-            name: "Remove All Threads",
+            name: 'Remove All Threads',
             icon: Trash,
             action: () => {
                 clearThreads();
-                router.push("/");
+                router.push('/');
                 onClose();
             },
         },
         {
-            name: "FAQ",
+            name: 'FAQ',
             icon: HelpCircle,
             action: () => {
-                router.push("/faq");
+                router.push('/faq');
                 onClose();
             },
         },
         {
-            name: "AI Glossary",
+            name: 'AI Glossary',
             icon: FileText,
             action: () => {
-                router.push("/ai-glossary");
+                router.push('/ai-glossary');
                 onClose();
             },
         },
         {
-            name: "AI Resources",
+            name: 'AI Resources',
             icon: FileText,
             action: () => {
-                router.push("/ai-resources");
+                router.push('/ai-resources');
                 onClose();
             },
         },
@@ -222,32 +222,32 @@ export const CommandSearch = () => {
 
     return (
         <CommandDialog onOpenChange={setIsCommandSearchOpen} open={isCommandSearchOpen}>
-            <div className="flex w-full flex-row items-center justify-between gap-2 p-0.5">
-                <div className="flex items-center gap-1 px-2">
-                    <Kbd className="h-5 w-5">
-                        <Command className="shrink-0" size={12} strokeWidth={2} />
+            <div className='flex w-full flex-row items-center justify-between gap-2 p-0.5'>
+                <div className='flex items-center gap-1 px-2'>
+                    <Kbd className='h-5 w-5'>
+                        <Command className='shrink-0' size={12} strokeWidth={2} />
                     </Kbd>
-                    <Kbd className="h-5 w-5">K</Kbd>
+                    <Kbd className='h-5 w-5'>K</Kbd>
                 </div>
-                <div className="flex-1">
-                    <CommandInput placeholder="Search..." className="border-none" />
+                <div className='flex-1'>
+                    <CommandInput placeholder='Search...' className='border-none' />
                 </div>
             </div>
-            <CommandList className="max-h-[300px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5">
+            <CommandList className='max-h-[300px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5'>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     {actions.map((action, index) => {
                         const actionItem = (
                             <CommandItem
-                                className="gap-"
+                                className='gap-'
                                 key={`action-${action.name}-${index}`}
                                 onSelect={action.action}
                                 value={action.name}
                             >
                                 <action.icon
-                                    className="text-muted-foreground flex-shrink-0"
+                                    className='text-muted-foreground flex-shrink-0'
                                     size={14}
-                                    strokeWidth="2"
+                                    strokeWidth='2'
                                 />
                                 {action.name}
                             </CommandItem>
@@ -260,7 +260,7 @@ export const CommandSearch = () => {
                                     key={`gated-${action.name}-${index}`}
                                     message={`Please sign in to ${action.name.toLowerCase()}.`}
                                     showAlert={true}
-                                    title="Login Required"
+                                    title='Login Required'
                                 >
                                     {actionItem}
                                 </GatedFeatureAlert>
@@ -272,17 +272,17 @@ export const CommandSearch = () => {
                 </CommandGroup>
                 {/* Show only 3 most recent threads without day grouping */}
                 {threads.length > 0 && (
-                    <CommandGroup heading="Recent Threads">
+                    <CommandGroup heading='Recent Threads'>
                         {[...threads]
                             .sort(
                                 (a, b) =>
-                                    new Date(b.createdAt).getTime() -
-                                    new Date(a.createdAt).getTime(),
+                                    new Date(b.createdAt).getTime()
+                                    - new Date(a.createdAt).getTime(),
                             )
                             .slice(0, 3)
                             .map((thread, index) => (
                                 <CommandItem
-                                    className={cn("w-full gap-3")}
+                                    className={cn('w-full gap-3')}
                                     key={`thread-${thread.id}-${index}`}
                                     onSelect={() => {
                                         switchThread(thread.id);
@@ -292,11 +292,11 @@ export const CommandSearch = () => {
                                     value={`${thread.id}/${thread.title}`}
                                 >
                                     <MessageCircle
-                                        className="text-muted-foreground/50"
+                                        className='text-muted-foreground/50'
                                         size={16}
                                         strokeWidth={2}
                                     />
-                                    <span className="w-full truncate font-normal">
+                                    <span className='w-full truncate font-normal'>
                                         {thread.title}
                                     </span>
                                 </CommandItem>
@@ -306,32 +306,32 @@ export const CommandSearch = () => {
             </CommandList>
 
             <LoginRequiredDialog
-                description="Please sign in to access this feature."
+                description='Please sign in to access this feature.'
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
-                title="Login Required"
+                title='Login Required'
             />
 
             <Dialog onOpenChange={setShowSubscriptionDialog} open={showSubscriptionDialog}>
                 <DialogContent
-                    className="max-w-md"
-                    aria-describedby="subscription-dialog-description"
+                    className='max-w-md'
+                    aria-describedby='subscription-dialog-description'
                 >
                     <DialogHeader>
                         <DialogTitle>Sign In Required</DialogTitle>
-                        <DialogDescription id="subscription-dialog-description">
+                        <DialogDescription id='subscription-dialog-description'>
                             Dark theme is available to all registered users. Sign in to enjoy a
                             better viewing experience.
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="gap-3">
-                        <Button onClick={() => setShowSubscriptionDialog(false)} variant="outline">
+                    <DialogFooter className='gap-3'>
+                        <Button onClick={() => setShowSubscriptionDialog(false)} variant='outline'>
                             Cancel
                         </Button>
                         <Button
-                            className="gap-2"
+                            className='gap-2'
                             onClick={() => {
-                                router.push("/login");
+                                router.push('/login');
                                 setShowSubscriptionDialog(false);
                                 onClose();
                             }}

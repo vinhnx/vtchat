@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
-import { PLANS, PlanSlug } from "@repo/shared/types/subscription";
-import { Badge, cn } from "@repo/ui";
+import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
+import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
+import { Badge, cn } from '@repo/ui';
 
 interface UserTierBadgeProps {
     className?: string;
@@ -42,7 +42,7 @@ export function UserTierBadge({
             onUpgradeClick();
         } else {
             // Default behavior: navigate to upgrade page
-            window.location.href = "/pricing";
+            window.location.href = '/pricing';
         }
     };
 
@@ -51,17 +51,17 @@ export function UserTierBadge({
         return (
             <div
                 className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm",
-                    "border-border bg-card text-muted-foreground",
-                    "hover:bg-accent/50 shadow-sm transition-colors duration-200",
+                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm',
+                    'border-border bg-card text-muted-foreground',
+                    'hover:bg-accent/50 shadow-sm transition-colors duration-200',
                     className,
                 )}
             >
-                <span className="text-xs font-medium">Free</span>
-                <div className="bg-muted-foreground/40 h-1 w-1 rounded-full" />
+                <span className='text-xs font-medium'>Free</span>
+                <div className='bg-muted-foreground/40 h-1 w-1 rounded-full' />
                 <button
-                    type="button"
-                    className="text-primary hover:text-primary/80 text-xs font-medium transition-colors duration-150"
+                    type='button'
+                    className='text-primary hover:text-primary/80 text-xs font-medium transition-colors duration-150'
                     onClick={handleUpgradeClick}
                 >
                     Upgrade
@@ -73,13 +73,13 @@ export function UserTierBadge({
     return (
         <Badge
             className={cn(
-                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-300",
+                'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-300',
                 isPlus
-                    ? "vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] shadow-lg"
-                    : "border-muted-foreground/20 bg-muted text-muted-foreground hover:bg-muted/80",
+                    ? 'vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] shadow-lg'
+                    : 'border-muted-foreground/20 bg-muted text-muted-foreground hover:bg-muted/80',
                 className,
             )}
-            variant="secondary"
+            variant='secondary'
         >
             {planName}
         </Badge>

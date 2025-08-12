@@ -1,6 +1,6 @@
-import type { ContextSchemaDefinition } from "./context";
-import type { EventSchemaDefinition } from "./events";
-import type { TaskDefinition } from "./types";
+import type { ContextSchemaDefinition } from './context';
+import type { EventSchemaDefinition } from './events';
+import type { TaskDefinition } from './types';
 
 export const createTask = <
     TEvent extends EventSchemaDefinition = any,

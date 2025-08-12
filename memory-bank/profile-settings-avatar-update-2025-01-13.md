@@ -44,35 +44,35 @@ import {
 
 ```tsx
 <Avatar
-    className="border-border/20 border-2"
+    className='border-border/20 border-2'
     name={session.user.name || session.user.email || 'User'}
-    size="lg"
+    size='lg'
     src={getSessionCacheBustedAvatarUrl(session.user.image) || session.user.image || undefined}
-/>
+/>;
 ```
 
 **After**:
 
 ```tsx
-<Avatar className="border-border/20 h-12 w-12 border-2">
+<Avatar className='border-border/20 h-12 w-12 border-2'>
     <AvatarImage
         src={getSessionCacheBustedAvatarUrl(session.user.image) || session.user.image || undefined}
         alt={session.user.name || session.user.email || 'User'}
-        referrerPolicy="no-referrer-when-downgrade"
+        referrerPolicy='no-referrer-when-downgrade'
         onError={() => {
             log.warn(
                 {
                     avatarUrl: session.user.image,
                     userEmail: session.user.email,
                 },
-                'Avatar failed to load in profile settings, using fallback initials'
+                'Avatar failed to load in profile settings, using fallback initials',
             );
         }}
     />
-    <AvatarFallback className="text-sm font-medium">
+    <AvatarFallback className='text-sm font-medium'>
         {(session.user.name || session.user.email || 'U').charAt(0).toUpperCase()}
     </AvatarFallback>
-</Avatar>
+</Avatar>;
 ```
 
 ### 3. Benefits of Updated Implementation

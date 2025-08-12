@@ -4,19 +4,19 @@
  * Test script to verify API key detection in the workflow
  */
 
-console.log("🧪 Testing API Key Detection");
-console.log("=".repeat(60));
+console.log('🧪 Testing API Key Detection');
+console.log('='.repeat(60));
 
 async function testApiKeyDetection() {
-    console.log("\n📋 Testing API key detection logic");
+    console.log('\n📋 Testing API key detection logic');
 
     // Test the same logic used in generateObject
-    const hasSystemGeminiKey = typeof process !== "undefined" && !!process.env?.GEMINI_API_KEY;
+    const hasSystemGeminiKey = typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
 
-    console.log("Environment check:");
+    console.log('Environment check:');
     console.log(`  - typeof process: ${typeof process}`);
     console.log(
-        `  - process.env exists: ${typeof process !== "undefined" ? !!process.env : "N/A"}`,
+        `  - process.env exists: ${typeof process !== 'undefined' ? !!process.env : 'N/A'}`,
     );
     console.log(`  - GEMINI_API_KEY exists: ${hasSystemGeminiKey}`);
 
@@ -31,7 +31,7 @@ async function testApiKeyDetection() {
     const isVtPlusUser = false; // Simulating free tier user
     const hasUserGeminiKey = false; // Simulating no BYOK
 
-    console.log("\nUser scenario:");
+    console.log('\nUser scenario:');
     console.log(`  - Free Gemini model: ${isFreeGeminiModel}`);
     console.log(`  - VT+ user: ${isVtPlusUser}`);
     console.log(`  - Has user API key: ${hasUserGeminiKey}`);
@@ -40,41 +40,40 @@ async function testApiKeyDetection() {
     // Test the decision logic
     if (!hasUserGeminiKey && !hasSystemGeminiKey) {
         if (isFreeGeminiModel && !isVtPlusUser) {
-            console.log("\n❌ RESULT: Would throw error - Planning requires an API key");
+            console.log('\n❌ RESULT: Would throw error - Planning requires an API key');
             return false;
         }
     } else if (!hasUserGeminiKey && hasSystemGeminiKey) {
-        console.log("\n✅ RESULT: Would use system API key");
+        console.log('\n✅ RESULT: Would use system API key');
         return true;
     } else if (hasUserGeminiKey) {
-        console.log("\n✅ RESULT: Would use user API key");
+        console.log('\n✅ RESULT: Would use user API key');
         return true;
     }
 
-    console.log("\n⚠️  RESULT: Unexpected scenario");
+    console.log('\n⚠️  RESULT: Unexpected scenario');
     return false;
 }
 
 async function testEnvironmentLoading() {
-    console.log("\n📋 Testing environment variable loading");
+    console.log('\n📋 Testing environment variable loading');
 
     // Check if .env.local is being loaded
-    const envFiles = [".env.local", ".env.development", ".env"];
+    const envFiles = ['.env.local', '.env.development', '.env'];
 
     for (const file of envFiles) {
         try {
-            const fs = await import("fs");
-            const path = await import("path");
+            const fs = await import('fs');
+            const path = await import('path');
             const filePath = path.resolve(file);
             const exists = fs.existsSync(filePath);
-            console.log(`  - ${file}: ${exists ? "✅ exists" : "❌ not found"}`);
+            console.log(`  - ${file}: ${exists ? '✅ exists' : '❌ not found'}`);
 
-            if (exists && file === ".env.local") {
-                const content = fs.readFileSync(filePath, "utf8");
-                const hasGeminiKey =
-                    content.includes("GEMINI_API_KEY=") &&
-                    !content.includes("GEMINI_API_KEY=your_gemini_api_key_here");
-                console.log(`    - Contains valid GEMINI_API_KEY: ${hasGeminiKey ? "✅" : "❌"}`);
+            if (exists && file === '.env.local') {
+                const content = fs.readFileSync(filePath, 'utf8');
+                const hasGeminiKey = content.includes('GEMINI_API_KEY=')
+                    && !content.includes('GEMINI_API_KEY=your_gemini_api_key_here');
+                console.log(`    - Contains valid GEMINI_API_KEY: ${hasGeminiKey ? '✅' : '❌'}`);
             }
         } catch (error) {
             console.log(`  - ${file}: ❌ error checking (${error.message})`);
@@ -83,27 +82,27 @@ async function testEnvironmentLoading() {
 }
 
 async function runTests() {
-    console.log("Starting API key detection tests...\n");
+    console.log('Starting API key detection tests...\n');
 
     await testEnvironmentLoading();
     const result = await testApiKeyDetection();
 
-    console.log("\n" + "=".repeat(60));
+    console.log('\n' + '='.repeat(60));
     if (result) {
-        console.log("🎉 SUCCESS: API key detection is working correctly!");
-        console.log("\n✅ The system should be able to use the server-funded API key");
-        console.log("✅ Free tier users should be able to use web search");
+        console.log('🎉 SUCCESS: API key detection is working correctly!');
+        console.log('\n✅ The system should be able to use the server-funded API key');
+        console.log('✅ Free tier users should be able to use web search');
     } else {
-        console.log("❌ ISSUE: API key detection has problems");
-        console.log("\n🔍 Possible issues:");
-        console.log("   - API key not set in .env.local");
-        console.log("   - Environment variables not loaded correctly");
-        console.log("   - API key format is incorrect");
+        console.log('❌ ISSUE: API key detection has problems');
+        console.log('\n🔍 Possible issues:');
+        console.log('   - API key not set in .env.local');
+        console.log('   - Environment variables not loaded correctly');
+        console.log('   - API key format is incorrect');
     }
 }
 
 // Run the tests
 runTests().catch((error) => {
-    console.error("❌ Test script failed:", error);
+    console.error('❌ Test script failed:', error);
     process.exit(1);
 });

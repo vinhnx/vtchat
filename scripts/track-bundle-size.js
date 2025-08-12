@@ -7,28 +7,28 @@
  * It can be used locally or in CI to monitor bundle size changes.
  */
 
-const fs = require("node:fs");
-const path = require("node:path");
-const { execSync } = require("node:child_process");
-const { log } = require("@repo/shared/logger");
+const fs = require('node:fs');
+const path = require('node:path');
+const { execSync } = require('node:child_process');
+const { log } = require('@repo/shared/logger');
 
-const BUNDLE_HISTORY_FILE = "bundle-history.json";
-const WEB_APP_PATH = "./apps/web";
+const BUNDLE_HISTORY_FILE = 'bundle-history.json';
+const WEB_APP_PATH = './apps/web';
 
 function getBundleStats() {
-    const buildOutputPath = path.join(WEB_APP_PATH, ".next");
+    const buildOutputPath = path.join(WEB_APP_PATH, '.next');
 
     if (!fs.existsSync(buildOutputPath)) {
-        throw new Error("Next.js build output not found. Run `bun run build` first.");
+        throw new Error('Next.js build output not found. Run `bun run build` first.');
     }
 
     // Read build manifest for detailed info
     const buildManifest = JSON.parse(
-        fs.readFileSync(path.join(buildOutputPath, "build-manifest.json"), "utf8"),
+        fs.readFileSync(path.join(buildOutputPath, 'build-manifest.json'), 'utf8'),
     );
 
     const appBuildManifest = JSON.parse(
-        fs.readFileSync(path.join(buildOutputPath, "app-build-manifest.json"), "utf8"),
+        fs.readFileSync(path.join(buildOutputPath, 'app-build-manifest.json'), 'utf8'),
     );
 
     // Calculate total sizes
@@ -69,41 +69,41 @@ function getBundleStats() {
 
 function calculateStaticSize(fileSizes) {
     return Object.entries(fileSizes)
-        .filter(([file]) => file.includes("/static/"))
+        .filter(([file]) => file.includes('/static/'))
         .reduce((sum, [, size]) => sum + size, 0);
 }
 
 function calculateChunksSize(fileSizes) {
     return Object.entries(fileSizes)
-        .filter(([file]) => file.includes("/chunks/"))
+        .filter(([file]) => file.includes('/chunks/'))
         .reduce((sum, [, size]) => sum + size, 0);
 }
 
 function calculatePagesSize(fileSizes) {
     return Object.entries(fileSizes)
-        .filter(([file]) => file.includes("/pages/") || file.includes("/app/"))
+        .filter(([file]) => file.includes('/pages/') || file.includes('/app/'))
         .reduce((sum, [, size]) => sum + size, 0);
 }
 
 function getGitCommit() {
     try {
-        return execSync("git rev-parse HEAD", { encoding: "utf8" }).trim();
+        return execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
     } catch {
-        return "unknown";
+        return 'unknown';
     }
 }
 
 function formatBytes(bytes) {
-    if (bytes === 0) return "0 B";
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }
 
 function loadBundleHistory() {
     if (fs.existsSync(BUNDLE_HISTORY_FILE)) {
-        return JSON.parse(fs.readFileSync(BUNDLE_HISTORY_FILE, "utf8"));
+        return JSON.parse(fs.readFileSync(BUNDLE_HISTORY_FILE, 'utf8'));
     }
     return [];
 }
@@ -130,13 +130,13 @@ function compareBundles(current, previous) {
         isImprovement: sizeDiff < 0,
         previousSize: formatBytes(previous.totalSize),
         currentSize: formatBytes(current.totalSize),
-        sizeDiffFormatted: `${sizeDiff >= 0 ? "+" : ""}${formatBytes(Math.abs(sizeDiff))}`,
+        sizeDiffFormatted: `${sizeDiff >= 0 ? '+' : ''}${formatBytes(Math.abs(sizeDiff))}`,
     };
 }
 
 function generateReport(stats, comparison) {
     // CLI output for user - keeping console for readability
-    console.log("\n📦 Bundle Size Report\n");
+    console.log('\n📦 Bundle Size Report\n');
     console.log(`🕐 Timestamp: ${stats.timestamp}`);
     console.log(`📝 Commit: ${stats.commit.substring(0, 8)}`);
     console.log(`📁 Total Files: ${stats.fileCount}`);
@@ -152,18 +152,20 @@ function generateReport(stats, comparison) {
             fileCount: stats.fileCount,
             pages: stats.pages,
         },
-        "Bundle size report generated",
+        'Bundle size report generated',
     );
 
     if (comparison.previousSize) {
         const emoji = comparison.isImprovement
-            ? "🟢"
+            ? '🟢'
             : comparison.totalSizeChange === 0
-              ? "🟡"
-              : "🔴";
+            ? '🟡'
+            : '🔴';
 
         console.log(
-            `\n${emoji} Size Change: ${comparison.sizeDiffFormatted} (${comparison.totalSizeChangePercent.toFixed(2)}%)`,
+            `\n${emoji} Size Change: ${comparison.sizeDiffFormatted} (${
+                comparison.totalSizeChangePercent.toFixed(2)
+            }%)`,
         );
         console.log(`   Previous: ${comparison.previousSize}`);
         console.log(`   Current:  ${comparison.currentSize}`);
@@ -175,16 +177,16 @@ function generateReport(stats, comparison) {
                 isImprovement: comparison.isImprovement,
                 currentSize: stats.totalSize,
             },
-            "Bundle size comparison",
+            'Bundle size comparison',
         );
     }
 
-    console.log("\n📊 Breakdown:");
+    console.log('\n📊 Breakdown:');
     console.log(`   Static: ${formatBytes(stats.breakdown.static)}`);
     console.log(`   Chunks: ${formatBytes(stats.breakdown.chunks)}`);
     console.log(`   Pages:  ${formatBytes(stats.breakdown.pages)}`);
 
-    console.log("\n🔍 Largest Files:");
+    console.log('\n🔍 Largest Files:');
     stats.largestFiles.forEach(({ file, size }, _i) => {
         console.log(`   ${_i + 1}. ${file} - ${size}`);
     });
@@ -195,9 +197,9 @@ function main() {
 
     try {
         switch (command) {
-            case "track": {
-                console.log("📊 Analyzing current bundle...");
-                log.info("Starting bundle size analysis");
+            case 'track': {
+                console.log('📊 Analyzing current bundle...');
+                log.info('Starting bundle size analysis');
                 const stats = getBundleStats();
                 const history = loadBundleHistory();
                 const previous = history[history.length - 1];
@@ -212,44 +214,46 @@ function main() {
                 }
 
                 saveBundleHistory(history);
-                log.info("Bundle history saved");
+                log.info('Bundle history saved');
                 generateReport(stats, comparison);
 
                 // Exit with error code if bundle size increased significantly
                 if (comparison.totalSizeChangePercent > 5) {
-                    console.log("\n❌ Bundle size increased by more than 5%!");
+                    console.log('\n❌ Bundle size increased by more than 5%!');
                     log.error(
                         { sizeIncrease: comparison.totalSizeChangePercent },
-                        "Bundle size increased significantly",
+                        'Bundle size increased significantly',
                     );
                     process.exit(1);
                 }
                 break;
             }
 
-            case "history": {
+            case 'history': {
                 const savedHistory = loadBundleHistory();
                 if (savedHistory.length === 0) {
-                    console.log("No bundle history found. Run `track` first.");
+                    console.log('No bundle history found. Run `track` first.');
                     return;
                 }
 
-                console.log("\n📈 Bundle Size History\n");
-                log.info({ historyCount: savedHistory.length }, "Displaying bundle history");
+                console.log('\n📈 Bundle Size History\n');
+                log.info({ historyCount: savedHistory.length }, 'Displaying bundle history');
                 savedHistory.slice(-10).forEach((entry, _i) => {
                     console.log(
-                        `${entry.timestamp} | ${entry.commit.substring(0, 8)} | ${formatBytes(entry.totalSize)}`,
+                        `${entry.timestamp} | ${entry.commit.substring(0, 8)} | ${
+                            formatBytes(entry.totalSize)
+                        }`,
                     );
                 });
                 break;
             }
 
-            case "clean":
+            case 'clean':
                 if (fs.existsSync(BUNDLE_HISTORY_FILE)) {
                     fs.unlinkSync(BUNDLE_HISTORY_FILE);
-                    console.log("✅ Bundle history cleared.");
+                    console.log('✅ Bundle history cleared.');
                 } else {
-                    console.log("ℹ️  No bundle history to clear.");
+                    console.log('ℹ️  No bundle history to clear.');
                 }
                 break;
 
@@ -266,8 +270,8 @@ Make sure to run 'bun run build' first.
                 `);
         }
     } catch (error) {
-        console.error("❌ Error:", error.message);
-        log.error({ error: error.message }, "Bundle size tracking failed");
+        console.error('❌ Error:', error.message);
+        log.error({ error: error.message }, 'Bundle size tracking failed');
         process.exit(1);
     }
 }

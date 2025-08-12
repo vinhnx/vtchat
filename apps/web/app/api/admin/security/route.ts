@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/lib/logger";
-import { and, count, desc, eq, gte, isNotNull, ne, or, sql } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { providerUsage, sessions, users } from "@/lib/database/schema";
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
+import { providerUsage, sessions, users } from '@/lib/database/schema';
+import { log } from '@repo/shared/lib/logger';
+import { and, count, desc, eq, gte, isNotNull, ne, or, sql } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user is admin
@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     try {
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
             })
             .from(providerUsage)
             .leftJoin(users, eq(providerUsage.userId, users.id))
-            .where(and(gte(providerUsage.requestTimestamp, oneDayAgo), ne(users.role, "admin")))
+            .where(and(gte(providerUsage.requestTimestamp, oneDayAgo), ne(users.role, 'admin')))
             .groupBy(providerUsage.userId, users.name, users.email)
             .having(sql`COUNT(*) > 100`)
             .orderBy(desc(count()))
@@ -107,7 +107,9 @@ export async function GET(request: NextRequest) {
                 ipAddress: sessions.ipAddress,
                 uniqueUsers: sql<number>`COUNT(DISTINCT ${sessions.userId})`,
                 totalSessions: count(),
-                recentSessions: sql<number>`COUNT(CASE WHEN ${sessions.createdAt} >= ${oneDayAgo} THEN 1 END)`,
+                recentSessions: sql<
+                    number
+                >`COUNT(CASE WHEN ${sessions.createdAt} >= ${oneDayAgo} THEN 1 END)`,
             })
             .from(sessions)
             .where(isNotNull(sessions.ipAddress))
@@ -174,8 +176,8 @@ export async function GET(request: NextRequest) {
             securityTimeline,
         });
     } catch (error) {
-        log.error({ error }, "Failed to fetch security data");
-        return NextResponse.json({ error: "Failed to fetch security data" }, { status: 500 });
+        log.error({ error }, 'Failed to fetch security data');
+        return NextResponse.json({ error: 'Failed to fetch security data' }, { status: 500 });
     }
 }
 
@@ -185,7 +187,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user is admin
@@ -193,8 +195,8 @@ export async function POST(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     try {
@@ -202,13 +204,13 @@ export async function POST(request: NextRequest) {
         const { action, data } = body;
 
         switch (action) {
-            case "bulkBan": {
+            case 'bulkBan': {
                 const { userIds, reason, expires } = data;
                 await db
                     .update(users)
                     .set({
                         banned: true,
-                        banReason: reason || "Bulk ban by admin",
+                        banReason: reason || 'Bulk ban by admin',
                         banExpires: expires ? new Date(expires) : null,
                         updatedAt: new Date(),
                     })
@@ -216,25 +218,25 @@ export async function POST(request: NextRequest) {
                 break;
             }
 
-            case "revokeAllSessions": {
+            case 'revokeAllSessions': {
                 const { userId } = data;
                 await db.delete(sessions).where(eq(sessions.userId, userId));
                 break;
             }
 
-            case "blockIP":
+            case 'blockIP':
                 // This would require implementing IP blocking functionality
                 // For now, just log the action
-                log.info({ ipAddress: data.ipAddress }, "IP block requested");
+                log.info({ ipAddress: data.ipAddress }, 'IP block requested');
                 break;
 
             default:
-                return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+                return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
         }
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        log.error({ error }, "Failed to perform security action");
-        return NextResponse.json({ error: "Failed to perform security action" }, { status: 500 });
+        log.error({ error }, 'Failed to perform security action');
+        return NextResponse.json({ error: 'Failed to perform security action' }, { status: 500 });
     }
 }

@@ -27,7 +27,7 @@
 - **AI Integration**: Vercel AI SDK with reasoning tokens
 - **Logging**: Pino with automatic PII redaction
 - **Testing**: Vitest with Testing Library
-- **Code Quality**: Biome (formatting/linting) + oxlint
+- **Code Quality**: dprint (formatting) + oxlint
 
 ## AI & Integrations
 
@@ -62,8 +62,8 @@ bun test:run              # Run tests once
 
 ```bash
 bun run lint              # Lint with oxlint (comprehensive)
-bun run biome:check       # Check code formatting with Biome
-bun run biome:format      # Format code with Biome
+bun run fmt             # Format code with dprint
+bun run fmt:check       # Check code formatting with dprint
 bun run format            # Format markdown files with Prettier
 ```
 

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { SUBSCRIPTION_SOURCES } from "@repo/shared/constants";
-import { log } from "@repo/shared/logger";
-import { FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import type { UserClientSubscriptionStatus } from "@repo/shared/utils/subscription";
+import { SUBSCRIPTION_SOURCES } from '@repo/shared/constants';
+import { log } from '@repo/shared/logger';
+import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import type { UserClientSubscriptionStatus } from '@repo/shared/utils/subscription';
 import {
     getEffectiveAccessStatus,
     hasSubscriptionAccess,
-} from "@repo/shared/utils/subscription-grace-period";
-import { useCallback, useMemo } from "react";
-import { useGlobalSubscriptionStatus } from "../providers/subscription-provider"; // Use global provider
+} from '@repo/shared/utils/subscription-grace-period';
+import { useCallback, useMemo } from 'react';
+import { useGlobalSubscriptionStatus } from '../providers/subscription-provider'; // Use global provider
 
 /**
  * Custom hook for optimized subscription access checking.
@@ -32,17 +32,17 @@ export function useSubscriptionAccess() {
         // Use centralized access logic instead of checking only ACTIVE
         const hasActiveAccess = subscriptionStatus
             ? hasSubscriptionAccess({
-                  status: subscriptionStatus.status,
-                  currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
-              })
+                status: subscriptionStatus.status,
+                currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+            })
             : false;
 
         // Get effective status for UI display
         const effectiveStatus = subscriptionStatus
             ? getEffectiveAccessStatus({
-                  status: subscriptionStatus.status,
-                  currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
-              })
+                status: subscriptionStatus.status,
+                currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
+            })
             : SubscriptionStatusEnum.NONE;
 
         return {
@@ -50,10 +50,9 @@ export function useSubscriptionAccess() {
             isActive: hasActiveAccess, // Use access logic instead of just ACTIVE status
             isPremium: subscriptionStatus?.isPlusSubscriber && hasActiveAccess,
             isVtPlus: subscriptionStatus?.isPlusSubscriber && hasActiveAccess,
-            isVtBase:
-                !subscriptionStatus?.isPlusSubscriber &&
-                currentPlanSlug === PlanSlug.VT_BASE &&
-                hasActiveAccess,
+            isVtBase: !subscriptionStatus?.isPlusSubscriber
+                && currentPlanSlug === PlanSlug.VT_BASE
+                && hasActiveAccess,
             canUpgrade: !subscriptionStatus?.isPlusSubscriber,
             status: effectiveStatus, // Use effective status instead of binary ACTIVE/NONE
             planConfig, // Use the actual plan configuration with features
@@ -69,7 +68,7 @@ export function useSubscriptionAccess() {
     const isSignedIn = !subscriptionStatus?.isAnonymous;
 
     const hasAccess = useCallback(
-        (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string }) => {
+        (options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string; }) => {
             if (!(isLoaded && subscriptionStatus && convertedStatus.isActive)) {
                 // If not loaded, or no status, or overall status is not active, then no access.
                 return false;
@@ -132,7 +131,7 @@ export function useSubscriptionAccess() {
             if (options.permission) {
                 log.warn(
                     { permission: options.permission },
-                    "Permission checks are not fully implemented in useSubscriptionAccess",
+                    'Permission checks are not fully implemented in useSubscriptionAccess',
                 );
                 return false;
             }
@@ -211,7 +210,7 @@ export function useVtPlusAccess(): boolean {
 
 export function useCurrentPlan(): {
     planSlug: PlanSlug;
-    planConfig: UserClientSubscriptionStatus["planConfig"];
+    planConfig: UserClientSubscriptionStatus['planConfig'];
     canUpgrade: boolean;
     isVtPlus: boolean;
     isActive: boolean;

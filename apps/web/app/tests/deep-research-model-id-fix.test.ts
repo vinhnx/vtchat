@@ -1,5 +1,5 @@
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ModelEnum } from '@repo/ai/models';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the database and budget tracking
 const mockDb = {
@@ -10,26 +10,26 @@ const mockDb = {
 
 const mockRecordProviderUsage = vi.fn();
 
-vi.mock("@repo/shared/lib/database", () => ({
+vi.mock('@repo/shared/lib/database', () => ({
     db: mockDb,
 }));
 
-vi.mock("../../lib/services/budget-tracking", () => ({
+vi.mock('../../lib/services/budget-tracking', () => ({
     recordProviderUsage: mockRecordProviderUsage,
 }));
 
-vi.mock("../../lib/database/schema", () => ({
+vi.mock('../../lib/database/schema', () => ({
     userRateLimits: {
-        userId: "userId",
-        modelId: "modelId",
-        id: "id",
+        userId: 'userId',
+        modelId: 'modelId',
+        id: 'id',
     },
 }));
 
 // Import the rate limit functions after mocking
-import { recordRequest } from "../../lib/services/rate-limit";
+import { recordRequest } from '../../lib/services/rate-limit';
 
-describe("Deep Research Model ID Fix", () => {
+describe('Deep Research Model ID Fix', () => {
     beforeEach(() => {
         vi.clearAllMocks();
 
@@ -50,8 +50,8 @@ describe("Deep Research Model ID Fix", () => {
         mockRecordProviderUsage.mockResolvedValue(undefined);
     });
 
-    it("should record Deep Research requests with DEEP_RESEARCH model ID for VT+ users", async () => {
-        const userId = "vt-plus-user-123";
+    it('should record Deep Research requests with DEEP_RESEARCH model ID for VT+ users', async () => {
+        const userId = 'vt-plus-user-123';
         const modelId = ModelEnum.GEMINI_2_5_FLASH; // Used by Deep Research
         const isVTPlusUser = true;
 
@@ -60,13 +60,13 @@ describe("Deep Research Model ID Fix", () => {
         // Verify recordProviderUsage was called with DEEP_RESEARCH instead of GEMINI_2_5_FLASH
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
-            "DEEP_RESEARCH", // This should be the feature ID, not the model ID
-            "gemini",
+            'DEEP_RESEARCH', // This should be the feature ID, not the model ID
+            'gemini',
         );
     });
 
-    it("should record Pro Search requests with PRO_SEARCH model ID for VT+ users", async () => {
-        const userId = "vt-plus-user-123";
+    it('should record Pro Search requests with PRO_SEARCH model ID for VT+ users', async () => {
+        const userId = 'vt-plus-user-123';
         const modelId = ModelEnum.GEMINI_2_5_FLASH; // Used by Pro Search
         const isVTPlusUser = true;
 
@@ -75,13 +75,13 @@ describe("Deep Research Model ID Fix", () => {
         // Verify recordProviderUsage was called with PRO_SEARCH instead of GEMINI_2_5_FLASH
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
-            "PRO_SEARCH", // This should be the feature ID, not the model ID
-            "gemini",
+            'PRO_SEARCH', // This should be the feature ID, not the model ID
+            'gemini',
         );
     });
 
-    it("should record regular Gemini requests with original model ID for VT+ users", async () => {
-        const userId = "vt-plus-user-123";
+    it('should record regular Gemini requests with original model ID for VT+ users', async () => {
+        const userId = 'vt-plus-user-123';
         const modelId = ModelEnum.GEMINI_2_5_FLASH_LITE; // Regular model
         const isVTPlusUser = true;
 
@@ -91,12 +91,12 @@ describe("Deep Research Model ID Fix", () => {
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
             ModelEnum.GEMINI_2_5_FLASH_LITE, // Should remain as the original model ID
-            "gemini",
+            'gemini',
         );
     });
 
-    it("should record requests with original model ID for free users", async () => {
-        const userId = "free-user-123";
+    it('should record requests with original model ID for free users', async () => {
+        const userId = 'free-user-123';
         const modelId = ModelEnum.GEMINI_2_5_FLASH; // Used by Deep Research
         const isVTPlusUser = false; // Free user
 
@@ -106,13 +106,13 @@ describe("Deep Research Model ID Fix", () => {
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
             ModelEnum.GEMINI_2_5_FLASH, // Should remain as the original model ID for free users
-            "gemini",
+            'gemini',
         );
     });
 
-    it("should not record usage for non-Gemini models", async () => {
-        const userId = "user-123";
-        const modelId = "gpt-4o" as ModelEnum; // Non-Gemini model
+    it('should not record usage for non-Gemini models', async () => {
+        const userId = 'user-123';
+        const modelId = 'gpt-4o' as ModelEnum; // Non-Gemini model
         const isVTPlusUser = true;
 
         await recordRequest(userId, modelId, isVTPlusUser);

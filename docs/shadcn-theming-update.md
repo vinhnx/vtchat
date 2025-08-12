@@ -9,25 +9,25 @@ Updated the global CSS theming system to fully comply with Shadcn UI's official 
 ### 1. Core CSS Variable Updates
 
 - **Files Updated**:
-    - `/apps/web/app/globals.css`
-    - `/packages/ui/src/styles.css`
+  - `/apps/web/app/globals.css`
+  - `/packages/ui/src/styles.css`
 
 - **Changes**:
-    - Replaced custom `:root` and `.dark` variable blocks with official Shadcn UI variable sets
-    - Updated both light and dark theme definitions
-    - Ensured all Shadcn UI semantic variables are properly defined
+  - Replaced custom `:root` and `.dark` variable blocks with official Shadcn UI variable sets
+  - Updated both light and dark theme definitions
+  - Ensured all Shadcn UI semantic variables are properly defined
 
 ### 2. Legacy Variable Mapping
 
 - **Backward Compatibility**: Maintained support for existing custom variables by mapping them to Shadcn equivalents:
-    - `--tertiary` → `var(--muted)`
-    - `--tertiary-foreground` → `var(--muted-foreground)`
-    - `--quaternary` → `var(--accent)`
-    - `--quaternary-foreground` → `var(--accent-foreground)`
-    - `--soft` → `var(--border)`
-    - `--hard` → `var(--input)`
-    - `--border-soft` → `var(--border)`
-    - `--border-hard` → `var(--input)`
+  - `--tertiary` → `var(--muted)`
+  - `--tertiary-foreground` → `var(--muted-foreground)`
+  - `--quaternary` → `var(--accent)`
+  - `--quaternary-foreground` → `var(--accent-foreground)`
+  - `--soft` → `var(--border)`
+  - `--hard` → `var(--input)`
+  - `--border-soft` → `var(--border)`
+  - `--border-hard` → `var(--input)`
 
 ### 3. Custom Variables Preserved
 

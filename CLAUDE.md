@@ -30,7 +30,7 @@
 - Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
 - **REQUIRED**: Always consult Oracle before implementing any new task - ask for detailed plan first
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
-- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` unless you have my approval
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
@@ -43,15 +43,15 @@
 - This applies to ALL deployment commands and scripts
 
 - **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
-    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
-    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
-    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
-    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
-    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
+  - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+  - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+  - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+  - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+  - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
 ### Git Hooks
 
-- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Manual fixes**: Run `bun run fmt` and `bun run fmt:check` for comprehensive fixes
 - **Philosophy**: Encourage good practices without blocking development flow
 
 ## Tech Stack

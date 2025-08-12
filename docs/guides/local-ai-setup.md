@@ -6,10 +6,10 @@ This guide helps you choose between **Ollama** (command-line) and **LM Studio** 
 
 ## Why Use Local AI?
 
-✅ **100% Free** - No API costs, no subscriptions  
-✅ **Complete Privacy** - Your data never leaves your computer  
-✅ **Always Available** - Works offline, no internet required  
-✅ **No Rate Limits** - Use as much as you want  
+✅ **100% Free** - No API costs, no subscriptions\
+✅ **Complete Privacy** - Your data never leaves your computer\
+✅ **Always Available** - Works offline, no internet required\
+✅ **No Rate Limits** - Use as much as you want\
 ✅ **Custom Models** - Access to hundreds of specialized models
 
 ## Quick Comparison: Ollama vs LM Studio
@@ -41,7 +41,7 @@ ollama pull qwen3:1.7b
 ollama run qwen3:1.7b "Hello!"
 ```
 
-**✅ Pros**: Fastest setup, minimal resources, great for automation  
+**✅ Pros**: Fastest setup, minimal resources, great for automation\
 **❌ Cons**: Command-line only, less user-friendly
 
 ➡️ **[Full Ollama Setup Guide](./ollama-setup.md)**
@@ -56,7 +56,7 @@ ollama run qwen3:1.7b "Hello!"
 4. Developer tab → Start Server
 5. Done!
 
-**✅ Pros**: Beautiful interface, easy model management, beginner-friendly  
+**✅ Pros**: Beautiful interface, easy model management, beginner-friendly\
 **❌ Cons**: Larger download, GUI uses more resources
 
 ➡️ **[Full LM Studio Setup Guide](./lm-studio-setup.md)**
@@ -133,8 +133,8 @@ Once your local AI is running:
 1. **Open VTChat** → Go to the chat interface
 2. **Click Model Selector** → The dropdown at the top
 3. **Find Local Models**:
-    - **"Ollama (Beta)"** - If using Ollama
-    - **"LM Studio (Beta)"** - If using LM Studio
+   - **"Ollama (Beta)"** - If using Ollama
+   - **"LM Studio (Beta)"** - If using LM Studio
 4. **Choose Your Model** → Pick the model you downloaded
 5. **Start Chatting** → Your conversations are completely private!
 
@@ -142,7 +142,7 @@ Once your local AI is running:
 
 ### Connection Issues
 
-**Problem**: "Unable to connect to local server"  
+**Problem**: "Unable to connect to local server"\
 **Solution**: Make sure your service is running:
 
 - **Ollama**: Run `ollama serve` in terminal
@@ -150,7 +150,7 @@ Once your local AI is running:
 
 ### Out of Memory
 
-**Problem**: Model crashes or runs very slowly  
+**Problem**: Model crashes or runs very slowly\
 **Solution**: Try a smaller model:
 
 - Switch from 7B → 3B → 1.7B models
@@ -158,7 +158,7 @@ Once your local AI is running:
 
 ### Model Not Found
 
-**Problem**: "Model not available"  
+**Problem**: "Model not available"\
 **Solution**: Download the model first:
 
 - **Ollama**: `ollama pull model-name`

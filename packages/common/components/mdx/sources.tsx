@@ -1,5 +1,5 @@
-import { log } from "@repo/shared/logger";
-import { XMLParser } from "fast-xml-parser";
+import { log } from '@repo/shared/logger';
+import { XMLParser } from 'fast-xml-parser';
 
 export function parseSourceTagsFromXML(xmlText: string): string[] {
     if (!xmlText) {
@@ -12,9 +12,9 @@ export function parseSourceTagsFromXML(xmlText: string): string[] {
         const results: Set<string> = new Set();
 
         const traverseObject = (obj: any): void => {
-            if (obj && typeof obj === "object") {
+            if (obj && typeof obj === 'object') {
                 for (const [key, value] of Object.entries(obj)) {
-                    if (key === "Source") {
+                    if (key === 'Source') {
                         if (Array.isArray(value)) {
                             value.forEach((val) => {
                                 results.add(val);
@@ -33,7 +33,7 @@ export function parseSourceTagsFromXML(xmlText: string): string[] {
 
         return Array.from(results);
     } catch (error) {
-        log.error({ error }, "Failed to parse source tags from XML");
+        log.error({ error }, 'Failed to parse source tags from XML');
         return [];
     }
 }

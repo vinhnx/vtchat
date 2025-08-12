@@ -27,14 +27,14 @@ uide.
 - Tool schemas: Switched sandbox tools to use `parameters` (not `inputSchema`) t
   o match the AI SDK’s tool format and avoid the “Cannot read property '\_def'” err
   or.
-    - File: `packages/ai/tools/sandbox.ts` (openSandbox/startSandbox/stopSandbox)
+  - File: `packages/ai/tools/sandbox.ts` (openSandbox/startSandbox/stopSandbox)
 - Pyodide loader: Replaced dynamic https import with script injection to fix Nex
   t/Webpack UnhandledSchemeError.
-    - File: `apps/web/components/pyodide-runner.tsx`
+  - File: `apps/web/components/pyodide-runner.tsx`
 
 **Verify Build/Lint**
 
-- Format: `bun run biome:format` (already passes for changed files)
+- Format: `bun run fmt` (already passes for changed files)
 - Build: `bun run build` (Pyodide script injection removes the https loader erro
   r)
 - Dev: `bun dev`
@@ -45,56 +45,55 @@ picked up.
 **Self-Test Guide**
 
 - Prereqs:
-    - `bun install`
-    - Set `E2B_API_KEY` in `.env` for server sandboxes (VT+ only).
-    - Start dev: `bun dev` → open `http://localhost:3000`.
-    - In the app’s model settings, pick a tool-capable model (e.g., `gpt-4o-mini`)
-      .
+  - `bun install`
+  - Set `E2B_API_KEY` in `.env` for server sandboxes (VT+ only).
+  - Start dev: `bun dev` → open `http://localhost:3000`.
+  - In the app’s model settings, pick a tool-capable model (e.g., `gpt-4o-mini`)
+    .
 
 - Client Sandbox (React):
-    - Prompt: “Open a sandbox with a minimal React counter: /App.tsx and /index.ts
-      x.”
-    - Expect: The right rail shows a Sandpack editor running the React app.
+  - Prompt: “Open a sandbox with a minimal React counter: /App.tsx and /index.ts
+    x.”
+  - Expect: The right rail shows a Sandpack editor running the React app.
 
 - Client Sandbox (Python/Pyodide):
-    - Prompt: “Open a Python sandbox with /main.py that prints ‘hello VT’.”
-    - Expect: The right rail shows a Python output panel with the printed message.
-    - Note: First run shows “Booting Python…” briefly while Pyodide loads from CDN
+  - Prompt: “Open a Python sandbox with /main.py that prints ‘hello VT’.”
+  - Expect: The right rail shows a Python output panel with the printed message.
+  - Note: First run shows “Booting Python…” briefly while Pyodide loads from CDN
 
 - Server Sandbox (E2B, VT+ only):
-    - Ensure you’re VT+ (userTier = PLUS) and `E2B_API_KEY` is set.
-    - Prompt: “Start a server sandbox with template ‘python-interpreter’. Creat
-      e /
-      main.py that serves ‘Hello’ on port 8000 using aiohttp. Run `python main.py`.
-      Po
-      rt: 8000.”
-    - Expect: Right rail iframe preview; if blocked by X-Frame-Options, use “Op
-      en
-      in new tab”.
-    - Click “Stop sandbox” to verify cleanup; preview disappears.
+  - Ensure you’re VT+ (userTier = PLUS) and `E2B_API_KEY` is set.
+  - Prompt: “Start a server sandbox with template ‘python-interpreter’. Creat
+    e /
+    main.py that serves ‘Hello’ on port 8000 using aiohttp. Run `python main.py`.
+    Po
+    rt: 8000.”
+  - Expect: Right rail iframe preview; if blocked by X-Frame-Options, use “Op
+    en
+    in new tab”.
+  - Click “Stop sandbox” to verify cleanup; preview disappears.
 
 - Right-Rail Behavior:
-    - The latest `openSandbox` result takes priority over older ones.
-    - If `startSandbox` returns a host, the iframe preview shows the app and a
-      lin
-      k to open in a new tab.
+  - The latest `openSandbox` result takes priority over older ones.
+  - If `startSandbox` returns a host, the iframe preview shows the app and a
+    lin
+    k to open in a new tab.
 
 - Troubleshooting:
-    - Tool list shows in server logs. After a prompt, confirm: “Final tools for
-      AI
-      { data: [ 'openSandbox', ... ] }”.
-    - If you don’t see server sandbox tools, ensure `userTier` is PLUS; otherwi
-      se
-      only `openSandbox` will register.
-    - If E2B key is missing/short, server sandbox throws: “Server sandbox is un
-      ava
-      ilable: E2B_API_KEY is not configured on the server.”
-    - If iframe is blank, use the “Open in new tab” link.
+  - Tool list shows in server logs. After a prompt, confirm: “Final tools for
+    AI
+    { data: [ 'openSandbox', ... ] }”.
+  - If you don’t see server sandbox tools, ensure `userTier` is PLUS; otherwi
+    se
+    only `openSandbox` will register.
+  - If E2B key is missing/short, server sandbox throws: “Server sandbox is un
+    ava
+    ilable: E2B_API_KEY is not configured on the server.”
+  - If iframe is blank, use the “Open in new tab” link.
 
 Want me to also add a small VT+ upsell dialog for server sandbox attempts by
 non
-‑PLUS users, or wire the exact system prompt hints to push the model toward `
-ope
+‑PLUS users, or wire the exact system prompt hints to push the model toward `ope
 nSandbox`/`startSandbox`?
 
 --

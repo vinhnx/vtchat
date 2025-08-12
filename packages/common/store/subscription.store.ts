@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/lib/logger";
-import { type FeatureSlug, PLANS, PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { log } from '@repo/shared/lib/logger';
+import { type FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 // Subscription data structure
 export interface SubscriptionData {
@@ -84,10 +84,10 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
                 });
 
                 try {
-                    const response = await fetch("/api/subscription", {
-                        method: "GET",
+                    const response = await fetch('/api/subscription', {
+                        method: 'GET',
                         headers: {
-                            "Content-Type": "application/json",
+                            'Content-Type': 'application/json',
                         },
                     });
 
@@ -124,9 +124,9 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
                         state.lastUpdated = new Date();
                     });
 
-                    log.info("[SubscriptionStore] Subscription data fetched successfully");
+                    log.info('[SubscriptionStore] Subscription data fetched successfully');
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
                     set((state) => {
                         state.isLoading = false;
@@ -135,7 +135,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
                         state.availableFeatures = PLANS[PlanSlug.VT_BASE].features;
                     });
 
-                    log.error({ error }, "[SubscriptionStore] Failed to fetch subscription data");
+                    log.error({ error }, '[SubscriptionStore] Failed to fetch subscription data');
                 }
             },
 
@@ -194,7 +194,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
             },
         })),
         {
-            name: "subscription-storage",
+            name: 'subscription-storage',
             partialize: (state) => ({
                 subscription: state.subscription,
                 availableFeatures: state.availableFeatures,

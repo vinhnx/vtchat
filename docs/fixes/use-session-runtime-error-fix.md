@@ -13,24 +13,24 @@ Several React components were using `useSession` or `useUser` hooks (which inter
 The following components were missing the `'use client'` directive and have been fixed:
 
 1. **packages/common/components/chat-input/chat-footer.tsx**
-    - Uses `useUser` hook
-    - Added `'use client'` directive
+   - Uses `useUser` hook
+   - Added `'use client'` directive
 
 2. **packages/common/components/chat-input/structured-output-button.tsx**
-    - Uses `useSession` hook
-    - Added `'use client'` directive
+   - Uses `useSession` hook
+   - Added `'use client'` directive
 
 3. **packages/common/components/chat-input/document-upload-button.tsx**
-    - Uses `useSession` hook
-    - Added `'use client'` directive
+   - Uses `useSession` hook
+   - Added `'use client'` directive
 
 4. **packages/common/components/chat-input/multi-modal-attachment-button.tsx**
-    - Uses `useSession` hook
-    - Added `'use client'` directive
+   - Uses `useSession` hook
+   - Added `'use client'` directive
 
 5. **packages/common/components/chat-input/image-upload.tsx**
-    - Uses `useSession` hook
-    - Added `'use client'` directive
+   - Uses `useSession` hook
+   - Added `'use client'` directive
 
 ## Fix Applied
 

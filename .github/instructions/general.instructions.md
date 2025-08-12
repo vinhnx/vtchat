@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: "**"
 ---
 
 # AGENT.md - Development Guidelines
@@ -25,6 +25,7 @@ applyTo: '**'
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
 - Use oxlint for fast comprehensive linting (run `bun run lint`)
+- Use dprint for code formatting (run `bun run fmt`)
 - Use Prettier for markdown files only (run `bun run format`)
 
 ## UI/UX Design Principles
@@ -41,7 +42,7 @@ applyTo: '**'
 - Make sure you DO NOT CREATE ANY debug and test FILES IN ./ ROOT DIRECTORY. Only use files in /temps or apps/web/app/tests/ or /scripts.
 - Make sure you run `bun dev` and check the app console to see if there are any errors before starting to work on anothers task. fix it first.
 - Plan first, then implement. For substantial changes, request maintainer feedback on the plan before coding.
-- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues with dprint
 - **NEVER commit changes yourself** - DO NOT execute `git commit` unless you have my approval
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
@@ -57,15 +58,15 @@ applyTo: '**'
 - This applies to ALL deployment commands and scripts
 
 - **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
-    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
-    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
-    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
-    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
-    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
+  - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+  - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+  - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+  - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+  - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
 ### Git Hooks
 
-- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Manual fixes**: Run `bun run fmt` and `bun run fmt:check` for comprehensive formatting fixes with dprint
 - **Philosophy**: Encourage good practices without blocking development flow
 
 ## Tech Stack

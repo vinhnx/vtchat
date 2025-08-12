@@ -1,25 +1,25 @@
-import { createTask } from "@repo/orchestrator";
-import { ChatMode } from "@repo/shared/config";
-import { formatDate } from "@repo/shared/utils";
-import { getFormattingInstructions } from "../../config/formatting-guidelines";
-import { getModelFromChatMode, ModelEnum } from "../../models";
-import { ContentMonitor } from "../../utils/content-monitor";
-import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
-import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from "../utils";
+import { createTask } from '@repo/orchestrator';
+import { ChatMode } from '@repo/shared/config';
+import { formatDate } from '@repo/shared/utils';
+import { getFormattingInstructions } from '../../config/formatting-guidelines';
+import { getModelFromChatMode, ModelEnum } from '../../models';
+import { ContentMonitor } from '../../utils/content-monitor';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from '../utils';
 
 export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: "writer",
+    name: 'writer',
     execute: async ({ events, context, data, signal }) => {
-        const analysis = data?.analysis || "";
+        const analysis = data?.analysis || '';
 
-        const question = context?.get("question") || "";
-        const summaries = context?.get("summaries") || [];
-        const messages = context?.get("messages") || [];
+        const question = context?.get('question') || '';
+        const summaries = context?.get('summaries') || [];
+        const messages = context?.get('messages') || [];
         const { updateStep, nextStepId, updateAnswer, updateStatus } = sendEvents(events);
         const stepId = nextStepId();
 
         const currentDate = new Date();
-        const humanizedDate = formatDate(currentDate, "MMMM dd, yyyy, h:mm a");
+        const humanizedDate = formatDate(currentDate, 'MMMM dd, yyyy, h:mm a');
 
         const prompt = `
 
@@ -30,7 +30,7 @@ Your goal is to create a comprehensive report based on the research information 
 First, carefully read and analyze the following research information:
 
 <research_findings>
-${summaries.map((summary) => `<finding>${summary}</finding>`).join("\n")}
+${summaries.map((summary) => `<finding>${summary}</finding>`).join('\n')}
 </research_findings>
 
 <analysis>
@@ -66,15 +66,15 @@ ${analysis}
 
 Note: **Reference list at the end is not required.**
 
-${getFormattingInstructions("writer")}
+${getFormattingInstructions('writer')}
     `;
 
         if (stepId) {
             updateStep({
                 stepId: stepId + 1,
-                stepStatus: "COMPLETED",
+                stepStatus: 'COMPLETED',
                 subSteps: {
-                    wrapup: { status: "COMPLETED" },
+                    wrapup: { status: 'COMPLETED' },
                 },
             });
         }
@@ -82,16 +82,17 @@ ${getFormattingInstructions("writer")}
         const contentMonitor = new ContentMonitor({
             onStuckDetected: (content, issue) => {
                 updateAnswer({
-                    text: "\n\n**Note**: Switching to alternative formatting to improve readability...\n\n",
-                    status: "PENDING",
+                    text:
+                        '\n\n**Note**: Switching to alternative formatting to improve readability...\n\n',
+                    status: 'PENDING',
                 });
             },
         });
 
-        let fullContent = "";
+        let fullContent = '';
         const chunkBuffer = new ChunkBuffer({
             threshold: 150,
-            breakOn: ["\n\n", ".", "!", "?"],
+            breakOn: ['\n\n', '.', '!', '?'],
             onFlush: (text: string) => {
                 fullContent += text;
 
@@ -104,27 +105,28 @@ ${getFormattingInstructions("writer")}
 
                 updateAnswer({
                     text,
-                    status: "PENDING",
+                    status: 'PENDING',
                 });
             },
         });
 
-        const mode = context?.get("mode") || "";
+        const mode = context?.get('mode') || '';
         // For Deep Research workflow, select available model with fallback mechanism
-        const baseModel =
-            mode === ChatMode.Deep ? ModelEnum.GEMINI_2_5_FLASH : getModelFromChatMode(mode);
-        const model = selectAvailableModel(baseModel, context?.get("apiKeys"));
+        const baseModel = mode === ChatMode.Deep
+            ? ModelEnum.GEMINI_2_5_FLASH
+            : getModelFromChatMode(mode);
+        const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
         const answer = await generateText({
             prompt,
             model,
             messages,
             signal,
-            byokKeys: context?.get("apiKeys"),
-            thinkingMode: context?.get("thinkingMode"),
-            userTier: context?.get("userTier"),
-            userId: context?.get("userId"),
-            mode: context?.get("mode"),
+            byokKeys: context?.get('apiKeys'),
+            thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
+            mode: context?.get('mode'),
             onChunk: (chunk, _fullText) => {
                 chunkBuffer.add(chunk);
             },
@@ -134,28 +136,28 @@ ${getFormattingInstructions("writer")}
         chunkBuffer.flush();
 
         updateAnswer({
-            text: "",
+            text: '',
             finalText: answer,
-            status: "COMPLETED",
+            status: 'COMPLETED',
         });
 
-        context?.get("onFinish")?.({
+        context?.get('onFinish')?.({
             answer,
-            threadId: context?.get("threadId"),
-            threadItemId: context?.get("threadItemId"),
+            threadId: context?.get('threadId'),
+            threadItemId: context?.get('threadItemId'),
         });
 
-        updateStatus("COMPLETED");
+        updateStatus('COMPLETED');
 
-        context?.update("answer", (_) => answer);
+        context?.update('answer', (_) => answer);
 
         return answer;
     },
     onError: handleError,
     route: ({ context }) => {
-        if (context?.get("showSuggestions") && !!context?.get("answer")) {
-            return "suggestions";
+        if (context?.get('showSuggestions') && !!context?.get('answer')) {
+            return 'suggestions';
         }
-        return "end";
+        return 'end';
     },
 });

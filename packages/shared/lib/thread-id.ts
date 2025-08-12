@@ -1,8 +1,8 @@
-import { createId, verifyId } from "legid";
-import { log } from "../logger-simple";
+import { createId, verifyId } from 'legid';
+import { log } from '../logger-simple';
 
 // Shared salt for client/server sync - must be consistent across all environments
-const THREAD_ID_SALT = "vtchat-thread:";
+const THREAD_ID_SALT = 'vtchat-thread:';
 const THREAD_ID_LENGTH = 10;
 
 /**
@@ -19,10 +19,10 @@ export async function generateThreadId(): Promise<string> {
             salt: THREAD_ID_SALT,
         });
 
-        log.debug({ id, length: id.length }, "Generated legid thread ID");
+        log.debug({ id, length: id.length }, 'Generated legid thread ID');
         return id;
     } catch (error) {
-        log.error({ error }, "Legid generation failed, using fallback");
+        log.error({ error }, 'Legid generation failed, using fallback');
         // Fallback to temporary ID if legid fails
         return generateFallbackId();
     }
@@ -34,7 +34,7 @@ export async function generateThreadId(): Promise<string> {
  * Use generateThreadId() instead when possible
  */
 export function generateThreadIdSync(): string {
-    log.warn("Synchronous thread ID generation requested - this should be avoided");
+    log.warn('Synchronous thread ID generation requested - this should be avoided');
     return generateFallbackId();
 }
 
@@ -45,16 +45,16 @@ export function generateThreadIdSync(): string {
 function generateFallbackId(): string {
     try {
         // Use crypto.getRandomValues if available (browser/Node 19+)
-        if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
             const array = new Uint8Array(16);
             crypto.getRandomValues(array);
-            const randomHex = Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
-                "",
+            const randomHex = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
+                '',
             );
             return `tmp_${Date.now().toString(36)}_${randomHex.substring(0, 12)}`;
         }
     } catch (error) {
-        log.warn({ error }, "Crypto fallback failed, using Math.random");
+        log.warn({ error }, 'Crypto fallback failed, using Math.random');
     }
 
     // Fallback to Math.random if crypto is unavailable
@@ -72,20 +72,20 @@ function generateFallbackId(): string {
  * @returns Promise<boolean> True if ID is valid legid or acceptable fallback
  */
 export async function verifyThreadId(id: string): Promise<boolean> {
-    if (!id || typeof id !== "string") {
-        log.warn({ id }, "Invalid thread ID format");
+    if (!id || typeof id !== 'string') {
+        log.warn({ id }, 'Invalid thread ID format');
         return false;
     }
 
     // Accept temporary fallback IDs as valid (not ideal but functional)
     if (isTemporaryThreadId(id)) {
-        log.debug({ id }, "Verified temporary thread ID");
+        log.debug({ id }, 'Verified temporary thread ID');
         return true;
     }
 
     // Accept legacy thread IDs during migration period
     if (isLegacyThreadId(id)) {
-        log.debug({ id }, "Verified legacy thread ID");
+        log.debug({ id }, 'Verified legacy thread ID');
         return true;
     }
 
@@ -95,10 +95,10 @@ export async function verifyThreadId(id: string): Promise<boolean> {
             salt: THREAD_ID_SALT,
         });
 
-        log.debug({ id, isValid }, "Legid verification result");
+        log.debug({ id, isValid }, 'Legid verification result');
         return isValid;
     } catch (error) {
-        log.error({ error, id }, "Thread ID verification failed");
+        log.error({ error, id }, 'Thread ID verification failed');
         return false;
     }
 }
@@ -114,7 +114,7 @@ export function isLegacyThreadId(id: string): boolean {
     // - temporary fallback: starts with 'tmp_'
     const nanoidPattern = /^[A-Za-z0-9_-]{21}$/;
     const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return nanoidPattern.test(id) || uuidPattern.test(id) || id.startsWith("tmp_");
+    return nanoidPattern.test(id) || uuidPattern.test(id) || id.startsWith('tmp_');
 }
 
 /**
@@ -122,5 +122,5 @@ export function isLegacyThreadId(id: string): boolean {
  * These should be replaced with proper legid IDs ASAP
  */
 export function isTemporaryThreadId(id: string): boolean {
-    return id.startsWith("tmp_");
+    return id.startsWith('tmp_');
 }

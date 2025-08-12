@@ -1,5 +1,10 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { handlePDFProcessingError, validatePDFFile, shouldRetryPDFProcessing, getPDFErrorDisplayMessage } from '../packages/ai/utils/pdf-error-handler';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    getPDFErrorDisplayMessage,
+    handlePDFProcessingError,
+    shouldRetryPDFProcessing,
+    validatePDFFile,
+} from '../packages/ai/utils/pdf-error-handler';
 
 describe('PDF Document Understanding Improvements', () => {
     describe('PDF Error Handler', () => {
@@ -66,7 +71,7 @@ describe('PDF Document Understanding Improvements', () => {
             const largeMockFile = {
                 size: 15 * 1024 * 1024, // 15MB
                 type: 'application/pdf',
-                name: 'large.pdf'
+                name: 'large.pdf',
             } as File;
 
             const result = validatePDFFile(largeMockFile);
@@ -80,7 +85,7 @@ describe('PDF Document Understanding Improvements', () => {
             const invalidMockFile = {
                 size: 1024 * 1024, // 1MB
                 type: 'text/plain',
-                name: 'document.pdf'
+                name: 'document.pdf',
             } as File;
 
             const result = validatePDFFile(invalidMockFile);
@@ -94,7 +99,7 @@ describe('PDF Document Understanding Improvements', () => {
             const invalidExtensionFile = {
                 size: 1024 * 1024, // 1MB
                 type: 'application/pdf',
-                name: 'document.txt'
+                name: 'document.txt',
             } as File;
 
             const result = validatePDFFile(invalidExtensionFile);
@@ -108,7 +113,7 @@ describe('PDF Document Understanding Improvements', () => {
             const validMockFile = {
                 size: 2 * 1024 * 1024, // 2MB
                 type: 'application/pdf',
-                name: 'document.pdf'
+                name: 'document.pdf',
             } as File;
 
             const result = validatePDFFile(validMockFile);
@@ -125,7 +130,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'API key invalid',
                 userMessage: 'API configuration error',
                 suggestion: 'Check API key',
-                retryable: true
+                retryable: true,
             };
 
             expect(shouldRetryPDFProcessing(apiError)).toBe(true);
@@ -137,7 +142,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'Unable to process',
                 userMessage: 'Format not supported',
                 suggestion: 'Convert to image',
-                retryable: false
+                retryable: false,
             };
 
             expect(shouldRetryPDFProcessing(formatError)).toBe(false);
@@ -149,7 +154,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'File too large',
                 userMessage: 'PDF file is too large',
                 suggestion: 'Compress file',
-                retryable: false
+                retryable: false,
             };
 
             expect(shouldRetryPDFProcessing(sizeError)).toBe(false);
@@ -163,7 +168,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'document has no pages',
                 userMessage: 'Unable to read the PDF document',
                 suggestion: 'Try a different PDF file',
-                retryable: false
+                retryable: false,
             };
 
             const display = getPDFErrorDisplayMessage(error);
@@ -178,7 +183,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'Unable to process input image',
                 userMessage: 'PDF format not supported',
                 suggestion: 'Convert to image',
-                retryable: false
+                retryable: false,
             };
 
             const display = getPDFErrorDisplayMessage(error);
@@ -193,7 +198,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'Request payload size exceeds limit',
                 userMessage: 'PDF file is too large',
                 suggestion: 'Upload smaller file',
-                retryable: false
+                retryable: false,
             };
 
             const display = getPDFErrorDisplayMessage(error);
@@ -208,7 +213,7 @@ describe('PDF Document Understanding Improvements', () => {
                 message: 'API key invalid',
                 userMessage: 'API configuration error',
                 suggestion: 'Check API key',
-                retryable: true
+                retryable: true,
             };
 
             const display = getPDFErrorDisplayMessage(error);
@@ -249,7 +254,7 @@ describe('PDF Processing Status Management', () => {
     // Mock chat store for testing
     const mockChatStore = {
         setPdfProcessingStatus: vi.fn(),
-        pdfProcessingStatus: { status: 'idle', error: undefined, suggestion: undefined }
+        pdfProcessingStatus: { status: 'idle', error: undefined, suggestion: undefined },
     };
 
     beforeEach(() => {
@@ -260,7 +265,7 @@ describe('PDF Processing Status Management', () => {
         const newStatus = {
             status: 'processing' as const,
             error: undefined,
-            suggestion: undefined
+            suggestion: undefined,
         };
 
         mockChatStore.setPdfProcessingStatus(newStatus);
@@ -272,7 +277,7 @@ describe('PDF Processing Status Management', () => {
         const errorStatus = {
             status: 'error' as const,
             error: 'PDF format not supported',
-            suggestion: 'Try converting to image format'
+            suggestion: 'Try converting to image format',
         };
 
         mockChatStore.setPdfProcessingStatus(errorStatus);
@@ -284,7 +289,7 @@ describe('PDF Processing Status Management', () => {
         const idleStatus = {
             status: 'idle' as const,
             error: undefined,
-            suggestion: undefined
+            suggestion: undefined,
         };
 
         mockChatStore.setPdfProcessingStatus(idleStatus);
@@ -299,18 +304,18 @@ describe('User Feedback and Guidance', () => {
             {
                 error: 'document has no pages',
                 expectedType: 'PDF_NO_PAGES',
-                expectedGuidance: 'ensure the PDF file is not corrupted'
+                expectedGuidance: 'ensure the PDF file is not corrupted',
             },
             {
                 error: 'Unable to process input image',
                 expectedType: 'PDF_FORMAT_ERROR',
-                expectedGuidance: 'converting the PDF to an image'
+                expectedGuidance: 'converting the PDF to an image',
             },
             {
                 error: 'Request payload size exceeds',
                 expectedType: 'PDF_SIZE_ERROR',
-                expectedGuidance: 'smaller PDF file'
-            }
+                expectedGuidance: 'smaller PDF file',
+            },
         ];
 
         testCases.forEach(({ error, expectedType, expectedGuidance }) => {
@@ -326,7 +331,7 @@ describe('User Feedback and Guidance', () => {
             'Unable to process input image',
             'Request payload size exceeds limit',
             'API key invalid',
-            'rate limit exceeded'
+            'rate limit exceeded',
         ];
 
         errors.forEach(errorMessage => {

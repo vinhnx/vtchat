@@ -1,8 +1,5 @@
-import { log } from "@repo/shared/lib/logger";
-import { count, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
 import {
     feedback,
     providerUsage,
@@ -10,7 +7,10 @@ import {
     sessions,
     users,
     vtplusUsage,
-} from "@/lib/database/schema";
+} from '@/lib/database/schema';
+import { log } from '@repo/shared/lib/logger';
+import { count, eq, gte, sql, sum } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user is admin
@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     try {
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
         const [vtPlusUsers] = await db
             .select({ count: count() })
             .from(users)
-            .where(eq(users.planSlug, "vt_plus"));
+            .where(eq(users.planSlug, 'vt_plus'));
 
         // Session activity metrics
         const [activeSessionsLast24h] = await db
@@ -126,10 +126,9 @@ export async function GET(request: NextRequest) {
                 newUsersLast30Days: newUsersLast30Days.count,
                 newUsersLast7Days: newUsersLast7Days.count,
                 vtPlusUsers: vtPlusUsers.count,
-                conversionRate:
-                    totalUsersCount.count > 0
-                        ? ((vtPlusUsers.count / totalUsersCount.count) * 100).toFixed(2)
-                        : "0.00",
+                conversionRate: totalUsersCount.count > 0
+                    ? ((vtPlusUsers.count / totalUsersCount.count) * 100).toFixed(2)
+                    : '0.00',
             },
             activityMetrics: {
                 activeSessionsLast24h: activeSessionsLast24h.count,
@@ -159,7 +158,7 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error) {
-        log.error({ error }, "Failed to fetch analytics (detailed)");
+        log.error({ error }, 'Failed to fetch analytics (detailed)');
         return NextResponse.json(
             { error: error instanceof Error ? error.message : String(error) },
             { status: 500 },

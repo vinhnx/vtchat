@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/logger";
-import { Button } from "@repo/ui";
-import { BarChart3 } from "lucide-react";
-import { useMemo } from "react";
-import { type ChartData, useChartPopup } from "./chart-popup";
+import { log } from '@repo/shared/logger';
+import { Button } from '@repo/ui';
+import { BarChart3 } from 'lucide-react';
+import { useMemo } from 'react';
+import { type ChartData, useChartPopup } from './chart-popup';
 
 type ChartMessageProps = {
     content: string;
@@ -21,14 +21,14 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
         try {
             return JSON.parse(chartDataMatch[1]) as ChartData;
         } catch (error) {
-            log.error({ data: error }, "Failed to parse chart data");
+            log.error({ data: error }, 'Failed to parse chart data');
             return null;
         }
     }, [content]);
 
     // Remove chart data marker from content for display
     const cleanContent = useMemo(() => {
-        return content.replace(/\[CHART_DATA:.*?\]/g, "").trim();
+        return content.replace(/\[CHART_DATA:.*?\]/g, '').trim();
     }, [content]);
 
     const handleViewChart = () => {
@@ -38,18 +38,18 @@ export const ChartMessage = ({ content }: ChartMessageProps) => {
     };
 
     return (
-        <div className="space-y-3">
+        <div className='space-y-3'>
             {/* Display the cleaned content */}
-            <div className="whitespace-pre-wrap">{cleanContent}</div>
+            <div className='whitespace-pre-wrap'>{cleanContent}</div>
 
             {/* Show chart button if chart data exists */}
             {chartData && (
-                <div className="flex justify-start">
+                <div className='flex justify-start'>
                     <Button
-                        className="gap-2 border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100"
+                        className='gap-2 border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100'
                         onClick={handleViewChart}
-                        size="sm"
-                        variant="outline"
+                        size='sm'
+                        variant='outline'
                     >
                         <BarChart3 size={16} />
                         View Chart

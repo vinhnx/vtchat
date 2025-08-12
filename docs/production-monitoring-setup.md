@@ -147,7 +147,7 @@ export async function GET() {
                 timestamp: new Date().toISOString(),
                 error: error.message,
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -158,11 +158,11 @@ export async function GET() {
 ```toml
 # fly.toml (already configured)
 [[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"
-  method = "GET"
-  timeout = "5s"
-  path = "/api/health"
+grace_period = "10s"
+interval = "30s"
+method = "GET"
+timeout = "5s"
+path = "/api/health"
 ```
 
 ## Application Logs
@@ -205,7 +205,7 @@ export async function POST(request: Request) {
                 duration: Date.now() - startTime,
                 status: 200,
             },
-            'API request completed'
+            'API request completed',
         );
     } catch (error) {
         logger.error(
@@ -216,7 +216,7 @@ export async function POST(request: Request) {
                 error: error.message,
                 stack: error.stack,
             },
-            'API request failed'
+            'API request failed',
         );
 
         throw error;
@@ -280,7 +280,7 @@ export const trackAIUsage = async (
     provider: string,
     model: string,
     tokens: number,
-    latency: number
+    latency: number,
 ) => {
     logger.info(
         {
@@ -290,7 +290,7 @@ export const trackAIUsage = async (
             latency,
             timestamp: new Date().toISOString(),
         },
-        'AI model usage'
+        'AI model usage',
     );
 
     // Track to analytics service
@@ -319,7 +319,7 @@ export function middleware(request: NextRequest) {
                 userAgent: request.headers.get('user-agent'),
                 ip: request.ip || 'unknown',
             },
-            'Request processed'
+            'Request processed',
         );
 
         return response;
@@ -381,22 +381,22 @@ const sendSlackAlert = async (message: string, severity: 'critical' | 'warning' 
 ### Key Metrics to Track
 
 1. **Performance Metrics**
-    - Page load times
-    - API response times
-    - AI model latency
-    - Database query performance
+   - Page load times
+   - API response times
+   - AI model latency
+   - Database query performance
 
 2. **Business Metrics**
-    - Active users
-    - Subscription conversions
-    - Feature usage
-    - Retention rates
+   - Active users
+   - Subscription conversions
+   - Feature usage
+   - Retention rates
 
 3. **Technical Metrics**
-    - Error rates
-    - Uptime percentage
-    - Memory/CPU usage
-    - Database connections
+   - Error rates
+   - Uptime percentage
+   - Memory/CPU usage
+   - Database connections
 
 ### Dashboard Tools
 
@@ -419,7 +419,7 @@ export const trackSecurityEvent = (event: string, details: any) => {
             timestamp: new Date().toISOString(),
             severity: 'security',
         },
-        'Security event detected'
+        'Security event detected',
     );
 
     // Send to security monitoring service
@@ -445,7 +445,7 @@ export const trackRateLimit = (ip: string, endpoint: string) => {
             event: 'rate_limit_exceeded',
             timestamp: new Date().toISOString(),
         },
-        'Rate limit exceeded'
+        'Rate limit exceeded',
     );
 };
 ```

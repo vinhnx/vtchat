@@ -1,24 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
 /**
  * Test suite for enhanced message components
  * Verifies visual differentiation and accessibility improvements
  */
-describe("Enhanced Message Components", () => {
-    describe("Component Structure", () => {
-        it("should have UserMessage component available", () => {
+describe('Enhanced Message Components', () => {
+    describe('Component Structure', () => {
+        it('should have UserMessage component available', () => {
             // Test that the component can be imported
-            expect(typeof "UserMessage").toBe("string");
+            expect(typeof 'UserMessage').toBe('string');
         });
 
-        it("should have AIMessage component available", () => {
+        it('should have AIMessage component available', () => {
             // Test that the component can be imported
-            expect(typeof "AIMessage").toBe("string");
+            expect(typeof 'AIMessage').toBe('string');
         });
     });
 
-    describe("Visual Differentiation Features", () => {
-        it("should provide user message with avatar and border styling", () => {
+    describe('Visual Differentiation Features', () => {
+        it('should provide user message with avatar and border styling', () => {
             // Test the key features of user messages:
             // - Right-aligned layout (justify-end)
             // - User avatar display
@@ -36,7 +36,7 @@ describe("Enhanced Message Components", () => {
             });
         });
 
-        it("should provide AI message with distinct styling", () => {
+        it('should provide AI message with distinct styling', () => {
             // Test the key features of AI messages:
             // - Left-aligned layout
             // - AI avatar with gradient background
@@ -55,8 +55,8 @@ describe("Enhanced Message Components", () => {
         });
     });
 
-    describe("Accessibility Compliance", () => {
-        it("should provide proper ARIA labels and roles", () => {
+    describe('Accessibility Compliance', () => {
+        it('should provide proper ARIA labels and roles', () => {
             // Test accessibility features:
             // - role="article" for message content
             // - aria-label for screen readers
@@ -74,7 +74,7 @@ describe("Enhanced Message Components", () => {
             });
         });
 
-        it("should support reduced motion preferences", () => {
+        it('should support reduced motion preferences', () => {
             // Test that animations respect user preferences
             const motionSupport = {
                 respectsReducedMotion: true,
@@ -87,8 +87,8 @@ describe("Enhanced Message Components", () => {
         });
     });
 
-    describe("Responsive Design", () => {
-        it("should work on mobile devices", () => {
+    describe('Responsive Design', () => {
+        it('should work on mobile devices', () => {
             // Test mobile-specific features:
             // - Minimum 44px touch targets
             // - Responsive max-width classes
@@ -106,7 +106,7 @@ describe("Enhanced Message Components", () => {
             });
         });
 
-        it("should maintain visual hierarchy on different screen sizes", () => {
+        it('should maintain visual hierarchy on different screen sizes', () => {
             // Test that visual differentiation is maintained across devices
             const visualHierarchy = {
                 maintainsUserVsAIDifferentiation: true,
@@ -120,8 +120,8 @@ describe("Enhanced Message Components", () => {
         });
     });
 
-    describe("Animation Compatibility", () => {
-        it("should not interfere with streaming text animations", () => {
+    describe('Animation Compatibility', () => {
+        it('should not interfere with streaming text animations', () => {
             // Test that the new components work with existing streaming
             const streamingCompatibility = {
                 preservesStreamingAnimation: true,
@@ -135,7 +135,7 @@ describe("Enhanced Message Components", () => {
             });
         });
 
-        it("should provide smooth user interactions", () => {
+        it('should provide smooth user interactions', () => {
             // Test interaction animations
             const interactionFeatures = {
                 hasHoverEffects: true,
@@ -150,8 +150,8 @@ describe("Enhanced Message Components", () => {
         });
     });
 
-    describe("Integration with Existing System", () => {
-        it("should integrate with shadcn/ui design system", () => {
+    describe('Integration with Existing System', () => {
+        it('should integrate with shadcn/ui design system', () => {
             // Test design system integration
             const designSystemIntegration = {
                 usesShadcnComponents: true,
@@ -165,7 +165,7 @@ describe("Enhanced Message Components", () => {
             });
         });
 
-        it("should work with existing ThreadItem component", () => {
+        it('should work with existing ThreadItem component', () => {
             // Test integration with existing components
             const componentIntegration = {
                 replacesOldMessageComponent: true,

@@ -1,18 +1,17 @@
-import { db, schema } from "@repo/shared/lib/database";
-import { and, eq } from "drizzle-orm";
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { VtPlusFeature } from "../src/config/vtPlusLimits";
-import { consumeQuota, getUsage } from "../src/lib/vtplusRateLimiter";
+import { db, schema } from '@repo/shared/lib/database';
+import { and, eq } from 'drizzle-orm';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { VtPlusFeature } from '../src/config/vtPlusLimits';
+import { consumeQuota, getUsage } from '../src/lib/vtplusRateLimiter';
 
-describe("VT+ Quota Concurrency Tests", () => {
-    const testUserId = "test-user-concurrency";
+describe('VT+ Quota Concurrency Tests', () => {
+    const testUserId = 'test-user-concurrency';
     const testFeature = VtPlusFeature.DEEP_RESEARCH;
 
     // Skip tests if no real database connection is available
-    const hasDatabase =
-        process.env.NODE_ENV === "test" &&
-        process.env.DATABASE_URL &&
-        !process.env.DATABASE_URL.includes("localhost");
+    const hasDatabase = process.env.NODE_ENV === 'test'
+        && process.env.DATABASE_URL
+        && !process.env.DATABASE_URL.includes('localhost');
 
     beforeAll(() => {
         if (!hasDatabase) {
@@ -45,7 +44,7 @@ describe("VT+ Quota Concurrency Tests", () => {
             );
     });
 
-    it("should handle 20 parallel consumeQuota calls without race conditions", async () => {
+    it('should handle 20 parallel consumeQuota calls without race conditions', async () => {
         if (!hasDatabase) {
             return; // Skip if no database available
         }
@@ -60,8 +59,7 @@ describe("VT+ Quota Concurrency Tests", () => {
                 userId: testUserId,
                 feature: testFeature,
                 amount: amountPerCall,
-            }),
-        );
+            }));
 
         // Execute all calls in parallel
         await Promise.all(promises);
@@ -87,7 +85,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         expect(rows[0].used).toBe(expectedTotal);
     }, 30000); // 30 second timeout for the test
 
-    it("should handle mixed amounts in parallel calls", async () => {
+    it('should handle mixed amounts in parallel calls', async () => {
         const calls = [
             { amount: 1 },
             { amount: 3 },
@@ -108,7 +106,7 @@ describe("VT+ Quota Concurrency Tests", () => {
                 userId: testUserId,
                 feature: testFeature,
                 amount: call.amount,
-            }),
+            })
         );
 
         // Execute all calls in parallel
@@ -134,7 +132,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         expect(rows[0].used).toBe(expectedTotal);
     }, 30000);
 
-    it("should handle extremely high concurrency (50 calls)", async () => {
+    it('should handle extremely high concurrency (50 calls)', async () => {
         const concurrentCalls = 50;
         const amountPerCall = 2;
         const expectedTotal = concurrentCalls * amountPerCall;
@@ -145,8 +143,7 @@ describe("VT+ Quota Concurrency Tests", () => {
                 userId: testUserId,
                 feature: testFeature,
                 amount: amountPerCall,
-            }),
-        );
+            }));
 
         // Execute all calls in parallel
         await Promise.all(promises);
@@ -171,7 +168,7 @@ describe("VT+ Quota Concurrency Tests", () => {
         expect(rows[0].used).toBe(expectedTotal);
     }, 60000); // 60 second timeout for high concurrency test
 
-    it("should handle concurrent calls for different features", async () => {
+    it('should handle concurrent calls for different features', async () => {
         const features = [VtPlusFeature.DEEP_RESEARCH, VtPlusFeature.PRO_SEARCH];
         const callsPerFeature = 10;
         const amountPerCall = 3;
@@ -184,8 +181,7 @@ describe("VT+ Quota Concurrency Tests", () => {
                     userId: testUserId,
                     feature,
                     amount: amountPerCall,
-                }),
-            ),
+                }))
         );
 
         // Execute all calls in parallel

@@ -1,9 +1,9 @@
 export type ContextSchemaDefinition = Record<string, any>;
 
 export class Context<T extends ContextSchemaDefinition> {
-    private state: { [K in keyof T]?: T[K] } = {};
+    private state: { [K in keyof T]?: T[K]; } = {};
 
-    constructor(initialState?: Partial<{ [K in keyof T]: T[K] }>) {
+    constructor(initialState?: Partial<{ [K in keyof T]: T[K]; }>) {
         if (initialState) {
             Object.entries(initialState).forEach(([key, value]) => {
                 this.state[key as keyof T] = value;
@@ -15,7 +15,7 @@ export class Context<T extends ContextSchemaDefinition> {
         return this.state[key];
     }
 
-    getAll(): { [K in keyof T]?: T[K] } {
+    getAll(): { [K in keyof T]?: T[K]; } {
         return { ...this.state };
     }
 
@@ -29,7 +29,7 @@ export class Context<T extends ContextSchemaDefinition> {
         this.set(key, newValue);
     }
 
-    merge(updates: Partial<{ [K in keyof T]: T[K] }>): void {
+    merge(updates: Partial<{ [K in keyof T]: T[K]; }>): void {
         Object.entries(updates).forEach(([key, value]) => {
             this.set(key as keyof T, value);
         });
@@ -37,7 +37,7 @@ export class Context<T extends ContextSchemaDefinition> {
 }
 
 export function createContext<T extends ContextSchemaDefinition>(
-    initialState?: Partial<{ [K in keyof T]: T[K] }>,
+    initialState?: Partial<{ [K in keyof T]: T[K]; }>,
 ) {
     return new Context<T>(initialState);
 }

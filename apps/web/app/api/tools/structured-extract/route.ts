@@ -1,11 +1,11 @@
-import { getProviderInstance, Providers } from "@repo/ai/providers";
-import { isGeminiModel } from "@repo/common/utils";
-import { log } from "@repo/shared/logger";
-import { generateObject } from "ai";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/lib/auth-server";
-import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../../subscription/access-control";
+import { auth } from '@/lib/auth-server';
+import { getProviderInstance, Providers } from '@repo/ai/providers';
+import { isGeminiModel } from '@repo/common/utils';
+import { log } from '@repo/shared/logger';
+import { generateObject } from 'ai';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../../subscription/access-control';
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({
@@ -94,7 +94,7 @@ const getDocumentSchemas = () => ({
             })
             .optional(),
     }),
-    "markdown-document": z.object({
+    'markdown-document': z.object({
         title: z.string().optional(),
         headings: z.array(
             z.object({
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         // Validate required fields
         if (!textContent || !documentType || !chatMode) {
             return NextResponse.json(
-                { error: "Missing required fields: textContent, documentType, chatMode" },
+                { error: 'Missing required fields: textContent, documentType, chatMode' },
                 { status: 400 },
             );
         }
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
         // Validate that it's a Gemini model
         if (!isGeminiModel(chatMode)) {
             return NextResponse.json(
-                { error: "Structured extraction only supports Gemini models" },
+                { error: 'Structured extraction only supports Gemini models' },
                 { status: 400 },
             );
         }
@@ -177,8 +177,8 @@ export async function POST(request: NextRequest) {
         if (!hasFeatureAccess) {
             return NextResponse.json(
                 {
-                    error: "Authentication required",
-                    message: "Please sign in to use structured output extraction functionality.",
+                    error: 'Authentication required',
+                    message: 'Please sign in to use structured output extraction functionality.',
                 },
                 { status: 403 },
             );
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
             if (!effectiveApiKeys.GEMINI_API_KEY) {
                 if (!process.env.GEMINI_API_KEY) {
                     return NextResponse.json(
-                        { error: "System Gemini API key not configured" },
+                        { error: 'System Gemini API key not configured' },
                         { status: 500 },
                     );
                 }
@@ -209,12 +209,12 @@ export async function POST(request: NextRequest) {
             if (!effectiveApiKeys.GEMINI_API_KEY || !effectiveApiKeys.GEMINI_API_KEY.trim()) {
                 return NextResponse.json(
                     {
-                        error: "Please add your Google Gemini API key",
+                        error: 'Please add your Google Gemini API key',
                         message:
-                            "Document understanding requires your own Google Gemini API key. Please add your Gemini API key in Settings > API Keys, or upgrade to VT+ for server-funded access.",
-                        requiredApiKey: "GEMINI_API_KEY",
-                        providerName: "Google Gemini",
-                        settingsAction: "open_api_keys_settings",
+                            'Document understanding requires your own Google Gemini API key. Please add your Gemini API key in Settings > API Keys, or upgrade to VT+ for server-funded access.',
+                        requiredApiKey: 'GEMINI_API_KEY',
+                        providerName: 'Google Gemini',
+                        settingsAction: 'open_api_keys_settings',
                     },
                     { status: 403 },
                 );
@@ -238,7 +238,8 @@ export async function POST(request: NextRequest) {
         const { object } = await generateObject({
             model: googleProvider(chatMode),
             schema,
-            prompt: `You are an expert document analyzer. Extract structured data from the following ${documentType} document.
+            prompt:
+                `You are an expert document analyzer. Extract structured data from the following ${documentType} document.
 
 Be thorough and accurate in your extraction. Follow these guidelines:
 - Extract all relevant information that matches the schema
@@ -256,16 +257,16 @@ ${textContent}`,
         return NextResponse.json({
             data: object,
             type: documentType,
-            fileName: fileName || "unknown",
+            fileName: fileName || 'unknown',
             extractedAt: new Date().toISOString(),
             confidence: 0.9,
         });
     } catch (error) {
-        log.error("Structured extraction failed:", { error });
+        log.error('Structured extraction failed:', { error });
         return NextResponse.json(
             {
-                error: "Failed to extract structured data",
-                details: error instanceof Error ? error.message : "Unknown error",
+                error: 'Failed to extract structured data',
+                details: error instanceof Error ? error.message : 'Unknown error',
             },
             { status: 500 },
         );

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/logger";
-import { Component, type ReactNode } from "react";
-import { MinimalErrorPage } from "./minimal-error-page";
+import { log } from '@repo/shared/logger';
+import { Component, type ReactNode } from 'react';
+import { MinimalErrorPage } from './minimal-error-page';
 
 interface Props {
     children: ReactNode;
@@ -25,7 +25,7 @@ export class AuthErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: any) {
-        log.error({ error, errorInfo }, "[Auth Error Boundary] Caught error");
+        log.error({ error, errorInfo }, '[Auth Error Boundary] Caught error');
     }
 
     render() {
@@ -33,13 +33,13 @@ export class AuthErrorBoundary extends Component<Props, State> {
             return (
                 this.props.fallback || (
                     <MinimalErrorPage
-                        code="401"
-                        title="Authentication Error"
-                        description="Please refresh the page or try again later."
+                        code='401'
+                        title='Authentication Error'
+                        description='Please refresh the page or try again later.'
                         actionButton={{
-                            text: "Refresh Page",
+                            text: 'Refresh Page',
                             onClick: () =>
-                                typeof window !== "undefined" && window.location.reload(),
+                                typeof window !== 'undefined' && window.location.reload(),
                         }}
                     />
                 )

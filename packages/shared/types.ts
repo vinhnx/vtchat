@@ -1,4 +1,4 @@
-import type { ChatMode } from "./config";
+import type { ChatMode } from './config';
 
 export type Project = {
     id: string;
@@ -23,7 +23,7 @@ export type SubStep = {
     status: ItemStatus;
 };
 
-export type ItemStatus = "QUEUED" | "PENDING" | "COMPLETED" | "ERROR" | "ABORTED" | "HUMAN_REVIEW";
+export type ItemStatus = 'QUEUED' | 'PENDING' | 'COMPLETED' | 'ERROR' | 'ABORTED' | 'HUMAN_REVIEW';
 
 export type Step = {
     id: string;
@@ -45,14 +45,14 @@ export type Answer = {
 };
 
 export type ToolCall = {
-    type: "tool-call";
+    type: 'tool-call';
     toolCallId: string;
     toolName: string;
     args: any;
 };
 
 export type ToolResult = {
-    type: "tool-result";
+    type: 'tool-result';
     toolCallId: string;
     toolName: string;
     args: any;
@@ -100,17 +100,17 @@ export type ThreadItem = {
     reasoning?: string;
     // Structured reasoning details from AI SDK (includes text and redacted content)
     reasoningDetails?: Array<{
-        type: "text" | "redacted";
+        type: 'text' | 'redacted';
         text?: string;
         data?: string;
         signature?: string;
     }>;
     // Message parts for AI SDK reasoning support
     parts?: Array<{
-        type: "text" | "reasoning";
+        type: 'text' | 'reasoning';
         text?: string;
         details?: Array<{
-            type: "text" | "redacted";
+            type: 'text' | 'redacted';
             text?: string;
         }>;
     }>;

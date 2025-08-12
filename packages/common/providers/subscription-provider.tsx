@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * Global Subscription Provider
@@ -7,16 +7,16 @@
  * Uses the optimized session-cached API endpoint and shares state across all components.
  */
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { requestDeduplicator } from "@repo/shared/utils/request-deduplication";
-import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period"; // Corrected import
-import type React from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { VT_BASE_PRODUCT_INFO } from "../../shared/config/payment";
-import { PortalReturnIndicator } from "../components/portal-return-indicator";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
+import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period'; // Corrected import
+import type React from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
+import { PortalReturnIndicator } from '../components/portal-return-indicator';
 
 export interface SubscriptionStatus {
     plan: string;
@@ -29,11 +29,11 @@ export interface SubscriptionStatus {
     fromCache?: boolean;
     cachedAt?: Date;
     fetchCount?: number;
-    lastRefreshTrigger?: "initial" | "payment" | "expiration" | "page_refresh" | "manual";
+    lastRefreshTrigger?: 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
     isAnonymous?: boolean;
 }
 
-type RefreshTrigger = "initial" | "payment" | "expiration" | "page_refresh" | "manual";
+type RefreshTrigger = 'initial' | 'payment' | 'expiration' | 'page_refresh' | 'manual';
 
 interface SubscriptionContextType {
     subscriptionStatus: SubscriptionStatus | null;
@@ -82,7 +82,7 @@ export function resetGlobalSubscriptionState(): void {
 }
 
 // Clean up global state on hot module reload in development
-if (typeof module !== "undefined" && module.hot) {
+if (typeof module !== 'undefined' && module.hot) {
     module.hot.dispose(() => {
         resetGlobalSubscriptionState();
     });
@@ -106,7 +106,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const [previousUserId, setPreviousUserId] = useState<string | null>(session?.user?.id || null);
 
     const fetchSubscriptionStatus = useCallback(
-        async (trigger: RefreshTrigger = "initial", forceRefresh = false) => {
+        async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
             const userId = session?.user?.id || null;
             // const userDescription = userId ? `user ${userId}` : 'anonymous user'; // Removed - no longer used in production logs
 
@@ -167,12 +167,12 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     // Build API URL with trigger and force refresh parameters
                     const params = new URLSearchParams({
                         trigger,
-                        ...(forceRefresh && { force: "true" }),
+                        ...(forceRefresh && { force: 'true' }),
                     });
 
                     // Create AbortController for timeout (longer in development)
                     const controller = new AbortController();
-                    const timeoutMs = process.env.NODE_ENV === "development" ? 30_000 : 15_000; // 30s dev, 15s prod
+                    const timeoutMs = process.env.NODE_ENV === 'development' ? 30_000 : 15_000; // 30s dev, 15s prod
                     const timeoutId = setTimeout(() => {
                         controller.abort();
                     }, timeoutMs);
@@ -181,7 +181,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         const response = await fetch(`/api/subscription/status?${params}`, {
                             signal: controller.signal,
                             headers: {
-                                "Cache-Control": "no-cache",
+                                'Cache-Control': 'no-cache',
                             },
                         });
 
@@ -217,8 +217,8 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                     } catch (error) {
                         clearTimeout(timeoutId);
 
-                        if (error instanceof Error && error.name === "AbortError") {
-                            const timeoutSec = process.env.NODE_ENV === "development" ? 30 : 15;
+                        if (error instanceof Error && error.name === 'AbortError') {
+                            const timeoutSec = process.env.NODE_ENV === 'development' ? 30 : 15;
                             log.warn(
                                 `Subscription fetch timeout (${timeoutSec}s) - using cached status`,
                                 {
@@ -239,9 +239,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
                         }
 
                         // Handle network errors during page navigation
-                        if (error instanceof TypeError && error.message.includes("NetworkError")) {
+                        if (error instanceof TypeError && error.message.includes('NetworkError')) {
                             throw new Error(
-                                "Network error - request cancelled during page navigation",
+                                'Network error - request cancelled during page navigation',
                             );
                         }
 
@@ -281,17 +281,17 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
                 return result;
             } catch (err) {
-                const errorMessage = err instanceof Error ? err.message : "Unknown error";
+                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
                 // Don't log network errors during page navigation as errors
                 if (
-                    errorMessage.includes("request cancelled during page navigation") ||
-                    errorMessage.includes("NetworkError") ||
-                    errorMessage.includes("AbortError")
+                    errorMessage.includes('request cancelled during page navigation')
+                    || errorMessage.includes('NetworkError')
+                    || errorMessage.includes('AbortError')
                 ) {
-                    log.debug("Request cancelled during page navigation", { error: errorMessage });
+                    log.debug('Request cancelled during page navigation', { error: errorMessage });
                 } else {
-                    log.error({ error: errorMessage }, "Error fetching subscription status");
+                    log.error({ error: errorMessage }, 'Error fetching subscription status');
                 }
 
                 // Update global and local error state
@@ -326,7 +326,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     // Initial fetch when provider mounts - this handles page refresh
     useEffect(() => {
         // Always fetch on mount to ensure fresh data after page refresh
-        const trigger = globalSubscriptionStatus ? "page_refresh" : "initial";
+        const trigger = globalSubscriptionStatus ? 'page_refresh' : 'initial';
         fetchSubscriptionStatus(trigger);
     }, [fetchSubscriptionStatus]); // Include dependency but it's stable due to useCallback
 
@@ -335,7 +335,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
         if (session?.user) {
             // Only fetch if we don't have data yet or if the session actually changed
             if (!globalSubscriptionStatus || globalIsLoading) {
-                fetchSubscriptionStatus("initial", false);
+                fetchSubscriptionStatus('initial', false);
             }
         }
     }, [session?.user, fetchSubscriptionStatus]);
@@ -362,7 +362,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
-        async (forceRefresh = false, trigger: RefreshTrigger = "manual") => {
+        async (forceRefresh = false, trigger: RefreshTrigger = 'manual') => {
             await fetchSubscriptionStatus(trigger, forceRefresh);
         },
         [fetchSubscriptionStatus],
@@ -371,19 +371,19 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     // Auto-refresh when returning from payment (detect URL changes)
     useEffect(() => {
         const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible") {
+            if (document.visibilityState === 'visible') {
                 // Check if we're returning from a payment flow
                 const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has("checkout_success") || urlParams.has("payment_success")) {
+                if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
                     // log.info({}, 'Detected return from payment, refreshing subscription'); // Removed - too verbose for production
                     setIsPortalReturn(true);
-                    refreshSubscriptionStatus(true, "payment");
+                    refreshSubscriptionStatus(true, 'payment');
 
                     // Clean up URL parameters after handling
                     if (window.history.replaceState) {
                         const url = new URL(window.location.href);
-                        url.searchParams.delete("checkout_success");
-                        url.searchParams.delete("payment_success");
+                        url.searchParams.delete('checkout_success');
+                        url.searchParams.delete('payment_success');
                         window.history.replaceState({}, document.title, url.toString());
                     }
                 }
@@ -392,11 +392,11 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
         const handlePopState = () => {
             // Handle browser back/forward navigation
-            refreshSubscriptionStatus(false, "page_refresh");
+            refreshSubscriptionStatus(false, 'page_refresh');
         };
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-        window.addEventListener("popstate", handlePopState);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('popstate', handlePopState);
 
         const handleBeforeUnload = () => {
             // Clear any pending requests before page unload
@@ -405,12 +405,12 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             }
         };
 
-        window.addEventListener("beforeunload", handleBeforeUnload);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-            window.removeEventListener("popstate", handlePopState);
-            window.removeEventListener("beforeunload", handleBeforeUnload);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [refreshSubscriptionStatus]); // Include dependency but it's stable due to useCallback
 
@@ -429,7 +429,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
             // Only refresh when actually expired and status is not already expired
             // This prevents infinite loops from repeated "expiration" trigger calls
             if (daysDiff <= 0 && subscriptionStatus.status !== SubscriptionStatusEnum.EXPIRED) {
-                refreshSubscriptionStatus(true, "expiration");
+                refreshSubscriptionStatus(true, 'expiration');
             }
         };
 
@@ -495,7 +495,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 export function useGlobalSubscriptionStatus(): SubscriptionContextType {
     const context = useContext(SubscriptionContext);
     if (context === undefined) {
-        throw new Error("useGlobalSubscriptionStatus must be used within a SubscriptionProvider");
+        throw new Error('useGlobalSubscriptionStatus must be used within a SubscriptionProvider');
     }
     return context;
 }
@@ -505,6 +505,6 @@ export function useGlobalSubscriptionStatus(): SubscriptionContextType {
  * Wraps the global subscription context
  */
 export function useSubscriptionStatus() {
-    log.warn({}, "useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.");
+    log.warn({}, 'useSubscriptionStatus is deprecated. Use useGlobalSubscriptionStatus instead.');
     return useGlobalSubscriptionStatus();
 }

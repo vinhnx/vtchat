@@ -81,7 +81,7 @@ vtchat/
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
-- **Code Quality**: Biome (formatting & linting) + oxlint (comprehensive linting)
+- **Code Quality**: dprint (formatting) + oxlint (comprehensive linting)
 - **Type Checking**: TypeScript with strict configuration
 - **Performance Monitoring**: React Scan for development performance optimization
 
@@ -130,7 +130,7 @@ vtchat/
 ### Development Workflow
 
 - Plan before implementing significant tasks; request maintainer feedback on the plan
-- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
@@ -138,7 +138,7 @@ vtchat/
 
 ### Git Hooks
 
-- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Manual fixes**: Run `bun run fmt` and `bun run fmt:check` for comprehensive fixes
 - **Philosophy**: Encourage good practices without blocking development flow
 
 ## Core Documentation
@@ -215,7 +215,7 @@ Security: NEXT_PUBLIC_BASE_URL
 
 ### Linting & Formatting
 - oxlint for comprehensive error checking
-- Biome for code formatting and style enforcement
+- dprint for code formatting and style enforcement
 - TypeScript strict configuration for type safety
 
 ### Testing Framework

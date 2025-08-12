@@ -170,44 +170,44 @@ All sensitive variables properly stored as Fly.io secrets:
 ### 🔴 CRITICAL (Domain)
 
 1. **Configure DNS for vtchat.io.vn**
-    ```
-    Add CNAME record: vtchat.io.vn → vtchat.fly.dev
-    ```
+   ```
+   Add CNAME record: vtchat.io.vn → vtchat.fly.dev
+   ```
 
 ### 🟡 IMPORTANT (Optional Enhancements)
 
 1. **Add Error Monitoring**
 
-    ```bash
-    # Add Sentry DSN for production error tracking
-    fly secrets set NEXT_PUBLIC_SENTRY_DSN="your-sentry-dsn" --app vtchat
-    ```
+   ```bash
+   # Add Sentry DSN for production error tracking
+   fly secrets set NEXT_PUBLIC_SENTRY_DSN="your-sentry-dsn" --app vtchat
+   ```
 
 2. **Add User Analytics**
 
-    ```bash
-    # Add Hotjar for user behavior tracking
-    fly secrets set NEXT_PUBLIC_HOTJAR_SITE_ID="your-site-id" --app vtchat
-    fly secrets set NEXT_PUBLIC_HOTJAR_VERSION="6" --app vtchat
-    ```
+   ```bash
+   # Add Hotjar for user behavior tracking
+   fly secrets set NEXT_PUBLIC_HOTJAR_SITE_ID="your-site-id" --app vtchat
+   fly secrets set NEXT_PUBLIC_HOTJAR_VERSION="6" --app vtchat
+   ```
 
 3. **Additional AI Providers**
-    ```bash
-    # Optional: Add OpenAI for additional model options
-    fly secrets set OPENAI_API_KEY="your-openai-key" --app vtchat
-    ```
+   ```bash
+   # Optional: Add OpenAI for additional model options
+   fly secrets set OPENAI_API_KEY="your-openai-key" --app vtchat
+   ```
 
 ### 🟢 OPERATIONAL
 
 1. **Monitor Resource Usage**
-    - Check Fly.io metrics dashboard
-    - Monitor memory/CPU usage patterns
-    - Adjust machine specs if needed
+   - Check Fly.io metrics dashboard
+   - Monitor memory/CPU usage patterns
+   - Adjust machine specs if needed
 
 2. **Regular Security Updates**
-    - Rotate secrets periodically
-    - Update dependencies regularly
-    - Monitor security advisories
+   - Rotate secrets periodically
+   - Update dependencies regularly
+   - Monitor security advisories
 
 ## ✅ Production Readiness Checklist
 

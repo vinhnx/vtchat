@@ -1,10 +1,10 @@
-import { Atom, Star } from "lucide-react";
+import { Atom, Star } from 'lucide-react';
 
 export const getIconByName = (iconName: string) => {
     switch (iconName) {
-        case "Atom":
+        case 'Atom':
             return <Atom size={16} />;
-        case "Star":
+        case 'Star':
             return <Star size={16} />;
         default:
             return null;

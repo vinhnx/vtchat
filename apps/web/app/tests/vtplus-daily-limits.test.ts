@@ -1,6 +1,6 @@
-import { VT_PLUS_LIMITS, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
-import { consumeQuota, getAllUsage, getUsage } from "@repo/common/lib/vtplusRateLimiter";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { VT_PLUS_LIMITS, VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { consumeQuota, getAllUsage, getUsage } from '@repo/common/lib/vtplusRateLimiter';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock database
 const mockDb = {
@@ -11,19 +11,19 @@ const mockDb = {
 
 const mockSchema = {
     vtplusUsage: {
-        userId: "userId",
-        feature: "feature",
-        periodStart: "periodStart",
+        userId: 'userId',
+        feature: 'feature',
+        periodStart: 'periodStart',
     },
 };
 
 // Mock imports
-vi.mock("@repo/shared/lib/database", () => ({
+vi.mock('@repo/shared/lib/database', () => ({
     db: mockDb,
     schema: mockSchema,
 }));
 
-vi.mock("@repo/shared/lib/logger", () => ({
+vi.mock('@repo/shared/lib/logger', () => ({
     log: {
         info: vi.fn(),
         error: vi.fn(),
@@ -31,12 +31,12 @@ vi.mock("@repo/shared/lib/logger", () => ({
     },
 }));
 
-vi.mock("@repo/common/utils/neon-mcp", () => ({
+vi.mock('@repo/common/utils/neon-mcp', () => ({
     queryMcp: vi.fn(),
     isNeonMcpEnabled: vi.fn().mockReturnValue(false),
 }));
 
-describe("VT+ Daily Limits", () => {
+describe('VT+ Daily Limits', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         // Reset process.env for clean tests
@@ -45,39 +45,39 @@ describe("VT+ Daily Limits", () => {
         delete process.env.VTPLUS_DAILY_LIMIT_PS;
     });
 
-    describe("Configuration", () => {
-        it("should set daily limits for Deep Research and Pro Search", () => {
+    describe('Configuration', () => {
+        it('should set daily limits for Deep Research and Pro Search', () => {
             expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toEqual({
                 limit: 5,
-                window: "daily",
+                window: 'daily',
             });
 
             expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toEqual({
                 limit: 10,
-                window: "daily",
+                window: 'daily',
             });
         });
 
-        it("should respect environment variables for limits", () => {
+        it('should respect environment variables for limits', () => {
             // Set environment variables
-            process.env.VTPLUS_DAILY_LIMIT_DR = "3";
-            process.env.VTPLUS_DAILY_LIMIT_PS = "7";
+            process.env.VTPLUS_DAILY_LIMIT_DR = '3';
+            process.env.VTPLUS_DAILY_LIMIT_PS = '7';
 
             // Re-import to get updated config
-            const { VT_PLUS_LIMITS: updatedLimits } = require("@repo/common/config/vtPlusLimits");
+            const { VT_PLUS_LIMITS: updatedLimits } = require('@repo/common/config/vtPlusLimits');
 
             expect(updatedLimits[VtPlusFeature.DEEP_RESEARCH].limit).toBe(3);
             expect(updatedLimits[VtPlusFeature.PRO_SEARCH].limit).toBe(7);
         });
     });
 
-    describe("Daily Period Calculation", () => {
-        it("should use current day for daily window features", async () => {
+    describe('Daily Period Calculation', () => {
+        it('should use current day for daily window features', async () => {
             const mockRecord = {
                 used: 1,
                 feature: VtPlusFeature.DEEP_RESEARCH,
-                userId: "user123",
-                periodStart: new Date().toISOString().split("T")[0],
+                userId: 'user123',
+                periodStart: new Date().toISOString().split('T')[0],
             };
 
             mockDb.select = vi.fn().mockReturnValue({
@@ -88,7 +88,7 @@ describe("VT+ Daily Limits", () => {
                 }),
             });
 
-            const usage = await getUsage("user123", VtPlusFeature.DEEP_RESEARCH);
+            const usage = await getUsage('user123', VtPlusFeature.DEEP_RESEARCH);
 
             // Verify it uses today's date for daily window
             const today = new Date();
@@ -96,19 +96,19 @@ describe("VT+ Daily Limits", () => {
                 Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
             );
 
-            expect(usage.periodStart.toISOString().split("T")[0]).toBe(
-                expectedPeriodStart.toISOString().split("T")[0],
+            expect(usage.periodStart.toISOString().split('T')[0]).toBe(
+                expectedPeriodStart.toISOString().split('T')[0],
             );
         });
     });
 
-    describe("Mixed Window Query Optimization", () => {
-        it("should efficiently query features with different windows in getAllUsage", async () => {
+    describe('Mixed Window Query Optimization', () => {
+        it('should efficiently query features with different windows in getAllUsage', async () => {
             const dailyRecord = {
                 used: 3,
                 feature: VtPlusFeature.DEEP_RESEARCH,
-                userId: "user123",
-                periodStart: new Date().toISOString().split("T")[0],
+                userId: 'user123',
+                periodStart: new Date().toISOString().split('T')[0],
             };
 
             mockDb.select = vi.fn().mockReturnValue({
@@ -122,7 +122,7 @@ describe("VT+ Daily Limits", () => {
                 }),
             });
 
-            const allUsage = await getAllUsage("user123");
+            const allUsage = await getAllUsage('user123');
 
             // Should make a single query for daily features
             expect(mockDb.select).toHaveBeenCalledTimes(1);
@@ -133,8 +133,8 @@ describe("VT+ Daily Limits", () => {
         });
     });
 
-    describe("Quota Consumption with Windows", () => {
-        it("should consume daily quota correctly", async () => {
+    describe('Quota Consumption with Windows', () => {
+        it('should consume daily quota correctly', async () => {
             const mockTransaction = vi.fn().mockImplementation(async (callback) => {
                 const mockTx = {
                     execute: vi.fn().mockResolvedValue({
@@ -147,7 +147,7 @@ describe("VT+ Daily Limits", () => {
             mockDb.transaction = mockTransaction;
 
             await consumeQuota({
-                userId: "user123",
+                userId: 'user123',
                 feature: VtPlusFeature.DEEP_RESEARCH,
                 amount: 1,
             });

@@ -32,9 +32,9 @@ Successfully migrated VTChat from React 18.3.1 to React 19.0.0 on January 13, 20
 **Fix**: Added validation to check if element can receive DOM props before cloning
 
 ```typescript
-const gatedChildren = React.isValidElement(children) && typeof children.type !== 'symbol' ?
-    React.cloneElement(children, {...props}) :
-    <div {...gatedProps}>{children}</div>
+const gatedChildren = React.isValidElement(children) && typeof children.type !== 'symbol'
+    ? React.cloneElement(children, { ...props })
+    : <div {...gatedProps}>{children}</div>;
 ```
 
 #### 2. FeatureToggleButton Component

@@ -2,13 +2,13 @@
  * Cross-process cache invalidation using Redis pub/sub
  */
 
-import { log } from "@repo/shared/lib/logger";
-import { redisCache } from "@/lib/cache/redis-cache";
-import { invalidateSessionSubscriptionCache } from "@/lib/subscription-session-cache";
+import { redisCache } from '@/lib/cache/redis-cache';
+import { invalidateSessionSubscriptionCache } from '@/lib/subscription-session-cache';
+import { log } from '@repo/shared/lib/logger';
 
 let subscriptionInitialized = false;
 
-const CACHE_INVALIDATION_CHANNEL = "subscription:invalidate";
+const CACHE_INVALIDATION_CHANNEL = 'subscription:invalidate';
 
 /**
  * Publishes a cache invalidation message across all processes
@@ -18,7 +18,7 @@ export async function publishCacheInvalidation(userId: string): Promise<void> {
         // Get Redis client for publishing
         const client = redisCache.getClient?.();
         if (!client) {
-            log.warn("Redis client not available for cache invalidation broadcast");
+            log.warn('Redis client not available for cache invalidation broadcast');
             return;
         }
 
@@ -26,9 +26,9 @@ export async function publishCacheInvalidation(userId: string): Promise<void> {
             CACHE_INVALIDATION_CHANNEL,
             JSON.stringify({ userId, timestamp: Date.now() }),
         );
-        log.debug("Published cache invalidation", { userId, channel: CACHE_INVALIDATION_CHANNEL });
+        log.debug('Published cache invalidation', { userId, channel: CACHE_INVALIDATION_CHANNEL });
     } catch (error) {
-        log.error("Failed to publish cache invalidation", { userId, error });
+        log.error('Failed to publish cache invalidation', { userId, error });
     }
 }
 
@@ -45,13 +45,12 @@ export async function subscribeToCacheInvalidation(): Promise<void> {
         const client = redisCache.getClient?.();
         if (!client) {
             // Use debug level during build time to reduce noise
-            const isBuildTime =
-                process.env.NEXT_PHASE === "phase-production-build" ||
-                (process.env.NODE_ENV === "production" && !process.env.REDIS_URL);
+            const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build'
+                || (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL);
             if (isBuildTime) {
-                log.debug("Redis client not available for cache invalidation subscription");
+                log.debug('Redis client not available for cache invalidation subscription');
             } else {
-                log.warn("Redis client not available for cache invalidation subscription");
+                log.warn('Redis client not available for cache invalidation subscription');
             }
             return;
         }
@@ -60,7 +59,7 @@ export async function subscribeToCacheInvalidation(): Promise<void> {
         await client.subscribe(CACHE_INVALIDATION_CHANNEL);
 
         // Listen for messages
-        client.on("message", (channel, message) => {
+        client.on('message', (channel, message) => {
             if (channel !== CACHE_INVALIDATION_CHANNEL) return;
 
             try {
@@ -69,22 +68,22 @@ export async function subscribeToCacheInvalidation(): Promise<void> {
                 // Invalidate local session cache for this user
                 invalidateSessionSubscriptionCache(userId);
 
-                log.debug("Received and processed cache invalidation", {
+                log.debug('Received and processed cache invalidation', {
                     userId,
                     timestamp,
                     channel: CACHE_INVALIDATION_CHANNEL,
                 });
             } catch (error) {
-                log.error("Failed to process cache invalidation message", { message, error });
+                log.error('Failed to process cache invalidation message', { message, error });
             }
         });
 
         subscriptionInitialized = true;
-        log.info("Subscribed to cache invalidation messages", {
+        log.info('Subscribed to cache invalidation messages', {
             channel: CACHE_INVALIDATION_CHANNEL,
         });
     } catch (error) {
-        log.error("Failed to subscribe to cache invalidation", { error });
+        log.error('Failed to subscribe to cache invalidation', { error });
     }
 }
 
@@ -99,12 +98,12 @@ export async function invalidateAllCaches(userId: string): Promise<void> {
     await redisCache.invalidateSubscription(userId);
 
     // 3. Initialize subscription if not already done (lazy initialization)
-    if (!subscriptionInitialized && typeof window === "undefined") {
+    if (!subscriptionInitialized && typeof window === 'undefined') {
         await subscribeToCacheInvalidation();
     }
 
     // 4. Broadcast to other processes
     await publishCacheInvalidation(userId);
 
-    log.info("Invalidated all caches for user", { userId });
+    log.info('Invalidated all caches for user', { userId });
 }

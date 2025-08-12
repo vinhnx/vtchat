@@ -65,12 +65,12 @@ fly deploy
 
 ```toml
 [env]
-  BASE_URL = "https://vtchat-dev.fly.dev"
-  BETTER_AUTH_URL = "https://vtchat-dev.fly.dev"
-  NEXT_PUBLIC_BASE_URL = "https://vtchat-dev.fly.dev"
-  NEXT_PUBLIC_APP_URL = "https://vtchat-dev.fly.dev"
-  CREEM_ENVIRONMENT = "sandbox"
-  BETTER_AUTH_ENV = "production"
+BASE_URL = "https://vtchat-dev.fly.dev"
+BETTER_AUTH_URL = "https://vtchat-dev.fly.dev"
+NEXT_PUBLIC_BASE_URL = "https://vtchat-dev.fly.dev"
+NEXT_PUBLIC_APP_URL = "https://vtchat-dev.fly.dev"
+CREEM_ENVIRONMENT = "sandbox"
+BETTER_AUTH_ENV = "production"
 ```
 
 ### Secrets (via fly secrets)

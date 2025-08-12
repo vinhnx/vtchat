@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ChatMode } from "@repo/shared/config";
-import { log } from "@repo/shared/logger";
+import { ChatMode } from '@repo/shared/config';
+import { log } from '@repo/shared/logger';
 import {
     Button,
     Dialog,
@@ -11,10 +11,10 @@ import {
     DialogTitle,
     Input,
     Label,
-} from "@repo/ui";
-import { ExternalLink, Key } from "lucide-react";
-import { useEffect, useState } from "react";
-import { type ApiKeys, useApiKeysStore } from "../store/api-keys.store";
+} from '@repo/ui';
+import { ExternalLink, Key } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { type ApiKeys, useApiKeysStore } from '../store/api-keys.store';
 
 interface ApiKeyPromptModalProps {
     isOpen: boolean;
@@ -33,17 +33,17 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.GPT_4_1_Mini:
         case ChatMode.GPT_4_1_Nano:
         case ChatMode.GPT_4_1:
-            return "OPENAI_API_KEY";
+            return 'OPENAI_API_KEY';
         case ChatMode.Pro:
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_PRO:
-            return "GEMINI_API_KEY";
+            return 'GEMINI_API_KEY';
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
-            return "ANTHROPIC_API_KEY";
+            return 'ANTHROPIC_API_KEY';
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
-            return "XAI_API_KEY";
+            return 'XAI_API_KEY';
         // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
         case ChatMode.DEEPSEEK_R1:
@@ -51,7 +51,7 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.QWEN3_32B:
         case ChatMode.MISTRAL_NEMO:
         case ChatMode.QWEN3_14B:
-            return "OPENROUTER_API_KEY";
+            return 'OPENROUTER_API_KEY';
         default:
             return null;
     }
@@ -60,52 +60,52 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
 const getApiKeyInfo = (provider: keyof ApiKeys) => {
     const info = {
         OPENAI_API_KEY: {
-            name: "OpenAI",
-            url: "https://platform.openai.com/api-keys",
-            placeholder: "sk-...",
-            description: "Get your API key from OpenAI Platform",
+            name: 'OpenAI',
+            url: 'https://platform.openai.com/api-keys',
+            placeholder: 'sk-...',
+            description: 'Get your API key from OpenAI Platform',
         },
         ANTHROPIC_API_KEY: {
-            name: "Anthropic",
-            url: "https://console.anthropic.com/settings/keys",
-            placeholder: "sk-ant-...",
-            description: "Get your API key from Anthropic Console",
+            name: 'Anthropic',
+            url: 'https://console.anthropic.com/settings/keys',
+            placeholder: 'sk-ant-...',
+            description: 'Get your API key from Anthropic Console',
         },
         GEMINI_API_KEY: {
-            name: "Google Gemini",
-            url: "https://ai.google.dev/api",
-            placeholder: "AIza...",
-            description: "Get your API key from Google AI Studio",
+            name: 'Google Gemini',
+            url: 'https://ai.google.dev/api',
+            placeholder: 'AIza...',
+            description: 'Get your API key from Google AI Studio',
         },
         FIREWORKS_API_KEY: {
-            name: "Fireworks",
-            url: "https://fireworks.ai/api-keys",
-            placeholder: "fw-...",
-            description: "Get your API key from Fireworks AI",
+            name: 'Fireworks',
+            url: 'https://fireworks.ai/api-keys',
+            placeholder: 'fw-...',
+            description: 'Get your API key from Fireworks AI',
         },
         XAI_API_KEY: {
-            name: "xAI Grok",
-            url: "https://x.ai/api",
-            placeholder: "xai-...",
-            description: "Get your API key from xAI",
+            name: 'xAI Grok',
+            url: 'https://x.ai/api',
+            placeholder: 'xai-...',
+            description: 'Get your API key from xAI',
         },
         JINA_API_KEY: {
-            name: "Jina",
-            url: "https://jina.ai/api",
-            placeholder: "jina-...",
-            description: "Get your API key from Jina AI",
+            name: 'Jina',
+            url: 'https://jina.ai/api',
+            placeholder: 'jina-...',
+            description: 'Get your API key from Jina AI',
         },
         OPENROUTER_API_KEY: {
-            name: "OpenRouter",
-            url: "https://openrouter.ai/keys",
-            placeholder: "sk-or-...",
-            description: "Get your API key from OpenRouter",
+            name: 'OpenRouter',
+            url: 'https://openrouter.ai/keys',
+            placeholder: 'sk-or-...',
+            description: 'Get your API key from OpenRouter',
         },
         TOGETHER_API_KEY: {
-            name: "Together",
-            url: "https://api.together.xyz/settings/api-keys",
-            placeholder: "together-...",
-            description: "Get your API key from Together AI",
+            name: 'Together',
+            url: 'https://api.together.xyz/settings/api-keys',
+            placeholder: 'together-...',
+            description: 'Get your API key from Together AI',
         },
     };
 
@@ -121,7 +121,7 @@ export const ApiKeyPromptModal = ({
     const requiredProvider = getRequiredApiKeyForMode(chatMode);
     const setApiKey = useApiKeysStore((state) => state.setKey);
 
-    const [apiKeyValue, setApiKeyValue] = useState("");
+    const [apiKeyValue, setApiKeyValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [, setValidationError] = useState<string | null>(null);
     const [, setIsValid] = useState<boolean | null>(null);
@@ -143,18 +143,18 @@ export const ApiKeyPromptModal = ({
         const validateApiKey = async () => {
             try {
                 // Import validation function dynamically to avoid SSR issues
-                const { validateApiKeyFormat } = await import("@repo/ai/services/api-key-mapper");
+                const { validateApiKeyFormat } = await import('@repo/ai/services/api-key-mapper');
 
                 // Map provider names to validation format
                 const providerMapping: Record<keyof ApiKeys, string> = {
-                    OPENAI_API_KEY: "openai",
-                    ANTHROPIC_API_KEY: "anthropic",
-                    GEMINI_API_KEY: "google",
-                    XAI_API_KEY: "xai",
-                    FIREWORKS_API_KEY: "fireworks",
-                    OPENROUTER_API_KEY: "openrouter",
-                    TOGETHER_API_KEY: "together",
-                    JINA_API_KEY: "together", // Use together format for now
+                    OPENAI_API_KEY: 'openai',
+                    ANTHROPIC_API_KEY: 'anthropic',
+                    GEMINI_API_KEY: 'google',
+                    XAI_API_KEY: 'xai',
+                    FIREWORKS_API_KEY: 'fireworks',
+                    OPENROUTER_API_KEY: 'openrouter',
+                    TOGETHER_API_KEY: 'together',
+                    JINA_API_KEY: 'together', // Use together format for now
                 };
 
                 const providerName = providerMapping[requiredProvider];
@@ -168,13 +168,13 @@ export const ApiKeyPromptModal = ({
                         setValidationError(null);
                         setIsValid(true);
                     } else {
-                        setValidationError(validation.error || "Invalid API key format");
+                        setValidationError(validation.error || 'Invalid API key format');
                         setIsValid(false);
                     }
                 } else {
                     // Basic validation for unknown providers
                     if (apiKeyValue.trim().length < 10) {
-                        setValidationError("API key appears too short");
+                        setValidationError('API key appears too short');
                         setIsValid(false);
                     } else {
                         setValidationError(null);
@@ -182,7 +182,7 @@ export const ApiKeyPromptModal = ({
                     }
                 }
             } catch (error) {
-                log.warn("API key validation failed:", { data: error });
+                log.warn('API key validation failed:', { data: error });
                 // Don't show validation errors if validation service fails
                 setValidationError(null);
                 setIsValid(null);
@@ -202,73 +202,73 @@ export const ApiKeyPromptModal = ({
             setApiKey(requiredProvider, apiKeyValue.trim());
             onComplete?.();
             onClose();
-            setApiKeyValue("");
+            setApiKeyValue('');
         } catch (error) {
-            log.error("Error saving API key:", { data: error });
+            log.error('Error saving API key:', { data: error });
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleClose = () => {
-        setApiKeyValue("");
+        setApiKeyValue('');
         onClose();
     };
 
     return (
         <Dialog onOpenChange={handleClose} open={isOpen}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className='sm:max-w-md'>
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <Key className="h-5 w-5" />
+                    <DialogTitle className='flex items-center gap-2'>
+                        <Key className='h-5 w-5' />
                         API Key Required
                     </DialogTitle>
                     <DialogDescription>
-                        To use {chatMode} mode, you need to provide your {providerInfo.name} API
-                        key.
+                        To use {chatMode} mode, you need to provide your {providerInfo.name}{' '}
+                        API key.
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="api-key">{providerInfo.name} API Key</Label>
+                <div className='space-y-4'>
+                    <div className='space-y-2'>
+                        <Label htmlFor='api-key'>{providerInfo.name} API Key</Label>
                         <Input
                             autoFocus
-                            id="api-key"
+                            id='api-key'
                             onChange={(e) => setApiKeyValue(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter" && !e.shiftKey) {
+                                if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
                                     handleSave();
                                 }
                             }}
                             placeholder={providerInfo.placeholder}
-                            type="password"
+                            type='password'
                             value={apiKeyValue}
                         />
-                        <p className="text-muted-foreground text-sm">{providerInfo.description}</p>
+                        <p className='text-muted-foreground text-sm'>{providerInfo.description}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2">
+                    <div className='flex items-center justify-between pt-2'>
                         <Button
-                            className="flex items-center gap-1"
-                            onClick={() => window.open(providerInfo.url, "_blank")}
-                            size="sm"
-                            variant="outlined"
+                            className='flex items-center gap-1'
+                            onClick={() => window.open(providerInfo.url, '_blank')}
+                            size='sm'
+                            variant='outlined'
                         >
-                            <ExternalLink className="h-3 w-3" />
+                            <ExternalLink className='h-3 w-3' />
                             Get API Key
                         </Button>
 
-                        <div className="flex gap-2">
-                            <Button onClick={handleClose} variant="outlined">
+                        <div className='flex gap-2'>
+                            <Button onClick={handleClose} variant='outlined'>
                                 Cancel
                             </Button>
                             <Button
                                 disabled={!apiKeyValue.trim() || isLoading}
                                 onClick={handleSave}
                             >
-                                {isLoading ? "Saving..." : "Save & Continue"}
+                                {isLoading ? 'Saving...' : 'Save & Continue'}
                             </Button>
                         </div>
                     </div>

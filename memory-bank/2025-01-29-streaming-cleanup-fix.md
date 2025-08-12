@@ -49,9 +49,9 @@ activeControllersRef.current.clear();
 ### What the Fix Does
 
 1. **Calls `stopGeneration()`**: This function in the chat store:
-    - Sets `isGenerating` to false
-    - Clears generation start time and timeout indicator
-    - Aborts the current `abortController`
+   - Sets `isGenerating` to false
+   - Clears generation start time and timeout indicator
+   - Aborts the current `abortController`
 
 2. **Cleans up active controllers**: Ensures all tracked abort controllers are properly aborted and cleared from the tracking set
 
@@ -124,12 +124,12 @@ Added status-aware animation logic:
 ```typescript
 // Determine if this thread item should animate
 // Only animate if it's the last item, currently generating, AND not already completed
-const shouldAnimate =
-    isLast && isGenerating && !['COMPLETED', 'ERROR', 'ABORTED'].includes(threadItem.status || '');
+const shouldAnimate = isLast && isGenerating
+    && !['COMPLETED', 'ERROR', 'ABORTED'].includes(threadItem.status || '');
 
 const { isAnimationComplete, text: animatedText } = useAnimatedText(
     threadItem.answer?.text || '',
-    shouldAnimate
+    shouldAnimate,
 );
 ```
 
@@ -208,7 +208,7 @@ const memoizedCurrentThreadItem = useMemo(() => {
     if (!currentThreadItem) return null;
 
     return (
-        <div key={currentThreadItem.id} className="min-h-[calc(100dvh-16rem)]">
+        <div key={currentThreadItem.id} className='min-h-[calc(100dvh-16rem)]'>
             <ThreadItem
                 key={currentThreadItem.id}
                 threadItem={currentThreadItem}
@@ -274,31 +274,33 @@ useEffect(() => {
 }, [threadItem.status, threadItem.error]);
 
 // Use debounced values in alert
-{debouncedStatus === "ABORTED" && debouncedError && (
-    <Alert>
-        <AlertDescription>
-            <AlertCircle className="mt-0.5 size-3.5" />
-            {debouncedError}
-        </AlertDescription>
-    </Alert>
-)}
+{
+    debouncedStatus === 'ABORTED' && debouncedError && (
+        <Alert>
+            <AlertDescription>
+                <AlertCircle className='mt-0.5 size-3.5' />
+                {debouncedError}
+            </AlertDescription>
+        </Alert>
+    );
+}
 ```
 
 Also improved the memo comparison function:
 
 ```typescript
 // Custom comparison function to prevent unnecessary re-renders and flashing
-(prevProps, nextProps) => {
+((prevProps, nextProps) => {
     return (
-        prevProps.threadItem.id === nextProps.threadItem.id &&
-        prevProps.threadItem.status === nextProps.threadItem.status &&
-        prevProps.threadItem.error === nextProps.threadItem.error &&
-        prevProps.threadItem.answer?.text === nextProps.threadItem.answer?.text &&
-        prevProps.threadItem.updatedAt?.getTime() === nextProps.threadItem.updatedAt?.getTime() &&
-        prevProps.isGenerating === nextProps.isGenerating &&
-        prevProps.isLast === nextProps.isLast
+        prevProps.threadItem.id === nextProps.threadItem.id
+        && prevProps.threadItem.status === nextProps.threadItem.status
+        && prevProps.threadItem.error === nextProps.threadItem.error
+        && prevProps.threadItem.answer?.text === nextProps.threadItem.answer?.text
+        && prevProps.threadItem.updatedAt?.getTime() === nextProps.threadItem.updatedAt?.getTime()
+        && prevProps.isGenerating === nextProps.isGenerating
+        && prevProps.isLast === nextProps.isLast
     );
-};
+});
 ```
 
 ### Impact

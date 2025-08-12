@@ -1,30 +1,30 @@
-import { act, renderHook } from "@testing-library/react";
-import { useLogout } from "../use-logout";
+import { act, renderHook } from '@testing-library/react';
+import { useLogout } from '../use-logout';
 
 // Mock the dependencies
-jest.mock("@repo/shared/lib/auth-client", () => ({
+jest.mock('@repo/shared/lib/auth-client', () => ({
     signOut: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock("next-themes", () => ({
+jest.mock('next-themes', () => ({
     useTheme: () => ({
         setTheme: jest.fn(),
     }),
 }));
 
-jest.mock("../store/api-keys.store", () => ({
+jest.mock('../store/api-keys.store', () => ({
     useApiKeysStore: () => ({
         clearAllKeys: jest.fn(),
     }),
 }));
 
-jest.mock("../store/chat.store", () => ({
+jest.mock('../store/chat.store', () => ({
     useChatStore: () => ({
         clearAllThreads: jest.fn(() => Promise.resolve()),
     }),
 }));
 
-jest.mock("../store/app.store", () => ({
+jest.mock('../store/app.store', () => ({
     useAppStore: () => ({
         resetUserState: jest.fn(),
     }),
@@ -35,23 +35,23 @@ global.fetch = jest.fn(() =>
     Promise.resolve({
         ok: true,
         json: () => Promise.resolve({}),
-    }),
+    })
 ) as jest.Mock;
 
 // Mock window.location.reload
-Object.defineProperty(window, "location", {
+Object.defineProperty(window, 'location', {
     value: {
         reload: jest.fn(),
     },
     writable: true,
 });
 
-describe("useLogout loading state", () => {
+describe('useLogout loading state', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    it("should manage loading state during logout", async () => {
+    it('should manage loading state during logout', async () => {
         const { result } = renderHook(() => useLogout());
 
         // Initially, should not be logging out
@@ -74,7 +74,7 @@ describe("useLogout loading state", () => {
         expect(result.current.isLoggingOut).toBe(false);
     });
 
-    it("should prevent multiple simultaneous logout attempts", async () => {
+    it('should prevent multiple simultaneous logout attempts', async () => {
         const { result } = renderHook(() => useLogout());
 
         // Start first logout

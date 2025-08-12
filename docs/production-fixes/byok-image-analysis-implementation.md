@@ -102,7 +102,6 @@ const chatModeToApiKeyMap = {
     // Research modes
     [ChatMode.Deep]: 'GEMINI_API_KEY',
     [ChatMode.Pro]: 'GEMINI_API_KEY',
-
     // Other providers...
 };
 ```

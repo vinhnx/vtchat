@@ -69,12 +69,11 @@ The slider in VT+ settings converts minutes to seconds:
         setGeminiCaching({
             enabled: geminiCaching.enabled,
             ttlSeconds: value, // Direct seconds value
-        })
-    }
-    min={60}    // 1 minute
-    max={3600}  // 60 minutes
-    step={60}   // 1 minute increments
-/>
+        })}
+    min={60} // 1 minute
+    max={3600} // 60 minutes
+    step={60} // 1 minute increments
+/>;
 
 // Display conversion
 const displayMinutes = Math.round(geminiCaching.ttlSeconds / 60);

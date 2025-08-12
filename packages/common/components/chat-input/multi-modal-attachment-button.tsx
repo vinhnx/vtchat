@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useChatStore } from "@repo/common/store";
-import { supportsMultiModal } from "@repo/shared/config";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import type { Attachment } from "@repo/shared/types";
-import { Button, Tooltip, useToast } from "@repo/ui";
-import { Image } from "lucide-react";
-import { type FC, useCallback, useRef, useState } from "react";
-import { LoginRequiredDialog } from "../login-required-dialog";
+import { useChatStore } from '@repo/common/store';
+import { supportsMultiModal } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import type { Attachment } from '@repo/shared/types';
+import { Button, Tooltip, useToast } from '@repo/ui';
+import { Image } from 'lucide-react';
+import { type FC, useCallback, useRef, useState } from 'react';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 // Create a wrapper component for Paperclip to match expected icon prop type
 const PaperclipIcon: React.ComponentType<{
@@ -46,7 +46,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
             if (attachments.length + files.length > maxFiles) {
                 toast({
                     title: `Maximum ${maxFiles} files allowed`,
-                    variant: "destructive",
+                    variant: 'destructive',
                 });
                 return;
             }
@@ -55,16 +55,16 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 
             try {
                 const formData = new FormData();
-                files.forEach((file) => formData.append("files", file));
+                files.forEach((file) => formData.append('files', file));
 
-                const response = await fetch("/api/upload", {
-                    method: "POST",
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
                     body: formData,
                 });
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.error || "Upload failed");
+                    throw new Error(error.error || 'Upload failed');
                 }
 
                 const data = await response.json();
@@ -73,13 +73,13 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
                 onAttachmentsChange(newAttachments);
                 toast({
                     title: data.message,
-                    variant: "success",
+                    variant: 'success',
                 });
             } catch (error) {
-                log.error({ data: error }, "Upload error");
+                log.error({ data: error }, 'Upload error');
                 toast({
-                    title: error instanceof Error ? error.message : "Upload failed",
-                    variant: "destructive",
+                    title: error instanceof Error ? error.message : 'Upload failed',
+                    variant: 'destructive',
                 });
             } finally {
                 setUploading(false);
@@ -94,7 +94,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
             handleFileUpload(files);
             // Reset input to allow same file to be selected again
             if (fileInputRef.current) {
-                fileInputRef.current.value = "";
+                fileInputRef.current.value = '';
             }
         },
         [handleFileUpload],
@@ -117,35 +117,35 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     }
 
     const getTooltipContent = () => {
-        if (uploading) return "Uploading...";
+        if (uploading) return 'Uploading...';
         if (hasAttachments) {
             const count = attachments.length;
-            const fileNames = attachments.map((a) => a.name).join(", ");
-            return `${count} file${count > 1 ? "s" : ""} attached: ${fileNames}`;
+            const fileNames = attachments.map((a) => a.name).join(', ');
+            return `${count} file${count > 1 ? 's' : ''} attached: ${fileNames}`;
         }
-        return "Attach images";
+        return 'Attach images';
     };
 
     const attachmentButton = (
         <>
             <input
-                accept="image/*"
-                className="hidden"
+                accept='image/*'
+                className='hidden'
                 disabled={disabled || uploading}
                 multiple
                 onChange={handleFileInputChange}
                 ref={fileInputRef}
-                type="file"
+                type='file'
             />
             <Tooltip content={getTooltipContent()}>
                 <Button
-                    className={
-                        hasAttachments ? "border-blue-300 bg-blue-100 hover:bg-blue-200" : ""
-                    }
+                    className={hasAttachments
+                        ? 'border-blue-300 bg-blue-100 hover:bg-blue-200'
+                        : ''}
                     disabled={disabled || uploading}
                     onClick={handleFileSelect}
-                    size="icon-sm"
-                    variant={hasAttachments ? "default" : "ghost"}
+                    size='icon-sm'
+                    variant={hasAttachments ? 'default' : 'ghost'}
                 >
                     <Image size={16} strokeWidth={2} />
                 </Button>
@@ -153,11 +153,11 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 
             {/* Login prompt dialog */}
             <LoginRequiredDialog
-                description="Please log in to upload and attach files to your messages."
+                description='Please log in to upload and attach files to your messages.'
                 icon={PaperclipIcon}
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
-                title="Login Required"
+                title='Login Required'
             />
         </>
     );

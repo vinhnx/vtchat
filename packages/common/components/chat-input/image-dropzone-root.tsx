@@ -1,6 +1,6 @@
-import type { FC } from "react";
-import type { DropzoneState } from "react-dropzone";
-import { ImageDropzone } from "./image-dropzone";
+import type { FC } from 'react';
+import type { DropzoneState } from 'react-dropzone';
+import { ImageDropzone } from './image-dropzone';
 
 export type IImageDropzoneRootProps = {
     children: React.ReactNode;
@@ -9,7 +9,7 @@ export type IImageDropzoneRootProps = {
 export const ImageDropzoneRoot: FC<IImageDropzoneRootProps> = ({ children, dropzoneProps }) => {
     return (
         <div
-            className="relative flex w-full flex-col items-start gap-0"
+            className='relative flex w-full flex-col items-start gap-0'
             {...dropzoneProps.getRootProps()}
         >
             {children}

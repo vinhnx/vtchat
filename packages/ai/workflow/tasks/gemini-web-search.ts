@@ -1,23 +1,23 @@
-import { createTask } from "@repo/orchestrator";
-import { UserTier } from "@repo/shared/constants/user-tiers";
-import { log } from "@repo/shared/lib/logger";
-import { getModelFromChatMode, ModelEnum } from "../../models";
-import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
-import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from "../utils";
+import { createTask } from '@repo/orchestrator';
+import { UserTier } from '@repo/shared/constants/user-tiers';
+import { log } from '@repo/shared/lib/logger';
+import { getModelFromChatMode, ModelEnum } from '../../models';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: "gemini-web-search",
+    name: 'gemini-web-search',
     execute: async ({ data, events, context, signal }) => {
-        const question = context?.get("question") || "";
+        const question = context?.get('question') || '';
         const stepId = data?.stepId;
-        const gl = context?.get("gl");
+        const gl = context?.get('gl');
         const { updateStep } = sendEvents(events);
 
         // Get mode first before using it
-        const mode = context?.get("mode") || "gemini-2.5-flash-lite-preview-06-17";
+        const mode = context?.get('mode') || 'gemini-2.5-flash-lite-preview-06-17';
 
         // Determine if this is Pro Search mode for enhanced capabilities
-        const isProSearch = mode === "pro";
+        const isProSearch = mode === 'pro';
 
         const prompt = isProSearch
             ? `You are conducting a PRO SEARCH - an advanced, intelligent web search with enhanced grounding capabilities.
@@ -26,7 +26,7 @@ export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowConte
 
 **Current Context**:
 - Date: ${getHumanizedDate()}
-${gl?.country ? `- Location: ${gl?.country}` : ""}
+${gl?.country ? `- Location: ${gl?.country}` : ''}
 
 **Pro Search Instructions**:
 1. **Multi-angle Analysis**: Search from multiple perspectives and angles
@@ -45,7 +45,7 @@ ${gl?.country ? `- Location: ${gl?.country}` : ""}
             : `Please search for and provide comprehensive information to answer this question: "${question}"
 
 The current date is: ${getHumanizedDate()}
-${gl?.country ? `Location: ${gl?.country}` : ""}
+${gl?.country ? `Location: ${gl?.country}` : ''}
 
 Please include:
 - Current and relevant information
@@ -55,19 +55,19 @@ Please include:
 
         try {
             // Use the user's selected model (mode already defined above)
-            const userTier = context?.get("userTier") || UserTier.FREE;
-            const userApiKeys = context?.get("apiKeys") || {};
+            const userTier = context?.get('userTier') || UserTier.FREE;
+            const userApiKeys = context?.get('apiKeys') || {};
             const isVtPlusUser = userTier === UserTier.PLUS;
 
-            log.info("=== gemini-web-search EXECUTE START ===");
-            log.info("Chat mode:", { data: mode });
-            log.info("User tier:", { userTier, isVtPlusUser });
-            log.info("Search type:", {
+            log.info('=== gemini-web-search EXECUTE START ===');
+            log.info('Chat mode:', { data: mode });
+            log.info('User tier:', { userTier, isVtPlusUser });
+            log.info('Search type:', {
                 isProSearch,
-                searchCapabilities: isProSearch ? "Enhanced Pro Search" : "Basic Web Search",
+                searchCapabilities: isProSearch ? 'Enhanced Pro Search' : 'Basic Web Search',
             });
 
-            log.info("Context data:", {
+            log.info('Context data:', {
                 hasQuestion: !!question,
                 questionLength: question?.length,
                 hasStepId: stepId !== undefined,
@@ -78,17 +78,17 @@ Please include:
             });
 
             const model = getModelFromChatMode(mode);
-            log.info("Selected model result:", {
+            log.info('Selected model result:', {
                 model,
                 modelType: typeof model,
             });
 
             if (!model) {
-                log.error("No model found for mode:", { data: mode });
+                log.error('No model found for mode:', { data: mode });
                 throw new Error(`Invalid model for mode: ${mode}`);
             }
 
-            log.info("Calling generateTextWithGeminiSearch with:", {
+            log.info('Calling generateTextWithGeminiSearch with:', {
                 model,
                 promptLength: prompt.length,
                 hasByokKeys: !!userApiKeys,
@@ -102,12 +102,12 @@ Please include:
                 prompt,
                 byokKeys: userApiKeys,
                 signal,
-                thinkingMode: context?.get("thinkingMode"),
+                thinkingMode: context?.get('thinkingMode'),
                 userTier,
-                userId: context?.get("userId"),
+                userId: context?.get('userId'),
             });
 
-            log.info("generateTextWithGeminiSearch result:", {
+            log.info('generateTextWithGeminiSearch result:', {
                 hasResult: !!result,
                 hasText: !!result?.text,
                 textLength: result?.text?.length,
@@ -118,7 +118,7 @@ Please include:
 
             // Update sources if available with proper deduplication
             if (result.sources && result.sources.length > 0) {
-                context?.update("sources", (current) => {
+                context?.update('sources', (current) => {
                     const existingSources = current ?? [];
 
                     // Filter out duplicates within the new sources first
@@ -127,10 +127,10 @@ Please include:
 
                     for (const source of result.sources || []) {
                         if (
-                            source?.url &&
-                            typeof source.url === "string" &&
-                            source.url.trim() !== "" &&
-                            !seenUrls.has(source.url)
+                            source?.url
+                            && typeof source.url === 'string'
+                            && source.url.trim() !== ''
+                            && !seenUrls.has(source.url)
                         ) {
                             seenUrls.add(source.url);
                             uniqueNewSources.push(source);
@@ -138,9 +138,9 @@ Please include:
                     }
 
                     const newSources = uniqueNewSources.map((source: any, index: number) => ({
-                        title: source.title || "Web Search Result",
+                        title: source.title || 'Web Search Result',
                         link: source.url,
-                        snippet: source.description || "",
+                        snippet: source.description || '',
                         index: index + (existingSources?.length || 0) + 1,
                     }));
 
@@ -151,26 +151,26 @@ Please include:
                             filteredNewCount: newSources?.length || 0,
                             totalCount: (existingSources.length || 0) + (newSources?.length || 0),
                         },
-                        "Updated sources from Gemini web search with deduplication",
+                        'Updated sources from Gemini web search with deduplication',
                     );
 
                     return [...existingSources, ...newSources];
                 });
             }
 
-            context?.update("summaries", (current) => [...(current ?? []), result.text]);
+            context?.update('summaries', (current) => [...(current ?? []), result.text]);
 
             // Mark step as completed
             if (stepId !== undefined) {
                 updateStep({
                     stepId,
-                    stepStatus: "COMPLETED",
-                    text: "Web search completed successfully",
+                    stepStatus: 'COMPLETED',
+                    text: 'Web search completed successfully',
                     subSteps: {},
                 });
             }
 
-            log.info("=== gemini-web-search EXECUTE END ===");
+            log.info('=== gemini-web-search EXECUTE END ===');
             return {
                 stepId,
                 summary: result.text,
@@ -179,12 +179,12 @@ Please include:
             };
         } catch (error: any) {
             // Get context values for error handling
-            const userTier = context?.get("userTier") || UserTier.FREE;
-            const userApiKeys = context?.get("apiKeys") || {};
+            const userTier = context?.get('userTier') || UserTier.FREE;
+            const userApiKeys = context?.get('apiKeys') || {};
             const model = getModelFromChatMode(mode);
 
-            log.error("=== gemini-web-search ERROR ===");
-            log.error("Error details:", {
+            log.error('=== gemini-web-search ERROR ===');
+            log.error('Error details:', {
                 message: error.message,
                 name: error.name,
                 stack: error.stack,
@@ -195,8 +195,8 @@ Please include:
             if (stepId !== undefined) {
                 updateStep({
                     stepId,
-                    stepStatus: "COMPLETED",
-                    text: `Web search failed: ${error.message || "Unknown error"}`,
+                    stepStatus: 'COMPLETED',
+                    text: `Web search failed: ${error.message || 'Unknown error'}`,
                     subSteps: {},
                 });
             }
@@ -219,19 +219,19 @@ Please include:
                     environment: process.env.NODE_ENV,
                     errorType: error.constructor.name,
                 },
-                "Web search failed with detailed context",
+                'Web search failed with detailed context',
             );
 
-            if (error.message?.includes("Web search requires an API key")) {
+            if (error.message?.includes('Web search requires an API key')) {
                 // Free user needs to provide their own API key for web search
                 throw new Error(
-                    "Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.",
+                    'Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
                 );
             }
-            if (error.message?.includes("API key")) {
+            if (error.message?.includes('API key')) {
                 if (isVtPlusUser && !hasUserApiKey && !hasSystemApiKey) {
                     throw new Error(
-                        "Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.",
+                        'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
                 if (isFreeModel && !hasUserApiKey) {
@@ -240,51 +240,53 @@ Please include:
                     );
                 }
                 throw new Error(
-                    "Gemini API key is required for web search. Please configure your API key in settings.",
+                    'Gemini API key is required for web search. Please configure your API key in settings.',
                 );
             }
-            if (error.message?.includes("unauthorized") || error.message?.includes("401")) {
+            if (error.message?.includes('unauthorized') || error.message?.includes('401')) {
                 if (isVtPlusUser && !hasUserApiKey) {
                     throw new Error(
-                        "Web search service encountered an authentication issue. Please add your own Gemini API key in settings for unlimited usage.",
+                        'Web search service encountered an authentication issue. Please add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        "Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.",
+                        'Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
-                throw new Error("Invalid Gemini API key. Please check your API key in settings.");
+                throw new Error('Invalid Gemini API key. Please check your API key in settings.');
             }
-            if (error.message?.includes("forbidden") || error.message?.includes("403")) {
-                throw new Error("Gemini API access denied. Please check your API key permissions.");
+            if (error.message?.includes('forbidden') || error.message?.includes('403')) {
+                throw new Error('Gemini API access denied. Please check your API key permissions.');
             }
-            if (error.message?.includes("rate limit") || error.message?.includes("429")) {
+            if (error.message?.includes('rate limit') || error.message?.includes('429')) {
                 if (isVtPlusUser && !hasUserApiKey) {
                     throw new Error(
-                        "Web search rate limit reached. Add your own Gemini API key in settings for unlimited usage.",
+                        'Web search rate limit reached. Add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        "Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.",
+                        'Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
                 throw new Error(
-                    "Gemini API rate limit exceeded. Please try again in a few moments.",
+                    'Gemini API rate limit exceeded. Please try again in a few moments.',
                 );
             }
-            if (error.message?.includes("undefined to object")) {
+            if (error.message?.includes('undefined to object')) {
                 throw new Error(
-                    "Web search configuration error. Please try using a different model or check your settings.",
+                    'Web search configuration error. Please try using a different model or check your settings.',
                 );
             }
 
             throw new Error(
-                `Web search failed: ${error.message || "Please try again or use a different model."}`,
+                `Web search failed: ${
+                    error.message || 'Please try again or use a different model.'
+                }`,
             );
         }
     },
     onError: handleError,
-    route: () => "analysis",
+    route: () => 'analysis',
 });

@@ -1,7 +1,7 @@
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import * as React from "react";
+import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import * as React from 'react';
 
-import { cn } from "../lib/utils";
+import { cn } from '../lib/utils';
 
 const Avatar = React.forwardRef<
     React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -9,7 +9,7 @@ const Avatar = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AvatarPrimitive.Root
         ref={ref}
-        className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+        className={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', className)}
         {...props}
     />
 ));
@@ -21,7 +21,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AvatarPrimitive.Image
         ref={ref}
-        className={cn("aspect-square h-full w-full", className)}
+        className={cn('aspect-square h-full w-full', className)}
         {...props}
     />
 ));
@@ -34,7 +34,7 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
         ref={ref}
         className={cn(
-            "bg-muted flex h-full w-full items-center justify-center rounded-full",
+            'bg-muted flex h-full w-full items-center justify-center rounded-full',
             className,
         )}
         {...props}
@@ -49,13 +49,13 @@ export type UnifiedAvatarProps = {
     /** Avatar image source URL */
     src?: string | null | undefined;
     /** Size variant */
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     /** Additional CSS classes */
     className?: string;
     /** Image alt text (defaults to name) */
     alt?: string;
     /** Referrer policy for external images */
-    referrerPolicy?: React.ImgHTMLAttributes<HTMLImageElement>["referrerPolicy"];
+    referrerPolicy?: React.ImgHTMLAttributes<HTMLImageElement>['referrerPolicy'];
     /** Error handler for failed image loads */
     onImageError?: () => void;
     /** Custom fallback content (overrides default initials) */
@@ -70,10 +70,10 @@ const UnifiedAvatar = React.forwardRef<
         {
             name,
             src,
-            size = "md",
+            size = 'md',
             className,
             alt,
-            referrerPolicy = "no-referrer-when-downgrade",
+            referrerPolicy = 'no-referrer-when-downgrade',
             onImageError,
             fallback,
             ...props
@@ -81,26 +81,26 @@ const UnifiedAvatar = React.forwardRef<
         ref,
     ) => {
         const sizeClasses = {
-            xs: "h-6 w-6 min-w-6",
-            sm: "h-7 w-7 min-w-7",
-            md: "h-8 w-8 min-w-8",
-            lg: "h-12 w-12 min-w-12",
-            xl: "h-16 w-16 min-w-16",
+            xs: 'h-6 w-6 min-w-6',
+            sm: 'h-7 w-7 min-w-7',
+            md: 'h-8 w-8 min-w-8',
+            lg: 'h-12 w-12 min-w-12',
+            xl: 'h-16 w-16 min-w-16',
         };
 
         const textSizeClasses = {
-            xs: "text-xs",
-            sm: "text-xs",
-            md: "text-sm",
-            lg: "text-base",
-            xl: "text-lg",
+            xs: 'text-xs',
+            sm: 'text-xs',
+            md: 'text-sm',
+            lg: 'text-base',
+            xl: 'text-lg',
         };
 
         const getInitials = (name: string): string => {
-            if (!name) return "?";
+            if (!name) return '?';
 
             // Handle email addresses
-            if (name.includes("@")) {
+            if (name.includes('@')) {
                 return name.charAt(0).toUpperCase();
             }
 
@@ -125,7 +125,7 @@ const UnifiedAvatar = React.forwardRef<
                 )}
                 <AvatarFallback
                     className={cn(
-                        "bg-muted text-muted-foreground font-medium",
+                        'bg-muted text-muted-foreground font-medium',
                         textSizeClasses[size],
                     )}
                 >
@@ -135,21 +135,21 @@ const UnifiedAvatar = React.forwardRef<
         );
     },
 );
-UnifiedAvatar.displayName = "UnifiedAvatar";
+UnifiedAvatar.displayName = 'UnifiedAvatar';
 
 // Legacy component for backward compatibility
 export type TAvatar = {
     name: string;
     src?: string;
-    size?: "sm" | "md" | "lg";
+    size?: 'sm' | 'md' | 'lg';
     className?: string;
 };
 
-export const AvatarLegacy = ({ name, src, size = "md", className }: TAvatar) => {
+export const AvatarLegacy = ({ name, src, size = 'md', className }: TAvatar) => {
     const sizeClasses = {
-        sm: "h-7 w-7 min-w-7",
-        md: "h-8 w-8 min-w-8",
-        lg: "h-12 w-12 min-w-12",
+        sm: 'h-7 w-7 min-w-7',
+        md: 'h-8 w-8 min-w-8',
+        lg: 'h-12 w-12 min-w-12',
     };
 
     return (
@@ -157,13 +157,13 @@ export const AvatarLegacy = ({ name, src, size = "md", className }: TAvatar) => 
             {src && <AvatarImage alt={name} src={src} />}
             <AvatarFallback
                 className={cn(
-                    "bg-secondary text-secondary-foreground font-bold uppercase",
-                    size === "sm" && "text-xs",
-                    size === "md" && "text-sm",
-                    size === "lg" && "text-base",
+                    'bg-secondary text-secondary-foreground font-bold uppercase',
+                    size === 'sm' && 'text-xs',
+                    size === 'md' && 'text-sm',
+                    size === 'lg' && 'text-base',
                 )}
             >
-                {name?.[0] || "?"}
+                {name?.[0] || '?'}
             </AvatarFallback>
         </Avatar>
     );

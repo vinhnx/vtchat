@@ -1,5 +1,5 @@
-import { log } from "../logger";
-import { generateThreadId, isLegacyThreadId, verifyThreadId } from "./thread-id";
+import { log } from '../logger';
+import { generateThreadId, isLegacyThreadId, verifyThreadId } from './thread-id';
 
 export interface ThreadMigrationResult {
     totalThreads: number;
@@ -12,7 +12,7 @@ export interface ThreadMigrationResult {
  * This function helps transition from nanoid/uuid to legid
  */
 export async function migrateThreadIds(
-    getThreads: () => Promise<{ id: string; [key: string]: any }[]>,
+    getThreads: () => Promise<{ id: string; [key: string]: any; }[]>,
     updateThreadId: (oldId: string, newId: string) => Promise<void>,
 ): Promise<ThreadMigrationResult> {
     const result: ThreadMigrationResult = {
@@ -25,7 +25,7 @@ export async function migrateThreadIds(
         const threads = await getThreads();
         result.totalThreads = threads.length;
 
-        log.info({ totalThreads: result.totalThreads }, "Starting thread ID migration");
+        log.info({ totalThreads: result.totalThreads }, 'Starting thread ID migration');
 
         for (const thread of threads) {
             try {
@@ -33,10 +33,10 @@ export async function migrateThreadIds(
                 if (!isLegacyThreadId(thread.id)) {
                     // Verify it's a valid legid
                     if (verifyThreadId(thread.id)) {
-                        log.debug({ threadId: thread.id }, "Thread already using legid format");
+                        log.debug({ threadId: thread.id }, 'Thread already using legid format');
                         continue;
                     } else {
-                        log.warn({ threadId: thread.id }, "Thread has unknown ID format");
+                        log.warn({ threadId: thread.id }, 'Thread has unknown ID format');
                     }
                 }
 
@@ -52,12 +52,12 @@ export async function migrateThreadIds(
                         oldId: thread.id,
                         newId: newId,
                     },
-                    "Migrated thread ID",
+                    'Migrated thread ID',
                 );
             } catch (error) {
                 const errorMsg = `Failed to migrate thread ${thread.id}: ${error}`;
                 result.errors.push(errorMsg);
-                log.error({ error, threadId: thread.id }, "Thread migration failed");
+                log.error({ error, threadId: thread.id }, 'Thread migration failed');
             }
         }
 
@@ -67,12 +67,12 @@ export async function migrateThreadIds(
                 migratedThreads: result.migratedThreads,
                 errors: result.errors.length,
             },
-            "Thread ID migration completed",
+            'Thread ID migration completed',
         );
     } catch (error) {
         const errorMsg = `Migration failed: ${error}`;
         result.errors.push(errorMsg);
-        log.error({ error }, "Thread ID migration failed");
+        log.error({ error }, 'Thread ID migration failed');
     }
 
     return result;
@@ -83,8 +83,8 @@ export async function migrateThreadIds(
  * Useful for checking migration results
  */
 export async function validateThreadIds(
-    getThreads: () => Promise<{ id: string; [key: string]: any }[]>,
-): Promise<{ valid: number; invalid: number; legacy: number }> {
+    getThreads: () => Promise<{ id: string; [key: string]: any; }[]>,
+): Promise<{ valid: number; invalid: number; legacy: number; }> {
     const threads = await getThreads();
     const result = { valid: 0, invalid: 0, legacy: 0 };
 

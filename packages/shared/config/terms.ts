@@ -1,4 +1,4 @@
-import { VT_PLUS_PRICE_FORMATTED } from "../constants";
+import { VT_PLUS_PRICE_FORMATTED } from '../constants';
 
 export const termsMdx = `
 # Terms of Service

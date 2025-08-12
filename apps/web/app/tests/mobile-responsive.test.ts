@@ -1,39 +1,39 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
 const MOBILE_VIEWPORT = { width: 375, height: 667 }; // iPhone SE
 const TABLET_VIEWPORT = { width: 768, height: 1024 }; // iPad
 const DESKTOP_VIEWPORT = { width: 1280, height: 720 }; // Desktop
 
-test.describe("Mobile Responsive Design", () => {
+test.describe('Mobile Responsive Design', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to the app
-        await page.goto("/");
+        await page.goto('/');
     });
 
-    test("Mobile layout - core functionality works", async ({ page }) => {
+    test('Mobile layout - core functionality works', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Check mobile header is visible
         await expect(
-            page.locator('[data-testid="mobile-header"]').or(page.locator(".md\\:hidden").first()),
+            page.locator('[data-testid="mobile-header"]').or(page.locator('.md\\:hidden').first()),
         ).toBeVisible();
 
         // Check hamburger menu button exists and is clickable
         const _hamburgerButton = page
-            .locator("button")
+            .locator('button')
             .filter({ hasText: /menu|hamburger/i })
             .or(
                 page
-                    .locator("button")
-                    .filter({ has: page.locator("svg") })
+                    .locator('button')
+                    .filter({ has: page.locator('svg') })
                     .first(),
             );
 
         // Check that the mobile header with menu button is visible
-        await expect(page.locator(".md\\:hidden .bg-secondary")).toBeVisible();
+        await expect(page.locator('.md\\:hidden .bg-secondary')).toBeVisible();
 
         // Test mobile drawer functionality
-        const mobileMenuButton = page.locator(".md\\:hidden button").first();
+        const mobileMenuButton = page.locator('.md\\:hidden button').first();
         if (await mobileMenuButton.isVisible()) {
             await mobileMenuButton.click();
 
@@ -41,25 +41,25 @@ test.describe("Mobile Responsive Design", () => {
             await page.waitForTimeout(500);
 
             // Check if navigation items are accessible in drawer
-            const drawerContent = page.locator('[role="dialog"]').or(page.locator(".vaul-content"));
+            const drawerContent = page.locator('[role="dialog"]').or(page.locator('.vaul-content'));
             if (await drawerContent.isVisible()) {
                 await expect(drawerContent).toBeVisible();
             }
         }
     });
 
-    test("Mobile chat input is functional", async ({ page }) => {
+    test('Mobile chat input is functional', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Navigate to chat page
-        await page.goto("/");
+        await page.goto('/');
 
         // Check chat input exists and is properly sized
         const chatInput = page.locator('textarea, [contenteditable="true"]').first();
         await expect(chatInput).toBeVisible();
 
         // Test that toolbar buttons are accessible (may wrap on mobile)
-        const toolbarButtons = page.locator("button").filter({
+        const toolbarButtons = page.locator('button').filter({
             hasText: /search|math|upload|image/i,
         });
 
@@ -68,19 +68,19 @@ test.describe("Mobile Responsive Design", () => {
         expect(buttonCount).toBeGreaterThan(0);
     });
 
-    test("Mobile settings modal is responsive", async ({ page }) => {
+    test('Mobile settings modal is responsive', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Try to open settings - check for floating user button or settings access
         const _userButton = page
-            .locator("button")
+            .locator('button')
             .filter({ hasText: /user|profile|settings/i })
             .first();
         const settingsButton = page
-            .locator("button")
+            .locator('button')
             .filter({ hasText: /settings/i })
             .first();
-        const floatingButton = page.locator(".fixed.bottom-4.right-4");
+        const floatingButton = page.locator('.fixed.bottom-4.right-4');
 
         // Look for any way to access settings on mobile
         let settingsOpened = false;
@@ -115,16 +115,16 @@ test.describe("Mobile Responsive Design", () => {
         }
     });
 
-    test("Tablet layout works correctly", async ({ page }) => {
+    test('Tablet layout works correctly', async ({ page }) => {
         await page.setViewportSize(TABLET_VIEWPORT);
 
         // On tablet, desktop sidebar should be visible
         const _sidebar = page
-            .locator(".hidden.md\\:flex")
+            .locator('.hidden.md\\:flex')
             .or(page.locator('[data-testid="sidebar"]'));
 
         // Check that layout adapts properly for tablet
-        const mainContent = page.locator("main, .flex-1").first();
+        const mainContent = page.locator('main, .flex-1').first();
         await expect(mainContent).toBeVisible();
 
         // Tablet should have more space than mobile
@@ -132,27 +132,27 @@ test.describe("Mobile Responsive Design", () => {
         expect(viewport?.width).toBeGreaterThan(MOBILE_VIEWPORT.width);
     });
 
-    test("Desktop layout maintains functionality", async ({ page }) => {
+    test('Desktop layout maintains functionality', async ({ page }) => {
         await page.setViewportSize(DESKTOP_VIEWPORT);
 
         // Desktop should not show mobile-only elements
-        await expect(page.locator(".md\\:hidden").first()).not.toBeVisible();
+        await expect(page.locator('.md\\:hidden').first()).not.toBeVisible();
 
         // Desktop sidebar should be available
-        const _sidebarElements = page.locator(".hidden.md\\:flex, .md\\:flex").first();
+        const _sidebarElements = page.locator('.hidden.md\\:flex, .md\\:flex').first();
 
         // Main content should be properly laid out
-        const mainContent = page.locator("main, .flex-1").first();
+        const mainContent = page.locator('main, .flex-1').first();
         await expect(mainContent).toBeVisible();
     });
 
-    test("Responsive breakpoints work correctly", async ({ page }) => {
+    test('Responsive breakpoints work correctly', async ({ page }) => {
         // Test mobile breakpoint
         await page.setViewportSize(MOBILE_VIEWPORT);
         await page.waitForTimeout(100);
 
         // Mobile-specific elements should be visible
-        const mobileElements = page.locator(".md\\:hidden");
+        const mobileElements = page.locator('.md\\:hidden');
         const mobileElementsCount = await mobileElements.count();
         expect(mobileElementsCount).toBeGreaterThan(0);
 
@@ -161,19 +161,19 @@ test.describe("Mobile Responsive Design", () => {
         await page.waitForTimeout(100);
 
         // Desktop-specific elements should be visible
-        const desktopElements = page.locator(".hidden.md\\:flex, .md\\:flex");
+        const desktopElements = page.locator('.hidden.md\\:flex, .md\\:flex');
         const desktopElementsCount = await desktopElements.count();
         expect(desktopElementsCount).toBeGreaterThan(0);
     });
 
-    test("Touch interactions work on mobile", async ({ page }) => {
+    test('Touch interactions work on mobile', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Navigate to chat to test interactions
-        await page.goto("/");
+        await page.goto('/');
 
         // Test tap interactions instead of hover
-        const buttons = page.locator("button").first();
+        const buttons = page.locator('button').first();
         if (await buttons.isVisible()) {
             await buttons.tap();
             // Should not throw errors
@@ -188,7 +188,7 @@ test.describe("Mobile Responsive Design", () => {
         expect(scrollY).toBeGreaterThan(0);
     });
 
-    test("No horizontal overflow on mobile", async ({ page }) => {
+    test('No horizontal overflow on mobile', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Check that content doesn't cause horizontal scroll
@@ -206,7 +206,7 @@ test.describe("Mobile Responsive Design", () => {
         expect(bodyWidth).toBeLessThanOrEqual(MOBILE_VIEWPORT.width + 20); // 20px tolerance
     });
 
-    test("Mobile navigation accessibility", async ({ page }) => {
+    test('Mobile navigation accessibility', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
 
         // Check for proper ARIA labels on mobile navigation
@@ -216,25 +216,25 @@ test.describe("Mobile Responsive Design", () => {
 
         if (await mobileNavButton.isVisible()) {
             // Should have accessible labels
-            const ariaLabel = await mobileNavButton.getAttribute("aria-label");
+            const ariaLabel = await mobileNavButton.getAttribute('aria-label');
             expect(ariaLabel).toBeTruthy();
         }
 
         // Check keyboard navigation works
-        await page.keyboard.press("Tab");
-        const focusedElement = page.locator(":focus");
+        await page.keyboard.press('Tab');
+        const focusedElement = page.locator(':focus');
         await expect(focusedElement).toBeVisible();
     });
 });
 
 // Test specific mobile features
-test.describe("Mobile-Specific Features", () => {
-    test("Floating user button appears when logged in", async ({ page }) => {
+test.describe('Mobile-Specific Features', () => {
+    test('Floating user button appears when logged in', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
-        await page.goto("/");
+        await page.goto('/');
 
         // Check for floating action button on mobile
-        const floatingButton = page.locator(".fixed.bottom-4.right-4, .md\\:hidden.fixed");
+        const floatingButton = page.locator('.fixed.bottom-4.right-4, .md\\:hidden.fixed');
 
         // Note: This test assumes user might be logged in
         // In a real test, you would set up authentication state
@@ -252,12 +252,12 @@ test.describe("Mobile-Specific Features", () => {
         }
     });
 
-    test("Mobile drawer closes after navigation", async ({ page }) => {
+    test('Mobile drawer closes after navigation', async ({ page }) => {
         await page.setViewportSize(MOBILE_VIEWPORT);
-        await page.goto("/");
+        await page.goto('/');
 
         // Open mobile drawer
-        const mobileMenuButton = page.locator(".md\\:hidden button").first();
+        const mobileMenuButton = page.locator('.md\\:hidden button').first();
         if (await mobileMenuButton.isVisible()) {
             await mobileMenuButton.click();
             await page.waitForTimeout(300);

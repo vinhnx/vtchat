@@ -1,10 +1,10 @@
-import { neon } from "@neondatabase/serverless";
-import { log } from "@repo/shared/logger";
-import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "./schema";
+import { neon } from '@neondatabase/serverless';
+import { log } from '@repo/shared/logger';
+import { drizzle } from 'drizzle-orm/neon-http';
+import * as schema from './schema';
 
 if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL environment variable is required");
+    throw new Error('DATABASE_URL environment variable is required');
 }
 
 // Use Neon HTTP client instead of Pool for better Bun compatibility
@@ -22,12 +22,12 @@ export const db = drizzle(sql, {
 export const testConnection = async () => {
     try {
         await sql`SELECT 1`;
-        log.info({}, "Database connection test successful");
+        log.info({}, 'Database connection test successful');
         return true;
     } catch (error) {
         log.error(
             { error: error instanceof Error ? error.message : String(error) },
-            "Database connection test failed",
+            'Database connection test failed',
         );
         return false;
     }
@@ -36,7 +36,7 @@ export const testConnection = async () => {
 // Helper function to handle database connection errors gracefully
 export const withDatabaseErrorHandling = async <T>(
     operation: () => Promise<T>,
-    operationName = "Database operation",
+    operationName = 'Database operation',
 ): Promise<T> => {
     try {
         return await operation();
@@ -58,14 +58,14 @@ export const withDatabaseErrorHandling = async <T>(
         );
 
         // Handle specific Neon/PostgreSQL error codes
-        if (err.code === "57P01") {
-            throw new Error("Database connection was terminated. Please try again.");
+        if (err.code === '57P01') {
+            throw new Error('Database connection was terminated. Please try again.');
         }
-        if (err.code === "ECONNRESET" || err.code === "ETIMEDOUT") {
-            throw new Error("Database connection timeout. Please try again.");
+        if (err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
+            throw new Error('Database connection timeout. Please try again.');
         }
-        if (err.code === "53300") {
-            throw new Error("Too many database connections. Please try again in a moment.");
+        if (err.code === '53300') {
+            throw new Error('Too many database connections. Please try again in a moment.');
         }
 
         // Re-throw original error for other cases

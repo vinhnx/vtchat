@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/logger";
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { log } from '@repo/shared/logger';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface TableErrorBoundaryState {
     hasError: boolean;
@@ -67,9 +67,9 @@ export class TableErrorBoundary extends Component<
                 error: error.message,
                 errorCount: newCount,
                 componentStack: errorInfo.componentStack,
-                errorBoundary: "TableErrorBoundary",
+                errorBoundary: 'TableErrorBoundary',
             },
-            "Table rendering error caught by error boundary",
+            'Table rendering error caught by error boundary',
         );
 
         // Call custom error handler if provided
@@ -79,7 +79,7 @@ export class TableErrorBoundary extends Component<
         if (newCount >= TableErrorBoundary.MAX_ERRORS) {
             log.warn(
                 { errorKey, errorCount: newCount },
-                "Maximum table rendering errors reached, blocking further attempts",
+                'Maximum table rendering errors reached, blocking further attempts',
             );
         }
     }
@@ -99,13 +99,13 @@ export class TableErrorBoundary extends Component<
             // If we've hit the error limit, show a permanent fallback
             if (this.state.errorCount >= TableErrorBoundary.MAX_ERRORS) {
                 return (
-                    <div className="border-destructive bg-destructive/10 text-destructive my-4 rounded-md border p-4">
-                        <div className="text-sm font-medium">Table Rendering Blocked</div>
-                        <div className="mt-1 text-xs opacity-80">
+                    <div className='border-destructive bg-destructive/10 text-destructive my-4 rounded-md border p-4'>
+                        <div className='text-sm font-medium'>Table Rendering Blocked</div>
+                        <div className='mt-1 text-xs opacity-80'>
                             Multiple rendering errors detected. Content has been converted to plain
                             text for safety.
                         </div>
-                        <pre className="bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs">
+                        <pre className='bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs'>
                             {typeof this.props.children === "string"
                                 ? this.props.children
                                 : "Table content unavailable"}
@@ -120,12 +120,12 @@ export class TableErrorBoundary extends Component<
             }
 
             return (
-                <div className="border-warning bg-warning/10 text-warning my-4 rounded-md border p-4">
-                    <div className="text-sm font-medium">Table Rendering Error</div>
-                    <div className="mt-1 text-xs opacity-80">
+                <div className='border-warning bg-warning/10 text-warning my-4 rounded-md border p-4'>
+                    <div className='text-sm font-medium'>Table Rendering Error</div>
+                    <div className='mt-1 text-xs opacity-80'>
                         There was an issue rendering this table. Showing as code block instead.
                     </div>
-                    <pre className="bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs">
+                    <pre className='bg-muted text-muted-foreground mt-2 overflow-x-auto rounded p-2 text-xs'>
                         {typeof this.props.children === "string"
                             ? this.props.children
                             : "Table content unavailable"}

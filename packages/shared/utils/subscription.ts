@@ -4,12 +4,12 @@
  * Client-side utilities for checking subscription access.
  */
 
-import { log } from "@repo/shared/logger";
-import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from "../constants";
-import { FeatureSlug, PLANS, type PlanConfig, PlanSlug } from "../types/subscription";
-import { SubscriptionStatusEnum } from "../types/subscription-status";
-import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from "./access-control";
-import { hasSubscriptionAccess } from "./subscription-grace-period";
+import { log } from '@repo/shared/logger';
+import { SUBSCRIPTION_SOURCES, type SubscriptionSource } from '../constants';
+import { FeatureSlug, type PlanConfig, PLANS, PlanSlug } from '../types/subscription';
+import { SubscriptionStatusEnum } from '../types/subscription-status';
+import { canUpgrade as canUserUpgrade, hasVTPlusAccessByPlan } from './access-control';
+import { hasSubscriptionAccess } from './subscription-grace-period';
 
 // Type for subscription access context
 export interface SubscriptionContext {
@@ -27,10 +27,9 @@ function getCreemSubscriptionData(context: SubscriptionContext): {
     source: SubscriptionSource; // SUBSCRIPTION_SOURCES.CREEM indicates data came from a recognized subscription source
 } {
     // Try to get user from context or window
-    const user =
-        context.user ||
-        (typeof window !== "undefined" && (window as any).__BETTER_AUTH_USER__) ||
-        null;
+    const user = context.user
+        || (typeof window !== 'undefined' && (window as any).__BETTER_AUTH_USER__)
+        || null;
 
     if (user) {
         // Check for Creem subscription data in publicMetadata.subscription
@@ -157,7 +156,7 @@ export function hasPlan(context: SubscriptionContext, plan: PlanSlug): boolean {
  */
 export function checkSubscriptionAccess(
     context: SubscriptionContext,
-    options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string },
+    options: { feature?: FeatureSlug; plan?: PlanSlug; permission?: string; },
 ): boolean {
     const { feature, plan, permission } = options;
 
@@ -173,7 +172,7 @@ export function checkSubscriptionAccess(
 
     // Permission checks are not supported in the new system
     if (permission) {
-        log.warn("Permission checks are not supported in the new subscription system");
+        log.warn('Permission checks are not supported in the new subscription system');
         return false;
     }
 
@@ -274,8 +273,8 @@ export function getSubscriptionStatus(context: SubscriptionContext): UserClientS
 
     // If it's VT_BASE and no specific subscription record (source NONE), it's effectively active for base features.
     if (
-        subscriptionData.planSlug === PlanSlug.VT_BASE &&
-        subscriptionData.source === SUBSCRIPTION_SOURCES.NONE
+        subscriptionData.planSlug === PlanSlug.VT_BASE
+        && subscriptionData.source === SUBSCRIPTION_SOURCES.NONE
     ) {
         status = SubscriptionStatusEnum.ACTIVE; // Free tier is always 'active'
         overallIsActive = true;
@@ -338,7 +337,7 @@ export function getUserSubscription(user: any): {
 /**
  * Check if authentication is required
  */
-export function requiresAuth(options: { feature?: FeatureSlug; plan?: PlanSlug }): boolean {
+export function requiresAuth(options: { feature?: FeatureSlug; plan?: PlanSlug; }): boolean {
     const { feature, plan } = options;
 
     // Features in the base plan don't require auth

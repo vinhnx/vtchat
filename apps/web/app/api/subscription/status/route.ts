@@ -1,32 +1,32 @@
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import {
-    getEffectiveAccessStatus,
-    hasSubscriptionAccess,
-} from "@repo/shared/utils/subscription-grace-period";
-import { desc, eq, sql } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { userSubscriptions, users } from "@/lib/database/schema";
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
 import {
     getAnonymousSubscriptionStatus,
     getOrCreateSubscriptionRequest,
     getSessionSubscriptionStatus,
     type SessionSubscriptionStatus,
-} from "@/lib/subscription-session-cache";
+} from '@/lib/subscription-session-cache';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import {
+    getEffectiveAccessStatus,
+    hasSubscriptionAccess,
+} from '@repo/shared/utils/subscription-grace-period';
+import { desc, eq, sql } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 
 async function fetchSubscriptionFromDB(
     userId: string,
 ): Promise<
     Omit<
         SessionSubscriptionStatus,
-        "cachedAt" | "expiresAt" | "sessionId" | "fetchCount" | "lastRefreshTrigger"
+        'cachedAt' | 'expiresAt' | 'sessionId' | 'fetchCount' | 'lastRefreshTrigger'
     >
 > {
     // Get user plan_slug from users table first
@@ -92,9 +92,8 @@ async function fetchSubscriptionFromDB(
     }
 
     // Use centralized grace period logic to determine access
-    const isPlusSubscriber =
-        finalPlan === PlanSlug.VT_PLUS &&
-        hasSubscriptionAccess({
+    const isPlusSubscriber = finalPlan === PlanSlug.VT_PLUS
+        && hasSubscriptionAccess({
             status: subscriptionStatus,
             currentPeriodEnd: currentPeriodEnd,
         });
@@ -115,9 +114,9 @@ export async function GET(request: NextRequest) {
         // Get refresh trigger from query params
         const url = new URL(request.url);
         const refreshTrigger =
-            (url.searchParams.get("trigger") as SessionSubscriptionStatus["lastRefreshTrigger"]) ||
-            "page_refresh";
-        const forceRefresh = url.searchParams.get("force") === "true";
+            (url.searchParams.get('trigger') as SessionSubscriptionStatus['lastRefreshTrigger'])
+            || 'page_refresh';
+        const forceRefresh = url.searchParams.get('force') === 'true';
 
         // Try to get session with timeout - handle both logged-in and non-logged-in users
         let session;
@@ -127,12 +126,12 @@ export async function GET(request: NextRequest) {
             });
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Session check timeout")), 3000),
+                setTimeout(() => reject(new Error('Session check timeout')), 3000)
             );
 
             session = await Promise.race([sessionPromise, timeoutPromise]);
         } catch (error) {
-            log.warn({ error }, "[Subscription Status API] Session check failed or timed out");
+            log.warn({ error }, '[Subscription Status API] Session check failed or timed out');
             // For session failures, treat as anonymous user
             session = null;
         }
@@ -144,14 +143,14 @@ export async function GET(request: NextRequest) {
             {
                 trigger: refreshTrigger,
             },
-            `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : "anonymous"}`,
+            `[Subscription Status API] Request for ${isLoggedIn ? `user ${userId}` : 'anonymous'}`,
         );
 
         // For non-logged-in users, return cached anonymous status or create it
         if (!isLoggedIn) {
             const cached = getSessionSubscriptionStatus(null, refreshTrigger, request);
             if (cached && !forceRefresh) {
-                log.info({}, "[Subscription Status API] Cache hit for anonymous user");
+                log.info({}, '[Subscription Status API] Cache hit for anonymous user');
                 return NextResponse.json({
                     plan: cached.plan,
                     status: cached.status,
@@ -167,7 +166,7 @@ export async function GET(request: NextRequest) {
             // Use deduplication for anonymous users as well
             log.info(
                 {},
-                "[Subscription Status API] Cache miss for anonymous user, using deduplication",
+                '[Subscription Status API] Cache miss for anonymous user, using deduplication',
             );
             const cachedResult = await getOrCreateSubscriptionRequest(
                 null,
@@ -176,7 +175,7 @@ export async function GET(request: NextRequest) {
                 async () => getAnonymousSubscriptionStatus(),
             );
 
-            log.info({}, "[Subscription Status API] Created anonymous subscription status");
+            log.info({}, '[Subscription Status API] Created anonymous subscription status');
             return NextResponse.json({
                 plan: cachedResult.plan,
                 status: cachedResult.status,
@@ -240,11 +239,11 @@ export async function GET(request: NextRequest) {
             lastRefreshTrigger: cachedResult.lastRefreshTrigger,
         });
     } catch (error) {
-        log.error("[Subscription Status API] Error:", { error });
+        log.error('[Subscription Status API] Error:', { error });
         return NextResponse.json(
             {
-                error: "Internal server error",
-                message: error instanceof Error ? error.message : "Unknown error",
+                error: 'Internal server error',
+                message: error instanceof Error ? error.message : 'Unknown error',
             },
             { status: 500 },
         );

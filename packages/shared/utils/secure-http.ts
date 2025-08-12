@@ -2,8 +2,8 @@ import {
     API_KEY_TO_HEADER_MAP,
     createSecureHeaders,
     validateHTTPS,
-} from "@repo/shared/constants/security-headers";
-import { log } from "@repo/shared/logger";
+} from '@repo/shared/constants/security-headers';
+import { log } from '@repo/shared/logger';
 
 /**
  * Secure HTTP client that enforces HTTPS and handles API keys via headers
@@ -37,17 +37,17 @@ export async function secureFetch<T = any>(
     url: string,
     options: SecureRequestOptions = {},
 ): Promise<SecureResponse<T>> {
-    const { method = "GET", body, apiKeys = {}, additionalHeaders = {}, timeout = 30000 } = options;
+    const { method = 'GET', body, apiKeys = {}, additionalHeaders = {}, timeout = 30000 } = options;
 
     // SECURITY: Validate HTTPS
     const requestUrl = new URL(url);
-    if (requestUrl.protocol !== "https:" && process.env.NODE_ENV === "production") {
-        throw new Error("SECURITY: HTTPS required for API requests in production");
+    if (requestUrl.protocol !== 'https:' && process.env.NODE_ENV === 'production') {
+        throw new Error('SECURITY: HTTPS required for API requests in production');
     }
 
     // Prepare headers
     const headers: Record<string, string> = {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...createSecureHeaders(),
         ...additionalHeaders,
     };
@@ -64,7 +64,7 @@ export async function secureFetch<T = any>(
     const requestBody = body ? JSON.stringify(body) : undefined;
 
     // SECURITY: Log request without exposing sensitive information
-    log.info("Secure API request initiated", {
+    log.info('Secure API request initiated', {
         url: requestUrl.origin + requestUrl.pathname, // Don't log query params
         method,
         hasApiKeys: Object.keys(apiKeys).length > 0,
@@ -94,7 +94,7 @@ export async function secureFetch<T = any>(
         }
 
         // SECURITY: Log response without exposing sensitive data
-        log.info("Secure API request completed", {
+        log.info('Secure API request completed', {
             status: response.status,
             ok: response.ok,
             hasData: !!data,
@@ -108,8 +108,8 @@ export async function secureFetch<T = any>(
         };
     } catch (error) {
         // SECURITY: Log errors without exposing sensitive information
-        log.error("Secure API request failed", {
-            error: error instanceof Error ? error.message : "Unknown error",
+        log.error('Secure API request failed', {
+            error: error instanceof Error ? error.message : 'Unknown error',
             url: requestUrl.origin + requestUrl.pathname,
         });
         throw error;
@@ -140,10 +140,10 @@ export async function secureCompletionRequest(
     // SECURITY: Remove API keys from request body and send via headers
     const cleanBody = { ...data };
 
-    const response = await fetch("/api/completion", {
-        method: "POST",
+    const response = await fetch('/api/completion', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             ...createSecureHeaders(),
             // Add API keys to headers
             ...Object.entries(apiKeys).reduce(
@@ -161,7 +161,7 @@ export async function secureCompletionRequest(
     });
 
     // SECURITY: Log request completion without exposing sensitive data
-    log.info("Completion request sent", {
+    log.info('Completion request sent', {
         mode: data.mode,
         hasApiKeys: Object.keys(apiKeys).length > 0,
         status: response.status,
@@ -181,26 +181,26 @@ export function validateRequestSecurity(request: Request): {
 
     // Check HTTPS
     if (!validateHTTPS(request)) {
-        errors.push("HTTPS required for secure requests");
+        errors.push('HTTPS required for secure requests');
     }
 
     // Check for API keys in body (should be in headers instead)
-    if (request.headers.get("content-type")?.includes("application/json")) {
+    if (request.headers.get('content-type')?.includes('application/json')) {
         // We can't read the body here without consuming it, so this is a basic check
         const hasApiKeyHeaders = Object.values(API_KEY_TO_HEADER_MAP).some((header) =>
-            request.headers.has(header),
+            request.headers.has(header)
         );
 
         if (!hasApiKeyHeaders) {
             // This might be okay - not all requests need API keys
-            log.debug("Request has no API key headers", {
+            log.debug('Request has no API key headers', {
                 url: new URL(request.url).pathname,
             });
         }
     }
 
     // Check security headers
-    const requiredHeaders = ["user-agent"];
+    const requiredHeaders = ['user-agent'];
     for (const header of requiredHeaders) {
         if (!request.headers.has(header)) {
             errors.push(`Missing required header: ${header}`);

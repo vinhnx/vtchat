@@ -11,16 +11,16 @@
 
 // Run this in browser console after logging in:
 function _extractCookiesForPlaywright() {
-    const cookies = document.cookie.split(";").map((cookie) => {
-        const [name, value] = cookie.split("=").map((s) => s.trim());
+    const cookies = document.cookie.split(';').map((cookie) => {
+        const [name, value] = cookie.split('=').map((s) => s.trim());
         return {
             name,
-            value: value || "",
-            domain: "localhost",
-            path: "/",
+            value: value || '',
+            domain: 'localhost',
+            path: '/',
             httpOnly: false, // These are client-side accessible cookies
             secure: false,
-            sameSite: "Lax",
+            sameSite: 'Lax',
         };
     });
 

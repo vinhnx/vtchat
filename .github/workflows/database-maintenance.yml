@@ -1,185 +1,185 @@
 name: Database Maintenance (Fixed)
 
 on:
-  schedule:
-    # BUDGET OPTIMIZATION: Daily maintenance at 2 AM UTC (was hourly)
-    - cron: '0 2 * * *'
-    # Weekly deep maintenance (Sundays at 3 AM UTC)  
-    - cron: '0 3 * * 0'
-  workflow_dispatch:
-    inputs:
-      maintenance_type:
-        description: 'Type of maintenance to run'
-        required: true
-        default: 'daily'
-        type: choice
-        options:
-          - daily
-          - weekly
+    schedule:
+        # BUDGET OPTIMIZATION: Daily maintenance at 2 AM UTC (was hourly)
+        - cron: "0 2 * * *"
+        # Weekly deep maintenance (Sundays at 3 AM UTC)
+        - cron: "0 3 * * 0"
+    workflow_dispatch:
+        inputs:
+            maintenance_type:
+                description: "Type of maintenance to run"
+                required: true
+                default: "daily"
+                type: choice
+                options:
+                    - daily
+                    - weekly
 
 concurrency:
-  group: db-maintenance-${{ github.event.schedule || github.event.inputs.maintenance_type || 'manual' }}
-  cancel-in-progress: false
+    group: db-maintenance-${{ github.event.schedule || github.event.inputs.maintenance_type || 'manual' }}
+    cancel-in-progress: false
 
 # Enhanced security permissions for OIDC
 permissions:
-  contents: read
-  id-token: write  # For OIDC token requests
-  actions: read    # For workflow status checks
+    contents: read
+    id-token: write # For OIDC token requests
+    actions: read # For workflow status checks
 
 jobs:
-  debug-endpoints:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    environment: production
+    debug-endpoints:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        environment: production
 
-    steps:
-      - name: Debug app endpoints
-        env:
-          BASE_URL: ${{ secrets.FLY_APP_URL }}
-        run: |
-          echo "🔍 Debugging app endpoints..."
-          
-          # Test base URL
-          echo "Testing base URL: $BASE_URL"
-          curl -s -I "$BASE_URL" || echo "Base URL failed"
-          
-          # Test health endpoint
-          echo "Testing health endpoint..."
-          curl -s "$BASE_URL/api/health" || echo "Health endpoint failed"
-          
-          # Test cron endpoint with GET (should return endpoint info)
-          echo "Testing cron endpoint with GET..."
-          curl -s "$BASE_URL/api/cron/database-maintenance" || echo "Cron GET failed"
-          
-          # Test what we actually get from the endpoint
-          echo "Raw response from cron endpoint:"
-          curl -s "$BASE_URL/api/cron/database-maintenance" | head -10
+        steps:
+            - name: Debug app endpoints
+              env:
+                  BASE_URL: ${{ secrets.FLY_APP_URL }}
+              run: |
+                  echo "🔍 Debugging app endpoints..."
 
-  database-maintenance:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    environment: production
-    needs: debug-endpoints
-    if: always()
+                  # Test base URL
+                  echo "Testing base URL: $BASE_URL"
+                  curl -s -I "$BASE_URL" || echo "Base URL failed"
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+                  # Test health endpoint
+                  echo "Testing health endpoint..."
+                  curl -s "$BASE_URL/api/health" || echo "Health endpoint failed"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+                  # Test cron endpoint with GET (should return endpoint info)
+                  echo "Testing cron endpoint with GET..."
+                  curl -s "$BASE_URL/api/cron/database-maintenance" || echo "Cron GET failed"
 
-      - name: Determine maintenance type
-        id: maintenance-type
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "type=${{ inputs.maintenance_type }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.schedule }}" = "0 3 * * 0" ]; then
-            echo "type=weekly" >> $GITHUB_OUTPUT
-          else
-            echo "type=daily" >> $GITHUB_OUTPUT
-          fi
+                  # Test what we actually get from the endpoint
+                  echo "Raw response from cron endpoint:"
+                  curl -s "$BASE_URL/api/cron/database-maintenance" | head -10
 
-      - name: Configure OIDC and secure environment
-        id: configure-security
-        run: |
-          # Validate required environment variables exist
-          if [ -z "${{ secrets.FLY_APP_URL }}" ]; then
-            echo "❌ FLY_APP_URL secret is required"
-            exit 1
-          fi
-          if [ -z "${{ secrets.CRON_SECRET_TOKEN }}" ]; then
-            echo "❌ CRON_SECRET_TOKEN secret is required"
-            exit 1
-          fi
+    database-maintenance:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        environment: production
+        needs: debug-endpoints
+        if: always()
 
-          # Additional security validations
-          echo "✅ Security configuration validated"
-          echo "🔐 OIDC token available: ${{ github.token != '' }}"
-          echo "🌐 Environment: ${{ github.ref_name }}"
-          echo "⏰ Maintenance type: ${{ steps.maintenance-type.outputs.type }}"
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Pre-flight checks
-        env:
-          BASE_URL: ${{ secrets.FLY_APP_URL }}
-          CRON_SECRET_TOKEN: ${{ secrets.CRON_SECRET_TOKEN }}
-        run: |
-          echo "🔍 Running pre-flight checks..."
-          
-          # Test app health
-          if ! curl -f -s "${BASE_URL}/api/health" > /dev/null; then
-            echo "❌ App health check failed"
-            echo "Response:"
-            curl -s "${BASE_URL}/api/health" | head -5
-            exit 1
-          fi
-          
-          # Test endpoint accessibility  
-          response=$(curl -s "${BASE_URL}/api/cron/database-maintenance")
-          if echo "$response" | grep -q "<!DOCTYPE"; then
-            echo "❌ Endpoint returning HTML instead of JSON"
-            echo "Response preview:"
-            echo "$response" | head -5
-            exit 1
-          fi
-          
-          echo "✅ Pre-flight checks passed"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
 
-      - name: Run database maintenance
-        env:
-          BASE_URL: ${{ secrets.FLY_APP_URL }}
-          CRON_SECRET_TOKEN: ${{ secrets.CRON_SECRET_TOKEN }}
-          GITHUB_TOKEN: ${{ github.token }}  # OIDC token for enhanced security
-          RUNNER_ENVIRONMENT: "github-actions"
-          MAINTENANCE_TYPE: ${{ steps.maintenance-type.outputs.type }}
-          # Enhanced security environment variables
-          MAX_RETRIES: "3"
-          TIMEOUT_MS: "300000"  # 5 minutes
-          INITIAL_RETRY_DELAY: "2000"  # 2 seconds
-          MAX_RETRY_DELAY: "30000"  # 30 seconds
-        run: |
-          # Set stricter bash options for security
-          set -euo pipefail
+            - name: Determine maintenance type
+              id: maintenance-type
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    echo "type=${{ inputs.maintenance_type }}" >> $GITHUB_OUTPUT
+                  elif [ "${{ github.event.schedule }}" = "0 3 * * 0" ]; then
+                    echo "type=weekly" >> $GITHUB_OUTPUT
+                  else
+                    echo "type=daily" >> $GITHUB_OUTPUT
+                  fi
 
-          # Validate maintenance type
-          case "${{ steps.maintenance-type.outputs.type }}" in
-            hourly|weekly)
-              echo "✅ Valid maintenance type: ${{ steps.maintenance-type.outputs.type }}"
-              ;;
-            *)
-              echo "❌ Invalid maintenance type: ${{ steps.maintenance-type.outputs.type }}"
-              exit 1
-              ;;
-          esac
+            - name: Configure OIDC and secure environment
+              id: configure-security
+              run: |
+                  # Validate required environment variables exist
+                  if [ -z "${{ secrets.FLY_APP_URL }}" ]; then
+                    echo "❌ FLY_APP_URL secret is required"
+                    exit 1
+                  fi
+                  if [ -z "${{ secrets.CRON_SECRET_TOKEN }}" ]; then
+                    echo "❌ CRON_SECRET_TOKEN secret is required"
+                    exit 1
+                  fi
 
-          # Run maintenance with enhanced logging
-          echo "🚀 Starting database maintenance..."
-          node scripts/cron-database-maintenance.js ${{ steps.maintenance-type.outputs.type }}
+                  # Additional security validations
+                  echo "✅ Security configuration validated"
+                  echo "🔐 OIDC token available: ${{ github.token != '' }}"
+                  echo "🌐 Environment: ${{ github.ref_name }}"
+                  echo "⏰ Maintenance type: ${{ steps.maintenance-type.outputs.type }}"
 
-      - name: Notify on failure
-        if: failure()
-        run: |
-          echo "❌ Database maintenance failed! Check the logs above."
-          echo "This indicates a potential issue with the database or application."
-          # You can add Slack/Discord/email notifications here if needed
+            - name: Pre-flight checks
+              env:
+                  BASE_URL: ${{ secrets.FLY_APP_URL }}
+                  CRON_SECRET_TOKEN: ${{ secrets.CRON_SECRET_TOKEN }}
+              run: |
+                  echo "🔍 Running pre-flight checks..."
 
-  health-check:
-    runs-on: ubuntu-latest
-    needs: database-maintenance
-    if: always()
+                  # Test app health
+                  if ! curl -f -s "${BASE_URL}/api/health" > /dev/null; then
+                    echo "❌ App health check failed"
+                    echo "Response:"
+                    curl -s "${BASE_URL}/api/health" | head -5
+                    exit 1
+                  fi
 
-    steps:
-      - name: Check application health
-        env:
-          HEALTH_URL: ${{ secrets.FLY_APP_URL }}
-        run: |
-          echo "🔍 Checking application health after maintenance..."
-          HEALTH_URL=${HEALTH_URL:-"https://vtchat.io.vn"}
-          curl -f -s "${HEALTH_URL}/api/health" || {
-            echo "❌ Health check failed!"
-            exit 1
-          }
-          echo "✅ Application is healthy"
+                  # Test endpoint accessibility
+                  response=$(curl -s "${BASE_URL}/api/cron/database-maintenance")
+                  if echo "$response" | grep -q "<!DOCTYPE"; then
+                    echo "❌ Endpoint returning HTML instead of JSON"
+                    echo "Response preview:"
+                    echo "$response" | head -5
+                    exit 1
+                  fi
+
+                  echo "✅ Pre-flight checks passed"
+
+            - name: Run database maintenance
+              env:
+                  BASE_URL: ${{ secrets.FLY_APP_URL }}
+                  CRON_SECRET_TOKEN: ${{ secrets.CRON_SECRET_TOKEN }}
+                  GITHUB_TOKEN: ${{ github.token }} # OIDC token for enhanced security
+                  RUNNER_ENVIRONMENT: "github-actions"
+                  MAINTENANCE_TYPE: ${{ steps.maintenance-type.outputs.type }}
+                  # Enhanced security environment variables
+                  MAX_RETRIES: "3"
+                  TIMEOUT_MS: "300000" # 5 minutes
+                  INITIAL_RETRY_DELAY: "2000" # 2 seconds
+                  MAX_RETRY_DELAY: "30000" # 30 seconds
+              run: |
+                  # Set stricter bash options for security
+                  set -euo pipefail
+
+                  # Validate maintenance type
+                  case "${{ steps.maintenance-type.outputs.type }}" in
+                    hourly|weekly)
+                      echo "✅ Valid maintenance type: ${{ steps.maintenance-type.outputs.type }}"
+                      ;;
+                    *)
+                      echo "❌ Invalid maintenance type: ${{ steps.maintenance-type.outputs.type }}"
+                      exit 1
+                      ;;
+                  esac
+
+                  # Run maintenance with enhanced logging
+                  echo "🚀 Starting database maintenance..."
+                  node scripts/cron-database-maintenance.js ${{ steps.maintenance-type.outputs.type }}
+
+            - name: Notify on failure
+              if: failure()
+              run: |
+                  echo "❌ Database maintenance failed! Check the logs above."
+                  echo "This indicates a potential issue with the database or application."
+                  # You can add Slack/Discord/email notifications here if needed
+
+    health-check:
+        runs-on: ubuntu-latest
+        needs: database-maintenance
+        if: always()
+
+        steps:
+            - name: Check application health
+              env:
+                  HEALTH_URL: ${{ secrets.FLY_APP_URL }}
+              run: |
+                  echo "🔍 Checking application health after maintenance..."
+                  HEALTH_URL=${HEALTH_URL:-"https://vtchat.io.vn"}
+                  curl -f -s "${HEALTH_URL}/api/health" || {
+                    echo "❌ Health check failed!"
+                    exit 1
+                  }
+                  echo "✅ Application is healthy"

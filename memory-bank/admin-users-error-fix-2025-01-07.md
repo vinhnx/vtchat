@@ -55,10 +55,10 @@ setPageCount(data.pagination?.totalPages || 0);
 
 ```tsx
 <ErrorBoundary>
-    <motion.div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <motion.div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {/* Statistics Cards */}
     </motion.div>
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
 ### **Files Modified**
@@ -68,9 +68,9 @@ setPageCount(data.pagination?.totalPages || 0);
 
 ### **Testing Verification**
 
-✅ **Manual Test**: Created React test component simulating undefined/null values  
-✅ **No Errors**: Badge components handle invalid data gracefully  
-✅ **Fallbacks Work**: Proper default values display when data is missing  
+✅ **Manual Test**: Created React test component simulating undefined/null values\
+✅ **No Errors**: Badge components handle invalid data gracefully\
+✅ **Fallbacks Work**: Proper default values display when data is missing\
 ✅ **Type Safety**: Runtime type checking prevents crashes
 
 ### **Error Prevention**

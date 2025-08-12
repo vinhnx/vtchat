@@ -9,18 +9,18 @@
  * Usage: node scripts/sync-subscription-data.js
  */
 
-import { log } from "@repo/shared/logger";
-import { and, eq, isNull } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { userSubscriptions, users } from "../apps/web/lib/database/schema.js";
-import { PlanSlug } from "../packages/shared/types/subscription.ts";
+import { log } from '@repo/shared/logger';
+import { and, eq, isNull } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { users, userSubscriptions } from '../apps/web/lib/database/schema.js';
+import { PlanSlug } from '../packages/shared/types/subscription.ts';
 
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-    console.error("DATABASE_URL environment variable is required");
-    log.error("DATABASE_URL environment variable is required");
+    console.error('DATABASE_URL environment variable is required');
+    log.error('DATABASE_URL environment variable is required');
     process.exit(1);
 }
 
@@ -28,12 +28,12 @@ const client = postgres(connectionString);
 const db = drizzle(client);
 
 async function syncSubscriptionData() {
-    console.log("🔄 Starting subscription data sync...");
-    log.info("Starting subscription data sync");
+    console.log('🔄 Starting subscription data sync...');
+    log.info('Starting subscription data sync');
 
     try {
         // Find users with vt_plus plan_slug but no subscription record
-        log.info("Finding users with vt_plus plan without subscription records");
+        log.info('Finding users with vt_plus plan without subscription records');
         const usersWithoutSubscriptions = await db
             .select({
                 id: users.id,
@@ -45,8 +45,8 @@ async function syncSubscriptionData() {
             .where(and(eq(users.planSlug, PlanSlug.VT_PLUS), isNull(userSubscriptions.id)));
 
         if (usersWithoutSubscriptions.length === 0) {
-            console.log("✅ All users with vt_plus plan_slug already have subscription records");
-            log.info("All users with vt_plus plan already have subscription records");
+            console.log('✅ All users with vt_plus plan_slug already have subscription records');
+            log.info('All users with vt_plus plan already have subscription records');
             return;
         }
 
@@ -55,7 +55,7 @@ async function syncSubscriptionData() {
         );
         log.info(
             { userCount: usersWithoutSubscriptions.length },
-            "Found users needing subscription records",
+            'Found users needing subscription records',
         );
         usersWithoutSubscriptions.forEach((user) => {
             console.log(`   - User ID: ${user.id}`);
@@ -79,7 +79,7 @@ async function syncSubscriptionData() {
 
             await db.insert(userSubscriptions).values(subscriptionData);
             console.log(`✅ Created subscription record for user ${user.id}`);
-            log.info({ userId: user.id }, "Created subscription record for user");
+            log.info({ userId: user.id }, 'Created subscription record for user');
         }
 
         console.log(
@@ -87,11 +87,11 @@ async function syncSubscriptionData() {
         );
         log.info(
             { count: usersWithoutSubscriptions.length },
-            "Successfully synced subscription records",
+            'Successfully synced subscription records',
         );
     } catch (error) {
-        console.error("❌ Error syncing subscription data:", error);
-        log.error({ error }, "Error syncing subscription data");
+        console.error('❌ Error syncing subscription data:', error);
+        log.error({ error }, 'Error syncing subscription data');
         process.exit(1);
     } finally {
         await client.end();

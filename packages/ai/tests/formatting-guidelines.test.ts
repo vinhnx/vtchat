@@ -1,24 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 import {
     FORMATTING_GUIDELINES,
     getFormattingInstructions,
     isLikelyTableGeneration,
     suggestAlternativeFormatting,
-} from "../config/formatting-guidelines";
-import { ContentMonitor, checkContentForIssues } from "../utils/content-monitor";
+} from '../config/formatting-guidelines';
+import { checkContentForIssues, ContentMonitor } from '../utils/content-monitor';
 
-describe("Formatting Guidelines", () => {
-    it("should provide different instructions for different task types", () => {
-        const writerInstructions = getFormattingInstructions("writer");
-        const analysisInstructions = getFormattingInstructions("analysis");
-        const searchInstructions = getFormattingInstructions("search");
+describe('Formatting Guidelines', () => {
+    it('should provide different instructions for different task types', () => {
+        const writerInstructions = getFormattingInstructions('writer');
+        const analysisInstructions = getFormattingInstructions('analysis');
+        const searchInstructions = getFormattingInstructions('search');
 
-        expect(writerInstructions).toContain("NEVER create large markdown tables");
-        expect(analysisInstructions).toContain("NARRATIVE ANALYSIS");
-        expect(searchInstructions).toContain("PRIORITIZE diverse markdown content");
+        expect(writerInstructions).toContain('NEVER create large markdown tables');
+        expect(analysisInstructions).toContain('NARRATIVE ANALYSIS');
+        expect(searchInstructions).toContain('PRIORITIZE diverse markdown content');
     });
 
-    it("should detect table generation patterns", () => {
+    it('should detect table generation patterns', () => {
         const tableContent = `
 | Column 1 | Column 2 | Column 3 | Column 4 |
 |----------|----------|----------|----------|
@@ -32,7 +32,7 @@ describe("Formatting Guidelines", () => {
         expect(isLikelyTableGeneration(tableContent)).toBe(true);
     });
 
-    it("should not flag normal content as table generation", () => {
+    it('should not flag normal content as table generation', () => {
         const normalContent = `
 # Heading
 
@@ -48,7 +48,7 @@ Another paragraph with some data: Revenue increased **42%** to $2.1B.
         expect(isLikelyTableGeneration(normalContent)).toBe(false);
     });
 
-    it("should suggest alternatives for table-heavy content", () => {
+    it('should suggest alternatives for table-heavy content', () => {
         const tableContent = `
 | A | B | C | D |
 |---|---|---|---|
@@ -57,12 +57,12 @@ Another paragraph with some data: Revenue increased **42%** to $2.1B.
         `;
 
         const result = suggestAlternativeFormatting(tableContent);
-        expect(result).toContain("alternative formats");
+        expect(result).toContain('alternative formats');
     });
 });
 
-describe("Content Monitor", () => {
-    it("should detect when content is stuck on table generation", () => {
+describe('Content Monitor', () => {
+    it('should detect when content is stuck on table generation', () => {
         const monitor = new ContentMonitor();
         const tableContent = `
 | Col1 | Col2 | Col3 | Col4 | Col5 |
@@ -77,18 +77,18 @@ describe("Content Monitor", () => {
 
         const result = monitor.checkContent(tableContent);
         expect(result.isStuck).toBe(true);
-        expect(result.issue).toContain("table generation");
+        expect(result.issue).toContain('table generation');
     });
 
-    it("should not flag normal content as stuck", () => {
+    it('should not flag normal content as stuck', () => {
         const monitor = new ContentMonitor();
-        const normalContent = "This is normal content with some **bold** text and bullet points.";
+        const normalContent = 'This is normal content with some **bold** text and bullet points.';
 
         const result = monitor.checkContent(normalContent);
         expect(result.isStuck).toBe(false);
     });
 
-    it("should provide helpful suggestions for problematic content", () => {
+    it('should provide helpful suggestions for problematic content', () => {
         const result = checkContentForIssues(`
 | A | B | C | D | E | F |
 |---|---|---|---|---|---|
@@ -98,13 +98,13 @@ describe("Content Monitor", () => {
 
         expect(result.needsIntervention).toBe(true);
         expect(result.suggestions).toContain(
-            "Replace large tables with bullet points or inline formatting",
+            'Replace large tables with bullet points or inline formatting',
         );
     });
 });
 
-describe("Table Limits", () => {
-    it("should define reasonable table limits", () => {
+describe('Table Limits', () => {
+    it('should define reasonable table limits', () => {
         expect(FORMATTING_GUIDELINES.TABLE_LIMITS.MAX_COLUMNS).toBe(3);
         expect(FORMATTING_GUIDELINES.TABLE_LIMITS.MAX_ROWS).toBe(5);
         expect(FORMATTING_GUIDELINES.TABLE_LIMITS.PREFERRED_ALTERNATIVES).toHaveLength(5);

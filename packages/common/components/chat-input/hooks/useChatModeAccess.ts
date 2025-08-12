@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useSubscriptionAccess } from "@repo/common/hooks";
-import { useApiKeysStore } from "@repo/common/store";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
-import { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
+import { useSubscriptionAccess } from '@repo/common/hooks';
+import { useApiKeysStore } from '@repo/common/store';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 
 interface AccessResult {
     isGated: boolean;
@@ -35,10 +35,9 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
     if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
         // Check if user has VT+ subscription first
         const hasVtPlusAccess = hasAccess({ plan: PlanSlug.VT_PLUS });
-        const hasFeatureAccess =
-            mode === ChatMode.Deep
-                ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
-                : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+        const hasFeatureAccess = mode === ChatMode.Deep
+            ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+            : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
         // If user has VT+ and feature access, they can use it without BYOK
         if (hasVtPlusAccess && hasFeatureAccess) {
@@ -55,8 +54,9 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
         return {
             isGated: true,
             reason: {
-                requiredFeature:
-                    mode === ChatMode.Deep ? FeatureSlug.DEEP_RESEARCH : FeatureSlug.PRO_SEARCH,
+                requiredFeature: mode === ChatMode.Deep
+                    ? FeatureSlug.DEEP_RESEARCH
+                    : FeatureSlug.PRO_SEARCH,
                 requiredPlan: PlanSlug.VT_PLUS,
                 missingApiKey: !hasByokGeminiKey,
             },
@@ -65,7 +65,7 @@ export const useChatModeAccess = (mode: ChatMode): AccessResult => {
 
     // For other modes, use regular logic
     let hasRequiredAccess = true;
-    const reason: AccessResult["reason"] = {};
+    const reason: AccessResult['reason'] = {};
 
     if (config.requiredFeature) {
         hasRequiredAccess = hasAccess({

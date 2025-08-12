@@ -10,12 +10,12 @@ Enhanced React Scan configuration to ensure it **NEVER** runs in production or d
 
 - `NODE_ENV === 'development'` required
 - Blocked on all deployment platforms:
-    - Vercel (`VERCEL`)
-    - Fly.io (`FLY_APP_NAME`)
-    - Netlify (`NETLIFY`)
-    - Render (`RENDER`)
-    - Railway (`RAILWAY_ENVIRONMENT`)
-    - Heroku (`HEROKU_APP_NAME`)
+  - Vercel (`VERCEL`)
+  - Fly.io (`FLY_APP_NAME`)
+  - Netlify (`NETLIFY`)
+  - Render (`RENDER`)
+  - Railway (`RAILWAY_ENVIRONMENT`)
+  - Heroku (`HEROKU_APP_NAME`)
 
 ### 2. Configuration Safety
 
@@ -43,8 +43,8 @@ isDeployment: !!(process.env.VERCEL || process.env.FLY_APP_NAME || ...)
 forceEnabledInProduction: process.env.REACT_SCAN_FORCE_PRODUCTION === 'true';
 
 // After
-forceEnabledInProduction: process.env.REACT_SCAN_FORCE_PRODUCTION === 'true' &&
-    process.env.NODE_ENV === 'development';
+forceEnabledInProduction: process.env.REACT_SCAN_FORCE_PRODUCTION === 'true'
+    && process.env.NODE_ENV === 'development';
 ```
 
 ## Testing Results

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
 import {
     getModelFromChatMode,
     supportsReasoning,
     supportsTools,
     supportsWebSearch,
-} from "@repo/ai/models";
-import { useSubscriptionAccess, useVtPlusAccess } from "@repo/common/hooks";
-import { useApiKeysStore, type ApiKeys } from "@repo/common/store";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { API_KEY_NAMES } from "@repo/shared/constants/api-keys";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { FeatureSlug } from "@repo/shared/types/subscription";
+} from '@repo/ai/models';
+import { useSubscriptionAccess, useVtPlusAccess } from '@repo/common/hooks';
+import { type ApiKeys, useApiKeysStore } from '@repo/common/store';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { API_KEY_NAMES } from '@repo/shared/constants/api-keys';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
 import {
     Badge,
@@ -21,15 +21,15 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     Input,
-} from "@repo/ui";
-import { Brain, Globe, Wrench } from "lucide-react";
+} from '@repo/ui';
+import { Brain, Globe, Wrench } from 'lucide-react';
 
-import { useState } from "react";
-import { LoginRequiredDialog } from "../../../login-required-dialog";
-import { chatOptions, modelOptions, modelOptionsByProvider } from "../../chat-config";
-import { getIconByName } from "../../config/icons";
-import { useLoginPrompt } from "../../hooks/useLoginPrompt";
-import { BYOKSetupModal } from "../../modals/BYOKSetupModal";
+import { useState } from 'react';
+import { LoginRequiredDialog } from '../../../login-required-dialog';
+import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
+import { getIconByName } from '../../config/icons';
+import { useLoginPrompt } from '../../hooks/useLoginPrompt';
+import { BYOKSetupModal } from '../../modals/BYOKSetupModal';
 
 interface ChatModeOptionsProps {
     chatMode: ChatMode;
@@ -72,10 +72,9 @@ export function ChatModeOptions({
         // CRITICAL: Special handling for Deep Research and Pro Search
         if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
             // Check if user has VT+ subscription first
-            const hasFeatureAccess =
-                mode === ChatMode.Deep
-                    ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
-                    : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+            const hasFeatureAccess = mode === ChatMode.Deep
+                ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
             // If user has VT+ and feature access, they can use it without BYOK
             if (isVtPlus && hasFeatureAccess) {
@@ -109,15 +108,17 @@ export function ChatModeOptions({
     };
 
     // Search state for filtering models
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
 
     // BYOK modal state
     const [byokModalOpen, setBYOKModalOpen] = useState(false);
-    const [pendingMode, setPendingMode] = useState<{
-        mode: ChatMode;
-        requiredApiKey: keyof ApiKeys;
-        modelName: string;
-    } | null>(null);
+    const [pendingMode, setPendingMode] = useState<
+        {
+            mode: ChatMode;
+            requiredApiKey: keyof ApiKeys;
+            modelName: string;
+        } | null
+    >(null);
 
     const handleModeSelect = (mode: ChatMode) => {
         const config = ChatModeConfig[mode];
@@ -138,10 +139,9 @@ export function ChatModeOptions({
             if (!hasRequiredApiKey) {
                 // Special handling for Deep Research and Pro Search: VT+ users don't need BYOK
                 if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
-                    const hasFeatureAccess =
-                        mode === ChatMode.Deep
-                            ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
-                            : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
+                    const hasFeatureAccess = mode === ChatMode.Deep
+                        ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
+                        : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
                     // If user has VT+ access, bypass BYOK requirement
                     if (isVtPlus && hasFeatureAccess) {
@@ -163,7 +163,7 @@ export function ChatModeOptions({
                 setPendingMode({
                     mode,
                     requiredApiKey,
-                    modelName: option?.label || "this model",
+                    modelName: option?.label || 'this model',
                 });
                 setBYOKModalOpen(true);
                 return;
@@ -179,7 +179,8 @@ export function ChatModeOptions({
                 feature: config?.requiredFeature,
                 plan: config?.requiredPlan,
                 title: `${option?.label}`,
-                message: `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+                message:
+                    `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
             });
             return;
         }
@@ -209,18 +210,18 @@ export function ChatModeOptions({
     return (
         <>
             <DropdownMenuContent
-                align="start"
-                className="no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]"
-                side="bottom"
+                align='start'
+                className='no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]'
+                side='bottom'
             >
                 {/* Search input (filters Models section) */}
-                <div className="sticky top-0 z-10 bg-popover p-2 pb-2">
+                <div className='sticky top-0 z-10 bg-popover p-2 pb-2'>
                     <Input
                         autoFocus
-                        className="h-8"
+                        className='h-8'
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={(e) => e.stopPropagation()}
-                        placeholder="Search models..."
+                        placeholder='Search models...'
                         value={searchQuery}
                     />
                 </div>
@@ -230,46 +231,46 @@ export function ChatModeOptions({
                         return (
                             <DropdownMenuItem
                                 className={cn(
-                                    "h-auto",
-                                    option.value === _chatMode &&
-                                        "border-muted-foreground/30 border",
+                                    'h-auto',
+                                    option.value === _chatMode
+                                        && 'border-muted-foreground/30 border',
                                 )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
                             >
-                                <div className="flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5">
-                                    <div className="flex flex-col gap-0 pt-1">
-                                        {"iconName" in option
+                                <div className='flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5'>
+                                    <div className='flex flex-col gap-0 pt-1'>
+                                        {'iconName' in option
                                             ? getIconByName(option.iconName as string)
                                             : option.icon}
                                     </div>
-                                    <div className="flex flex-col gap-0">
-                                        <div className="flex items-center gap-2">
-                                            <p className="m-0 text-sm font-medium">
+                                    <div className='flex flex-col gap-0'>
+                                        <div className='flex items-center gap-2'>
+                                            <p className='m-0 text-sm font-medium'>
                                                 {option.label}
                                             </p>
-                                            {(option.value === ChatMode.Deep ||
-                                                option.value === ChatMode.Pro) && (
+                                            {(option.value === ChatMode.Deep
+                                                || option.value === ChatMode.Pro) && (
                                                 <Badge
-                                                    className="bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]"
-                                                    variant="secondary"
+                                                    className='bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]'
+                                                    variant='secondary'
                                                 >
                                                     VT+
                                                 </Badge>
                                             )}
                                         </div>
                                         {option.description && (
-                                            <p className="text-muted-foreground text-xs font-light">
+                                            <p className='text-muted-foreground text-xs font-light'>
                                                 {option.description}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="flex-1" />
+                                    <div className='flex-1' />
                                     {supportsReasoning(getModelFromChatMode(option.value)) && (
                                         <Brain
-                                            className="text-purple-500"
+                                            className='text-purple-500'
                                             size={14}
-                                            title="Reasoning Model"
+                                            title='Reasoning Model'
                                         />
                                     )}
                                 </div>
@@ -284,9 +285,7 @@ export function ChatModeOptions({
                         const entries = Object.entries(modelOptionsByProvider).map(
                             ([providerName, options]) => {
                                 const filtered = q
-                                    ? options.filter((opt) =>
-                                          opt.label.toLowerCase().includes(q),
-                                      )
+                                    ? options.filter((opt) => opt.label.toLowerCase().includes(q))
                                     : options;
                                 return [providerName, filtered] as const;
                             },
@@ -295,7 +294,7 @@ export function ChatModeOptions({
 
                         if (q && visible.length === 0) {
                             return (
-                                <div className="text-muted-foreground px-3 py-2 text-xs">
+                                <div className='text-muted-foreground px-3 py-2 text-xs'>
                                     No models found
                                 </div>
                             );
@@ -303,38 +302,38 @@ export function ChatModeOptions({
 
                         return visible.map(([providerName, options]) => (
                             <div key={providerName}>
-                                <DropdownMenuLabel className="text-muted-foreground py-1 pl-2 text-xs font-normal">
+                                <DropdownMenuLabel className='text-muted-foreground py-1 pl-2 text-xs font-normal'>
                                     {providerName}
                                 </DropdownMenuLabel>
                                 {options.map((option) => {
                                     return (
                                         <DropdownMenuItem
                                             className={cn(
-                                                "h-auto pl-4",
-                                                option.value === _chatMode &&
-                                                    "border-muted-foreground/30 border",
+                                                'h-auto pl-4',
+                                                option.value === _chatMode
+                                                    && 'border-muted-foreground/30 border',
                                             )}
                                             key={`model-${option.value}`}
                                             onSelect={() => handleDropdownSelect(option.value)}
                                         >
-                                            <div className="flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5">
+                                            <div className='flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5'>
                                                 {(option as any).providerIcon && (
-                                                    <div className="flex items-center">
+                                                    <div className='flex items-center'>
                                                         {(option as any).providerIcon}
                                                     </div>
                                                 )}
-                                                <div className="flex flex-col gap-0">
-                                                    <p className="text-sm font-medium">
+                                                <div className='flex flex-col gap-0'>
+                                                    <p className='text-sm font-medium'>
                                                         {option.label}
                                                     </p>
                                                     {(option as any).description && (
-                                                        <p className="text-muted-foreground text-xs">
+                                                        <p className='text-muted-foreground text-xs'>
                                                             {(option as any).description}
                                                         </p>
                                                     )}
                                                 </div>
-                                                <div className="flex-1" />
-                                                <div className="flex items-center gap-1">
+                                                <div className='flex-1' />
+                                                <div className='flex items-center gap-1'>
                                                     {(() => {
                                                         const model = getModelFromChatMode(
                                                             option.value,
@@ -346,34 +345,34 @@ export function ChatModeOptions({
                                                                 {supportsTools(model) && (
                                                                     <Wrench
                                                                         className={cn(
-                                                                            "text-gray-500",
-                                                                            option.value ===
-                                                                                _chatMode &&
-                                                                                "text-blue-500",
+                                                                            'text-gray-500',
+                                                                            option.value
+                                                                                    === _chatMode
+                                                                                && 'text-blue-500',
                                                                         )}
                                                                         size={12}
-                                                                        title="Supports Tools"
+                                                                        title='Supports Tools'
                                                                     />
                                                                 )}
                                                                 {supportsReasoning(model) && (
                                                                     <Brain
-                                                                        className="text-purple-500"
+                                                                        className='text-purple-500'
                                                                         size={12}
-                                                                        title="Reasoning Model"
+                                                                        title='Reasoning Model'
                                                                     />
                                                                 )}
                                                                 {supportsWebSearch(model) && (
                                                                     <Globe
-                                                                        className="text-blue-500"
+                                                                        className='text-blue-500'
                                                                         size={12}
-                                                                        title="Web Search"
+                                                                        title='Web Search'
                                                                     />
                                                                 )}
                                                             </>
                                                         );
                                                     })()}
                                                     {option.icon && (
-                                                        <div className="flex items-center">
+                                                        <div className='flex items-center'>
                                                             {option.icon}
                                                         </div>
                                                     )}
@@ -401,10 +400,10 @@ export function ChatModeOptions({
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
-                description="Please log in to select and use different AI models."
+                description='Please log in to select and use different AI models.'
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
-                title="Login Required"
+                title='Login Required'
             />
         </>
     );

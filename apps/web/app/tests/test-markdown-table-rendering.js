@@ -1,4 +1,4 @@
-import { log } from "@repo/shared/lib/logger";
+import { log } from '@repo/shared/lib/logger';
 
 /**
  * Test script for markdown table rendering improvements
@@ -55,7 +55,7 @@ The table above should render properly with enhanced spacing.
 
 // Test functions
 function testTableValidation() {
-    log.info("🧪 Testing table validation...");
+    log.info('🧪 Testing table validation...');
 
     // Test valid table
     const _validTable = `| Name | Age |
@@ -66,11 +66,11 @@ function testTableValidation() {
     const _malformedTable = `| Single pipe content
 | Another single pipe`;
 
-    log.info("✅ Table validation tests completed");
+    log.info('✅ Table validation tests completed');
 }
 
 function testHeaderSpacing() {
-    log.info("🧪 Testing header spacing...");
+    log.info('🧪 Testing header spacing...');
 
     const _headerContent = `# Main Title
 ## Section Header
@@ -79,38 +79,38 @@ function testHeaderSpacing() {
 ##### Minor Header
 ###### Small Header`;
 
-    log.info("✅ Header spacing tests completed");
+    log.info('✅ Header spacing tests completed');
 }
 
 function testCircuitBreaker() {
-    log.info("🧪 Testing circuit breaker...");
+    log.info('🧪 Testing circuit breaker...');
 
     // Simulate problematic content
     const _problematicContent = `| Problematic | Table |
 | Content | That | Might | Cause | Issues |`;
 
-    log.info("✅ Circuit breaker tests completed");
+    log.info('✅ Circuit breaker tests completed');
 }
 
 // Run tests
-log.info("🚀 Starting markdown rendering tests...");
-log.info("");
+log.info('🚀 Starting markdown rendering tests...');
+log.info('');
 
 testTableValidation();
 testHeaderSpacing();
 testCircuitBreaker();
 
-log.info("");
-log.info("📊 Test Results Summary:");
-log.info("- ✅ Table validation: More permissive, fewer false positives");
-log.info("- ✅ Header spacing: Increased vertical padding for better readability");
-log.info("- ✅ Circuit breaker: Faster detection (3 attempts vs 10)");
-log.info("- ✅ Error handling: Smart fallbacks maintain functionality");
-log.info("");
-log.info("🎉 All markdown rendering improvements verified!");
+log.info('');
+log.info('📊 Test Results Summary:');
+log.info('- ✅ Table validation: More permissive, fewer false positives');
+log.info('- ✅ Header spacing: Increased vertical padding for better readability');
+log.info('- ✅ Circuit breaker: Faster detection (3 attempts vs 10)');
+log.info('- ✅ Error handling: Smart fallbacks maintain functionality');
+log.info('');
+log.info('🎉 All markdown rendering improvements verified!');
 
 // Export test content for manual verification
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         testTableContent,
         malformedTableContent,

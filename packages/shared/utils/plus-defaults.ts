@@ -5,9 +5,9 @@
  * Based on Context7 patterns for feature-based defaults
  */
 
-import { THINKING_MODE } from "../constants/thinking-mode";
-import { FeatureSlug, PlanSlug } from "../types/subscription";
-import { hasVTPlusAccessByPlan } from "./access-control";
+import { THINKING_MODE } from '../constants/thinking-mode';
+import { FeatureSlug, PlanSlug } from '../types/subscription';
+import { hasVTPlusAccessByPlan } from './access-control';
 
 /**
  * Default thinking mode settings for plus users
@@ -101,9 +101,8 @@ export function shouldApplyPlusDefaults(
     const upgradingToPlus = previousPlan === PlanSlug.VT_BASE && newPlan === PlanSlug.VT_PLUS;
 
     // Or when plus user has disabled settings (allow re-enabling)
-    const isPlusWithDisabledFeatures =
-        newPlan === PlanSlug.VT_PLUS &&
-        !(currentSettings.thinkingMode.enabled && currentSettings.geminiCaching.enabled);
+    const isPlusWithDisabledFeatures = newPlan === PlanSlug.VT_PLUS
+        && !(currentSettings.thinkingMode.enabled && currentSettings.geminiCaching.enabled);
 
     return upgradingToPlus || isPlusWithDisabledFeatures;
 }
@@ -133,9 +132,8 @@ export function mergeWithPlusDefaults(
             },
             geminiCaching: {
                 enabled: defaultSettings.geminiCaching.enabled, // Always enable for plus
-                ttlSeconds:
-                    currentSettings.geminiCaching.ttlSeconds ||
-                    defaultSettings.geminiCaching.ttlSeconds,
+                ttlSeconds: currentSettings.geminiCaching.ttlSeconds
+                    || defaultSettings.geminiCaching.ttlSeconds,
                 maxCaches: defaultSettings.geminiCaching.maxCaches, // Use plus default (1)
             },
         };

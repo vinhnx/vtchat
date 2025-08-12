@@ -1,29 +1,29 @@
-import { db, schema } from "@repo/shared/lib/database";
-import { log } from "@repo/shared/logger";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { db, schema } from '@repo/shared/lib/database';
+import { log } from '@repo/shared/logger';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
     type QuotaWindow,
     VT_PLUS_LIMITS,
     VtPlusFeature,
-} from "../config/vtPlusLimits";
+} from '../config/vtPlusLimits';
 
 /**
  * Rate limiter error messages
  */
 const RateLimiterErrorMessage = {
-    AMOUNT_MUST_BE_POSITIVE: "Amount must be positive",
-    FAILED_TO_CONSUME_QUOTA: "Failed to consume quota",
+    AMOUNT_MUST_BE_POSITIVE: 'Amount must be positive',
+    FAILED_TO_CONSUME_QUOTA: 'Failed to consume quota',
 } as const;
 
 /**
  * Rate limiter log messages
  */
 const RateLimiterLogMessage = {
-    ATTEMPTING_TO_CONSUME: "Attempting to consume VT+ quota",
-    QUOTA_CONSUMED_SUCCESS: "VT+ quota consumed successfully via Drizzle",
-    FAILED_TO_CONSUME: "Failed to consume VT+ quota",
+    ATTEMPTING_TO_CONSUME: 'Attempting to consume VT+ quota',
+    QUOTA_CONSUMED_SUCCESS: 'VT+ quota consumed successfully via Drizzle',
+    FAILED_TO_CONSUME: 'Failed to consume VT+ quota',
 } as const;
 
 /**
@@ -38,7 +38,7 @@ async function getCurrentUsageNonTx(
     periodStart: Date,
 ): Promise<number> {
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
     const result = await db
         .select({ used: schema.vtplusUsage.used })
         .from(schema.vtplusUsage)
@@ -63,9 +63,9 @@ async function upsertUsageNonTx(
     periodStart: Date,
     amount: number,
     limit: number,
-): Promise<{ used: number; exceeded: boolean }> {
+): Promise<{ used: number; exceeded: boolean; }> {
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
 
     // First, try to get current usage
     const currentUsage = await getCurrentUsageNonTx(userId, feature, periodStart);
@@ -182,7 +182,7 @@ export async function getUsage(userId: string, feature: VtPlusFeature): Promise<
     const { limit, window } = VT_PLUS_LIMITS[feature];
     const periodStart = getPeriodStart(window);
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
 
     const usage = await db
         .select()
@@ -224,7 +224,7 @@ export async function getAllUsage(userId: string): Promise<Record<VtPlusFeature,
     for (const [window, features] of Array.from(featuresByWindow.entries())) {
         const periodStart = getPeriodStart(window);
         // Convert to date string for database storage (YYYY-MM-DD format)
-        const periodStartDate = periodStart.toISOString().split("T")[0];
+        const periodStartDate = periodStart.toISOString().split('T')[0];
 
         const usageRecords = await db
             .select()

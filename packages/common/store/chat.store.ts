@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { type Model, models } from "@repo/ai/models";
-import { ChatMode } from "@repo/shared/config";
-import { THINKING_MODE } from "@repo/shared/constants";
-import { generateThreadId } from "@repo/shared/lib/thread-id";
-import type { MessageGroup, Thread, ThreadItem } from "@repo/shared/types";
-import Dexie, { type Table } from "dexie";
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { log } from "../../shared/src/lib/logger";
-import { getGlobalSubscriptionStatus } from "../providers/subscription-provider";
-import { useAppStore } from "./app.store";
+import { type Model, models } from '@repo/ai/models';
+import { ChatMode } from '@repo/shared/config';
+import { THINKING_MODE } from '@repo/shared/constants';
+import { generateThreadId } from '@repo/shared/lib/thread-id';
+import type { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
+import Dexie, { type Table } from 'dexie';
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { log } from '../../shared/src/lib/logger';
+import { getGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { useAppStore } from './app.store';
 
 // Helper function to check if user has VT+ subscription
 function isVtPlusUser(): boolean {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
 
     const subscriptionStatus = getGlobalSubscriptionStatus();
     return subscriptionStatus?.isPlusSubscriber === true;
@@ -26,24 +26,24 @@ class ThreadDatabase extends Dexie {
 
     constructor(userId?: string) {
         // Create user-specific database name for per-account isolation
-        const dbName = userId ? `ThreadDatabase_${userId}` : "ThreadDatabase_anonymous";
+        const dbName = userId ? `ThreadDatabase_${userId}` : 'ThreadDatabase_anonymous';
         super(dbName);
         this.version(1).stores({
-            threads: "id, createdAt, pinned, pinnedAt",
-            threadItems: "id, threadId, parentId, createdAt",
+            threads: 'id, createdAt, pinned, pinnedAt',
+            threadItems: 'id, threadId, parentId, createdAt',
         });
     }
 }
 
 let db: ThreadDatabase | null = null;
-let CONFIG_KEY = "chat-config";
+let CONFIG_KEY = 'chat-config';
 let currentUserId: string | null = null;
 
 /**
  * Get the current database instance, ensuring it's initialized
  */
 function getDatabase(): ThreadDatabase | null {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
         return null;
     }
 
@@ -60,8 +60,8 @@ function getDatabase(): ThreadDatabase | null {
  */
 function initializeUserDatabase(userId: string | null) {
     // Only initialize on client side
-    if (typeof window === "undefined") {
-        log.warn({ context: "ThreadDB" }, "Database initialization skipped on server side");
+    if (typeof window === 'undefined') {
+        log.warn({ context: 'ThreadDB' }, 'Database initialization skipped on server side');
         return null;
     }
 
@@ -73,18 +73,18 @@ function initializeUserDatabase(userId: string | null) {
         db = new ThreadDatabase(newUserId || undefined);
 
         // Update config key to be user-specific for better isolation
-        CONFIG_KEY = newUserId ? `chat-config-${newUserId}` : "chat-config-anonymous";
+        CONFIG_KEY = newUserId ? `chat-config-${newUserId}` : 'chat-config-anonymous';
 
-        log.info({ context: "ThreadDB", isAnonymous: !newUserId }, "Initialized database for user");
+        log.info({ context: 'ThreadDB', isAnonymous: !newUserId }, 'Initialized database for user');
     }
 
     return db;
 }
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
     // Initialize with anonymous database by default
     initializeUserDatabase(null);
-    CONFIG_KEY = "chat-config-anonymous";
+    CONFIG_KEY = 'chat-config-anonymous';
 }
 
 const loadInitialData = async () => {
@@ -108,7 +108,7 @@ const loadInitialData = async () => {
             useMathCalculator: false,
             useCharts: false,
             chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
-            customInstructions: "",
+            customInstructions: '',
             showSuggestions: false,
         };
     }
@@ -117,7 +117,7 @@ const loadInitialData = async () => {
 
     // Safe JSON parsing for config data
     const configStr = localStorage.getItem(CONFIG_KEY);
-    const config = JSON.parse(configStr || "{}");
+    const config = JSON.parse(configStr || '{}');
 
     const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
 
@@ -147,14 +147,14 @@ const loadInitialData = async () => {
         currentThreadId = initialThreads[0]?.id || null;
         log.warn(
             { configThreadId: config.currentThreadId },
-            "Thread ID from config not found in threads, using first thread",
+            'Thread ID from config not found in threads, using first thread',
         );
     }
 
     // If we still don't have a thread ID but have threads, use the first one
     if (!currentThreadId && initialThreads.length > 0) {
         currentThreadId = initialThreads[0].id;
-        log.info({ firstThreadId: currentThreadId }, "Using first thread as current thread");
+        log.info({ firstThreadId: currentThreadId }, 'Using first thread as current thread');
     }
 
     return {
@@ -173,7 +173,7 @@ const loadInitialData = async () => {
     };
 };
 
-type ActiveButtonType = "webSearch" | "mathCalculator" | "charts" | "structuredOutput" | null;
+type ActiveButtonType = 'webSearch' | 'mathCalculator' | 'charts' | 'structuredOutput' | null;
 
 type State = {
     model: Model;
@@ -188,7 +188,7 @@ type State = {
     editor: any;
     chatMode: ChatMode;
     context: string;
-    imageAttachment: { base64?: string; file?: File };
+    imageAttachment: { base64?: string; file?: File; };
     documentAttachment: {
         base64?: string;
         file?: File;
@@ -239,7 +239,7 @@ type Actions = {
     setModel: (model: Model) => void;
     setEditor: (editor: any) => void;
     setContext: (context: string) => void;
-    setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => void;
+    setImageAttachment: (imageAttachment: { base64?: string; file?: File; }) => void;
     clearImageAttachment: () => void;
     setDocumentAttachment: (documentAttachment: {
         base64?: string;
@@ -265,9 +265,9 @@ type Actions = {
     setShowTimeoutIndicator: (show: boolean) => void;
     stopGeneration: () => void;
     setAbortController: (abortController: AbortController) => void;
-    createThread: (optimisticId: string, thread?: Pick<Thread, "title">) => Promise<Thread>;
+    createThread: (optimisticId: string, thread?: Pick<Thread, 'title'>) => Promise<Thread>;
     setChatMode: (chatMode: ChatMode) => void;
-    updateThread: (thread: Pick<Thread, "id" | "title">) => Promise<void>;
+    updateThread: (thread: Pick<Thread, 'id' | 'title'>) => Promise<void>;
     getThread: (threadId: string) => Promise<Thread | null>;
     pinThread: (threadId: string) => Promise<void>;
     unpinThread: (threadId: string) => Promise<void>;
@@ -313,7 +313,7 @@ type Actions = {
 const debounce = <T extends (...args: any[]) => any>(
     fn: T,
     delay: number,
-): ((...args: Parameters<T>) => void) => {
+): (...args: Parameters<T>) => void => {
     let timeoutId: NodeJS.Timeout;
     return (...args: Parameters<T>) => {
         clearTimeout(timeoutId);
@@ -324,7 +324,7 @@ const debounce = <T extends (...args: any[]) => any>(
 const _throttle = <T extends (...args: any[]) => any>(
     fn: T,
     limit: number,
-): ((...args: Parameters<T>) => void) => {
+): (...args: Parameters<T>) => void => {
     let inThrottle = false;
     let lastArgs: Parameters<T> | null = null;
 
@@ -380,7 +380,7 @@ const processBatchUpdate = async () => {
             lastItemUpdateTime[item.id] = Date.now();
         });
     } catch (error) {
-        log.error({ error }, "Failed to batch update thread items");
+        log.error({ error }, 'Failed to batch update thread items');
         // If bulk update fails, try individual updates to salvage what we can
         for (const item of itemsToUpdate) {
             try {
@@ -390,7 +390,7 @@ const processBatchUpdate = async () => {
                 });
                 lastItemUpdateTime[item.id] = Date.now();
             } catch (innerError) {
-                log.error({ itemId: item.id, error: innerError }, "Failed to update item");
+                log.error({ itemId: item.id, error: innerError }, 'Failed to update item');
             }
         }
     }
@@ -422,14 +422,16 @@ declare global {
 
 // Function to initialize the shared worker
 const initializeWorker = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
         // Create a shared worker using the public JS file
         // Add production flag to suppress debug logs in production
-        const workerUrl = `/db-sync.worker.js${process.env.NODE_ENV === "production" ? "?prod=true" : ""}`;
+        const workerUrl = `/db-sync.worker.js${
+            process.env.NODE_ENV === 'production' ? '?prod=true' : ''
+        }`;
         dbWorker = new SharedWorker(workerUrl, {
-            type: "module",
+            type: 'module',
         });
 
         // Set up message handler with enhanced error handling
@@ -441,35 +443,35 @@ const initializeWorker = () => {
             try {
                 // Handle different message types
                 switch (message.type) {
-                    case "connected":
+                    case 'connected':
                         log.info(
-                            { context: "ChatStore", workerId: message.workerId },
-                            "Connected to SharedWorker",
+                            { context: 'ChatStore', workerId: message.workerId },
+                            'Connected to SharedWorker',
                         );
                         break;
 
-                    case "db-operation-result":
+                    case 'db-operation-result':
                         // Handle database operation results
                         if (message.success) {
                             log.info(
-                                { context: "ChatStore", requestId: message.requestId },
-                                "Database operation succeeded",
+                                { context: 'ChatStore', requestId: message.requestId },
+                                'Database operation succeeded',
                             );
                         } else {
                             log.error(
-                                { context: "ChatStore", error: message.error },
-                                "Database operation failed",
+                                { context: 'ChatStore', error: message.error },
+                                'Database operation failed',
                             );
                         }
                         break;
 
-                    case "worker-error":
-                        log.error({ context: "ChatStore", error: message.error }, "Worker error");
+                    case 'worker-error':
+                        log.error({ context: 'ChatStore', error: message.error }, 'Worker error');
                         // Fallback to localStorage sync on worker errors
                         initializeTabSync();
                         break;
 
-                    case "thread-update":
+                    case 'thread-update':
                         // Refresh threads list with better error handling
                         try {
                             const threads = await withDatabaseAsync(async (database) => {
@@ -483,11 +485,11 @@ const initializeWorker = () => {
                                 });
                             }
                         } catch (error) {
-                            log.error({ context: "ChatStore", error }, "Failed to refresh threads");
+                            log.error({ context: 'ChatStore', error }, 'Failed to refresh threads');
                         }
                         break;
 
-                    case "thread-item-update":
+                    case 'thread-item-update':
                         // Refresh thread items if we're on the same thread with better error handling
                         try {
                             const currentThreadId = useChatStore.getState().currentThreadId;
@@ -498,13 +500,13 @@ const initializeWorker = () => {
                             }
                         } catch (error) {
                             log.error(
-                                { context: "ChatStore", error },
-                                "Failed to refresh thread items",
+                                { context: 'ChatStore', error },
+                                'Failed to refresh thread items',
                             );
                         }
                         break;
 
-                    case "thread-delete":
+                    case 'thread-delete':
                         // Handle thread deletion with error handling
                         try {
                             useChatStore.setState((state) => {
@@ -523,13 +525,13 @@ const initializeWorker = () => {
                             });
                         } catch (error) {
                             log.error(
-                                { context: "ChatStore", error },
-                                "Failed to handle thread deletion",
+                                { context: 'ChatStore', error },
+                                'Failed to handle thread deletion',
                             );
                         }
                         break;
 
-                    case "thread-item-delete":
+                    case 'thread-item-delete':
                         // Handle thread item deletion with error handling
                         try {
                             if (
@@ -543,8 +545,8 @@ const initializeWorker = () => {
                             }
                         } catch (error) {
                             log.error(
-                                { context: "ChatStore", error },
-                                "Failed to handle thread item deletion",
+                                { context: 'ChatStore', error },
+                                'Failed to handle thread item deletion',
                             );
                         }
                         break;
@@ -553,14 +555,14 @@ const initializeWorker = () => {
                         // Handle unknown message types
                         if (message.fromWorker) {
                             log.info(
-                                { context: "ChatStore", messageType: message.type },
-                                "Received unknown message from worker",
+                                { context: 'ChatStore', messageType: message.type },
+                                'Received unknown message from worker',
                             );
                         }
                         break;
                 }
             } catch (error) {
-                log.error({ context: "ChatStore", error }, "Error processing worker message");
+                log.error({ context: 'ChatStore', error }, 'Error processing worker message');
             }
         };
 
@@ -570,23 +572,23 @@ const initializeWorker = () => {
         // Handle worker errors with proper fallback
         dbWorker.onerror = (err) => {
             log.warn(
-                { context: "ChatStore", error: err },
-                "SharedWorker connection failed, falling back to localStorage sync",
+                { context: 'ChatStore', error: err },
+                'SharedWorker connection failed, falling back to localStorage sync',
             );
             // Fallback to localStorage method
             initializeTabSync();
         };
 
         // Handle worker port errors (using addEventListener instead of onerror)
-        dbWorker.port.addEventListener("error", (err: Event) => {
+        dbWorker.port.addEventListener('error', (err: Event) => {
             log.warn(
-                { context: "ChatStore", error: err },
-                "SharedWorker port error, falling back to localStorage sync",
+                { context: 'ChatStore', error: err },
+                'SharedWorker port error, falling back to localStorage sync',
             );
             initializeTabSync();
         });
     } catch (error) {
-        log.error({ context: "ChatStore", error }, "Failed to initialize SharedWorker");
+        log.error({ context: 'ChatStore', error }, 'Failed to initialize SharedWorker');
         // Fallback to localStorage method if SharedWorker isn't supported
         initializeTabSync();
     }
@@ -594,22 +596,22 @@ const initializeWorker = () => {
 
 // Function to initialize tab synchronization using localStorage
 const initializeTabSync = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
-    const SYNC_EVENT_KEY = "chat-store-sync-event";
-    const SYNC_DATA_KEY = "chat-store-sync-data";
+    const SYNC_EVENT_KEY = 'chat-store-sync-event';
+    const SYNC_DATA_KEY = 'chat-store-sync-data';
 
     // Listen for storage events from other tabs
-    window.addEventListener("storage", (event) => {
+    window.addEventListener('storage', (event) => {
         if (event.key !== SYNC_EVENT_KEY) return;
 
         try {
-            const syncData = JSON.parse(localStorage.getItem(SYNC_DATA_KEY) || "null");
+            const syncData = JSON.parse(localStorage.getItem(SYNC_DATA_KEY) || 'null');
 
             if (!syncData?.type) return;
 
             switch (syncData.type) {
-                case "thread-update":
+                case 'thread-update':
                     // Refresh threads list
                     withDatabaseAsync(async (database) => {
                         const threads = await database.threads.toArray();
@@ -622,7 +624,7 @@ const initializeTabSync = () => {
                     });
                     break;
 
-                case "thread-item-update": {
+                case 'thread-item-update': {
                     // Refresh thread items if we're on the same thread
                     const currentThreadId = useChatStore.getState().currentThreadId;
                     if (syncData.data?.threadId === currentThreadId) {
@@ -631,7 +633,7 @@ const initializeTabSync = () => {
                     break;
                 }
 
-                case "thread-delete":
+                case 'thread-delete':
                     // Handle thread deletion
                     useChatStore.setState((state) => {
                         const newState = { ...state };
@@ -649,7 +651,7 @@ const initializeTabSync = () => {
                     });
                     break;
 
-                case "thread-item-delete":
+                case 'thread-item-delete':
                     // Handle thread item deletion
                     if (syncData.data?.threadId === useChatStore.getState().currentThreadId) {
                         useChatStore.setState((state) => ({
@@ -661,7 +663,7 @@ const initializeTabSync = () => {
                     break;
             }
         } catch (error) {
-            log.error({ error }, "Error processing sync data");
+            log.error({ error }, 'Error processing sync data');
         }
     });
 
@@ -681,7 +683,7 @@ const initializeTabSync = () => {
             // Trigger the storage event in other tabs
             localStorage.setItem(SYNC_EVENT_KEY, Date.now().toString());
         } catch (error) {
-            log.error({ error }, "Error notifying other tabs");
+            log.error({ error }, 'Error notifying other tabs');
         }
     };
 
@@ -693,7 +695,7 @@ const initializeTabSync = () => {
 const notifyWorker = (type: string, data: any, dbOperation?: any) => {
     if (!dbWorker?.port) {
         // Use localStorage fallback if worker isn't available
-        if (typeof window !== "undefined" && window.notifyTabSync) {
+        if (typeof window !== 'undefined' && window.notifyTabSync) {
             window.notifyTabSync(type, data);
         }
         return;
@@ -710,10 +712,10 @@ const notifyWorker = (type: string, data: any, dbOperation?: any) => {
 
         dbWorker.port.postMessage(message);
     } catch (error) {
-        log.error({ context: "ChatStore", error }, "Error notifying worker");
+        log.error({ context: 'ChatStore', error }, 'Error notifying worker');
 
         // Fallback to localStorage if worker communication fails
-        if (typeof window !== "undefined" && window.notifyTabSync) {
+        if (typeof window !== 'undefined' && window.notifyTabSync) {
             window.notifyTabSync(type, data);
         }
     }
@@ -734,17 +736,17 @@ const _performWorkerDatabaseOperation = async (
         return new Promise((resolve, reject) => {
             const requestId = Math.random().toString(36);
             const timeout = setTimeout(() => {
-                reject(new Error("Worker database operation timeout"));
+                reject(new Error('Worker database operation timeout'));
             }, 5000); // 5 second timeout
 
             // Listen for the result
             const handleMessage = (event: MessageEvent) => {
                 if (
-                    event.data.type === "db-operation-result" &&
-                    event.data.requestId === requestId
+                    event.data.type === 'db-operation-result'
+                    && event.data.requestId === requestId
                 ) {
                     clearTimeout(timeout);
-                    dbWorker?.port.removeEventListener("message", handleMessage);
+                    dbWorker?.port.removeEventListener('message', handleMessage);
 
                     if (event.data.success) {
                         resolve(event.data.result);
@@ -755,23 +757,23 @@ const _performWorkerDatabaseOperation = async (
             };
 
             if (dbWorker?.port) {
-                dbWorker.port.addEventListener("message", handleMessage);
+                dbWorker.port.addEventListener('message', handleMessage);
 
                 // Send the operation request
                 dbWorker.port.postMessage({
-                    type: "db-operation",
+                    type: 'db-operation',
                     requestId,
                     dbOperation: operation,
                     data,
                 });
             } else {
-                throw new Error("SharedWorker port not available");
+                throw new Error('SharedWorker port not available');
             }
         });
     } catch (error) {
         log.error(
-            { context: "ChatStore", error },
-            "Worker database operation failed, using fallback",
+            { context: 'ChatStore', error },
+            'Worker database operation failed, using fallback',
         );
         return await fallbackFn();
     }
@@ -783,7 +785,7 @@ const _performWorkerDatabaseOperation = async (
 function withDatabase<T>(operation: (db: ThreadDatabase) => T): T | null {
     const database = getDatabase();
     if (!database) {
-        log.warn({ context: "ThreadDB" }, "Database not available, skipping operation");
+        log.warn({ context: 'ThreadDB' }, 'Database not available, skipping operation');
         return null;
     }
     return operation(database);
@@ -797,13 +799,13 @@ async function withDatabaseAsync<T>(
 ): Promise<T | null> {
     const database = getDatabase();
     if (!database) {
-        log.warn({ context: "ThreadDB" }, "Database not available, skipping async operation");
+        log.warn({ context: 'ThreadDB' }, 'Database not available, skipping async operation');
         return null;
     }
     try {
         return await operation(database);
     } catch (error) {
-        log.error({ context: "ThreadDB", error }, "Database operation failed");
+        log.error({ context: 'ThreadDB', error }, 'Database operation failed');
         return null;
     }
 }
@@ -818,14 +820,14 @@ export const useChatStore = create(
         generationStartTime: null,
         showTimeoutIndicator: false,
         editor: undefined,
-        context: "",
+        context: '',
         threads: [],
         chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
         threadItems: [],
         useWebSearch: false,
         useMathCalculator: false,
         useCharts: false,
-        customInstructions: "",
+        customInstructions: '',
         currentThreadId: null,
         activeThreadItemView: null,
         currentThread: null,
@@ -870,7 +872,7 @@ export const useChatStore = create(
             useAppStore.getState().setCustomInstructions(customInstructions);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, customInstructions }),
@@ -881,7 +883,7 @@ export const useChatStore = create(
             });
         },
 
-        setImageAttachment: (imageAttachment: { base64?: string; file?: File }) => {
+        setImageAttachment: (imageAttachment: { base64?: string; file?: File; }) => {
             set((state) => {
                 state.imageAttachment = imageAttachment;
             });
@@ -961,7 +963,7 @@ export const useChatStore = create(
             useAppStore.getState().setShowSuggestions(!disabledSuggestions);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({
@@ -979,7 +981,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseWebSearch(useWebSearch);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useWebSearch }));
             set((state) => {
                 state.useWebSearch = useWebSearch;
@@ -991,7 +993,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseMathCalculator(useMathCalculator);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(
                 CONFIG_KEY,
                 JSON.stringify({ ...existingConfig, useMathCalculator }),
@@ -1006,7 +1008,7 @@ export const useChatStore = create(
             useAppStore.getState().setUseCharts(useCharts);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
             set((state) => {
                 state.useCharts = useCharts;
@@ -1016,43 +1018,44 @@ export const useChatStore = create(
         setActiveButton: (button: ActiveButtonType) => {
             set((state) => {
                 // When setting a new active button, deactivate other buttons
-                if (button === "webSearch") {
-                    state.activeButton = state.useWebSearch ? null : "webSearch";
+                if (button === 'webSearch') {
+                    state.activeButton = state.useWebSearch ? null : 'webSearch';
                     state.useWebSearch = !state.useWebSearch;
                     if (state.useWebSearch) {
                         state.useMathCalculator = false;
                         state.useCharts = false;
                     }
-                } else if (button === "mathCalculator") {
-                    state.activeButton = state.useMathCalculator ? null : "mathCalculator";
+                } else if (button === 'mathCalculator') {
+                    state.activeButton = state.useMathCalculator ? null : 'mathCalculator';
                     state.useMathCalculator = !state.useMathCalculator;
                     if (state.useMathCalculator) {
                         state.useWebSearch = false;
                         state.useCharts = false;
                     }
-                } else if (button === "charts") {
+                } else if (button === 'charts') {
                     // Ensure useCharts is properly initialized
                     if (state.useCharts === undefined) {
                         log.info(
-                            { useCharts: "undefined" },
-                            "🔧 useCharts was undefined, initializing to false",
+                            { useCharts: 'undefined' },
+                            '🔧 useCharts was undefined, initializing to false',
                         );
                         state.useCharts = false;
                     }
-                    log.info({ useCharts: state.useCharts }, "🔧 Before toggle - useCharts");
-                    state.activeButton = state.useCharts ? null : "charts";
+                    log.info({ useCharts: state.useCharts }, '🔧 Before toggle - useCharts');
+                    state.activeButton = state.useCharts ? null : 'charts';
                     state.useCharts = !state.useCharts;
-                    log.info({ useCharts: state.useCharts }, "🔧 After toggle - useCharts");
+                    log.info({ useCharts: state.useCharts }, '🔧 After toggle - useCharts');
                     if (state.useCharts) {
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
                     }
-                } else if (button === "structuredOutput") {
+                } else if (button === 'structuredOutput') {
                     // For structured output, we'll just set it as active
                     // The actual logic is handled in the StructuredOutputButton component
-                    state.activeButton =
-                        state.activeButton === "structuredOutput" ? null : "structuredOutput";
-                    if (state.activeButton === "structuredOutput") {
+                    state.activeButton = state.activeButton === 'structuredOutput'
+                        ? null
+                        : 'structuredOutput';
+                    if (state.activeButton === 'structuredOutput') {
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
                         state.useCharts = false;
@@ -1062,7 +1065,7 @@ export const useChatStore = create(
                 }
 
                 // Update localStorage for persistent states
-                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
                 localStorage.setItem(
                     CONFIG_KEY,
                     JSON.stringify({
@@ -1078,7 +1081,7 @@ export const useChatStore = create(
         setChatMode: (chatMode: ChatMode) => {
             try {
                 // Get existing config and merge with new chat mode
-                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
                 const updatedConfig = { ...existingConfig, chatMode };
 
                 // Immediately save to localStorage
@@ -1086,15 +1089,15 @@ export const useChatStore = create(
 
                 // Verify the save was successful - warn only, don't throw
                 const verification = localStorage.getItem(CONFIG_KEY);
-                const verifiedConfig = JSON.parse(verification || "{}") as any;
+                const verifiedConfig = JSON.parse(verification || '{}') as any;
                 if (verifiedConfig.chatMode !== chatMode) {
                     log.warn(
-                        { context: "ChatStore" },
-                        "Chat mode persistence verification failed, but continuing",
+                        { context: 'ChatStore' },
+                        'Chat mode persistence verification failed, but continuing',
                     );
                 }
 
-                log.info({ context: "ChatStore" }, "Successfully persisted chat mode");
+                log.info({ context: 'ChatStore' }, 'Successfully persisted chat mode');
 
                 // Update state and reset button selections when chat mode changes
                 set((state) => {
@@ -1106,7 +1109,7 @@ export const useChatStore = create(
                     state.useMathCalculator = false;
                 });
             } catch (error) {
-                log.error({ context: "ChatStore", error }, "Failed to persist chat mode");
+                log.error({ context: 'ChatStore', error }, 'Failed to persist chat mode');
                 // Still update state even if persistence fails
                 set((state) => {
                     state.chatMode = chatMode;
@@ -1134,7 +1137,7 @@ export const useChatStore = create(
             useAppStore.getState().setThinkingMode(thinkingMode);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, thinkingMode }));
 
             set((state) => {
@@ -1157,7 +1160,7 @@ export const useChatStore = create(
             useAppStore.getState().setGeminiCaching(geminiCaching);
 
             // Also maintain backwards compatibility with localStorage
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, geminiCaching }));
 
             set((state) => {
@@ -1177,7 +1180,7 @@ export const useChatStore = create(
                 state.threads = state.threads.map((thread) =>
                     thread.id === threadId
                         ? { ...thread, pinned: true, pinnedAt: new Date() }
-                        : thread,
+                        : thread
                 );
             });
         },
@@ -1194,7 +1197,7 @@ export const useChatStore = create(
                 state.threads = state.threads.map((thread) =>
                     thread.id === threadId
                         ? { ...thread, pinned: false, pinnedAt: new Date() }
-                        : thread,
+                        : thread
                 );
             });
         },
@@ -1202,7 +1205,7 @@ export const useChatStore = create(
         getPinnedThreads: async () => {
             return (
                 (await withDatabaseAsync(async (database) => {
-                    const threads = await database.threads.where("pinned").equals("true").toArray();
+                    const threads = await database.threads.where('pinned').equals('true').toArray();
                     return threads.sort((a, b) => b.pinnedAt.getTime() - a.pinnedAt.getTime());
                 })) || []
             );
@@ -1213,7 +1216,7 @@ export const useChatStore = create(
                 const threadItem = await database.threadItems.get(threadItemId);
                 if (!threadItem) return null;
                 const threadItems = await database.threadItems
-                    .where("createdAt")
+                    .where('createdAt')
                     .above(threadItem.createdAt)
                     .and((item) => item.threadId === threadItem.threadId)
                     .toArray();
@@ -1232,7 +1235,7 @@ export const useChatStore = create(
             });
 
             // Notify other tabs
-            debouncedNotify("thread-item-delete", {
+            debouncedNotify('thread-item-delete', {
                 threadId: result.threadId,
                 id: threadItemId,
                 isFollowupRemoval: true,
@@ -1241,7 +1244,7 @@ export const useChatStore = create(
 
         getThreadItems: async (threadId: string) => {
             const threadItems = await withDatabaseAsync(async (database) => {
-                return await database.threadItems.where("threadId").equals(threadId).toArray();
+                return await database.threadItems.where('threadId').equals(threadId).toArray();
             });
             return threadItems || [];
         },
@@ -1290,7 +1293,7 @@ export const useChatStore = create(
                 state.generationStartTime = null;
                 state.showTimeoutIndicator = false;
                 // Use "cleanup" reason to distinguish from user-initiated aborts
-                state.abortController?.abort("cleanup");
+                state.abortController?.abort('cleanup');
             });
         },
 
@@ -1301,11 +1304,11 @@ export const useChatStore = create(
 
         loadThreadItems: async (threadId: string) => {
             try {
-                log.info({ threadId }, "Loading thread items");
+                log.info({ threadId }, 'Loading thread items');
 
                 // Ensure the thread ID is persisted in localStorage for reload resilience
                 try {
-                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
                     if (existingConfig.currentThreadId !== threadId) {
                         localStorage.setItem(
                             CONFIG_KEY,
@@ -1313,18 +1316,18 @@ export const useChatStore = create(
                         );
                         log.info(
                             { threadId },
-                            "Updated thread ID in localStorage during loadThreadItems",
+                            'Updated thread ID in localStorage during loadThreadItems',
                         );
                     }
                 } catch (storageError) {
                     log.error(
                         { threadId, error: storageError },
-                        "Failed to update thread ID in localStorage",
+                        'Failed to update thread ID in localStorage',
                     );
                 }
 
                 const threadItems = await withDatabaseAsync(async (database) => {
-                    return await database.threadItems.where("threadId").equals(threadId).toArray();
+                    return await database.threadItems.where('threadId').equals(threadId).toArray();
                 });
 
                 if (threadItems) {
@@ -1338,18 +1341,18 @@ export const useChatStore = create(
                                     requestedThreadId: threadId,
                                     currentThreadId: state.currentThreadId,
                                 },
-                                "Thread ID changed during loading, not updating state",
+                                'Thread ID changed during loading, not updating state',
                             );
                         }
                     });
 
                     log.info(
                         { threadId, itemsCount: threadItems.length },
-                        "Successfully loaded thread items",
+                        'Successfully loaded thread items',
                     );
                     return threadItems;
                 } else {
-                    log.warn({ threadId }, "No thread items found");
+                    log.warn({ threadId }, 'No thread items found');
                     set((state) => {
                         if (state.currentThreadId === threadId) {
                             state.threadItems = [];
@@ -1358,7 +1361,7 @@ export const useChatStore = create(
                     return [];
                 }
             } catch (error) {
-                log.error({ threadId, error }, "Error loading thread items");
+                log.error({ threadId, error }, 'Error loading thread items');
                 set((state) => {
                     if (state.currentThreadId === threadId) {
                         state.threadItems = [];
@@ -1382,14 +1385,14 @@ export const useChatStore = create(
 
         getThread: async (threadId: string) => {
             try {
-                log.info({ threadId }, "Getting thread");
+                log.info({ threadId }, 'Getting thread');
 
                 // First check if the thread is in the store's state
                 const stateThreads = get().threads;
                 const stateThread = stateThreads.find((t) => t.id === threadId);
 
                 if (stateThread) {
-                    log.info({ threadId }, "Found thread in store state");
+                    log.info({ threadId }, 'Found thread in store state');
                     return stateThread;
                 }
 
@@ -1399,7 +1402,7 @@ export const useChatStore = create(
                 });
 
                 if (dbThread) {
-                    log.info({ threadId }, "Found thread in database");
+                    log.info({ threadId }, 'Found thread in database');
 
                     // Update the store's state with this thread if it's not already there
                     if (!stateThreads.some((t) => t.id === threadId)) {
@@ -1411,19 +1414,19 @@ export const useChatStore = create(
                     return dbThread;
                 }
 
-                log.warn({ threadId }, "Thread not found in store or database");
+                log.warn({ threadId }, 'Thread not found in store or database');
                 return null;
             } catch (error) {
-                log.error({ threadId, error }, "Error getting thread");
+                log.error({ threadId, error }, 'Error getting thread');
                 return null;
             }
         },
 
-        createThread: async (optimisticId: string, thread?: Pick<Thread, "title">) => {
+        createThread: async (optimisticId: string, thread?: Pick<Thread, 'title'>) => {
             const threadId = optimisticId || (await generateThreadId());
             const newThread = {
                 id: threadId,
-                title: thread?.title || "New Thread",
+                title: thread?.title || 'New Thread',
                 updatedAt: new Date(),
                 createdAt: new Date(),
                 pinned: false,
@@ -1443,7 +1446,7 @@ export const useChatStore = create(
             });
 
             // Notify other tabs through the worker
-            debouncedNotify("thread-update", { threadId });
+            debouncedNotify('thread-update', { threadId });
 
             return newThread;
         },
@@ -1451,7 +1454,7 @@ export const useChatStore = create(
         setModel: async (model: Model) => {
             try {
                 // Get existing config and merge with new model
-                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}") as any;
+                const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}') as any;
                 const updatedConfig = { ...existingConfig, model: model.id };
 
                 // Immediately save to localStorage
@@ -1459,22 +1462,22 @@ export const useChatStore = create(
 
                 // Verify the save was successful - warn only, don't throw
                 const verification = localStorage.getItem(CONFIG_KEY);
-                const verifiedConfig = JSON.parse(verification || "{}") as any;
+                const verifiedConfig = JSON.parse(verification || '{}') as any;
                 if (verifiedConfig.model !== model.id) {
                     log.warn(
-                        { context: "ChatStore" },
-                        "Model persistence verification failed, but continuing",
+                        { context: 'ChatStore' },
+                        'Model persistence verification failed, but continuing',
                     );
                 }
 
-                log.info({ context: "ChatStore" }, "Successfully persisted model");
+                log.info({ context: 'ChatStore' }, 'Successfully persisted model');
 
                 // Update state
                 set((state) => {
                     state.model = model;
                 });
             } catch (error) {
-                log.error({ context: "ChatStore", error }, "Failed to persist model");
+                log.error({ context: 'ChatStore', error }, 'Failed to persist model');
                 // Still update state even if persistence fails
                 set((state) => {
                     state.model = model;
@@ -1509,9 +1512,9 @@ export const useChatStore = create(
                 });
 
                 // Notify other tabs about the update
-                debouncedNotify("thread-update", { threadId: thread.id });
+                debouncedNotify('thread-update', { threadId: thread.id });
             } catch (error) {
-                log.error({ data: error }, "Failed to update thread in database");
+                log.error({ data: error }, 'Failed to update thread in database');
             }
         },
 
@@ -1530,7 +1533,7 @@ export const useChatStore = create(
 
                     if (state.threadItems.find((t) => t.id === threadItem.id)) {
                         state.threadItems = state.threadItems.map((t) =>
-                            t.id === threadItem.id ? threadItem : t,
+                            t.id === threadItem.id ? threadItem : t
                         );
                     } else {
                         state.threadItems.push({ ...threadItem, threadId });
@@ -1538,12 +1541,12 @@ export const useChatStore = create(
                 });
 
                 // Notify other tabs
-                debouncedNotify("thread-item-update", {
+                debouncedNotify('thread-item-update', {
                     threadId,
                     id: threadItem.id,
                 });
             } catch (error) {
-                log.error({ data: error }, "Failed to create thread item");
+                log.error({ data: error }, 'Failed to create thread item');
                 // Handle error appropriately
             }
         },
@@ -1567,12 +1570,12 @@ export const useChatStore = create(
                 const updatedItem = existingItem
                     ? { ...existingItem, ...threadItem, threadId, updatedAt: new Date() }
                     : ({
-                          id: threadItem.id,
-                          threadId,
-                          createdAt: new Date(),
-                          updatedAt: new Date(),
-                          ...threadItem,
-                      } as ThreadItem);
+                        id: threadItem.id,
+                        threadId,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        ...threadItem,
+                    } as ThreadItem);
 
                 // Update UI state immediately
                 set((state) => {
@@ -1607,7 +1610,7 @@ export const useChatStore = create(
                 queueThreadItemForUpdate(updatedItem);
 
                 // Notify other tabs about the update
-                debouncedNotify("thread-item-update", {
+                debouncedNotify('thread-item-update', {
                     threadId,
                     id: threadItem.id,
                 });
@@ -1619,19 +1622,19 @@ export const useChatStore = create(
                 // Non-critical updates that are too soon after the last update
                 // won't be persisted yet, but will be in the UI state
             } catch (error) {
-                log.error({ data: error }, "Error in updateThreadItem");
+                log.error({ data: error }, 'Error in updateThreadItem');
 
                 // Safety fallback - try to persist directly in case of errors in the main logic
                 try {
                     const fallbackItem = {
                         id: threadItem.id,
                         threadId,
-                        query: threadItem.query || "",
+                        query: threadItem.query || '',
                         mode: threadItem.mode || ChatMode.GEMINI_2_5_FLASH_LITE,
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         ...threadItem,
-                        error: threadItem.error || "Something went wrong",
+                        error: threadItem.error || 'Something went wrong',
                     };
                     await withDatabaseAsync(async (database) => {
                         await database.threadItems.put(fallbackItem);
@@ -1640,7 +1643,7 @@ export const useChatStore = create(
                 } catch (fallbackError) {
                     log.error(
                         { error: fallbackError },
-                        "Critical: Failed even fallback thread item update",
+                        'Critical: Failed even fallback thread item update',
                     );
                 }
             }
@@ -1650,7 +1653,7 @@ export const useChatStore = create(
             const thread = get().threads.find((t) => t.id === threadId);
 
             // Safely get existing config to preserve other settings
-            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
             const currentModel = get().model;
 
             // Only update config if model is available
@@ -1665,7 +1668,7 @@ export const useChatStore = create(
                 // Log for debugging
                 log.info(
                     { threadId, model: currentModel.id },
-                    "Persisted thread ID and model to localStorage",
+                    'Persisted thread ID and model to localStorage',
                 );
             } else {
                 // If model is not available yet, just update thread ID
@@ -1676,7 +1679,7 @@ export const useChatStore = create(
                 localStorage.setItem(CONFIG_KEY, JSON.stringify(updatedConfig));
 
                 // Log for debugging
-                log.info({ threadId }, "Persisted thread ID to localStorage");
+                log.info({ threadId }, 'Persisted thread ID to localStorage');
             }
 
             // Update state with the new thread ID first
@@ -1690,7 +1693,7 @@ export const useChatStore = create(
             try {
                 // Force load thread items
                 const threadItems = await withDatabaseAsync(async (database) => {
-                    return await database.threadItems.where("threadId").equals(threadId).toArray();
+                    return await database.threadItems.where('threadId').equals(threadId).toArray();
                 });
 
                 if (threadItems) {
@@ -1703,10 +1706,10 @@ export const useChatStore = create(
 
                     log.info(
                         { threadId, itemsCount: threadItems.length },
-                        "Loaded thread items in switchThread",
+                        'Loaded thread items in switchThread',
                     );
                 } else {
-                    log.warn({ threadId }, "No thread items found in switchThread");
+                    log.warn({ threadId }, 'No thread items found in switchThread');
                     set((state) => {
                         if (state.currentThreadId === threadId) {
                             state.threadItems = [];
@@ -1714,7 +1717,7 @@ export const useChatStore = create(
                     });
                 }
             } catch (error) {
-                log.error({ threadId, error }, "Error loading thread items in switchThread");
+                log.error({ threadId, error }, 'Error loading thread items in switchThread');
                 set((state) => {
                     if (state.currentThreadId === threadId) {
                         state.threadItems = [];
@@ -1739,11 +1742,11 @@ export const useChatStore = create(
             });
 
             // Notify other tabs
-            debouncedNotify("thread-item-delete", { id: threadItemId, threadId });
+            debouncedNotify('thread-item-delete', { id: threadItemId, threadId });
 
             // Check if there are any thread items left for this thread
             const remainingItems = await withDatabaseAsync(async (database) => {
-                return await database.threadItems.where("threadId").equals(threadId).count();
+                return await database.threadItems.where('threadId').equals(threadId).count();
             });
 
             // If no items remain, delete the thread and redirect
@@ -1759,8 +1762,8 @@ export const useChatStore = create(
                 });
 
                 // Redirect to chat page
-                if (typeof window !== "undefined") {
-                    window.location.href = "/";
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/';
                 }
             }
         },
@@ -1768,7 +1771,7 @@ export const useChatStore = create(
         deleteThread: async (threadId) => {
             await withDatabaseAsync(async (database) => {
                 await database.threads.delete(threadId);
-                await database.threadItems.where("threadId").equals(threadId).delete();
+                await database.threadItems.where('threadId').equals(threadId).delete();
                 return true;
             });
             set((state) => {
@@ -1778,14 +1781,14 @@ export const useChatStore = create(
             });
 
             // Notify other tabs
-            debouncedNotify("thread-delete", { threadId });
+            debouncedNotify('thread-delete', { threadId });
         },
 
         getPreviousThreadItems: (threadId?: string) => {
             const state = get();
 
             if (!threadId) {
-                log.warn("getPreviousThreadItems called without threadId");
+                log.warn('getPreviousThreadItems called without threadId');
                 return [];
             }
 
@@ -1806,7 +1809,7 @@ export const useChatStore = create(
 
             if (!threadId && !state.currentThreadId) {
                 log.warn(
-                    "getCurrentThreadItem called without threadId and no currentThreadId in state",
+                    'getCurrentThreadItem called without threadId and no currentThreadId in state',
                 );
                 return null;
             }
@@ -1832,7 +1835,7 @@ export const useChatStore = create(
         // User-specific database management for per-account thread isolation
         switchUserDatabase: async (userId: string | null) => {
             try {
-                log.info({ isAnonymous: !userId }, "[ThreadDB] Switching to database for user");
+                log.info({ isAnonymous: !userId }, '[ThreadDB] Switching to database for user');
 
                 // Initialize the new user-specific database
                 initializeUserDatabase(userId);
@@ -1845,10 +1848,9 @@ export const useChatStore = create(
                     threads: newData.threads,
                     threadItems: [],
                     currentThreadId: newData.currentThreadId,
-                    currentThread:
-                        newData.threads.find((t) => t.id === newData.currentThreadId) ||
-                        newData.threads?.[0] ||
-                        null,
+                    currentThread: newData.threads.find((t) => t.id === newData.currentThreadId)
+                        || newData.threads?.[0]
+                        || null,
                     chatMode: newData.chatMode,
                     useWebSearch: newData.useWebSearch,
                     showSuggestions: newData.showSuggestions,
@@ -1867,24 +1869,24 @@ export const useChatStore = create(
                     localStorage.setItem(CONFIG_KEY, JSON.stringify(configToSave));
                     log.info(
                         {
-                            context: "ThreadDB",
-                            userId: userId || "anonymous",
+                            context: 'ThreadDB',
+                            userId: userId || 'anonymous',
                         },
-                        "Persisted config for user",
+                        'Persisted config for user',
                     );
                 } catch (configError) {
                     log.error(
-                        { context: "ThreadDB", error: configError },
-                        "Failed to persist config after user switch",
+                        { context: 'ThreadDB', error: configError },
+                        'Failed to persist config after user switch',
                     );
                 }
 
                 log.info(
-                    { context: "ThreadDB", threadsCount: newData.threads.length },
-                    "Successfully switched to user database",
+                    { context: 'ThreadDB', threadsCount: newData.threads.length },
+                    'Successfully switched to user database',
                 );
             } catch (error) {
-                log.error({ context: "ThreadDB", error }, "Error switching user database");
+                log.error({ context: 'ThreadDB', error }, 'Error switching user database');
                 // On error, ensure we have a clean state
                 set({
                     threads: [],
@@ -1897,7 +1899,7 @@ export const useChatStore = create(
     })),
 );
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
     // Initialize store with data from IndexedDB
     loadInitialData().then(
         ({
@@ -1912,13 +1914,13 @@ if (typeof window !== "undefined") {
         }) => {
             // Check if we're on a chat page with a thread ID in the URL
             let urlThreadId = null;
-            if (typeof window !== "undefined") {
-                const pathParts = window.location.pathname.split("/");
-                if (pathParts.length >= 3 && pathParts[1] === "chat") {
+            if (typeof window !== 'undefined') {
+                const pathParts = window.location.pathname.split('/');
+                if (pathParts.length >= 3 && pathParts[1] === 'chat') {
                     urlThreadId = pathParts[2];
                     log.info(
                         { urlThreadId, storedThreadId: currentThreadId },
-                        "Found thread ID in URL",
+                        'Found thread ID in URL',
                     );
                 }
             }
@@ -1933,14 +1935,14 @@ if (typeof window !== "undefined") {
             // If we're using a different thread ID than what's in localStorage, update localStorage
             if (finalThreadId && finalThreadId !== currentThreadId) {
                 try {
-                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
                     localStorage.setItem(
                         CONFIG_KEY,
                         JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),
                     );
-                    log.info({ threadId: finalThreadId }, "Updated thread ID in localStorage");
+                    log.info({ threadId: finalThreadId }, 'Updated thread ID in localStorage');
                 } catch (error) {
-                    log.error({ error }, "Failed to update thread ID in localStorage");
+                    log.error({ error }, 'Failed to update thread ID in localStorage');
                 }
             }
 
@@ -1961,19 +1963,19 @@ if (typeof window !== "undefined") {
             if (finalThreadId && urlThreadId) {
                 // Set a flag in sessionStorage to indicate we're handling this thread ID
                 try {
-                    sessionStorage.setItem("handling_thread_id", finalThreadId);
+                    sessionStorage.setItem('handling_thread_id', finalThreadId);
                     // Also ensure the thread ID is persisted in localStorage for reload resilience
-                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || "{}");
+                    const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
                     localStorage.setItem(
                         CONFIG_KEY,
                         JSON.stringify({ ...existingConfig, currentThreadId: finalThreadId }),
                     );
                     log.info(
                         { threadId: finalThreadId },
-                        "Set handling flag and persisted thread ID for reload resilience",
+                        'Set handling flag and persisted thread ID for reload resilience',
                     );
                 } catch (error) {
-                    log.error({ error }, "Failed to set handling flag in sessionStorage");
+                    log.error({ error }, 'Failed to set handling flag in sessionStorage');
                 }
 
                 useChatStore
@@ -1982,19 +1984,19 @@ if (typeof window !== "undefined") {
                     .then((items) => {
                         log.info(
                             { threadId: finalThreadId, itemsCount: items.length },
-                            "Loaded thread items during initialization",
+                            'Loaded thread items during initialization',
                         );
                     })
                     .catch((error) => {
                         log.error(
                             { threadId: finalThreadId, error },
-                            "Failed to load thread items during initialization",
+                            'Failed to load thread items during initialization',
                         );
                     });
             }
 
             // Initialize the shared worker for tab synchronization
-            if ("SharedWorker" in window) {
+            if ('SharedWorker' in window) {
                 initializeWorker();
             } else {
                 // Fallback to localStorage method
@@ -2003,7 +2005,7 @@ if (typeof window !== "undefined") {
 
             // Mark store as initialized to help coordinate with components
             useChatStore.setState({ isStoreInitialized: true });
-            log.info("Chat store initialization completed");
+            log.info('Chat store initialization completed');
         },
     );
 }

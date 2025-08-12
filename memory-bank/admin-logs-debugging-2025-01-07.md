@@ -14,9 +14,9 @@
 - **Status**: RESOLVED - Not occurring in current implementation
 - **Analysis**: Checked all `asChild` prop usage in admin/logs components
 - **Components Verified**:
-    - DataTable (DropdownMenuTrigger asChild)
-    - Columns (TooltipTrigger asChild)
-    - All components using proper single-child pattern
+  - DataTable (DropdownMenuTrigger asChild)
+  - Columns (TooltipTrigger asChild)
+  - All components using proper single-child pattern
 
 ## Admin Interface Status
 

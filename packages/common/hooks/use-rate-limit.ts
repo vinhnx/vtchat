@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { ModelEnum } from "@repo/ai/models";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { useEffect, useState } from "react";
+import { ModelEnum } from '@repo/ai/models';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { useEffect, useState } from 'react';
 
 export interface RateLimitStatus {
     dailyUsed: number;
@@ -55,7 +55,7 @@ export function useRateLimit(modelId: ModelEnum) {
 
                 setStatus(data);
             } catch (err) {
-                setError(err instanceof Error ? err.message : "Failed to fetch rate limit status");
+                setError(err instanceof Error ? err.message : 'Failed to fetch rate limit status');
                 setStatus(null);
             } finally {
                 setIsLoading(false);
@@ -75,8 +75,9 @@ export function useRateLimit(modelId: ModelEnum) {
 
 export function useRateLimitForChatMode(chatMode: string) {
     // Map chat mode to model - only needed for Gemini 2.5 Flash Lite
-    const modelId =
-        chatMode === ChatMode.GEMINI_2_5_FLASH_LITE ? ModelEnum.GEMINI_2_5_FLASH_LITE : null;
+    const modelId = chatMode === ChatMode.GEMINI_2_5_FLASH_LITE
+        ? ModelEnum.GEMINI_2_5_FLASH_LITE
+        : null;
 
     return useRateLimit(modelId as ModelEnum);
 }

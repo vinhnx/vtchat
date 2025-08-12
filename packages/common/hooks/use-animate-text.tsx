@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { animate, useMotionValue } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { animate, useMotionValue } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useAnimatedText(text: string, shouldAnimate = true) {
     const animatedCursor = useMotionValue(0);
@@ -66,7 +66,7 @@ export function useAnimatedText(text: string, shouldAnimate = true) {
 
         animationRef.current = animate(animatedCursor, textLength, {
             duration: baseDuration,
-            ease: "easeOut", // Smoother easing for more natural appearance
+            ease: 'easeOut', // Smoother easing for more natural appearance
             onUpdate: updateCursor,
             onComplete() {
                 setCursor(textLength);

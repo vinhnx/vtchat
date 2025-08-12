@@ -15,7 +15,7 @@ This module provides cost-effective caching for Gemini 2.5 and 2.0 models using 
 ### Basic Setup
 
 ```typescript
-import { GeminiCacheManager, DEFAULT_CACHE_SETTINGS } from '@repo/ai/cache';
+import { DEFAULT_CACHE_SETTINGS, GeminiCacheManager } from '@repo/ai/cache';
 
 // Initialize cache manager
 const cacheManager = GeminiCacheManager.getInstance(apiKey);
@@ -47,7 +47,7 @@ const model = getLanguageModel(
     undefined, // middleware
     undefined, // byokKeys
     false, // useSearchGrounding
-    cachedContentName // cachedContent
+    cachedContentName, // cachedContent
 );
 
 const { text } = await generateText({

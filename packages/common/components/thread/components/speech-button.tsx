@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useApiKeysStore } from "@repo/common/store";
-import { Button, cn } from "@repo/ui";
-import { useLegacyToast } from "@repo/ui/src/components/use-toast";
-import { Volume2, VolumeX } from "lucide-react";
-import { useState } from "react";
+import { useApiKeysStore } from '@repo/common/store';
+import { Button, cn } from '@repo/ui';
+import { useLegacyToast } from '@repo/ui/src/components/use-toast';
+import { Volume2, VolumeX } from 'lucide-react';
+import { useState } from 'react';
 
 interface SpeechButtonProps {
     text: string;
@@ -21,31 +21,31 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
     const handleSpeak = async () => {
         if (!text.trim()) {
             toast({
-                title: "No text to speak",
-                description: "There is no content available to read aloud.",
-                variant: "default",
+                title: 'No text to speak',
+                description: 'There is no content available to read aloud.',
+                variant: 'default',
             });
             return;
         }
 
         try {
             setIsSpeaking(true);
-            const response = await fetch("/api/speech", {
-                method: "POST",
+            const response = await fetch('/api/speech', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                    "x-openai-api-key": openaiApiKey || "",
+                    'Content-Type': 'application/json',
+                    'x-openai-api-key': openaiApiKey || '',
                 },
                 body: JSON.stringify({ text }),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                const errorMessage = errorData.error || "Failed to generate speech";
+                const errorMessage = errorData.error || 'Failed to generate speech';
                 toast({
-                    title: "Speech Generation Error",
+                    title: 'Speech Generation Error',
                     description: errorMessage,
-                    variant: "destructive",
+                    variant: 'destructive',
                 });
                 throw new Error(errorMessage); // Re-throw for the catch block to handle general error state
             }
@@ -80,18 +80,18 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
                 URL.revokeObjectURL(audioUrl); // Clean up the object URL
             };
         } catch (error: any) {
-            console.error("Error generating or playing speech:", error);
+            console.error('Error generating or playing speech:', error);
             setIsSpeaking(false);
             // Toast for general errors (e.g., network issues, unexpected errors)
             // Specific API errors are handled above and show their own toasts before re-throwing.
             if (
-                !error.message.includes("OpenAI API key is required") &&
-                !error.message.includes("Speech Generation Error")
+                !error.message.includes('OpenAI API key is required')
+                && !error.message.includes('Speech Generation Error')
             ) {
                 toast({
-                    title: "Speech Error",
-                    description: error.message || "Could not generate or play the speech.",
-                    variant: "destructive",
+                    title: 'Speech Error',
+                    description: error.message || 'Could not generate or play the speech.',
+                    variant: 'destructive',
                 });
             }
             // If it's the API key error, the toast has already been shown.
@@ -108,7 +108,7 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
         }
         // Fallback for cases where audio might be playing via <audio> element
         // This is a simple stop, a more robust solution might track active audio elements
-        const allAudioElements = document.querySelectorAll("audio");
+        const allAudioElements = document.querySelectorAll('audio');
         allAudioElements.forEach((el) => {
             (el as HTMLAudioElement).pause();
             (el as HTMLAudioElement).currentTime = 0;
@@ -121,18 +121,18 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
 
     return (
         <Button
-            variant="secondary"
-            size="sm"
+            variant='secondary'
+            size='sm'
             className={cn(
-                "bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3",
+                'bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3',
                 className,
             )}
             onClick={isSpeaking ? handleStop : handleSpeak}
-            aria-label={isSpeaking ? "Stop speaking" : "Speak text"}
-            title={isSpeaking ? "Stop speaking" : "Read aloud"}
+            aria-label={isSpeaking ? 'Stop speaking' : 'Speak text'}
+            title={isSpeaking ? 'Stop speaking' : 'Read aloud'}
             disabled={isSpeaking}
         >
-            {isSpeaking ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            {isSpeaking ? <VolumeX className='h-4 w-4' /> : <Volume2 className='h-4 w-4' />}
         </Button>
     );
 };

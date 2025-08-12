@@ -1,12 +1,12 @@
-import { log } from "@repo/shared/logger";
-import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { accounts } from "@/lib/database/schema";
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
+import { accounts } from '@/lib/database/schema';
+import { log } from '@repo/shared/logger';
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         });
 
         if (!session?.user?.id) {
-            return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+            return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }
 
         const userId = session.user.id;
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
         log.info(
             { linkedAccountsCount: linkedAccounts.length, userId },
-            "Found linked accounts for user",
+            'Found linked accounts for user',
         );
 
         return NextResponse.json({
@@ -46,12 +46,12 @@ export async function GET(request: NextRequest) {
             userId,
         });
     } catch (error) {
-        log.error("[List Accounts API] Error:", { error });
+        log.error('[List Accounts API] Error:', { error });
         return NextResponse.json(
             {
                 success: false,
-                error: "Failed to fetch linked accounts",
-                message: error instanceof Error ? error.message : "Unknown error",
+                error: 'Failed to fetch linked accounts',
+                message: error instanceof Error ? error.message : 'Unknown error',
             },
             { status: 500 },
         );

@@ -1,4 +1,4 @@
-import type { Transition, Variants } from "framer-motion";
+import type { Transition, Variants } from 'framer-motion';
 
 /**
  * Animation optimization utilities for VT Chat
@@ -7,27 +7,27 @@ import type { Transition, Variants } from "framer-motion";
 
 // Device detection utilities
 export const isMobile = () => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
     return (
-        window.innerWidth < 768 ||
-        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        window.innerWidth < 768
+        || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 };
 
 export const isLowEndDevice = () => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
     // Check for reduced motion preference or low-end device indicators
     return (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        (navigator as any).hardwareConcurrency <= 2 ||
-        (navigator as any).deviceMemory <= 2
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        || (navigator as any).hardwareConcurrency <= 2
+        || (navigator as any).deviceMemory <= 2
     );
 };
 
 // Prefers reduced motion check
 export const prefersReducedMotion = () => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 // Performance-optimized transition configurations
@@ -35,30 +35,30 @@ export const TRANSITIONS = {
     // Ultra-fast transitions for immediate feedback
     instant: {
         duration: 0.08,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Fast transitions for mobile
     fast: {
         duration: 0.12,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Standard transitions with mobile optimization
     standard: {
         duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.15 : 0.2,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Smooth transitions for desktop, reduced for mobile
     smooth: {
         duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.18 : 0.25,
-        ease: "easeInOut",
+        ease: 'easeInOut',
     } as Transition,
 
     // Spring transitions optimized for mobile
     spring: {
-        type: "spring" as const,
+        type: 'spring' as const,
         stiffness: isMobile() ? 400 : 300,
         damping: isMobile() ? 25 : 20,
         mass: 0.8,
@@ -66,7 +66,7 @@ export const TRANSITIONS = {
 
     // Gentle spring for mobile
     springGentle: {
-        type: "spring" as const,
+        type: 'spring' as const,
         stiffness: isMobile() ? 200 : 150,
         damping: isMobile() ? 20 : 15,
         mass: 1,
@@ -184,7 +184,7 @@ export const LOADING_ANIMATIONS = {
         transition: {
             duration: isMobile() ? 1.5 : 2,
             repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
+            ease: 'easeInOut',
         },
     },
 
@@ -195,7 +195,7 @@ export const LOADING_ANIMATIONS = {
         transition: {
             duration: isMobile() ? 1.2 : 1.4,
             repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
+            ease: 'easeInOut',
         },
     },
 
@@ -205,7 +205,7 @@ export const LOADING_ANIMATIONS = {
         transition: {
             duration: isMobile() ? 1.5 : 2,
             repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
+            ease: 'linear',
         },
     },
 } as const;
@@ -213,55 +213,55 @@ export const LOADING_ANIMATIONS = {
 // CSS class names for hardware acceleration
 export const HARDWARE_ACCELERATION_CLASSES = {
     // Force hardware acceleration
-    accelerated: "transform-gpu will-change-transform",
+    accelerated: 'transform-gpu will-change-transform',
 
     // For opacity animations
-    fadeAccelerated: "will-change-opacity",
+    fadeAccelerated: 'will-change-opacity',
 
     // For transform animations
-    transformAccelerated: "transform-gpu will-change-transform",
+    transformAccelerated: 'transform-gpu will-change-transform',
 
     // For complex animations
-    complexAccelerated: "transform-gpu will-change-transform will-change-opacity",
+    complexAccelerated: 'transform-gpu will-change-transform will-change-opacity',
 
     // Remove will-change after animation
-    removeWillChange: "will-change-auto",
+    removeWillChange: 'will-change-auto',
 } as const;
 
 // Animation configuration presets
 export const ANIMATION_PRESETS = {
     // Chat message animations
     chatMessage: {
-        variants: getAnimationVariant("slideUp"),
-        transition: getOptimizedTransition("standard"),
+        variants: getAnimationVariant('slideUp'),
+        transition: getOptimizedTransition('standard'),
         className: HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
     },
 
     // Modal/dialog animations
     modal: {
-        variants: getAnimationVariant("scaleIn"),
-        transition: getOptimizedTransition("smooth"),
+        variants: getAnimationVariant('scaleIn'),
+        transition: getOptimizedTransition('smooth'),
         className: HARDWARE_ACCELERATION_CLASSES.complexAccelerated,
     },
 
     // Page transition animations
     page: {
-        variants: getAnimationVariant("fadeIn"),
-        transition: getOptimizedTransition("standard"),
+        variants: getAnimationVariant('fadeIn'),
+        transition: getOptimizedTransition('standard'),
         className: HARDWARE_ACCELERATION_CLASSES.fadeAccelerated,
     },
 
     // Button/interactive element animations
     interactive: {
-        variants: getAnimationVariant("scaleMobile"),
-        transition: getOptimizedTransition("fast"),
+        variants: getAnimationVariant('scaleMobile'),
+        transition: getOptimizedTransition('fast'),
         className: HARDWARE_ACCELERATION_CLASSES.transformAccelerated,
     },
 
     // Loading indicator animations
     loading: {
-        variants: getAnimationVariant("fadeIn"),
-        transition: getOptimizedTransition("smooth"),
+        variants: getAnimationVariant('fadeIn'),
+        transition: getOptimizedTransition('smooth'),
         className: HARDWARE_ACCELERATION_CLASSES.complexAccelerated,
     },
 } as const;
@@ -271,9 +271,9 @@ export const createMotionProps = (preset: keyof typeof ANIMATION_PRESETS) => {
     const config = ANIMATION_PRESETS[preset];
     return {
         variants: config.variants,
-        initial: "initial",
-        animate: "animate",
-        exit: "exit",
+        initial: 'initial',
+        animate: 'animate',
+        exit: 'exit',
         transition: config.transition,
         className: config.className,
     };
@@ -281,7 +281,7 @@ export const createMotionProps = (preset: keyof typeof ANIMATION_PRESETS) => {
 
 // Performance monitoring utilities
 export const measureAnimationPerformance = (name: string, callback: () => void) => {
-    if (typeof window === "undefined" || !window.performance) {
+    if (typeof window === 'undefined' || !window.performance) {
         callback();
         return;
     }
@@ -291,7 +291,7 @@ export const measureAnimationPerformance = (name: string, callback: () => void) 
     const end = performance.now();
 
     // Log performance in development
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
         // Performance logging for development only
         if (end - start > 16) {
             // Only log if animation takes longer than 1 frame (16ms)

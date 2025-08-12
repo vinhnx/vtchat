@@ -20,20 +20,20 @@ The application uses session-based cache busting via the `getSessionCacheBustedA
 The following components have been updated with cache-busting:
 
 1. **UserButton** (`packages/common/components/user-button.tsx`)
-    - Used in sidebars and navigation areas
-    - Displays user avatar in dropdown menu
+   - Used in sidebars and navigation areas
+   - Displays user avatar in dropdown menu
 
 2. **NavUser** (`packages/common/components/dashboard/nav-user.tsx`)
-    - Dashboard sidebar user component
-    - Shows avatar in both collapsed and expanded states
+   - Dashboard sidebar user component
+   - Shows avatar in both collapsed and expanded states
 
 3. **UserProfileSettings** (`packages/common/components/user-profile-settings.tsx`)
-    - Profile settings page avatar display
-    - Used in user account management
+   - Profile settings page avatar display
+   - Used in user account management
 
 4. **Admin Users Table** (`apps/web/app/admin/users/columns.tsx`)
-    - User listing in admin dashboard
-    - Ensures admin sees up-to-date user avatars
+   - User listing in admin dashboard
+   - Ensures admin sees up-to-date user avatars
 
 ## Technical Details
 

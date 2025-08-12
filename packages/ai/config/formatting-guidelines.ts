@@ -54,11 +54,11 @@ Focus on providing substantive analysis rather than cataloging facts. Emphasize 
         MAX_COLUMNS: 3,
         MAX_ROWS: 5,
         PREFERRED_ALTERNATIVES: [
-            "Bullet points with embedded data",
-            "Inline comparisons within paragraphs",
-            "Structured lists with key-value pairs",
-            "Summary paragraphs with highlighted statistics",
-            "Blockquotes for important data points",
+            'Bullet points with embedded data',
+            'Inline comparisons within paragraphs',
+            'Structured lists with key-value pairs',
+            'Summary paragraphs with highlighted statistics',
+            'Blockquotes for important data points',
         ],
     },
 };
@@ -67,16 +67,16 @@ Focus on providing substantive analysis rather than cataloging facts. Emphasize 
  * Get formatting instructions for a specific workflow task
  */
 export function getFormattingInstructions(
-    taskType: "writer" | "analysis" | "search" | "general",
+    taskType: 'writer' | 'analysis' | 'search' | 'general',
 ): string {
     const base = FORMATTING_GUIDELINES.ANTI_TABLE_INSTRUCTIONS;
 
     switch (taskType) {
-        case "writer":
-            return base + "\n\n" + FORMATTING_GUIDELINES.RESEARCH_WRITING_GUIDELINES;
-        case "analysis":
-            return base + "\n\n" + FORMATTING_GUIDELINES.ANALYSIS_GUIDELINES;
-        case "search":
+        case 'writer':
+            return base + '\n\n' + FORMATTING_GUIDELINES.RESEARCH_WRITING_GUIDELINES;
+        case 'analysis':
+            return base + '\n\n' + FORMATTING_GUIDELINES.ANALYSIS_GUIDELINES;
+        case 'search':
             return FORMATTING_GUIDELINES.CONTENT_VARIETY_INSTRUCTIONS;
         default:
             return base;
@@ -114,9 +114,9 @@ export function suggestAlternativeFormatting(content: string): string {
     }
 
     return (
-        content +
-        "\n\n" +
-        `
+        content
+        + '\n\n'
+        + `
 **Note**: Consider presenting this data using alternative formats:
 - Bullet points with key statistics
 - Inline comparisons within paragraphs

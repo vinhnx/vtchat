@@ -12,13 +12,13 @@
  *   bun run apps/web/app/tests/simple-anthropic-stream.js
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import Anthropic from '@anthropic-ai/sdk';
 
 async function testAnthropicStreaming() {
     // Check for API key
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-        throw new Error("❌ Error: ANTHROPIC_API_KEY environment variable is required");
+        throw new Error('❌ Error: ANTHROPIC_API_KEY environment variable is required');
     }
 
     // Initialize client
@@ -32,25 +32,25 @@ async function testAnthropicStreaming() {
         // Create streaming request
         const stream = client.messages
             .stream({
-                model: "claude-3-5-sonnet-20241022",
+                model: 'claude-3-5-sonnet-20241022',
                 max_tokens: 150,
                 messages: [
                     {
-                        role: "user",
-                        content: "Count from 1 to 5 and briefly explain what you are doing.",
+                        role: 'user',
+                        content: 'Count from 1 to 5 and briefly explain what you are doing.',
                     },
                 ],
             })
-            .on("connect", () => {})
-            .on("text", (text) => {
+            .on('connect', () => {})
+            .on('text', (text) => {
                 textChunks.push(text);
                 process.stdout.write(text); // Stream text to console in real-time
             })
-            .on("streamEvent", (_event) => {})
-            .on("error", (error) => {
+            .on('streamEvent', (_event) => {})
+            .on('error', (error) => {
                 throw error;
             })
-            .on("end", () => {});
+            .on('end', () => {});
 
         // Wait for completion
         await stream.finalMessage();
@@ -65,12 +65,12 @@ async function testLowLevelStreaming() {
 
     try {
         const stream = await client.messages.create({
-            model: "claude-3-5-sonnet-20241022",
+            model: 'claude-3-5-sonnet-20241022',
             max_tokens: 100,
             messages: [
                 {
-                    role: "user",
-                    content: "What is 2 + 2? Give a short answer.",
+                    role: 'user',
+                    content: 'What is 2 + 2? Give a short answer.',
                 },
             ],
             stream: true,
@@ -81,18 +81,18 @@ async function testLowLevelStreaming() {
         for await (const event of stream) {
             eventTypes.push(event.type);
             switch (event.type) {
-                case "message_start":
+                case 'message_start':
                     break;
-                case "content_block_start":
+                case 'content_block_start':
                     break;
-                case "content_block_delta":
-                    if (event.delta.type === "text_delta") {
+                case 'content_block_delta':
+                    if (event.delta.type === 'text_delta') {
                         process.stdout.write(event.delta.text);
                     }
                     break;
-                case "content_block_stop":
+                case 'content_block_stop':
                     break;
-                case "message_stop":
+                case 'message_stop':
                     break;
             }
         }

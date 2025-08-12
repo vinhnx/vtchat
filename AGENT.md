@@ -23,7 +23,7 @@ This file is intentionally short to reduce context size. For the complete contri
 - Build: `bun run build`
 - Lint: `bun run lint`
 - Format (Markdown only): `bun run format`
-- Biome format: `bun run biome:format`
+- Code format: `bun run fmt` (dprint)
 - Tests: `bun test`
 
 ## Deployment Policy

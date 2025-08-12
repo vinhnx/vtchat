@@ -29,9 +29,9 @@ This document describes the complete Vitest testing setup for the VTChat monorep
 #### `vitest.config.ts` (Root Level - Following Next.js Recommendations)
 
 ```typescript
-import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     plugins: [tsconfigPaths(), react()],
@@ -69,8 +69,8 @@ export default defineConfig({
 
 ```typescript
 import '@testing-library/jest-dom/vitest';
-import { afterEach, beforeAll, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
+import { afterEach, beforeAll, vi } from 'vitest';
 
 // Mock IntersectionObserver for components that use it
 beforeAll(() => {
@@ -189,7 +189,7 @@ Updated `turbo.json` includes test tasks:
 
 ```typescript
 // packages/shared/utils/__tests__/utils.test.ts
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('Utils', () => {
     it('should be a placeholder test', () => {
@@ -213,38 +213,38 @@ describe('Utils', () => {
 
 ```typescript
 // packages/common/components/__tests__/footer.test.tsx
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { Footer } from '../footer'
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Footer } from '../footer';
 
 describe('Footer Component', () => {
-  it('should render footer with links', () => {
-    render(<Footer />)
+    it('should render footer with links', () => {
+        render(<Footer />);
 
-    expect(screen.getByText('Terms of Service')).toBeInTheDocument()
-    expect(screen.getByText('Privacy Policy')).toBeInTheDocument()
-    expect(screen.getByText('Help Center')).toBeInTheDocument()
-  })
+        expect(screen.getByText('Terms of Service')).toBeInTheDocument();
+        expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
+        expect(screen.getByText('Help Center')).toBeInTheDocument();
+    });
 
-  it('should have proper link hrefs', () => {
-    render(<Footer />)
+    it('should have proper link hrefs', () => {
+        render(<Footer />);
 
-    const termsLink = screen.getByRole('link', { name: 'Terms of Service' })
-    const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' })
-    const faqLink = screen.getByRole('link', { name: 'Help Center' })
+        const termsLink = screen.getByRole('link', { name: 'Terms of Service' });
+        const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' });
+        const faqLink = screen.getByRole('link', { name: 'Help Center' });
 
-    expect(termsLink).toHaveAttribute('href', '/terms')
-    expect(privacyLink).toHaveAttribute('href', '/privacy')
-    expect(faqLink).toHaveAttribute('href', '/faq')
-  })
+        expect(termsLink).toHaveAttribute('href', '/terms');
+        expect(privacyLink).toHaveAttribute('href', '/privacy');
+        expect(faqLink).toHaveAttribute('href', '/faq');
+    });
 
-  it('should have appropriate styling classes', () => {
-    const { container } = render(<Footer />)
-    const footer = container.firstChild
+    it('should have appropriate styling classes', () => {
+        const { container } = render(<Footer />);
+        const footer = container.firstChild;
 
-    expect(footer).toHaveClass('flex', 'w-full', 'flex-col', 'items-center', 'justify-center')
-  })
-})
+        expect(footer).toHaveClass('flex', 'w-full', 'flex-col', 'items-center', 'justify-center');
+    });
+});
 ```
 
 ## Running Tests

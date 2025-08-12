@@ -2,9 +2,9 @@ export type EventSchemaDefinition = Record<string, any>;
 
 export class TypedEventEmitter<T extends EventSchemaDefinition> {
     private listeners: Map<keyof T, Set<(data: any) => void>> = new Map();
-    private state: { [K in keyof T]?: T[K] } = {};
+    private state: { [K in keyof T]?: T[K]; } = {};
 
-    constructor(initialState?: Partial<{ [K in keyof T]: T[K] }>) {
+    constructor(initialState?: Partial<{ [K in keyof T]: T[K]; }>) {
         if (initialState) {
             Object.entries(initialState).forEach(([key, value]) => {
                 this.state[key as keyof T] = value;
@@ -56,13 +56,13 @@ export class TypedEventEmitter<T extends EventSchemaDefinition> {
         return this.state[key];
     }
 
-    getAllState(): { [K in keyof T]?: T[K] } {
+    getAllState(): { [K in keyof T]?: T[K]; } {
         return { ...this.state };
     }
 }
 
 export function createTypedEventEmitter<T extends EventSchemaDefinition>(
-    initialState?: Partial<{ [K in keyof T]: T[K] }>,
+    initialState?: Partial<{ [K in keyof T]: T[K]; }>,
 ) {
     return new TypedEventEmitter<T>(initialState);
 }

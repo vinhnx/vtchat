@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { sessionCache } from "@repo/shared/utils/session-cache";
-import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { sessionCache } from '@repo/shared/utils/session-cache';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
 interface OptimizedAuthContextType {
     isAuthenticated: boolean;
@@ -38,7 +38,7 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
         try {
             await refetch();
         } catch (error) {
-            log.warn({ data: error }, "[OptimizedAuth] Failed to refresh session");
+            log.warn({ data: error }, '[OptimizedAuth] Failed to refresh session');
         }
     }, [refetch]);
 
@@ -56,13 +56,13 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
                 refreshSession: refreshSessionStable,
             };
 
-            sessionCache.set("auth-state", authState, 30_000); // Cache for 30 seconds
+            sessionCache.set('auth-state', authState, 30_000); // Cache for 30 seconds
             setCachedAuth(authState);
             return;
         }
 
         // Check cache first for subsequent renders
-        const cacheKey = "auth-state";
+        const cacheKey = 'auth-state';
         const cached = sessionCache.get<OptimizedAuthContextType>(cacheKey);
 
         if (cached && !sessionLoading && !session) {
@@ -123,7 +123,7 @@ export function OptimizedAuthProvider({ children, initialSession }: OptimizedAut
 export function useOptimizedAuth() {
     const context = useContext(OptimizedAuthContext);
     if (context === undefined) {
-        throw new Error("useOptimizedAuth must be used within an OptimizedAuthProvider");
+        throw new Error('useOptimizedAuth must be used within an OptimizedAuthProvider');
     }
     return context;
 }

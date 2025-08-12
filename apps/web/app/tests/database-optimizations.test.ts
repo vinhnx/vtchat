@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock database and Redis
 const mockDb = {
@@ -19,36 +19,36 @@ const mockRedis = {
 };
 
 // Mock the database functions
-vi.mock("@repo/shared/lib/database", () => ({
+vi.mock('@repo/shared/lib/database', () => ({
     db: mockDb,
 }));
 
-vi.mock("@repo/shared/lib/redis", () => ({
+vi.mock('@repo/shared/lib/redis', () => ({
     redis: mockRedis,
 }));
 
-describe("Database Optimizations", () => {
+describe('Database Optimizations', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    describe("Session Management Optimizations", () => {
-        it("should cleanup expired sessions efficiently", async () => {
+    describe('Session Management Optimizations', () => {
+        it('should cleanup expired sessions efficiently', async () => {
             // Mock database function call
             mockDb.execute.mockResolvedValue([{ affectedRows: 150 }]);
 
             // Simulate calling cleanup function
-            const result = await mockDb.execute("SELECT cleanup_expired_sessions()");
+            const result = await mockDb.execute('SELECT cleanup_expired_sessions()');
 
-            expect(mockDb.execute).toHaveBeenCalledWith("SELECT cleanup_expired_sessions()");
+            expect(mockDb.execute).toHaveBeenCalledWith('SELECT cleanup_expired_sessions()');
             expect(result[0].affectedRows).toBe(150);
         });
 
-        it("should validate sessions with Redis caching", async () => {
-            const sessionToken = "test-session-token";
+        it('should validate sessions with Redis caching', async () => {
+            const sessionToken = 'test-session-token';
             const cachedSession = {
-                id: "session-123",
-                userId: "user-456",
+                id: 'session-123',
+                userId: 'user-456',
                 expiresAt: new Date(Date.now() + 86400000), // 24 hours from now
             };
 
@@ -58,20 +58,20 @@ describe("Database Optimizations", () => {
             const session = JSON.parse(await mockRedis.get(`session:${sessionToken}`));
 
             expect(mockRedis.get).toHaveBeenCalledWith(`session:${sessionToken}`);
-            expect(session.id).toBe("session-123");
-            expect(session.userId).toBe("user-456");
+            expect(session.id).toBe('session-123');
+            expect(session.userId).toBe('user-456');
         });
 
-        it("should fallback to database when Redis cache misses", async () => {
-            const sessionToken = "test-session-token";
+        it('should fallback to database when Redis cache misses', async () => {
+            const sessionToken = 'test-session-token';
 
             // Mock Redis cache miss
             mockRedis.get.mockResolvedValue(null);
 
             // Mock database query
             const dbSession = {
-                id: "session-789",
-                userId: "user-101",
+                id: 'session-789',
+                userId: 'user-101',
                 expiresAt: new Date(Date.now() + 86400000),
             };
 
@@ -90,32 +90,32 @@ describe("Database Optimizations", () => {
             // Would then query database
             const dbResult = await mockDb
                 .select()
-                .from("sessions")
-                .where("token", sessionToken)
+                .from('sessions')
+                .where('token', sessionToken)
                 .limit(1);
 
             expect(dbResult).toEqual([dbSession]);
 
             // Would then cache the result
-            await mockRedis.set(`session:${sessionToken}`, JSON.stringify(dbSession), "EX", 3600);
+            await mockRedis.set(`session:${sessionToken}`, JSON.stringify(dbSession), 'EX', 3600);
             expect(mockRedis.set).toHaveBeenCalledWith(
                 `session:${sessionToken}`,
                 JSON.stringify(dbSession),
-                "EX",
+                'EX',
                 3600,
             );
         });
     });
 
-    describe("Subscription Check Optimizations", () => {
-        it("should use materialized view for fast subscription checks", async () => {
-            const userId = "user-123";
+    describe('Subscription Check Optimizations', () => {
+        it('should use materialized view for fast subscription checks', async () => {
+            const userId = 'user-123';
 
             // Mock materialized view query
             const subscriptionData = {
                 userId,
-                planSlug: "vt-plus",
-                status: "active",
+                planSlug: 'vt-plus',
+                status: 'active',
                 expiresAt: new Date(Date.now() + 30 * 86400000), // 30 days from now
             };
 
@@ -129,21 +129,21 @@ describe("Database Optimizations", () => {
 
             const result = await mockDb
                 .select()
-                .from("user_subscription_summary")
-                .where("userId", userId)
+                .from('user_subscription_summary')
+                .where('userId', userId)
                 .limit(1);
 
             expect(result).toEqual([subscriptionData]);
             expect(mockDb.select).toHaveBeenCalled();
         });
 
-        it("should batch subscription checks for multiple users", async () => {
-            const userIds = ["user-1", "user-2", "user-3"];
+        it('should batch subscription checks for multiple users', async () => {
+            const userIds = ['user-1', 'user-2', 'user-3'];
 
             const batchResults = [
-                { userId: "user-1", planSlug: "vt-plus", status: "active" },
-                { userId: "user-2", planSlug: null, status: null },
-                { userId: "user-3", planSlug: "vt-plus", status: "active" },
+                { userId: 'user-1', planSlug: 'vt-plus', status: 'active' },
+                { userId: 'user-2', planSlug: null, status: null },
+                { userId: 'user-3', planSlug: 'vt-plus', status: 'active' },
             ];
 
             mockDb.select.mockReturnValue({
@@ -154,60 +154,60 @@ describe("Database Optimizations", () => {
 
             const results = await mockDb
                 .select()
-                .from("user_subscription_summary")
-                .whereIn("userId", userIds);
+                .from('user_subscription_summary')
+                .whereIn('userId', userIds);
 
             expect(results).toEqual(batchResults);
             expect(mockDb.select).toHaveBeenCalled();
         });
 
-        it("should refresh materialized view periodically", async () => {
+        it('should refresh materialized view periodically', async () => {
             // Mock materialized view refresh
-            mockDb.execute.mockResolvedValue([{ command: "REFRESH MATERIALIZED VIEW" }]);
+            mockDb.execute.mockResolvedValue([{ command: 'REFRESH MATERIALIZED VIEW' }]);
 
             const result = await mockDb.execute(
-                "REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary",
+                'REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary',
             );
 
             expect(mockDb.execute).toHaveBeenCalledWith(
-                "REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary",
+                'REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary',
             );
-            expect(result[0].command).toBe("REFRESH MATERIALIZED VIEW");
+            expect(result[0].command).toBe('REFRESH MATERIALIZED VIEW');
         });
     });
 
-    describe("Database Indexes and Performance", () => {
-        it("should use indexes for common query patterns", async () => {
+    describe('Database Indexes and Performance', () => {
+        it('should use indexes for common query patterns', async () => {
             // Simulate checking if indexes exist
             const indexQueries = [
-                "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_sessions_user_id_expires_at ON sessions(user_id, expires_at)",
-                "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_sessions_token_hash ON sessions USING hash(token)",
-                "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_subscriptions_user_status ON user_subscriptions(user_id, status, expires_at)",
+                'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_sessions_user_id_expires_at ON sessions(user_id, expires_at)',
+                'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_sessions_token_hash ON sessions USING hash(token)',
+                'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_subscriptions_user_status ON user_subscriptions(user_id, status, expires_at)',
             ];
 
             for (const query of indexQueries) {
-                mockDb.execute.mockResolvedValue([{ command: "CREATE INDEX" }]);
+                mockDb.execute.mockResolvedValue([{ command: 'CREATE INDEX' }]);
                 await mockDb.execute(query);
             }
 
             expect(mockDb.execute).toHaveBeenCalledTimes(3);
         });
 
-        it("should perform VACUUM ANALYZE for table maintenance", async () => {
-            const tables = ["sessions", "users", "user_subscriptions"];
+        it('should perform VACUUM ANALYZE for table maintenance', async () => {
+            const tables = ['sessions', 'users', 'user_subscriptions'];
 
             for (const table of tables) {
-                mockDb.execute.mockResolvedValue([{ command: "VACUUM" }]);
+                mockDb.execute.mockResolvedValue([{ command: 'VACUUM' }]);
                 await mockDb.execute(`VACUUM ANALYZE ${table}`);
             }
 
             expect(mockDb.execute).toHaveBeenCalledTimes(3);
-            expect(mockDb.execute).toHaveBeenCalledWith("VACUUM ANALYZE sessions");
-            expect(mockDb.execute).toHaveBeenCalledWith("VACUUM ANALYZE users");
-            expect(mockDb.execute).toHaveBeenCalledWith("VACUUM ANALYZE user_subscriptions");
+            expect(mockDb.execute).toHaveBeenCalledWith('VACUUM ANALYZE sessions');
+            expect(mockDb.execute).toHaveBeenCalledWith('VACUUM ANALYZE users');
+            expect(mockDb.execute).toHaveBeenCalledWith('VACUUM ANALYZE user_subscriptions');
         });
 
-        it("should monitor database health and bloat", async () => {
+        it('should monitor database health and bloat', async () => {
             const healthData = {
                 table_bloat: 15.5,
                 index_bloat: 8.2,
@@ -234,9 +234,9 @@ describe("Database Optimizations", () => {
         });
     });
 
-    describe("Cache Layer Performance", () => {
-        it("should implement multi-layer caching for subscription data", async () => {
-            const userId = "user-123";
+    describe('Cache Layer Performance', () => {
+        it('should implement multi-layer caching for subscription data', async () => {
+            const userId = 'user-123';
             const cacheKey = `subscription:${userId}`;
 
             // L1 Cache (Redis) miss
@@ -245,8 +245,8 @@ describe("Database Optimizations", () => {
             // L2 Cache (materialized view) hit
             const subscriptionData = {
                 userId,
-                planSlug: "vt-plus",
-                status: "active",
+                planSlug: 'vt-plus',
+                status: 'active',
             };
 
             mockDb.select.mockReturnValue({
@@ -264,24 +264,24 @@ describe("Database Optimizations", () => {
             // Query L2 (materialized view)
             const l2Result = await mockDb
                 .select()
-                .from("user_subscription_summary")
-                .where("userId", userId)
+                .from('user_subscription_summary')
+                .where('userId', userId)
                 .limit(1);
 
             expect(l2Result).toEqual([subscriptionData]);
 
             // Cache in L1
-            await mockRedis.set(cacheKey, JSON.stringify(subscriptionData[0]), "EX", 300);
+            await mockRedis.set(cacheKey, JSON.stringify(subscriptionData[0]), 'EX', 300);
             expect(mockRedis.set).toHaveBeenCalledWith(
                 cacheKey,
                 JSON.stringify(subscriptionData[0]),
-                "EX",
+                'EX',
                 300,
             );
         });
 
-        it("should invalidate cache when subscription changes", async () => {
-            const userId = "user-123";
+        it('should invalidate cache when subscription changes', async () => {
+            const userId = 'user-123';
             const cacheKeys = [
                 `subscription:${userId}`,
                 `user:${userId}:vtplus`,
@@ -301,14 +301,14 @@ describe("Database Optimizations", () => {
         });
     });
 
-    describe("Database Maintenance Jobs", () => {
-        it("should run hourly maintenance tasks", async () => {
+    describe('Database Maintenance Jobs', () => {
+        it('should run hourly maintenance tasks', async () => {
             // Mock cleanup function
-            mockDb.execute.mockResolvedValue([{ result: "success" }]);
+            mockDb.execute.mockResolvedValue([{ result: 'success' }]);
 
             const maintenanceTasks = [
-                "SELECT cleanup_expired_sessions()",
-                "REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary",
+                'SELECT cleanup_expired_sessions()',
+                'REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary',
             ];
 
             for (const task of maintenanceTasks) {
@@ -316,21 +316,21 @@ describe("Database Optimizations", () => {
             }
 
             expect(mockDb.execute).toHaveBeenCalledTimes(2);
-            expect(mockDb.execute).toHaveBeenCalledWith("SELECT cleanup_expired_sessions()");
+            expect(mockDb.execute).toHaveBeenCalledWith('SELECT cleanup_expired_sessions()');
             expect(mockDb.execute).toHaveBeenCalledWith(
-                "REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary",
+                'REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary',
             );
         });
 
-        it("should run weekly maintenance with VACUUM and REINDEX", async () => {
+        it('should run weekly maintenance with VACUUM and REINDEX', async () => {
             const weeklyTasks = [
-                "VACUUM ANALYZE sessions",
-                "VACUUM ANALYZE users",
-                "VACUUM ANALYZE user_subscriptions",
-                "REINDEX INDEX CONCURRENTLY idx_sessions_user_id_expires_at",
+                'VACUUM ANALYZE sessions',
+                'VACUUM ANALYZE users',
+                'VACUUM ANALYZE user_subscriptions',
+                'REINDEX INDEX CONCURRENTLY idx_sessions_user_id_expires_at',
             ];
 
-            mockDb.execute.mockResolvedValue([{ command: "MAINTENANCE" }]);
+            mockDb.execute.mockResolvedValue([{ command: 'MAINTENANCE' }]);
 
             for (const task of weeklyTasks) {
                 await mockDb.execute(task);
@@ -341,8 +341,8 @@ describe("Database Optimizations", () => {
     });
 });
 
-describe("Query Performance Analysis", () => {
-    it("should use EXPLAIN ANALYZE for slow query optimization", async () => {
+describe('Query Performance Analysis', () => {
+    it('should use EXPLAIN ANALYZE for slow query optimization', async () => {
         const slowQuery = `
             SELECT u.*, s.plan_slug 
             FROM users u 
@@ -351,7 +351,7 @@ describe("Query Performance Analysis", () => {
         `;
 
         const explainResult = {
-            query_plan: "Nested Loop",
+            query_plan: 'Nested Loop',
             execution_time: 1250.45,
             planning_time: 0.123,
             total_cost: 1000.5,
@@ -365,7 +365,7 @@ describe("Query Performance Analysis", () => {
         expect(mockDb.query).toHaveBeenCalledWith(`EXPLAIN (ANALYZE, BUFFERS) ${slowQuery}`);
     });
 
-    it("should suggest optimizations for expensive queries", () => {
+    it('should suggest optimizations for expensive queries', () => {
         const queryStats = {
             execution_time: 2500, // ms
             cost: 15000,
@@ -376,19 +376,19 @@ describe("Query Performance Analysis", () => {
         const suggestions = [];
 
         if (queryStats.execution_time > 1000) {
-            suggestions.push("Consider adding indexes for frequently filtered columns");
+            suggestions.push('Consider adding indexes for frequently filtered columns');
         }
 
         if (queryStats.seq_scans > 0) {
-            suggestions.push("Sequential scans detected - add appropriate indexes");
+            suggestions.push('Sequential scans detected - add appropriate indexes');
         }
 
         if (queryStats.rows_returned > 10000) {
-            suggestions.push("Large result set - consider pagination or filtering");
+            suggestions.push('Large result set - consider pagination or filtering');
         }
 
-        expect(suggestions).toContain("Consider adding indexes for frequently filtered columns");
-        expect(suggestions).toContain("Sequential scans detected - add appropriate indexes");
-        expect(suggestions).toContain("Large result set - consider pagination or filtering");
+        expect(suggestions).toContain('Consider adding indexes for frequently filtered columns');
+        expect(suggestions).toContain('Sequential scans detected - add appropriate indexes');
+        expect(suggestions).toContain('Large result set - consider pagination or filtering');
     });
 });

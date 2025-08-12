@@ -1,6 +1,6 @@
-"use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
+'use client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -10,7 +10,7 @@ const queryClient = new QueryClient({
     },
 });
 
-export const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
+export const ReactQueryProvider = ({ children }: { children: ReactNode; }) => {
     // const [isDBReady, setIsDBReady] = useState(false);
     // useEffect(() => {
     //   const init = async () => {

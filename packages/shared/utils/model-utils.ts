@@ -1,5 +1,5 @@
-import { ModelEnum } from "@repo/ai/models";
-import { ChatMode } from "../config";
+import { ModelEnum } from '@repo/ai/models';
+import { ChatMode } from '../config';
 
 /**
  * All Gemini ChatMode values
@@ -45,7 +45,7 @@ export function isGeminiModel(model: ChatMode | ModelEnum | string): boolean {
     }
 
     // Check for string patterns (fallback for any model ID containing 'gemini')
-    if (typeof model === "string" && model.toLowerCase().includes("gemini")) {
+    if (typeof model === 'string' && model.toLowerCase().includes('gemini')) {
         return true;
     }
 

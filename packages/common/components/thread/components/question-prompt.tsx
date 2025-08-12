@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useAgentStream } from "@repo/common/hooks";
-import { useChatStore } from "@repo/common/store";
-import type { ThreadItem } from "@repo/shared/types";
-import { Button, RadioGroup, RadioGroupItem, Textarea } from "@repo/ui";
-import { Check, HelpCircle, Square } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useAgentStream } from '@repo/common/hooks';
+import { useChatStore } from '@repo/common/store';
+import type { ThreadItem } from '@repo/shared/types';
+import { Button, RadioGroup, RadioGroupItem, Textarea } from '@repo/ui';
+import { Check, HelpCircle, Square } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
-export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
+export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem; }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const [customOption, setCustomOption] = useState<string>("");
+    const [customOption, setCustomOption] = useState<string>('');
     const [_isCustomSelected, setIsCustomSelected] = useState<boolean>(false);
     const { handleSubmit } = useAgentStream();
     const getThreadItems = useChatStore((state) => state.getThreadItems);
     const updateThreadItem = useChatStore((state) => state.updateThreadItem);
 
     const options: string[] = threadItem.object?.clarifyingQuestion?.options || [];
-    const question = threadItem.object?.clarifyingQuestion?.question || "";
-    const choiceType = threadItem.object?.clarifyingQuestion?.choiceType || "multiple";
+    const question = threadItem.object?.clarifyingQuestion?.question || '';
+    const choiceType = threadItem.object?.clarifyingQuestion?.choiceType || 'multiple';
     const isSubmitted = !!threadItem.object?.clarifyingQuestion?.submittedQuery;
 
     const handleOptionChange = (value: string) => {
         setSelectedOption(value);
-        setIsCustomSelected(value === "custom");
+        setIsCustomSelected(value === 'custom');
     };
 
     const hasClarifyingQuestions = useMemo(() => {
@@ -33,20 +33,20 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     const renderRadioGroup = () => {
         return (
             <RadioGroup
-                className="flex flex-col gap-2"
+                className='flex flex-col gap-2'
                 onValueChange={handleOptionChange}
-                value={selectedOption || ""}
+                value={selectedOption || ''}
             >
                 {options.map((option, index) => (
-                    <div className="flex items-center space-x-2" key={index}>
+                    <div className='flex items-center space-x-2' key={index}>
                         <RadioGroupItem id={`option-${index}`} value={option} />
-                        <p className="text-sm">{option}</p>
+                        <p className='text-sm'>{option}</p>
                     </div>
                 ))}
 
-                <div className="flex items-center space-x-2">
-                    <RadioGroupItem id="option-custom" value="custom" />
-                    <p className="text-sm">Custom option</p>
+                <div className='flex items-center space-x-2'>
+                    <RadioGroupItem id='option-custom' value='custom' />
+                    <p className='text-sm'>Custom option</p>
                 </div>
             </RadioGroup>
         );
@@ -54,10 +54,10 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
 
     const renderCheckboxGroup = () => {
         return (
-            <div className="flex flex-row flex-wrap gap-2">
+            <div className='flex flex-row flex-wrap gap-2'>
                 {options.map((option, index) => (
                     <div
-                        className="border-border flex items-center space-x-2 rounded-full border px-3 py-1.5"
+                        className='border-border flex items-center space-x-2 rounded-full border px-3 py-1.5'
                         key={index}
                         onClick={() => {
                             if (selectedOptions.includes(option)) {
@@ -67,16 +67,16 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                             }
                         }}
                     >
-                        {selectedOptions.includes(option) ? (
-                            <Check className="text-brand" size={16} strokeWidth={2} />
-                        ) : (
-                            <Square
-                                className="text-muted-foreground/20"
-                                size={16}
-                                strokeWidth={2}
-                            />
-                        )}
-                        <p className="text-sm">{option}</p>
+                        {selectedOptions.includes(option)
+                            ? <Check className='text-brand' size={16} strokeWidth={2} />
+                            : (
+                                <Square
+                                    className='text-muted-foreground/20'
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                            )}
+                        <p className='text-sm'>{option}</p>
                     </div>
                 ))}
             </div>
@@ -85,12 +85,12 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
 
     if (isSubmitted) {
         return (
-            <div className="border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4">
-                <span className="flex flex-row items-center gap-1 text-xs font-medium text-yellow-700">
+            <div className='border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4'>
+                <span className='flex flex-row items-center gap-1 text-xs font-medium text-yellow-700'>
                     <Check size={14} strokeWidth={2} /> Submitted
                 </span>
-                <div className="flex flex-col">
-                    <p className="text-base">
+                <div className='flex flex-col'>
+                    <p className='text-base'>
                         {threadItem.object?.clarifyingQuestion?.submittedQuery}
                     </p>
                 </div>
@@ -103,21 +103,21 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
     }
 
     return (
-        <div className="border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4">
-            <div className="flex flex-row items-center gap-1">
-                <HelpCircle className="text-brand" size={16} strokeWidth={2} />
-                <p className="text-sm text-yellow-700">Follow-up Question</p>
+        <div className='border-border bg-background mt-2 flex w-full flex-col items-start gap-4 rounded-lg border p-4'>
+            <div className='flex flex-row items-center gap-1'>
+                <HelpCircle className='text-brand' size={16} strokeWidth={2} />
+                <p className='text-sm text-yellow-700'>Follow-up Question</p>
             </div>
 
-            <p className="text-base">{question}</p>
+            <p className='text-base'>{question}</p>
 
-            {choiceType === "single" ? renderRadioGroup() : renderCheckboxGroup()}
+            {choiceType === 'single' ? renderRadioGroup() : renderCheckboxGroup()}
 
-            <div className="mt-2 w-full">
+            <div className='mt-2 w-full'>
                 <Textarea
-                    className="!border-border h-[100px] w-full rounded-lg !border px-3 py-2"
+                    className='!border-border h-[100px] w-full rounded-lg !border px-3 py-2'
                     onChange={(e) => setCustomOption(e.target.value)}
-                    placeholder="Add your response here..."
+                    placeholder='Add your response here...'
                     value={customOption}
                 />
             </div>
@@ -125,13 +125,17 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
             <Button
                 disabled={!(selectedOption || selectedOptions.length || customOption)}
                 onClick={async () => {
-                    const originalQuery = threadItem.query || "";
-                    let clarifyingResponse = "";
+                    const originalQuery = threadItem.query || '';
+                    let clarifyingResponse = '';
 
-                    if (choiceType === "single") {
-                        clarifyingResponse = `${selectedOption ? `${selectedOption} \n\n` : ""}${customOption}`;
+                    if (choiceType === 'single') {
+                        clarifyingResponse = `${
+                            selectedOption ? `${selectedOption} \n\n` : ''
+                        }${customOption}`;
                     } else {
-                        clarifyingResponse = `${selectedOptions?.length ? `${selectedOptions.join(", ")} \n\n` : ""}${customOption}`;
+                        clarifyingResponse = `${
+                            selectedOptions?.length ? `${selectedOptions.join(', ')} \n\n` : ''
+                        }${customOption}`;
                     }
 
                     const query = originalQuery
@@ -139,7 +143,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                         : clarifyingResponse;
 
                     const formData = new FormData();
-                    formData.append("query", query);
+                    formData.append('query', query);
                     const threadItems = await getThreadItems(threadItem.threadId);
                     updateThreadItem(threadItem.threadId, {
                         ...threadItem,
@@ -150,7 +154,7 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                                 submittedQuery: query,
                             },
                         },
-                        status: "COMPLETED",
+                        status: 'COMPLETED',
                     });
                     setTimeout(() => {
                         handleSubmit({
@@ -159,8 +163,8 @@ export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem }) => {
                         });
                     }, 1000);
                 }}
-                rounded="full"
-                size="sm"
+                rounded='full'
+                size='sm'
             >
                 Submit
             </Button>

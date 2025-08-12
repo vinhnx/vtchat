@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface EnhancedAuthState {
     isAuthenticated: boolean;
@@ -59,7 +59,7 @@ export function useEnhancedAuth(options: UseEnhancedAuthOptions = {}) {
         const userId = session?.user?.id;
 
         try {
-            log.debug("[EnhancedAuth] Refreshing session");
+            log.debug('[EnhancedAuth] Refreshing session');
             await refetch();
             retryCountRef.current = 0;
 
@@ -72,10 +72,10 @@ export function useEnhancedAuth(options: UseEnhancedAuthOptions = {}) {
             }));
 
             logSessionRefresh(true, undefined, userId);
-            log.debug("[EnhancedAuth] Session refreshed successfully");
+            log.debug('[EnhancedAuth] Session refreshed successfully');
         } catch (error) {
             retryCountRef.current++;
-            const errorMessage = error instanceof Error ? error.message : "Session refresh failed";
+            const errorMessage = error instanceof Error ? error.message : 'Session refresh failed';
 
             logSessionRefresh(false, errorMessage, userId);
 
@@ -85,13 +85,13 @@ export function useEnhancedAuth(options: UseEnhancedAuthOptions = {}) {
                     retryCount: retryCountRef.current,
                     maxRetries,
                 },
-                "[EnhancedAuth] Session refresh failed",
+                '[EnhancedAuth] Session refresh failed',
             );
 
             if (retryCountRef.current >= maxRetries) {
                 setAuthState((prev) => ({
                     ...prev,
-                    error: "Authentication session expired. Please sign in again.",
+                    error: 'Authentication session expired. Please sign in again.',
                 }));
 
                 logAuthError(errorMessage, undefined, userId);
@@ -157,15 +157,15 @@ export function useEnhancedAuth(options: UseEnhancedAuthOptions = {}) {
 
             // If session expires in less than 1 hour, refresh it
             if (timeUntilExpiry < 60 * 60 * 1000 && timeUntilExpiry > 0) {
-                log.info("[EnhancedAuth] Session expiring soon, refreshing");
+                log.info('[EnhancedAuth] Session expiring soon, refreshing');
                 refreshSession();
             } else if (timeUntilExpiry <= 0) {
-                log.warn("[EnhancedAuth] Session expired");
+                log.warn('[EnhancedAuth] Session expired');
                 setAuthState((prev) => ({
                     ...prev,
                     isAuthenticated: false,
                     user: null,
-                    error: "Session expired",
+                    error: 'Session expired',
                 }));
                 onSessionExpired?.();
             }

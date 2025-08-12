@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * Plus Defaults Hook
@@ -6,11 +6,11 @@
  * Automatically applies plus user default settings when subscription status changes
  */
 
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { useEffect, useRef } from "react";
-import { useGlobalSubscriptionStatus } from "../providers/subscription-provider";
-import { useAppStore } from "../store/app.store";
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { useEffect, useRef } from 'react';
+import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
+import { useAppStore } from '../store/app.store';
 
 /**
  * Hook to automatically apply plus defaults when user subscription changes
@@ -30,7 +30,7 @@ export function usePlusDefaults() {
 
         // Initial setup - apply defaults for current plan
         if (!hasInitializedRef.current) {
-            log.info({ plan: currentPlan }, "[Plus Defaults] Initial setup for plan");
+            log.info({ plan: currentPlan }, '[Plus Defaults] Initial setup for plan');
             initializeSettingsForPlan(currentPlan);
             hasInitializedRef.current = true;
             previousPlanRef.current = currentPlan;
@@ -39,15 +39,15 @@ export function usePlusDefaults() {
 
         // Handle plan changes (upgrade/downgrade)
         if (previousPlan && previousPlan !== currentPlan) {
-            log.info({ previousPlan, currentPlan }, "[Plus Defaults] Plan changed");
+            log.info({ previousPlan, currentPlan }, '[Plus Defaults] Plan changed');
 
             if (currentPlan === PlanSlug.VT_PLUS && previousPlan === PlanSlug.VT_BASE) {
                 // Upgrading to plus - apply plus defaults but preserve user customizations
-                log.info("[Plus Defaults] Upgrading to VT+, applying plus defaults");
+                log.info('[Plus Defaults] Upgrading to VT+, applying plus defaults');
                 applyPlusDefaults(currentPlan, true);
             } else if (currentPlan === PlanSlug.VT_BASE && previousPlan === PlanSlug.VT_PLUS) {
                 // Downgrading to base - apply base defaults
-                log.info("[Plus Defaults] Downgrading to base, applying base defaults");
+                log.info('[Plus Defaults] Downgrading to base, applying base defaults');
                 initializeSettingsForPlan(currentPlan);
             }
         }

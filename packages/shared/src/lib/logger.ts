@@ -24,7 +24,7 @@ const logMessage = (
 
     if (args.length === 1) {
         const [arg] = args;
-        if (typeof arg === "string") {
+        if (typeof arg === 'string') {
             consoleMethod(arg);
         } else {
             consoleMethod(defaultPrefix, arg);
@@ -36,14 +36,12 @@ const logMessage = (
         const [first, second] = args;
 
         // Pattern: log.info({data}, "message")
-        if (typeof first === "object" && typeof second === "string") {
+        if (typeof first === 'object' && typeof second === 'string') {
             consoleMethod(second, first);
-        }
-        // Pattern: log.info("message", {data})
-        else if (typeof first === "string" && typeof second === "object") {
+        } // Pattern: log.info("message", {data})
+        else if (typeof first === 'string' && typeof second === 'object') {
             consoleMethod(first, second);
-        }
-        // Default: treat as message, data
+        } // Default: treat as message, data
         else {
             consoleMethod(first, second);
         }
@@ -57,22 +55,22 @@ const logMessage = (
 // Simple logger that wraps console methods
 const createLogger = (): Logger => {
     const info: LogFunction = (...args: any[]) => {
-        logMessage(console.log, "Info:", ...args);
+        logMessage(console.log, 'Info:', ...args);
     };
 
     const warn: LogFunction = (...args: any[]) => {
-        logMessage(console.warn, "Warn:", ...args);
+        logMessage(console.warn, 'Warn:', ...args);
     };
 
     const error: LogFunction = (...args: any[]) => {
         // In development, use console.warn to avoid triggering error overlay for non-critical errors
-        const logMethod = process.env.NODE_ENV === "development" ? console.warn : console.error;
-        logMessage(logMethod, "Error:", ...args);
+        const logMethod = process.env.NODE_ENV === 'development' ? console.warn : console.error;
+        logMessage(logMethod, 'Error:', ...args);
     };
 
     const debug: LogFunction = (...args: any[]) => {
-        if (process.env.NODE_ENV === "development") {
-            logMessage(console.debug, "Debug:", ...args);
+        if (process.env.NODE_ENV === 'development') {
+            logMessage(console.debug, 'Debug:', ...args);
         }
     };
 

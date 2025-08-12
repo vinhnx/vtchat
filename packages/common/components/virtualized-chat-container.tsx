@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { cn } from "@repo/ui";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { cn } from '@repo/ui';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface VirtualizedChatContainerProps {
     children: React.ReactNode[];
@@ -71,8 +71,8 @@ export const VirtualizedChatContainer = memo(
             };
 
             updateHeight();
-            window.addEventListener("resize", updateHeight);
-            return () => window.removeEventListener("resize", updateHeight);
+            window.addEventListener('resize', updateHeight);
+            return () => window.removeEventListener('resize', updateHeight);
         }, []);
 
         // Auto-scroll to bottom for new messages
@@ -100,37 +100,37 @@ export const VirtualizedChatContainer = memo(
             <div
                 ref={containerRef}
                 className={cn(
-                    "relative overflow-y-auto overflow-x-hidden",
-                    "scrollbar-default chat-scroll-container",
+                    'relative overflow-y-auto overflow-x-hidden',
+                    'scrollbar-default chat-scroll-container',
                     className,
                 )}
                 onScroll={handleScroll}
                 style={{
-                    height: "100%",
-                    contain: "layout style",
+                    height: '100%',
+                    contain: 'layout style',
                 }}
             >
                 {/* Total height spacer */}
-                <div style={{ height: totalHeight, position: "relative" }}>
+                <div style={{ height: totalHeight, position: 'relative' }}>
                     {/* Visible items container */}
                     <div
                         style={{
                             transform: `translateY(${offsetY}px)`,
-                            position: "absolute",
+                            position: 'absolute',
                             top: 0,
                             left: 0,
                             right: 0,
-                            contain: "layout style",
+                            contain: 'layout style',
                         }}
                     >
                         {visibleItems.map((child, index) => (
                             <div
                                 key={startIndex + index}
-                                className="message-container"
+                                className='message-container'
                                 style={{
                                     minHeight: itemHeight,
-                                    contain: "layout style",
-                                    contentVisibility: isScrolling ? "auto" : "visible",
+                                    contain: 'layout style',
+                                    contentVisibility: isScrolling ? 'auto' : 'visible',
                                 }}
                             >
                                 {child}
@@ -143,7 +143,7 @@ export const VirtualizedChatContainer = memo(
     },
 );
 
-VirtualizedChatContainer.displayName = "VirtualizedChatContainer";
+VirtualizedChatContainer.displayName = 'VirtualizedChatContainer';
 
 /**
  * Hook for managing virtualized chat state

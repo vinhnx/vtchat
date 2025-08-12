@@ -18,27 +18,27 @@ export function PerformanceOptimizations() {
     return (
         <>
             {/* DNS prefetch for external domains */}
-            <link href="//www.google.com" rel="dns-prefetch" />
+            <link href='//www.google.com' rel='dns-prefetch' />
 
             {/* Preload critical assets for LCP */}
-            <link href="/icon-192x192.png" rel="preload" as="image" />
-            <link href="/icons/peerlist_badge.svg" rel="preload" as="image" />
-            <link href="/api/health" rel="prefetch" />
-            <link href="/favicon.ico" rel="preload" as="image" />
+            <link href='/icon-192x192.png' rel='preload' as='image' />
+            <link href='/icons/peerlist_badge.svg' rel='preload' as='image' />
+            <link href='/api/health' rel='prefetch' />
+            <link href='/favicon.ico' rel='preload' as='image' />
 
             {/* Preload critical fonts */}
-            <link 
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-                rel="preload" 
-                as="style" 
+            <link
+                href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+                rel='preload'
+                as='style'
             />
 
             {/* Optimize viewport for mobile */}
-            <meta content="#000000" name="theme-color" />
-            <meta content="dark light" name="color-scheme" />
+            <meta content='#000000' name='theme-color' />
+            <meta content='dark light' name='color-scheme' />
 
             {/* Performance optimization meta tags */}
-            <meta content="on" httpEquiv="x-dns-prefetch-control" />
+            <meta content='on' httpEquiv='x-dns-prefetch-control' />
         </>
     );
 }
@@ -52,11 +52,11 @@ Modify the Thread component to render a minimal skeleton during initial load:
 // In packages/common/components/thread/thread-combo.tsx
 export function Thread() {
     const { threadId } = useParams();
-    const currentThreadId = threadId?.toString() ?? "";
-    
+    const currentThreadId = threadId?.toString() ?? '';
+
     // Show skeleton on initial load
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    
+
     useEffect(() => {
         // Set initial load to false after first render
         const timer = setTimeout(() => setIsInitialLoad(false), 100);
@@ -67,13 +67,13 @@ export function Thread() {
 
     if (isInitialLoad) {
         return (
-            <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
+            <div className='flex min-w-full flex-col gap-6 px-2 py-4 pt-6'>
                 {/* Skeleton for first message */}
-                <div className="flex animate-pulse space-x-4">
-                    <div className="bg-muted-foreground/20 rounded-full h-10 w-10" />
-                    <div className="flex-1 space-y-2">
-                        <div className="bg-muted-foreground/20 h-4 rounded w-3/4" />
-                        <div className="bg-muted-foreground/20 h-4 rounded" />
+                <div className='flex animate-pulse space-x-4'>
+                    <div className='bg-muted-foreground/20 rounded-full h-10 w-10' />
+                    <div className='flex-1 space-y-2'>
+                        <div className='bg-muted-foreground/20 h-4 rounded w-3/4' />
+                        <div className='bg-muted-foreground/20 h-4 rounded' />
                     </div>
                 </div>
             </div>
@@ -91,14 +91,14 @@ In the ThreadItem component, add priority loading for key images:
 ```tsx
 // In packages/common/components/thread/thread-item.tsx
 <img
-    src="/icon-192x192.png"
-    alt="VT"
+    src='/icon-192x192.png'
+    alt='VT'
     width={20}
     height={20}
-    className="object-contain"
-    fetchPriority="high" // Add this for LCP optimization
-    decoding="async"
-/>
+    className='object-contain'
+    fetchPriority='high' // Add this for LCP optimization
+    decoding='async'
+/>;
 ```
 
 ### 4. Add Resource Hints to Next Config
@@ -138,18 +138,19 @@ Modify dynamic imports in `page.tsx` to prioritize critical components:
 ```tsx
 // In apps/web/app/page.tsx, adjust the dynamic imports:
 const ThreadWithSuspense = NextDynamic(
-    () => import("../components/lazy-components").then((mod) => ({
-        default: mod.ThreadWithSuspense,
-    })),
+    () =>
+        import('../components/lazy-components').then((mod) => ({
+            default: mod.ThreadWithSuspense,
+        })),
     {
         ssr: false,
         loading: () => (
-            <div className="flex h-full items-center justify-center">
-                <div className="animate-pulse">Loading AI chat...</div>
+            <div className='flex h-full items-center justify-center'>
+                <div className='animate-pulse'>Loading AI chat...</div>
             </div>
         ),
         // Add this to prioritize loading
-        options: { suspense: true }
+        options: { suspense: true },
     },
 );
 ```
@@ -173,6 +174,7 @@ const ThreadWithSuspense = NextDynamic(
 ## Expected Impact
 
 These optimizations should improve LCP by:
+
 - Reducing resource load times through preloading
 - Eliminating render-blocking delays
 - Providing immediate visual feedback with skeleton loading

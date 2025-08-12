@@ -1,19 +1,19 @@
 // Service Worker for VT Chat - PWA with optimal caching strategy
-const CACHE_VERSION = "3.1.0";
+const CACHE_VERSION = '3.1.0';
 const STATIC_CACHE = `vtchat-static-v${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `vtchat-dynamic-v${CACHE_VERSION}`;
 const IMAGE_CACHE = `vtchat-images-v${CACHE_VERSION}`;
 
 // Static assets that rarely change
 const STATIC_ASSETS = [
-    "/favicon.ico",
-    "/logo.svg",
-    "/icon-192x192.png",
-    "/icon-256x256.png",
-    "/icon-384x384.png",
-    "/icon-512x512.png",
-    "/manifest.webmanifest",
-    "/offline.html", // Add offline page to cache
+    '/favicon.ico',
+    '/logo.svg',
+    '/icon-192x192.png',
+    '/icon-256x256.png',
+    '/icon-384x384.png',
+    '/icon-512x512.png',
+    '/manifest.webmanifest',
+    '/offline.html', // Add offline page to cache
 ];
 
 // Cache limits to prevent excessive storage usage
@@ -28,85 +28,84 @@ function getCacheStrategy(request) {
 
     // Static assets - long term cache with versioning
     if (STATIC_ASSETS.some((asset) => url.pathname.endsWith(asset))) {
-        return { cache: STATIC_CACHE, strategy: "cache-first", maxAge: 365 * 24 * 60 * 60 }; // 1 year
+        return { cache: STATIC_CACHE, strategy: 'cache-first', maxAge: 365 * 24 * 60 * 60 }; // 1 year
     }
 
     // Images - optimize with size limits (including remote images and AI-generated content)
     if (
-        url.pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|avif|ico)$/i) ||
+        url.pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|avif|ico)$/i)
         // Avatar services
-        url.hostname.includes("googleusercontent.com") ||
-        url.hostname.includes("githubusercontent.com") ||
-        url.hostname.includes("discordapp.com") ||
-        url.hostname.includes("facebook.com") ||
-        url.hostname.includes("twimg.com") ||
+        || url.hostname.includes('googleusercontent.com')
+        || url.hostname.includes('githubusercontent.com')
+        || url.hostname.includes('discordapp.com')
+        || url.hostname.includes('facebook.com')
+        || url.hostname.includes('twimg.com')
         // AI/LLM Provider Images
-        url.hostname.includes("oaidalleapiprodscus.blob.core.windows.net") ||
-        url.hostname.includes("cdn.openai.com") ||
-        url.hostname.includes("images.openai.com") ||
-        url.hostname.includes("storage.googleapis.com") ||
-        url.hostname.includes("generativelanguage.googleapis.com") ||
-        url.hostname.includes("claude.ai") ||
-        url.hostname.includes("cdn.anthropic.com") ||
-        url.hostname.includes("images.anthropic.com") ||
-        url.hostname.includes("api.stability.ai") ||
-        url.hostname.includes("cdn.stability.ai") ||
-        url.hostname.includes("replicate.delivery") ||
-        url.hostname.includes("pbxt.replicate.delivery") ||
-        url.hostname.includes("cdn.replicate.com") ||
-        url.hostname.includes("huggingface.co") ||
-        url.hostname.includes("cdn-uploads.huggingface.co") ||
-        url.hostname.includes("images.cohere.ai") ||
-        url.hostname.includes("api.cohere.ai") ||
-        url.hostname.includes("images.perplexity.ai") ||
-        url.hostname.includes("api.perplexity.ai") ||
+        || url.hostname.includes('oaidalleapiprodscus.blob.core.windows.net')
+        || url.hostname.includes('cdn.openai.com')
+        || url.hostname.includes('images.openai.com')
+        || url.hostname.includes('storage.googleapis.com')
+        || url.hostname.includes('generativelanguage.googleapis.com')
+        || url.hostname.includes('claude.ai')
+        || url.hostname.includes('cdn.anthropic.com')
+        || url.hostname.includes('images.anthropic.com')
+        || url.hostname.includes('api.stability.ai')
+        || url.hostname.includes('cdn.stability.ai')
+        || url.hostname.includes('replicate.delivery')
+        || url.hostname.includes('pbxt.replicate.delivery')
+        || url.hostname.includes('cdn.replicate.com')
+        || url.hostname.includes('huggingface.co')
+        || url.hostname.includes('cdn-uploads.huggingface.co')
+        || url.hostname.includes('images.cohere.ai')
+        || url.hostname.includes('api.cohere.ai')
+        || url.hostname.includes('images.perplexity.ai')
+        || url.hostname.includes('api.perplexity.ai')
         // CDN and user-uploaded content
-        url.hostname.includes("cloudinary.com") ||
-        url.hostname.includes("imgur.com") ||
-        url.hostname.includes("unsplash.com")
+        || url.hostname.includes('cloudinary.com')
+        || url.hostname.includes('imgur.com')
+        || url.hostname.includes('unsplash.com')
     ) {
         // Use shorter cache for AI-generated images as they might be dynamic
-        const isAIGenerated =
-            url.hostname.includes("openai.com") ||
-            url.hostname.includes("anthropic.com") ||
-            url.hostname.includes("stability.ai") ||
-            url.hostname.includes("replicate.") ||
-            url.hostname.includes("cohere.ai") ||
-            url.hostname.includes("perplexity.ai") ||
-            url.hostname.includes("huggingface.co") ||
-            url.hostname.includes("googleapis.com");
+        const isAIGenerated = url.hostname.includes('openai.com')
+            || url.hostname.includes('anthropic.com')
+            || url.hostname.includes('stability.ai')
+            || url.hostname.includes('replicate.')
+            || url.hostname.includes('cohere.ai')
+            || url.hostname.includes('perplexity.ai')
+            || url.hostname.includes('huggingface.co')
+            || url.hostname.includes('googleapis.com');
 
         return {
             cache: IMAGE_CACHE,
-            strategy: "cache-first",
+            strategy: 'cache-first',
             maxAge: isAIGenerated ? 24 * 60 * 60 : 7 * 24 * 60 * 60, // 1 day for AI images, 1 week for others
         };
     }
 
     // CSS/JS files - moderate caching with network fallback
     if (url.pathname.match(/\.(css|js|woff2?|ttf|eot)$/i)) {
-        return { cache: DYNAMIC_CACHE, strategy: "stale-while-revalidate", maxAge: 24 * 60 * 60 }; // 1 day
+        return { cache: DYNAMIC_CACHE, strategy: 'stale-while-revalidate', maxAge: 24 * 60 * 60 }; // 1 day
     }
 
     // HTML pages - network first with cache fallback
-    if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
-        return { cache: DYNAMIC_CACHE, strategy: "network-first", maxAge: 5 * 60 }; // 5 minutes
+    if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+        return { cache: DYNAMIC_CACHE, strategy: 'network-first', maxAge: 5 * 60 }; // 5 minutes
     }
 
     // API calls - no caching for dynamic content
-    if (url.pathname.startsWith("/api/")) {
-        return { cache: null, strategy: "network-only" };
+    if (url.pathname.startsWith('/api/')) {
+        return { cache: null, strategy: 'network-only' };
     }
 
     // Default - network first with short cache
-    return { cache: DYNAMIC_CACHE, strategy: "network-first", maxAge: 60 }; // 1 minute
+    return { cache: DYNAMIC_CACHE, strategy: 'network-first', maxAge: 60 }; // 1 minute
 }
 
 // Helper function to check if cached response is still fresh
 function isCacheEntryFresh(response, maxAge) {
     if (!response) return false;
 
-    const cachedTime = response.headers.get("sw-cached-at");
+    const cachedTime = response.headers.get('sw-cached-at');
     if (!cachedTime) return false;
 
     const age = (Date.now() - parseInt(cachedTime)) / 1000;
@@ -117,7 +116,7 @@ function isCacheEntryFresh(response, maxAge) {
 function addCacheMetadata(response) {
     const responseClone = response.clone();
     const headers = new Headers(responseClone.headers);
-    headers.set("sw-cached-at", Date.now().toString());
+    headers.set('sw-cached-at', Date.now().toString());
 
     return new Response(responseClone.body, {
         status: responseClone.status,
@@ -145,7 +144,7 @@ async function cleanupCache(cacheName, limit) {
 }
 
 // Install event - cache critical static assets only
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches
             .open(STATIC_CACHE)
@@ -160,7 +159,7 @@ self.addEventListener("install", (event) => {
 });
 
 // Activate event - clean old caches and optimize storage
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
         Promise.all([
             // Clean up old cache versions
@@ -177,7 +176,7 @@ self.addEventListener("activate", (event) => {
                 }),
             // Clean up oversized caches
             Object.entries(CACHE_LIMITS).map(([cacheName, limit]) =>
-                cleanupCache(cacheName, limit),
+                cleanupCache(cacheName, limit)
             ),
             // Take control of all clients
             self.clients.claim(),
@@ -188,29 +187,29 @@ self.addEventListener("activate", (event) => {
 });
 
 // Push event - handle push notifications with error resilience
-self.addEventListener("push", (event) => {
+self.addEventListener('push', (event) => {
     if (event.data) {
         try {
             const data = event.data.json();
             const options = {
-                body: data.body || "You have a new message",
-                icon: data.icon || "/icon-192x192.png",
-                badge: "/icon-192x192.png",
+                body: data.body || 'You have a new message',
+                icon: data.icon || '/icon-192x192.png',
+                badge: '/icon-192x192.png',
                 vibrate: [100, 50, 100],
                 data: {
                     dateOfArrival: Date.now(),
-                    primaryKey: data.primaryKey || "1",
-                    url: data.url || "/",
+                    primaryKey: data.primaryKey || '1',
+                    url: data.url || '/',
                 },
                 actions: [
                     {
-                        action: "open",
-                        title: "Open VT",
-                        icon: "/icon-192x192.png",
+                        action: 'open',
+                        title: 'Open VT',
+                        icon: '/icon-192x192.png',
                     },
                     {
-                        action: "close",
-                        title: "Close",
+                        action: 'close',
+                        title: 'Close',
                     },
                 ],
                 requireInteraction: false,
@@ -218,13 +217,13 @@ self.addEventListener("push", (event) => {
                 timestamp: Date.now(),
             };
 
-            event.waitUntil(self.registration.showNotification(data.title || "VT Chat", options));
+            event.waitUntil(self.registration.showNotification(data.title || 'VT Chat', options));
         } catch {
             // Fallback notification on parse error
             event.waitUntil(
-                self.registration.showNotification("VT Chat", {
-                    body: "You have a new message",
-                    icon: "/icon-192x192.png",
+                self.registration.showNotification('VT Chat', {
+                    body: 'You have a new message',
+                    icon: '/icon-192x192.png',
                     timestamp: Date.now(),
                 }),
             );
@@ -233,26 +232,26 @@ self.addEventListener("push", (event) => {
 });
 
 // Notification click event - handle user interactions
-self.addEventListener("notificationclick", (event) => {
+self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 
     const action = event.action;
     const notificationData = event.notification.data || {};
 
-    if (action === "close") {
+    if (action === 'close') {
         return;
     }
 
     // Default action or 'open' action
-    const urlToOpen = notificationData.url || "/";
+    const urlToOpen = notificationData.url || '/';
 
     event.waitUntil(
         clients
-            .matchAll({ type: "window", includeUncontrolled: true })
+            .matchAll({ type: 'window', includeUncontrolled: true })
             .then((clientList) => {
                 // Check if there's already a window/tab open with the target URL
                 for (const client of clientList) {
-                    if (client.url === urlToOpen && "focus" in client) {
+                    if (client.url === urlToOpen && 'focus' in client) {
                         return client.focus();
                     }
                 }
@@ -269,17 +268,17 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 // Optimized fetch event - intelligent caching with multiple strategies
-self.addEventListener("fetch", (event) => {
+self.addEventListener('fetch', (event) => {
     // Only handle GET requests
-    if (event.request.method !== "GET") return;
+    if (event.request.method !== 'GET') return;
 
     // Skip non-http(s) requests
-    if (!event.request.url.startsWith("http")) return;
+    if (!event.request.url.startsWith('http')) return;
 
     const { cache: cacheName, strategy, maxAge } = getCacheStrategy(event.request);
 
     // Network-only requests (API calls)
-    if (strategy === "network-only") {
+    if (strategy === 'network-only') {
         return;
     }
 
@@ -287,7 +286,7 @@ self.addEventListener("fetch", (event) => {
         (async () => {
             try {
                 switch (strategy) {
-                    case "cache-first": {
+                    case 'cache-first': {
                         // Try cache first, fallback to network
                         const cachedResponse = await caches.match(event.request);
                         if (cachedResponse && isCacheEntryFresh(cachedResponse, maxAge)) {
@@ -312,7 +311,7 @@ self.addEventListener("fetch", (event) => {
                         }
                     }
 
-                    case "network-first": {
+                    case 'network-first': {
                         // Try network first, fallback to cache
                         try {
                             const networkResponse = await fetch(event.request);
@@ -331,7 +330,7 @@ self.addEventListener("fetch", (event) => {
                         }
                     }
 
-                    case "stale-while-revalidate": {
+                    case 'stale-while-revalidate': {
                         // Return cache immediately, update in background
                         const cachedResponse = await caches.match(event.request);
 
@@ -388,21 +387,21 @@ self.addEventListener("fetch", (event) => {
 // Helper function to create appropriate offline responses
 function createOfflineResponse(request) {
     // Return offline page for navigation requests.
-    if (request.mode === "navigate") {
-        return caches.match("/offline.html");
+    if (request.mode === 'navigate') {
+        return caches.match('/offline.html');
     }
 
     // For other requests (e.g., images, styles), return a simple error response.
-    return new Response("Service Unavailable", {
+    return new Response('Service Unavailable', {
         status: 503,
-        statusText: "Service Unavailable",
-        headers: { "Content-Type": "text/plain" },
+        statusText: 'Service Unavailable',
+        headers: { 'Content-Type': 'text/plain' },
     });
 }
 
 // Background sync - handle offline actions when connection is restored
-self.addEventListener("sync", (event) => {
-    if (event.tag === "background-sync") {
+self.addEventListener('sync', (event) => {
+    if (event.tag === 'background-sync') {
         event.waitUntil(
             // Perform background sync operations here
             // This could include sending queued messages, syncing user data, etc.
@@ -412,17 +411,17 @@ self.addEventListener("sync", (event) => {
 });
 
 // Message event - handle communication with main thread
-self.addEventListener("message", (event) => {
-    if (event.data && event.data.type === "SKIP_WAITING") {
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
 
     // Handle cache management messages from the main thread
-    if (event.data && event.data.type === "CACHE_CLEANUP") {
+    if (event.data && event.data.type === 'CACHE_CLEANUP') {
         event.waitUntil(
             Promise.all(
                 Object.entries(CACHE_LIMITS).map(([cacheName, limit]) =>
-                    cleanupCache(cacheName, limit),
+                    cleanupCache(cacheName, limit)
                 ),
             ),
         );

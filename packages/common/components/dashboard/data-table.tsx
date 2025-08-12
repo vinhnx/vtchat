@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Badge,
@@ -22,8 +22,8 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@repo/ui";
-import { ChevronDown, Columns, Plus } from "lucide-react";
+} from '@repo/ui';
+import { ChevronDown, Columns, Plus } from 'lucide-react';
 
 export interface DataTableItem {
     id: number;
@@ -35,96 +35,96 @@ export interface DataTableItem {
     reviewer: string;
 }
 
-export function DataTable({ data }: { data: DataTableItem[] }) {
+export function DataTable({ data }: { data: DataTableItem[]; }) {
     return (
-        <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-6">
-            <div className="flex items-center justify-between px-4 lg:px-6">
-                <Label htmlFor="view-selector" className="sr-only">
+        <Tabs defaultValue='outline' className='w-full flex-col justify-start gap-6'>
+            <div className='flex items-center justify-between px-4 lg:px-6'>
+                <Label htmlFor='view-selector' className='sr-only'>
                     View
                 </Label>
-                <Select defaultValue="outline">
+                <Select defaultValue='outline'>
                     <SelectTrigger
-                        className="@4xl/main:hidden flex w-fit"
-                        size="sm"
-                        id="view-selector"
+                        className='@4xl/main:hidden flex w-fit'
+                        size='sm'
+                        id='view-selector'
                     >
-                        <SelectValue placeholder="Select a view" />
+                        <SelectValue placeholder='Select a view' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="outline">Outline</SelectItem>
-                        <SelectItem value="past-performance">Past Performance</SelectItem>
-                        <SelectItem value="key-personnel">Key Personnel</SelectItem>
-                        <SelectItem value="focus-documents">Focus Documents</SelectItem>
+                        <SelectItem value='outline'>Outline</SelectItem>
+                        <SelectItem value='past-performance'>Past Performance</SelectItem>
+                        <SelectItem value='key-personnel'>Key Personnel</SelectItem>
+                        <SelectItem value='focus-documents'>Focus Documents</SelectItem>
                     </SelectContent>
                 </Select>
-                <TabsList className="@4xl/main:flex hidden">
-                    <TabsTrigger value="outline">Outline</TabsTrigger>
-                    <TabsTrigger value="past-performance">
-                        Past Performance <Badge variant="secondary">3</Badge>
+                <TabsList className='@4xl/main:flex hidden'>
+                    <TabsTrigger value='outline'>Outline</TabsTrigger>
+                    <TabsTrigger value='past-performance'>
+                        Past Performance <Badge variant='secondary'>3</Badge>
                     </TabsTrigger>
-                    <TabsTrigger value="key-personnel">
-                        Key Personnel <Badge variant="secondary">2</Badge>
+                    <TabsTrigger value='key-personnel'>
+                        Key Personnel <Badge variant='secondary'>2</Badge>
                     </TabsTrigger>
-                    <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
+                    <TabsTrigger value='focus-documents'>Focus Documents</TabsTrigger>
                 </TabsList>
-                <div className="flex items-center gap-2">
+                <div className='flex items-center gap-2'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">
+                            <Button variant='outline' size='sm'>
                                 <Columns />
-                                <span className="hidden lg:inline">Customize Columns</span>
-                                <span className="lg:hidden">Columns</span>
+                                <span className='hidden lg:inline'>Customize Columns</span>
+                                <span className='lg:hidden'>Columns</span>
                                 <ChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <div className="p-2 text-sm">Column customization options</div>
+                        <DropdownMenuContent align='end' className='w-56'>
+                            <div className='p-2 text-sm'>Column customization options</div>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="sm">
+                    <Button variant='outline' size='sm'>
                         <Plus />
-                        <span className="hidden lg:inline">Add Section</span>
+                        <span className='hidden lg:inline'>Add Section</span>
                     </Button>
                 </div>
             </div>
             <TabsContent
-                value="outline"
-                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+                value='outline'
+                className='relative flex flex-col gap-4 overflow-auto px-4 lg:px-6'
             >
-                <div className="overflow-hidden rounded-lg border">
+                <div className='overflow-hidden rounded-lg border'>
                     <Table>
-                        <TableHeader className="bg-muted sticky top-0 z-10">
+                        <TableHeader className='bg-muted sticky top-0 z-10'>
                             <TableRow>
                                 <TableHead>Header</TableHead>
                                 <TableHead>Section Type</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Target</TableHead>
-                                <TableHead className="text-right">Limit</TableHead>
+                                <TableHead className='text-right'>Target</TableHead>
+                                <TableHead className='text-right'>Limit</TableHead>
                                 <TableHead>Reviewer</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.map((item) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.header}</TableCell>
+                                    <TableCell className='font-medium'>{item.header}</TableCell>
                                     <TableCell>
                                         <Badge
-                                            variant="outline"
-                                            className="text-muted-foreground px-1.5"
+                                            variant='outline'
+                                            className='text-muted-foreground px-1.5'
                                         >
                                             {item.type}
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
                                         <Badge
-                                            variant="outline"
-                                            className="text-muted-foreground px-1.5"
+                                            variant='outline'
+                                            className='text-muted-foreground px-1.5'
                                         >
                                             {item.status}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell className="text-right">{item.target}</TableCell>
-                                    <TableCell className="text-right">{item.limit}</TableCell>
+                                    <TableCell className='text-right'>{item.target}</TableCell>
+                                    <TableCell className='text-right'>{item.limit}</TableCell>
                                     <TableCell>{item.reviewer}</TableCell>
                                 </TableRow>
                             ))}
@@ -132,14 +132,14 @@ export function DataTable({ data }: { data: DataTableItem[] }) {
                     </Table>
                 </div>
             </TabsContent>
-            <TabsContent value="past-performance" className="flex flex-col px-4 lg:px-6">
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+            <TabsContent value='past-performance' className='flex flex-col px-4 lg:px-6'>
+                <div className='aspect-video w-full flex-1 rounded-lg border border-dashed'></div>
             </TabsContent>
-            <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+            <TabsContent value='key-personnel' className='flex flex-col px-4 lg:px-6'>
+                <div className='aspect-video w-full flex-1 rounded-lg border border-dashed'></div>
             </TabsContent>
-            <TabsContent value="focus-documents" className="flex flex-col px-4 lg:px-6">
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+            <TabsContent value='focus-documents' className='flex flex-col px-4 lg:px-6'>
+                <div className='aspect-video w-full flex-1 rounded-lg border border-dashed'></div>
             </TabsContent>
         </Tabs>
     );

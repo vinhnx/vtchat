@@ -101,7 +101,7 @@ apps/web/
 - **TypeScript**: Shared configs in `packages/typescript-config/`
 - **Tailwind**: Shared config in `packages/tailwind-config/`
 - **Build**: `turbo.json` for monorepo task orchestration
-- **Code Quality**: `biome.json` for formatting/linting rules
+- **Code Quality**: `dprint.json` for formatting rules
 
 ## Documentation Structure
 

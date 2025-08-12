@@ -3,9 +3,9 @@
  * Tests that VT+ users bypass BYOK checks for tools and function calling
  */
 
-import { ChatMode } from "@repo/shared/config";
-import { GEMINI_CHAT_MODES } from "@repo/shared/utils";
-import { describe, expect, test, vi } from "vitest";
+import { ChatMode } from '@repo/shared/config';
+import { GEMINI_CHAT_MODES } from '@repo/shared/utils';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock the hasApiKeyForChatMode function behavior
 const mockHasApiKeyForChatMode = (chatMode, isSignedIn, isVtPlus = false) => {
@@ -30,115 +30,115 @@ const mockHasApiKeyForChatMode = (chatMode, isSignedIn, isVtPlus = false) => {
     return false;
 };
 
-describe("VT+ Tools BYOK Bypass", () => {
-    describe("hasApiKeyForChatMode Function", () => {
-        test("VT+ user should have access to Deep Research without API key", () => {
+describe('VT+ Tools BYOK Bypass', () => {
+    describe('hasApiKeyForChatMode Function', () => {
+        test('VT+ user should have access to Deep Research without API key', () => {
             const result = mockHasApiKeyForChatMode(ChatMode.Deep, true, true);
             expect(result).toBe(true);
         });
 
-        test("VT+ user should have access to Pro Search without API key", () => {
+        test('VT+ user should have access to Pro Search without API key', () => {
             const result = mockHasApiKeyForChatMode(ChatMode.Pro, true, true);
             expect(result).toBe(true);
         });
 
-        test("VT+ user should have access to Gemini 2.5 Pro without API key", () => {
+        test('VT+ user should have access to Gemini 2.5 Pro without API key', () => {
             const result = mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO, true, true);
             expect(result).toBe(true);
         });
 
-        test("VT+ user should have access to Gemini 2.5 Flash without API key", () => {
+        test('VT+ user should have access to Gemini 2.5 Flash without API key', () => {
             const result = mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_FLASH, true, true);
             expect(result).toBe(true);
         });
 
-        test("VT+ user should have access to all Gemini preview models without API key", () => {});
+        test('VT+ user should have access to all Gemini preview models without API key', () => {});
 
-        test("Free user should not have access to Gemini models without API key", () => {
+        test('Free user should not have access to Gemini models without API key', () => {
             expect(mockHasApiKeyForChatMode(ChatMode.Deep, true, false)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.Pro, true, false)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO, true, false)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_FLASH, true, false)).toBe(false);
         });
 
-        test("VT+ user should not have access to non-Gemini models without API key", () => {
+        test('VT+ user should not have access to non-Gemini models without API key', () => {
             expect(mockHasApiKeyForChatMode(ChatMode.GPT_4o, true, true)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.CLAUDE_4_SONNET, true, true)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.DEEPSEEK_R1, true, true)).toBe(false);
         });
 
-        test("Unauthenticated user should not have access to any models", () => {
+        test('Unauthenticated user should not have access to any models', () => {
             expect(mockHasApiKeyForChatMode(ChatMode.Deep, false, true)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GEMINI_2_5_PRO, false, true)).toBe(false);
             expect(mockHasApiKeyForChatMode(ChatMode.GPT_4o, false, false)).toBe(false);
         });
     });
 
-    describe("Structured Output API Route", () => {
-        test("should handle VT+ user request with system API key", async () => {
+    describe('Structured Output API Route', () => {
+        test('should handle VT+ user request with system API key', async () => {
             // Mock fetch request to our new API route
             const mockFetch = vi.fn().mockResolvedValue({
                 ok: true,
                 json: vi.fn().mockResolvedValue({
-                    data: { extracted: "data" },
-                    type: "document",
-                    fileName: "test.pdf",
-                    extractedAt: "2024-01-01T00:00:00.000Z",
+                    data: { extracted: 'data' },
+                    type: 'document',
+                    fileName: 'test.pdf',
+                    extractedAt: '2024-01-01T00:00:00.000Z',
                     confidence: 0.9,
                 }),
             });
 
             global.fetch = mockFetch;
 
-            const response = await fetch("/api/tools/structured-extract", {
-                method: "POST",
+            const response = await fetch('/api/tools/structured-extract', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    textContent: "Sample document content",
-                    documentType: "document",
-                    fileName: "test.pdf",
+                    textContent: 'Sample document content',
+                    documentType: 'document',
+                    fileName: 'test.pdf',
                     chatMode: ChatMode.GEMINI_2_5_PRO,
                     userApiKeys: {}, // No user API keys, should use system key for VT+
                 }),
             });
 
             expect(response.ok).toBe(true);
-            expect(mockFetch).toHaveBeenCalledWith("/api/tools/structured-extract", {
-                method: "POST",
+            expect(mockFetch).toHaveBeenCalledWith('/api/tools/structured-extract', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    textContent: "Sample document content",
-                    documentType: "document",
-                    fileName: "test.pdf",
+                    textContent: 'Sample document content',
+                    documentType: 'document',
+                    fileName: 'test.pdf',
                     chatMode: ChatMode.GEMINI_2_5_PRO,
                     userApiKeys: {},
                 }),
             });
         });
 
-        test("should handle error for non-Gemini models", async () => {
+        test('should handle error for non-Gemini models', async () => {
             const mockFetch = vi.fn().mockResolvedValue({
                 ok: false,
                 json: vi.fn().mockResolvedValue({
-                    error: "Structured extraction only supports Gemini models",
+                    error: 'Structured extraction only supports Gemini models',
                 }),
             });
 
             global.fetch = mockFetch;
 
-            const response = await fetch("/api/tools/structured-extract", {
-                method: "POST",
+            const response = await fetch('/api/tools/structured-extract', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    textContent: "Sample document content",
-                    documentType: "document",
-                    fileName: "test.pdf",
+                    textContent: 'Sample document content',
+                    documentType: 'document',
+                    fileName: 'test.pdf',
                     chatMode: ChatMode.GPT_4o, // Non-Gemini model
                     userApiKeys: {},
                 }),
@@ -148,8 +148,8 @@ describe("VT+ Tools BYOK Bypass", () => {
         });
     });
 
-    describe("Chat Input BYOK Logic", () => {
-        test("VT+ user should not need API key check for Gemini models", () => {
+    describe('Chat Input BYOK Logic', () => {
+        test('VT+ user should not need API key check for Gemini models', () => {
             const isVtPlus = true;
             const isGeminiModel = (chatMode) => {
                 return GEMINI_CHAT_MODES.includes(chatMode);
@@ -173,7 +173,7 @@ describe("VT+ Tools BYOK Bypass", () => {
             expect(needsApiKeyCheck(ChatMode.CLAUDE_4_SONNET, isVtPlus)).toBe(true);
         });
 
-        test("Free user should need API key check for all models", () => {
+        test('Free user should need API key check for all models', () => {
             const isVtPlus = false;
             const isGeminiModel = (chatMode) => {
                 return GEMINI_CHAT_MODES.includes(chatMode);

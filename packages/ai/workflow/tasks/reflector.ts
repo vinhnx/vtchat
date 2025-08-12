@@ -1,24 +1,24 @@
-import { createTask } from "@repo/orchestrator";
-import { getVTPlusFeatureFromChatMode } from "@repo/shared/utils/access-control";
-import { z } from "zod";
-import { ModelEnum } from "../../models";
-import type { WorkflowContextSchema, WorkflowEventSchema } from "../flow";
+import { createTask } from '@repo/orchestrator';
+import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
+import { z } from 'zod';
+import { ModelEnum } from '../../models';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import {
     generateObject,
     getHumanizedDate,
     handleError,
     selectAvailableModel,
     sendEvents,
-} from "../utils";
+} from '../utils';
 
 export const reflectorTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
-    name: "reflector",
+    name: 'reflector',
     execute: async ({ data, events, context, signal, redirectTo }) => {
-        const question = context?.get("question") || "";
-        const messages = context?.get("messages") || [];
-        const prevQueries = context?.get("queries") || [];
+        const question = context?.get('question') || '';
+        const messages = context?.get('messages') || [];
+        const prevQueries = context?.get('queries') || [];
         const stepId = data?.stepId;
-        const prevSummaries = context?.get("summaries") || [];
+        const prevSummaries = context?.get('summaries') || [];
         const currentYear = new Date().getFullYear();
         const { updateStep } = sendEvents(events);
 
@@ -30,10 +30,10 @@ You are a research progress evaluator analyzing how effectively a research quest
 Research Question: "${question}"
 
 Previous Search Queries:
-${prevQueries?.join("\n")}
+${prevQueries?.join('\n')}
 
 Research Findings So Far:
-${prevSummaries?.join("\n---\n")}
+${prevSummaries?.join('\n---\n')}
 
 Current date: ${getHumanizedDate()}
 
@@ -97,13 +97,13 @@ Current date: ${getHumanizedDate()}
 **CRITICAL: Your primary goal is to avoid redundancy. If you cannot identify genuinely new angles to explore that would yield different information, return null for queries.**
 `;
 
-        const byokKeys = context?.get("apiKeys");
+        const byokKeys = context?.get('apiKeys');
 
         // Select an appropriate model based on available API keys
         const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_FLASH, byokKeys);
 
         // Determine VT+ feature based on mode
-        const chatMode = context?.get("mode");
+        const chatMode = context?.get('mode');
         const vtplusFeature = getVTPlusFeatureFromChatMode(chatMode);
 
         const object = await generateObject({
@@ -116,29 +116,29 @@ Current date: ${getHumanizedDate()}
             byokKeys,
             messages: messages as any,
             signal,
-            thinkingMode: context?.get("thinkingMode"),
-            userTier: context?.get("userTier"),
-            userId: context?.get("userId"),
+            thinkingMode: context?.get('thinkingMode'),
+            userTier: context?.get('userTier'),
+            userId: context?.get('userId'),
             feature: vtplusFeature || undefined,
         });
 
         const newStepId = stepId + 1;
 
-        context?.update("queries", (current) => [...(current ?? []), ...(object?.queries ?? [])]);
+        context?.update('queries', (current) => [...(current ?? []), ...(object?.queries ?? [])]);
 
         if (object?.reasoning) {
             updateStep({
                 stepId: newStepId,
-                stepStatus: "PENDING",
+                stepStatus: 'PENDING',
                 text: object?.reasoning,
                 subSteps: {
-                    search: { status: "COMPLETED", data: object?.queries },
+                    search: { status: 'COMPLETED', data: object?.queries },
                 },
             });
         }
 
         if (!(object?.queries?.length && object?.reasoning)) {
-            redirectTo("analysis");
+            redirectTo('analysis');
         }
 
         return {
@@ -149,9 +149,9 @@ Current date: ${getHumanizedDate()}
     onError: handleError,
     route: ({ result }) => {
         if (result?.queries?.filter(Boolean)?.length > 0) {
-            return "gemini-web-search";
+            return 'gemini-web-search';
         }
 
-        return "analysis";
+        return 'analysis';
     },
 });

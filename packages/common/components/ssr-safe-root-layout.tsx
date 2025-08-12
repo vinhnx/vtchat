@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useRootContext } from "@repo/common/context";
-import { useAppStore } from "@repo/common/store";
-import { usePathname } from "next/navigation";
-import { lazy, Suspense, useEffect, useState } from "react";
-import { LayoutSkeleton } from "./layout-skeleton";
+import { useRootContext } from '@repo/common/context';
+import { useAppStore } from '@repo/common/store';
+import { usePathname } from 'next/navigation';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { LayoutSkeleton } from './layout-skeleton';
 
 // Lazy load the complete root layout for better performance
 const CompleteRootLayout = lazy(() =>
-    import("./layout/root").then((module) => ({
+    import('./layout/root').then((module) => ({
         default: module.RootLayout,
-    })),
+    }))
 );
 
 export type TSSRSafeRootLayout = {
@@ -40,13 +40,13 @@ export const SSRSafeRootLayout: React.FC<TSSRSafeRootLayout> = ({ children }) =>
     // Lock body scroll when mobile sidebar is open
     useEffect(() => {
         if (isMobileSidebarOpen) {
-            document.body.style.overflow = "hidden";
+            document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = "unset";
+            document.body.style.overflow = 'unset';
         }
 
         return () => {
-            document.body.style.overflow = "unset";
+            document.body.style.overflow = 'unset';
         };
     }, [isMobileSidebarOpen]);
 
@@ -57,7 +57,7 @@ export const SSRSafeRootLayout: React.FC<TSSRSafeRootLayout> = ({ children }) =>
 
     // Client-side rendering with progressive loading
     return (
-        <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
+        <div className='bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden'>
             <Suspense
                 fallback={
                     <LayoutSkeleton

@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
 // Removed unused imports - now using server-side API route
-import { useFeatureAccess } from "@repo/common/hooks/use-subscription-access";
-import { useChatStore } from "@repo/common/store";
-import { isGeminiModel } from "@repo/common/utils";
-import { DOCUMENT_UPLOAD_CONFIG } from "@repo/shared/constants/document-upload";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { FeatureSlug } from "@repo/shared/types/subscription";
-import { Button, cn, useToast } from "@repo/ui";
+import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
+import { useChatStore } from '@repo/common/store';
+import { isGeminiModel } from '@repo/common/utils';
+import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { Button, cn, useToast } from '@repo/ui';
 // Removed unused generateObject import - now using server-side API route
-import { FileUp, ScanText, Sparkles } from "lucide-react";
-import { useRef, useState } from "react";
-import { z } from "zod";
-import { getPdfWorkerUrl } from "../../constants/pdf-worker";
-import { useApiKeysStore } from "../../store/api-keys.store";
-import { LoginRequiredDialog } from "../login-required-dialog";
+import { FileUp, ScanText, Sparkles } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { z } from 'zod';
+import { getPdfWorkerUrl } from '../../constants/pdf-worker';
+import { useApiKeysStore } from '../../store/api-keys.store';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 const StructuredOutputButton = () => {
     const chatMode = useChatStore((state) => state.chatMode);
@@ -37,19 +37,19 @@ const StructuredOutputButton = () => {
     const getDocumentType = (
         content: string,
         fileName: string,
-    ): { type: string; schema: z.ZodSchema } => {
+    ): { type: string; schema: z.ZodSchema; } => {
         const lowercaseContent = content.toLowerCase();
-        const fileExtension = fileName.split(".").pop()?.toLowerCase();
+        const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
         // Email detection
         if (
-            lowercaseContent.includes("@") &&
-            (lowercaseContent.includes("subject:") ||
-                lowercaseContent.includes("from:") ||
-                lowercaseContent.includes("to:"))
+            lowercaseContent.includes('@')
+            && (lowercaseContent.includes('subject:')
+                || lowercaseContent.includes('from:')
+                || lowercaseContent.includes('to:'))
         ) {
             return {
-                type: "email",
+                type: 'email',
                 schema: z.object({
                     subject: z.string().optional(),
                     from: z.string().optional(),
@@ -63,12 +63,12 @@ const StructuredOutputButton = () => {
 
         // Invoice detection
         if (
-            lowercaseContent.includes("invoice") ||
-            lowercaseContent.includes("bill") ||
-            lowercaseContent.includes("amount due")
+            lowercaseContent.includes('invoice')
+            || lowercaseContent.includes('bill')
+            || lowercaseContent.includes('amount due')
         ) {
             return {
-                type: "invoice",
+                type: 'invoice',
                 schema: z.object({
                     invoiceNumber: z.string().optional(),
                     date: z.string().optional(),
@@ -102,12 +102,12 @@ const StructuredOutputButton = () => {
 
         // Resume detection
         if (
-            lowercaseContent.includes("experience") &&
-            lowercaseContent.includes("education") &&
-            lowercaseContent.includes("skills")
+            lowercaseContent.includes('experience')
+            && lowercaseContent.includes('education')
+            && lowercaseContent.includes('skills')
         ) {
             return {
-                type: "resume",
+                type: 'resume',
                 schema: z.object({
                     personalInfo: z.object({
                         name: z.string(),
@@ -142,12 +142,12 @@ const StructuredOutputButton = () => {
 
         // Contract detection
         if (
-            lowercaseContent.includes("agreement") ||
-            lowercaseContent.includes("contract") ||
-            lowercaseContent.includes("terms and conditions")
+            lowercaseContent.includes('agreement')
+            || lowercaseContent.includes('contract')
+            || lowercaseContent.includes('terms and conditions')
         ) {
             return {
-                type: "contract",
+                type: 'contract',
                 schema: z.object({
                     contractType: z.string(),
                     parties: z.array(
@@ -172,9 +172,9 @@ const StructuredOutputButton = () => {
         }
 
         // Document structure for markdown files
-        if (fileExtension === "md") {
+        if (fileExtension === 'md') {
             return {
-                type: "markdown-document",
+                type: 'markdown-document',
                 schema: z.object({
                     title: z.string().optional(),
                     headings: z.array(
@@ -211,7 +211,7 @@ const StructuredOutputButton = () => {
 
         // Generic document schema
         return {
-            type: "document",
+            type: 'document',
             schema: z.object({
                 documentType: z.string(),
                 title: z.string().optional(),
@@ -234,25 +234,25 @@ const StructuredOutputButton = () => {
     const extractTextFromFile = async (file: File): Promise<string> => {
         const fileType = file.type;
 
-        if (fileType === "application/pdf") {
+        if (fileType === 'application/pdf') {
             // Use PDF.js for PDF extraction with CDN worker for version consistency
-            const pdfjsLib = await import("pdfjs-dist");
+            const pdfjsLib = await import('pdfjs-dist');
             pdfjsLib.GlobalWorkerOptions.workerSrc = getPdfWorkerUrl();
 
             const arrayBuffer = await file.arrayBuffer();
             const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
             const pdf = await loadingTask.promise;
 
-            let fullText = "";
+            let fullText = '';
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
                 const textContent = await page.getTextContent();
-                const textItems = textContent.items.map((item: { str: string }) => item.str);
-                fullText += `${textItems.join(" ")}\n`;
+                const textItems = textContent.items.map((item: { str: string; }) => item.str);
+                fullText += `${textItems.join(' ')}\n`;
             }
 
             return fullText.trim();
-        } else if (fileType === "text/plain" || fileType === "text/markdown") {
+        } else if (fileType === 'text/plain' || fileType === 'text/markdown') {
             // For text and markdown files, just read as text
             return await file.text();
         } else {
@@ -267,7 +267,7 @@ const StructuredOutputButton = () => {
         try {
             // Show initial toast
             toast({
-                title: "Processing Document",
+                title: 'Processing Document',
                 description: `Analyzing ${file.name} for structured data extraction...`,
             });
 
@@ -275,17 +275,17 @@ const StructuredOutputButton = () => {
             const textContent = await extractTextFromFile(file);
 
             if (!textContent.trim()) {
-                throw new Error("No text content found in the document");
+                throw new Error('No text content found in the document');
             }
 
             // Get document type - schema is now handled server-side
             const { type } = getDocumentType(textContent, file.name);
 
             // Call the server-side API route for structured extraction
-            const response = await fetch("/api/tools/structured-extract", {
-                method: "POST",
+            const response = await fetch('/api/tools/structured-extract', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     textContent,
@@ -298,7 +298,7 @@ const StructuredOutputButton = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to extract structured data");
+                throw new Error(errorData.error || 'Failed to extract structured data');
             }
 
             const result = await response.json();
@@ -308,7 +308,7 @@ const StructuredOutputButton = () => {
 
             // Show success toast
             toast({
-                title: "Extraction Complete",
+                title: 'Extraction Complete',
                 description: `Successfully extracted ${result.type} data from ${result.fileName}`,
             });
 
@@ -318,7 +318,8 @@ const StructuredOutputButton = () => {
                 '[data-testid="chat-input"]',
             ) as HTMLTextAreaElement;
             if (chatInput) {
-                chatInput.value = `I've extracted structured data from ${result.fileName}. Here's the extracted ${result.type} data:
+                chatInput.value =
+                    `I've extracted structured data from ${result.fileName}. Here's the extracted ${result.type} data:
 
 \`\`\`json
 ${extractedDataString}
@@ -327,16 +328,17 @@ ${extractedDataString}
 Please help me analyze this data and provide insights or answer any questions about it.`;
 
                 // Trigger input change event to update the chat store
-                chatInput.dispatchEvent(new Event("input", { bubbles: true }));
+                chatInput.dispatchEvent(new Event('input', { bubbles: true }));
                 chatInput.focus();
             }
         } catch (error) {
-            log.error("Structured extraction failed:", { data: error });
+            log.error('Structured extraction failed:', { data: error });
             toast({
-                title: "Extraction Failed",
-                description:
-                    error instanceof Error ? error.message : "Failed to extract structured data",
-                variant: "destructive",
+                title: 'Extraction Failed',
+                description: error instanceof Error
+                    ? error.message
+                    : 'Failed to extract structured data',
+                variant: 'destructive',
             });
         } finally {
             setIsProcessing(false);
@@ -351,9 +353,9 @@ Please help me analyze this data and provide insights or answer any questions ab
         // Validate file size
         if (file.size > DOCUMENT_UPLOAD_CONFIG.MAX_FILE_SIZE) {
             toast({
-                title: "File too large",
-                description: "File size must be less than 10MB",
-                variant: "destructive",
+                title: 'File too large',
+                description: 'File size must be less than 10MB',
+                variant: 'destructive',
             });
             return;
         }
@@ -362,9 +364,9 @@ Please help me analyze this data and provide insights or answer any questions ab
         const isValidType = Object.keys(DOCUMENT_UPLOAD_CONFIG.ACCEPTED_TYPES).includes(file.type);
         if (!isValidType) {
             toast({
-                title: "Unsupported File Type",
-                description: "Please upload a PDF, DOC, DOCX, TXT, or MD file",
-                variant: "destructive",
+                title: 'Unsupported File Type',
+                description: 'Please upload a PDF, DOC, DOCX, TXT, or MD file',
+                variant: 'destructive',
             });
             return;
         }
@@ -373,7 +375,7 @@ Please help me analyze this data and provide insights or answer any questions ab
 
         // Reset file input
         if (fileInputRef.current) {
-            fileInputRef.current.value = "";
+            fileInputRef.current.value = '';
         }
     };
 
@@ -386,20 +388,20 @@ Please help me analyze this data and provide insights or answer any questions ab
 
         if (!hasStructuredOutputAccess) {
             toast({
-                title: "Sign In Required",
+                title: 'Sign In Required',
                 description:
-                    "Structured output extraction requires you to be signed in. Please sign in to access this functionality.",
-                variant: "destructive",
+                    'Structured output extraction requires you to be signed in. Please sign in to access this functionality.',
+                variant: 'destructive',
             });
             return;
         }
 
         if (!isGeminiModel(chatMode)) {
             toast({
-                title: "Gemini Model Required",
+                title: 'Gemini Model Required',
                 description:
-                    "Structured output extraction requires a Gemini model. Please switch to a Gemini model.",
-                variant: "destructive",
+                    'Structured output extraction requires a Gemini model. Please switch to a Gemini model.',
+                variant: 'destructive',
             });
             return;
         }
@@ -415,48 +417,44 @@ Please help me analyze this data and provide insights or answer any questions ab
         <>
             <Button
                 className={cn(
-                    "text-muted-foreground hover:text-foreground",
-                    hasProcessedData && "bg-green-500/10 text-green-500 hover:text-green-600",
-                    isProcessing && "cursor-not-allowed opacity-50",
+                    'text-muted-foreground hover:text-foreground',
+                    hasProcessedData && 'bg-green-500/10 text-green-500 hover:text-green-600',
+                    isProcessing && 'cursor-not-allowed opacity-50',
                 )}
                 onClick={handleClick}
                 disabled={isProcessing}
-                size="icon-sm"
-                tooltip={
-                    hasStructuredOutputAccess
-                        ? hasProcessedData
-                            ? `Structured data extracted from ${structuredData?.fileName}`
-                            : "Upload document to extract structured data (PDF, TXT, MD)"
-                        : "Unlock AI-powered structured data extraction with VT+"
-                }
-                variant="ghost"
+                size='icon-sm'
+                tooltip={hasStructuredOutputAccess
+                    ? hasProcessedData
+                        ? `Structured data extracted from ${structuredData?.fileName}`
+                        : 'Upload document to extract structured data (PDF, TXT, MD)'
+                    : 'Unlock AI-powered structured data extraction with VT+'}
+                variant='ghost'
             >
-                {isProcessing ? (
-                    <ScanText className="animate-spin" size={16} strokeWidth={2} />
-                ) : hasProcessedData ? (
-                    <ScanText size={16} strokeWidth={2} />
-                ) : hasStructuredOutputAccess ? (
-                    <FileUp size={16} strokeWidth={2} />
-                ) : (
-                    <Sparkles size={16} strokeWidth={2} />
-                )}
+                {isProcessing
+                    ? <ScanText className='animate-spin' size={16} strokeWidth={2} />
+                    : hasProcessedData
+                    ? <ScanText size={16} strokeWidth={2} />
+                    : hasStructuredOutputAccess
+                    ? <FileUp size={16} strokeWidth={2} />
+                    : <Sparkles size={16} strokeWidth={2} />}
             </Button>
 
             {/* Hidden file input */}
             <input
                 ref={fileInputRef}
-                type="file"
-                accept={DOCUMENT_UPLOAD_CONFIG.SUPPORTED_EXTENSIONS.join(",")}
+                type='file'
+                accept={DOCUMENT_UPLOAD_CONFIG.SUPPORTED_EXTENSIONS.join(',')}
                 onChange={handleFileUpload}
-                className="hidden"
+                className='hidden'
             />
 
             {/* Login Required Dialog */}
             <LoginRequiredDialog
-                description="Please log in to use structured output extraction functionality."
+                description='Please log in to use structured output extraction functionality.'
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
-                title="Login Required"
+                title='Login Required'
             />
         </>
     );

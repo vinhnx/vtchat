@@ -3,10 +3,10 @@ name: Bundle Size Monitor
 on:
     pull_request:
         paths:
-            - 'apps/web/**'
-            - 'packages/**'
-            - 'package.json'
-            - '**/package.json'
+            - "apps/web/**"
+            - "packages/**"
+            - "package.json"
+            - "**/package.json"
     push:
         branches: [main]
 
@@ -44,10 +44,10 @@ jobs:
                   cd apps/web
                   ANALYZE=true bun run build
               env:
-                  NEXT_PUBLIC_BASE_URL: 'https://example.com'
-                  DATABASE_URL: 'sqlite:///:memory:'
-                  BETTER_AUTH_SECRET: 'dummy-secret-for-build'
-                  BETTER_AUTH_URL: 'https://example.com'
+                  NEXT_PUBLIC_BASE_URL: "https://example.com"
+                  DATABASE_URL: "sqlite:///:memory:"
+                  BETTER_AUTH_SECRET: "dummy-secret-for-build"
+                  BETTER_AUTH_URL: "https://example.com"
 
             - name: Extract bundle stats
               run: |

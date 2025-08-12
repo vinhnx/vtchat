@@ -1,1 +1,1 @@
-export * from "./feedback.action";
+export * from './feedback.action';

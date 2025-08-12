@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { ErrorBoundary } from "@repo/common/components";
-import { log } from "@repo/shared/lib/logger";
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui";
-import type { PaginationState } from "@tanstack/react-table";
-import { motion } from "framer-motion";
-import { Activity, CheckCircle, CreditCard, Users } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { createColumns, type User } from "./columns";
-import { DataTable } from "./data-table";
+import { ErrorBoundary } from '@repo/common/components';
+import { log } from '@repo/shared/lib/logger';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
+import type { PaginationState } from '@tanstack/react-table';
+import { motion } from 'framer-motion';
+import { Activity, CheckCircle, CreditCard, Users } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { createColumns, type User } from './columns';
+import { DataTable } from './data-table';
 
 interface UserStats {
     totalUsers: number;
@@ -31,17 +31,17 @@ interface ApiResponse {
         totalPages: number;
     };
     statistics: UserStats;
-    planDistribution: Array<{ plan: string; count: number }>;
-    registrationTrend: Array<{ date: string; count: number }>;
+    planDistribution: Array<{ plan: string; count: number; }>;
+    registrationTrend: Array<{ date: string; count: number; }>;
 }
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [stats, setStats] = useState<UserStats | null>(null);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [planFilter, setPlanFilter] = useState("all");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [planFilter, setPlanFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
 
     // TanStack table pagination state
     const [pagination, setPagination] = useState<PaginationState>({
@@ -59,19 +59,19 @@ export default function AdminUsersPage() {
                     limit: pageSize.toString(),
                 });
 
-                if (searchTerm) params.append("search", searchTerm);
-                if (planFilter && planFilter !== "all") params.append("plan", planFilter);
-                if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
+                if (searchTerm) params.append('search', searchTerm);
+                if (planFilter && planFilter !== 'all') params.append('plan', planFilter);
+                if (statusFilter && statusFilter !== 'all') params.append('status', statusFilter);
 
                 const response = await fetch(`/api/admin/users?${params}`);
-                if (!response.ok) throw new Error("Failed to fetch users");
+                if (!response.ok) throw new Error('Failed to fetch users');
 
                 const data: ApiResponse = await response.json();
                 setUsers(data.users || []);
                 setStats(data.statistics || null);
                 setPageCount(data.pagination?.totalPages || 0);
             } catch (error) {
-                log.error({ error }, "Failed to fetch users");
+                log.error({ error }, 'Failed to fetch users');
             } finally {
                 setLoading(false);
             }
@@ -90,18 +90,18 @@ export default function AdminUsersPage() {
 
     const handleUserAction = async (userId: string, action: string, data?: any) => {
         try {
-            const response = await fetch("/api/admin/users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const response = await fetch('/api/admin/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action, userId, data }),
             });
 
-            if (!response.ok) throw new Error("Failed to update user");
+            if (!response.ok) throw new Error('Failed to update user');
 
             // Refresh the users list
             fetchUsers();
         } catch (error) {
-            log.error({ error }, "Failed to update user");
+            log.error({ error }, 'Failed to update user');
         }
     };
 
@@ -112,15 +112,15 @@ export default function AdminUsersPage() {
     };
 
     return (
-        <div className="container mx-auto space-y-8 py-8">
+        <div className='container mx-auto space-y-8 py-8'>
             {/* Page Header */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-2"
+                className='space-y-2'
             >
-                <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-                <p className="text-muted-foreground">
+                <h1 className='text-3xl font-bold tracking-tight'>User Management</h1>
+                <p className='text-muted-foreground'>
                     Manage user accounts, roles, and subscriptions with advanced filtering and
                     sorting
                 </p>
@@ -133,19 +133,19 @@ export default function AdminUsersPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+                        className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'
                     >
                         <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                                <Users className="text-muted-foreground h-4 w-4" />
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                                <CardTitle className='text-sm font-medium'>Total Users</CardTitle>
+                                <Users className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
+                                <div className='text-2xl font-bold'>
                                     {stats.totalUsers.toLocaleString()}
                                 </div>
-                                <div className="text-muted-foreground text-xs">
-                                    <Badge variant="outline" className="mr-1">
+                                <div className='text-muted-foreground text-xs'>
+                                    <Badge variant='outline' className='mr-1'>
                                         +{stats.newUsers7d || 0}
                                     </Badge>
                                     new this week
@@ -154,21 +154,21 @@ export default function AdminUsersPage() {
                         </Card>
 
                         <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                                <CardTitle className='text-sm font-medium'>
                                     VT+ Subscribers
                                 </CardTitle>
-                                <CreditCard className="text-muted-foreground h-4 w-4" />
+                                <CreditCard className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
+                                <div className='text-2xl font-bold'>
                                     {stats.vtPlusUsers.toLocaleString()}
                                 </div>
-                                <div className="text-muted-foreground text-xs">
-                                    <Badge variant="default" className="mr-1">
-                                        {typeof stats.conversionRate === "string"
+                                <div className='text-muted-foreground text-xs'>
+                                    <Badge variant='default' className='mr-1'>
+                                        {typeof stats.conversionRate === 'string'
                                             ? stats.conversionRate
-                                            : "0.00"}
+                                            : '0.00'}
                                         %
                                     </Badge>
                                     conversion rate
@@ -177,34 +177,34 @@ export default function AdminUsersPage() {
                         </Card>
 
                         <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                                <Activity className="text-muted-foreground h-4 w-4" />
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                                <CardTitle className='text-sm font-medium'>Active Users</CardTitle>
+                                <Activity className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
+                                <div className='text-2xl font-bold'>
                                     {stats.activeUsers.toLocaleString()}
                                 </div>
-                                <p className="text-muted-foreground text-xs">Last 24 hours</p>
+                                <p className='text-muted-foreground text-xs'>Last 24 hours</p>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                                <CardTitle className='text-sm font-medium'>
                                     Email Verified
                                 </CardTitle>
-                                <CheckCircle className="text-muted-foreground h-4 w-4" />
+                                <CheckCircle className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
+                                <div className='text-2xl font-bold'>
                                     {stats.verifiedUsers.toLocaleString()}
                                 </div>
-                                <div className="text-muted-foreground text-xs">
-                                    <Badge variant="secondary" className="mr-1">
-                                        {typeof stats.verificationRate === "string"
+                                <div className='text-muted-foreground text-xs'>
+                                    <Badge variant='secondary' className='mr-1'>
+                                        {typeof stats.verificationRate === 'string'
                                             ? stats.verificationRate
-                                            : "0.00"}
+                                            : '0.00'}
                                         %
                                     </Badge>
                                     verified

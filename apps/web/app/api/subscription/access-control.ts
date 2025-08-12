@@ -5,14 +5,14 @@
  * for VT+ features and capabilities
  */
 
-import { VTPlusAccess } from "@repo/shared/config/vt-plus-features";
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
-import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { checkSubscriptionOptimized } from "../../../lib/auth/optimized-subscription-check";
+import { auth } from '@/lib/auth-server';
+import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
+import type { NextRequest } from 'next/server';
+import { checkSubscriptionOptimized } from '../../../lib/auth/optimized-subscription-check';
 
 /**
  * Get comprehensive subscription status for a user
@@ -22,20 +22,20 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
     try {
         // Import dynamically to avoid build-time issues with drizzle
         const subscriptionSync = await import(
-            "../../../../../packages/shared/utils/subscription-sync"
+            '../../../../../packages/shared/utils/subscription-sync'
         );
         return await subscriptionSync.getComprehensiveSubscriptionStatus(userId);
     } catch (importError) {
         log.warn(
             { error: importError },
-            "Could not import subscription-sync, falling back to direct database query",
+            'Could not import subscription-sync, falling back to direct database query',
         );
 
         try {
             // Fallback: direct database query if import fails
-            const { db, withDatabaseErrorHandling } = await import("@/lib/database");
-            const { users, userSubscriptions } = await import("@/lib/database/schema");
-            const { eq } = await import("drizzle-orm");
+            const { db, withDatabaseErrorHandling } = await import('@/lib/database');
+            const { users, userSubscriptions } = await import('@/lib/database/schema');
+            const { eq } = await import('drizzle-orm');
 
             return await withDatabaseErrorHandling(async () => {
                 // Get user's current plan from database
@@ -51,7 +51,7 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                         plan: PlanSlug.VT_BASE,
                         isActive: true,
                         expiresAt: null,
-                        source: "default" as const,
+                        source: 'default' as const,
                         hasDbSubscription: false,
                         userPlanSlug: null,
                         needsSync: false,
@@ -79,10 +79,9 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                         status: subscription.status as SubscriptionStatusEnum,
                         currentPeriodEnd: subscription.currentPeriodEnd,
                     });
-                    plan =
-                        isActive && subscription.plan === PlanSlug.VT_PLUS
-                            ? PlanSlug.VT_PLUS
-                            : PlanSlug.VT_BASE;
+                    plan = isActive && subscription.plan === PlanSlug.VT_PLUS
+                        ? PlanSlug.VT_PLUS
+                        : PlanSlug.VT_BASE;
                 } else if (userPlanSlug === PlanSlug.VT_PLUS) {
                     // Fallback to user plan if no subscription record
                     plan = PlanSlug.VT_PLUS;
@@ -97,18 +96,18 @@ async function getComprehensiveSubscriptionStatus(userId: string) {
                     plan,
                     isActive,
                     expiresAt: subscription?.currentPeriodEnd || null,
-                    source: subscription ? "subscription" : ("user_plan" as const),
+                    source: subscription ? 'subscription' : ('user_plan' as const),
                     hasDbSubscription: !!subscription,
                     userPlanSlug,
                     needsSync: false,
                 };
-            }, "Get user subscription status");
+            }, 'Get user subscription status');
         } catch (dbError) {
-            log.error("Database query failed, denying access for security:", {
-                error: dbError instanceof Error ? dbError.message : "Unknown error",
+            log.error('Database query failed, denying access for security:', {
+                error: dbError instanceof Error ? dbError.message : 'Unknown error',
             });
             // SECURITY: Don't provide fallback access when database fails
-            throw new Error("Unable to verify subscription status");
+            throw new Error('Unable to verify subscription status');
         }
     }
 }
@@ -135,7 +134,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
     if (!userId) {
         return {
             hasAccess: false,
-            reason: "Authentication required for VT+ features",
+            reason: 'Authentication required for VT+ features',
             subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
@@ -148,7 +147,7 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         if (optimizedResult) {
             return {
                 hasAccess: optimizedResult.isVtPlus,
-                reason: optimizedResult.isVtPlus ? undefined : "VT+ subscription required",
+                reason: optimizedResult.isVtPlus ? undefined : 'VT+ subscription required',
                 subscriptionStatus: optimizedResult.isVtPlus
                     ? SubscriptionStatusEnum.ACTIVE
                     : SubscriptionStatusEnum.NONE,
@@ -159,12 +158,12 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         // Fallback to comprehensive check if optimized fails
         const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
 
-        const hasVTPlus =
-            subscriptionStatus.plan === PlanSlug.VT_PLUS && subscriptionStatus.isActive;
+        const hasVTPlus = subscriptionStatus.plan === PlanSlug.VT_PLUS
+            && subscriptionStatus.isActive;
 
         return {
             hasAccess: hasVTPlus,
-            reason: hasVTPlus ? undefined : "VT+ subscription required",
+            reason: hasVTPlus ? undefined : 'VT+ subscription required',
             subscriptionStatus: hasVTPlus
                 ? SubscriptionStatusEnum.ACTIVE
                 : SubscriptionStatusEnum.NONE,
@@ -172,13 +171,13 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
         };
     } catch (error) {
         // SECURITY: Log error without exposing sensitive subscription data
-        log.error("Failed to check VT+ access:", {
-            error: error instanceof Error ? error.message : "Unknown error",
-            userId: userId ? "present" : "missing",
+        log.error('Failed to check VT+ access:', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            userId: userId ? 'present' : 'missing',
         });
         return {
             hasAccess: false,
-            reason: "Unable to verify subscription status",
+            reason: 'Unable to verify subscription status',
             subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
@@ -198,7 +197,7 @@ export async function checkSignedInFeatureAccess(
     if (!userId) {
         return {
             hasAccess: false,
-            reason: "Sign in required for this feature",
+            reason: 'Sign in required for this feature',
             subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
@@ -218,10 +217,10 @@ export async function checkSignedInFeatureAccess(
             planSlug: subscriptionStatus.plan,
         };
     } catch (error) {
-        log.error("Failed to check signed-in feature access:", { error });
+        log.error('Failed to check signed-in feature access:', { error });
         return {
             hasAccess: false,
-            reason: "Failed to verify user status",
+            reason: 'Failed to verify user status',
             subscriptionStatus: SubscriptionStatusEnum.NONE,
             planSlug: PlanSlug.VT_BASE,
         };
@@ -243,7 +242,7 @@ export async function checkFeatureAccess(
 
     // Check if the specific feature is enabled
     const hasFeatureAccess = VTPlusAccess.getAccessibleFeatures(true).some(
-        (feature: { id: string }) => feature.id === featureId,
+        (feature: { id: string; }) => feature.id === featureId,
     );
 
     return {
@@ -272,16 +271,16 @@ export async function enforceVTPlusAccess(request: NextRequest): Promise<{
         if (!userId) {
             return {
                 success: false,
-                response: new Response(JSON.stringify({ error: "Unauthorized" }), {
+                response: new Response(JSON.stringify({ error: 'Unauthorized' }), {
                     status: 401,
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 'Content-Type': 'application/json' },
                 }),
             };
         }
 
         // Extract IP for rate limiting analytics
-        const ip =
-            request.headers.get("x-real-ip") ?? request.headers.get("x-forwarded-for") ?? undefined;
+        const ip = request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for')
+            ?? undefined;
 
         const accessResult = await checkVTPlusAccess({ userId, ip });
 
@@ -290,13 +289,13 @@ export async function enforceVTPlusAccess(request: NextRequest): Promise<{
                 success: false,
                 response: new Response(
                     JSON.stringify({
-                        error: "VT+ subscription required",
+                        error: 'VT+ subscription required',
                         reason: accessResult.reason,
                         subscriptionStatus: accessResult.subscriptionStatus,
                     }),
                     {
                         status: 403,
-                        headers: { "Content-Type": "application/json" },
+                        headers: { 'Content-Type': 'application/json' },
                     },
                 ),
                 userId,
@@ -310,16 +309,16 @@ export async function enforceVTPlusAccess(request: NextRequest): Promise<{
             accessResult,
         };
     } catch (error) {
-        log.error("VT+ access enforcement failed:", { error });
+        log.error('VT+ access enforcement failed:', { error });
         return {
             success: false,
             response: new Response(
                 JSON.stringify({
-                    error: "Failed to verify subscription access",
+                    error: 'Failed to verify subscription access',
                 }),
                 {
                     status: 500,
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 'Content-Type': 'application/json' },
                 },
             ),
         };

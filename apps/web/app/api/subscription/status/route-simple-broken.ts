@@ -1,17 +1,17 @@
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { getSubscription } from "@/lib/subscription/subscription-access-simple";
+import { auth } from '@/lib/auth-server';
 import {
     getAnonymousSubscriptionStatus,
     getOrCreateSubscriptionRequest,
     getSessionSubscriptionStatus,
-} from "@/lib/subscription-session-cache";
+} from '@/lib/subscription-session-cache';
+import { getSubscription } from '@/lib/subscription/subscription-access-simple';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     try {
@@ -20,16 +20,16 @@ export async function GET(request: NextRequest) {
         });
 
         const searchParams = request.nextUrl.searchParams;
-        const forceRefresh = searchParams.get("refresh") === "true";
+        const forceRefresh = searchParams.get('refresh') === 'true';
 
         if (!session) {
             // Handle anonymous users
-            const sessionId = request.headers.get("x-session-id");
+            const sessionId = request.headers.get('x-session-id');
 
             if (!sessionId) {
                 return NextResponse.json({
                     plan: PlanSlug.FREE,
-                    status: "active",
+                    status: 'active',
                     isPlusSubscriber: false,
                     hasSubscription: false,
                     isAnonymous: true,
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
             // Anonymous users get free tier
             return NextResponse.json({
                 plan: PlanSlug.FREE,
-                status: "active",
+                status: 'active',
                 isPlusSubscriber: false,
                 hasSubscription: false,
                 isAnonymous: true,
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
             // User not found or no subscription - default to free
             const defaultStatus = {
                 plan: PlanSlug.FREE,
-                status: "active" as const,
+                status: 'active' as const,
                 isPlusSubscriber: false,
                 hasSubscription: false,
                 isAnonymous: false,
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
         // Convert to API response format
         const response = {
             plan: subscription.planSlug || PlanSlug.FREE,
-            status: subscription.status || "active",
+            status: subscription.status || 'active',
             isPlusSubscriber: subscription.isVtPlus,
             hasSubscription: subscription.status !== null,
             currentPeriodEnd: subscription.currentPeriodEnd?.toISOString(),
@@ -116,17 +116,17 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(response);
     } catch (error) {
-        log.error("[Subscription Status API] Error:", { error });
+        log.error('[Subscription Status API] Error:', { error });
 
         // Return safe fallback
         return NextResponse.json(
             {
                 plan: PlanSlug.FREE,
-                status: "active",
+                status: 'active',
                 isPlusSubscriber: false,
                 hasSubscription: false,
                 isAnonymous: true,
-                error: "Internal server error",
+                error: 'Internal server error',
             },
             { status: 500 },
         );
