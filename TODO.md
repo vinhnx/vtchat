@@ -34,7 +34,7 @@ uide.
 
 **Verify Build/Lint**
 
-- Format: `bun run biome:format` (already passes for changed files)
+- Format: `bun run fmt` (already passes for changed files)
 - Build: `bun run build` (Pyodide script injection removes the https loader erro
   r)
 - Dev: `bun dev`

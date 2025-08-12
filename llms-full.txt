@@ -130,7 +130,7 @@ vtchat/
 ### Development Workflow
 
 - Plan before implementing significant tasks; request maintainer feedback on the plan
-- **REQUIRED**: Run `bun run biome:format` to auto-fix formatting issues
+- **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
 - Run `bun run lint` (oxlint) for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
@@ -138,7 +138,7 @@ vtchat/
 
 ### Git Hooks
 
-- **Manual fixes**: Run `bun run biome:format` and `bun run biome:check --unsafe` for comprehensive fixes
+- **Manual fixes**: Run `bun run fmt` and `bun run fmt:check` for comprehensive fixes
 - **Philosophy**: Encourage good practices without blocking development flow
 
 ## Core Documentation

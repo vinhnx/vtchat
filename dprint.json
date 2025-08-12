@@ -1,0 +1,22 @@
+{
+    "$schema": "https://dprint.dev/schemas/v0.json",
+    "lineWidth": 100,
+    "indentWidth": 4,
+    "useTabs": false,
+    "excludes": [
+        "node_modules",
+        ".next",
+        ".turbo",
+        "dist",
+        "build",
+        "coverage"
+    ],
+    "plugins": [
+        "https://plugins.dprint.dev/typescript-0.95.9.wasm",
+        "https://plugins.dprint.dev/json-0.20.0.wasm"
+    ],
+    "typescript": {
+        "quoteStyle": "preferSingle",
+        "semiColons": "always"
+    }
+}

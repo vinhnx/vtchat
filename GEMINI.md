@@ -14,7 +14,7 @@ This guide is streamlined to reduce context size. Use AGENTS.md for the authorit
 
 - Apps in `apps/` (Next.js in `apps/web`); shared packages in `packages/` (`@repo/ui`, `@repo/shared`, `@repo/common`).
 - Tests live in `apps/web/app/tests/`.
-- Common commands: `bun install`, `bun dev`, `bun run build`, `bun run lint`, `bun run biome:format`, `bun test`.
+- Common commands: `bun install`, `bun dev`, `bun run build`, `bun run lint`, `bun run fmt`, `bun test`.
 
 ## Deployment & Logging
 

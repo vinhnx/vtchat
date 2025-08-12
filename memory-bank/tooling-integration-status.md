@@ -1,5 +1,10 @@
 # Tooling Integration Status
 
+## Update (2025-08-12)
+
+- Replaced Biome with dprint for code formatting
+- Removed Biome scripts and configuration
+
 ## Session Summary
 
 **Date**: January 7, 2025  
