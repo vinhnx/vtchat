@@ -91,8 +91,8 @@ VT (VTChat) has successfully reached production readiness with all core features
 
 - All free features
 - **2 Research-Focused Exclusives:**
-    - **Enhanced Web Search** (PRO_SEARCH)
-    - **Deep Research** (DEEP_RESEARCH)
+  - **Enhanced Web Search** (PRO_SEARCH)
+  - **Deep Research** (DEEP_RESEARCH)
 - Premium AI models access
 - Priority support
 

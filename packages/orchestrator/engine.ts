@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/logger";
-import { EventEmitter } from "events";
-import type { Context, ContextSchemaDefinition } from "./context";
-import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
-import { ExecutionContext } from "./execution-context";
-import type { PersistenceLayer } from "./persistence";
+import { log } from '@repo/shared/logger';
+import { EventEmitter } from 'events';
+import type { Context, ContextSchemaDefinition } from './context';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import { ExecutionContext } from './execution-context';
+import type { PersistenceLayer } from './persistence';
 import type {
     EventPayload,
     ParallelTaskRoute,
@@ -11,7 +11,7 @@ import type {
     TaskOptions,
     TaskParams,
     WorkflowConfig,
-} from "./types";
+} from './types';
 
 export class WorkflowEngine<
     TEvent extends EventSchemaDefinition = any,
@@ -101,7 +101,7 @@ export class WorkflowEngine<
                 redirectTo: () => {}, // This will be overridden by the actual function
             }),
             new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("⏳ Task timeout exceeded")), timeoutMs),
+                setTimeout(() => reject(new Error('⏳ Task timeout exceeded')), timeoutMs)
             ),
         ]);
     }
@@ -125,11 +125,13 @@ export class WorkflowEngine<
         }
 
         if (
-            config.dependencies &&
-            !config.dependencies.every((dep) => this.executionContext.isTaskComplete(dep))
+            config.dependencies
+            && !config.dependencies.every((dep) => this.executionContext.isTaskComplete(dep))
         ) {
             log.info(
-                `⏳ Task "${taskName}" is waiting for dependencies: ${config.dependencies.join(", ")}`,
+                `⏳ Task "${taskName}" is waiting for dependencies: ${
+                    config.dependencies.join(', ')
+                }`,
             );
             return;
         }
@@ -164,20 +166,20 @@ export class WorkflowEngine<
 
                 const taskResult = config.timeoutMs
                     ? await this.executeTaskWithTimeout(
-                          (params) => config.execute({ ...params, redirectTo }),
-                          data,
-                          config.timeoutMs,
-                      )
+                        (params) => config.execute({ ...params, redirectTo }),
+                        data,
+                        config.timeoutMs,
+                    )
                     : await config.execute({
-                          data,
-                          executionContext: this.executionContext,
-                          abort: this.executionContext.abortWorkflow.bind(this.executionContext),
-                          events: this.events,
-                          context: this.context,
-                          config: this.config,
-                          signal: this.signal,
-                          redirectTo,
-                      });
+                        data,
+                        executionContext: this.executionContext,
+                        abort: this.executionContext.abortWorkflow.bind(this.executionContext),
+                        events: this.events,
+                        context: this.context,
+                        config: this.config,
+                        signal: this.signal,
+                        redirectTo,
+                    });
 
                 // Add this line to end timing for successful execution
                 this.executionContext.endTaskTiming(taskName);
@@ -187,10 +189,10 @@ export class WorkflowEngine<
                 let directNextTasks;
 
                 if (
-                    taskResult &&
-                    typeof taskResult === "object" &&
-                    "result" in taskResult &&
-                    "next" in taskResult
+                    taskResult
+                    && typeof taskResult === 'object'
+                    && 'result' in taskResult
+                    && 'next' in taskResult
                 ) {
                     result = taskResult.result;
                     directNextTasks = taskResult.next;
@@ -205,8 +207,8 @@ export class WorkflowEngine<
                 this.executionContext.emitTaskExecutionEvent(taskName, executionCount);
 
                 if (
-                    this.executionContext.isAborted() &&
-                    !this.executionContext.isGracefulShutdown()
+                    this.executionContext.isAborted()
+                    && !this.executionContext.isGracefulShutdown()
                 ) {
                     log.info(`⚠️ Workflow stopped after task "${taskName}".`);
                     return result;
@@ -235,7 +237,7 @@ export class WorkflowEngine<
                 }
 
                 // Check for special "end" route value
-                if (nextTasks === "end") {
+                if (nextTasks === 'end') {
                     log.info(`🏁 Workflow ended after task "${taskName}".`);
                     if (this.persistence) {
                         await this.persistence.saveWorkflow(this.id, this);
@@ -246,9 +248,9 @@ export class WorkflowEngine<
                 if (nextTasks) {
                     if (Array.isArray(nextTasks)) {
                         if (
-                            nextTasks.length > 0 &&
-                            typeof nextTasks[0] === "object" &&
-                            "task" in nextTasks[0]
+                            nextTasks.length > 0
+                            && typeof nextTasks[0] === 'object'
+                            && 'task' in nextTasks[0]
                         ) {
                             // Handle ParallelTaskRoute[] format
                             await Promise.all(
@@ -256,14 +258,14 @@ export class WorkflowEngine<
                                     this.executeTask(
                                         route.task,
                                         route.data !== undefined ? route.data : result,
-                                    ),
+                                    )
                                 ),
                             );
                         } else {
                             // Handle string[] format (all tasks get the same data)
                             await Promise.all(
                                 (nextTasks as string[]).map((nextTask) =>
-                                    this.executeTask(nextTask, result),
+                                    this.executeTask(nextTask, result)
                                 ),
                             );
                         }
@@ -307,7 +309,7 @@ export class WorkflowEngine<
 
                             if (errorResult.next) {
                                 if (Array.isArray(errorResult.next)) {
-                                    if (typeof errorResult.next[0] === "object") {
+                                    if (typeof errorResult.next[0] === 'object') {
                                         await Promise.all(
                                             (errorResult.next as ParallelTaskRoute[]).map((route) =>
                                                 this.executeTask(
@@ -315,13 +317,13 @@ export class WorkflowEngine<
                                                     route.data !== undefined
                                                         ? route.data
                                                         : errorResult.result,
-                                                ),
+                                                )
                                             ),
                                         );
                                     } else {
                                         await Promise.all(
                                             (errorResult.next as string[]).map((nextTask) =>
-                                                this.executeTask(nextTask, errorResult.result),
+                                                this.executeTask(nextTask, errorResult.result)
                                             ),
                                         );
                                     }

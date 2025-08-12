@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
 // Simple wrapper to maintain API compatibility with existing useToast usage
 export function useToast() {
@@ -8,26 +8,26 @@ export function useToast() {
         toast: ({
             title,
             description,
-            variant = "default",
+            variant = 'default',
             duration = 4000,
         }: {
             title?: string;
             description?: string;
-            variant?: "default" | "destructive" | "success";
+            variant?: 'default' | 'destructive' | 'success';
             duration?: number;
         }) => {
-            const message = description || title || "";
+            const message = description || title || '';
             const titleText = description ? title : undefined;
 
             switch (variant) {
-                case "destructive":
+                case 'destructive':
                     return toast.error(message, {
                         description: titleText,
                         duration,
                         dismissible: true,
                         closeButton: true,
                     });
-                case "success":
+                case 'success':
                     return toast.success(message, {
                         description: titleText,
                         duration,

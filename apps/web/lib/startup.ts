@@ -2,8 +2,8 @@
  * Application startup initialization
  */
 
-import { log } from "@repo/shared/lib/logger";
-import { subscribeToCacheInvalidation } from "@/lib/cache/cache-invalidation";
+import { subscribeToCacheInvalidation } from '@/lib/cache/cache-invalidation';
+import { log } from '@repo/shared/lib/logger';
 
 let initialized = false;
 
@@ -16,15 +16,15 @@ export async function initializeApp(): Promise<void> {
     }
 
     // Skip initialization during build time
-    if (process.env.NODE_ENV === "production" && !process.env.REDIS_URL) {
-        log.debug("Skipping Redis cache invalidation setup - no Redis URL in production build");
+    if (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL) {
+        log.debug('Skipping Redis cache invalidation setup - no Redis URL in production build');
         initialized = true;
         return;
     }
 
     // Skip initialization during Next.js build process
-    if (process.env.NEXT_PHASE === "phase-production-build") {
-        log.debug("Skipping cache invalidation setup during build phase");
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+        log.debug('Skipping cache invalidation setup during build phase');
         initialized = true;
         return;
     }
@@ -34,9 +34,9 @@ export async function initializeApp(): Promise<void> {
         await subscribeToCacheInvalidation();
 
         initialized = true;
-        log.info("Application initialization completed");
+        log.info('Application initialization completed');
     } catch (error) {
-        log.error("Failed to initialize application", { error });
+        log.error('Failed to initialize application', { error });
         // Don't fail the app if Redis setup fails
         initialized = true;
     }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Area,
@@ -18,8 +18,8 @@ import {
     RadarChart,
     XAxis,
     YAxis,
-} from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/card";
+} from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 import {
     type ChartConfig,
     ChartContainer,
@@ -27,7 +27,7 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from "./components/chart";
+} from './components/chart';
 
 interface BaseChartData {
     name: string;
@@ -48,7 +48,7 @@ interface RadarData {
 }
 
 interface BarChartProps {
-    type: "barChart";
+    type: 'barChart';
     title: string;
     data: BaseChartData[];
     xAxisLabel?: string;
@@ -57,7 +57,7 @@ interface BarChartProps {
 }
 
 interface LineChartProps {
-    type: "lineChart";
+    type: 'lineChart';
     title: string;
     data: MultiSeriesData[];
     xAxisLabel?: string;
@@ -68,7 +68,7 @@ interface LineChartProps {
 }
 
 interface AreaChartProps {
-    type: "areaChart";
+    type: 'areaChart';
     title: string;
     data: MultiSeriesData[];
     xAxisLabel?: string;
@@ -79,7 +79,7 @@ interface AreaChartProps {
 }
 
 interface PieChartProps {
-    type: "pieChart";
+    type: 'pieChart';
     title: string;
     data: BaseChartData[];
     showLabels?: boolean;
@@ -87,7 +87,7 @@ interface PieChartProps {
 }
 
 interface RadarChartProps {
-    type: "radarChart";
+    type: 'radarChart';
     title: string;
     data: RadarData[];
     maxValue?: number;
@@ -102,45 +102,45 @@ export type ChartProps =
 
 // Custom color palette
 const CHART_COLORS = [
-    "#D9487D", // Pink/Magenta
-    "#383B73", // Dark Blue
-    "#171C26", // Dark Navy
-    "#BFB38F", // Beige/Tan
-    "#A63333", // Dark Red
+    '#D9487D', // Pink/Magenta
+    '#383B73', // Dark Blue
+    '#171C26', // Dark Navy
+    '#BFB38F', // Beige/Tan
+    '#A63333', // Dark Red
 ];
 
 // Chart configurations with custom color palette
 const getChartConfig = (data: any[], type: string): ChartConfig => {
     const config: ChartConfig = {};
 
-    if (type === "pie") {
+    if (type === 'pie') {
         data.forEach((item, index) => {
             config[item.name] = {
                 label: item.name,
                 color: CHART_COLORS[index % CHART_COLORS.length],
             };
         });
-    } else if (type === "bar") {
+    } else if (type === 'bar') {
         config.value = {
-            label: "Value",
+            label: 'Value',
             color: CHART_COLORS[0],
         };
-    } else if (type === "line" || type === "area") {
+    } else if (type === 'line' || type === 'area') {
         config.series1 = {
-            label: "Series 1",
+            label: 'Series 1',
             color: CHART_COLORS[0],
         };
         config.series2 = {
-            label: "Series 2",
+            label: 'Series 2',
             color: CHART_COLORS[1],
         };
         config.series3 = {
-            label: "Series 3",
+            label: 'Series 3',
             color: CHART_COLORS[2],
         };
-    } else if (type === "radar") {
+    } else if (type === 'radar') {
         config.value = {
-            label: "Value",
+            label: 'Value',
             color: CHART_COLORS[0],
         };
     }
@@ -157,11 +157,11 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
     return (
         <text
-            dominantBaseline="central"
-            fill="white"
+            dominantBaseline='central'
+            fill='white'
             fontSize={12}
-            fontWeight="500"
-            textAnchor={x > cx ? "start" : "end"}
+            fontWeight='500'
+            textAnchor={x > cx ? 'start' : 'end'}
             x={x}
             y={y}
         >
@@ -175,10 +175,10 @@ export function ChartRenderer(props: ChartProps) {
 
     const renderChart = () => {
         switch (type) {
-            case "barChart": {
-                const chartConfig = getChartConfig(props.data, "bar");
+            case 'barChart': {
+                const chartConfig = getChartConfig(props.data, 'bar');
                 return (
-                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                    <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
                         <BarChart
                             data={props.data}
                             accessibilityLayer
@@ -191,7 +191,7 @@ export function ChartRenderer(props: ChartProps) {
                         >
                             <CartesianGrid vertical={false} />
                             <XAxis
-                                dataKey="name"
+                                dataKey='name'
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
@@ -199,20 +199,20 @@ export function ChartRenderer(props: ChartProps) {
                             <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Bar
-                                dataKey="value"
-                                fill="var(--color-value)"
+                                dataKey='value'
+                                fill='var(--color-value)'
                                 radius={[4, 4, 0, 0]}
-                                className="transition-opacity hover:opacity-80"
+                                className='transition-opacity hover:opacity-80'
                             />
                         </BarChart>
                     </ChartContainer>
                 );
             }
 
-            case "lineChart": {
-                const chartConfig = getChartConfig(props.data, "line");
+            case 'lineChart': {
+                const chartConfig = getChartConfig(props.data, 'line');
                 return (
-                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                    <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
                         <LineChart
                             data={props.data}
                             accessibilityLayer
@@ -225,7 +225,7 @@ export function ChartRenderer(props: ChartProps) {
                         >
                             <CartesianGrid vertical={false} />
                             <XAxis
-                                dataKey="name"
+                                dataKey='name'
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
@@ -233,31 +233,31 @@ export function ChartRenderer(props: ChartProps) {
                             <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Line
-                                type="monotone"
-                                dataKey="series1"
-                                stroke="var(--color-series1)"
+                                type='monotone'
+                                dataKey='series1'
+                                stroke='var(--color-series1)'
                                 strokeWidth={2}
-                                dot={{ fill: "var(--color-series1)", strokeWidth: 2, r: 4 }}
+                                dot={{ fill: 'var(--color-series1)', strokeWidth: 2, r: 4 }}
                                 activeDot={{
                                     r: 6,
                                     strokeWidth: 2,
-                                    stroke: "var(--color-series1)",
+                                    stroke: 'var(--color-series1)',
                                 }}
-                                className="drop-shadow-xs"
+                                className='drop-shadow-xs'
                             />
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Line
-                                    type="monotone"
-                                    dataKey="series2"
-                                    stroke="var(--color-series2)"
+                                    type='monotone'
+                                    dataKey='series2'
+                                    stroke='var(--color-series2)'
                                     strokeWidth={2}
-                                    dot={{ fill: "var(--color-series2)", strokeWidth: 2, r: 4 }}
+                                    dot={{ fill: 'var(--color-series2)', strokeWidth: 2, r: 4 }}
                                     activeDot={{
                                         r: 6,
                                         strokeWidth: 2,
-                                        stroke: "var(--color-series2)",
+                                        stroke: 'var(--color-series2)',
                                     }}
-                                    className="drop-shadow-xs"
+                                    className='drop-shadow-xs'
                                 />
                             )}
                         </LineChart>
@@ -265,10 +265,10 @@ export function ChartRenderer(props: ChartProps) {
                 );
             }
 
-            case "areaChart": {
-                const chartConfig = getChartConfig(props.data, "area");
+            case 'areaChart': {
+                const chartConfig = getChartConfig(props.data, 'area');
                 return (
-                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                    <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
                         <AreaChart
                             data={props.data}
                             accessibilityLayer
@@ -281,7 +281,7 @@ export function ChartRenderer(props: ChartProps) {
                         >
                             <CartesianGrid vertical={false} />
                             <XAxis
-                                dataKey="name"
+                                dataKey='name'
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
@@ -289,34 +289,34 @@ export function ChartRenderer(props: ChartProps) {
                             <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <Area
-                                type="monotone"
-                                dataKey="series1"
-                                stroke="var(--color-series1)"
-                                fill="var(--color-series1)"
+                                type='monotone'
+                                dataKey='series1'
+                                stroke='var(--color-series1)'
+                                fill='var(--color-series1)'
                                 fillOpacity={0.6}
                                 strokeWidth={2}
-                                stackId={props.stacked ? "1" : undefined}
-                                className="drop-shadow-xs"
+                                stackId={props.stacked ? '1' : undefined}
+                                className='drop-shadow-xs'
                                 activeDot={{
                                     r: 6,
                                     strokeWidth: 2,
-                                    stroke: "var(--color-series1)",
+                                    stroke: 'var(--color-series1)',
                                 }}
                             />
                             {props.data.some((d) => d.series2 !== undefined) && (
                                 <Area
-                                    type="monotone"
-                                    dataKey="series2"
-                                    stroke="var(--color-series2)"
-                                    fill="var(--color-series2)"
+                                    type='monotone'
+                                    dataKey='series2'
+                                    stroke='var(--color-series2)'
+                                    fill='var(--color-series2)'
                                     fillOpacity={0.6}
                                     strokeWidth={2}
-                                    stackId={props.stacked ? "1" : undefined}
-                                    className="drop-shadow-xs"
+                                    stackId={props.stacked ? '1' : undefined}
+                                    className='drop-shadow-xs'
                                     activeDot={{
                                         r: 6,
                                         strokeWidth: 2,
-                                        stroke: "var(--color-series2)",
+                                        stroke: 'var(--color-series2)',
                                     }}
                                 />
                             )}
@@ -325,21 +325,21 @@ export function ChartRenderer(props: ChartProps) {
                 );
             }
 
-            case "pieChart": {
-                const chartConfig = getChartConfig(props.data, "pie");
+            case 'pieChart': {
+                const chartConfig = getChartConfig(props.data, 'pie');
                 return (
-                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                    <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
                         <PieChart>
                             <ChartTooltip
-                                content={<ChartTooltipContent nameKey="name" />}
+                                content={<ChartTooltipContent nameKey='name' />}
                                 cursor={false}
                             />
                             <Pie
-                                cx="50%"
-                                cy="50%"
+                                cx='50%'
+                                cy='50%'
                                 data={props.data}
-                                dataKey="value"
-                                nameKey="name"
+                                dataKey='value'
+                                nameKey='name'
                                 label={props.showLabels ? renderCustomizedLabel : false}
                                 labelLine={false}
                                 outerRadius={80}
@@ -354,7 +354,7 @@ export function ChartRenderer(props: ChartProps) {
                             {props.showLegend && (
                                 <ChartLegend
                                     content={<ChartLegendContent />}
-                                    verticalAlign="bottom"
+                                    verticalAlign='bottom'
                                 />
                             )}
                         </PieChart>
@@ -362,21 +362,21 @@ export function ChartRenderer(props: ChartProps) {
                 );
             }
 
-            case "radarChart": {
-                const chartConfig = getChartConfig(props.data, "radar");
+            case 'radarChart': {
+                const chartConfig = getChartConfig(props.data, 'radar');
                 return (
-                    <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+                    <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
                         <RadarChart data={props.data}>
-                            <ChartTooltip content={<ChartTooltipContent nameKey="category" />} />
+                            <ChartTooltip content={<ChartTooltipContent nameKey='category' />} />
                             <PolarGrid />
-                            <PolarAngleAxis dataKey="category" />
+                            <PolarAngleAxis dataKey='category' />
                             <PolarRadiusAxis angle={90} domain={[0, props.maxValue || 100]} />
                             <Radar
-                                dataKey="value"
-                                fill="var(--color-value)"
+                                dataKey='value'
+                                fill='var(--color-value)'
                                 fillOpacity={0.3}
-                                name="Value"
-                                stroke="var(--color-value)"
+                                name='Value'
+                                stroke='var(--color-value)'
                             />
                         </RadarChart>
                     </ChartContainer>
@@ -389,7 +389,7 @@ export function ChartRenderer(props: ChartProps) {
     };
 
     return (
-        <Card className="w-full">
+        <Card className='w-full'>
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 {(props as any).xAxisLabel && (

@@ -1,9 +1,9 @@
-"use client";
-import { log } from "@repo/shared/logger";
-import { initHotjar } from "@repo/shared/utils";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useThreadAuth } from "../hooks";
-import { useAppStore } from "../store/app.store";
+'use client';
+import { log } from '@repo/shared/logger';
+import { initHotjar } from '@repo/shared/utils';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useThreadAuth } from '../hooks';
+import { useAppStore } from '../store/app.store';
 
 export type RootContextType = {
     isSidebarOpen: boolean;
@@ -28,7 +28,7 @@ const defaultContextValue: RootContextType = {
 
 export const RootContext = createContext<RootContextType>(defaultContextValue);
 
-export const RootProvider = ({ children }: { children: React.ReactNode }) => {
+export const RootProvider = ({ children }: { children: React.ReactNode; }) => {
     const [isClient, setIsClient] = useState(false);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandSearchOpen, setIsCommandSearchOpen] = useState(false);
@@ -47,12 +47,12 @@ export const RootProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             initHotjar();
         } catch (error) {
-            log.warn({ data: error }, "Failed to initialize Hotjar");
+            log.warn({ data: error }, 'Failed to initialize Hotjar');
         }
     }, []);
 
     // During SSR, provide a consistent initial state that matches app store defaults
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
         return <RootContext.Provider value={defaultContextValue}>{children}</RootContext.Provider>;
     }
 

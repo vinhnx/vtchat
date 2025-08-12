@@ -4,15 +4,15 @@
  */
 
 export const Providers = {
-    OPENAI: "openai",
-    ANTHROPIC: "anthropic",
-    TOGETHER: "together",
-    GOOGLE: "google",
-    FIREWORKS: "fireworks",
-    XAI: "xai",
-    OPENROUTER: "openrouter",
-    LMSTUDIO: "lmstudio",
-    OLLAMA: "ollama",
+    OPENAI: 'openai',
+    ANTHROPIC: 'anthropic',
+    TOGETHER: 'together',
+    GOOGLE: 'google',
+    FIREWORKS: 'fireworks',
+    XAI: 'xai',
+    OPENROUTER: 'openrouter',
+    LMSTUDIO: 'lmstudio',
+    OLLAMA: 'ollama',
 } as const;
 
 export type ProviderEnumType = (typeof Providers)[keyof typeof Providers];

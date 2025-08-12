@@ -3,12 +3,12 @@ import {
     createTypedEventEmitter,
     WorkflowBuilder,
     type WorkflowConfig,
-} from "@repo/orchestrator";
-import type { ChatMode } from "@repo/shared/config";
-import { UserTier, type UserTierType } from "@repo/shared/constants/user-tiers";
-import { log } from "@repo/shared/logger";
-import type { Geo } from "@vercel/functions";
-import type { CoreMessage } from "ai";
+} from '@repo/orchestrator';
+import type { ChatMode } from '@repo/shared/config';
+import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
+import { log } from '@repo/shared/logger';
+import type { Geo } from '@vercel/functions';
+import type { CoreMessage } from 'ai';
 import {
     analysisTask,
     completionTask,
@@ -19,9 +19,9 @@ import {
     reflectorTask,
     suggestionsTask,
     writerTask,
-} from "./tasks";
+} from './tasks';
 
-type Status = "PENDING" | "COMPLETED" | "ERROR" | "HUMAN_REVIEW";
+type Status = 'PENDING' | 'COMPLETED' | 'ERROR' | 'HUMAN_REVIEW';
 
 // Define the workflow schema type
 export type WorkflowEventSchema = {
@@ -75,7 +75,7 @@ export type WorkflowContextSchema = {
         id: number;
         text: string;
         final: boolean;
-        status: "PENDING" | "COMPLETED" | "ERROR";
+        status: 'PENDING' | 'COMPLETED' | 'ERROR';
     }[];
     steps: {
         type: string;
@@ -157,7 +157,7 @@ export const runWorkflow = ({
     userTier?: UserTierType;
     userId?: string;
 }) => {
-    log.info("🔥 runWorkflow called with params:", {
+    log.info('🔥 runWorkflow called with params:', {
         webSearch,
         mathCalculator,
         charts,
@@ -175,21 +175,21 @@ export const runWorkflow = ({
         toolCalls: [],
         toolResults: [],
         answer: {
-            text: "",
+            text: '',
 
-            status: "PENDING",
+            status: 'PENDING',
         },
         sources: [],
         suggestions: [],
         object: {},
         error: {
-            error: "",
-            status: "PENDING",
+            error: '',
+            status: 'PENDING',
         },
-        status: "PENDING",
+        status: 'PENDING',
     });
 
-    log.info("🌟 Workflow context created with:", {
+    log.info('🌟 Workflow context created with:', {
         webSearch,
         mathCalculator,
         charts,

@@ -1,69 +1,69 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const links = [
     {
-        title: "Home",
-        href: "/",
+        title: 'Home',
+        href: '/',
     },
     {
-        title: "Terms",
-        href: "/terms",
+        title: 'Terms',
+        href: '/terms',
     },
     {
-        title: "Privacy",
-        href: "/privacy",
+        title: 'Privacy',
+        href: '/privacy',
     },
     {
-        title: "VT+",
-        href: "/pricing",
+        title: 'VT+',
+        href: '/pricing',
     },
     {
-        title: "Hello",
-        href: "mailto:hello@vtdotai.io.vn",
+        title: 'Hello',
+        href: 'mailto:hello@vtdotai.io.vn',
     },
     {
-        title: "Help",
-        href: "/help",
+        title: 'Help',
+        href: '/help',
     },
     {
-        title: "About",
-        href: "/about",
+        title: 'About',
+        href: '/about',
     },
     {
-        title: "FAQ",
-        href: "/faq",
+        title: 'FAQ',
+        href: '/faq',
     },
     {
-        title: "AI Glossary",
-        href: "/ai-glossary",
+        title: 'AI Glossary',
+        href: '/ai-glossary',
     },
     {
-        title: "AI Resources",
-        href: "/ai-resources",
+        title: 'AI Resources',
+        href: '/ai-resources',
     },
     {
-        title: "X",
-        href: "https://x.com/vtdotai",
+        title: 'X',
+        href: 'https://x.com/vtdotai',
     },
 ];
 
 export const Footer = () => {
     return (
-        <footer className="py-4 md:py-16">
-            <div className="mx-auto max-w-5xl px-4 md:px-6">
-                <div className="my-2 flex flex-wrap justify-center gap-3 text-xs md:my-8 md:gap-6 md:text-sm">
+        <footer className='py-4 md:py-16'>
+            <div className='mx-auto max-w-5xl px-4 md:px-6'>
+                <div className='my-2 flex flex-wrap justify-center gap-3 text-xs md:my-8 md:gap-6 md:text-sm'>
                     {links.map((link, index) => (
                         <Link
                             key={index}
                             href={link.href}
-                            className="text-muted-foreground hover:text-primary block duration-150"
+                            className='text-muted-foreground hover:text-primary block duration-150'
                         >
                             <span>{link.title}</span>
                         </Link>
                     ))}
                 </div>
-                <span className="text-muted-foreground block text-center text-xs md:text-sm">
-                    {" "}
+                <span className='text-muted-foreground block text-center text-xs md:text-sm'>
+                    {' '}
                     © {new Date().getFullYear()} VT, All rights reserved
                 </span>
             </div>

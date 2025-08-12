@@ -1,6 +1,6 @@
-import type { Context, ContextSchemaDefinition } from "./context";
-import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
-import type { ExecutionContext } from "./execution-context";
+import type { Context, ContextSchemaDefinition } from './context';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import type { ExecutionContext } from './execution-context';
 
 export type WorkflowConfig = {
     maxIterations?: number;
@@ -43,23 +43,23 @@ export type TaskExecutionFunction<
     TContext extends ContextSchemaDefinition = any,
     TWorkflow extends WorkflowDefinition<TEvent, TContext> = WorkflowDefinition<TEvent, TContext>,
 > = (
-    params: Omit<TaskParams<TEvent, TContext>, "signal"> & {
+    params: Omit<TaskParams<TEvent, TContext>, 'signal'> & {
         signal?: AbortSignal;
     },
 ) => Promise<
     | {
-          result: any;
-          next?:
-              | TaskRouteDestination<TWorkflow>
-              | Array<TaskRouteDestination<TWorkflow>>
-              | ParallelTaskRoute<TWorkflow>[];
-      }
+        result: any;
+        next?:
+            | TaskRouteDestination<TWorkflow>
+            | Array<TaskRouteDestination<TWorkflow>>
+            | ParallelTaskRoute<TWorkflow>[];
+    }
     | any
 >;
 
 type TaskRouteDestination<TWorkflow extends WorkflowDefinition = WorkflowDefinition> =
-    | keyof TWorkflow["tasks"]
-    | "end";
+    | keyof TWorkflow['tasks']
+    | 'end';
 
 type TaskRouterFunction<
     TEvent extends EventSchemaDefinition = any,
@@ -108,7 +108,7 @@ export type TaskTiming = {
     startTime: number;
     endTime?: number;
     duration?: number;
-    status: "success" | "failed";
+    status: 'success' | 'failed';
     error?: Error;
 };
 
@@ -149,6 +149,6 @@ export type WorkflowDefinition<
     TContext extends ContextSchemaDefinition = any,
 > = {
     tasks: Record<string, TaskDefinition<TEvent, TContext>>;
-    initialTask: keyof WorkflowDefinition<TEvent, TContext>["tasks"];
+    initialTask: keyof WorkflowDefinition<TEvent, TContext>['tasks'];
     config?: WorkflowConfig;
 };

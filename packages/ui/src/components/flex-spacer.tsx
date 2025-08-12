@@ -1,3 +1,3 @@
 export const FlexSpacer = () => {
-    return <div className="flex-1" />;
+    return <div className='flex-1' />;
 };

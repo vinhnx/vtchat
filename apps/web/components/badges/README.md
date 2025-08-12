@@ -51,7 +51,7 @@ Displays the GoodFirms directory badge with local SVG and fallback.
 import { BadgesSection } from '@/components/badges-section';
 
 // Use in your component
-<BadgesSection className="my-custom-class" />;
+<BadgesSection className='my-custom-class' />;
 ```
 
 ## File Structure

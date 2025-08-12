@@ -11,9 +11,9 @@
  * 4. Run this test: `NODE_ENV=production bun apps/web/app/tests/test-ollama-qwen3.js`
  */
 
-import { ModelEnum } from "@repo/ai/models";
-import { getLanguageModel } from "@repo/ai/providers";
-import { generateText } from "ai";
+import { ModelEnum } from '@repo/ai/models';
+import { getLanguageModel } from '@repo/ai/providers';
+import { generateText } from 'ai';
 
 async function testOllamaQwen3Integration() {
     try {
@@ -23,7 +23,7 @@ async function testOllamaQwen3Integration() {
         // Test simple text generation with recommended maxRetries for local models
         await generateText({
             model,
-            prompt: "What is the capital of Japan? Answer in one word.",
+            prompt: 'What is the capital of Japan? Answer in one word.',
             maxTokens: 10,
             maxRetries: 1, // Recommended for immediate feedback if server isn't running
         });
@@ -31,7 +31,8 @@ async function testOllamaQwen3Integration() {
         // Test with a coding question
         await generateText({
             model,
-            prompt: "Write a simple function to add two numbers in JavaScript. Just the function, no explanation.",
+            prompt:
+                'Write a simple function to add two numbers in JavaScript. Just the function, no explanation.',
             maxTokens: 50,
             maxRetries: 1,
         });
@@ -39,7 +40,8 @@ async function testOllamaQwen3Integration() {
         // Test with a reasoning question
         await generateText({
             model,
-            prompt: "If a train travels 60 miles in 1 hour, how far will it travel in 30 minutes? Answer with just the number and unit.",
+            prompt:
+                'If a train travels 60 miles in 1 hour, how far will it travel in 30 minutes? Answer with just the number and unit.',
             maxTokens: 15,
             maxRetries: 1,
         });

@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
-import { LayoutSkeleton } from "./layout-skeleton";
+import type { ReactNode } from 'react';
+import { LayoutSkeleton } from './layout-skeleton';
 
 interface OptimizedLayoutProps {
     children?: ReactNode;
     showSkeleton?: boolean;
-    sidebarPlacement?: "left" | "right";
+    sidebarPlacement?: 'left' | 'right';
 }
 
 /**
@@ -14,7 +14,7 @@ interface OptimizedLayoutProps {
 export function OptimizedLayout({
     children,
     showSkeleton = false,
-    sidebarPlacement = "left",
+    sidebarPlacement = 'left',
 }: OptimizedLayoutProps) {
     if (showSkeleton || !children) {
         return <LayoutSkeleton showSidebar={true} sidebarPlacement={sidebarPlacement} />;
@@ -27,9 +27,9 @@ export function OptimizedLayout({
  * Server-side safe layout wrapper
  * Provides consistent structure for SSR and client hydration
  */
-export function SSRLayoutWrapper({ children }: { children: ReactNode }) {
+export function SSRLayoutWrapper({ children }: { children: ReactNode; }) {
     return (
-        <div className="bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden">
+        <div className='bg-tertiary flex h-[100dvh] w-full flex-row overflow-hidden'>
             {children}
         </div>
     );

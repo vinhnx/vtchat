@@ -87,9 +87,9 @@ static async staleWhileRevalidate(request, cacheName) {
 
 ### **Expected Results**
 
-✅ **Service Worker Bypass**: Next.js image optimization requests no longer intercepted by service worker  
-✅ **Direct Browser Handling**: Avatar images loaded directly by browser/Next.js without interference  
-✅ **No Undefined Responses**: staleWhileRevalidate always returns Response object or throws error  
+✅ **Service Worker Bypass**: Next.js image optimization requests no longer intercepted by service worker\
+✅ **Direct Browser Handling**: Avatar images loaded directly by browser/Next.js without interference\
+✅ **No Undefined Responses**: staleWhileRevalidate always returns Response object or throws error\
 ✅ **Proper Avatar Display**: User avatars load correctly without console errors
 
 ### **Testing Instructions**

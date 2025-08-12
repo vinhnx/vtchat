@@ -167,7 +167,7 @@ bun dev
 **❌ Issue**: 401 Unauthorized
 **✅ Solution**: Check `CREEM_WEBHOOK_SECRET` and signature
 
-**❌ Issue**: 400 Bad Request  
+**❌ Issue**: 400 Bad Request\
 **✅ Solution**: Verify JSON payload format
 
 **❌ Issue**: 500 Internal Server Error

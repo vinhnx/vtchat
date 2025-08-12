@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ShineText, UserTierBadge } from "@repo/common/components";
-import { useCreemSubscription } from "@repo/common/hooks";
-import { useGlobalSubscriptionStatus } from "@repo/common/providers/subscription-provider";
-import { BUTTON_TEXT } from "@repo/shared/constants";
-import { useSession } from "@repo/shared/lib/auth-client";
+import { ShineText, UserTierBadge } from '@repo/common/components';
+import { useCreemSubscription } from '@repo/common/hooks';
+import { useGlobalSubscriptionStatus } from '@repo/common/providers/subscription-provider';
+import { BUTTON_TEXT } from '@repo/shared/constants';
+import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Announcement,
     AnnouncementTag,
@@ -12,16 +12,16 @@ import {
     TypographyH2,
     TypographyH3,
     TypographyMuted,
-} from "@repo/ui";
-import { ArrowUpRight, Check, CheckCircle, Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { AnimatedBadge } from "../../components/animated-badge";
-import { ButtonAnimatedGradient } from "../../components/button-animated-gradient";
-import { ButtonShadowGradient } from "../../components/button-shadow-gradient";
-import { CardSpotlightPricing } from "../../components/card-spotlight-pricing";
-import { FeaturesAccordion } from "../../components/features-accordion";
-import { PRICING_CONFIG } from "../../lib/config/pricing";
+} from '@repo/ui';
+import { ArrowUpRight, Check, CheckCircle, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { AnimatedBadge } from '../../components/animated-badge';
+import { ButtonAnimatedGradient } from '../../components/button-animated-gradient';
+import { ButtonShadowGradient } from '../../components/button-shadow-gradient';
+import { CardSpotlightPricing } from '../../components/card-spotlight-pricing';
+import { FeaturesAccordion } from '../../components/features-accordion';
+import { PRICING_CONFIG } from '../../lib/config/pricing';
 
 export function PricingClient() {
     const { data: session, isPending: isSessionLoading } = useSession();
@@ -46,7 +46,7 @@ export function PricingClient() {
 
     useEffect(() => {
         if (isLoaded && !isSignedIn) {
-            router.push("/login?redirect_url=/pricing");
+            router.push('/login?redirect_url=/pricing');
         }
     }, [isLoaded, isSignedIn, router]);
 
@@ -58,7 +58,7 @@ export function PricingClient() {
 
     const handleSubscribe = async () => {
         if (!isSignedIn) {
-            router.push("/login?redirect_url=/pricing");
+            router.push('/login?redirect_url=/pricing');
             return;
         }
 
@@ -71,9 +71,9 @@ export function PricingClient() {
 
     const handleTryFree = () => {
         if (isSignedIn) {
-            router.push("/");
+            router.push('/');
         } else {
-            router.push("/login?redirect_url=/");
+            router.push('/login?redirect_url=/');
         }
     };
 
@@ -84,7 +84,7 @@ export function PricingClient() {
             return (
                 <>
                     {isPortalLoading ? BUTTON_TEXT.LOADING : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
-                    <UserTierBadge className="ml-2" />
+                    <UserTierBadge className='ml-2' />
                 </>
             );
         }
@@ -93,9 +93,9 @@ export function PricingClient() {
 
     const getFreeButtonText = () => {
         if (isLoading) return BUTTON_TEXT.LOADING;
-        if (!isSignedIn) return "Sign Up Free";
-        if (isCurrentlySubscribed) return "Continue to Chat";
-        return "Continue";
+        if (!isSignedIn) return 'Sign Up Free';
+        if (isCurrentlySubscribed) return 'Continue to Chat';
+        return 'Continue';
     };
 
     const getCTAButtonText = () => {
@@ -105,7 +105,7 @@ export function PricingClient() {
             return (
                 <>
                     {isPortalLoading ? BUTTON_TEXT.LOADING : BUTTON_TEXT.MANAGE_SUBSCRIPTION}
-                    {!isPortalLoading && <UserTierBadge className="ml-2" />}
+                    {!isPortalLoading && <UserTierBadge className='ml-2' />}
                 </>
             );
         }
@@ -113,22 +113,22 @@ export function PricingClient() {
     };
 
     return (
-        <div className="relative min-h-dvh w-full">
-            <h1 className="sr-only">Pricing</h1>
-            <div className="container relative z-10 mx-auto px-2 py-4 pt-8 md:px-4 md:py-8 md:pt-16">
+        <div className='relative min-h-dvh w-full'>
+            <h1 className='sr-only'>Pricing</h1>
+            <div className='container relative z-10 mx-auto px-2 py-4 pt-8 md:px-4 md:py-8 md:pt-16'>
                 {/* Hero Section */}
-                <div className="mb-4 space-y-3 pt-4 text-center md:mb-8 md:pt-8">
-                    <div className="space-y-2 md:space-y-3">
+                <div className='mb-4 space-y-3 pt-4 text-center md:mb-8 md:pt-8'>
+                    <div className='space-y-2 md:space-y-3'>
                         <AnimatedBadge>
-                            <Sparkles className="mr-2 h-4 w-4" />
+                            <Sparkles className='mr-2 h-4 w-4' />
                             {PRICING_CONFIG.product.name}
                         </AnimatedBadge>
 
                         <div>
-                            <ShineText className="text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-loose lg:text-6xl">
+                            <ShineText className='text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-loose lg:text-6xl'>
                                 Advanced AI features
                             </ShineText>
-                            <p className="text-muted-foreground mt-4 text-lg md:text-xl">
+                            <p className='text-muted-foreground mt-4 text-lg md:text-xl'>
                                 Most powerful AI capabilities included free. VT+ adds 3 exclusive
                                 research features.
                             </p>
@@ -137,68 +137,68 @@ export function PricingClient() {
                 </div>
 
                 {/* VT LAUNCH Promo Announcement */}
-                <div className="mb-6 flex justify-center">
+                <div className='mb-6 flex justify-center'>
                     <Announcement themed>
                         <AnnouncementTag>Welcome</AnnouncementTag>
                         <AnnouncementTitle>
                             Get 20% off VT+ with code VTLAUNCH
-                            <ArrowUpRight className="text-muted-foreground shrink-0" size={16} />
+                            <ArrowUpRight className='text-muted-foreground shrink-0' size={16} />
                         </AnnouncementTitle>
                     </Announcement>
                 </div>
 
                 {/* Pricing Section */}
-                <div className="relative px-2 py-4 md:px-6 md:py-6 lg:px-8" id="pricing">
-                    <div className="mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2">
+                <div className='relative px-2 py-4 md:px-6 md:py-6 lg:px-8' id='pricing'>
+                    <div className='mx-auto grid max-w-lg grid-cols-1 items-center gap-0 lg:max-w-4xl lg:grid-cols-2'>
                         {/* Free Plan Card */}
                         <CardSpotlightPricing
                             className={`rounded-3xl rounded-t-3xl bg-white p-4 ring-1 sm:mx-8 sm:rounded-b-none sm:p-8 md:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none ${
-                                isFreeTier ? "ring-2 ring-[#BFB38F]" : "ring-gray-900/10"
+                                isFreeTier ? 'ring-2 ring-[#BFB38F]' : 'ring-gray-900/10'
                             }`}
                         >
                             <div>
-                                <div className="flex items-center justify-between">
+                                <div className='flex items-center justify-between'>
                                     <TypographyH3
-                                        className="text-lg font-bold text-[#BFB38F]"
-                                        id="tier-free"
+                                        className='text-lg font-bold text-[#BFB38F]'
+                                        id='tier-free'
                                     >
                                         Free
                                     </TypographyH3>
                                     {isFreeTier && (
-                                        <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/10 px-3 py-1">
-                                            <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
-                                            <span className="text-sm font-medium text-[#BFB38F]">
+                                        <div className='flex items-center gap-2 rounded-full bg-[#BFB38F]/10 px-3 py-1'>
+                                            <CheckCircle className='h-4 w-4 text-[#BFB38F]' />
+                                            <span className='text-sm font-medium text-[#BFB38F]'>
                                                 Current Plan
                                             </span>
                                         </div>
                                     )}
                                 </div>
-                                <p className="mt-4 flex items-baseline gap-x-2">
-                                    <span className="text-5xl font-semibold tracking-tight text-gray-900">
+                                <p className='mt-4 flex items-baseline gap-x-2'>
+                                    <span className='text-5xl font-semibold tracking-tight text-gray-900'>
                                         ${PRICING_CONFIG.pricing.free.price}
                                     </span>
-                                    <span className="text-muted-foreground text-base">
+                                    <span className='text-muted-foreground text-base'>
                                         /{PRICING_CONFIG.pricing.free.interval}
                                     </span>
                                 </p>
-                                <p className="text-muted-foreground mt-6 text-base/7">
+                                <p className='text-muted-foreground mt-6 text-base/7'>
                                     VT offers free tier, and with VT+ focusing only on 3 exclusive
                                     research capabilities: Deep Research, Pro Search.
                                 </p>
-                                <ul className="text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10">
+                                <ul className='text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10'>
                                     {PRICING_CONFIG.pricing.free.features.map((feature, index) => (
-                                        <li className="flex gap-x-3" key={index}>
-                                            <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                            {typeof feature === "string" ? feature : feature.name}
+                                        <li className='flex gap-x-3' key={index}>
+                                            <Check className='h-6 w-5 flex-none text-[#BFB38F]' />
+                                            {typeof feature === 'string' ? feature : feature.name}
                                         </li>
                                     ))}
                                 </ul>
-                                <div className="mt-8 sm:mt-10">
+                                <div className='mt-8 sm:mt-10'>
                                     <ButtonShadowGradient
-                                        className="w-full"
-                                        data-vmtrc="FreePlanSelected"
-                                        data-vmtrc-context="pricing_page"
-                                        data-vmtrc-plan="VT_BASE"
+                                        className='w-full'
+                                        data-vmtrc='FreePlanSelected'
+                                        data-vmtrc-context='pricing_page'
+                                        data-vmtrc-plan='VT_BASE'
                                         onClick={handleTryFree}
                                     >
                                         {getFreeButtonText()}
@@ -208,52 +208,52 @@ export function PricingClient() {
                         </CardSpotlightPricing>
 
                         {/* VT+ Plan Card */}
-                        <div className="relative inline-block overflow-hidden rounded-3xl p-[1px]">
-                            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#BFB38F_0%,#262626_50%,#BFB38F_100%)]" />
+                        <div className='relative inline-block overflow-hidden rounded-3xl p-[1px]'>
+                            <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#BFB38F_0%,#262626_50%,#BFB38F_100%)]' />
                             <CardSpotlightPricing
                                 className={`relative rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 sm:p-10 ${
                                     isCurrentlySubscribed
-                                        ? "ring-2 ring-[#BFB38F]"
-                                        : "ring-gray-900/10"
+                                        ? 'ring-2 ring-[#BFB38F]'
+                                        : 'ring-gray-900/10'
                                 }`}
                             >
                                 <div>
-                                    <div className="flex items-center justify-between">
+                                    <div className='flex items-center justify-between'>
                                         <TypographyH3
-                                            className="text-lg font-bold text-[#BFB38F]"
-                                            id="tier-vt-plus"
+                                            className='text-lg font-bold text-[#BFB38F]'
+                                            id='tier-vt-plus'
                                         >
                                             {PRICING_CONFIG.product.name}
                                         </TypographyH3>
                                         {isCurrentlySubscribed && (
-                                            <div className="flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1">
-                                                <CheckCircle className="h-4 w-4 text-[#BFB38F]" />
-                                                <span className="text-sm font-medium text-[#BFB38F]">
+                                            <div className='flex items-center gap-2 rounded-full bg-[#BFB38F]/20 px-3 py-1'>
+                                                <CheckCircle className='h-4 w-4 text-[#BFB38F]' />
+                                                <span className='text-sm font-medium text-[#BFB38F]'>
                                                     Current Plan
                                                 </span>
                                             </div>
                                         )}
                                     </div>
-                                    <p className="mt-4 flex items-baseline gap-x-2">
-                                        <span className="text-5xl font-semibold tracking-tight text-white">
+                                    <p className='mt-4 flex items-baseline gap-x-2'>
+                                        <span className='text-5xl font-semibold tracking-tight text-white'>
                                             ${PRICING_CONFIG.pricing.plus.price}
                                         </span>
-                                        <span className="text-muted-foreground text-base">
+                                        <span className='text-muted-foreground text-base'>
                                             /{PRICING_CONFIG.pricing.plus.interval}
                                         </span>
                                     </p>
-                                    <p className="text-muted-foreground mt-6 text-base/7">
+                                    <p className='text-muted-foreground mt-6 text-base/7'>
                                         {PRICING_CONFIG.product.description}
                                     </p>
 
-                                    <ul className="text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10">
+                                    <ul className='text-muted-foreground mt-8 space-y-3 text-sm/6 sm:mt-10'>
                                         {PRICING_CONFIG.pricing.plus.features.map(
                                             (feature, index) => (
-                                                <li className="flex gap-x-3" key={index}>
-                                                    <Check className="h-6 w-5 flex-none text-[#BFB38F]" />
-                                                    <div className="flex items-center gap-2">
+                                                <li className='flex gap-x-3' key={index}>
+                                                    <Check className='h-6 w-5 flex-none text-[#BFB38F]' />
+                                                    <div className='flex items-center gap-2'>
                                                         <span>
-                                                            {typeof feature === "string"
+                                                            {typeof feature === 'string'
                                                                 ? feature
                                                                 : feature.name}
                                                         </span>
@@ -262,13 +262,13 @@ export function PricingClient() {
                                             ),
                                         )}
                                     </ul>
-                                    <div className="mt-8 sm:mt-10">
+                                    <div className='mt-8 sm:mt-10'>
                                         <ButtonAnimatedGradient
-                                            className="flex w-full items-center justify-center"
-                                            data-vmtrc="PremiumPlanSelected"
-                                            data-vmtrc-context="pricing_page"
-                                            data-vmtrc-plan="VT_PLUS"
-                                            data-vmtrc-price="10"
+                                            className='flex w-full items-center justify-center'
+                                            data-vmtrc='PremiumPlanSelected'
+                                            data-vmtrc-context='pricing_page'
+                                            data-vmtrc-plan='VT_PLUS'
+                                            data-vmtrc-price='10'
                                             onClick={() => {
                                                 if (!(isPortalLoading || isPaymentLoading)) {
                                                     handleSubscribe();
@@ -280,29 +280,29 @@ export function PricingClient() {
                                     </div>
 
                                     {/* Free Trial & Cancel Anytime Badge */}
-                                    <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+                                    <div className='mt-4 flex items-center justify-center gap-4 text-sm'>
                                         <TypographyMuted>Free trial included</TypographyMuted>
                                         <TypographyMuted>Cancel anytime</TypographyMuted>
                                     </div>
                                     {/* Terms and Privacy Links */}
-                                    <div className="text-muted-foreground mt-4 text-center text-sm">
-                                        <span className="text-muted-foreground">
+                                    <div className='text-muted-foreground mt-4 text-center text-sm'>
+                                        <span className='text-muted-foreground'>
                                             Please review our
-                                        </span>{" "}
+                                        </span>{' '}
                                         <a
-                                            className="underline transition-colors hover:text-[#BFB38F]"
-                                            href="/terms"
+                                            className='underline transition-colors hover:text-[#BFB38F]'
+                                            href='/terms'
                                         >
                                             Terms of Service
-                                        </a>{" "}
-                                        <span>and</span>{" "}
+                                        </a>{' '}
+                                        <span>and</span>{' '}
                                         <a
-                                            className="underline transition-colors hover:text-[#BFB38F]"
-                                            href="/privacy"
+                                            className='underline transition-colors hover:text-[#BFB38F]'
+                                            href='/privacy'
                                         >
                                             Privacy Policy
-                                        </a>{" "}
-                                        <span className="text-muted-foreground">
+                                        </a>{' '}
+                                        <span className='text-muted-foreground'>
                                             before subscribing
                                         </span>
                                     </div>
@@ -313,27 +313,27 @@ export function PricingClient() {
                 </div>
 
                 {/* Features Section */}
-                <div className="mb-8 mt-8">
-                    <div className="mb-6 text-center">
-                        <ShineText className="text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl">
+                <div className='mb-8 mt-8'>
+                    <div className='mb-6 text-center'>
+                        <ShineText className='text-4xl font-bold leading-relaxed tracking-tight sm:text-4xl'>
                             Powerful Features
                         </ShineText>
-                        <p className="leading-7 [&:not(:first-child)]:mt-6">
-                            Discover what makes {PRICING_CONFIG.product.name} the perfect choice for
-                            your productivity needs
+                        <p className='leading-7 [&:not(:first-child)]:mt-6'>
+                            Discover what makes {PRICING_CONFIG.product.name}{' '}
+                            the perfect choice for your productivity needs
                         </p>
                     </div>
                     <FeaturesAccordion />
                 </div>
 
                 {/* CTA Section */}
-                <div className="mt-8 space-y-4 text-center">
-                    <TypographyH2 className="text text-lg font-semibold">
+                <div className='mt-8 space-y-4 text-center'>
+                    <TypographyH2 className='text text-lg font-semibold'>
                         Ready to get started?
                     </TypographyH2>
-                    <div className="mx-auto max-w-md pt-4">
+                    <div className='mx-auto max-w-md pt-4'>
                         <ButtonAnimatedGradient
-                            className="flex w-full items-center justify-center"
+                            className='flex w-full items-center justify-center'
                             onClick={() => {
                                 if (!(isPortalLoading || isPaymentLoading)) {
                                     handleSubscribe();
@@ -346,12 +346,12 @@ export function PricingClient() {
                 </div>
 
                 {/* Contact Section */}
-                <div className="mb-8 mt-8 text-center">
-                    <p className="text-muted-foreground text-base">
-                        Have questions? Get in touch:{" "}
+                <div className='mb-8 mt-8 text-center'>
+                    <p className='text-muted-foreground text-base'>
+                        Have questions? Get in touch:{' '}
                         <a
-                            className="font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80"
-                            href="mailto:hello@vtchat.io.vn"
+                            className='font-medium text-[#BFB38F] transition-colors hover:text-[#BFB38F]/80'
+                            href='mailto:hello@vtchat.io.vn'
                         >
                             hello@vtchat.io.vn
                         </a>

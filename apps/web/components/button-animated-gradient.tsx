@@ -1,19 +1,19 @@
-"use client";
-import type React from "react";
-import { useRef, useState } from "react";
+'use client';
+import type React from 'react';
+import { useRef, useState } from 'react';
 
 interface ButtonAnimatedGradientProps {
     children: React.ReactNode;
     onClick?: () => void;
     className?: string;
-    variant?: "primary" | "secondary"; // Added variant prop
+    variant?: 'primary' | 'secondary'; // Added variant prop
 }
 
 export const ButtonAnimatedGradient = ({
     children,
     onClick,
-    className = "",
-    variant = "primary", // Default to primary
+    className = '',
+    variant = 'primary', // Default to primary
 }: ButtonAnimatedGradientProps) => {
     const divRef = useRef<HTMLButtonElement>(null);
     const [isFocused, setIsFocused] = useState(false);
@@ -47,7 +47,7 @@ export const ButtonAnimatedGradient = ({
         setOpacity(0);
     };
 
-    if (variant === "secondary") {
+    if (variant === 'secondary') {
         return (
             <button
                 className={`relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-900/50 px-6 font-medium text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 ${className}`}
@@ -70,10 +70,11 @@ export const ButtonAnimatedGradient = ({
             ref={divRef}
         >
             <div
-                className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+                className='pointer-events-none absolute -inset-px opacity-0 transition duration-300'
                 style={{
                     opacity,
-                    background: `radial-gradient(300px circle at ${position.x}px ${position.y}px, rgba(255,255,255,.1), #0000000f)`,
+                    background:
+                        `radial-gradient(300px circle at ${position.x}px ${position.y}px, rgba(255,255,255,.1), #0000000f)`,
                 }}
             />
             {children}

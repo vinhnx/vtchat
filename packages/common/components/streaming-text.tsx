@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { cn } from "@repo/ui";
-import { motion } from "framer-motion";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { cn } from '@repo/ui';
+import { motion } from 'framer-motion';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface StreamingTextProps {
     text: string;
@@ -24,11 +24,11 @@ export const StreamingText = memo(
         onAnimationComplete,
         speed = 120, // Increased speed for smoother experience
     }: StreamingTextProps) => {
-        const [displayedText, setDisplayedText] = useState("");
+        const [displayedText, setDisplayedText] = useState('');
         const [isComplete, setIsComplete] = useState(false);
         const animationRef = useRef<number | null>(null);
         const startTimeRef = useRef<number>(0);
-        const lastTextRef = useRef<string>("");
+        const lastTextRef = useRef<string>('');
 
         const animate = useCallback(() => {
             if (!shouldAnimate) {
@@ -81,41 +81,41 @@ export const StreamingText = memo(
         }, [text, animate]);
 
         if (!shouldAnimate) {
-            return <span className={cn("streaming-text", className)}>{text}</span>;
+            return <span className={cn('streaming-text', className)}>{text}</span>;
         }
 
         return (
             <motion.span
                 className={cn(
-                    "streaming-text transform-gpu",
-                    "block min-h-[1.5em] w-full",
+                    'streaming-text transform-gpu',
+                    'block min-h-[1.5em] w-full',
                     className,
                 )}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.1 }}
                 style={{
-                    backfaceVisibility: "hidden",
-                    WebkitFontSmoothing: "antialiased",
-                    MozOsxFontSmoothing: "grayscale",
-                    wordBreak: "break-word",
-                    overflowWrap: "break-word",
-                    whiteSpace: "pre-wrap",
+                    backfaceVisibility: 'hidden',
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    whiteSpace: 'pre-wrap',
                     // Enable dynamic height changes
-                    willChange: "contents, height",
+                    willChange: 'contents, height',
                     // Remove containment for streaming expansion
-                    contain: "none",
+                    contain: 'none',
                 }}
             >
                 {displayedText}
                 {!isComplete && (
                     <motion.span
-                        className="ml-0.5 inline-block h-5 w-0.5 bg-current"
+                        className='ml-0.5 inline-block h-5 w-0.5 bg-current'
                         animate={{ opacity: [1, 0] }}
                         transition={{
                             duration: 0.6,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: "easeInOut",
+                            ease: 'easeInOut',
                         }}
                     />
                 )}
@@ -124,7 +124,7 @@ export const StreamingText = memo(
     },
 );
 
-StreamingText.displayName = "StreamingText";
+StreamingText.displayName = 'StreamingText';
 
 /**
  * Hook for managing streaming text state
@@ -139,7 +139,7 @@ export function useStreamingText(
 ) {
     const { shouldAnimate = true, speed = 80, onComplete } = options;
 
-    const [displayedText, setDisplayedText] = useState("");
+    const [displayedText, setDisplayedText] = useState('');
     const [isComplete, setIsComplete] = useState(false);
     const animationRef = useRef<number | null>(null);
     const startTimeRef = useRef<number>(0);
@@ -200,7 +200,7 @@ export function useStreamingText(
         reset: () => {
             startTimeRef.current = 0;
             setIsComplete(false);
-            setDisplayedText("");
+            setDisplayedText('');
         },
     };
 }

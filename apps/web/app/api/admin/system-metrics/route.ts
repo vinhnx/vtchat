@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/lib/logger";
-import { count, desc, eq, gte, sql, sum } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { db } from "@/lib/database";
-import { feedback, providerUsage, sessions, users, vtplusUsage } from "@/lib/database/schema";
+import { auth } from '@/lib/auth-server';
+import { db } from '@/lib/database';
+import { feedback, providerUsage, sessions, users, vtplusUsage } from '@/lib/database/schema';
+import { log } from '@repo/shared/lib/logger';
+import { count, desc, eq, gte, sql, sum } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session || !session.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if user is admin
@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
         where: eq(users.id, session.user.id),
     });
 
-    if (!user || user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     try {
@@ -120,7 +120,9 @@ export async function GET(request: NextRequest) {
         // System Health Indicators
         const avgSessionDuration = await db
             .select({
-                avgDuration: sql<number>`AVG(EXTRACT(EPOCH FROM (${sessions.expiresAt} - ${sessions.createdAt})) / 3600)`,
+                avgDuration: sql<
+                    number
+                >`AVG(EXTRACT(EPOCH FROM (${sessions.expiresAt} - ${sessions.createdAt})) / 3600)`,
             })
             .from(sessions)
             .where(gte(sessions.createdAt, sevenDaysAgo));
@@ -129,21 +131,22 @@ export async function GET(request: NextRequest) {
         const [errorRate] = await db
             .select({
                 totalFeedback: count(),
-                recentFeedback: sql<number>`COUNT(CASE WHEN ${feedback.createdAt} >= ${sevenDaysAgo} THEN 1 END)`,
+                recentFeedback: sql<
+                    number
+                >`COUNT(CASE WHEN ${feedback.createdAt} >= ${sevenDaysAgo} THEN 1 END)`,
             })
             .from(feedback);
 
         // Performance Metrics
         const performanceMetrics = {
-            systemUptime: "99.9%", // This would come from monitoring systems
-            avgResponseTime: "245ms", // This would come from APM
-            requestsPerSecond:
-                dailyUsageTrends.length > 0
-                    ? Math.round(
-                          dailyUsageTrends[dailyUsageTrends.length - 1]?.totalRequests /
-                              (24 * 60 * 60),
-                      )
-                    : 0,
+            systemUptime: '99.9%', // This would come from monitoring systems
+            avgResponseTime: '245ms', // This would come from APM
+            requestsPerSecond: dailyUsageTrends.length > 0
+                ? Math.round(
+                    dailyUsageTrends[dailyUsageTrends.length - 1]?.totalRequests
+                        / (24 * 60 * 60),
+                )
+                : 0,
             errorRate: (errorRate.recentFeedback / Math.max(errorRate.totalFeedback, 1)) * 100,
         };
 
@@ -192,7 +195,7 @@ export async function GET(request: NextRequest) {
             performanceMetrics,
         });
     } catch (error) {
-        log.error({ error }, "Failed to fetch system metrics");
-        return NextResponse.json({ error: "Failed to fetch system metrics" }, { status: 500 });
+        log.error({ error }, 'Failed to fetch system metrics');
+        return NextResponse.json({ error: 'Failed to fetch system metrics' }, { status: 500 });
     }
 }

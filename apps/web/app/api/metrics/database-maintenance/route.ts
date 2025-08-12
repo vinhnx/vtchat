@@ -1,12 +1,12 @@
-import { log } from "@repo/shared/lib/logger";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { log } from '@repo/shared/lib/logger';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Metrics schema for validation
 const MetricsSchema = z.object({
     timestamp: z.string().datetime(),
-    maintenance_type: z.enum(["hourly", "weekly"]),
-    status: z.enum(["success", "error", "fatal_error", "unhandled_rejection"]),
+    maintenance_type: z.enum(['hourly', 'weekly']),
+    status: z.enum(['success', 'error', 'fatal_error', 'unhandled_rejection']),
     duration_ms: z.number().min(0),
     attempt: z.number().min(1),
     error: z.string().nullable(),
@@ -21,88 +21,88 @@ const metricsStore: MaintenanceMetrics[] = [];
 const MAX_STORED_METRICS = 1000; // Keep last 1000 metrics
 
 // Add mock data for development/testing
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === 'development') {
     const now = new Date();
     const mockData: MaintenanceMetrics[] = [
         {
             timestamp: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 12500,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 8750,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-            maintenance_type: "hourly",
-            status: "error",
+            maintenance_type: 'hourly',
+            status: 'error',
             duration_ms: 45000,
             attempt: 2,
-            error: "Database connection timeout",
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            error: 'Database connection timeout',
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 15200,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 9800,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 11300,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
         {
             timestamp: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-            maintenance_type: "weekly",
-            status: "success",
+            maintenance_type: 'weekly',
+            status: 'success',
             duration_ms: 125000,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "database_maintenance" },
+            environment: 'development',
+            metadata: { task: 'database_maintenance' },
         },
         {
             timestamp: new Date(now.getTime() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
-            maintenance_type: "hourly",
-            status: "success",
+            maintenance_type: 'hourly',
+            status: 'success',
             duration_ms: 13700,
             attempt: 1,
             error: null,
-            environment: "development",
-            metadata: { task: "cleanup_old_sessions" },
+            environment: 'development',
+            metadata: { task: 'cleanup_old_sessions' },
         },
     ];
 
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
                 metrics,
                 stored_count: metricsStore.length,
             },
-            "Database maintenance metrics received",
+            'Database maintenance metrics received',
         );
 
         // Check for alerting conditions
@@ -144,18 +144,18 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         log.error(
             { error: error instanceof Error ? error.message : String(error) },
-            "Failed to process maintenance metrics",
+            'Failed to process maintenance metrics',
         );
 
-        return NextResponse.json({ error: "Failed to process metrics" }, { status: 400 });
+        return NextResponse.json({ error: 'Failed to process metrics' }, { status: 400 });
     }
 }
 
 export async function GET(request: NextRequest) {
     try {
         const url = new URL(request.url);
-        const maintenance_type = url.searchParams.get("type");
-        const hours = parseInt(url.searchParams.get("hours") || "24");
+        const maintenance_type = url.searchParams.get('type');
+        const hours = parseInt(url.searchParams.get('hours') || '24');
 
         // Filter metrics by time window and type
         const cutoffTime = new Date(Date.now() - hours * 60 * 60 * 1000);
@@ -173,17 +173,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: true,
             time_window_hours: hours,
-            maintenance_type: maintenance_type || "all",
+            maintenance_type: maintenance_type || 'all',
             metrics: filteredMetrics,
             summary,
         });
     } catch (error) {
         log.error(
             { error: error instanceof Error ? error.message : String(error) },
-            "Failed to retrieve maintenance metrics",
+            'Failed to retrieve maintenance metrics',
         );
 
-        return NextResponse.json({ error: "Failed to retrieve metrics" }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to retrieve metrics' }, { status: 500 });
     }
 }
 
@@ -200,7 +200,7 @@ async function checkAlertConditions(metrics: MaintenanceMetrics) {
         // More than 2 retries needed
         high_retry_count: metrics.attempt > 2,
         // Fatal error occurred
-        fatal_error: metrics.status === "fatal_error",
+        fatal_error: metrics.status === 'fatal_error',
     };
 
     const alerts = Object.entries(conditions)
@@ -214,7 +214,7 @@ async function checkAlertConditions(metrics: MaintenanceMetrics) {
                 metrics,
                 recent_metrics_count: recentMetrics.length,
             },
-            "Database maintenance alert conditions triggered",
+            'Database maintenance alert conditions triggered',
         );
 
         // In production, send alerts to monitoring systems here
@@ -229,7 +229,7 @@ function checkConsecutiveFailures(metrics: MaintenanceMetrics[]): boolean {
     if (metrics.length < 3) return false;
 
     const recent = metrics.slice(-3);
-    return recent.every((m) => m.status === "error" || m.status === "fatal_error");
+    return recent.every((m) => m.status === 'error' || m.status === 'fatal_error');
 }
 
 function calculateMetricsSummary(metrics: MaintenanceMetrics[]) {
@@ -244,9 +244,9 @@ function calculateMetricsSummary(metrics: MaintenanceMetrics[]) {
         };
     }
 
-    const successCount = metrics.filter((m) => m.status === "success").length;
+    const successCount = metrics.filter((m) => m.status === 'success').length;
     const errorCount = metrics.filter(
-        (m) => m.status === "error" || m.status === "fatal_error",
+        (m) => m.status === 'error' || m.status === 'fatal_error',
     ).length;
 
     const durations = metrics.map((m) => m.duration_ms);
@@ -261,8 +261,8 @@ function calculateMetricsSummary(metrics: MaintenanceMetrics[]) {
         total_errors: errorCount,
         error_rate: (errorCount / metrics.length) * 100,
         by_type: {
-            hourly: metrics.filter((m) => m.maintenance_type === "hourly").length,
-            weekly: metrics.filter((m) => m.maintenance_type === "weekly").length,
+            hourly: metrics.filter((m) => m.maintenance_type === 'hourly').length,
+            weekly: metrics.filter((m) => m.maintenance_type === 'weekly').length,
         },
     };
 }

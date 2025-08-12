@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { SecurityOverviewChart } from "@repo/common/components/admin/security-overview-chart";
-import { log } from "@repo/shared/lib/logger";
+import { SecurityOverviewChart } from '@repo/common/components/admin/security-overview-chart';
+import { log } from '@repo/shared/lib/logger';
 import {
     Badge,
     Button,
@@ -18,10 +18,10 @@ import {
     TableRow,
     TypographyH1,
     TypographyH2,
-} from "@repo/ui";
-import { motion } from "framer-motion";
-import { AlertTriangle, Globe, UserX } from "lucide-react";
-import { useEffect, useState } from "react";
+} from '@repo/ui';
+import { motion } from 'framer-motion';
+import { AlertTriangle, Globe, UserX } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface SecurityData {
     securityMetrics: {
@@ -74,13 +74,13 @@ export default function AdminSecurityPage() {
     useEffect(() => {
         const fetchSecurityData = async () => {
             try {
-                const response = await fetch("/api/admin/security");
+                const response = await fetch('/api/admin/security');
                 if (response.ok) {
                     const result = await response.json();
                     setData(result);
                 }
             } catch (error) {
-                log.error({ error }, "Failed to fetch security data");
+                log.error({ error }, 'Failed to fetch security data');
             } finally {
                 setLoading(false);
             }
@@ -95,9 +95,9 @@ export default function AdminSecurityPage() {
 
     if (loading) {
         return (
-            <div className="space-y-6">
+            <div className='space-y-6'>
                 <TypographyH1>Security Dashboard</TypographyH1>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
                     {[...Array(6)].map((_, i) => (
                         <Card key={i}>
                             <CardHeader>
@@ -111,7 +111,7 @@ export default function AdminSecurityPage() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className='space-y-8'>
             <TypographyH1>Security Dashboard</TypographyH1>
 
             {/* Security Overview Cards */}
@@ -121,99 +121,99 @@ export default function AdminSecurityPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <TypographyH2 className="mb-6">Security Overview</TypographyH2>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <TypographyH2 className='mb-6'>Security Overview</TypographyH2>
+                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Banned Users
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-red-600">
+                                <div className='text-2xl font-bold text-red-600'>
                                     {data.securityMetrics.totalBannedUsers}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     {data.securityMetrics.activeBans} active bans
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Active Sessions
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
+                                <div className='text-2xl font-bold'>
                                     {data.securityMetrics.activeSessions}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     of {data.securityMetrics.totalSessions} total
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Impersonated Sessions
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-yellow-600">
+                                <div className='text-2xl font-bold text-yellow-600'>
                                     {data.securityMetrics.impersonatedSessions}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     Admin sessions active
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Suspicious Activity
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-orange-600">
+                                <div className='text-2xl font-bold text-orange-600'>
                                     {data.securityMetrics.suspiciousSessions}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     High-frequency IPs
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Unverified Emails
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-amber-600">
+                                <div className='text-2xl font-bold text-amber-600'>
                                     {data.securityMetrics.unverifiedEmails}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     Users pending verification
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-muted-foreground text-sm font-medium">
+                            <CardHeader className='pb-2'>
+                                <CardTitle className='text-muted-foreground text-sm font-medium'>
                                     Protected Users
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-green-600">
+                                <div className='text-2xl font-bold text-green-600'>
                                     {data.securityMetrics.protectedUsers}
                                 </div>
-                                <div className="text-muted-foreground text-sm">
+                                <div className='text-muted-foreground text-sm'>
                                     Admin accounts protected
                                 </div>
                             </CardContent>
@@ -229,7 +229,7 @@ export default function AdminSecurityPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
                 >
-                    <TypographyH2 className="mb-6">Security Analytics</TypographyH2>
+                    <TypographyH2 className='mb-6'>Security Analytics</TypographyH2>
                     <SecurityOverviewChart securityMetrics={data.securityMetrics} />
                 </motion.div>
             )}
@@ -243,8 +243,8 @@ export default function AdminSecurityPage() {
                 >
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center">
-                                <UserX className="mr-2 h-5 w-5" />
+                            <CardTitle className='flex items-center'>
+                                <UserX className='mr-2 h-5 w-5' />
                                 Recently Banned Users
                             </CardTitle>
                         </CardHeader>
@@ -263,21 +263,21 @@ export default function AdminSecurityPage() {
                                         <TableRow key={user.id}>
                                             <TableCell>
                                                 <div>
-                                                    <div className="font-medium">{user.name}</div>
-                                                    <div className="text-muted-foreground text-sm">
+                                                    <div className='font-medium'>{user.name}</div>
+                                                    <div className='text-muted-foreground text-sm'>
                                                         {user.email}
                                                     </div>
                                                 </div>
                                             </TableCell>
                                             <TableCell>{user.banReason}</TableCell>
                                             <TableCell>
-                                                {user.banExpires ? (
-                                                    <Badge variant="destructive">
-                                                        {formatDate(user.banExpires)}
-                                                    </Badge>
-                                                ) : (
-                                                    <Badge variant="outline">Permanent</Badge>
-                                                )}
+                                                {user.banExpires
+                                                    ? (
+                                                        <Badge variant='destructive'>
+                                                            {formatDate(user.banExpires)}
+                                                        </Badge>
+                                                    )
+                                                    : <Badge variant='outline'>Permanent</Badge>}
                                             </TableCell>
                                             <TableCell>{formatDate(user.updatedAt)}</TableCell>
                                         </TableRow>
@@ -298,8 +298,8 @@ export default function AdminSecurityPage() {
                 >
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center">
-                                <AlertTriangle className="mr-2 h-5 w-5" />
+                            <CardTitle className='flex items-center'>
+                                <AlertTriangle className='mr-2 h-5 w-5' />
                                 High Activity Users (Last 24h)
                             </CardTitle>
                         </CardHeader>
@@ -318,16 +318,16 @@ export default function AdminSecurityPage() {
                                         <TableRow key={activity.userId}>
                                             <TableCell>
                                                 <div>
-                                                    <div className="font-medium">
+                                                    <div className='font-medium'>
                                                         {activity.userName}
                                                     </div>
-                                                    <div className="text-muted-foreground text-sm">
+                                                    <div className='text-muted-foreground text-sm'>
                                                         {activity.userEmail}
                                                     </div>
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="destructive">
+                                                <Badge variant='destructive'>
                                                     {activity.requestCount.toLocaleString()}
                                                 </Badge>
                                             </TableCell>
@@ -336,14 +336,13 @@ export default function AdminSecurityPage() {
                                             </TableCell>
                                             <TableCell>
                                                 <Button
-                                                    variant="outline"
-                                                    size="sm"
+                                                    variant='outline'
+                                                    size='sm'
                                                     onClick={() =>
                                                         window.open(
                                                             `/admin/users?search=${activity.userEmail}`,
-                                                            "_blank",
-                                                        )
-                                                    }
+                                                            '_blank',
+                                                        )}
                                                 >
                                                     Investigate
                                                 </Button>
@@ -366,8 +365,8 @@ export default function AdminSecurityPage() {
                 >
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center">
-                                <Globe className="mr-2 h-5 w-5" />
+                            <CardTitle className='flex items-center'>
+                                <Globe className='mr-2 h-5 w-5' />
                                 Suspicious IP Addresses
                             </CardTitle>
                         </CardHeader>
@@ -384,16 +383,14 @@ export default function AdminSecurityPage() {
                                 <TableBody>
                                     {data.ipAnalysis.map((ip, index) => (
                                         <TableRow key={index}>
-                                            <TableCell className="font-mono">
+                                            <TableCell className='font-mono'>
                                                 {ip.ipAddress}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
-                                                    variant={
-                                                        ip.uniqueUsers > 10
-                                                            ? "destructive"
-                                                            : "secondary"
-                                                    }
+                                                    variant={ip.uniqueUsers > 10
+                                                        ? 'destructive'
+                                                        : 'secondary'}
                                                 >
                                                     {ip.uniqueUsers}
                                                 </Badge>

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/lib/logger";
-import { createContext, useContext, useEffect, useState } from "react";
+import { log } from '@repo/shared/lib/logger';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AccessibilitySettings {
     reduceMotion: boolean;
     highContrast: boolean;
-    fontSize: "small" | "medium" | "large" | "extra-large";
+    fontSize: 'small' | 'medium' | 'large' | 'extra-large';
     focusIndicators: boolean;
     screenReaderOptimizations: boolean;
 }
@@ -19,13 +19,13 @@ interface AccessibilityContextType {
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-const STORAGE_KEY = "vt-accessibility-settings";
+const STORAGE_KEY = 'vt-accessibility-settings';
 
-export function AccessibilityProvider({ children }: { children: React.ReactNode }) {
+export function AccessibilityProvider({ children }: { children: React.ReactNode; }) {
     const [settings, setSettings] = useState<AccessibilitySettings>({
         reduceMotion: false, // Default to false - animations enabled by default
         highContrast: false,
-        fontSize: "medium",
+        fontSize: 'medium',
         focusIndicators: true,
         screenReaderOptimizations: false,
     });
@@ -41,15 +41,15 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
     useEffect(() => {
         if (!isClient) return;
 
-        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         setPrefersReducedMotion(mediaQuery.matches);
 
         const handleChange = (e: MediaQueryListEvent) => {
             setPrefersReducedMotion(e.matches);
         };
 
-        mediaQuery.addEventListener("change", handleChange);
-        return () => mediaQuery.removeEventListener("change", handleChange);
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
     }, [isClient]);
 
     // Load settings from localStorage on mount
@@ -63,7 +63,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
                 setSettings(parsedSettings);
             }
         } catch (error) {
-            log.warn({ error }, "Failed to load accessibility settings");
+            log.warn({ error }, 'Failed to load accessibility settings');
         }
     }, [isClient]);
 
@@ -74,7 +74,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
         } catch (error) {
-            log.warn({ error }, "Failed to save accessibility settings");
+            log.warn({ error }, 'Failed to save accessibility settings');
         }
     }, [settings, isClient]);
 
@@ -94,7 +94,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
 export function useAccessibility() {
     const context = useContext(AccessibilityContext);
     if (context === undefined) {
-        throw new Error("useAccessibility must be used within an AccessibilityProvider");
+        throw new Error('useAccessibility must be used within an AccessibilityProvider');
     }
     return context;
 }

@@ -2,14 +2,14 @@
  * Fast subscription access utilities with caching and optimized queries
  */
 
-import { log } from "@repo/shared/lib/logger";
-import { PlanSlug, type VtPlusFeature } from "@repo/shared/types/subscription";
-import type { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { hasSubscriptionAccess } from "@repo/shared/utils/subscription-grace-period";
-import { desc, eq, inArray, sql } from "drizzle-orm";
-import { redisCache, type SubscriptionCacheData } from "@/lib/cache/redis-cache";
-import { db } from "@/lib/database";
-import { userSubscriptions, users } from "@/lib/database/schema";
+import { redisCache, type SubscriptionCacheData } from '@/lib/cache/redis-cache';
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
+import { log } from '@repo/shared/lib/logger';
+import { PlanSlug, type VtPlusFeature } from '@repo/shared/types/subscription';
+import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
+import { desc, eq, inArray, sql } from 'drizzle-orm';
 
 interface FastSubscriptionData {
     planSlug: string | null;
@@ -31,11 +31,11 @@ interface VTPlusAccessResult {
 
 // In-memory LRU cache for very recent requests (< 2 seconds)
 class QuickLRU<K, V> {
-    private cache = new Map<K, { value: V; timestamp: number }>();
+    private cache = new Map<K, { value: V; timestamp: number; }>();
     private maxSize: number;
     private ttl: number;
 
-    constructor(options: { maxSize: number; ttl: number }) {
+    constructor(options: { maxSize: number; ttl: number; }) {
         this.maxSize = options.maxSize;
         this.ttl = options.ttl;
     }
@@ -154,8 +154,8 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
             currentPeriodEnd: row.currentPeriodEnd,
         });
 
-        const isPremium =
-            isActive && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+        const isPremium = isActive
+            && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
         const isVtPlus = isPremium;
 
         const fastData: FastSubscriptionData = {
@@ -186,7 +186,7 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
 
         return fastData;
     } catch (error) {
-        log.error("Failed to fetch subscription data:", { userId, error });
+        log.error('Failed to fetch subscription data:', { userId, error });
         return null;
     }
 }
@@ -199,26 +199,26 @@ export async function checkVTPlusAccessFast(
     _ip?: string,
 ): Promise<VTPlusAccessResult> {
     if (!userIdOrSubscription) {
-        return { hasAccess: false, reason: "No user ID provided" };
+        return { hasAccess: false, reason: 'No user ID provided' };
     }
 
     let subscription: FastSubscriptionData | null;
 
-    if (typeof userIdOrSubscription === "string") {
+    if (typeof userIdOrSubscription === 'string') {
         subscription = await getSubscriptionFast(userIdOrSubscription);
     } else {
         subscription = userIdOrSubscription;
     }
 
     if (!subscription) {
-        return { hasAccess: false, reason: "Subscription not found" };
+        return { hasAccess: false, reason: 'Subscription not found' };
     }
 
     const hasAccess = subscription.isVtPlus && subscription.isActive;
 
     return {
         hasAccess,
-        reason: hasAccess ? undefined : "VT+ subscription required",
+        reason: hasAccess ? undefined : 'VT+ subscription required',
         planSlug: subscription.planSlug,
         subscriptionStatus: subscription.status,
     };
@@ -286,7 +286,7 @@ export async function invalidateUserCaches(userId: string): Promise<void> {
     // Clear LRU cache
     subscriptionLRU.clear(); // Clear all for simplicity, could be more targeted
 
-    log.debug("Invalidated caches for user", { userId });
+    log.debug('Invalidated caches for user', { userId });
 }
 
 /**
@@ -386,9 +386,8 @@ export async function getSubscriptionsBatch(
                     currentPeriodEnd: row.currentPeriodEnd,
                 });
 
-                const isPremium =
-                    isActive &&
-                    (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
+                const isPremium = isActive
+                    && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
                 const isVtPlus = isPremium;
 
                 const fastData: FastSubscriptionData = {
@@ -418,7 +417,7 @@ export async function getSubscriptionsBatch(
                 });
             }
         } catch (error) {
-            log.error("Failed to batch fetch subscription data:", {
+            log.error('Failed to batch fetch subscription data:', {
                 userIds: stillUncachedIds,
                 error,
             });

@@ -1,7 +1,7 @@
 # Web Search Text Streaming Animation Fixes
 
-**Date**: January 30, 2025  
-**Status**: ✅ COMPLETED  
+**Date**: January 30, 2025\
+**Status**: ✅ COMPLETED\
 **Issue**: Jiggering and flashing animations during web search text streaming
 
 ## Problem Analysis

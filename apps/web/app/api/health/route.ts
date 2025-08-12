@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET() {
     return NextResponse.json(
         {
-            status: "healthy",
+            status: 'healthy',
             timestamp: new Date().toISOString(),
-            service: "vtchat",
+            service: 'vtchat',
         },
         { status: 200 },
     );

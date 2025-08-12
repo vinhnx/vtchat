@@ -11,9 +11,9 @@
  * 4. Run this test: `bun apps/web/app/tests/test-ollama-integration.js`
  */
 
-import { ModelEnum } from "@repo/ai/models";
-import { getLanguageModel } from "@repo/ai/providers";
-import { generateText } from "ai";
+import { ModelEnum } from '@repo/ai/models';
+import { getLanguageModel } from '@repo/ai/providers';
+import { generateText } from 'ai';
 
 async function testOllamaIntegration() {
     try {
@@ -23,7 +23,7 @@ async function testOllamaIntegration() {
         // Test simple text generation with recommended maxRetries for local models
         await generateText({
             model,
-            prompt: "What is the capital of Japan? Answer in one word.",
+            prompt: 'What is the capital of Japan? Answer in one word.',
             maxTokens: 10,
             maxRetries: 1, // Recommended for immediate feedback if server isn't running
         });
@@ -32,7 +32,7 @@ async function testOllamaIntegration() {
         const qwenModel = getLanguageModel(ModelEnum.OLLAMA_QWEN_2_5);
         await generateText({
             model: qwenModel,
-            prompt: "Hello! How are you today?",
+            prompt: 'Hello! How are you today?',
             maxTokens: 20,
             maxRetries: 1,
         });
@@ -41,14 +41,14 @@ async function testOllamaIntegration() {
         const llama31Model = getLanguageModel(ModelEnum.OLLAMA_LLAMA_3_1);
         await generateText({
             model: llama31Model,
-            prompt: "What is 5 + 3? Answer with just the number.",
+            prompt: 'What is 5 + 3? Answer with just the number.',
             maxTokens: 5,
             maxRetries: 1,
         });
     } catch (error) {
-        if (error.message.includes("ECONNREFUSED")) {
+        if (error.message.includes('ECONNREFUSED')) {
         }
-        if (error.message.includes("model") || error.message.includes("not found")) {
+        if (error.message.includes('model') || error.message.includes('not found')) {
         }
 
         process.exit(1);

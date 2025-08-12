@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as TabsPrimitive from "@radix-ui/react-tabs";
-import * as React from "react";
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+import * as React from 'react';
 
-import { cn } from "../lib/utils";
+import { cn } from '../lib/utils';
 
 const Tabs = TabsPrimitive.Root;
 
@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.List
         className={cn(
-            "border-border bg-secondary text-secondary-foreground inline-flex h-10 items-center justify-start border-b",
+            'border-border bg-secondary text-secondary-foreground inline-flex h-10 items-center justify-start border-b',
             className,
         )}
         ref={ref}
@@ -28,7 +28,7 @@ const TabsTrigger = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.Trigger
         className={cn(
-            "ring-offset-background focus-visible:ring-ring-3 data-[state=active]:border-foreground data-[state=active]:text-brand focus-visible:outline-hidden inline-flex items-center justify-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium transition-all focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2",
+            'ring-offset-background focus-visible:ring-ring-3 data-[state=active]:border-foreground data-[state=active]:text-brand focus-visible:outline-hidden inline-flex items-center justify-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium transition-all focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2',
             className,
         )}
         ref={ref}
@@ -43,7 +43,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.Content
         className={cn(
-            "ring-offset-background focus-visible:ring-ring-3 focus-visible:outline-hidden mt-4 focus-visible:ring-2 focus-visible:ring-offset-2",
+            'ring-offset-background focus-visible:ring-ring-3 focus-visible:outline-hidden mt-4 focus-visible:ring-2 focus-visible:ring-offset-2',
             className,
         )}
         ref={ref}

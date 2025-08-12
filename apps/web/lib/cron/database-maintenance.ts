@@ -2,9 +2,9 @@
  * Database maintenance cron jobs for optimal performance
  */
 
-import { log } from "@repo/shared/logger";
-import { cleanupExpiredSessions } from "../auth/optimized-session-management";
-import { db } from "../database";
+import { log } from '@repo/shared/logger';
+import { cleanupExpiredSessions } from '../auth/optimized-session-management';
+import { db } from '../database';
 
 /**
  * Cleanup expired sessions and refresh materialized views
@@ -14,16 +14,16 @@ export async function performDatabaseMaintenance(): Promise<void> {
     const startTime = Date.now();
 
     try {
-        log.info("Starting database maintenance...");
+        log.info('Starting database maintenance...');
 
         // 1. Cleanup expired sessions
         const deletedSessions = await cleanupExpiredSessions();
 
         // 2. Refresh subscription summary materialized view
-        await db.execute("SELECT refresh_subscription_summary()");
+        await db.execute('SELECT refresh_subscription_summary()');
 
         // 3. Update table statistics for better query planning
-        await db.execute("ANALYZE users, user_subscriptions, sessions");
+        await db.execute('ANALYZE users, user_subscriptions, sessions');
 
         // 4. Get maintenance stats
         const stats = await db.execute(`
@@ -41,11 +41,11 @@ export async function performDatabaseMaintenance(): Promise<void> {
                 deletedSessions,
                 activeSessionsRemaining: stats.rows[0]?.active_sessions || 0,
             },
-            "Database maintenance completed",
+            'Database maintenance completed',
         );
     } catch (error) {
         const duration = Date.now() - startTime;
-        log.error({ duration, error }, "Database maintenance failed");
+        log.error({ duration, error }, 'Database maintenance failed');
         throw error;
     }
 }
@@ -57,12 +57,12 @@ export async function performWeeklyMaintenance(): Promise<void> {
     const startTime = Date.now();
 
     try {
-        log.info("Starting weekly database maintenance...");
+        log.info('Starting weekly database maintenance...');
 
         // 1. Vacuum analyze critical tables
-        await db.execute("VACUUM ANALYZE users");
-        await db.execute("VACUUM ANALYZE user_subscriptions");
-        await db.execute("VACUUM ANALYZE sessions");
+        await db.execute('VACUUM ANALYZE users');
+        await db.execute('VACUUM ANALYZE user_subscriptions');
+        await db.execute('VACUUM ANALYZE sessions');
 
         // 2. Reindex if needed (only if fragmentation is high)
         const indexStats = await db.execute(`
@@ -78,7 +78,7 @@ export async function performWeeklyMaintenance(): Promise<void> {
         `);
 
         // 3. Refresh all materialized views
-        await db.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary");
+        await db.execute('REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary');
 
         const duration = Date.now() - startTime;
 
@@ -87,11 +87,11 @@ export async function performWeeklyMaintenance(): Promise<void> {
                 duration,
                 indexesChecked: indexStats.rowCount || 0,
             },
-            "Weekly database maintenance completed",
+            'Weekly database maintenance completed',
         );
     } catch (error) {
         const duration = Date.now() - startTime;
-        log.error({ duration, error }, "Weekly database maintenance failed");
+        log.error({ duration, error }, 'Weekly database maintenance failed');
         throw error;
     }
 }
@@ -108,7 +108,7 @@ export async function checkDatabaseHealth(): Promise<{
 
     try {
         // Check connection
-        await db.execute("SELECT 1");
+        await db.execute('SELECT 1');
 
         // Check for bloated tables
         const bloatCheck = await db.execute(`
@@ -175,7 +175,7 @@ export async function checkDatabaseHealth(): Promise<{
             stats: [stats],
         };
     } catch (error) {
-        log.error({ error }, "Database health check failed");
+        log.error({ error }, 'Database health check failed');
         return {
             healthy: false,
             issues: [`Database connection failed: ${error}`],
@@ -201,20 +201,20 @@ export async function optimizeSlowQuery(query: string): Promise<{
         // Analyze the plan for optimization opportunities
         const planText = JSON.stringify(beforePlan.rows);
 
-        if (planText.includes("Seq Scan")) {
-            suggestions.push("Consider adding indexes for sequential scans");
+        if (planText.includes('Seq Scan')) {
+            suggestions.push('Consider adding indexes for sequential scans');
         }
 
-        if (planText.includes("Sort")) {
-            suggestions.push("Consider adding ordered indexes to avoid sorting");
+        if (planText.includes('Sort')) {
+            suggestions.push('Consider adding ordered indexes to avoid sorting');
         }
 
-        if (planText.includes("Nested Loop")) {
-            suggestions.push("Consider hash joins by increasing work_mem");
+        if (planText.includes('Nested Loop')) {
+            suggestions.push('Consider hash joins by increasing work_mem');
         }
 
         // Run ANALYZE to update statistics
-        await db.execute("ANALYZE");
+        await db.execute('ANALYZE');
 
         // Get query plan after ANALYZE
         const afterPlan = await db.execute(`EXPLAIN (ANALYZE, BUFFERS) ${query}`);
@@ -225,7 +225,7 @@ export async function optimizeSlowQuery(query: string): Promise<{
             suggestions,
         };
     } catch (error) {
-        log.error({ query, error }, "Query optimization failed");
+        log.error({ query, error }, 'Query optimization failed');
         throw error;
     }
 }

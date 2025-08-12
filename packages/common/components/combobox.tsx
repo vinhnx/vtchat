@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
 import {
     Button,
+    cn,
     Command,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    cn,
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@repo/ui";
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
+} from '@repo/ui';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
 
 interface ComboboxOption {
     value: string;
@@ -36,8 +36,8 @@ export function Combobox({
     options,
     value,
     onValueChange,
-    placeholder = "Select option...",
-    searchPlaceholder = "Search...",
+    placeholder = 'Select option...',
+    searchPlaceholder = 'Search...',
     className,
     disabled = false,
 }: ComboboxProps) {
@@ -50,18 +50,18 @@ export function Combobox({
             <PopoverTrigger asChild>
                 <Button
                     aria-expanded={open}
-                    className={cn("justify-between", className)}
+                    className={cn('justify-between', className)}
                     disabled={disabled}
-                    role="combobox"
-                    variant="outline"
+                    role='combobox'
+                    variant='outline'
                 >
-                    <span className="truncate">{selectedOption?.label || placeholder}</span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <span className='truncate'>{selectedOption?.label || placeholder}</span>
+                    <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-full p-0" side="bottom">
+            <PopoverContent align='start' className='w-full p-0' side='bottom'>
                 <Command>
-                    <CommandInput className="h-9" placeholder={searchPlaceholder} />
+                    <CommandInput className='h-9' placeholder={searchPlaceholder} />
                     <CommandList>
                         <CommandEmpty>No option found.</CommandEmpty>
                         <CommandGroup>
@@ -74,18 +74,18 @@ export function Combobox({
                                     }}
                                     value={option.value}
                                 >
-                                    <div className="flex flex-1 flex-col">
-                                        <span className="font-medium">{option.label}</span>
+                                    <div className='flex flex-1 flex-col'>
+                                        <span className='font-medium'>{option.label}</span>
                                         {option.description && (
-                                            <span className="text-muted-foreground text-xs">
+                                            <span className='text-muted-foreground text-xs'>
                                                 {option.description}
                                             </span>
                                         )}
                                     </div>
                                     <Check
                                         className={cn(
-                                            "ml-auto h-4 w-4",
-                                            value === option.value ? "opacity-100" : "opacity-0",
+                                            'ml-auto h-4 w-4',
+                                            value === option.value ? 'opacity-100' : 'opacity-0',
                                         )}
                                     />
                                 </CommandItem>

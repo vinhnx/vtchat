@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
-import { db } from "./index";
-import type { UserSubscription } from "./schema";
-import { userSubscriptions, users } from "./schema";
+import { eq } from 'drizzle-orm';
+import { db } from './index';
+import type { UserSubscription } from './schema';
+import { users, userSubscriptions } from './schema';
 
 export async function getUserWithSubscription(userId: string) {
     const user = await db

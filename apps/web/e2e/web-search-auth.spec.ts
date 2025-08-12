@@ -1,27 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
-test.describe("Web Search Authentication", () => {
-    test.describe("API Authentication Tests", () => {
-        test("should return 401 when web search is attempted without authentication", async ({
-            page,
-        }) => {
-            await page.goto("/", { waitUntil: "load" });
+test.describe('Web Search Authentication', () => {
+    test.describe('API Authentication Tests', () => {
+        test('should return 401 when web search is attempted without authentication', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Try to make a request with web search enabled by directly calling the API
             const response = await page.evaluate(async () => {
                 try {
-                    const res = await fetch("/api/completion", {
-                        method: "POST",
+                    const res = await fetch('/api/completion', {
+                        method: 'POST',
                         headers: {
-                            "Content-Type": "application/json",
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             threadId: `test-thread-${Date.now()}`,
                             threadItemId: `test-item-${Date.now()}`,
                             parentThreadItemId: `test-parent-${Date.now()}`,
-                            prompt: "test query with web search",
-                            messages: [{ role: "user", content: "test query with web search" }],
-                            mode: "gemini-2.5-flash-lite-preview-06-17",
+                            prompt: 'test query with web search',
+                            messages: [{ role: 'user', content: 'test query with web search' }],
+                            mode: 'gemini-2.5-flash-lite-preview-06-17',
                             webSearch: true,
                             mathCalculator: false,
                             charts: false,
@@ -41,27 +39,27 @@ test.describe("Web Search Authentication", () => {
             expect([400, 401]).toContain(response.status);
 
             if (response.data?.error) {
-                const hasAuthError = response.data.error.includes("Authentication required");
-                const hasValidationError = response.data.error.includes("Invalid request body");
+                const hasAuthError = response.data.error.includes('Authentication required');
+                const hasValidationError = response.data.error.includes('Invalid request body');
                 expect(hasAuthError || hasValidationError).toBe(true);
             }
         });
 
-        test("should validate chat mode authentication requirements", async ({ page }) => {
-            await page.goto("/", { waitUntil: "load" });
+        test('should validate chat mode authentication requirements', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Test various modes with web search
             const testCases = [
                 {
-                    mode: "gemini-2.5-flash-lite-preview-06-17",
+                    mode: 'gemini-2.5-flash-lite-preview-06-17',
                     expectAuth: true,
                 },
                 {
-                    mode: "gpt-4o-mini",
+                    mode: 'gpt-4o-mini',
                     expectAuth: true,
                 },
                 {
-                    mode: "pro",
+                    mode: 'pro',
                     expectAuth: true,
                 },
             ];
@@ -69,16 +67,16 @@ test.describe("Web Search Authentication", () => {
             for (const testCase of testCases) {
                 const response = await page.evaluate(async (mode) => {
                     try {
-                        const res = await fetch("/api/completion", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
+                        const res = await fetch('/api/completion', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 threadId: `test-${Date.now()}`,
                                 threadItemId: `test-${Date.now()}`,
                                 parentThreadItemId: `test-parent-${Date.now()}`,
-                                prompt: "test query",
+                                prompt: 'test query',
                                 mode,
-                                messages: [{ role: "user", content: "test" }],
+                                messages: [{ role: 'user', content: 'test' }],
                                 webSearch: true,
                             }),
                         });
@@ -100,28 +98,28 @@ test.describe("Web Search Authentication", () => {
         });
     });
 
-    test.describe("UI State Tests", () => {
-        test("should have feature toggle buttons visible", async ({ page }) => {
-            await page.goto("/", { waitUntil: "load" });
+    test.describe('UI State Tests', () => {
+        test('should have feature toggle buttons visible', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Wait for chat interface to load
             await page.waitForSelector('textarea, [contenteditable="true"]', { timeout: 10000 });
 
             // Look for any feature toggle buttons (they should exist even if not authenticated)
-            const toggleButtons = page.locator("button:has(svg)");
+            const toggleButtons = page.locator('button:has(svg)');
             const buttonCount = await toggleButtons.count();
 
             // Should have some feature toggle buttons
             expect(buttonCount).toBeGreaterThan(0);
         });
 
-        test("should show proper authentication state in session API", async ({ page }) => {
-            await page.goto("/", { waitUntil: "load" });
+        test('should show proper authentication state in session API', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Check session status via API
             const sessionResponse = await page.evaluate(async () => {
                 try {
-                    const res = await fetch("/api/auth/get-session");
+                    const res = await fetch('/api/auth/get-session');
                     return {
                         status: res.status,
                         data: await res.json().catch(() => ({})),
@@ -142,16 +140,16 @@ test.describe("Web Search Authentication", () => {
         });
     });
 
-    test.describe("Error Handling", () => {
-        test("should provide clear error messages for different scenarios", async ({ page }) => {
-            await page.goto("/", { waitUntil: "load" });
+    test.describe('Error Handling', () => {
+        test('should provide clear error messages for different scenarios', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Test missing required fields
             const invalidResponse = await page.evaluate(async () => {
                 try {
-                    const res = await fetch("/api/completion", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                    const res = await fetch('/api/completion', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             // Missing required fields
                             webSearch: true,
@@ -169,19 +167,19 @@ test.describe("Web Search Authentication", () => {
 
             // Should return validation error
             expect(invalidResponse.status).toBe(400);
-            expect(invalidResponse.data?.error).toContain("Invalid request body");
+            expect(invalidResponse.data?.error).toContain('Invalid request body');
         });
 
-        test("should handle malformed requests gracefully", async ({ page }) => {
-            await page.goto("/", { waitUntil: "load" });
+        test('should handle malformed requests gracefully', async ({ page }) => {
+            await page.goto('/', { waitUntil: 'load' });
 
             // Test malformed JSON
             const malformedResponse = await page.evaluate(async () => {
                 try {
-                    const res = await fetch("/api/completion", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: "invalid json",
+                    const res = await fetch('/api/completion', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: 'invalid json',
                     });
 
                     return {

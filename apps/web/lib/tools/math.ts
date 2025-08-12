@@ -1,173 +1,173 @@
-import { type Tool, tool } from "ai";
-import { z } from "zod";
+import { type Tool, tool } from 'ai';
+import { z } from 'zod';
 
 type CalculatorTools =
-    | "add"
-    | "subtract"
-    | "multiply"
-    | "divide"
-    | "exponentiate"
-    | "factorial"
-    | "isPrime"
-    | "squareRoot"
-    | "sin"
-    | "cos"
-    | "tan"
-    | "sqrt"
-    | "log"
-    | "exp"
-    | "evaluateExpression"
-    | "abs"
-    | "floor"
-    | "ceil"
-    | "round"
-    | "min"
-    | "max"
-    | "getConstants"
-    | "asin"
-    | "acos"
-    | "atan"
-    | "sinh"
-    | "cosh"
-    | "tanh"
-    | "gcd"
-    | "lcm"
-    | "permutation"
-    | "combination"
-    | "mean"
-    | "median"
-    | "standardDeviation";
+    | 'add'
+    | 'subtract'
+    | 'multiply'
+    | 'divide'
+    | 'exponentiate'
+    | 'factorial'
+    | 'isPrime'
+    | 'squareRoot'
+    | 'sin'
+    | 'cos'
+    | 'tan'
+    | 'sqrt'
+    | 'log'
+    | 'exp'
+    | 'evaluateExpression'
+    | 'abs'
+    | 'floor'
+    | 'ceil'
+    | 'round'
+    | 'min'
+    | 'max'
+    | 'getConstants'
+    | 'asin'
+    | 'acos'
+    | 'atan'
+    | 'sinh'
+    | 'cosh'
+    | 'tanh'
+    | 'gcd'
+    | 'lcm'
+    | 'permutation'
+    | 'combination'
+    | 'mean'
+    | 'median'
+    | 'standardDeviation';
 
 export const calculatorTools = (config?: {
     excludeTools?: CalculatorTools[];
 }): Partial<Record<CalculatorTools, Tool>> => {
     const tools: Partial<Record<CalculatorTools, Tool>> = {
         add: tool({
-            description: "Add two numbers and return the result",
+            description: 'Add two numbers and return the result',
             parameters: z.object({
-                a: z.number().describe("First number"),
-                b: z.number().describe("Second number"),
+                a: z.number().describe('First number'),
+                b: z.number().describe('Second number'),
             }),
             execute: async ({ a, b }) => {
                 return add(a, b);
             },
         }),
         subtract: tool({
-            description: "Subtract second number from first and return the result",
+            description: 'Subtract second number from first and return the result',
             parameters: z.object({
-                a: z.number().describe("First number"),
-                b: z.number().describe("Second number"),
+                a: z.number().describe('First number'),
+                b: z.number().describe('Second number'),
             }),
             execute: async ({ a, b }) => {
                 return subtract(a, b);
             },
         }),
         multiply: tool({
-            description: "Multiply two numbers and return the result",
+            description: 'Multiply two numbers and return the result',
             parameters: z.object({
-                a: z.number().describe("First number"),
-                b: z.number().describe("Second number"),
+                a: z.number().describe('First number'),
+                b: z.number().describe('Second number'),
             }),
             execute: async ({ a, b }) => {
                 return multiply(a, b);
             },
         }),
         divide: tool({
-            description: "Divide first number by second and return the result",
+            description: 'Divide first number by second and return the result',
             parameters: z.object({
-                a: z.number().describe("Numerator"),
-                b: z.number().describe("Denominator"),
+                a: z.number().describe('Numerator'),
+                b: z.number().describe('Denominator'),
             }),
             execute: async ({ a, b }) => {
                 return divide(a, b);
             },
         }),
         exponentiate: tool({
-            description: "Raise first number to the power of the second number",
+            description: 'Raise first number to the power of the second number',
             parameters: z.object({
-                a: z.number().describe("Base"),
-                b: z.number().describe("Exponent"),
+                a: z.number().describe('Base'),
+                b: z.number().describe('Exponent'),
             }),
             execute: async ({ a, b }) => {
                 return exponentiate(a, b);
             },
         }),
         factorial: tool({
-            description: "Calculate the factorial of a number",
+            description: 'Calculate the factorial of a number',
             parameters: z.object({
-                n: z.number().int().describe("Number to calculate the factorial of"),
+                n: z.number().int().describe('Number to calculate the factorial of'),
             }),
             execute: async ({ n }) => {
                 return factorial(n);
             },
         }),
         isPrime: tool({
-            description: "Check if a number is prime",
+            description: 'Check if a number is prime',
             parameters: z.object({
-                n: z.number().int().describe("Number to check if prime"),
+                n: z.number().int().describe('Number to check if prime'),
             }),
             execute: async ({ n }) => {
                 return isPrime(n);
             },
         }),
         squareRoot: tool({
-            description: "Calculate the square root of a number",
+            description: 'Calculate the square root of a number',
             parameters: z.object({
-                n: z.number().describe("Number to calculate the square root of"),
+                n: z.number().describe('Number to calculate the square root of'),
             }),
             execute: async ({ n }) => {
                 return squareRoot(n);
             },
         }),
         sin: tool({
-            description: "Calculate the sine of an angle in radians",
+            description: 'Calculate the sine of an angle in radians',
             parameters: z.object({
-                n: z.number().describe("Angle in radians"),
+                n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
                 return sin(n);
             },
         }),
         cos: tool({
-            description: "Calculate the cosine of an angle in radians",
+            description: 'Calculate the cosine of an angle in radians',
             parameters: z.object({
-                n: z.number().describe("Angle in radians"),
+                n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
                 return cos(n);
             },
         }),
         tan: tool({
-            description: "Calculate the tangent of an angle in radians",
+            description: 'Calculate the tangent of an angle in radians',
             parameters: z.object({
-                n: z.number().describe("Angle in radians"),
+                n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
                 return tan(n);
             },
         }),
         sqrt: tool({
-            description: "Calculate the square root of a number (alias for squareRoot)",
+            description: 'Calculate the square root of a number (alias for squareRoot)',
             parameters: z.object({
-                n: z.number().describe("Number to calculate the square root of"),
+                n: z.number().describe('Number to calculate the square root of'),
             }),
             execute: async ({ n }) => {
                 return squareRoot(n);
             },
         }),
         log: tool({
-            description: "Calculate the natural logarithm (base e) of a number",
+            description: 'Calculate the natural logarithm (base e) of a number',
             parameters: z.object({
-                n: z.number().describe("Number to calculate the logarithm of"),
+                n: z.number().describe('Number to calculate the logarithm of'),
             }),
             execute: async ({ n }) => {
                 return log(n);
             },
         }),
         exp: tool({
-            description: "Calculate e raised to the power of a number",
+            description: 'Calculate e raised to the power of a number',
             parameters: z.object({
-                n: z.number().describe("Power to raise e to"),
+                n: z.number().describe('Power to raise e to'),
             }),
             execute: async ({ n }) => {
                 return exp(n);
@@ -175,7 +175,7 @@ export const calculatorTools = (config?: {
         }),
         evaluateExpression: tool({
             description:
-                "Evaluate a complete mathematical expression with proper order of operations (PEMDAS). Supports +, -, *, /, ^, (), sqrt(), sin(), cos(), tan(), log(), exp(), abs(), floor(), ceil(), round(), pi, e",
+                'Evaluate a complete mathematical expression with proper order of operations (PEMDAS). Supports +, -, *, /, ^, (), sqrt(), sin(), cos(), tan(), log(), exp(), abs(), floor(), ceil(), round(), pi, e',
             parameters: z.object({
                 expression: z
                     .string()
@@ -188,144 +188,144 @@ export const calculatorTools = (config?: {
             },
         }),
         abs: tool({
-            description: "Calculate the absolute value of a number",
+            description: 'Calculate the absolute value of a number',
             parameters: z.object({
-                n: z.number().describe("Number to get absolute value of"),
+                n: z.number().describe('Number to get absolute value of'),
             }),
             execute: async ({ n }) => {
                 return absoluteValue(n);
             },
         }),
         floor: tool({
-            description: "Round a number down to the nearest integer",
+            description: 'Round a number down to the nearest integer',
             parameters: z.object({
-                n: z.number().describe("Number to floor"),
+                n: z.number().describe('Number to floor'),
             }),
             execute: async ({ n }) => {
                 return floor(n);
             },
         }),
         ceil: tool({
-            description: "Round a number up to the nearest integer",
+            description: 'Round a number up to the nearest integer',
             parameters: z.object({
-                n: z.number().describe("Number to ceil"),
+                n: z.number().describe('Number to ceil'),
             }),
             execute: async ({ n }) => {
                 return ceil(n);
             },
         }),
         round: tool({
-            description: "Round a number to the nearest integer",
+            description: 'Round a number to the nearest integer',
             parameters: z.object({
-                n: z.number().describe("Number to round"),
+                n: z.number().describe('Number to round'),
                 decimals: z
                     .number()
                     .int()
                     .optional()
-                    .describe("Number of decimal places (default: 0)"),
+                    .describe('Number of decimal places (default: 0)'),
             }),
             execute: async ({ n, decimals = 0 }) => {
                 return roundNumber(n, decimals);
             },
         }),
         min: tool({
-            description: "Find the minimum value from a list of numbers",
+            description: 'Find the minimum value from a list of numbers',
             parameters: z.object({
-                numbers: z.array(z.number()).describe("Array of numbers to find minimum from"),
+                numbers: z.array(z.number()).describe('Array of numbers to find minimum from'),
             }),
             execute: async ({ numbers }) => {
                 return minimum(numbers);
             },
         }),
         max: tool({
-            description: "Find the maximum value from a list of numbers",
+            description: 'Find the maximum value from a list of numbers',
             parameters: z.object({
-                numbers: z.array(z.number()).describe("Array of numbers to find maximum from"),
+                numbers: z.array(z.number()).describe('Array of numbers to find maximum from'),
             }),
             execute: async ({ numbers }) => {
                 return maximum(numbers);
             },
         }),
         getConstants: tool({
-            description: "Get mathematical constants (pi, e, golden ratio, etc.)",
+            description: 'Get mathematical constants (pi, e, golden ratio, etc.)',
             parameters: z.object({
                 constant: z
-                    .enum(["pi", "e", "goldenRatio", "euler", "sqrt2"])
-                    .describe("Which constant to get"),
+                    .enum(['pi', 'e', 'goldenRatio', 'euler', 'sqrt2'])
+                    .describe('Which constant to get'),
             }),
             execute: async ({ constant }) => {
                 return getConstants(constant);
             },
         }),
         asin: tool({
-            description: "Calculate the arcsine (inverse sine) of a number in radians",
+            description: 'Calculate the arcsine (inverse sine) of a number in radians',
             parameters: z.object({
-                n: z.number().describe("Number between -1 and 1"),
+                n: z.number().describe('Number between -1 and 1'),
             }),
             execute: async ({ n }) => {
                 return arcsine(n);
             },
         }),
         acos: tool({
-            description: "Calculate the arccosine (inverse cosine) of a number in radians",
+            description: 'Calculate the arccosine (inverse cosine) of a number in radians',
             parameters: z.object({
-                n: z.number().describe("Number between -1 and 1"),
+                n: z.number().describe('Number between -1 and 1'),
             }),
             execute: async ({ n }) => {
                 return arccosine(n);
             },
         }),
         atan: tool({
-            description: "Calculate the arctangent (inverse tangent) of a number in radians",
+            description: 'Calculate the arctangent (inverse tangent) of a number in radians',
             parameters: z.object({
-                n: z.number().describe("Number to calculate arctangent of"),
+                n: z.number().describe('Number to calculate arctangent of'),
             }),
             execute: async ({ n }) => {
                 return arctangent(n);
             },
         }),
         sinh: tool({
-            description: "Calculate the hyperbolic sine of a number",
+            description: 'Calculate the hyperbolic sine of a number',
             parameters: z.object({
-                n: z.number().describe("Number to calculate hyperbolic sine of"),
+                n: z.number().describe('Number to calculate hyperbolic sine of'),
             }),
             execute: async ({ n }) => {
                 return hyperbolicSine(n);
             },
         }),
         cosh: tool({
-            description: "Calculate the hyperbolic cosine of a number",
+            description: 'Calculate the hyperbolic cosine of a number',
             parameters: z.object({
-                n: z.number().describe("Number to calculate hyperbolic cosine of"),
+                n: z.number().describe('Number to calculate hyperbolic cosine of'),
             }),
             execute: async ({ n }) => {
                 return hyperbolicCosine(n);
             },
         }),
         tanh: tool({
-            description: "Calculate the hyperbolic tangent of a number",
+            description: 'Calculate the hyperbolic tangent of a number',
             parameters: z.object({
-                n: z.number().describe("Number to calculate hyperbolic tangent of"),
+                n: z.number().describe('Number to calculate hyperbolic tangent of'),
             }),
             execute: async ({ n }) => {
                 return hyperbolicTangent(n);
             },
         }),
         gcd: tool({
-            description: "Calculate the Greatest Common Divisor (GCD) of two integers",
+            description: 'Calculate the Greatest Common Divisor (GCD) of two integers',
             parameters: z.object({
-                a: z.number().int().describe("First integer"),
-                b: z.number().int().describe("Second integer"),
+                a: z.number().int().describe('First integer'),
+                b: z.number().int().describe('Second integer'),
             }),
             execute: async ({ a, b }) => {
                 return greatestCommonDivisor(a, b);
             },
         }),
         lcm: tool({
-            description: "Calculate the Least Common Multiple (LCM) of two integers",
+            description: 'Calculate the Least Common Multiple (LCM) of two integers',
             parameters: z.object({
-                a: z.number().int().describe("First integer"),
-                b: z.number().int().describe("Second integer"),
+                a: z.number().int().describe('First integer'),
+                b: z.number().int().describe('Second integer'),
             }),
             execute: async ({ a, b }) => {
                 return leastCommonMultiple(a, b);
@@ -333,10 +333,10 @@ export const calculatorTools = (config?: {
         }),
         permutation: tool({
             description:
-                "Calculate permutations (nPr): number of ways to arrange r items from n items",
+                'Calculate permutations (nPr): number of ways to arrange r items from n items',
             parameters: z.object({
-                n: z.number().int().describe("Total number of items"),
-                r: z.number().int().describe("Number of items to arrange"),
+                n: z.number().int().describe('Total number of items'),
+                r: z.number().int().describe('Number of items to arrange'),
             }),
             execute: async ({ n, r }) => {
                 return permutation(n, r);
@@ -344,39 +344,39 @@ export const calculatorTools = (config?: {
         }),
         combination: tool({
             description:
-                "Calculate combinations (nCr): number of ways to choose r items from n items",
+                'Calculate combinations (nCr): number of ways to choose r items from n items',
             parameters: z.object({
-                n: z.number().int().describe("Total number of items"),
-                r: z.number().int().describe("Number of items to choose"),
+                n: z.number().int().describe('Total number of items'),
+                r: z.number().int().describe('Number of items to choose'),
             }),
             execute: async ({ n, r }) => {
                 return combination(n, r);
             },
         }),
         mean: tool({
-            description: "Calculate the arithmetic mean (average) of a list of numbers",
+            description: 'Calculate the arithmetic mean (average) of a list of numbers',
             parameters: z.object({
-                numbers: z.array(z.number()).describe("Array of numbers to calculate mean of"),
+                numbers: z.array(z.number()).describe('Array of numbers to calculate mean of'),
             }),
             execute: async ({ numbers }) => {
                 return arithmeticMean(numbers);
             },
         }),
         median: tool({
-            description: "Calculate the median (middle value) of a list of numbers",
+            description: 'Calculate the median (middle value) of a list of numbers',
             parameters: z.object({
-                numbers: z.array(z.number()).describe("Array of numbers to find median of"),
+                numbers: z.array(z.number()).describe('Array of numbers to find median of'),
             }),
             execute: async ({ numbers }) => {
                 return medianValue(numbers);
             },
         }),
         standardDeviation: tool({
-            description: "Calculate the standard deviation of a list of numbers",
+            description: 'Calculate the standard deviation of a list of numbers',
             parameters: z.object({
                 numbers: z
                     .array(z.number())
-                    .describe("Array of numbers to calculate standard deviation of"),
+                    .describe('Array of numbers to calculate standard deviation of'),
             }),
             execute: async ({ numbers }) => {
                 return standardDeviation(numbers);
@@ -407,7 +407,7 @@ function multiply(a: number, b: number) {
 
 function divide(a: number, b: number) {
     if (b === 0) {
-        return { error: "Cannot divide by zero" };
+        return { error: 'Cannot divide by zero' };
     }
     try {
         return { result: a / b };
@@ -422,7 +422,7 @@ function exponentiate(a: number, b: number) {
 
 function factorial(n: number) {
     if (n < 0) {
-        return { error: "Factorial is not defined for negative numbers" };
+        return { error: 'Factorial is not defined for negative numbers' };
     }
     let result = 1;
     for (let i = 2; i <= n; i++) {
@@ -445,7 +445,7 @@ function isPrime(n: number) {
 
 function squareRoot(n: number) {
     if (n < 0) {
-        return { error: "Square Root is not defined for negative numbers" };
+        return { error: 'Square Root is not defined for negative numbers' };
     }
     return { result: Math.sqrt(n) };
 }
@@ -464,7 +464,7 @@ function tan(n: number) {
 
 function log(n: number) {
     if (n <= 0) {
-        return { error: "Logarithm is not defined for non-positive numbers" };
+        return { error: 'Logarithm is not defined for non-positive numbers' };
     }
     return { result: Math.log(n) };
 }
@@ -480,32 +480,32 @@ function evaluateExpression(expression: string) {
         let expr = expression
             .replace(/\bpi\b/g, Math.PI.toString())
             .replace(/\be\b/g, Math.E.toString())
-            .replace(/\^/g, "**"); // Replace ^ with ** for exponentiation
+            .replace(/\^/g, '**'); // Replace ^ with ** for exponentiation
 
         // Replace math functions with JavaScript Math equivalents
         expr = expr
-            .replace(/sqrt\(/g, "Math.sqrt(")
-            .replace(/sin\(/g, "Math.sin(")
-            .replace(/cos\(/g, "Math.cos(")
-            .replace(/tan\(/g, "Math.tan(")
-            .replace(/log\(/g, "Math.log(")
-            .replace(/exp\(/g, "Math.exp(")
-            .replace(/abs\(/g, "Math.abs(")
-            .replace(/floor\(/g, "Math.floor(")
-            .replace(/ceil\(/g, "Math.ceil(")
-            .replace(/round\(/g, "Math.round(");
+            .replace(/sqrt\(/g, 'Math.sqrt(')
+            .replace(/sin\(/g, 'Math.sin(')
+            .replace(/cos\(/g, 'Math.cos(')
+            .replace(/tan\(/g, 'Math.tan(')
+            .replace(/log\(/g, 'Math.log(')
+            .replace(/exp\(/g, 'Math.exp(')
+            .replace(/abs\(/g, 'Math.abs(')
+            .replace(/floor\(/g, 'Math.floor(')
+            .replace(/ceil\(/g, 'Math.ceil(')
+            .replace(/round\(/g, 'Math.round(');
 
         // Validate expression contains only allowed characters
         const allowedPattern = /^[0-9+\-*/().^ \tMath.sincoatlgexpabflorceiu]*$/;
         if (!allowedPattern.test(expr)) {
-            return { error: "Expression contains invalid characters" };
+            return { error: 'Expression contains invalid characters' };
         }
 
         // Evaluate the expression safely
         const result = Function(`"use strict"; return (${expr})`)();
 
-        if (typeof result !== "number" || !Number.isFinite(result)) {
-            return { error: "Expression did not evaluate to a valid number" };
+        if (typeof result !== 'number' || !Number.isFinite(result)) {
+            return { error: 'Expression did not evaluate to a valid number' };
         }
 
         return {
@@ -515,7 +515,9 @@ function evaluateExpression(expression: string) {
         };
     } catch (error) {
         return {
-            error: `Invalid mathematical expression: ${error instanceof Error ? error.message : "Unknown error"}`,
+            error: `Invalid mathematical expression: ${
+                error instanceof Error ? error.message : 'Unknown error'
+            }`,
             originalExpression: expression,
         };
     }
@@ -541,20 +543,20 @@ function roundNumber(n: number, decimals = 0) {
 
 function minimum(numbers: number[]) {
     if (numbers.length === 0) {
-        return { error: "Cannot find minimum of empty array" };
+        return { error: 'Cannot find minimum of empty array' };
     }
     return { result: Math.min(...numbers) };
 }
 
 function maximum(numbers: number[]) {
     if (numbers.length === 0) {
-        return { error: "Cannot find maximum of empty array" };
+        return { error: 'Cannot find maximum of empty array' };
     }
     return { result: Math.max(...numbers) };
 }
 
 // Mathematical constants
-function getConstants(constant: "pi" | "e" | "goldenRatio" | "euler" | "sqrt2") {
+function getConstants(constant: 'pi' | 'e' | 'goldenRatio' | 'euler' | 'sqrt2') {
     const constants = {
         pi: Math.PI,
         e: Math.E,
@@ -574,24 +576,24 @@ function getConstantDescription(constant: string): string {
     const descriptions = {
         pi: "The ratio of a circle's circumference to its diameter (π ≈ 3.14159)",
         e: "Euler's number, base of natural logarithm (e ≈ 2.71828)",
-        goldenRatio: "Golden ratio, often denoted φ (phi) ≈ 1.618",
-        euler: "Euler-Mascheroni constant γ ≈ 0.5772",
-        sqrt2: "Square root of 2 ≈ 1.414",
+        goldenRatio: 'Golden ratio, often denoted φ (phi) ≈ 1.618',
+        euler: 'Euler-Mascheroni constant γ ≈ 0.5772',
+        sqrt2: 'Square root of 2 ≈ 1.414',
     };
-    return descriptions[constant as keyof typeof descriptions] || "Mathematical constant";
+    return descriptions[constant as keyof typeof descriptions] || 'Mathematical constant';
 }
 
 // Advanced trigonometric functions
 function arcsine(n: number) {
     if (n < -1 || n > 1) {
-        return { error: "Arcsine is only defined for values between -1 and 1" };
+        return { error: 'Arcsine is only defined for values between -1 and 1' };
     }
     return { result: Math.asin(n) };
 }
 
 function arccosine(n: number) {
     if (n < -1 || n > 1) {
-        return { error: "Arccosine is only defined for values between -1 and 1" };
+        return { error: 'Arccosine is only defined for values between -1 and 1' };
     }
     return { result: Math.acos(n) };
 }
@@ -632,7 +634,7 @@ function leastCommonMultiple(a: number, b: number) {
     }
 
     const gcdResult = greatestCommonDivisor(a, b);
-    if ("error" in gcdResult) {
+    if ('error' in gcdResult) {
         return gcdResult;
     }
 
@@ -642,7 +644,7 @@ function leastCommonMultiple(a: number, b: number) {
 // Combinatorics functions
 function permutation(n: number, r: number) {
     if (n < 0 || r < 0 || !Number.isInteger(n) || !Number.isInteger(r)) {
-        return { error: "n and r must be non-negative integers" };
+        return { error: 'n and r must be non-negative integers' };
     }
     if (r > n) {
         return { result: 0 };
@@ -657,7 +659,7 @@ function permutation(n: number, r: number) {
 
 function combination(n: number, r: number) {
     if (n < 0 || r < 0 || !Number.isInteger(n) || !Number.isInteger(r)) {
-        return { error: "n and r must be non-negative integers" };
+        return { error: 'n and r must be non-negative integers' };
     }
     if (r > n) {
         return { result: 0 };
@@ -679,7 +681,7 @@ function combination(n: number, r: number) {
 // Statistical functions
 function arithmeticMean(numbers: number[]) {
     if (numbers.length === 0) {
-        return { error: "Cannot calculate mean of empty array" };
+        return { error: 'Cannot calculate mean of empty array' };
     }
     const sum = numbers.reduce((acc, num) => acc + num, 0);
     return { result: sum / numbers.length };
@@ -687,7 +689,7 @@ function arithmeticMean(numbers: number[]) {
 
 function medianValue(numbers: number[]) {
     if (numbers.length === 0) {
-        return { error: "Cannot find median of empty array" };
+        return { error: 'Cannot find median of empty array' };
     }
 
     const sorted = [...numbers].sort((a, b) => a - b);
@@ -701,14 +703,14 @@ function medianValue(numbers: number[]) {
 
 function standardDeviation(numbers: number[]) {
     if (numbers.length === 0) {
-        return { error: "Cannot calculate standard deviation of empty array" };
+        return { error: 'Cannot calculate standard deviation of empty array' };
     }
     if (numbers.length === 1) {
         return { result: 0 };
     }
 
     const meanResult = arithmeticMean(numbers);
-    if ("error" in meanResult) {
+    if ('error' in meanResult) {
         return meanResult;
     }
 

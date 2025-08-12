@@ -1,31 +1,31 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
 // Critical resource preloading component
 export function PerformanceOptimizations() {
     return (
         <>
             {/* DNS prefetch for external domains */}
-            <link href="//www.google.com" rel="dns-prefetch" />
+            <link href='//www.google.com' rel='dns-prefetch' />
 
             {/* Preload critical assets for LCP */}
-            <link href="/icon-192x192.png" rel="preload" as="image" />
-            <link href="/icons/peerlist_badge.svg" rel="preload" as="image" />
-            <link href="/api/health" rel="prefetch" />
-            <link href="/favicon.ico" rel="preload" as="image" />
+            <link href='/icon-192x192.png' rel='preload' as='image' />
+            <link href='/icons/peerlist_badge.svg' rel='preload' as='image' />
+            <link href='/api/health' rel='prefetch' />
+            <link href='/favicon.ico' rel='preload' as='image' />
 
             {/* Preload critical fonts */}
-            <link 
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-                rel="preload" 
-                as="style" 
+            <link
+                href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+                rel='preload'
+                as='style'
             />
 
             {/* Optimize viewport for mobile */}
-            <meta content="#000000" name="theme-color" />
-            <meta content="dark light" name="color-scheme" />
+            <meta content='#000000' name='theme-color' />
+            <meta content='dark light' name='color-scheme' />
 
             {/* Performance optimization meta tags */}
-            <meta content="on" httpEquiv="x-dns-prefetch-control" />
+            <meta content='on' httpEquiv='x-dns-prefetch-control' />
         </>
     );
 }
@@ -39,7 +39,7 @@ export function LazyComponentWrapper({
     fallback?: React.ReactNode;
 }) {
     return (
-        <Suspense fallback={fallback || <div className="bg-muted h-20 animate-pulse rounded" />}>
+        <Suspense fallback={fallback || <div className='bg-muted h-20 animate-pulse rounded' />}>
             {children}
         </Suspense>
     );

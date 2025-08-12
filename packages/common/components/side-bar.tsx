@@ -1,20 +1,20 @@
-"use client";
-import { useRootContext } from "@repo/common/context";
-import { useReducedMotion } from "@repo/common/contexts/accessibility-context";
-import { useAdmin, useCreemSubscription, useLogout } from "@repo/common/hooks";
-import { useAppStore, useChatStore } from "@repo/common/store";
-import { getSessionCacheBustedAvatarUrl } from "@repo/common/utils/avatar-cache";
-import { BUTTON_TEXT, TOOLTIP_TEXT } from "@repo/shared/constants";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import type { Thread } from "@repo/shared/types";
+'use client';
+import { useRootContext } from '@repo/common/context';
+import { useReducedMotion } from '@repo/common/contexts/accessibility-context';
+import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
+import { useAppStore, useChatStore } from '@repo/common/store';
+import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
+import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import type { Thread } from '@repo/shared/types';
 import {
     getCompareDesc,
     getIsAfter,
     getIsToday,
     getIsYesterday,
     getSubDays,
-} from "@repo/shared/utils";
+} from '@repo/shared/utils';
 import {
     Badge,
     Button,
@@ -28,8 +28,8 @@ import {
     Flex,
     UnifiedAvatar,
     useToast,
-} from "@repo/ui";
-import { motion } from "framer-motion";
+} from '@repo/ui';
+import { motion } from 'framer-motion';
 import {
     ChevronLeft,
     ChevronRight,
@@ -53,20 +53,20 @@ import {
     Sparkles,
     Terminal,
     User,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { HistoryItem } from "./history/history-item";
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { HistoryItem } from './history/history-item';
 import {
     LoginRequiredDialog as SidebarLoginDialog,
     useLoginRequired,
-} from "./login-required-dialog";
-import { Logo } from "./logo";
-import "./sidebar.css";
-import { UserTierBadge as SidebarUserTierBadge } from "./user-tier-badge";
+} from './login-required-dialog';
+import { Logo } from './logo';
+import './sidebar.css';
+import { UserTierBadge as SidebarUserTierBadge } from './user-tier-badge';
 
-export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {}) => {
+export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}) => {
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
     const threads = useChatStore((state) => state.threads);
     const currentThreadId = useChatStore((state) => state.currentThreadId);
@@ -75,7 +75,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     const [currentPage, setCurrentPage] = useState(1);
     const threadsPerPage = 10; // Number of threads to display per page
 
-    const sortThreads = (threads: Thread[], sortBy: "createdAt") => {
+    const sortThreads = (threads: Thread[], sortBy: 'createdAt') => {
         if (!threads || !Array.isArray(threads)) {
             return [];
         }
@@ -83,7 +83,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
         // Filter out invalid threads
         const validThreads = threads.filter(
             (thread) =>
-                thread && typeof thread === "object" && thread.id && thread[sortBy] !== undefined,
+                thread && typeof thread === 'object' && thread.id && thread[sortBy] !== undefined,
         );
 
         return [...validThreads].sort((a, b) => {
@@ -98,7 +98,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                 return getCompareDesc(dateA, dateB);
             } catch (error) {
-                console.error("Error sorting threads:", error);
+                console.error('Error sorting threads:', error);
                 return 0;
             }
         });
@@ -132,7 +132,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     };
 
     // Group all threads by date
-    sortThreads(threads, "createdAt")?.forEach((thread) => {
+    sortThreads(threads, 'createdAt')?.forEach((thread) => {
         // Skip invalid threads or pinned threads in regular groups to avoid duplicates
         if (!thread || !thread.id || thread.pinned) return;
 
@@ -158,7 +158,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
             }
         } catch (error) {
             // Skip threads that cause errors during date processing
-            console.error("Error processing thread date:", error);
+            console.error('Error processing thread date:', error);
         }
     });
 
@@ -184,7 +184,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
         // Filter out invalid thread objects
         const validThreads = group.filter(
-            (thread) => thread && typeof thread === "object" && thread.id,
+            (thread) => thread && typeof thread === 'object' && thread.id,
         );
 
         if (processedThreads >= endIndex) {
@@ -228,45 +228,47 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
         // Filter out invalid threads
         const validThreads = threads.filter(
-            (thread) => thread && typeof thread === "object" && thread.id,
+            (thread) => thread && typeof thread === 'object' && thread.id,
         );
 
         return (
-            <Flex className="w-full gap-0.5" direction="col" items="start">
-                <div className="text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70">
+            <Flex className='w-full gap-0.5' direction='col' items='start'>
+                <div className='text-sidebar-foreground/50 flex flex-row items-center gap-1 px-2 py-1 text-xs font-medium opacity-70'>
                     {groupIcon}
                     {title}
                 </div>
-                {validThreads.length === 0 && renderEmptyState ? (
-                    renderEmptyState()
-                ) : (
-                    <Flex className="w-full gap-0.5" direction="col" gap="none">
-                        {validThreads.map((thread) => {
-                            // Ensure thread is valid before rendering
-                            if (!thread || !thread.id) {
-                                return null;
-                            }
+                {validThreads.length === 0 && renderEmptyState
+                    ? (
+                        renderEmptyState()
+                    )
+                    : (
+                        <Flex className='w-full gap-0.5' direction='col' gap='none'>
+                            {validThreads.map((thread) => {
+                                // Ensure thread is valid before rendering
+                                if (!thread || !thread.id) {
+                                    return null;
+                                }
 
-                            return (
-                                <HistoryItem
-                                    dismiss={() => {
-                                        if (forceMobile) {
-                                            setIsMobileSidebarOpen(false);
-                                        } else {
-                                            setIsSidebarOpen(() => false);
-                                        }
-                                    }}
-                                    isActive={thread.id === currentThreadId}
-                                    isPinned={thread.pinned}
-                                    key={`${isPinned ? "pinned-" : ""}${thread.id}`}
-                                    pinThread={() => pinThread(thread.id)}
-                                    thread={thread}
-                                    unpinThread={() => unpinThread(thread.id)}
-                                />
-                            );
-                        })}
-                    </Flex>
-                )}
+                                return (
+                                    <HistoryItem
+                                        dismiss={() => {
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            } else {
+                                                setIsSidebarOpen(() => false);
+                                            }
+                                        }}
+                                        isActive={thread.id === currentThreadId}
+                                        isPinned={thread.pinned}
+                                        key={`${isPinned ? 'pinned-' : ''}${thread.id}`}
+                                        pinThread={() => pinThread(thread.id)}
+                                        thread={thread}
+                                        unpinThread={() => unpinThread(thread.id)}
+                                    />
+                                );
+                            })}
+                        </Flex>
+                    )}
             </Flex>
         );
     };
@@ -274,266 +276,267 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
     return (
         <motion.div
             className={cn(
-                "bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 transform-gpu flex-col will-change-transform",
-                "dark:bg-black/95",
+                'bg-sidebar sidebar-container relative bottom-0 right-0 top-0 flex h-[100dvh] flex-shrink-0 transform-gpu flex-col will-change-transform',
+                'dark:bg-black/95',
                 forceMobile
-                    ? "z-[302] w-[300px] max-w-[300px]"
+                    ? 'z-[302] w-[300px] max-w-[300px]'
                     : cn(
-                          "z-[50]",
-                          isSidebarOpen
-                              ? "sidebar-expanded top-0 h-full w-[300px] max-w-[300px] flex-none"
-                              : "sidebar-collapsed w-[52px] flex-none",
-                      ),
+                        'z-[50]',
+                        isSidebarOpen
+                            ? 'sidebar-expanded top-0 h-full w-[300px] max-w-[300px] flex-none'
+                            : 'sidebar-collapsed w-[52px] flex-none',
+                    ),
             )}
             style={{
-                maxWidth: "300px",
-                transform: "translate3d(0, 0, 0)",
-                backfaceVisibility: "hidden",
-                contain: forceMobile ? "layout style paint" : "none",
+                maxWidth: '300px',
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden',
+                contain: forceMobile ? 'layout style paint' : 'none',
             }}
             initial={forceMobile && !shouldReduceMotion ? { opacity: 0, scale: 0.98 } : false}
             animate={forceMobile && !shouldReduceMotion ? { opacity: 1, scale: 1 } : {}}
-            transition={
-                forceMobile && !shouldReduceMotion
-                    ? {
-                          type: "tween",
-                          duration: 0.2,
-                          ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing curve
-                      }
-                    : {}
-            }
-            {...(forceMobile && { "data-mobile-sidebar": "true", "data-framer-motion": "true" })}
+            transition={forceMobile && !shouldReduceMotion
+                ? {
+                    type: 'tween',
+                    duration: 0.2,
+                    ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing curve
+                }
+                : {}}
+            {...(forceMobile && { 'data-mobile-sidebar': 'true', 'data-framer-motion': 'true' })}
         >
-            <Flex className="w-full flex-1 items-start overflow-hidden" direction="col">
+            <Flex className='w-full flex-1 items-start overflow-hidden' direction='col'>
                 {/* Top User Section */}
                 <div
                     className={cn(
-                        "w-full transition-all duration-200",
-                        isSidebarOpen ? "px-4 py-3" : "flex justify-center px-2 py-2",
+                        'w-full transition-all duration-200',
+                        isSidebarOpen ? 'px-4 py-3' : 'flex justify-center px-2 py-2',
                     )}
-                    data-testid="sidebar-user-section"
+                    data-testid='sidebar-user-section'
                 >
-                    {isSignedIn ? (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div
-                                    className={cn(
-                                        "border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200",
-                                        isSidebarOpen
-                                            ? "w-full flex-row gap-3 px-3 py-2"
-                                            : "h-7 w-7 p-0",
-                                    )}
-                                    data-testid="sidebar-user-trigger"
-                                    onClick={(e) => {
-                                        // Prevent clicks on user profile trigger from closing mobile sidebar
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                    }}
-                                    onTouchEnd={(e) => {
-                                        // Handle iOS touch events specifically
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                    }}
-                                >
-                                    <UnifiedAvatar
-                                        name={user?.name || user?.email || "User"}
-                                        size="sm"
-                                        src={
-                                            getSessionCacheBustedAvatarUrl(user?.image) || undefined
-                                        }
-                                        onImageError={() => {
-                                            log.warn(
-                                                "Avatar failed to load in sidebar, using fallback initials",
-                                            );
+                    {isSignedIn
+                        ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <div
+                                        className={cn(
+                                            'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
+                                            isSidebarOpen
+                                                ? 'w-full flex-row gap-3 px-3 py-2'
+                                                : 'h-7 w-7 p-0',
+                                        )}
+                                        data-testid='sidebar-user-trigger'
+                                        onClick={(e) => {
+                                            // Prevent clicks on user profile trigger from closing mobile sidebar
+                                            e.stopPropagation();
+                                            e.preventDefault();
                                         }}
-                                    />
-
-                                    {isSidebarOpen && (
-                                        <div className="flex min-w-0 flex-1 flex-col items-start">
-                                            <p className="text-sidebar-foreground line-clamp-1 text-sm font-medium">
-                                                {user?.name || user?.email}
-                                            </p>
-                                            <SidebarUserTierBadge />
-                                        </div>
-                                    )}
-                                    {isSidebarOpen && (
-                                        <ChevronsUpDown
-                                            className="text-sidebar-foreground/60 flex-shrink-0"
-                                            size={14}
-                                            strokeWidth={2}
+                                        onTouchEnd={(e) => {
+                                            // Handle iOS touch events specifically
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }}
+                                    >
+                                        <UnifiedAvatar
+                                            name={user?.name || user?.email || 'User'}
+                                            size='sm'
+                                            src={getSessionCacheBustedAvatarUrl(user?.image)
+                                                || undefined}
+                                            onImageError={() => {
+                                                log.warn(
+                                                    'Avatar failed to load in sidebar, using fallback initials',
+                                                );
+                                            }}
                                         />
-                                    )}
-                                </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                align="start"
-                                className="w-56 pl-2"
-                                onClick={(e) => {
-                                    // Prevent clicks inside dropdown from closing mobile sidebar
-                                    e.stopPropagation();
-                                }}
-                                onEscapeKeyDown={(e) => {
-                                    // Allow escape key to close dropdown but not sidebar
-                                    if (forceMobile) {
+
+                                        {isSidebarOpen && (
+                                            <div className='flex min-w-0 flex-1 flex-col items-start'>
+                                                <p className='text-sidebar-foreground line-clamp-1 text-sm font-medium'>
+                                                    {user?.name || user?.email}
+                                                </p>
+                                                <SidebarUserTierBadge />
+                                            </div>
+                                        )}
+                                        {isSidebarOpen && (
+                                            <ChevronsUpDown
+                                                className='text-sidebar-foreground/60 flex-shrink-0'
+                                                size={14}
+                                                strokeWidth={2}
+                                            />
+                                        )}
+                                    </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    align='start'
+                                    className='w-56 pl-2'
+                                    onClick={(e) => {
+                                        // Prevent clicks inside dropdown from closing mobile sidebar
                                         e.stopPropagation();
-                                    }
-                                }}
-                                onPointerDownOutside={(e) => {
-                                    // Prevent dropdown from closing when clicking outside on mobile
-                                    if (forceMobile) {
-                                        e.preventDefault();
-                                    }
-                                }}
+                                    }}
+                                    onEscapeKeyDown={(e) => {
+                                        // Allow escape key to close dropdown but not sidebar
+                                        if (forceMobile) {
+                                            e.stopPropagation();
+                                        }
+                                    }}
+                                    onPointerDownOutside={(e) => {
+                                        // Prevent dropdown from closing when clicking outside on mobile
+                                        if (forceMobile) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    {/* Account Management */}
+                                    <DropdownMenuLabel>Account</DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/profile');
+                                        }}
+                                    >
+                                        <User size={16} strokeWidth={2} />
+                                        Profile
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/settings');
+                                        }}
+                                    >
+                                        <Settings size={16} strokeWidth={2} />
+                                        Settings
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+
+                                    {/* Support & Legal */}
+                                    <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/about');
+                                        }}
+                                    >
+                                        <Info size={16} strokeWidth={2} />
+                                        About
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/help');
+                                        }}
+                                    >
+                                        <HelpCircle size={16} strokeWidth={2} />
+                                        Help Center
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/faq');
+                                        }}
+                                    >
+                                        <MessageCircleMore size={16} strokeWidth={2} />
+                                        FAQ
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/ai-glossary');
+                                        }}
+                                    >
+                                        <FileText size={16} strokeWidth={2} />
+                                        AI Glossary
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/ai-resources');
+                                        }}
+                                    >
+                                        <FileText size={16} strokeWidth={2} />
+                                        AI Resources
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/privacy');
+                                        }}
+                                    >
+                                        <Shield size={16} strokeWidth={2} />
+                                        Privacy Policy
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push('/terms');
+                                        }}
+                                    >
+                                        <FileText size={16} strokeWidth={2} />
+                                        Terms of Service
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+
+                                    {/* Authentication */}
+                                    <DropdownMenuItem
+                                        className={isLoggingOut
+                                            ? 'cursor-not-allowed opacity-50'
+                                            : ''}
+                                        disabled={isLoggingOut}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            logout();
+                                        }}
+                                    >
+                                        <LogOut size={16} strokeWidth={2} />
+                                        {isLoggingOut ? 'Signing out...' : 'Sign out'}
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )
+                        : (
+                            <Button
+                                className={cn(
+                                    'w-full',
+                                    isSidebarOpen ? 'justify-start' : 'items-center justify-center',
+                                )}
+                                onClick={() => push('/login')}
+                                roundedSm='lg'
+                                size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                                tooltip={isSidebarOpen ? undefined : 'Login'}
+                                tooltipSide='right'
+                                variant='ghost'
                             >
-                                {/* Account Management */}
-                                <DropdownMenuLabel>Account</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/profile");
-                                    }}
-                                >
-                                    <User size={16} strokeWidth={2} />
-                                    Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/settings");
-                                    }}
-                                >
-                                    <Settings size={16} strokeWidth={2} />
-                                    Settings
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-
-                                {/* Support & Legal */}
-                                <DropdownMenuLabel>Support & Legal</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/about");
-                                    }}
-                                >
-                                    <Info size={16} strokeWidth={2} />
-                                    About
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/help");
-                                    }}
-                                >
-                                    <HelpCircle size={16} strokeWidth={2} />
-                                    Help Center
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/faq");
-                                    }}
-                                >
-                                    <MessageCircleMore size={16} strokeWidth={2} />
-                                    FAQ
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/ai-glossary");
-                                    }}
-                                >
-                                    <FileText size={16} strokeWidth={2} />
-                                    AI Glossary
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/ai-resources");
-                                    }}
-                                >
-                                    <FileText size={16} strokeWidth={2} />
-                                    AI Resources
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/privacy");
-                                    }}
-                                >
-                                    <Shield size={16} strokeWidth={2} />
-                                    Privacy Policy
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        push("/terms");
-                                    }}
-                                >
-                                    <FileText size={16} strokeWidth={2} />
-                                    Terms of Service
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-
-                                {/* Authentication */}
-                                <DropdownMenuItem
-                                    className={isLoggingOut ? "cursor-not-allowed opacity-50" : ""}
-                                    disabled={isLoggingOut}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        logout();
-                                    }}
-                                >
-                                    <LogOut size={16} strokeWidth={2} />
-                                    {isLoggingOut ? "Signing out..." : "Sign out"}
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    ) : (
-                        <Button
-                            className={cn(
-                                "w-full",
-                                isSidebarOpen ? "justify-start" : "items-center justify-center",
-                            )}
-                            onClick={() => push("/login")}
-                            roundedSm="lg"
-                            size={isSidebarOpen ? "sm" : "icon-sm"}
-                            tooltip={isSidebarOpen ? undefined : "Login"}
-                            tooltipSide="right"
-                            variant="ghost"
-                        >
-                            <User
-                                className={cn("flex-shrink-0", isSidebarOpen ? "mr-2" : "")}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                            {isSidebarOpen && "Log in / Sign up"}
-                        </Button>
-                    )}
+                                <User
+                                    className={cn('flex-shrink-0', isSidebarOpen ? 'mr-2' : '')}
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                                {isSidebarOpen && 'Log in / Sign up'}
+                            </Button>
+                        )}
                 </div>
 
                 {/* Divider */}
-                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
-                    <div className="border-sidebar-border w-full border-t" />
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className='border-sidebar-border w-full border-t' />
                 </div>
 
                 {/* Header Section with Logo */}
                 <div
                     className={cn(
-                        "flex w-full flex-row items-center justify-between transition-all duration-200",
-                        isSidebarOpen ? "mb-4 px-4 py-3" : "mb-2 px-2 py-2",
+                        'flex w-full flex-row items-center justify-between transition-all duration-200',
+                        isSidebarOpen ? 'mb-4 px-4 py-3' : 'mb-2 px-2 py-2',
                     )}
                 >
-                    <Link className={isSidebarOpen ? "flex-1" : "w-full"} href="/">
+                    <Link className={isSidebarOpen ? 'flex-1' : 'w-full'} href='/'>
                         <div
                             className={cn(
-                                "hover:bg-sidebar-accent/70 flex w-full transform-gpu cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200 will-change-transform",
-                                !isSidebarOpen && "justify-center px-0",
+                                'hover:bg-sidebar-accent/70 flex w-full transform-gpu cursor-pointer items-center justify-start gap-2 rounded-lg p-1 transition-all duration-200 will-change-transform',
+                                !isSidebarOpen && 'justify-center px-0',
                             )}
-                            style={{ transform: "translate3d(0, 0, 0)" }}
+                            style={{ transform: 'translate3d(0, 0, 0)' }}
                         >
-                            <Logo className="text-brand size-6 flex-shrink-0" round />
+                            <Logo className='text-brand size-6 flex-shrink-0' round />
                             {isSidebarOpen && (
-                                <p className="font-clash text-sidebar-foreground text-xl font-bold tracking-wide">
+                                <p className='font-clash text-sidebar-foreground text-xl font-bold tracking-wide'>
                                     VT
                                 </p>
                             )}
@@ -543,12 +546,12 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                     {/* Collapse sidebar button in header */}
                     {isSidebarOpen && (
                         <Button
-                            className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                            className='text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors'
                             onClick={() => setIsSidebarOpen(false)}
-                            size="icon-sm"
-                            tooltip="Collapse Sidebar"
-                            tooltipSide="right"
-                            variant="ghost"
+                            size='icon-sm'
+                            tooltip='Collapse Sidebar'
+                            tooltipSide='right'
+                            variant='ghost'
                         >
                             <PanelLeftClose size={16} strokeWidth={2} />
                         </Button>
@@ -556,85 +559,91 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 </div>
                 {/* Primary Actions Section */}
                 <div
-                    className="transform-gpu will-change-transform"
-                    style={{ transform: "translate3d(0, 0, 0)" }}
+                    className='transform-gpu will-change-transform'
+                    style={{ transform: 'translate3d(0, 0, 0)' }}
                 >
                     <Flex
                         className={cn(
-                            "transition-all duration-200",
-                            isSidebarOpen ? "w-full gap-2 px-4" : "w-full items-center gap-2 px-2",
+                            'transition-all duration-200',
+                            isSidebarOpen ? 'w-full gap-2 px-4' : 'w-full items-center gap-2 px-2',
                         )}
-                        direction="col"
+                        direction='col'
                     >
                         {/* New Chat Button */}
                         <Button
                             className={cn(
-                                "transition-all duration-200",
+                                'transition-all duration-200',
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
                             )}
                             onClick={async () => {
                                 // Show toast notification
                                 toast({
-                                    title: "New Chat",
-                                    description: "Starting a new conversation...",
+                                    title: 'New Chat',
+                                    description: 'Starting a new conversation...',
                                     duration: 2000,
                                 });
 
                                 // Create a new thread before navigating
                                 await useChatStore.getState().createThread();
                                 // Navigate to / to start a new conversation
-                                push("/");
+                                push('/');
                                 // Close mobile drawer if open
                                 if (forceMobile) {
                                     setIsMobileSidebarOpen(false);
                                 }
                             }}
-                            roundedSm="lg"
-                            size={isSidebarOpen ? "sm" : "icon-sm"}
-                            variant="ghost"
+                            roundedSm='lg'
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant='ghost'
                         >
-                            {isSidebarOpen ? (
-                                <div className="flex items-center">
-                                    <div className="bg-muted/50 mr-2 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200">
+                            {isSidebarOpen
+                                ? (
+                                    <div className='flex items-center'>
+                                        <div className='bg-muted/50 mr-2 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200'>
+                                            <Plus
+                                                className='flex-shrink-0'
+                                                size={12}
+                                                strokeWidth={2.5}
+                                            />
+                                        </div>
+                                        New Chat
+                                    </div>
+                                )
+                                : (
+                                    <div className='bg-muted/50 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200'>
                                         <Plus
-                                            className="flex-shrink-0"
+                                            className='flex-shrink-0'
                                             size={12}
                                             strokeWidth={2.5}
                                         />
                                     </div>
-                                    New Chat
-                                </div>
-                            ) : (
-                                <div className="bg-muted/50 flex items-center justify-center rounded-md p-1.5 transition-colors duration-200">
-                                    <Plus className="flex-shrink-0" size={12} strokeWidth={2.5} />
-                                </div>
-                            )}
+                                )}
                             {isSidebarOpen && (
                                 // <span className="text-xs opacity-60 font-sans">⌘⌃⌥N</span>
-                                <div className="ml-auto flex flex-row items-center gap-1">
+                                <div className='ml-auto flex flex-row items-center gap-1'>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]'
+                                        variant='secondary'
                                     >
-                                        <Command className="shrink-0" size={10} strokeWidth={2} />
+                                        <Command className='shrink-0' size={10} strokeWidth={2} />
                                     </Badge>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]'
+                                        variant='secondary'
                                     >
-                                        <Option className="shrink-0" size={10} strokeWidth={2} />
+                                        <Option className='shrink-0' size={10} strokeWidth={2} />
                                     </Badge>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]'
+                                        variant='secondary'
                                     >
-                                        <ChevronUp className="shrink-0" size={10} strokeWidth={2} />
+                                        <ChevronUp className='shrink-0' size={10} strokeWidth={2} />
                                     </Badge>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium'
+                                        variant='secondary'
                                     >
                                         N
                                     </Badge>
@@ -645,10 +654,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                         {/* Search Button */}
                         <Button
                             className={cn(
-                                "transition-all duration-200",
+                                'transition-all duration-200',
                                 isSidebarOpen
-                                    ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-between'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
                             )}
                             onClick={() => {
                                 if (!isSignedIn) {
@@ -657,29 +666,29 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                                 }
                                 setIsCommandSearchOpen(true);
                             }}
-                            roundedSm="lg"
-                            size={isSidebarOpen ? "sm" : "icon-sm"}
-                            variant="ghost"
+                            roundedSm='lg'
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant='ghost'
                         >
-                            <div className="flex items-center">
+                            <div className='flex items-center'>
                                 <Search
-                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                    className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                                     size={16}
                                     strokeWidth={2}
                                 />
-                                {isSidebarOpen && "Search"}
+                                {isSidebarOpen && 'Search'}
                             </div>
                             {isSidebarOpen && (
-                                <div className="ml-auto flex flex-row items-center gap-1">
+                                <div className='ml-auto flex flex-row items-center gap-1'>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px]'
+                                        variant='secondary'
                                     >
-                                        <Command className="shrink-0" size={10} strokeWidth={2} />
+                                        <Command className='shrink-0' size={10} strokeWidth={2} />
                                     </Badge>
                                     <Badge
-                                        className="bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium"
-                                        variant="secondary"
+                                        className='bg-muted-foreground/10 text-muted-foreground/70 flex size-5 items-center justify-center rounded p-0 text-[10px] font-medium'
+                                        variant='secondary'
                                     >
                                         K
                                     </Badge>
@@ -687,144 +696,146 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                             )}
                         </Button>
 
-                        {/*
-                         Button */}
+                        {
+                            /*
+                         Button */
+                        }
                         {isAdmin && (
                             <Button
                                 className={cn(
-                                    "relative transition-all duration-200",
+                                    'relative transition-all duration-200',
                                     isSidebarOpen
-                                        ? "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start"
-                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center",
+                                        ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                        : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
                                 )}
                                 onClick={() => {
-                                    push("/admin");
+                                    push('/admin');
                                     // Close mobile drawer if open
                                     if (forceMobile) {
                                         setIsMobileSidebarOpen(false);
                                     }
                                 }}
-                                roundedSm="lg"
-                                size={isSidebarOpen ? "sm" : "icon-sm"}
-                                variant="ghost"
+                                roundedSm='lg'
+                                size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                                variant='ghost'
                             >
                                 <Terminal
-                                    className={cn("flex-shrink-0", isSidebarOpen && "mr-2")}
+                                    className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
                                     size={16}
                                     strokeWidth={2}
                                 />
-                                {isSidebarOpen && "VT Termimal"}
+                                {isSidebarOpen && 'VT Termimal'}
                             </Button>
                         )}
                     </Flex>
                 </div>
 
                 {/* Divider */}
-                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
-                    <div className="border-sidebar-border w-full border-t" />
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className='border-sidebar-border w-full border-t' />
                 </div>
 
                 {/* Subscription Section */}
                 <div
                     className={cn(
-                        "w-full transition-all duration-200",
-                        isSidebarOpen ? "px-4 py-3" : "px-2 py-2",
+                        'w-full transition-all duration-200',
+                        isSidebarOpen ? 'px-4 py-3' : 'px-2 py-2',
                     )}
                 >
-                    {isSidebarOpen ? (
-                        <Button
-                            className={cn(
-                                "group relative w-full justify-between overflow-hidden border shadow-sm transition-all duration-300",
-                                "border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10",
-                            )}
-                            disabled={isPortalLoading}
-                            onClick={() => {
-                                if (isPlusSubscriber) {
-                                    openCustomerPortal();
-                                } else {
-                                    push("/pricing");
-                                }
-                            }}
-                            roundedSm="lg"
-                            size={isSidebarOpen ? "sm" : "icon-sm"}
-                            variant="ghost"
-                        >
-                            <Sparkles
+                    {isSidebarOpen
+                        ? (
+                            <Button
                                 className={cn(
-                                    "flex-shrink-0 transition-all duration-300 group-hover:scale-110",
-                                    "text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300",
-                                    isSidebarOpen && "mr-2",
+                                    'group relative w-full justify-between overflow-hidden border shadow-sm transition-all duration-300',
+                                    'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10',
                                 )}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                            <span
-                                className={cn(
-                                    "flex-1 truncate text-left font-medium",
-                                    "text-[#262626] dark:text-[#BFB38F]",
-                                )}
+                                disabled={isPortalLoading}
+                                onClick={() => {
+                                    if (isPlusSubscriber) {
+                                        openCustomerPortal();
+                                    } else {
+                                        push('/pricing');
+                                    }
+                                }}
+                                roundedSm='lg'
+                                size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                                variant='ghost'
                             >
-                                {isPortalLoading
-                                    ? BUTTON_TEXT.LOADING
-                                    : isPlusSubscriber
-                                      ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
-                                      : BUTTON_TEXT.UPGRADE_TO_PLUS}
-                            </span>
-                            {isPlusSubscriber && (
-                                <ExternalLink
-                                    className="ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80"
-                                    size={12}
+                                <Sparkles
+                                    className={cn(
+                                        'flex-shrink-0 transition-all duration-300 group-hover:scale-110',
+                                        'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300',
+                                        isSidebarOpen && 'mr-2',
+                                    )}
+                                    size={16}
+                                    strokeWidth={2}
                                 />
-                            )}
-                        </Button>
-                    ) : (
-                        <Button
-                            className={cn(
-                                "group !m-0 flex items-center justify-center !p-0 transition-all duration-300",
-                                // Remove background in collapsed state, keep hover effects
-                                "hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                            )}
-                            disabled={isPortalLoading}
-                            onClick={() => {
-                                if (isPlusSubscriber) {
-                                    openCustomerPortal();
-                                } else {
-                                    push("/pricing");
-                                }
-                            }}
-                            roundedSm="lg"
-                            size="icon-sm"
-                            tooltip={
-                                isPlusSubscriber
-                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
-                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS
-                            }
-                            tooltipSide="right"
-                            variant="ghost"
-                        >
-                            <Sparkles
-                                className={cn(
-                                    "m-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110",
-                                    // Use consistent sidebar foreground colors for collapsed state
-                                    "text-sidebar-foreground/70 group-hover:text-sidebar-foreground",
+                                <span
+                                    className={cn(
+                                        'flex-1 truncate text-left font-medium',
+                                        'text-[#262626] dark:text-[#BFB38F]',
+                                    )}
+                                >
+                                    {isPortalLoading
+                                        ? BUTTON_TEXT.LOADING
+                                        : isPlusSubscriber
+                                        ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
+                                        : BUTTON_TEXT.UPGRADE_TO_PLUS}
+                                </span>
+                                {isPlusSubscriber && (
+                                    <ExternalLink
+                                        className='ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80'
+                                        size={12}
+                                    />
                                 )}
-                                size={16}
-                                strokeWidth={2}
-                            />
-                        </Button>
-                    )}
+                            </Button>
+                        )
+                        : (
+                            <Button
+                                className={cn(
+                                    'group !m-0 flex items-center justify-center !p-0 transition-all duration-300',
+                                    // Remove background in collapsed state, keep hover effects
+                                    'hover:bg-sidebar-accent hover:text-sidebar-foreground',
+                                )}
+                                disabled={isPortalLoading}
+                                onClick={() => {
+                                    if (isPlusSubscriber) {
+                                        openCustomerPortal();
+                                    } else {
+                                        push('/pricing');
+                                    }
+                                }}
+                                roundedSm='lg'
+                                size='icon-sm'
+                                tooltip={isPlusSubscriber
+                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
+                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS}
+                                tooltipSide='right'
+                                variant='ghost'
+                            >
+                                <Sparkles
+                                    className={cn(
+                                        'm-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110',
+                                        // Use consistent sidebar foreground colors for collapsed state
+                                        'text-sidebar-foreground/70 group-hover:text-sidebar-foreground',
+                                    )}
+                                    size={16}
+                                    strokeWidth={2}
+                                />
+                            </Button>
+                        )}
                 </div>
 
                 {/* Divider */}
-                <div className={cn("w-full", isSidebarOpen ? "px-4" : "px-2")}>
-                    <div className="border-sidebar-border w-full border-t" />
+                <div className={cn('w-full', isSidebarOpen ? 'px-4' : 'px-2')}>
+                    <div className='border-sidebar-border w-full border-t' />
                 </div>
 
                 {/* Thread History Section */}
                 <motion.div
                     className={cn(
-                        "thread-history-container w-full flex-1 transition-all duration-200",
-                        isSidebarOpen ? "flex flex-col px-4 pt-4" : "flex flex-col px-2 pt-2",
+                        'thread-history-container w-full flex-1 transition-all duration-200',
+                        isSidebarOpen ? 'flex flex-col px-4 pt-4' : 'flex flex-col px-2 pt-2',
                     )}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -832,126 +843,125 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
                 >
                     {/* Only show threads in expanded mode */}
                     {isSidebarOpen && (
-                        <div className="scrollbar-thin">
-                            {threads.length === 0 ? (
-                                <div className="flex w-full flex-col items-center justify-center gap-3 py-8">
-                                    <div className="text-sidebar-foreground/30 text-center">
-                                        <FileText size={24} strokeWidth={1.5} />
+                        <div className='scrollbar-thin'>
+                            {threads.length === 0
+                                ? (
+                                    <div className='flex w-full flex-col items-center justify-center gap-3 py-8'>
+                                        <div className='text-sidebar-foreground/30 text-center'>
+                                            <FileText size={24} strokeWidth={1.5} />
+                                        </div>
+                                        <div className='text-center'>
+                                            <p className='text-sidebar-foreground/70 text-sm font-medium'>
+                                                No conversations yet
+                                            </p>
+                                            <p className='text-sidebar-foreground/50 text-xs'>
+                                                Start a new chat to begin
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="text-center">
-                                        <p className="text-sidebar-foreground/70 text-sm font-medium">
-                                            No conversations yet
-                                        </p>
-                                        <p className="text-sidebar-foreground/50 text-xs">
-                                            Start a new chat to begin
-                                        </p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    {/* Pinned Conversations */}
-                                    {renderGroup({
-                                        title: "Pinned",
-                                        threads: threads
-                                            .filter(
-                                                (thread) =>
-                                                    thread &&
-                                                    typeof thread === "object" &&
-                                                    thread.id &&
-                                                    thread.pinned,
-                                            )
-                                            .sort((a, b) => {
-                                                // Ensure pinnedAt exists and is a valid date
-                                                const aTime =
-                                                    a.pinnedAt instanceof Date
+                                )
+                                : (
+                                    <>
+                                        {/* Pinned Conversations */}
+                                        {renderGroup({
+                                            title: 'Pinned',
+                                            threads: threads
+                                                .filter(
+                                                    (thread) =>
+                                                        thread
+                                                        && typeof thread === 'object'
+                                                        && thread.id
+                                                        && thread.pinned,
+                                                )
+                                                .sort((a, b) => {
+                                                    // Ensure pinnedAt exists and is a valid date
+                                                    const aTime = a.pinnedAt instanceof Date
                                                         ? a.pinnedAt.getTime()
                                                         : 0;
-                                                const bTime =
-                                                    b.pinnedAt instanceof Date
+                                                    const bTime = b.pinnedAt instanceof Date
                                                         ? b.pinnedAt.getTime()
                                                         : 0;
-                                                return bTime - aTime;
-                                            }),
-                                        groupIcon: <Pin size={14} strokeWidth={2} />,
-                                        renderEmptyState: () => (
-                                            <div className="border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3">
-                                                <Pin
-                                                    className="text-sidebar-foreground/30"
-                                                    size={16}
-                                                    strokeWidth={1.5}
-                                                />
-                                                <p className="text-sidebar-foreground/60 text-center text-xs">
-                                                    Pin important conversations to keep them at the
-                                                    top
-                                                </p>
-                                            </div>
-                                        ),
-                                        isPinned: true,
-                                    })}
+                                                    return bTime - aTime;
+                                                }),
+                                            groupIcon: <Pin size={14} strokeWidth={2} />,
+                                            renderEmptyState: () => (
+                                                <div className='border-hard flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-3'>
+                                                    <Pin
+                                                        className='text-sidebar-foreground/30'
+                                                        size={16}
+                                                        strokeWidth={1.5}
+                                                    />
+                                                    <p className='text-sidebar-foreground/60 text-center text-xs'>
+                                                        Pin important conversations to keep them at
+                                                        the top
+                                                    </p>
+                                                </div>
+                                            ),
+                                            isPinned: true,
+                                        })}
 
-                                    {/* Spacing between pinned and regular threads */}
-                                    <div className="h-4"></div>
+                                        {/* Spacing between pinned and regular threads */}
+                                        <div className='h-4'></div>
 
-                                    {/* Recent Conversations */}
-                                    {renderGroup({
-                                        title: "Today",
-                                        threads:
-                                            currentPage === 1
+                                        {/* Recent Conversations */}
+                                        {renderGroup({
+                                            title: 'Today',
+                                            threads: currentPage === 1
                                                 ? getPaginatedThreadsForGroup(
-                                                      groupedThreads.today,
-                                                      startIndex,
-                                                      endIndex,
-                                                  ).filter((thread) => !thread.pinned)
+                                                    groupedThreads.today,
+                                                    startIndex,
+                                                    endIndex,
+                                                ).filter((thread) => !thread.pinned)
                                                 : [],
-                                    })}
-                                    {renderGroup({
-                                        title: "Yesterday",
-                                        threads: getPaginatedThreadsForGroup(
-                                            groupedThreads.yesterday,
-                                            startIndex,
-                                            endIndex,
-                                        ).filter((thread) => !thread.pinned),
-                                    })}
-                                    {renderGroup({
-                                        title: "Last 7 Days",
-                                        threads: getPaginatedThreadsForGroup(
-                                            groupedThreads.last7Days,
-                                            startIndex,
-                                            endIndex,
-                                        ).filter((thread) => !thread.pinned),
-                                    })}
-                                    {renderGroup({
-                                        title: "Last 30 Days",
-                                        threads: getPaginatedThreadsForGroup(
-                                            groupedThreads.last30Days,
-                                            startIndex,
-                                            endIndex,
-                                        ).filter((thread) => !thread.pinned),
-                                    })}
-                                    {renderGroup({
-                                        title: "Older",
-                                        threads: getPaginatedThreadsForGroup(
-                                            groupedThreads.previousMonths,
-                                            startIndex,
-                                            endIndex,
-                                        ).filter((thread) => !thread.pinned),
-                                    })}
-                                </>
-                            )}
+                                        })}
+                                        {renderGroup({
+                                            title: 'Yesterday',
+                                            threads: getPaginatedThreadsForGroup(
+                                                groupedThreads.yesterday,
+                                                startIndex,
+                                                endIndex,
+                                            ).filter((thread) => !thread.pinned),
+                                        })}
+                                        {renderGroup({
+                                            title: 'Last 7 Days',
+                                            threads: getPaginatedThreadsForGroup(
+                                                groupedThreads.last7Days,
+                                                startIndex,
+                                                endIndex,
+                                            ).filter((thread) => !thread.pinned),
+                                        })}
+                                        {renderGroup({
+                                            title: 'Last 30 Days',
+                                            threads: getPaginatedThreadsForGroup(
+                                                groupedThreads.last30Days,
+                                                startIndex,
+                                                endIndex,
+                                            ).filter((thread) => !thread.pinned),
+                                        })}
+                                        {renderGroup({
+                                            title: 'Older',
+                                            threads: getPaginatedThreadsForGroup(
+                                                groupedThreads.previousMonths,
+                                                startIndex,
+                                                endIndex,
+                                            ).filter((thread) => !thread.pinned),
+                                        })}
+                                    </>
+                                )}
                         </div>
                     )}
 
                     {/* Show a simplified view in collapsed mode */}
                     {!isSidebarOpen && threads.length > 0 && (
                         <Button
-                            className="hover:bg-sidebar-accent/50 flex h-auto min-h-[44px] w-full flex-col items-center gap-1 py-2 transition-colors"
+                            className='hover:bg-sidebar-accent/50 flex h-auto min-h-[44px] w-full flex-col items-center gap-1 py-2 transition-colors'
                             onClick={() => setIsSidebarOpen(true)}
-                            size="icon-sm"
-                            tooltip="Open thread list"
-                            tooltipSide="right"
-                            variant="ghost"
+                            size='icon-sm'
+                            tooltip='Open thread list'
+                            tooltipSide='right'
+                            variant='ghost'
                         >
-                            <div className="text-sidebar-foreground/30 text-center">
+                            <div className='text-sidebar-foreground/30 text-center'>
                                 <MessageCircleMore size={16} strokeWidth={1.5} />
                             </div>
                         </Button>
@@ -960,33 +970,32 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                 {/* Pagination Controls */}
                 {isSidebarOpen && totalPages > 1 && (
-                    <div className="bg-sidebar-accent/20 border-sidebar-border sticky bottom-0 z-20 w-full border-t px-4 py-2 shadow-md">
-                        <div className="flex flex-row items-center justify-between">
-                            <span className="text-sidebar-foreground/70 text-xs font-medium">
+                    <div className='bg-sidebar-accent/20 border-sidebar-border sticky bottom-0 z-20 w-full border-t px-4 py-2 shadow-md'>
+                        <div className='flex flex-row items-center justify-between'>
+                            <span className='text-sidebar-foreground/70 text-xs font-medium'>
                                 Page {currentPage} of {totalPages}
                             </span>
-                            <div className="flex items-center gap-1">
+                            <div className='flex items-center gap-1'>
                                 <Button
-                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors"
+                                    className='text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors'
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                                    size="icon-sm"
-                                    variant={currentPage === 1 ? "ghost" : "outline"}
+                                    size='icon-sm'
+                                    variant={currentPage === 1 ? 'ghost' : 'outline'}
                                 >
-                                    <ChevronLeft className="h-4 w-4" />
-                                    <span className="sr-only">Previous page</span>
+                                    <ChevronLeft className='h-4 w-4' />
+                                    <span className='sr-only'>Previous page</span>
                                 </Button>
                                 <Button
-                                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors"
+                                    className='text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-7 w-7 p-0 transition-colors'
                                     disabled={currentPage === totalPages}
                                     onClick={() =>
-                                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                                    }
-                                    size="icon-sm"
-                                    variant={currentPage === totalPages ? "ghost" : "outline"}
+                                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                                    size='icon-sm'
+                                    variant={currentPage === totalPages ? 'ghost' : 'outline'}
                                 >
-                                    <ChevronRight className="h-4 w-4" />
-                                    <span className="sr-only">Next page</span>
+                                    <ChevronRight className='h-4 w-4' />
+                                    <span className='sr-only'>Next page</span>
                                 </Button>
                             </div>
                         </div>
@@ -995,15 +1004,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
 
                 {/* Bottom Section - Expand Button for Collapsed State */}
                 {!isSidebarOpen && (
-                    <div className="from-sidebar via-sidebar/95 fixed bottom-0 w-[52px] bg-gradient-to-t to-transparent px-2 py-4">
-                        <div className="flex flex-col items-center gap-3">
+                    <div className='from-sidebar via-sidebar/95 fixed bottom-0 w-[52px] bg-gradient-to-t to-transparent px-2 py-4'>
+                        <div className='flex flex-col items-center gap-3'>
                             <Button
-                                className="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                                className='text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors'
                                 onClick={() => setIsSidebarOpen((prev) => !prev)}
-                                size="icon-sm"
-                                tooltip="Open Sidebar"
-                                tooltipSide="right"
-                                variant="ghost"
+                                size='icon-sm'
+                                tooltip='Open Sidebar'
+                                tooltipSide='right'
+                                variant='ghost'
                             >
                                 <PanelRightClose size={16} strokeWidth={2} />
                             </Button>
@@ -1013,10 +1022,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean } = {})
             </Flex>
 
             <SidebarLoginDialog
-                description="Please sign in to access the command search feature."
+                description='Please sign in to access the command search feature.'
                 isOpen={showLoginPrompt}
                 onClose={hideLoginPrompt}
-                title="Login Required"
+                title='Login Required'
             />
         </motion.div>
     );

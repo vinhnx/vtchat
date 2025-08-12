@@ -21,14 +21,14 @@ Updated default value for `showExamplePrompts` to `true` in two locations:
 
 1. **Initial state** in app store:
 
-    ```typescript
-    showExamplePrompts: true, // Enable by default for better onboarding
-    ```
+   ```typescript
+   showExamplePrompts: true, // Enable by default for better onboarding
+   ```
 
 2. **Reset function** for consistency:
-    ```typescript
-    state.showExamplePrompts = true; // Enable by default for better onboarding
-    ```
+   ```typescript
+   state.showExamplePrompts = true; // Enable by default for better onboarding
+   ```
 
 ## Files Modified
 

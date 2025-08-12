@@ -2,9 +2,9 @@
  * Optimized subscription checking using Neon database optimizations
  */
 
-import { neon } from "@neondatabase/serverless";
-import { log } from "@repo/shared/logger";
-import { redisCache } from "../cache/redis-cache";
+import { neon } from '@neondatabase/serverless';
+import { log } from '@repo/shared/logger';
+import { redisCache } from '../cache/redis-cache';
 
 // Create a direct SQL client for raw queries
 const sql = neon(process.env.DATABASE_URL!);
@@ -67,7 +67,7 @@ export async function checkSubscriptionOptimized(
 
         return subscriptionData;
     } catch (error) {
-        log.error("Optimized subscription check failed:", { userId, error });
+        log.error('Optimized subscription check failed:', { userId, error });
         return null;
     }
 }
@@ -115,7 +115,7 @@ export async function checkSubscriptionsBatch(
             await redisCache.set(cacheKey, data, 30);
         }
     } catch (error) {
-        log.error("Batch subscription check failed:", { userIds, error });
+        log.error('Batch subscription check failed:', { userIds, error });
     }
 
     return results;
@@ -139,9 +139,9 @@ export async function invalidateSubscriptionCache(userId: string): Promise<void>
     // Also refresh the materialized view if needed
     try {
         await sql`SELECT refresh_subscription_summary()`;
-        log.debug("Subscription summary refreshed", { userId });
+        log.debug('Subscription summary refreshed', { userId });
     } catch (error) {
-        log.warn("Failed to refresh subscription summary:", { userId, error });
+        log.warn('Failed to refresh subscription summary:', { userId, error });
     }
 }
 
@@ -172,7 +172,7 @@ export async function getVtPlusUsers(): Promise<OptimizedSubscriptionData[]> {
             planSlug: row.plan_slug as string | null,
         }));
     } catch (error) {
-        log.error("Failed to get VT+ users:", { error });
+        log.error('Failed to get VT+ users:', { error });
         return [];
     }
 }
@@ -193,7 +193,7 @@ export async function getSubscriptionStats() {
 
         return result[0];
     } catch (error) {
-        log.error("Failed to get subscription stats:", { error });
+        log.error('Failed to get subscription stats:', { error });
         return null;
     }
 }

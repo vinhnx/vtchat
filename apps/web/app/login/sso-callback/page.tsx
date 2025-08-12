@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Page() {
     const router = useRouter();
@@ -9,11 +9,11 @@ export default function Page() {
     useEffect(() => {
         // Better Auth handles OAuth redirects automatically
         // Redirect to home page (which is now the chat interface)
-        router.push("/");
+        router.push('/');
     }, [router]);
 
     return (
-        <div className="flex min-h-screen items-center justify-center">
+        <div className='flex min-h-screen items-center justify-center'>
             <div>Redirecting...</div>
         </div>
     );

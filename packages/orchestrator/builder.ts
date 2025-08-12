@@ -1,8 +1,8 @@
-import type { Context, ContextSchemaDefinition } from "./context";
-import { WorkflowEngine } from "./engine";
-import type { EventSchemaDefinition, TypedEventEmitter } from "./events";
-import type { PersistenceLayer } from "./persistence";
-import type { TaskDefinition, WorkflowConfig } from "./types";
+import type { Context, ContextSchemaDefinition } from './context';
+import { WorkflowEngine } from './engine';
+import type { EventSchemaDefinition, TypedEventEmitter } from './events';
+import type { PersistenceLayer } from './persistence';
+import type { TaskDefinition, WorkflowConfig } from './types';
 
 export type WorkflowBuilderOptions<
     TEvent extends EventSchemaDefinition = any,
@@ -76,7 +76,7 @@ export class WorkflowBuilder<
 
     getTimingSummary() {
         if (!this.workflowInstance) {
-            throw new Error("Workflow has not been built yet. Call build() or start() first.");
+            throw new Error('Workflow has not been built yet. Call build() or start() first.');
         }
         return this.workflowInstance.getTimingSummary();
     }

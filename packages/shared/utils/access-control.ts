@@ -5,8 +5,8 @@
  * throughout the codebase like `user?.planSlug === 'vt_plus'`
  */
 
-import { PlanSlug } from "../types/subscription";
-import type { SubscriptionStatusEnum } from "../types/subscription-status";
+import { PlanSlug } from '../types/subscription';
+import type { SubscriptionStatusEnum } from '../types/subscription-status';
 
 export interface UserContext {
     id?: string;
@@ -116,11 +116,11 @@ export function validateUserForQuota(user: UserContext): {
     reason?: string;
 } {
     if (!user?.id) {
-        return { isValid: false, reason: "User ID is required" };
+        return { isValid: false, reason: 'User ID is required' };
     }
 
     if (!hasVTPlusAccess(user)) {
-        return { isValid: false, reason: "VT+ access required" };
+        return { isValid: false, reason: 'VT+ access required' };
     }
 
     return { isValid: true };
@@ -133,14 +133,14 @@ export function validateUserForQuota(user: UserContext): {
 export function getVTPlusFeatureFromChatMode(mode?: string): string | null {
     // Import VtPlusFeature enum values as constants to avoid circular imports
     const VT_PLUS_FEATURES = {
-        DEEP_RESEARCH: "DR",
-        PRO_SEARCH: "PS",
+        DEEP_RESEARCH: 'DR',
+        PRO_SEARCH: 'PS',
     } as const;
 
     // ChatMode constants to avoid imports
     const CHAT_MODES = {
-        Deep: "deep",
-        Pro: "pro",
+        Deep: 'deep',
+        Pro: 'pro',
     } as const;
 
     switch (mode) {

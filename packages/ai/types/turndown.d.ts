@@ -1,14 +1,14 @@
-declare module "turndown" {
+declare module 'turndown' {
     interface Options {
-        headingStyle?: "setext" | "atx";
+        headingStyle?: 'setext' | 'atx';
         hr?: string;
         bulletListMarker?: string;
-        codeBlockStyle?: "indented" | "fenced";
+        codeBlockStyle?: 'indented' | 'fenced';
         fence?: string;
         emDelimiter?: string;
         strongDelimiter?: string;
-        linkStyle?: "inlined" | "referenced";
-        linkReferenceStyle?: "full" | "collapsed" | "shortcut";
+        linkStyle?: 'inlined' | 'referenced';
+        linkReferenceStyle?: 'full' | 'collapsed' | 'shortcut';
     }
 
     class TurndownService {

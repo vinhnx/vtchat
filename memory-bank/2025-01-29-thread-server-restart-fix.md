@@ -1,7 +1,7 @@
 # Thread Server Restart Redirect Fix
 
-**Date**: 2025-01-29  
-**Issue**: Critical routing bug causing redirects to homepage after server restart  
+**Date**: 2025-01-29\
+**Issue**: Critical routing bug causing redirects to homepage after server restart\
 **Status**: ✅ FIXED
 
 ## Problem Description
@@ -91,7 +91,7 @@ log.info(
         isStoreInitialized,
         threadsCount: threads.length,
     },
-    'Thread not found, retrying with exponential backoff...'
+    'Thread not found, retrying with exponential backoff...',
 );
 ```
 
@@ -101,10 +101,10 @@ log.info(
 
 ```typescript
 // BEFORE: Incorrect return type
-loadThreadItems: (threadId: string) => Promise<void>;
+loadThreadItems: ((threadId: string) => Promise<void>);
 
 // AFTER: Correct return type matching implementation
-loadThreadItems: (threadId: string) => Promise<ThreadItem[]>;
+loadThreadItems: ((threadId: string) => Promise<ThreadItem[]>);
 ```
 
 ## Impact
@@ -135,17 +135,17 @@ loadThreadItems: (threadId: string) => Promise<ThreadItem[]>;
 ### Manual Testing Required
 
 1. **Server Restart Scenario**:
-    - Start development server (`bun dev`)
-    - Login and navigate to thread page (`/chat/[threadId]`)
-    - Stop server (Ctrl+C) and restart (`bun dev`)
-    - Refresh thread page
-    - **Verify**: User stays on thread page (no redirect to homepage)
+   - Start development server (`bun dev`)
+   - Login and navigate to thread page (`/chat/[threadId]`)
+   - Stop server (Ctrl+C) and restart (`bun dev`)
+   - Refresh thread page
+   - **Verify**: User stays on thread page (no redirect to homepage)
 
 2. **Edge Cases**:
-    - Test with slow IndexedDB initialization
-    - Test with network latency
-    - Test with multiple threads loaded
-    - Test with empty thread state
+   - Test with slow IndexedDB initialization
+   - Test with network latency
+   - Test with multiple threads loaded
+   - Test with empty thread state
 
 ## Files Modified
 

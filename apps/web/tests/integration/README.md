@@ -13,13 +13,13 @@ This directory contains integration tests for the provider authentication system
 ### Provider-Specific Authentication Tests
 
 - **Format Validation**: Tests API key format validation for all supported providers:
-    - OpenAI: `sk-[alphanumeric]{20+}`
-    - Anthropic: `sk-ant-[alphanumeric_-]{95+}`
-    - OpenRouter: `sk-or-v1-[hex]{64}`
-    - Gemini: `[alphanumeric_-]{39}`
-    - Together: `[hex]{64}`
-    - Fireworks: `[alphanumeric]{32+}`
-    - XAI: `xai-[alphanumeric]{32+}`
+  - OpenAI: `sk-[alphanumeric]{20+}`
+  - Anthropic: `sk-ant-[alphanumeric_-]{95+}`
+  - OpenRouter: `sk-or-v1-[hex]{64}`
+  - Gemini: `[alphanumeric_-]{39}`
+  - Together: `[hex]{64}`
+  - Fireworks: `[alphanumeric]{32+}`
+  - XAI: `xai-[alphanumeric]{32+}`
 - **Invalid Format Rejection**: Tests that invalid API key formats are properly rejected with meaningful error messages
 
 ### Provider Key Mapping Tests

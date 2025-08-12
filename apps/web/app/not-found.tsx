@@ -1,6 +1,6 @@
 // Standalone 404 page without any imports to avoid context issues during build
 export const metadata = {
-    title: "404 - Page Not Found | VT",
+    title: '404 - Page Not Found | VT',
     description:
         "The page you're looking for doesn't exist. Return to VT to continue chatting with AI.",
     robots: {
@@ -13,12 +13,13 @@ export const metadata = {
 
 export default function NotFound() {
     return (
-        <html lang="en">
+        <html lang='en'>
             <head>
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta charSet='utf-8' />
+                <meta name='viewport' content='width=device-width, initial-scale=1' />
                 <title>404 - Page Not Found | VT</title>
-                <style>{`
+                <style>
+                    {`
                     * {
                         box-sizing: border-box;
                         margin: 0;
@@ -102,16 +103,17 @@ export default function NotFound() {
                             background-color: hsl(0 0% 98% / 0.9);
                         }
                     }
-                `}</style>
+                `}
+                </style>
             </head>
             <body>
-                <div className="container">
-                    <div className="content">
-                        <h1 className="title">404 - Page Not Found</h1>
-                        <p className="description">
+                <div className='container'>
+                    <div className='content'>
+                        <h1 className='title'>404 - Page Not Found</h1>
+                        <p className='description'>
                             Sorry, we couldn't find the page you're looking for.
                         </p>
-                        <a href="/" className="button">
+                        <a href='/' className='button'>
                             Back to VT
                         </a>
                     </div>

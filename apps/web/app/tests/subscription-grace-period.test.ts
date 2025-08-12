@@ -1,16 +1,16 @@
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import {
     getEffectiveAccessStatus,
     hasSubscriptionAccess,
-} from "@repo/shared/utils/subscription-grace-period";
-import { describe, expect, it } from "vitest";
+} from '@repo/shared/utils/subscription-grace-period';
+import { describe, expect, it } from 'vitest';
 
-describe("Subscription Grace Period Logic", () => {
+describe('Subscription Grace Period Logic', () => {
     const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
     const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
 
-    describe("hasSubscriptionAccess", () => {
-        it("should grant access for active subscriptions until period end", () => {
+    describe('hasSubscriptionAccess', () => {
+        it('should grant access for active subscriptions until period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -19,7 +19,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(true);
         });
 
-        it("should deny access for expired active subscriptions", () => {
+        it('should deny access for expired active subscriptions', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -28,7 +28,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(false);
         });
 
-        it("should grant access for canceled subscriptions until period end", () => {
+        it('should grant access for canceled subscriptions until period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.CANCELED,
@@ -37,7 +37,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(true);
         });
 
-        it("should deny access for canceled subscriptions after period end", () => {
+        it('should deny access for canceled subscriptions after period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.CANCELED,
@@ -46,7 +46,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(false);
         });
 
-        it("should grant access for past_due subscriptions until period end", () => {
+        it('should grant access for past_due subscriptions until period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.PAST_DUE,
@@ -55,7 +55,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(true);
         });
 
-        it("should deny access for past_due subscriptions after period end", () => {
+        it('should deny access for past_due subscriptions after period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.PAST_DUE,
@@ -64,7 +64,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(false);
         });
 
-        it("should grant access for trialing subscriptions until period end", () => {
+        it('should grant access for trialing subscriptions until period end', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.TRIALING,
@@ -73,7 +73,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(true);
         });
 
-        it("should deny access for expired subscriptions", () => {
+        it('should deny access for expired subscriptions', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.EXPIRED,
@@ -82,7 +82,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(false);
         });
 
-        it("should deny access for inactive subscriptions", () => {
+        it('should deny access for inactive subscriptions', () => {
             expect(
                 hasSubscriptionAccess({
                     status: SubscriptionStatusEnum.INACTIVE,
@@ -92,8 +92,8 @@ describe("Subscription Grace Period Logic", () => {
         });
     });
 
-    describe("getEffectiveAccessStatus", () => {
-        it("should return active for active subscriptions with access", () => {
+    describe('getEffectiveAccessStatus', () => {
+        it('should return active for active subscriptions with access', () => {
             expect(
                 getEffectiveAccessStatus({
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -102,7 +102,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(SubscriptionStatusEnum.ACTIVE);
         });
 
-        it("should return canceled for canceled subscriptions with access", () => {
+        it('should return canceled for canceled subscriptions with access', () => {
             expect(
                 getEffectiveAccessStatus({
                     status: SubscriptionStatusEnum.CANCELED,
@@ -111,7 +111,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(SubscriptionStatusEnum.CANCELED);
         });
 
-        it("should return expired for subscriptions without access", () => {
+        it('should return expired for subscriptions without access', () => {
             expect(
                 getEffectiveAccessStatus({
                     status: SubscriptionStatusEnum.ACTIVE,
@@ -120,7 +120,7 @@ describe("Subscription Grace Period Logic", () => {
             ).toBe(SubscriptionStatusEnum.EXPIRED);
         });
 
-        it("should return expired for canceled subscriptions without access", () => {
+        it('should return expired for canceled subscriptions without access', () => {
             expect(
                 getEffectiveAccessStatus({
                     status: SubscriptionStatusEnum.CANCELED,

@@ -1,46 +1,46 @@
-"use client";
+'use client';
 
-import { getModelFromChatMode } from "@repo/ai/models";
-import { ProviderErrorExtractor } from "@repo/ai/services/provider-error-extractor";
-import { useWorkflowWorker } from "@repo/ai/worker";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { getRateLimitMessage } from "@repo/shared/constants";
-import { UserTier } from "@repo/shared/constants/user-tiers";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { generateThreadId } from "@repo/shared/lib/thread-id";
-import { log } from "@repo/shared/logger";
-import type { ThreadItem } from "@repo/shared/types";
-import { GEMINI_MODEL_ENUMS_ARRAY, buildCoreMessagesFromThreadItems } from "@repo/shared/utils";
-import { useToast } from "@repo/ui/src/components/use-sonner-toast";
-import { useParams, useRouter } from "next/navigation";
+import { getModelFromChatMode } from '@repo/ai/models';
+import { ProviderErrorExtractor } from '@repo/ai/services/provider-error-extractor';
+import { useWorkflowWorker } from '@repo/ai/worker';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { getRateLimitMessage } from '@repo/shared/constants';
+import { UserTier } from '@repo/shared/constants/user-tiers';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { generateThreadId } from '@repo/shared/lib/thread-id';
+import { log } from '@repo/shared/logger';
+import type { ThreadItem } from '@repo/shared/types';
+import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
+import { useToast } from '@repo/ui/src/components/use-sonner-toast';
+import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
+    type ReactNode,
     useCallback,
     useContext,
     useEffect,
     useMemo,
     useRef,
     useState,
-    type ReactNode,
-} from "react";
-import { ApiKeyPromptModal } from "../components/api-key-prompt-modal";
-import { useApiKeysStore, useChatStore } from "../store";
-import { isGeminiModel } from "../utils/document-processing";
-import { useGenerationTimeout } from "./use-generation-timeout";
-import { useVtPlusAccess } from "./use-subscription-access";
+} from 'react';
+import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
+import { useApiKeysStore, useChatStore } from '../store';
+import { isGeminiModel } from '../utils/document-processing';
+import { useGenerationTimeout } from './use-generation-timeout';
+import { useVtPlusAccess } from './use-subscription-access';
 
 // Define common event types to reduce repetition - using as const to prevent Fast Refresh issues
 const EVENT_TYPES = [
-    "steps",
-    "sources",
-    "answer",
-    "error",
-    "status",
-    "suggestions",
-    "toolCalls",
-    "toolResults",
-    "object",
-    "toolRouter",
+    'steps',
+    'sources',
+    'answer',
+    'error',
+    'status',
+    'suggestions',
+    'toolCalls',
+    'toolResults',
+    'object',
+    'toolRouter',
 ] as const;
 
 export type AgentContextType = {
@@ -61,7 +61,7 @@ export type AgentContextType = {
 
 const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
-export const AgentProvider = ({ children }: { children: ReactNode }) => {
+export const AgentProvider = ({ children }: { children: ReactNode; }) => {
     const { threadId: currentThreadId } = useParams();
     const { data: session } = useSession();
     const isSignedIn = !!session;
@@ -70,9 +70,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const instanceId = useRef(Math.random().toString(36).substring(7));
 
     useEffect(() => {
-        log.info("🏗️ AgentProvider instance created", { instanceId: instanceId.current });
+        log.info('🏗️ AgentProvider instance created', { instanceId: instanceId.current });
         return () => {
-            log.info("🗑️ AgentProvider instance destroyed", { instanceId: instanceId.current });
+            log.info('🗑️ AgentProvider instance destroyed', { instanceId: instanceId.current });
         };
     }, []);
 
@@ -137,7 +137,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             let reasoning = prevItem.reasoning;
             let reasoningDetails = prevItem.reasoningDetails;
 
-            if (eventType === "steps" && eventData?.steps) {
+            if (eventType === 'steps' && eventData?.steps) {
                 // Look for reasoning in the steps structure
                 const stepsData = eventData.steps;
                 if (stepsData[0]?.steps?.reasoning?.data) {
@@ -150,13 +150,13 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             }
 
             // Handle reasoning details from answer events if present
-            if (eventType === "answer" && eventData?.answer?.reasoningDetails) {
+            if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
                 reasoningDetails = eventData.answer.reasoningDetails;
             }
 
             const updatedItem: ThreadItem = {
                 ...prevItem,
-                query: eventData?.query || prevItem.query || "",
+                query: eventData?.query || prevItem.query || '',
                 mode: eventData?.mode || prevItem.mode,
                 threadId,
                 parentId: parentThreadItemId || prevItem.parentId,
@@ -166,45 +166,44 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 reasoningDetails,
                 createdAt: prevItem.createdAt || new Date(),
                 updatedAt: new Date(),
-                ...(eventType === "answer"
+                ...(eventType === 'answer'
                     ? {
-                          answer: {
-                              ...eventData.answer,
-                              // Check if this is a complete/final text or incremental chunk
-                              text: (() => {
-                                  const isCompleted = eventData.answer.status === "COMPLETED";
-                                  const hasFullText = !!eventData.answer.fullText;
-                                  const incomingText = eventData.answer.text || "";
-                                  const previousText = prevItem.answer?.text || "";
+                        answer: {
+                            ...eventData.answer,
+                            // Check if this is a complete/final text or incremental chunk
+                            text: (() => {
+                                const isCompleted = eventData.answer.status === 'COMPLETED';
+                                const hasFullText = !!eventData.answer.fullText;
+                                const incomingText = eventData.answer.text || '';
+                                const previousText = prevItem.answer?.text || '';
 
-                                  let resultText;
-                                  if (isCompleted && hasFullText) {
-                                      resultText = eventData.answer.fullText; // Use complete final text directly
-                                  } else if (hasFullText) {
-                                      resultText = eventData.answer.fullText; // Use complete text directly
-                                  } else {
-                                      resultText = previousText + incomingText; // Concatenate incremental chunks
-                                  }
+                                let resultText;
+                                if (isCompleted && hasFullText) {
+                                    resultText = eventData.answer.fullText; // Use complete final text directly
+                                } else if (hasFullText) {
+                                    resultText = eventData.answer.fullText; // Use complete text directly
+                                } else {
+                                    resultText = previousText + incomingText; // Concatenate incremental chunks
+                                }
 
-                                  log.debug("📝 Answer text update decision", {
-                                      isCompleted,
-                                      hasFullText,
-                                      incomingTextLength: incomingText.length,
-                                      previousTextLength: previousText.length,
-                                      resultTextLength: resultText.length,
-                                      strategy:
-                                          isCompleted && hasFullText
-                                              ? "final-complete"
-                                              : hasFullText
-                                                ? "complete"
-                                                : "concatenate",
-                                      threadItemId,
-                                  });
+                                log.debug('📝 Answer text update decision', {
+                                    isCompleted,
+                                    hasFullText,
+                                    incomingTextLength: incomingText.length,
+                                    previousTextLength: previousText.length,
+                                    resultTextLength: resultText.length,
+                                    strategy: isCompleted && hasFullText
+                                        ? 'final-complete'
+                                        : hasFullText
+                                        ? 'complete'
+                                        : 'concatenate',
+                                    threadItemId,
+                                });
 
-                                  return resultText;
-                              })(),
-                          },
-                      }
+                                return resultText;
+                            })(),
+                        },
+                    }
                     : { [eventType]: eventData[eventType] }),
             };
 
@@ -218,10 +217,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         useCallback(
             (data: any) => {
                 if (
-                    data?.threadId &&
-                    data?.threadItemId &&
-                    data.event &&
-                    EVENT_TYPES.includes(data.event)
+                    data?.threadId
+                    && data?.threadItemId
+                    && data.event
+                    && EVENT_TYPES.includes(data.event)
                 ) {
                     handleThreadItemUpdate(
                         data.threadId,
@@ -232,26 +231,26 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     );
                 }
 
-                if (data.type === "done") {
+                if (data.type === 'done') {
                     setIsGenerating(false);
 
                     // Handle workflow errors
-                    if (data.status === "error") {
+                    if (data.status === 'error') {
                         log.error(
                             { error: data.error, threadId: data.threadId },
-                            "❌ Workflow error",
+                            '❌ Workflow error',
                         );
                         log.error(
                             { error: data.error, threadId: data.threadId },
-                            "Workflow failed",
+                            'Workflow failed',
                         );
 
                         // Update thread item with error status - use ERROR status and error field for toast
                         if (data.threadItemId) {
                             updateThreadItem(data.threadId, {
                                 id: data.threadItemId,
-                                status: "ERROR",
-                                error: data.error || "Workflow failed",
+                                status: 'ERROR',
+                                error: data.error || 'Workflow failed',
                                 persistToDB: true,
                             });
                         }
@@ -270,7 +269,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
         const activeControllers = activeControllersRef.current;
 
         const handleBeforeUnload = () => {
-            log.info("Page unloading, aborting active connections");
+            log.info('Page unloading, aborting active connections');
             activeControllers.forEach((controller) => {
                 if (!controller.signal.aborted) {
                     controller.abort();
@@ -281,16 +280,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                log.debug("Tab hidden, connections will timeout naturally");
+                log.debug('Tab hidden, connections will timeout naturally');
             }
         };
 
-        window.addEventListener("beforeunload", handleBeforeUnload);
-        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
 
         return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
             // Cleanup any remaining connections
             activeControllers.forEach((controller) => {
                 if (!controller.signal.aborted) {
@@ -311,21 +310,21 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsGenerating(true);
             const startTime = performance.now();
 
-            abortController.signal.addEventListener("abort", () => {
-                log.info({ threadId: body.threadId }, "Abort controller triggered");
+            abortController.signal.addEventListener('abort', () => {
+                log.info({ threadId: body.threadId }, 'Abort controller triggered');
                 setIsGenerating(false);
-                log.info("🧹 Clearing active submission in abort handler", {
+                log.info('🧹 Clearing active submission in abort handler', {
                     previousActiveSubmission: activeSubmissionRef.current,
                 });
                 activeSubmissionRef.current = null; // Clear active submission
 
                 // Only mark as ABORTED if the abort was not due to cleanup for new conversation
                 // Check if this is a user-initiated abort vs cleanup abort
-                if (!abortController.signal.reason || abortController.signal.reason !== "cleanup") {
+                if (!abortController.signal.reason || abortController.signal.reason !== 'cleanup') {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: "ABORTED",
-                        error: "Generation stopped",
+                        status: 'ABORTED',
+                        error: 'Generation stopped',
                         persistToDB: true,
                     });
                 } else {
@@ -335,7 +334,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     if (threadItem?.answer?.text) {
                         updateThreadItem(body.threadId, {
                             id: body.threadItemId,
-                            status: "COMPLETED",
+                            status: 'COMPLETED',
                             persistToDB: true,
                         });
                     }
@@ -346,12 +345,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             });
 
             try {
-                const response = await fetch("/api/completion", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                const response = await fetch('/api/completion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body),
-                    credentials: "include",
-                    cache: "no-store",
+                    credentials: 'include',
+                    cache: 'no-store',
                     signal: abortController.signal,
                 });
 
@@ -360,7 +359,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                     // Use ProviderErrorExtractor to get structured error information
                     let finalErrorMessage = errorText;
-                    let errorTitle = "API Error";
+                    let errorTitle = 'API Error';
 
                     try {
                         const errorData = JSON.parse(errorText);
@@ -400,7 +399,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     if (response.status === 429) {
                         try {
                             const errorData = JSON.parse(errorText);
-                            if (errorData.limitType === "daily_limit_exceeded") {
+                            if (errorData.limitType === 'daily_limit_exceeded') {
                                 finalErrorMessage = getRateLimitMessage.dailyLimit(
                                     isSignedIn,
                                     hasVtPlusAccess,
@@ -425,59 +424,61 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                             // Handle VT+ subscription required errors (Gemini models)
                             if (
-                                errorData.error === "VT+ subscription required" &&
-                                errorData.upgradeUrl
+                                errorData.error === 'VT+ subscription required'
+                                && errorData.upgradeUrl
                             ) {
                                 finalErrorMessage = errorData.message || finalErrorMessage;
                                 // Note: The structured error includes upgradeUrl and usageSettingsAction
                                 // These could be used to show actionable buttons in the UI
-                            }
-                            // Handle X.AI credit issues
+                            } // Handle X.AI credit issues
                             else if (
-                                finalErrorMessage.includes("doesn't have any credits yet") ||
-                                finalErrorMessage.includes("console.x.ai")
+                                finalErrorMessage.includes("doesn't have any credits yet")
+                                || finalErrorMessage.includes('console.x.ai')
                             ) {
                                 finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
                             } else {
                                 // Use the parsed message or fallback to generic message
-                                finalErrorMessage =
-                                    errorData.message ||
-                                    `Access Denied (${response.status}): ${finalErrorMessage}`;
+                                finalErrorMessage = errorData.message
+                                    || `Access Denied (${response.status}): ${finalErrorMessage}`;
                             }
                         } catch {
                             // Fallback for non-JSON 403 responses
                             if (
-                                finalErrorMessage.includes("doesn't have any credits yet") ||
-                                finalErrorMessage.includes("console.x.ai")
+                                finalErrorMessage.includes("doesn't have any credits yet")
+                                || finalErrorMessage.includes('console.x.ai')
                             ) {
                                 finalErrorMessage = `X.AI Credits Required: ${finalErrorMessage}`;
                             } else {
-                                finalErrorMessage = `Access Denied (${response.status}): ${finalErrorMessage}`;
+                                finalErrorMessage =
+                                    `Access Denied (${response.status}): ${finalErrorMessage}`;
                             }
                         }
                     } else if (response.status === 400) {
                         // For 400 errors, use the extracted message or provide context
                         if (!finalErrorMessage || finalErrorMessage === errorText) {
-                            finalErrorMessage = `API Error (${response.status}): ${finalErrorMessage}`;
+                            finalErrorMessage =
+                                `API Error (${response.status}): ${finalErrorMessage}`;
                         }
                     } else if (response.status >= 500) {
-                        finalErrorMessage = `Service Error (${response.status}): ${finalErrorMessage || "Internal server error"}`;
+                        finalErrorMessage = `Service Error (${response.status}): ${
+                            finalErrorMessage || 'Internal server error'
+                        }`;
                     }
 
                     setIsGenerating(false);
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: "ERROR",
+                        status: 'ERROR',
                         error: finalErrorMessage,
                         persistToDB: true,
                     });
-                    log.error({ errorText, status: response.status }, "Error response received");
+                    log.error({ errorText, status: response.status }, 'Error response received');
 
                     // Show error message to user using Sonner
                     toast({
                         title: errorTitle,
                         description: finalErrorMessage,
-                        variant: "destructive",
+                        variant: 'destructive',
                         duration: 5000,
                     });
 
@@ -486,7 +487,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 }
 
                 if (!response.body) {
-                    throw new Error("No response body received");
+                    throw new Error('No response body received');
                 }
 
                 const reader = response.body.getReader();
@@ -496,7 +497,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 let eventCount = 0;
                 const streamStartTime = performance.now();
 
-                let buffer = "";
+                let buffer = '';
                 let consecutiveErrors = 0;
 
                 while (true) {
@@ -508,8 +509,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         consecutiveErrors = 0;
 
                         buffer += decoder.decode(value, { stream: true });
-                        const messages = buffer.split("\n\n");
-                        buffer = messages.pop() || "";
+                        const messages = buffer.split('\n\n');
+                        buffer = messages.pop() || '';
 
                         for (const message of messages) {
                             if (!message.trim()) continue;
@@ -524,9 +525,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                 try {
                                     const data = JSON.parse(dataMatch[1]);
                                     if (
-                                        EVENT_TYPES.includes(currentEvent) &&
-                                        data?.threadId &&
-                                        data?.threadItemId
+                                        EVENT_TYPES.includes(currentEvent)
+                                        && data?.threadId
+                                        && data?.threadItemId
                                     ) {
                                         const shouldPersistToDB =
                                             Date.now() - lastDbUpdate >= DB_UPDATE_INTERVAL;
@@ -541,7 +542,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                         if (shouldPersistToDB) {
                                             lastDbUpdate = Date.now();
                                         }
-                                    } else if (currentEvent === "done" && data.type === "done") {
+                                    } else if (currentEvent === 'done' && data.type === 'done') {
                                         setIsGenerating(false);
                                         const streamDuration = performance.now() - streamStartTime;
                                         log.info(
@@ -549,31 +550,34 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                                 eventCount,
                                                 streamDurationMs: streamDuration.toFixed(2),
                                             },
-                                            "done event received",
+                                            'done event received',
                                         );
 
                                         // Handle quota exceeded specifically
-                                        if (data.status === "quota_exceeded") {
-                                            log.warn({ error: data.error }, "VT+ quota exceeded");
+                                        if (data.status === 'quota_exceeded') {
+                                            log.warn({ error: data.error }, 'VT+ quota exceeded');
                                             // Error will be handled by the thread item component
                                         }
 
                                         // Record rate limit usage for successful Gemini completions
                                         if (
-                                            data.status !== "error" &&
-                                            data.status !== "aborted" &&
-                                            data.status !== "quota_exceeded"
+                                            data.status !== 'error'
+                                            && data.status !== 'aborted'
+                                            && data.status !== 'quota_exceeded'
                                         ) {
                                             const modelId = getModelFromChatMode(body.mode);
-                                            const isGemini =
-                                                GEMINI_MODEL_ENUMS_ARRAY.includes(modelId);
+                                            const isGemini = GEMINI_MODEL_ENUMS_ARRAY.includes(
+                                                modelId,
+                                            );
 
                                             if (isGemini) {
                                                 fetch(
-                                                    `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`,
+                                                    `/api/rate-limit/status?model=${
+                                                        encodeURIComponent(modelId)
+                                                    }`,
                                                     {
-                                                        method: "POST",
-                                                        credentials: "include",
+                                                        method: 'POST',
+                                                        credentials: 'include',
                                                     },
                                                 ).catch(() => {
                                                     // Fail silently - server-side safety net will handle recording
@@ -584,8 +588,8 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                         if (data.threadItemId) {
                                             threadItemMap.delete(data.threadItemId);
                                         }
-                                        if (data.status === "error") {
-                                            log.error({ error: data.error }, "Stream error");
+                                        if (data.status === 'error') {
+                                            log.error({ error: data.error }, 'Stream error');
                                         }
                                     }
                                 } catch (jsonError) {
@@ -594,7 +598,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                                             rawData: dataMatch[1],
                                             error: jsonError,
                                         },
-                                        "JSON parse error for data",
+                                        'JSON parse error for data',
                                     );
                                 }
                             }
@@ -604,25 +608,25 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                         // Check if this is a stream closed error or abort error
                         if (
-                            readError.name === "AbortError" ||
-                            readError.message?.includes("stream") ||
-                            readError.message?.includes("closed") ||
-                            readError.message?.includes("cancelled")
+                            readError.name === 'AbortError'
+                            || readError.message?.includes('stream')
+                            || readError.message?.includes('closed')
+                            || readError.message?.includes('cancelled')
                         ) {
-                            log.info("Stream was closed or aborted, ending read loop");
+                            log.info('Stream was closed or aborted, ending read loop');
                             break;
                         }
 
                         // If we've had too many consecutive errors, break the loop
                         if (consecutiveErrors > 3) {
-                            log.error("Too many consecutive stream read errors, breaking loop");
+                            log.error('Too many consecutive stream read errors, breaking loop');
                             break;
                         }
 
                         // For other errors, log and retry with backoff
                         log.error(
                             { error: readError, consecutiveErrors },
-                            "Error reading from stream",
+                            'Error reading from stream',
                         );
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                     }
@@ -634,19 +638,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                         error: streamError,
                         totalTimeMs: totalTime.toFixed(2),
                     },
-                    "Fatal stream error",
+                    'Fatal stream error',
                 );
                 setIsGenerating(false);
 
                 // Extract meaningful error message using ProviderErrorExtractor
-                let errorMessage = "Something went wrong. Please try again.";
-                let errorTitle = "Stream Error";
+                let errorMessage = 'Something went wrong. Please try again.';
+                let errorTitle = 'Stream Error';
 
-                if (streamError.name === "AbortError") {
+                if (streamError.name === 'AbortError') {
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
-                        status: "ABORTED",
-                        error: "Generation aborted",
+                        status: 'ABORTED',
+                        error: 'Generation aborted',
                         persistToDB: true,
                     });
                     return; // Early return for abort errors
@@ -667,29 +671,29 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 } else if (streamError.message) {
                     const errorMsg = streamError.message.toLowerCase();
 
-                    if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
+                    if (errorMsg.includes('429') || errorMsg.includes('rate limit')) {
                         errorMessage = getRateLimitMessage.dailyLimit(isSignedIn, hasVtPlusAccess);
                     } else if (
-                        errorMsg.includes("credit balance") ||
-                        errorMsg.includes("too low")
+                        errorMsg.includes('credit balance')
+                        || errorMsg.includes('too low')
                     ) {
                         errorMessage =
-                            "Your credit balance is too low to access the API. Please go to Plans & Billing to upgrade or purchase credits.";
+                            'Your credit balance is too low to access the API. Please go to Plans & Billing to upgrade or purchase credits.';
                     } else if (
-                        errorMsg.includes("unauthorized") ||
-                        errorMsg.includes("invalid api key")
+                        errorMsg.includes('unauthorized')
+                        || errorMsg.includes('invalid api key')
                     ) {
                         errorMessage =
-                            "Authentication failed. Please check your API key in settings.";
+                            'Authentication failed. Please check your API key in settings.';
                     } else if (
-                        errorMsg.includes("503") ||
-                        errorMsg.includes("service unavailable")
+                        errorMsg.includes('503')
+                        || errorMsg.includes('service unavailable')
                     ) {
                         errorMessage =
-                            "Service is temporarily unavailable. Please try again later.";
-                    } else if (errorMsg.includes("network") || errorMsg.includes("connection")) {
+                            'Service is temporarily unavailable. Please try again later.';
+                    } else if (errorMsg.includes('network') || errorMsg.includes('connection')) {
                         errorMessage =
-                            "Network error occurred. Please check your connection and try again.";
+                            'Network error occurred. Please check your connection and try again.';
                     } else if (streamError.message.length < 200) {
                         // Use the actual error message if it's not too long
                         errorMessage = streamError.message;
@@ -698,7 +702,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
                 updateThreadItem(body.threadId, {
                     id: body.threadItemId,
-                    status: "ERROR",
+                    status: 'ERROR',
                     error: errorMessage,
                     persistToDB: true,
                 });
@@ -707,12 +711,12 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 toast({
                     title: errorTitle,
                     description: errorMessage,
-                    variant: "destructive",
+                    variant: 'destructive',
                     duration: 5000,
                 });
             } finally {
                 setIsGenerating(false);
-                log.info("🧹 Clearing active submission in runAgent finally block", {
+                log.info('🧹 Clearing active submission in runAgent finally block', {
                     previousActiveSubmission: activeSubmissionRef.current,
                 });
                 activeSubmissionRef.current = null; // Clear active submission
@@ -721,7 +725,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 activeControllersRef.current.delete(abortController);
 
                 const totalTime = performance.now() - startTime;
-                log.info({ totalTimeMs: totalTime.toFixed(2) }, "Stream completed");
+                log.info({ totalTimeMs: totalTime.toFixed(2) }, 'Stream completed');
             }
         },
         [
@@ -757,10 +761,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             useCharts?: boolean;
             showSuggestions?: boolean;
         }) => {
-            const query = formData.get("query") as string;
-            log.info("🚀 handleSubmit called", {
+            const query = formData.get('query') as string;
+            log.info('🚀 handleSubmit called', {
                 instanceId: instanceId.current,
-                query: query?.substring(0, 50) + "...",
+                query: query?.substring(0, 50) + '...',
                 newThreadId,
                 existingThreadItemId,
                 activeSubmission: activeSubmissionRef.current,
@@ -775,7 +779,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             activeControllersRef.current.forEach((controller) => {
                 if (!controller.signal.aborted) {
                     // Use "cleanup" reason to distinguish from user-initiated aborts
-                    controller.abort("cleanup");
+                    controller.abort('cleanup');
                 }
             });
             activeControllersRef.current.clear();
@@ -783,22 +787,22 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             // Debounce rapid submissions
             const now = Date.now();
             if (now - lastSubmissionRef.current < SUBMISSION_DEBOUNCE_MS) {
-                log.debug("Submission debounced - too frequent");
+                log.debug('Submission debounced - too frequent');
                 return;
             }
             lastSubmissionRef.current = now;
 
             log.info(
                 { useWebSearch, useMathCalculator, useCharts },
-                "Agent provider received flags",
+                'Agent provider received flags',
             );
 
             const mode = (newChatMode || chatMode) as ChatMode;
             if (
-                !isSignedIn &&
-                !!ChatModeConfig[mode as keyof typeof ChatModeConfig]?.isAuthRequired
+                !isSignedIn
+                && !!ChatModeConfig[mode as keyof typeof ChatModeConfig]?.isAuthRequired
             ) {
-                push("/login");
+                push('/login');
 
                 return;
             }
@@ -810,19 +814,19 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
             // Check if this exact submission is already in progress
             if (activeSubmissionRef.current === submissionId) {
-                log.warn("🚫 Duplicate submission detected, ignoring", {
+                log.warn('🚫 Duplicate submission detected, ignoring', {
                     submissionId,
                     activeSubmission: activeSubmissionRef.current,
-                    query: query.substring(0, 50) + "...",
+                    query: query.substring(0, 50) + '...',
                 });
                 return;
             }
 
             // Mark this submission as active
             activeSubmissionRef.current = submissionId;
-            log.info("✅ Marking submission as active", {
+            log.info('✅ Marking submission as active', {
                 submissionId,
-                query: query.substring(0, 50) + "...",
+                query: query.substring(0, 50) + '...',
             });
             if (!threadId) return;
 
@@ -830,11 +834,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             updateThread({ id: threadId, title: query });
 
             const optimisticAiThreadItemId = existingThreadItemId || (await generateThreadId());
-            const imageAttachment = formData.get("imageAttachment") as string;
-            const documentAttachment = formData.get("documentAttachment") as string;
-            const documentMimeType = formData.get("documentMimeType") as string;
-            const documentFileName = formData.get("documentFileName") as string;
-            const multiModalAttachmentsStr = formData.get("multiModalAttachments") as string;
+            const imageAttachment = formData.get('imageAttachment') as string;
+            const documentAttachment = formData.get('documentAttachment') as string;
+            const documentMimeType = formData.get('documentMimeType') as string;
+            const documentFileName = formData.get('documentFileName') as string;
+            const multiModalAttachmentsStr = formData.get('multiModalAttachments') as string;
             const multiModalAttachments = multiModalAttachmentsStr
                 ? JSON.parse(multiModalAttachmentsStr)
                 : undefined;
@@ -843,16 +847,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 id: optimisticAiThreadItemId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                status: "QUEUED",
+                status: 'QUEUED',
                 threadId,
                 query,
                 imageAttachment,
                 documentAttachment: documentAttachment
                     ? {
-                          base64: documentAttachment,
-                          mimeType: documentMimeType,
-                          fileName: documentFileName,
-                      }
+                        base64: documentAttachment,
+                        mimeType: documentMimeType,
+                        fileName: documentFileName,
+                    }
                     : undefined,
                 attachments: multiModalAttachments,
                 mode,
@@ -870,17 +874,17 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 imageAttachment,
                 documentAttachment: documentAttachment
                     ? {
-                          base64: documentAttachment,
-                          mimeType: documentMimeType,
-                          fileName: documentFileName,
-                      }
+                        base64: documentAttachment,
+                        mimeType: documentMimeType,
+                        fileName: documentFileName,
+                    }
                     : undefined,
                 attachments: multiModalAttachments,
             });
 
             // Import routing utilities
-            const { shouldUseServerSideAPI: mustUseServer } = await import("../lib/ai-routing");
-            const { logRoutingDecision, logExecutionPath } = await import("../lib/agent-submit");
+            const { shouldUseServerSideAPI: mustUseServer } = await import('../lib/ai-routing');
+            const { logRoutingDecision, logExecutionPath } = await import('../lib/agent-submit');
 
             // Determine routing based on model, user tier, and features
             const shouldUseServerSideAPI = mustUseServer({
@@ -895,10 +899,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 mode,
                 isFreeModel: mode === ChatMode.GEMINI_2_5_FLASH_LITE,
                 hasVtPlusAccess,
-                needsServerSide:
-                    (hasVtPlusAccess &&
-                        [ChatMode.CLAUDE_4_SONNET, ChatMode.GPT_4o].includes(mode)) ||
-                    isGeminiModel(mode),
+                needsServerSide: (hasVtPlusAccess
+                    && [ChatMode.CLAUDE_4_SONNET, ChatMode.GPT_4o].includes(mode))
+                    || isGeminiModel(mode),
                 shouldUseServerSideAPI,
                 hasApiKey: hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess),
                 deepResearch: mode === ChatMode.Deep,
@@ -906,29 +909,29 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             });
 
             if (
-                hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess) &&
-                !shouldUseServerSideAPI
+                hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess)
+                && !shouldUseServerSideAPI
             ) {
-                logExecutionPath("client-workflow", mode);
+                logExecutionPath('client-workflow', mode);
                 const abortController = new AbortController();
                 setAbortController(abortController);
                 setIsGenerating(true);
 
-                abortController.signal.addEventListener("abort", () => {
-                    log.info({ threadId }, "Abort signal received");
+                abortController.signal.addEventListener('abort', () => {
+                    log.info({ threadId }, 'Abort signal received');
                     setIsGenerating(false);
                     abortWorkflow();
                     activeSubmissionRef.current = null; // Clear active submission
 
                     // Only mark as ABORTED if not a cleanup abort
                     if (
-                        !abortController.signal.reason ||
-                        abortController.signal.reason !== "cleanup"
+                        !abortController.signal.reason
+                        || abortController.signal.reason !== 'cleanup'
                     ) {
                         updateThreadItem(threadId, {
                             id: optimisticAiThreadItemId,
-                            status: "ABORTED",
-                            error: "Generation stopped",
+                            status: 'ABORTED',
+                            error: 'Generation stopped',
                         });
                     }
                 });
@@ -937,15 +940,16 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 // SECURITY: Log workflow start without exposing API key metadata
                 log.info(
                     { useWebSearch, useMathCalculator, useCharts },
-                    "About to call startWorkflow",
+                    'About to call startWorkflow',
                 );
                 log.info(
                     {
                         mode,
-                        apiKeysConfigured:
-                            Object.keys(apiKeys).filter((key) => apiKeys[key]).length > 0,
+                        apiKeysConfigured: Object.keys(apiKeys).filter((key) =>
+                            apiKeys[key]
+                        ).length > 0,
                     },
-                    "🚀 Starting workflow with API keys",
+                    '🚀 Starting workflow with API keys',
                 );
 
                 // Clear active submission when workflow completes
@@ -961,7 +965,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     threadId,
                     messages: coreMessages,
                     threadItemId: optimisticAiThreadItemId,
-                    parentThreadItemId: "",
+                    parentThreadItemId: '',
                     customInstructions,
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
@@ -975,7 +979,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 // Show API key modal if user is signed in but missing required API key
                 // BUT NOT for free models or VT+ users with server-funded models which don't require user API keys
                 if (isSignedIn && !shouldUseServerSideAPI) {
-                    logExecutionPath("api-key-modal", mode);
+                    logExecutionPath('api-key-modal', mode);
                     setModalChatMode(mode);
                     setShowApiKeyModal(true);
                     setIsGenerating(false);
@@ -983,10 +987,10 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     return;
                 }
 
-                logExecutionPath("server-api", mode);
+                logExecutionPath('server-api', mode);
 
                 // For ALL server-side API calls, filter API keys based on model type
-                const { filterApiKeysForServerSide } = await import("../lib/ai-routing");
+                const { filterApiKeysForServerSide } = await import('../lib/ai-routing');
                 const serverApiKeys = getAllKeys();
 
                 // A request to /api/completion is always a server-side call → we must filter on EVERY path
@@ -1004,9 +1008,9 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 );
 
                 if (isServerFundedModel) {
-                    log.info({ mode }, "🔐 Server-funded model: Removed ALL provider API keys");
+                    log.info({ mode }, '🔐 Server-funded model: Removed ALL provider API keys');
                 } else {
-                    log.info({ mode }, "🔑 BYOK model: Kept required provider API key only");
+                    log.info({ mode }, '🔑 BYOK model: Kept required provider API key only');
                 }
 
                 // Clear active submission when server API completes
@@ -1021,7 +1025,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                     messages: coreMessages,
                     threadItemId: optimisticAiThreadItemId,
                     customInstructions,
-                    parentThreadItemId: "",
+                    parentThreadItemId: '',
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
@@ -1056,7 +1060,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 
     const updateContext = useCallback(
         (threadId: string, data: any) => {
-            log.info({ contextData: data }, "Updating context");
+            log.info({ contextData: data }, 'Updating context');
             updateThreadItem(threadId, {
                 id: data.threadItemId,
                 parentId: data.parentThreadItemId,
@@ -1099,7 +1103,7 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
 export const useAgentStream = (): AgentContextType => {
     const context = useContext(AgentContext);
     if (!context) {
-        throw new Error("useAgentStream must be used within an AgentProvider");
+        throw new Error('useAgentStream must be used within an AgentProvider');
     }
     return context;
 };

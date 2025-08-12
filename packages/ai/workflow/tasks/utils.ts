@@ -1,7 +1,7 @@
 import {
-    generateErrorMessage as centralizedGenerator,
     type ErrorContext,
-} from "../../services/error-messages";
+    generateErrorMessage as centralizedGenerator,
+} from '../../services/error-messages';
 
 /**
  * @deprecated Use the centralized error message service instead
@@ -17,30 +17,30 @@ export const generateErrorMessage = (error: Error | string, context: ErrorContex
         const errorMessage = error instanceof Error ? error.message : error;
 
         // Basic error type detection for fallback
-        if (errorMessage.includes("429")) {
-            return "You have reached the limit of requests per minute. Please try again later.";
+        if (errorMessage.includes('429')) {
+            return 'You have reached the limit of requests per minute. Please try again later.';
         }
-        if (errorMessage.includes("401") || errorMessage.includes("403")) {
-            return "You are not authorized to access this resource. Please try again.";
+        if (errorMessage.includes('401') || errorMessage.includes('403')) {
+            return 'You are not authorized to access this resource. Please try again.';
         }
-        if (errorMessage.toLowerCase().includes("timeout")) {
-            return "The request timed out. Please try again.";
+        if (errorMessage.toLowerCase().includes('timeout')) {
+            return 'The request timed out. Please try again.';
         }
         if (
-            errorMessage.toLowerCase().includes("api") &&
-            errorMessage.toLowerCase().includes("key")
+            errorMessage.toLowerCase().includes('api')
+            && errorMessage.toLowerCase().includes('key')
         ) {
-            return "The API key is invalid. Please try again.";
+            return 'The API key is invalid. Please try again.';
         }
 
         // LM Studio specific error handling (preserve existing logic)
         if (/ECONNREFUSED.*localhost/i.test(errorMessage)) {
-            return "Local LM Studio server is not reachable. Ensure it is running (e.g. `lms server start --cors`).";
+            return 'Local LM Studio server is not reachable. Ensure it is running (e.g. `lms server start --cors`).';
         }
         if (/fetch failed.*localhost/i.test(errorMessage)) {
-            return "Cannot connect to LM Studio. Ensure the server is running on the correct port.";
+            return 'Cannot connect to LM Studio. Ensure the server is running on the correct port.';
         }
 
-        return "Something went wrong. Please try again later.";
+        return 'Something went wrong. Please try again later.';
     }
 };

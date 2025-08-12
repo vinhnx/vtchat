@@ -1,12 +1,12 @@
-import Hotjar from "@hotjar/browser";
-import { log } from "../src/lib/logger";
+import Hotjar from '@hotjar/browser';
+import { log } from '../src/lib/logger';
 
 const siteId = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 const hotjarVersion = process.env.NEXT_PUBLIC_HOTJAR_VERSION;
 
 const initHotjar = () => {
     // Only initialize in browser environment
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
         return;
     }
 
@@ -26,7 +26,7 @@ const initHotjar = () => {
         if (Number.isNaN(parsedSiteId) || Number.isNaN(parsedVersion)) {
             log.warn(
                 { siteId, hotjarVersion },
-                "Hotjar configuration invalid: siteId or version is not a valid number",
+                'Hotjar configuration invalid: siteId or version is not a valid number',
             );
             return;
         }
@@ -35,32 +35,32 @@ const initHotjar = () => {
         if (parsedSiteId <= 0 || parsedVersion <= 0) {
             log.warn(
                 { siteId: parsedSiteId, version: parsedVersion },
-                "Hotjar configuration invalid: values must be positive numbers",
+                'Hotjar configuration invalid: values must be positive numbers',
             );
             return;
         }
 
         // Initialize Hotjar with proper error handling and timeout
         const initTimeout = setTimeout(() => {
-            log.warn("Hotjar initialization timed out");
+            log.warn('Hotjar initialization timed out');
         }, 5000);
 
         Hotjar.init(parsedSiteId, parsedVersion, {
-            debug: process.env.NODE_ENV === "development",
+            debug: process.env.NODE_ENV === 'development',
         });
 
         clearTimeout(initTimeout);
 
         log.info(
             { siteId: parsedSiteId, version: parsedVersion },
-            "Hotjar initialized successfully",
+            'Hotjar initialized successfully',
         );
     } catch (error) {
         // Log error but don't throw to prevent app crashes
-        log.warn({ error }, "Failed to initialize Hotjar");
+        log.warn({ error }, 'Failed to initialize Hotjar');
 
         // Additional safety: if Hotjar fails, ensure it doesn't break the app
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
             // Provide a minimal fallback to prevent undefined errors
             (window as any).hj = (window as any).hj || (() => {});
         }

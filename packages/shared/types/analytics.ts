@@ -1,5 +1,5 @@
-import { PAYMENT_EVENT_TYPES, TOOL_FEATURES } from "../constants";
-import type { PlanSlug } from "./subscription";
+import { PAYMENT_EVENT_TYPES, TOOL_FEATURES } from '../constants';
+import type { PlanSlug } from './subscription';
 
 // Generic event data type for analytics
 export interface EventData {
@@ -89,7 +89,7 @@ export interface PerformanceEventData extends EventData {
 
 export interface SecurityEventData extends EventData {
     eventType: string;
-    severity?: "low" | "medium" | "high" | "critical";
+    severity?: 'low' | 'medium' | 'high' | 'critical';
     blocked?: boolean;
     userAgent?: string; // Sanitized
     ipHash?: string; // Hashed IP for privacy
@@ -98,90 +98,90 @@ export interface SecurityEventData extends EventData {
 // Event name constants to ensure consistency
 export const ANALYTICS_EVENTS = {
     // Authentication Events
-    USER_SIGNED_IN: "UserSignedIn",
-    USER_SIGNED_OUT: "UserSignedOut",
-    USER_REGISTERED: "UserRegistered",
-    AUTH_METHOD_SELECTED: "AuthMethodSelected",
+    USER_SIGNED_IN: 'UserSignedIn',
+    USER_SIGNED_OUT: 'UserSignedOut',
+    USER_REGISTERED: 'UserRegistered',
+    AUTH_METHOD_SELECTED: 'AuthMethodSelected',
 
     // Chat Events
-    MESSAGE_SENT: "MessageSent",
-    CHAT_STARTED: "ChatStarted",
-    MODEL_SELECTED: "ModelSelected",
-    RESPONSE_RECEIVED: "ResponseReceived",
-    CONVERSATION_EXPORTED: "ConversationExported",
-    THREAD_CREATED: "ThreadCreated",
-    THREAD_DELETED: "ThreadDeleted",
+    MESSAGE_SENT: 'MessageSent',
+    CHAT_STARTED: 'ChatStarted',
+    MODEL_SELECTED: 'ModelSelected',
+    RESPONSE_RECEIVED: 'ResponseReceived',
+    CONVERSATION_EXPORTED: 'ConversationExported',
+    THREAD_CREATED: 'ThreadCreated',
+    THREAD_DELETED: 'ThreadDeleted',
 
     // Feature Usage
-    FILE_UPLOADED: "FileUploaded",
-    TOOL_USED: "ToolUsed",
-    SETTINGS_CHANGED: "SettingsChanged",
-    THEME_CHANGED: "ThemeChanged",
-    PROMPT_BOOST_USED: "PromptBoostUsed",
+    FILE_UPLOADED: 'FileUploaded',
+    TOOL_USED: 'ToolUsed',
+    SETTINGS_CHANGED: 'SettingsChanged',
+    THEME_CHANGED: 'ThemeChanged',
+    PROMPT_BOOST_USED: 'PromptBoostUsed',
 
     // Subscription Events
-    SUBSCRIPTION_CREATED: "SubscriptionCreated",
-    SUBSCRIPTION_CANCELLED: "SubscriptionCancelled",
-    SUBSCRIPTION_RENEWED: "SubscriptionRenewed",
-    PLAN_UPGRADE_INITIATED: "PlanUpgradeInitiated",
-    PLAN_UPGRADE_COMPLETED: "PlanUpgradeCompleted",
+    SUBSCRIPTION_CREATED: 'SubscriptionCreated',
+    SUBSCRIPTION_CANCELLED: 'SubscriptionCancelled',
+    SUBSCRIPTION_RENEWED: 'SubscriptionRenewed',
+    PLAN_UPGRADE_INITIATED: 'PlanUpgradeInitiated',
+    PLAN_UPGRADE_COMPLETED: 'PlanUpgradeCompleted',
 
     // User Journey Events
-    ONBOARDING_STARTED: "OnboardingStarted",
-    ONBOARDING_COMPLETED: "OnboardingCompleted",
-    FIRST_MESSAGE_SENT: "FirstMessageSent",
-    FEATURE_DISCOVERED: "FeatureDiscovered",
-    HELP_ACCESSED: "HelpAccessed",
+    ONBOARDING_STARTED: 'OnboardingStarted',
+    ONBOARDING_COMPLETED: 'OnboardingCompleted',
+    FIRST_MESSAGE_SENT: 'FirstMessageSent',
+    FEATURE_DISCOVERED: 'FeatureDiscovered',
+    HELP_ACCESSED: 'HelpAccessed',
 
     // Navigation Events
-    PAGE_VIEWED: "PageViewed",
-    EXTERNAL_LINK_CLICKED: "ExternalLinkClicked",
-    SEARCH_PERFORMED: "SearchPerformed",
+    PAGE_VIEWED: 'PageViewed',
+    EXTERNAL_LINK_CLICKED: 'ExternalLinkClicked',
+    SEARCH_PERFORMED: 'SearchPerformed',
 
     // Error Events (no PII)
-    ERROR_ENCOUNTERED: "ErrorEncountered",
-    API_ERROR: "APIError",
-    CONNECTION_FAILED: "ConnectionFailed",
+    ERROR_ENCOUNTERED: 'ErrorEncountered',
+    API_ERROR: 'APIError',
+    CONNECTION_FAILED: 'ConnectionFailed',
 
     // Performance Events
-    PAGE_LOAD_TIME: "PageLoadTime",
-    API_RESPONSE_TIME: "APIResponseTime",
-    FEATURE_LOAD_TIME: "FeatureLoadTime",
+    PAGE_LOAD_TIME: 'PageLoadTime',
+    API_RESPONSE_TIME: 'APIResponseTime',
+    FEATURE_LOAD_TIME: 'FeatureLoadTime',
 
     // Additional Events (previously hardcoded)
-    FEATURE_GATE_ENCOUNTERED: "FeatureGateEncountered",
-    PAYMENT_EVENT: "PaymentEvent",
+    FEATURE_GATE_ENCOUNTERED: 'FeatureGateEncountered',
+    PAYMENT_EVENT: 'PaymentEvent',
 
     // Critical Payment Operations
-    PAYMENT_INITIATED: "PaymentInitiated",
-    PAYMENT_METHOD_SELECTED: "PaymentMethodSelected",
-    PAYMENT_VALIDATION_FAILED: "PaymentValidationFailed",
-    PAYMENT_PROCESSING_ERROR: "PaymentProcessingError",
+    PAYMENT_INITIATED: 'PaymentInitiated',
+    PAYMENT_METHOD_SELECTED: 'PaymentMethodSelected',
+    PAYMENT_VALIDATION_FAILED: 'PaymentValidationFailed',
+    PAYMENT_PROCESSING_ERROR: 'PaymentProcessingError',
 
     // Document Operations
-    DOCUMENT_UPLOADED: "DocumentUploaded",
-    DOCUMENT_PROCESSED: "DocumentProcessed",
-    DOCUMENT_PROCESSING_FAILED: "DocumentProcessingFailed",
+    DOCUMENT_UPLOADED: 'DocumentUploaded',
+    DOCUMENT_PROCESSED: 'DocumentProcessed',
+    DOCUMENT_PROCESSING_FAILED: 'DocumentProcessingFailed',
 
     // Tool Operations (using constants from features.ts)
-    WEB_SEARCH_EXECUTED: "WebSearchExecuted",
-    WEB_SEARCH_FAILED: "WebSearchFailed",
-    MATH_CALCULATION_EXECUTED: "MathCalculationExecuted",
-    CHART_GENERATED: "ChartGenerated",
+    WEB_SEARCH_EXECUTED: 'WebSearchExecuted',
+    WEB_SEARCH_FAILED: 'WebSearchFailed',
+    MATH_CALCULATION_EXECUTED: 'MathCalculationExecuted',
+    CHART_GENERATED: 'ChartGenerated',
 
     // Performance & Reliability
-    RESPONSE_TIMEOUT: "ResponseTimeout",
-    RATE_LIMIT_EXCEEDED: "RateLimitExceeded",
-    QUOTA_EXCEEDED: "QuotaExceeded",
-    SERVICE_UNAVAILABLE: "ServiceUnavailable",
+    RESPONSE_TIMEOUT: 'ResponseTimeout',
+    RATE_LIMIT_EXCEEDED: 'RateLimitExceeded',
+    QUOTA_EXCEEDED: 'QuotaExceeded',
+    SERVICE_UNAVAILABLE: 'ServiceUnavailable',
 
     // Security Events
-    SUSPICIOUS_ACTIVITY: "SuspiciousActivity",
-    SESSION_EXPIRED: "SessionExpired",
+    SUSPICIOUS_ACTIVITY: 'SuspiciousActivity',
+    SESSION_EXPIRED: 'SessionExpired',
 
     // Premium Features
-    PREMIUM_FEATURE_ACCESSED: "PremiumFeatureAccessed",
-    FEATURE_LIMIT_REACHED: "FeatureLimitReached",
+    PREMIUM_FEATURE_ACCESSED: 'PremiumFeatureAccessed',
+    FEATURE_LIMIT_REACHED: 'FeatureLimitReached',
 } as const;
 
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS];
@@ -206,10 +206,10 @@ export interface UserProperties {
     messageCount?: number;
     lastActiveDate?: string;
     preferredModel?: string;
-    themePreference?: "light" | "dark" | "system";
+    themePreference?: 'light' | 'dark' | 'system';
     timezone?: string;
     locale?: string;
-    deviceType?: "desktop" | "mobile" | "tablet";
+    deviceType?: 'desktop' | 'mobile' | 'tablet';
     browserName?: string;
     referralSource?: string;
     featureFlags?: string[];

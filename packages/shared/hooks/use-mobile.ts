@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -23,5 +23,5 @@ export function useIsMobile() {
     }, []);
 
     // Return false during SSR to prevent hydration mismatch
-    return typeof window === "undefined" ? false : !!isMobile;
+    return typeof window === 'undefined' ? false : !!isMobile;
 }

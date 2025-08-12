@@ -4,7 +4,7 @@
  * Single source of truth for determining the application's base URL
  * across all environments (development, CI, production).
  */
-import { log } from "../lib/logger";
+import { log } from '../lib/logger';
 
 interface BaseURLOptions {
     /**
@@ -46,11 +46,11 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
             if (value) {
                 url = value;
                 // Warn about deprecated usage
-                if (typeof console !== "undefined" && process.env.NODE_ENV !== "test") {
+                if (typeof console !== 'undefined' && process.env.NODE_ENV !== 'test') {
                     log.warn(
                         {
                             deprecatedVar: varName,
-                            replacement: "NEXT_PUBLIC_APP_URL",
+                            replacement: 'NEXT_PUBLIC_APP_URL',
                         },
                         `[config] ${varName} is deprecated; please use NEXT_PUBLIC_APP_URL instead`,
                     );
@@ -62,16 +62,18 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
 
     // Development fallback
     if (!url) {
-        if (process.env.NODE_ENV === "production") {
-            throw new Error("APP_URL or NEXT_PUBLIC_APP_URL must be set in production environment");
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('APP_URL or NEXT_PUBLIC_APP_URL must be set in production environment');
         }
-        return "http://localhost:3000";
+        return 'http://localhost:3000';
     }
 
     // Normalize URL (remove trailing slashes)
     return (
-        url?.replace(/\/+$/, "") ||
-        (process.env.NODE_ENV === "production" ? "https://vtchat.io.vn" : "http://localhost:3000")
+        url?.replace(/\/+$/, '')
+        || (process.env.NODE_ENV === 'production'
+            ? 'https://vtchat.io.vn'
+            : 'http://localhost:3000')
     );
 }
 
@@ -83,9 +85,9 @@ export function getPublicBaseURL(): string {
     const result = getBaseURL({ public: true });
     if (!result) {
         // This should never happen due to fallback logic, but just in case
-        return process.env.NODE_ENV === "production"
-            ? "https://vtchat.io.vn"
-            : "http://localhost:3000";
+        return process.env.NODE_ENV === 'production'
+            ? 'https://vtchat.io.vn'
+            : 'http://localhost:3000';
     }
     return result;
 }

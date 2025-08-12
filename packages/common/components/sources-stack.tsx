@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 const isValidUrl = (url: string) => {
     try {
@@ -23,8 +23,8 @@ const getFavIcon = (host?: string) => {
     }
     // Skip favicon for grounding API redirects
     if (
-        host.includes("vertexaisearch.cloud.google.com") ||
-        host.includes("grounding-api-redirect")
+        host.includes('vertexaisearch.cloud.google.com')
+        || host.includes('grounding-api-redirect')
     ) {
         return null;
     }
@@ -35,25 +35,25 @@ const getFavIcon = (host?: string) => {
     }
 };
 
-export const SourcesStack = ({ urls }: { urls: string[] }) => {
+export const SourcesStack = ({ urls }: { urls: string[]; }) => {
     if (urls.length === 0) {
         return null;
     }
     return (
-        <div className="bg-secondary flex flex-row items-center gap-2 rounded-full border p-1 text-xs">
-            <div className="-gap-2 flex flex-row">
+        <div className='bg-secondary flex flex-row items-center gap-2 rounded-full border p-1 text-xs'>
+            <div className='-gap-2 flex flex-row'>
                 {urls.slice(0, 3).map((url, index) => {
                     const host = getHost(url);
-                    const favIcon = getFavIcon(host ?? "");
+                    const favIcon = getFavIcon(host ?? '');
                     if (isValidUrl(url) && favIcon) {
                         return (
                             <div
-                                className="border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border"
+                                className='border-border bg-background relative -mr-2 h-6 w-6 overflow-hidden rounded-full border'
                                 key={index}
                             >
                                 <Image
-                                    alt={host ?? ""}
-                                    className="not-prose absolute inset-0 h-full w-full object-cover"
+                                    alt={host ?? ''}
+                                    className='not-prose absolute inset-0 h-full w-full object-cover'
                                     fill
                                     src={favIcon}
                                 />
@@ -62,8 +62,8 @@ export const SourcesStack = ({ urls }: { urls: string[] }) => {
                     }
                     return null;
                 })}
-            </div>{" "}
-            <div className="text-brand px-1 text-xs">{urls.length} sources</div>
+            </div>{' '}
+            <div className='text-brand px-1 text-xs'>{urls.length} sources</div>
         </div>
     );
 };

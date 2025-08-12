@@ -1,6 +1,6 @@
-import type { ErrorContext, ErrorMessage } from "@repo/ai/services/error-messages";
-import { useToast } from "@repo/ui";
-import { useCallback } from "react";
+import type { ErrorContext, ErrorMessage } from '@repo/ai/services/error-messages';
+import { useToast } from '@repo/ui';
+import { useCallback } from 'react';
 
 /**
  * Custom hook for consistent error handling across React components
@@ -23,7 +23,7 @@ export function useErrorHandler() {
 
             try {
                 // Dynamically import the error message service to avoid bundling issues
-                const { generateErrorMessage } = await import("@repo/ai/services/error-messages");
+                const { generateErrorMessage } = await import('@repo/ai/services/error-messages');
 
                 const structuredError = generateErrorMessage(error, context);
 
@@ -37,7 +37,7 @@ export function useErrorHandler() {
                     toast({
                         title: structuredError.title,
                         description: structuredError.message,
-                        variant: "destructive",
+                        variant: 'destructive',
                         duration,
                     });
                 }
@@ -45,20 +45,20 @@ export function useErrorHandler() {
                 return structuredError;
             } catch (_serviceError) {
                 // Fallback error handling if the service fails
-                const fallbackMessage = typeof error === "string" ? error : error.message;
+                const fallbackMessage = typeof error === 'string' ? error : error.message;
 
                 if (showToast) {
                     toast({
-                        title: "Error",
-                        description: fallbackMessage || "An unexpected error occurred",
-                        variant: "destructive",
+                        title: 'Error',
+                        description: fallbackMessage || 'An unexpected error occurred',
+                        variant: 'destructive',
                         duration,
                     });
                 }
 
                 return {
-                    title: "Error",
-                    message: fallbackMessage || "An unexpected error occurred",
+                    title: 'Error',
+                    message: fallbackMessage || 'An unexpected error occurred',
                 };
             }
         },
@@ -83,7 +83,7 @@ export function useErrorHandler() {
                 model,
                 hasApiKey,
                 isVtPlus,
-                originalError: typeof error === "string" ? error : error.message,
+                originalError: typeof error === 'string' ? error : error.message,
             };
 
             return showError(error, context, options);
@@ -103,7 +103,7 @@ export function useErrorHandler() {
         ) => {
             const context: ErrorContext = {
                 provider: provider as any,
-                originalError: typeof error === "string" ? error : error.message,
+                originalError: typeof error === 'string' ? error : error.message,
             };
 
             return showError(error, context, options);
@@ -125,22 +125,22 @@ export function extractErrorContext(
     error: Error | string,
     additionalContext: Partial<ErrorContext> = {},
 ): ErrorContext {
-    const errorMessage = typeof error === "string" ? error : error.message;
+    const errorMessage = typeof error === 'string' ? error : error.message;
     const errorLower = errorMessage.toLowerCase();
 
     // Try to extract provider from error message
     let provider: string | undefined;
-    if (errorLower.includes("openai")) provider = "openai";
-    else if (errorLower.includes("anthropic") || errorLower.includes("claude"))
-        provider = "anthropic";
-    else if (errorLower.includes("google") || errorLower.includes("gemini")) provider = "google";
-    else if (errorLower.includes("together")) provider = "together";
-    else if (errorLower.includes("fireworks")) provider = "fireworks";
-    else if (errorLower.includes("xai") || errorLower.includes("grok")) provider = "xai";
-    else if (errorLower.includes("openrouter")) provider = "openrouter";
-    else if (errorLower.includes("lmstudio") || errorLower.includes("lm studio"))
-        provider = "lmstudio";
-    else if (errorLower.includes("ollama")) provider = "ollama";
+    if (errorLower.includes('openai')) provider = 'openai';
+    else if (errorLower.includes('anthropic') || errorLower.includes('claude')) {
+        provider = 'anthropic';
+    } else if (errorLower.includes('google') || errorLower.includes('gemini')) provider = 'google';
+    else if (errorLower.includes('together')) provider = 'together';
+    else if (errorLower.includes('fireworks')) provider = 'fireworks';
+    else if (errorLower.includes('xai') || errorLower.includes('grok')) provider = 'xai';
+    else if (errorLower.includes('openrouter')) provider = 'openrouter';
+    else if (errorLower.includes('lmstudio') || errorLower.includes('lm studio')) {
+        provider = 'lmstudio';
+    } else if (errorLower.includes('ollama')) provider = 'ollama';
 
     return {
         provider: provider as any,

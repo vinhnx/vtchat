@@ -3,11 +3,11 @@
  * Detects data integrity issues and subscription mismatches
  */
 
-import { log } from "@repo/shared/logger";
-import { and, eq, inArray, sql } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { userSubscriptions, users } from "@/lib/database/schema";
-import { SubscriptionService } from "@/lib/services/subscription-service";
+import { db } from '@/lib/database';
+import { users, userSubscriptions } from '@/lib/database/schema';
+import { SubscriptionService } from '@/lib/services/subscription-service';
+import { log } from '@repo/shared/logger';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 interface SubscriptionMetrics {
     totalUsers: number;
@@ -38,7 +38,7 @@ export class SubscriptionMonitoring {
                     count: sql<number>`COUNT(*)`,
                 })
                 .from(userSubscriptions)
-                .where(inArray(userSubscriptions.status, ["active", "trialing", "past_due"]))
+                .where(inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']))
                 .groupBy(userSubscriptions.userId)
                 .having(sql`COUNT(*) > 1`);
 
@@ -54,7 +54,7 @@ export class SubscriptionMonitoring {
                     userSubscriptions,
                     and(
                         eq(users.id, userSubscriptions.userId),
-                        inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                        inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                     ),
                 )
                 .where(sql`
@@ -71,7 +71,7 @@ export class SubscriptionMonitoring {
                 .from(userSubscriptions)
                 .where(
                     and(
-                        inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                        inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                         sql`current_period_end < NOW()`,
                     ),
                 );
@@ -86,14 +86,14 @@ export class SubscriptionMonitoring {
 
             // Log critical issues
             if (metrics.duplicateActiveSubscriptions > 0) {
-                log.error("CRITICAL: Users with duplicate active subscriptions detected", {
+                log.error('CRITICAL: Users with duplicate active subscriptions detected', {
                     count: metrics.duplicateActiveSubscriptions,
                     users: duplicateActiveQuery.map((u) => u.userId),
                 });
             }
 
             if (metrics.planSlugMismatches > 0) {
-                log.error("CRITICAL: Plan slug mismatches detected", {
+                log.error('CRITICAL: Plan slug mismatches detected', {
                     count: metrics.planSlugMismatches,
                     mismatches: mismatchQuery.map((m) => ({
                         userId: m.userId,
@@ -104,7 +104,7 @@ export class SubscriptionMonitoring {
             }
 
             if (metrics.expiredButActiveSubscriptions > 0) {
-                log.warn("Expired but active subscriptions detected", {
+                log.warn('Expired but active subscriptions detected', {
                     count: metrics.expiredButActiveSubscriptions,
                     subscriptions: expiredActiveQuery.map((s) => ({
                         id: s.id,
@@ -115,7 +115,7 @@ export class SubscriptionMonitoring {
 
             return metrics;
         } catch (error) {
-            log.error("Failed to get subscription metrics", { error });
+            log.error('Failed to get subscription metrics', { error });
             throw error;
         }
     }
@@ -158,11 +158,13 @@ export class SubscriptionMonitoring {
                 metrics,
             };
         } catch (error) {
-            log.error("Health check failed", { error });
+            log.error('Health check failed', { error });
             return {
                 healthy: false,
                 issues: [
-                    `Health check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+                    `Health check failed: ${
+                        error instanceof Error ? error.message : 'Unknown error'
+                    }`,
                 ],
                 metrics: {
                     totalUsers: 0,
@@ -194,11 +196,11 @@ export class SubscriptionMonitoring {
                     userId: userSubscriptions.userId,
                 })
                 .from(userSubscriptions)
-                .where(inArray(userSubscriptions.status, ["active", "trialing", "past_due"]))
+                .where(inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']))
                 .groupBy(userSubscriptions.userId)
                 .having(sql`COUNT(*) > 1`);
 
-            log.info("Starting auto-fix for subscription issues", {
+            log.info('Starting auto-fix for subscription issues', {
                 duplicateUsers: duplicates.length,
             });
 
@@ -207,25 +209,27 @@ export class SubscriptionMonitoring {
                 try {
                     await SubscriptionService.fixUserSubscriptions(userId);
                     fixed++;
-                    log.info("Fixed subscription issues for user", { userId });
+                    log.info('Fixed subscription issues for user', { userId });
                 } catch (error) {
                     failed++;
-                    const errorMsg = `Failed to fix user ${userId}: ${error instanceof Error ? error.message : "Unknown error"}`;
+                    const errorMsg = `Failed to fix user ${userId}: ${
+                        error instanceof Error ? error.message : 'Unknown error'
+                    }`;
                     errors.push(errorMsg);
-                    log.error("Failed to fix subscription issues", { userId, error });
+                    log.error('Failed to fix subscription issues', { userId, error });
                 }
             }
 
-            log.info("Auto-fix completed", { fixed, failed, errors: errors.length });
+            log.info('Auto-fix completed', { fixed, failed, errors: errors.length });
 
             return { fixed, failed, errors };
         } catch (error) {
-            log.error("Auto-fix process failed", { error });
+            log.error('Auto-fix process failed', { error });
             return {
                 fixed: 0,
                 failed: 0,
                 errors: [
-                    `Auto-fix failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+                    `Auto-fix failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
                 ],
             };
         }
@@ -259,7 +263,7 @@ export class SubscriptionMonitoring {
                 .where(
                     and(
                         eq(userSubscriptions.userId, testUserId),
-                        inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                        inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                     ),
                 )
                 .limit(1);
@@ -270,13 +274,13 @@ export class SubscriptionMonitoring {
             if (subscriptionResult.length === 0) {
                 return {
                     success: false,
-                    error: "No active subscription found for canary user",
+                    error: 'No active subscription found for canary user',
                     responseTime,
                 };
             }
 
             const subscription = subscriptionResult[0];
-            if (subscription.plan !== "vt_plus") {
+            if (subscription.plan !== 'vt_plus') {
                 return {
                     success: false,
                     error: `Expected vt_plus plan, got ${subscription.plan}`,
@@ -287,7 +291,7 @@ export class SubscriptionMonitoring {
             if (subscription.currentPeriodEnd && new Date() > subscription.currentPeriodEnd) {
                 return {
                     success: false,
-                    error: "Canary subscription is expired",
+                    error: 'Canary subscription is expired',
                     responseTime,
                 };
             }
@@ -299,7 +303,7 @@ export class SubscriptionMonitoring {
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : "Unknown error",
+                error: error instanceof Error ? error.message : 'Unknown error',
                 responseTime: Date.now() - startTime,
             };
         }

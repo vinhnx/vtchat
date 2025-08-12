@@ -21,7 +21,7 @@ The tool system now supports the full range of AI SDK tool call states:
 New utilities in `packages/ai/tools/streaming-utils.ts`:
 
 ```typescript
-import { StreamingToolExecutor, createPartialToolCall, createToolResult } from '@repo/ai/tools';
+import { createPartialToolCall, createToolResult, StreamingToolExecutor } from '@repo/ai/tools';
 
 // Create streaming executor
 const executor = new StreamingToolExecutor({
@@ -41,7 +41,7 @@ await executor.executeToolWithStreaming(toolCall, async args => {
 Centralized tool management in `packages/ai/tools/registry.ts`:
 
 ```typescript
-import { toolRegistry, getToolsForModel } from '@repo/ai/tools';
+import { getToolsForModel, toolRegistry } from '@repo/ai/tools';
 
 // Get tools for a specific model and context
 const tools = getToolsForModel('gpt-4o-mini', {
@@ -130,9 +130,9 @@ export type ToolResult = {
 ### 1. **OpenAI Web Search with Streaming**
 
 ```typescript
+import { openai } from '@ai-sdk/openai';
 import { getToolsForModel } from '@repo/ai/tools';
 import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
 
 const tools = getToolsForModel('gpt-4o-mini', {
     enableWebSearch: true,

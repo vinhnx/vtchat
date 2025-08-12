@@ -1,31 +1,31 @@
+import { db } from '@/lib/database';
+import { vtplusUsage } from '@/lib/database/schema';
 import {
     QUOTA_WINDOW,
     QuotaExceededError,
     type QuotaWindow,
     VtPlusFeature,
-} from "@repo/common/config/vtPlusLimits";
-import { log } from "@repo/shared/lib/logger";
-import type { PlanSlug } from "@repo/shared/types/subscription";
-import { and, eq, inArray, sql } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { vtplusUsage } from "@/lib/database/schema";
-import { getQuotaConfig } from "./quota-config.service";
+} from '@repo/common/config/vtPlusLimits';
+import { log } from '@repo/shared/lib/logger';
+import type { PlanSlug } from '@repo/shared/types/subscription';
+import { and, eq, inArray, sql } from 'drizzle-orm';
+import { getQuotaConfig } from './quota-config.service';
 
 /**
  * Rate limiter error messages
  */
 const RateLimiterErrorMessage = {
-    AMOUNT_MUST_BE_POSITIVE: "Amount must be positive",
-    FAILED_TO_CONSUME_QUOTA: "Failed to consume quota",
+    AMOUNT_MUST_BE_POSITIVE: 'Amount must be positive',
+    FAILED_TO_CONSUME_QUOTA: 'Failed to consume quota',
 } as const;
 
 /**
  * Rate limiter log messages
  */
 const RateLimiterLogMessage = {
-    ATTEMPTING_TO_CONSUME: "Attempting to consume VT+ quota",
-    QUOTA_CONSUMED_SUCCESS: "VT+ quota consumed successfully via Drizzle",
-    FAILED_TO_CONSUME: "Failed to consume VT+ quota",
+    ATTEMPTING_TO_CONSUME: 'Attempting to consume VT+ quota',
+    QUOTA_CONSUMED_SUCCESS: 'VT+ quota consumed successfully via Drizzle',
+    FAILED_TO_CONSUME: 'Failed to consume VT+ quota',
 } as const;
 
 export interface ConsumeOptions {
@@ -64,7 +64,7 @@ async function getCurrentUsageNonTx(
     periodStart: Date,
 ): Promise<number> {
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
     const result = await db
         .select({ used: vtplusUsage.used })
         .from(vtplusUsage)
@@ -89,9 +89,9 @@ async function upsertUsageNonTx(
     periodStart: Date,
     amount: number,
     limit: number,
-): Promise<{ used: number; exceeded: boolean }> {
+): Promise<{ used: number; exceeded: boolean; }> {
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
 
     // First, try to get current usage
     const currentUsage = await getCurrentUsageNonTx(userId, feature, periodStart);
@@ -184,7 +184,7 @@ export async function getUsage(
     const { limit, window } = await getQuotaConfig(feature, userPlan);
     const periodStart = getPeriodStart(window);
     // Convert to date string for database storage (YYYY-MM-DD format)
-    const periodStartDate = periodStart.toISOString().split("T")[0];
+    const periodStartDate = periodStart.toISOString().split('T')[0];
 
     const usage = await db
         .select()
@@ -216,7 +216,7 @@ export async function getAllUsage(
     const result: Record<VtPlusFeature, UsageResponse> = {} as Record<VtPlusFeature, UsageResponse>;
 
     // Get quota configurations for all features based on user's plan
-    const quotaConfigs = new Map<VtPlusFeature, { limit: number; window: QuotaWindow }>();
+    const quotaConfigs = new Map<VtPlusFeature, { limit: number; window: QuotaWindow; }>();
     for (const feature of Object.values(VtPlusFeature)) {
         const config = await getQuotaConfig(feature, userPlan);
         quotaConfigs.set(feature, config);
@@ -239,7 +239,7 @@ export async function getAllUsage(
     for (const [window, features] of Array.from(featuresByWindow.entries())) {
         const periodStart = getPeriodStart(window);
         // Convert to date string for database storage (YYYY-MM-DD format)
-        const periodStartDate = periodStart.toISOString().split("T")[0];
+        const periodStartDate = periodStart.toISOString().split('T')[0];
 
         const usageRecords = await db
             .select()

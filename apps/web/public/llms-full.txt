@@ -81,7 +81,7 @@ vtchat/
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
-- **Code Quality**: Biome (formatting & linting) + oxlint (comprehensive linting)
+- **Code Quality**: dprint (formatting) + oxlint (comprehensive linting)
 - **Type Checking**: TypeScript with strict configuration
 - **Performance Monitoring**: React Scan for development performance optimization
 
@@ -215,7 +215,7 @@ Security: NEXT_PUBLIC_BASE_URL
 
 ### Linting & Formatting
 - oxlint for comprehensive error checking
-- Biome for code formatting and style enforcement
+- dprint for code formatting and style enforcement
 - TypeScript strict configuration for type safety
 
 ### Testing Framework

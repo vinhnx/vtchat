@@ -1,6 +1,6 @@
-import { log } from "@repo/shared/logger";
-import type { EventEmitter } from "events";
-import type { TaskTiming, WorkflowState } from "./types";
+import { log } from '@repo/shared/logger';
+import type { EventEmitter } from 'events';
+import type { TaskTiming, WorkflowState } from './types';
 
 export class ExecutionContext {
     private state: WorkflowState;
@@ -67,7 +67,7 @@ export class ExecutionContext {
     abortWorkflow(graceful = false) {
         log.info(
             { graceful },
-            graceful ? "Gracefully stopping workflow..." : "Workflow aborted immediately!",
+            graceful ? 'Gracefully stopping workflow...' : 'Workflow aborted immediately!',
         );
         this.aborted = true;
         this.gracefulShutdown = graceful;
@@ -91,7 +91,7 @@ export class ExecutionContext {
 
     emitTaskExecutionEvent(taskName: string, count: number): void {
         if (this.eventEmitter) {
-            this.eventEmitter.emit("taskExecution", { taskName, count });
+            this.eventEmitter.emit('taskExecution', { taskName, count });
         }
     }
 
@@ -103,7 +103,7 @@ export class ExecutionContext {
     startTaskTiming(taskName: string) {
         const timing: TaskTiming = {
             startTime: Date.now(),
-            status: "success",
+            status: 'success',
         };
 
         if (!this.taskTimings.has(taskName)) {
@@ -119,7 +119,7 @@ export class ExecutionContext {
             currentTiming.endTime = Date.now();
             currentTiming.duration = currentTiming.endTime - currentTiming.startTime;
             if (error) {
-                currentTiming.status = "failed";
+                currentTiming.status = 'failed';
                 currentTiming.error = error;
             }
         }
@@ -143,7 +143,7 @@ export class ExecutionContext {
         };
 
         this.taskTimings.forEach((timings, taskName) => {
-            const failures = timings.filter((t) => t.status === "failed").length;
+            const failures = timings.filter((t) => t.status === 'failed').length;
             const completedTimings = timings.filter((t) => t.duration !== undefined);
             const totalDuration = completedTimings.reduce((sum, t) => sum + (t.duration ?? 0), 0);
             const validAttempts = completedTimings.length;
@@ -162,8 +162,8 @@ export class ExecutionContext {
     }
 
     parseDurationToMs(duration: string): number {
-        const [value, unit] = duration.split(" ");
-        const multiplier = unit === "ms" ? 1 : unit === "s" ? 1000 : 60_000;
+        const [value, unit] = duration.split(' ');
+        const multiplier = unit === 'ms' ? 1 : unit === 's' ? 1000 : 60_000;
         return Number.parseFloat(value) * multiplier;
     }
 
@@ -177,7 +177,7 @@ export class ExecutionContext {
         averageTaskDuration: string;
         slowestTask: string;
         highestFailureTask: string;
-        status: "success" | "failed";
+        status: 'success' | 'failed';
     } {
         const taskSummary = this.getTaskTimingSummary();
         let totalRuns = 0;
@@ -185,8 +185,8 @@ export class ExecutionContext {
         let totalDurationMs = 0;
         const totalTasks = Object.keys(taskSummary).length;
         let failedTasks = 0;
-        let slowestTask = { name: "", duration: 0 };
-        let highestFailureTask = { name: "", failures: 0 };
+        let slowestTask = { name: '', duration: 0 };
+        let highestFailureTask = { name: '', failures: 0 };
 
         Object.entries(taskSummary).forEach(([taskName, stats]) => {
             totalRuns += stats.attempts;
@@ -225,7 +225,7 @@ export class ExecutionContext {
             averageTaskDuration: formatDuration(totalTasks > 0 ? totalDurationMs / totalTasks : 0),
             slowestTask: slowestTask.name,
             highestFailureTask: highestFailureTask.name,
-            status: this.isAborted() || failedTasks > 0 ? "failed" : "success",
+            status: this.isAborted() || failedTasks > 0 ? 'failed' : 'success',
         };
     }
 }

@@ -67,8 +67,8 @@ size === 'sm'
 size === 'sm'
     ? 'text-xs'
     : size === 'md'
-      ? 'text-xs md:text-sm' // Smaller on mobile
-      : 'text-sm md:text-base';
+    ? 'text-xs md:text-sm' // Smaller on mobile
+    : 'text-sm md:text-base';
 ```
 
 #### Dots Animation - Smaller on Mobile

@@ -6,32 +6,32 @@
  */
 
 export const API_KEY_HEADERS = {
-    OPENAI: "X-VT-OpenAI-Key",
-    ANTHROPIC: "X-VT-Anthropic-Key",
-    GEMINI: "X-VT-Gemini-Key",
-    FIREWORKS: "X-VT-Fireworks-Key",
-    XAI: "X-VT-XAI-Key",
-    OPENROUTER: "X-VT-OpenRouter-Key",
-    TOGETHER: "X-VT-Together-Key",
-    JINA: "X-VT-Jina-Key",
+    OPENAI: 'X-VT-OpenAI-Key',
+    ANTHROPIC: 'X-VT-Anthropic-Key',
+    GEMINI: 'X-VT-Gemini-Key',
+    FIREWORKS: 'X-VT-Fireworks-Key',
+    XAI: 'X-VT-XAI-Key',
+    OPENROUTER: 'X-VT-OpenRouter-Key',
+    TOGETHER: 'X-VT-Together-Key',
+    JINA: 'X-VT-Jina-Key',
 } as const;
 
 export const SECURITY_HEADERS = {
     // Enforce HTTPS and prevent mixed content
-    CONTENT_SECURITY_POLICY: "Content-Security-Policy",
-    STRICT_TRANSPORT_SECURITY: "Strict-Transport-Security",
-    X_CONTENT_TYPE_OPTIONS: "X-Content-Type-Options",
-    X_FRAME_OPTIONS: "X-Frame-Options",
-    X_XSS_PROTECTION: "X-XSS-Protection",
-    REFERRER_POLICY: "Referrer-Policy",
+    CONTENT_SECURITY_POLICY: 'Content-Security-Policy',
+    STRICT_TRANSPORT_SECURITY: 'Strict-Transport-Security',
+    X_CONTENT_TYPE_OPTIONS: 'X-Content-Type-Options',
+    X_FRAME_OPTIONS: 'X-Frame-Options',
+    X_XSS_PROTECTION: 'X-XSS-Protection',
+    REFERRER_POLICY: 'Referrer-Policy',
 } as const;
 
 export const SECURITY_HEADER_VALUES = {
-    STRICT_TRANSPORT_SECURITY: "max-age=31536000; includeSubDomains; preload",
-    X_CONTENT_TYPE_OPTIONS: "nosniff",
-    X_FRAME_OPTIONS: "DENY",
-    X_XSS_PROTECTION: "1; mode=block",
-    REFERRER_POLICY: "strict-origin-when-cross-origin",
+    STRICT_TRANSPORT_SECURITY: 'max-age=31536000; includeSubDomains; preload',
+    X_CONTENT_TYPE_OPTIONS: 'nosniff',
+    X_FRAME_OPTIONS: 'DENY',
+    X_XSS_PROTECTION: '1; mode=block',
+    REFERRER_POLICY: 'strict-origin-when-cross-origin',
     CONTENT_SECURITY_POLICY:
         "default-src 'self'; connect-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
 } as const;
@@ -55,7 +55,7 @@ export const API_KEY_TO_HEADER_MAP: Record<string, string> = {
  */
 export function validateHTTPS(request: Request): boolean {
     const url = new URL(request.url);
-    return url.protocol === "https:" || process.env.NODE_ENV === "development";
+    return url.protocol === 'https:' || process.env.NODE_ENV === 'development';
 }
 
 /**

@@ -2,10 +2,16 @@
  * Enhanced error handling for PDF document processing with Gemini
  */
 
-import { log } from "@repo/shared/logger";
+import { log } from '@repo/shared/logger';
 
 export interface PDFProcessingError {
-    type: 'PDF_NO_PAGES' | 'PDF_FORMAT_ERROR' | 'PDF_SIZE_ERROR' | 'PDF_CORRUPTED' | 'API_ERROR' | 'UNKNOWN_ERROR';
+    type:
+        | 'PDF_NO_PAGES'
+        | 'PDF_FORMAT_ERROR'
+        | 'PDF_SIZE_ERROR'
+        | 'PDF_CORRUPTED'
+        | 'API_ERROR'
+        | 'UNKNOWN_ERROR';
     message: string;
     userMessage: string;
     suggestion: string;
@@ -17,11 +23,11 @@ export interface PDFProcessingError {
  */
 export function handlePDFProcessingError(error: any): PDFProcessingError {
     const errorMessage = error?.message || String(error);
-    
+
     log.error('PDF processing error', {
         message: errorMessage,
         stack: error?.stack,
-        cause: error?.cause
+        cause: error?.cause,
     });
 
     // Handle specific Gemini PDF errors
@@ -30,8 +36,9 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             type: 'PDF_NO_PAGES',
             message: errorMessage,
             userMessage: 'Unable to read the PDF document',
-            suggestion: 'Please ensure the PDF file is not corrupted and contains readable content. Try uploading a different PDF file.',
-            retryable: false
+            suggestion:
+                'Please ensure the PDF file is not corrupted and contains readable content. Try uploading a different PDF file.',
+            retryable: false,
         };
     }
 
@@ -40,8 +47,9 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             type: 'PDF_FORMAT_ERROR',
             message: errorMessage,
             userMessage: 'PDF format not supported',
-            suggestion: 'This PDF format cannot be processed. Try converting the PDF to an image (PNG/JPG) or use a different PDF file with text content.',
-            retryable: false
+            suggestion:
+                'This PDF format cannot be processed. Try converting the PDF to an image (PNG/JPG) or use a different PDF file with text content.',
+            retryable: false,
         };
     }
 
@@ -50,8 +58,9 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             type: 'PDF_SIZE_ERROR',
             message: errorMessage,
             userMessage: 'PDF file is too large',
-            suggestion: 'Please upload a smaller PDF file (under 10MB) or compress the PDF before uploading.',
-            retryable: false
+            suggestion:
+                'Please upload a smaller PDF file (under 10MB) or compress the PDF before uploading.',
+            retryable: false,
         };
     }
 
@@ -60,8 +69,9 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             type: 'API_ERROR',
             message: errorMessage,
             userMessage: 'API configuration error',
-            suggestion: 'Please check your Gemini API key in Settings > API Keys, or try again later.',
-            retryable: true
+            suggestion:
+                'Please check your Gemini API key in Settings > API Keys, or try again later.',
+            retryable: true,
         };
     }
 
@@ -71,7 +81,7 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             message: errorMessage,
             userMessage: 'Rate limit exceeded',
             suggestion: 'Please wait a moment and try again, or check your API quota.',
-            retryable: true
+            retryable: true,
         };
     }
 
@@ -81,7 +91,7 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
             message: errorMessage,
             userMessage: 'Network error',
             suggestion: 'Please check your internet connection and try again.',
-            retryable: true
+            retryable: true,
         };
     }
 
@@ -90,15 +100,16 @@ export function handlePDFProcessingError(error: any): PDFProcessingError {
         type: 'UNKNOWN_ERROR',
         message: errorMessage,
         userMessage: 'Failed to process PDF document',
-        suggestion: 'Please try again with a different PDF file, or contact support if the issue persists.',
-        retryable: true
+        suggestion:
+            'Please try again with a different PDF file, or contact support if the issue persists.',
+        retryable: true,
     };
 }
 
 /**
  * Validates PDF file before processing
  */
-export function validatePDFFile(file: File): { valid: boolean; error?: PDFProcessingError } {
+export function validatePDFFile(file: File): { valid: boolean; error?: PDFProcessingError; } {
     // Check file size
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
@@ -109,8 +120,8 @@ export function validatePDFFile(file: File): { valid: boolean; error?: PDFProces
                 message: `File size ${file.size} exceeds maximum ${maxSize}`,
                 userMessage: 'PDF file is too large',
                 suggestion: 'Please upload a PDF file smaller than 10MB.',
-                retryable: false
-            }
+                retryable: false,
+            },
         };
     }
 
@@ -123,8 +134,8 @@ export function validatePDFFile(file: File): { valid: boolean; error?: PDFProces
                 message: `Invalid MIME type: ${file.type}`,
                 userMessage: 'Invalid file type',
                 suggestion: 'Please upload a PDF file (.pdf extension).',
-                retryable: false
-            }
+                retryable: false,
+            },
         };
     }
 
@@ -137,8 +148,8 @@ export function validatePDFFile(file: File): { valid: boolean; error?: PDFProces
                 message: `Invalid file extension: ${file.name}`,
                 userMessage: 'Invalid file extension',
                 suggestion: 'Please upload a file with .pdf extension.',
-                retryable: false
-            }
+                retryable: false,
+            },
         };
     }
 
@@ -165,35 +176,35 @@ export function getPDFErrorDisplayMessage(error: PDFProcessingError): {
             return {
                 title: 'Cannot read PDF',
                 description: error.userMessage,
-                action: 'Try a different PDF file'
+                action: 'Try a different PDF file',
             };
-        
+
         case 'PDF_FORMAT_ERROR':
             return {
                 title: 'Unsupported PDF format',
                 description: error.userMessage,
-                action: 'Convert to image or try different PDF'
+                action: 'Convert to image or try different PDF',
             };
-        
+
         case 'PDF_SIZE_ERROR':
             return {
                 title: 'File too large',
                 description: error.userMessage,
-                action: 'Upload smaller file (under 10MB)'
+                action: 'Upload smaller file (under 10MB)',
             };
-        
+
         case 'API_ERROR':
             return {
                 title: 'Service temporarily unavailable',
                 description: error.userMessage,
-                action: error.retryable ? 'Try again' : 'Check API settings'
+                action: error.retryable ? 'Try again' : 'Check API settings',
             };
-        
+
         default:
             return {
                 title: 'PDF processing failed',
                 description: error.userMessage,
-                action: 'Try again or use different file'
+                action: 'Try again or use different file',
             };
     }
 }

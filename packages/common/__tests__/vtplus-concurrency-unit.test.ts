@@ -1,10 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
-import { VtPlusFeature } from "../src/config/vtPlusLimits";
+import { describe, expect, it, vi } from 'vitest';
+import { VtPlusFeature } from '../src/config/vtPlusLimits';
 
-describe("VT+ Quota Concurrency Logic Tests", () => {
-    it("should validate parallel consumeQuota call simulation", async () => {
+describe('VT+ Quota Concurrency Logic Tests', () => {
+    it('should validate parallel consumeQuota call simulation', async () => {
         // Simulate the atomic UPSERT behavior without requiring actual database
-        const _testUserId = "test-user";
+        const _testUserId = 'test-user';
         const _testFeature = VtPlusFeature.DEEP_RESEARCH;
         const concurrentCalls = 20;
         const amountPerCall = 1;
@@ -17,8 +17,9 @@ describe("VT+ Quota Concurrency Logic Tests", () => {
         });
 
         // Simulate parallel calls
-        const promises = Array.from({ length: concurrentCalls }, () =>
-            atomicIncrement(amountPerCall),
+        const promises = Array.from(
+            { length: concurrentCalls },
+            () => atomicIncrement(amountPerCall),
         );
 
         await Promise.all(promises);
@@ -28,7 +29,7 @@ describe("VT+ Quota Concurrency Logic Tests", () => {
         expect(atomicIncrement).toHaveBeenCalledTimes(concurrentCalls);
     });
 
-    it("should handle mixed amounts in parallel simulation", async () => {
+    it('should handle mixed amounts in parallel simulation', async () => {
         const calls = [1, 3, 2, 5, 1, 4, 2, 3, 1, 2];
         const expectedTotal = calls.reduce((sum, amount) => sum + amount, 0);
 
@@ -45,8 +46,8 @@ describe("VT+ Quota Concurrency Logic Tests", () => {
         expect(atomicIncrement).toHaveBeenCalledTimes(calls.length);
     });
 
-    it("should validate VT+ feature constants", () => {
-        expect(VtPlusFeature.DEEP_RESEARCH).toBe("DR");
-        expect(VtPlusFeature.PRO_SEARCH).toBe("PS");
+    it('should validate VT+ feature constants', () => {
+        expect(VtPlusFeature.DEEP_RESEARCH).toBe('DR');
+        expect(VtPlusFeature.PRO_SEARCH).toBe('PS');
     });
 });

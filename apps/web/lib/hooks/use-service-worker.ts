@@ -2,8 +2,8 @@
  * React hook for Service Worker management
  */
 
-import { useCallback, useEffect, useState } from "react";
-import { type CacheStats, swManager } from "../service-worker-manager";
+import { useCallback, useEffect, useState } from 'react';
+import { type CacheStats, swManager } from '../service-worker-manager';
 
 export interface ServiceWorkerHook {
     isSupported: boolean;
@@ -27,7 +27,7 @@ export function useServiceWorker(): ServiceWorkerHook {
     const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const isSupported = typeof window !== "undefined" && "serviceWorker" in navigator;
+    const isSupported = typeof window !== 'undefined' && 'serviceWorker' in navigator;
 
     // Initialize service worker
     useEffect(() => {
@@ -39,8 +39,9 @@ export function useServiceWorker(): ServiceWorkerHook {
         const initSW = async () => {
             try {
                 // Only register in production
-                const registration =
-                    process.env.NODE_ENV === "production" ? await swManager.register() : null;
+                const registration = process.env.NODE_ENV === 'production'
+                    ? await swManager.register()
+                    : null;
                 setIsRegistered(!!registration);
                 setHasUpdate(swManager.hasUpdateWaiting());
 
@@ -53,7 +54,7 @@ export function useServiceWorker(): ServiceWorkerHook {
                 const stats = await swManager.getCacheStats();
                 setCacheStats(stats);
             } catch (error) {
-                console.error("Service worker initialization failed:", error);
+                console.error('Service worker initialization failed:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -82,7 +83,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             await swManager.update();
             setHasUpdate(false);
         } catch (error) {
-            console.error("Service worker update failed:", error);
+            console.error('Service worker update failed:', error);
         }
     }, []);
 
@@ -95,7 +96,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error("Cache clear failed:", error);
+            console.error('Cache clear failed:', error);
         }
     }, []);
 
@@ -105,7 +106,7 @@ export function useServiceWorker(): ServiceWorkerHook {
         try {
             await swManager.forceSync();
         } catch (error) {
-            console.error("Force sync failed:", error);
+            console.error('Force sync failed:', error);
         }
     }, []);
 
@@ -116,7 +117,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error("Cache stats refresh failed:", error);
+            console.error('Cache stats refresh failed:', error);
         }
     }, []);
 

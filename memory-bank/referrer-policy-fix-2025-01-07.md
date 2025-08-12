@@ -45,15 +45,15 @@ Added explicit referrer policy to Image component:
 // packages/common/components/user-button.tsx
 <Image
     alt={user.name || user.email || 'User'}
-    className="rounded-full"
+    className='rounded-full'
     height={24}
     src={getSessionCacheBustedAvatarUrl(user.image) || user.image}
     width={24}
-    referrerPolicy="no-referrer-when-downgrade"
+    referrerPolicy='no-referrer-when-downgrade'
     onError={(e) => {
         // Fallback logic...
     }}
-/>
+/>;
 ```
 
 ### **Why This Works**
@@ -79,9 +79,9 @@ AFTER:  no-referrer-when-downgrade → Sends full URL to Google (HTTPS→HTTPS)
 
 ### **Expected Results**
 
-✅ **No Referrer Policy Warnings**: Console should be clean of referrer policy messages  
-✅ **Better Privacy**: More appropriate referrer behavior for different scenarios  
-✅ **Google Compatibility**: Meets Google's expectations for avatar image requests  
+✅ **No Referrer Policy Warnings**: Console should be clean of referrer policy messages\
+✅ **Better Privacy**: More appropriate referrer behavior for different scenarios\
+✅ **Google Compatibility**: Meets Google's expectations for avatar image requests\
 ✅ **Security Maintained**: Still protects against downgrade attacks
 
 ### **Testing Verification**

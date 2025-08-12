@@ -139,19 +139,19 @@ Better Auth has been optimized for maximum performance using the following techn
 ## Testing Recommendations
 
 1. **Performance Testing**:
-    - Measure page load times before/after
-    - Monitor auth check durations in console
-    - Test on slow network connections
+   - Measure page load times before/after
+   - Monitor auth check durations in console
+   - Test on slow network connections
 
 2. **Error Scenarios**:
-    - Test with network disconnected
-    - Test with slow database responses
-    - Test auth service failures
+   - Test with network disconnected
+   - Test with slow database responses
+   - Test auth service failures
 
 3. **User Experience**:
-    - Verify smooth login/logout flows
-    - Check loading states display properly
-    - Ensure error recovery works
+   - Verify smooth login/logout flows
+   - Check loading states display properly
+   - Ensure error recovery works
 
 ## Monitoring
 

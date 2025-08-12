@@ -1,17 +1,16 @@
-import { adminClient, multiSessionClient } from "better-auth/client/plugins";
-import { createAuthClient } from "better-auth/react";
+import { adminClient, multiSessionClient } from 'better-auth/client/plugins';
+import { createAuthClient } from 'better-auth/react';
 
 // Import performance utilities
-const requestDeduplicator =
-    typeof window !== "undefined"
-        ? import("@repo/shared/utils/request-deduplication").then((m) => m.requestDeduplicator)
-        : null;
+const requestDeduplicator = typeof window !== 'undefined'
+    ? import('@repo/shared/utils/request-deduplication').then((m) => m.requestDeduplicator)
+    : null;
 
 // Ensure proper URL formatting for Better Auth
 const getBaseURL = () => {
     // In production, always use the production URL
-    if (process.env.NODE_ENV === "production") {
-        return "https://vtchat.io.vn";
+    if (process.env.NODE_ENV === 'production') {
+        return 'https://vtchat.io.vn';
     }
 
     // Use environment variables in order of preference for development
@@ -26,12 +25,12 @@ const getBaseURL = () => {
     }
 
     // In development, use localhost or window origin
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
         return window.location.origin;
     }
 
     // Server-side fallback for development
-    return "http://localhost:3000";
+    return 'http://localhost:3000';
 };
 
 // Create the auth client that will be used across all packages
@@ -43,11 +42,11 @@ export const authClient = createAuthClient({
 
 // Create optimized session getter with deduplication
 const createOptimizedSessionGetter = () => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
         return authClient.getSession.bind(authClient);
     }
 
-    return async (options?: { query?: { disableCookieCache?: boolean } }) => {
+    return async (options?: { query?: { disableCookieCache?: boolean; }; }) => {
         if (!requestDeduplicator) {
             return authClient.getSession(options);
         }

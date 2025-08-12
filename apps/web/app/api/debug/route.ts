@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
@@ -6,8 +6,8 @@ export async function GET() {
         const envStatus = {
             NODE_ENV: process.env.NODE_ENV,
             CREEM_ENVIRONMENT: process.env.CREEM_ENVIRONMENT,
-            DATABASE_URL: process.env.DATABASE_URL ? "Set" : "Missing",
-            BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ? "Set" : "Missing",
+            DATABASE_URL: process.env.DATABASE_URL ? 'Set' : 'Missing',
+            BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ? 'Set' : 'Missing',
             BASE_URL: process.env.BASE_URL,
             NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
             PORT: process.env.PORT,
@@ -16,9 +16,9 @@ export async function GET() {
 
         return NextResponse.json(
             {
-                status: "ok",
+                status: 'ok',
                 timestamp: new Date().toISOString(),
-                service: "vtchat-debug",
+                service: 'vtchat-debug',
                 environment: envStatus,
                 platform: {
                     arch: process.arch,
@@ -31,8 +31,8 @@ export async function GET() {
     } catch (error) {
         return NextResponse.json(
             {
-                status: "error",
-                error: error instanceof Error ? error.message : "Unknown error",
+                status: 'error',
+                error: error instanceof Error ? error.message : 'Unknown error',
                 timestamp: new Date().toISOString(),
             },
             { status: 500 },

@@ -63,7 +63,7 @@ After running the migration, you should be able to:
 ## What's Fixed
 
 ✅ **Database table created**: `user_rate_limits` table with proper schema
-✅ **BYOK dialog fixed**: Free model doesn't require user API key  
+✅ **BYOK dialog fixed**: Free model doesn't require user API key\
 ✅ **Default model**: Gemini 2.5 Flash Lite Preview is now the default
 ✅ **Model ordering**: Free model appears first in Google section
 ✅ **Rate limiting**: 10 requests/day per account, 1 request/minute per account

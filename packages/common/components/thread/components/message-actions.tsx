@@ -1,9 +1,9 @@
-"use client";
-import { ChatModeOptions } from "@repo/common/components";
-import { useAgentStream, useCopyText } from "@repo/common/hooks";
-import { useChatStore } from "@repo/common/store";
-import { type ChatMode, getChatModeName } from "@repo/shared/config";
-import type { ThreadItem } from "@repo/shared/types";
+'use client';
+import { ChatModeOptions } from '@repo/common/components';
+import { useAgentStream, useCopyText } from '@repo/common/hooks';
+import { useChatStore } from '@repo/common/store';
+import { type ChatMode, getChatModeName } from '@repo/shared/config';
+import type { ThreadItem } from '@repo/shared/types';
 import {
     Alert,
     AlertDescription,
@@ -11,7 +11,7 @@ import {
     Button,
     DropdownMenu,
     DropdownMenuTrigger,
-} from "@repo/ui";
+} from '@repo/ui';
 import {
     AlertCircle,
     Check,
@@ -20,8 +20,8 @@ import {
     MessageCircleX,
     RefreshCcw,
     Trash2,
-} from "lucide-react";
-import React, { forwardRef, useState } from "react";
+} from 'lucide-react';
+import React, { forwardRef, useState } from 'react';
 
 type MessageActionsProps = {
     threadItem: ThreadItem;
@@ -36,39 +36,39 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         const useWebSearch = useChatStore((state) => state.useWebSearch);
         const [chatMode, setChatMode] = useState<ChatMode>(threadItem.mode);
         const { copyToClipboard, status, copyMarkdown, markdownCopyStatus } = useCopyText();
-        const [gatedFeatureAlert, setGatedFeatureAlert] = useState<{
-            feature?: string;
-            plan?: string;
-            title: string;
-            message: string;
-        } | null>(null);
+        const [gatedFeatureAlert, setGatedFeatureAlert] = useState<
+            {
+                feature?: string;
+                plan?: string;
+                title: string;
+                message: string;
+            } | null
+        >(null);
 
         const handleGatedFeature = React.useCallback(
-            (gateInfo: { feature?: string; plan?: string; title: string; message: string }) => {
+            (gateInfo: { feature?: string; plan?: string; title: string; message: string; }) => {
                 setGatedFeatureAlert(gateInfo);
             },
             [],
         );
         return (
-            <div className="flex flex-col gap-2">
-                <div className="flex flex-row items-center gap-1 py-2">
+            <div className='flex flex-col gap-2'>
+                <div className='flex flex-row items-center gap-1 py-2'>
                     {threadItem?.answer?.text && (
                         <Button
                             onClick={() => {
-                                if (ref && "current" in ref && ref.current) {
+                                if (ref && 'current' in ref && ref.current) {
                                     copyToClipboard(ref.current);
                                 }
                             }}
-                            size="icon-sm"
-                            tooltip="Copy"
-                            variant="secondary"
-                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
+                            size='icon-sm'
+                            tooltip='Copy'
+                            variant='secondary'
+                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
                         >
-                            {status === "copied" ? (
-                                <Check className="h-4 w-4" strokeWidth={2} />
-                            ) : (
-                                <Clipboard className="h-4 w-4" strokeWidth={2} />
-                            )}
+                            {status === 'copied'
+                                ? <Check className='h-4 w-4' strokeWidth={2} />
+                                : <Clipboard className='h-4 w-4' strokeWidth={2} />}
                         </Button>
                     )}
 
@@ -76,85 +76,85 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                         <Button
                             onClick={() => {
                                 // Get text content from the DOM element (same as regular copy)
-                                let textContent = "";
-                                if (ref && "current" in ref && ref.current) {
-                                    textContent =
-                                        ref.current.innerText || ref.current.textContent || "";
+                                let textContent = '';
+                                if (ref && 'current' in ref && ref.current) {
+                                    textContent = ref.current.innerText || ref.current.textContent
+                                        || '';
                                 }
 
                                 // Build references section
                                 const referencesSection = threadItem?.sources?.length
-                                    ? `\n\n## References\n${threadItem.sources
-                                          .map((source) => `[${source.index}] ${source.link}`)
-                                          .join("\n")}`
-                                    : "";
+                                    ? `\n\n## References\n${
+                                        threadItem.sources
+                                            .map((source) => `[${source.index}] ${source.link}`)
+                                            .join('\n')
+                                    }`
+                                    : '';
 
                                 copyMarkdown(`${textContent}${referencesSection}`);
                             }}
-                            size="icon-sm"
-                            tooltip="Copy Markdown"
-                            variant="secondary"
-                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
+                            size='icon-sm'
+                            tooltip='Copy Markdown'
+                            variant='secondary'
+                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
                         >
-                            {markdownCopyStatus === "copied" ? (
-                                <Check className="h-4 w-4" strokeWidth={2} />
-                            ) : (
-                                <FileText className="h-4 w-4" strokeWidth={2} />
-                            )}
+                            {markdownCopyStatus === 'copied'
+                                ? <Check className='h-4 w-4' strokeWidth={2} />
+                                : <FileText className='h-4 w-4' strokeWidth={2} />}
                         </Button>
                     )}
-                    {threadItem.status !== "ERROR" &&
-                        threadItem.answer?.status !== "HUMAN_REVIEW" && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        size="icon-sm"
-                                        tooltip="Rewrite"
-                                        variant="secondary"
-                                        className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
-                                    >
-                                        <RefreshCcw className="h-4 w-4" strokeWidth={2} />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <ChatModeOptions
-                                    chatMode={chatMode}
-                                    onGatedFeature={handleGatedFeature}
-                                    setChatMode={async (mode) => {
-                                        setChatMode(mode);
-                                        const formData = new FormData();
-                                        formData.append("query", threadItem.query || "");
-                                        const threadItems = await getThreadItems(
-                                            threadItem.threadId,
-                                        );
-                                        handleSubmit({
-                                            formData,
-                                            existingThreadItemId: threadItem.id,
-                                            newChatMode: mode as any,
-                                            messages: threadItems,
-                                            useWebSearch,
-                                        });
-                                    }}
-                                />
-                            </DropdownMenu>
-                        )}
+                    {threadItem.status !== 'ERROR'
+                        && threadItem.answer?.status !== 'HUMAN_REVIEW' && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    size='icon-sm'
+                                    tooltip='Rewrite'
+                                    variant='secondary'
+                                    className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                >
+                                    <RefreshCcw className='h-4 w-4' strokeWidth={2} />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <ChatModeOptions
+                                chatMode={chatMode}
+                                onGatedFeature={handleGatedFeature}
+                                setChatMode={async (mode) => {
+                                    setChatMode(mode);
+                                    const formData = new FormData();
+                                    formData.append('query', threadItem.query || '');
+                                    const threadItems = await getThreadItems(
+                                        threadItem.threadId,
+                                    );
+                                    handleSubmit({
+                                        formData,
+                                        existingThreadItemId: threadItem.id,
+                                        newChatMode: mode as any,
+                                        messages: threadItems,
+                                        useWebSearch,
+                                    });
+                                }}
+                            />
+                        </DropdownMenu>
+                    )}
 
                     {isLast && (
                         <Button
                             onClick={() => {
                                 removeThreadItem(threadItem.id);
                             }}
-                            size="icon-sm"
-                            tooltip="Remove"
-                            variant="secondary"
-                            className="bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3"
+                            size='icon-sm'
+                            tooltip='Remove'
+                            variant='secondary'
+                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
                         >
-                            <MessageCircleX className="h-4 w-4" strokeWidth={2} />
+                            <MessageCircleX className='h-4 w-4' strokeWidth={2} />
                         </Button>
                     )}
                     {threadItem.mode && (
-                        <p className="text-muted-foreground px-2 text-xs">
+                        <p className='text-muted-foreground px-2 text-xs'>
                             Generated with {getChatModeName(threadItem.mode)}
-                            {threadItem.model ? ` using ${threadItem.model}` : ""}
+                            {threadItem.model ? ` using ${threadItem.model}` : ''}
                         </p>
                     )}
                 </div>
@@ -162,7 +162,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                 {/* Gated Feature Alert */}
                 {gatedFeatureAlert && (
                     <Alert>
-                        <AlertCircle className="h-4 w-4" />
+                        <AlertCircle className='h-4 w-4' />
                         <AlertTitle>{gatedFeatureAlert.title}</AlertTitle>
                         <AlertDescription>{gatedFeatureAlert.message}</AlertDescription>
                     </Alert>
@@ -172,4 +172,4 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
     },
 );
 
-MessageActions.displayName = "MessageActions";
+MessageActions.displayName = 'MessageActions';

@@ -1,24 +1,23 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
-test.describe("VT+ Web Search Functionality", () => {
-    test("should work for authenticated VT+ users", async ({ page }) => {
-        await page.goto("/", { waitUntil: "load" });
+test.describe('VT+ Web Search Functionality', () => {
+    test('should work for authenticated VT+ users', async ({ page }) => {
+        await page.goto('/', { waitUntil: 'load' });
 
         // Check session and subscription status first
         const userStatus = await page.evaluate(async () => {
             try {
                 const [sessionRes, subscriptionRes] = await Promise.all([
-                    fetch("/api/auth/get-session"),
-                    fetch("/api/subscription/status"),
+                    fetch('/api/auth/get-session'),
+                    fetch('/api/subscription/status'),
                 ]);
 
                 return {
                     session: await sessionRes.json(),
                     subscription: await subscriptionRes.json(),
                     isAuthenticated: sessionRes.status === 200,
-                    hasVTPlus:
-                        subscriptionRes.status === 200 &&
-                        (await subscriptionRes.json())?.isPlusSubscriber,
+                    hasVTPlus: subscriptionRes.status === 200
+                        && (await subscriptionRes.json())?.isPlusSubscriber,
                 };
             } catch (error) {
                 return { error: (error as Error).message };
@@ -34,27 +33,27 @@ test.describe("VT+ Web Search Functionality", () => {
         // Test web search API with proper authentication
         const webSearchResponse = await page.evaluate(async () => {
             try {
-                const res = await fetch("/api/completion", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                const res = await fetch('/api/completion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         threadId: `vt-plus-test-${Date.now()}`,
                         threadItemId: `vt-plus-item-${Date.now()}`,
                         parentThreadItemId: `vt-plus-parent-${Date.now()}`,
-                        prompt: "test VT+ web search functionality",
-                        messages: [{ role: "user", content: "test VT+ web search functionality" }],
-                        mode: "gemini-2.5-flash-lite-preview-06-17",
+                        prompt: 'test VT+ web search functionality',
+                        messages: [{ role: 'user', content: 'test VT+ web search functionality' }],
+                        mode: 'gemini-2.5-flash-lite-preview-06-17',
                         webSearch: true,
                         mathCalculator: false,
                         charts: false,
-                        userTier: "PLUS",
+                        userTier: 'PLUS',
                     }),
                 });
 
                 return {
                     status: res.status,
                     headers: Object.fromEntries(res.headers.entries()),
-                    isEventStream: res.headers.get("content-type")?.includes("text/event-stream"),
+                    isEventStream: res.headers.get('content-type')?.includes('text/event-stream'),
                 };
             } catch (error) {
                 return { error: (error as Error).message };
@@ -66,13 +65,13 @@ test.describe("VT+ Web Search Functionality", () => {
         expect(webSearchResponse.isEventStream).toBe(true);
     });
 
-    test("should check rate limit status for VT+ users", async ({ page }) => {
-        await page.goto("/", { waitUntil: "load" });
+    test('should check rate limit status for VT+ users', async ({ page }) => {
+        await page.goto('/', { waitUntil: 'load' });
 
         // Check if user is VT+ subscriber
         const subscriptionStatus = await page.evaluate(async () => {
             try {
-                const res = await fetch("/api/subscription/status");
+                const res = await fetch('/api/subscription/status');
                 const data = await res.json();
                 return { status: res.status, isPlusSubscriber: data?.isPlusSubscriber };
             } catch (error) {
@@ -90,9 +89,9 @@ test.describe("VT+ Web Search Functionality", () => {
         const rateLimitResponse = await page.evaluate(async () => {
             try {
                 const res = await fetch(
-                    "/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17",
+                    '/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17',
                     {
-                        method: "POST",
+                        method: 'POST',
                     },
                 );
 
@@ -111,18 +110,18 @@ test.describe("VT+ Web Search Functionality", () => {
 
         if (rateLimitResponse.status === 200) {
             // VT+ users should have positive or infinite limits
-            expect(rateLimitResponse.data).toHaveProperty("dailyLimit");
-            expect(rateLimitResponse.data).toHaveProperty("minuteLimit");
+            expect(rateLimitResponse.data).toHaveProperty('dailyLimit');
+            expect(rateLimitResponse.data).toHaveProperty('minuteLimit');
         }
     });
 
-    test("should handle web search UI interactions for VT+ users", async ({ page }) => {
-        await page.goto("/", { waitUntil: "load" });
+    test('should handle web search UI interactions for VT+ users', async ({ page }) => {
+        await page.goto('/', { waitUntil: 'load' });
 
         // Check VT+ status
         const hasVTPlus = await page.evaluate(async () => {
             try {
-                const res = await fetch("/api/subscription/status");
+                const res = await fetch('/api/subscription/status');
                 const data = await res.json();
                 return data?.isPlusSubscriber === true;
             } catch {
@@ -139,25 +138,25 @@ test.describe("VT+ Web Search Functionality", () => {
         await page.waitForSelector('textarea, [contenteditable="true"]', { timeout: 10000 });
 
         // Look for web search toggle button
-        const webSearchButton = page.locator("button").filter({ hasText: "Web Search" }).first();
+        const webSearchButton = page.locator('button').filter({ hasText: 'Web Search' }).first();
 
         if (await webSearchButton.isVisible()) {
             // Should be able to toggle web search without login prompt
             await webSearchButton.click();
 
             // Should not show login dialog for VT+ users
-            await expect(page.locator("text=Login Required")).not.toBeVisible({ timeout: 2000 });
+            await expect(page.locator('text=Login Required')).not.toBeVisible({ timeout: 2000 });
 
             // Try a simple query
             const chatInput = page.locator('textarea, [contenteditable="true"]');
-            await chatInput.fill("What is the current date?");
+            await chatInput.fill('What is the current date?');
 
             const submitButton = page.locator('button[type="submit"], button:has(svg)').last();
             if (await submitButton.isVisible()) {
                 await submitButton.click();
 
                 // Should not get authentication error
-                await expect(page.locator("text=Authentication required")).not.toBeVisible({
+                await expect(page.locator('text=Authentication required')).not.toBeVisible({
                     timeout: 5000,
                 });
 

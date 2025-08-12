@@ -1,7 +1,7 @@
 # Mobile Animation Flashing Fix
 
-**Date**: January 30, 2025  
-**Issue**: Animation flashing and jittery motion on mobile devices, especially sidebar animations  
+**Date**: January 30, 2025\
+**Issue**: Animation flashing and jittery motion on mobile devices, especially sidebar animations\
 **Status**: ✅ RESOLVED
 
 ## Problem Analysis
@@ -9,24 +9,24 @@
 ### Root Causes Identified
 
 1. **Multiple Animation Layers Conflicting**
-    - CSS transitions and Framer Motion animations running simultaneously
-    - Spring animations causing unpredictable timing on mobile
-    - Lack of hardware acceleration causing layout thrashing
+   - CSS transitions and Framer Motion animations running simultaneously
+   - Spring animations causing unpredictable timing on mobile
+   - Lack of hardware acceleration causing layout thrashing
 
 2. **Improper AnimatePresence Configuration**
-    - Missing `mode="wait"` causing overlapping animations
-    - Missing `initial={false}` causing flash on mount
-    - Improper key management for component transitions
+   - Missing `mode="wait"` causing overlapping animations
+   - Missing `initial={false}` causing flash on mount
+   - Improper key management for component transitions
 
 3. **Hardware Acceleration Issues**
-    - Missing `transform3d(0, 0, 0)` for GPU acceleration
-    - No `backface-visibility: hidden` optimization
-    - Missing `will-change` properties for performance hints
+   - Missing `transform3d(0, 0, 0)` for GPU acceleration
+   - No `backface-visibility: hidden` optimization
+   - Missing `will-change` properties for performance hints
 
 4. **Mobile-Specific Performance Problems**
-    - Animation durations too long for mobile devices
-    - Complex spring animations causing frame drops
-    - Layout shifts during sidebar animations
+   - Animation durations too long for mobile devices
+   - Complex spring animations causing frame drops
+   - Layout shifts during sidebar animations
 
 ## Comprehensive Solution Implemented
 

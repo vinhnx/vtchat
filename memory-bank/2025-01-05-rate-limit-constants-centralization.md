@@ -1,7 +1,7 @@
 # Rate Limit Constants Centralization Implementation
 
-**Date:** 2025-01-05  
-**Task:** Replace hardcoded rate limit numbers with centralized constants  
+**Date:** 2025-01-05\
+**Task:** Replace hardcoded rate limit numbers with centralized constants\
 **Status:** ✅ Approved and Implemented
 
 ## Problem Statement
@@ -16,9 +16,9 @@ Implemented a single source of truth for rate limit constants:
 
 - **File:** `packages/shared/constants/rate-limits.ts`
 - **Contents:**
-    - `GEMINI_FLASH_LIMITS` object with FREE_DAY, FREE_MINUTE, PLUS_DAY, PLUS_MINUTE
-    - `limitText` helper functions for consistent UI formatting
-    - Normalized wording: "requests/day" and "/min" format
+  - `GEMINI_FLASH_LIMITS` object with FREE_DAY, FREE_MINUTE, PLUS_DAY, PLUS_MINUTE
+  - `limitText` helper functions for consistent UI formatting
+  - Normalized wording: "requests/day" and "/min" format
 
 ### 2. Updated Backend Rate Limit Service
 

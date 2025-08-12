@@ -1,8 +1,8 @@
-import { ChatMode } from "@repo/shared/config";
-import { describe, expect, it } from "vitest";
+import { ChatMode } from '@repo/shared/config';
+import { describe, expect, it } from 'vitest';
 
 // Test the specific logic that determines if Grok models should show BYOK dialog
-describe("Grok Send Button Debug", () => {
+describe('Grok Send Button Debug', () => {
     // Simulate the hasApiKeyForChatMode function logic for Grok models
     const simulateHasApiKeyForChatMode = (
         chatMode: ChatMode,
@@ -14,12 +14,12 @@ describe("Grok Send Button Debug", () => {
         if (!isSignedIn) return false;
 
         // VT+ users don't need API keys for Gemini models (but not Grok models)
-        if (isVtPlus && chatMode.includes("gemini")) {
+        if (isVtPlus && chatMode.includes('gemini')) {
             return true; // VT+ users can use system API key for Gemini
         }
 
         // For Grok models, check XAI API key
-        if (chatMode.includes("grok")) {
+        if (chatMode.includes('grok')) {
             return hasXaiApiKey;
         }
 
@@ -28,7 +28,7 @@ describe("Grok Send Button Debug", () => {
 
     // Simulate the needsApiKeyCheck logic from input.tsx
     const simulateNeedsApiKeyCheck = (chatMode: ChatMode, isPlusTier: boolean): boolean => {
-        const isGeminiModel = chatMode.includes("gemini");
+        const isGeminiModel = chatMode.includes('gemini');
         if (isGeminiModel) {
             // VT+ users don't need API keys for any Gemini models
             return !isPlusTier;
@@ -54,15 +54,15 @@ describe("Grok Send Button Debug", () => {
 
         if (needsApiKeyCheck && !hasRequiredApiKey) {
             if (isSignedIn) {
-                return "SHOW_BYOK_DIALOG";
+                return 'SHOW_BYOK_DIALOG';
             }
-            return "SHOW_LOGIN_PROMPT";
+            return 'SHOW_LOGIN_PROMPT';
         }
 
-        return "PROCEED_WITH_SUBMISSION";
+        return 'PROCEED_WITH_SUBMISSION';
     };
 
-    it("should show BYOK dialog for signed-in user without XAI API key using Grok", () => {
+    it('should show BYOK dialog for signed-in user without XAI API key using Grok', () => {
         const result = simulateSubmissionLogic(
             ChatMode.GROK_4,
             true, // isSignedIn
@@ -70,10 +70,10 @@ describe("Grok Send Button Debug", () => {
             false, // hasXaiApiKey
         );
 
-        expect(result).toBe("SHOW_BYOK_DIALOG");
+        expect(result).toBe('SHOW_BYOK_DIALOG');
     });
 
-    it("should show BYOK dialog for VT+ user without XAI API key using Grok", () => {
+    it('should show BYOK dialog for VT+ user without XAI API key using Grok', () => {
         // Even VT+ users need BYOK for Grok models
         const result = simulateSubmissionLogic(
             ChatMode.GROK_4,
@@ -82,10 +82,10 @@ describe("Grok Send Button Debug", () => {
             false, // hasXaiApiKey
         );
 
-        expect(result).toBe("SHOW_BYOK_DIALOG");
+        expect(result).toBe('SHOW_BYOK_DIALOG');
     });
 
-    it("should proceed with submission for user with XAI API key using Grok", () => {
+    it('should proceed with submission for user with XAI API key using Grok', () => {
         const result = simulateSubmissionLogic(
             ChatMode.GROK_4,
             true, // isSignedIn
@@ -93,10 +93,10 @@ describe("Grok Send Button Debug", () => {
             true, // hasXaiApiKey
         );
 
-        expect(result).toBe("PROCEED_WITH_SUBMISSION");
+        expect(result).toBe('PROCEED_WITH_SUBMISSION');
     });
 
-    it("should show login prompt for non-signed-in user trying to use Grok", () => {
+    it('should show login prompt for non-signed-in user trying to use Grok', () => {
         const result = simulateSubmissionLogic(
             ChatMode.GROK_4,
             false, // isSignedIn
@@ -104,10 +104,10 @@ describe("Grok Send Button Debug", () => {
             false, // hasXaiApiKey
         );
 
-        expect(result).toBe("SHOW_LOGIN_PROMPT");
+        expect(result).toBe('SHOW_LOGIN_PROMPT');
     });
 
-    it("Grok models should always need API key check (not like Gemini for VT+)", () => {
+    it('Grok models should always need API key check (not like Gemini for VT+)', () => {
         const needsCheck = simulateNeedsApiKeyCheck(ChatMode.GROK_4, true);
         expect(needsCheck).toBe(true);
 
@@ -121,13 +121,13 @@ describe("Grok Send Button Debug", () => {
     grokModels.forEach((model) => {
         it(`should show BYOK dialog for ${model} without XAI key`, () => {
             const result = simulateSubmissionLogic(model, true, false, false);
-            expect(result).toBe("SHOW_BYOK_DIALOG");
+            expect(result).toBe('SHOW_BYOK_DIALOG');
         });
     });
 });
 
-describe("Debug Why Grok Send Does Nothing", () => {
-    it("should identify potential blocking conditions", () => {
+describe('Debug Why Grok Send Does Nothing', () => {
+    it('should identify potential blocking conditions', () => {
         // Potential issues that could cause 'tap send does nothing':
         // 1. hasTextInput check fails
         // 2. isGenerating is true
@@ -137,14 +137,14 @@ describe("Debug Why Grok Send Does Nothing", () => {
         // 6. Console errors prevent execution
 
         const potentialIssues = [
-            "Empty message text",
-            "Generation already in progress",
-            "BYOK dialog state management broken",
-            "API key validation returning wrong result",
-            "Event handler not bound properly",
-            "Console JavaScript errors",
-            "Missing XAI_API_KEY in ApiKeys type",
-            "React strict mode double execution",
+            'Empty message text',
+            'Generation already in progress',
+            'BYOK dialog state management broken',
+            'API key validation returning wrong result',
+            'Event handler not bound properly',
+            'Console JavaScript errors',
+            'Missing XAI_API_KEY in ApiKeys type',
+            'React strict mode double execution',
         ];
 
         expect(potentialIssues.length).toBeGreaterThan(0);

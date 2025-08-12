@@ -1,8 +1,8 @@
-import { useSession } from "@repo/shared/lib/auth-client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Simple in-memory cache for admin status to avoid duplicate requests
-const adminStatusCache = new Map<string, { isAdmin: boolean; timestamp: number }>();
+const adminStatusCache = new Map<string, { isAdmin: boolean; timestamp: number; }>();
 // Per-user request deduplication
 const pendingRequests = new Map<string, Promise<boolean>>();
 const CACHE_DURATION = 60 * 1000; // 60 seconds - reduce API calls
@@ -38,7 +38,7 @@ export function useAdmin(): UseAdminResult {
 
             const requestPromise = (async () => {
                 try {
-                    const response = await fetch("/api/admin/check-status", { signal });
+                    const response = await fetch('/api/admin/check-status', { signal });
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
@@ -53,10 +53,10 @@ export function useAdmin(): UseAdminResult {
 
                     return adminStatus;
                 } catch (err) {
-                    if (err instanceof Error && err.name === "AbortError") {
+                    if (err instanceof Error && err.name === 'AbortError') {
                         throw err; // Re-throw abort errors
                     }
-                    throw new Error("Failed to check admin status");
+                    throw new Error('Failed to check admin status');
                 } finally {
                     pendingRequests.delete(userId);
                 }
@@ -96,7 +96,7 @@ export function useAdmin(): UseAdminResult {
                 }
             } catch (err) {
                 if (isMountedRef.current && !signal.aborted) {
-                    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+                    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
                     setError(errorMessage);
                     setIsAdmin(false);
                 }

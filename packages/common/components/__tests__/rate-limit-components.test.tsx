@@ -1,36 +1,36 @@
-import { ModelEnum } from "@repo/ai/models";
-import { render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ModelEnum } from '@repo/ai/models';
+import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the hooks
 const mockUseSession = vi.fn();
 const mockUseRateLimit = vi.fn();
 
-vi.mock("@repo/shared/lib/auth-client", () => ({
+vi.mock('@repo/shared/lib/auth-client', () => ({
     useSession: mockUseSession,
 }));
 
-vi.mock("@repo/common/hooks", () => ({
+vi.mock('@repo/common/hooks', () => ({
     useRateLimit: mockUseRateLimit,
 }));
 
 // Mock date-fns
-vi.mock("date-fns", () => ({
+vi.mock('date-fns', () => ({
     formatDistanceToNow: vi.fn((_date, options) => {
         if (options?.addSuffix) {
-            return "in 5 minutes";
+            return 'in 5 minutes';
         }
-        return "5 minutes";
+        return '5 minutes';
     }),
 }));
 
 // Import components after mocks
-import { RateLimitIndicator } from "../rate-limit-indicator";
-import { RateLimitMeter } from "../rate-limit-meter";
+import { RateLimitIndicator } from '../rate-limit-indicator';
+import { RateLimitMeter } from '../rate-limit-meter';
 
-describe("Rate Limit UI Components", () => {
+describe('Rate Limit UI Components', () => {
     const authenticatedUser = {
-        user: { id: "user-123", email: "user@test.com" },
+        user: { id: 'user-123', email: 'user@test.com' },
     };
 
     const mockRateLimitStatus = {
@@ -41,7 +41,7 @@ describe("Rate Limit UI Components", () => {
         remainingDaily: 5,
         remainingMinute: 1,
         resetTime: {
-            daily: new Date("2024-01-02T00:00:00Z"),
+            daily: new Date('2024-01-02T00:00:00Z'),
             minute: new Date(Date.now() + 300_000), // 5 minutes from now
         },
     };
@@ -54,8 +54,8 @@ describe("Rate Limit UI Components", () => {
         vi.restoreAllMocks();
     });
 
-    describe("RateLimitIndicator", () => {
-        it("should not render for non-rate-limited models", () => {
+    describe('RateLimitIndicator', () => {
+        it('should not render for non-rate-limited models', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: null,
@@ -68,7 +68,7 @@ describe("Rate Limit UI Components", () => {
             expect(container.firstChild).toBeNull();
         });
 
-        it("should not render when no user is authenticated", () => {
+        it('should not render when no user is authenticated', () => {
             mockUseSession.mockReturnValue({ data: null });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -83,7 +83,7 @@ describe("Rate Limit UI Components", () => {
             expect(container.firstChild).toBeNull();
         });
 
-        it("should show loading state", () => {
+        it('should show loading state', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: null,
@@ -93,10 +93,10 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
-            expect(screen.getByText("Loading...")).toBeInTheDocument();
+            expect(screen.getByText('Loading...')).toBeInTheDocument();
         });
 
-        it("should display usage in compact mode", () => {
+        it('should display usage in compact mode', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -106,10 +106,10 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
-            expect(screen.getByText("5/10 today")).toBeInTheDocument();
+            expect(screen.getByText('5/10 today')).toBeInTheDocument();
         });
 
-        it("should show warning when near daily limit", () => {
+        it('should show warning when near daily limit', () => {
             const nearLimitStatus = {
                 ...mockRateLimitStatus,
                 dailyUsed: 8,
@@ -126,16 +126,16 @@ describe("Rate Limit UI Components", () => {
             render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
             // Should show warning icon and text color
-            const indicator = screen.getByText("8/10 today");
+            const indicator = screen.getByText('8/10 today');
             expect(indicator).toBeInTheDocument();
 
             // Check for warning icon (AlertTriangle)
-            const warningIcon =
-                screen.getByTestId("alert-triangle") || screen.getByRole("img", { hidden: true });
+            const warningIcon = screen.getByTestId('alert-triangle')
+                || screen.getByRole('img', { hidden: true });
             expect(warningIcon).toBeInTheDocument();
         });
 
-        it("should show minute rate limit warning", () => {
+        it('should show minute rate limit warning', () => {
             const minuteLimitStatus = {
                 ...mockRateLimitStatus,
                 remainingMinute: 0,
@@ -153,7 +153,7 @@ describe("Rate Limit UI Components", () => {
             expect(screen.getByText(/Rate limited • Resets in 5 minutes/)).toBeInTheDocument();
         });
 
-        it("should show daily limit warning", () => {
+        it('should show daily limit warning', () => {
             const dailyLimitStatus = {
                 ...mockRateLimitStatus,
                 remainingDaily: 1,
@@ -169,12 +169,12 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
 
-            expect(screen.getByText("Daily limit almost reached")).toBeInTheDocument();
+            expect(screen.getByText('Daily limit almost reached')).toBeInTheDocument();
         });
     });
 
-    describe("RateLimitMeter", () => {
-        it("should not render for unauthenticated users", () => {
+    describe('RateLimitMeter', () => {
+        it('should not render for unauthenticated users', () => {
             mockUseSession.mockReturnValue({ data: null });
 
             const { container } = render(<RateLimitMeter />);
@@ -182,7 +182,7 @@ describe("Rate Limit UI Components", () => {
             expect(container.firstChild).toBeNull();
         });
 
-        it("should show loading state", () => {
+        it('should show loading state', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: null,
@@ -192,33 +192,33 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            expect(screen.getByText("Free Model Usage")).toBeInTheDocument();
+            expect(screen.getByText('Free Model Usage')).toBeInTheDocument();
             expect(
                 screen.getByText(/Track your personal daily and per-minute limits/),
             ).toBeInTheDocument();
 
             // Should show skeleton loaders
-            const skeletons = screen.getAllByTestId("skeleton");
+            const skeletons = screen.getAllByTestId('skeleton');
             expect(skeletons.length).toBeGreaterThan(0);
         });
 
-        it("should show error state", () => {
+        it('should show error state', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: null,
                 isLoading: false,
-                error: "Failed to load",
+                error: 'Failed to load',
             });
 
             render(<RateLimitMeter />);
 
-            expect(screen.getByText("Free Model Usage")).toBeInTheDocument();
+            expect(screen.getByText('Free Model Usage')).toBeInTheDocument();
             expect(
-                screen.getByText("Unable to load your personal usage information"),
+                screen.getByText('Unable to load your personal usage information'),
             ).toBeInTheDocument();
         });
 
-        it("should display current usage statistics", () => {
+        it('should display current usage statistics', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -229,18 +229,18 @@ describe("Rate Limit UI Components", () => {
             render(<RateLimitMeter />);
 
             // Check daily usage display
-            expect(screen.getByText("Daily requests")).toBeInTheDocument();
-            expect(screen.getByText("5 / 10")).toBeInTheDocument();
+            expect(screen.getByText('Daily requests')).toBeInTheDocument();
+            expect(screen.getByText('5 / 10')).toBeInTheDocument();
             expect(
                 screen.getByText(/5 requests remaining • Resets in 5 minutes/),
             ).toBeInTheDocument();
 
             // Check per-minute status
-            expect(screen.getByText("Per-minute rate limit")).toBeInTheDocument();
-            expect(screen.getByText("Available")).toBeInTheDocument();
+            expect(screen.getByText('Per-minute rate limit')).toBeInTheDocument();
+            expect(screen.getByText('Available')).toBeInTheDocument();
         });
 
-        it("should show progress bar with correct color coding", () => {
+        it('should show progress bar with correct color coding', () => {
             // Test with 50% usage (should be green)
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
@@ -251,9 +251,9 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            const progressBar = screen.getByRole("progressbar");
+            const progressBar = screen.getByRole('progressbar');
             expect(progressBar).toBeInTheDocument();
-            expect(progressBar).toHaveAttribute("aria-valuenow", "50");
+            expect(progressBar).toHaveAttribute('aria-valuenow', '50');
 
             // Test with high usage (should be amber)
             const highUsageStatus = {
@@ -270,11 +270,11 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            const highProgressBar = screen.getByRole("progressbar");
-            expect(highProgressBar).toHaveAttribute("aria-valuenow", "90");
+            const highProgressBar = screen.getByRole('progressbar');
+            expect(highProgressBar).toHaveAttribute('aria-valuenow', '90');
         });
 
-        it("should show rate limit status when minute limit is hit", () => {
+        it('should show rate limit status when minute limit is hit', () => {
             const minuteLimitStatus = {
                 ...mockRateLimitStatus,
                 remainingMinute: 0,
@@ -289,11 +289,11 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            expect(screen.getByText("Rate limited")).toBeInTheDocument();
+            expect(screen.getByText('Rate limited')).toBeInTheDocument();
             expect(screen.getByText(/Next request available in 5 minutes/)).toBeInTheDocument();
         });
 
-        it("should show daily limit reached warning", () => {
+        it('should show daily limit reached warning', () => {
             const dailyLimitStatus = {
                 ...mockRateLimitStatus,
                 dailyUsed: 10,
@@ -309,11 +309,11 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            expect(screen.getByText("Daily limit reached")).toBeInTheDocument();
+            expect(screen.getByText('Daily limit reached')).toBeInTheDocument();
             expect(screen.getByText(/Upgrade to VT\+ for unlimited access/)).toBeInTheDocument();
         });
 
-        it("should show low requests warning", () => {
+        it('should show low requests warning', () => {
             const lowRequestsStatus = {
                 ...mockRateLimitStatus,
                 dailyUsed: 8,
@@ -329,13 +329,13 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            expect(screen.getByText("Low on daily requests")).toBeInTheDocument();
+            expect(screen.getByText('Low on daily requests')).toBeInTheDocument();
             expect(
                 screen.getByText(/Consider upgrading to VT\+ for unlimited access/),
             ).toBeInTheDocument();
         });
 
-        it("should display success state with check icon when limits are healthy", () => {
+        it('should display success state with check icon when limits are healthy', () => {
             const healthyStatus = {
                 ...mockRateLimitStatus,
                 dailyUsed: 3,
@@ -353,14 +353,14 @@ describe("Rate Limit UI Components", () => {
             render(<RateLimitMeter />);
 
             // Should show green check icon for healthy status
-            expect(screen.getByText("Free Model Usage")).toBeInTheDocument();
-            expect(screen.getByText("3 / 10")).toBeInTheDocument();
-            expect(screen.getByText("Available")).toBeInTheDocument();
+            expect(screen.getByText('Free Model Usage')).toBeInTheDocument();
+            expect(screen.getByText('3 / 10')).toBeInTheDocument();
+            expect(screen.getByText('Available')).toBeInTheDocument();
         });
     });
 
-    describe("Component Integration", () => {
-        it("should handle real-time updates correctly", async () => {
+    describe('Component Integration', () => {
+        it('should handle real-time updates correctly', async () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
 
             // Start with initial status
@@ -373,7 +373,7 @@ describe("Rate Limit UI Components", () => {
             });
 
             rerender(<RateLimitMeter />);
-            expect(screen.getByText("5 / 10")).toBeInTheDocument();
+            expect(screen.getByText('5 / 10')).toBeInTheDocument();
 
             // Update to new status (simulate usage)
             const updatedStatus = {
@@ -389,10 +389,10 @@ describe("Rate Limit UI Components", () => {
             });
 
             rerender(<RateLimitMeter />);
-            expect(screen.getByText("6 / 10")).toBeInTheDocument();
+            expect(screen.getByText('6 / 10')).toBeInTheDocument();
         });
 
-        it("should handle component prop changes", () => {
+        it('should handle component prop changes', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -404,20 +404,20 @@ describe("Rate Limit UI Components", () => {
                 <RateLimitIndicator compact={false} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />,
             );
 
-            expect(screen.getByText("Daily usage:")).toBeInTheDocument();
+            expect(screen.getByText('Daily usage:')).toBeInTheDocument();
 
             // Switch to compact mode
             rerender(
                 <RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />,
             );
 
-            expect(screen.getByText("5/10 today")).toBeInTheDocument();
-            expect(screen.queryByText("Daily usage:")).not.toBeInTheDocument();
+            expect(screen.getByText('5/10 today')).toBeInTheDocument();
+            expect(screen.queryByText('Daily usage:')).not.toBeInTheDocument();
         });
     });
 
-    describe("Accessibility", () => {
-        it("should have proper ARIA labels for progress bars", () => {
+    describe('Accessibility', () => {
+        it('should have proper ARIA labels for progress bars', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -427,13 +427,13 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            const progressBar = screen.getByRole("progressbar");
-            expect(progressBar).toHaveAttribute("aria-valuenow", "50");
-            expect(progressBar).toHaveAttribute("aria-valuemin", "0");
-            expect(progressBar).toHaveAttribute("aria-valuemax", "100");
+            const progressBar = screen.getByRole('progressbar');
+            expect(progressBar).toHaveAttribute('aria-valuenow', '50');
+            expect(progressBar).toHaveAttribute('aria-valuemin', '0');
+            expect(progressBar).toHaveAttribute('aria-valuemax', '100');
         });
 
-        it("should have proper heading structure", () => {
+        it('should have proper heading structure', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,
@@ -443,11 +443,11 @@ describe("Rate Limit UI Components", () => {
 
             render(<RateLimitMeter />);
 
-            const heading = screen.getByRole("heading", { level: 3 });
-            expect(heading).toHaveTextContent("Free Model Usage");
+            const heading = screen.getByRole('heading', { level: 3 });
+            expect(heading).toHaveTextContent('Free Model Usage');
         });
 
-        it("should provide screen reader friendly content", () => {
+        it('should provide screen reader friendly content', () => {
             mockUseSession.mockReturnValue({ data: authenticatedUser });
             mockUseRateLimit.mockReturnValue({
                 status: mockRateLimitStatus,

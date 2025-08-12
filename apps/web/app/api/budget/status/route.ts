@@ -1,7 +1,7 @@
-import { log } from "@repo/shared/logger";
-import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { getMonthlyUsage } from "@/lib/services/budget-tracking";
+import { auth } from '@/lib/auth-server';
+import { getMonthlyUsage } from '@/lib/services/budget-tracking';
+import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     try {
@@ -9,11 +9,11 @@ export async function GET(request: NextRequest) {
             headers: request.headers,
         });
         if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         // Get global monthly usage (no cost tracking)
-        const globalUsage = await getMonthlyUsage("gemini");
+        const globalUsage = await getMonthlyUsage('gemini');
 
         // Since cost tracking is removed, return usage-based response
         return NextResponse.json({
@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
             monthlyLimit: 0, // No cost tracking
             remainingBudget: 0, // No cost tracking
             usagePercent: 0, // No cost tracking
-            warningLevel: "normal", // Always normal since no cost limits
+            warningLevel: 'normal', // Always normal since no cost limits
             isEnabled: true, // Always enabled - rate limits handle usage control
             global: {
-                status: "ok",
+                status: 'ok',
                 totalCostUSD: 0, // Cost tracking removed
                 budgetLimitUSD: 0, // Cost tracking removed
                 percentageUsed: 0, // Cost tracking removed
@@ -37,10 +37,10 @@ export async function GET(request: NextRequest) {
                 modelBreakdown: {}, // Would need user-specific query
             },
             month: new Date().toISOString().slice(0, 7), // YYYY-MM format
-            note: "Cost tracking disabled - using rate limits for usage control",
+            note: 'Cost tracking disabled - using rate limits for usage control',
         });
     } catch (error) {
-        log.error({ error }, "Failed to get budget status");
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        log.error({ error }, 'Failed to get budget status');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

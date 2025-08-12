@@ -1,19 +1,19 @@
-import { ModelEnum } from "@repo/ai/models";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ModelEnum } from '@repo/ai/models';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Set test environment
-process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
-process.env.NEXTAUTH_SECRET = "test-secret";
-process.env.OPENAI_API_KEY = "test-key";
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+process.env.NEXTAUTH_SECRET = 'test-secret';
+process.env.OPENAI_API_KEY = 'test-key';
 
 // Mock external dependencies
-vi.mock("better-auth", () => ({
+vi.mock('better-auth', () => ({
     auth: () => ({
         createAuthorizationURL: vi.fn(),
         api: {
             getSession: vi.fn().mockResolvedValue({
-                user: { id: "test-user" },
-                session: { userId: "test-user" },
+                user: { id: 'test-user' },
+                session: { userId: 'test-user' },
             }),
         },
     }),
@@ -26,16 +26,16 @@ const mockDbOperations = {
     update: vi.fn(),
 };
 
-vi.mock("@/lib/database", () => ({
+vi.mock('@/lib/database', () => ({
     db: mockDbOperations,
 }));
 
-vi.mock("drizzle-orm", () => ({
-    eq: vi.fn(() => "eq_condition"),
-    and: vi.fn(() => "and_condition"),
+vi.mock('drizzle-orm', () => ({
+    eq: vi.fn(() => 'eq_condition'),
+    and: vi.fn(() => 'and_condition'),
 }));
 
-describe("API Integration Tests - Gemini Requirements", () => {
+describe('API Integration Tests - Gemini Requirements', () => {
     beforeEach(() => {
         vi.clearAllMocks();
 
@@ -65,12 +65,12 @@ describe("API Integration Tests - Gemini Requirements", () => {
         });
     });
 
-    describe("API Route: /api/rate-limit/status", () => {
-        it("should return rate limit status for all Gemini models", async () => {
+    describe('API Route: /api/rate-limit/status', () => {
+        it('should return rate limit status for all Gemini models', async () => {
             // Import and test the API route handler
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             expect(response.status).toBe(200);
@@ -81,10 +81,10 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(data).toHaveProperty(ModelEnum.GEMINI_2_5_FLASH);
         });
 
-        it("should show unlimited Flash Lite for VT+ users", async () => {
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+        it('should show unlimited Flash Lite for VT+ users', async () => {
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             const data = await response.json();
@@ -94,40 +94,40 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(flashLiteStatus.remainingMinute).toBe(Number.POSITIVE_INFINITY);
         });
 
-        it("should handle authentication errors gracefully", async () => {
+        it('should handle authentication errors gracefully', async () => {
             // Mock auth failure
-            vi.doMock("better-auth", () => ({
+            vi.doMock('better-auth', () => ({
                 auth: () => ({
                     api: {
-                        getSession: vi.fn().mockRejectedValue(new Error("Auth failed")),
+                        getSession: vi.fn().mockRejectedValue(new Error('Auth failed')),
                     },
                 }),
             }));
 
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             expect(response.status).toBe(401);
         });
     });
 
-    describe("API Route: /api/completion (Rate Limiting Integration)", () => {
-        it("should enforce rate limits before processing requests", async () => {
+    describe('API Route: /api/completion (Rate Limiting Integration)', () => {
+        it('should enforce rate limits before processing requests', async () => {
             // Mock rate limit check to return false
 
-            const { POST } = await import("@/app/api/completion/route");
+            const { POST } = await import('@/app/api/completion/route');
 
             const requestBody = {
-                message: "Test message",
+                message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
                 thread: [],
             };
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
             });
 
@@ -136,31 +136,31 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(response.status).toBe(429); // Rate limited
 
             const data = await response.json();
-            expect(data.error).toContain("rate limit");
+            expect(data.error).toContain('rate limit');
         });
 
-        it("should allow requests within rate limits", async () => {
+        it('should allow requests within rate limits', async () => {
             // Mock rate limit check to return true
 
             // Mock the AI generation
-            vi.doMock("@repo/ai/generate", () => ({
+            vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
-                    text: "Test response",
+                    text: 'Test response',
                     usage: { totalTokens: 100 },
                 }),
             }));
 
-            const { POST } = await import("@/app/api/completion/route");
+            const { POST } = await import('@/app/api/completion/route');
 
             const requestBody = {
-                message: "Test message",
+                message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
                 thread: [],
             };
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
             });
 
@@ -170,11 +170,11 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(response.status).not.toBe(429);
         });
 
-        it("should record dual quota usage for VT+ users on Pro models", async () => {
+        it('should record dual quota usage for VT+ users on Pro models', async () => {
             // Mock the recordRequest function to verify it's called with correct parameters
             const recordRequestSpy = vi.fn();
-            vi.doMock("@/lib/services/rate-limit", async () => {
-                const actual = await vi.importActual("@/lib/services/rate-limit");
+            vi.doMock('@/lib/services/rate-limit', async () => {
+                const actual = await vi.importActual('@/lib/services/rate-limit');
                 return {
                     ...actual,
                     recordRequest: recordRequestSpy,
@@ -186,24 +186,24 @@ describe("API Integration Tests - Gemini Requirements", () => {
                 };
             });
 
-            vi.doMock("@repo/ai/generate", () => ({
+            vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
-                    text: "Test response",
+                    text: 'Test response',
                     usage: { totalTokens: 100 },
                 }),
             }));
 
-            const { POST } = await import("@/app/api/completion/route");
+            const { POST } = await import('@/app/api/completion/route');
 
             const requestBody = {
-                message: "Test message",
+                message: 'Test message',
                 model: ModelEnum.GEMINI_2_5_PRO,
                 thread: [],
             };
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
             });
 
@@ -218,11 +218,11 @@ describe("API Integration Tests - Gemini Requirements", () => {
         });
     });
 
-    describe("VT+ Dual Quota API Behavior", () => {
-        it("should return dual quota information for VT+ users on Pro models", async () => {
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+    describe('VT+ Dual Quota API Behavior', () => {
+        it('should return dual quota information for VT+ users on Pro models', async () => {
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             const data = await response.json();
@@ -233,10 +233,10 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(proStatus.remainingMinute).toBeLessThanOrEqual(80); // min(100-10, 100-20)
         });
 
-        it("should show unlimited for VT+ Flash Lite regardless of usage", async () => {
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+        it('should show unlimited for VT+ Flash Lite regardless of usage', async () => {
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             const data = await response.json();
@@ -247,11 +247,11 @@ describe("API Integration Tests - Gemini Requirements", () => {
         });
     });
 
-    describe("Non-Gemini Models API Behavior", () => {
-        it("should allow unlimited access to non-Gemini models", async () => {
+    describe('Non-Gemini Models API Behavior', () => {
+        it('should allow unlimited access to non-Gemini models', async () => {
             // Mock check rate limit for non-Gemini model
-            vi.doMock("@/lib/services/rate-limit", async () => {
-                const actual = await vi.importActual("@/lib/services/rate-limit");
+            vi.doMock('@/lib/services/rate-limit', async () => {
+                const actual = await vi.importActual('@/lib/services/rate-limit');
                 return {
                     ...actual,
                     checkRateLimit: vi.fn().mockResolvedValue({
@@ -263,24 +263,24 @@ describe("API Integration Tests - Gemini Requirements", () => {
                 };
             });
 
-            vi.doMock("@repo/ai/generate", () => ({
+            vi.doMock('@repo/ai/generate', () => ({
                 generateText: vi.fn().mockResolvedValue({
-                    text: "Test response",
+                    text: 'Test response',
                     usage: { totalTokens: 100 },
                 }),
             }));
 
-            const { POST } = await import("@/app/api/completion/route");
+            const { POST } = await import('@/app/api/completion/route');
 
             const requestBody = {
-                message: "Test message",
+                message: 'Test message',
                 model: ModelEnum.GPT_4o, // Non-Gemini model
                 thread: [],
             };
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
             });
 
@@ -291,27 +291,27 @@ describe("API Integration Tests - Gemini Requirements", () => {
         });
     });
 
-    describe("Error Handling and Edge Cases", () => {
-        it("should handle database connection errors gracefully", async () => {
+    describe('Error Handling and Edge Cases', () => {
+        it('should handle database connection errors gracefully', async () => {
             mockDbOperations.select.mockImplementation(() => {
-                throw new Error("Database connection failed");
+                throw new Error('Database connection failed');
             });
 
-            const { GET } = await import("@/app/api/rate-limit/status/route");
+            const { GET } = await import('@/app/api/rate-limit/status/route');
 
-            const mockRequest = new Request("http://localhost/api/rate-limit/status");
+            const mockRequest = new Request('http://localhost/api/rate-limit/status');
             const response = await GET(mockRequest);
 
             expect(response.status).toBe(500);
         });
 
-        it("should handle malformed request bodies", async () => {
-            const { POST } = await import("@/app/api/completion/route");
+        it('should handle malformed request bodies', async () => {
+            const { POST } = await import('@/app/api/completion/route');
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ invalid: "data" }), // Missing required fields
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ invalid: 'data' }), // Missing required fields
             });
 
             const response = await POST(mockRequest);
@@ -319,18 +319,18 @@ describe("API Integration Tests - Gemini Requirements", () => {
             expect(response.status).toBe(400);
         });
 
-        it("should validate model enum values", async () => {
-            const { POST } = await import("@/app/api/completion/route");
+        it('should validate model enum values', async () => {
+            const { POST } = await import('@/app/api/completion/route');
 
             const requestBody = {
-                message: "Test message",
-                model: "invalid-model", // Invalid model
+                message: 'Test message',
+                model: 'invalid-model', // Invalid model
                 thread: [],
             };
 
-            const mockRequest = new Request("http://localhost/api/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const mockRequest = new Request('http://localhost/api/completion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
             });
 

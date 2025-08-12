@@ -5,25 +5,25 @@
  * This ensures consistency between subscription records and user.planSlug field
  */
 
-import { resolve } from "node:path";
-import { config } from "dotenv";
+import { config } from 'dotenv';
+import { resolve } from 'node:path';
 
 // Load environment variables from apps/web/.env.local
-config({ path: resolve(process.cwd(), "apps/web/.env.local") });
+config({ path: resolve(process.cwd(), 'apps/web/.env.local') });
 
 if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL environment variable is required");
+    throw new Error('DATABASE_URL environment variable is required');
 }
 
 async function updateUserPlanSlug() {
-    console.log("Starting user planSlug update...");
+    console.log('Starting user planSlug update...');
 
     try {
         // Dynamic imports to ensure env vars are loaded first
-        const { db } = await import("../apps/web/lib/database/index.js");
-        const { users, userSubscriptions } = await import("../apps/web/lib/database/schema.js");
-        const { PlanSlug } = await import("../packages/shared/types/subscription.js");
-        const { eq, and, isNull, or } = await import("drizzle-orm");
+        const { db } = await import('../apps/web/lib/database/index.js');
+        const { users, userSubscriptions } = await import('../apps/web/lib/database/schema.js');
+        const { PlanSlug } = await import('../packages/shared/types/subscription.js');
+        const { eq, and, isNull, or } = await import('drizzle-orm');
         // Find users with active VT+ subscriptions but undefined/null planSlug
         const usersWithVTPlusAccess = await db
             .select({
@@ -38,13 +38,13 @@ async function updateUserPlanSlug() {
             .where(
                 and(
                     // User has active VT+ subscription
-                    eq(userSubscriptions.status, "active"),
+                    eq(userSubscriptions.status, 'active'),
                     eq(userSubscriptions.plan, PlanSlug.VT_PLUS),
                     // But user.planSlug is undefined/null or not VT_PLUS
                     or(
                         isNull(users.planSlug),
-                        eq(users.planSlug, ""),
-                        eq(users.planSlug, "undefined"),
+                        eq(users.planSlug, ''),
+                        eq(users.planSlug, 'undefined'),
                     ),
                 ),
             );
@@ -54,18 +54,18 @@ async function updateUserPlanSlug() {
         );
 
         if (usersWithVTPlusAccess.length === 0) {
-            console.log("No users need updating");
+            console.log('No users need updating');
             return;
         }
 
         // Display users to be updated
-        console.log("\nUsers to update:");
+        console.log('\nUsers to update:');
         usersWithVTPlusAccess.forEach((user, index) => {
             console.log(`${index + 1}. ${user.userEmail} (ID: ${user.userId})`);
             console.log(`   Current planSlug: ${user.currentPlanSlug}`);
             console.log(`   Subscription status: ${user.subscriptionStatus}`);
             console.log(`   Subscription plan: ${user.subscriptionPlan}`);
-            console.log("");
+            console.log('');
         });
 
         // Update users' planSlug to VT_PLUS
@@ -89,7 +89,7 @@ async function updateUserPlanSlug() {
         );
 
         // Verify the updates
-        console.log("\nVerifying updates...");
+        console.log('\nVerifying updates...');
         const verificationResults = await db
             .select({
                 userId: users.id,
@@ -103,7 +103,7 @@ async function updateUserPlanSlug() {
             `Verification: ${verificationResults.length} users now have planSlug set to VT_PLUS`,
         );
     } catch (error) {
-        console.error("Error updating user planSlug:", error);
+        console.error('Error updating user planSlug:', error);
         throw error;
     }
 }
@@ -111,10 +111,10 @@ async function updateUserPlanSlug() {
 // Run the script
 updateUserPlanSlug()
     .then(() => {
-        console.log("Script completed successfully");
+        console.log('Script completed successfully');
         process.exit(0);
     })
     .catch((error) => {
-        console.error("Script failed:", error);
+        console.error('Script failed:', error);
         process.exit(1);
     });

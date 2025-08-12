@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { log } from "@repo/shared/logger";
-import type { JSX, ReactNode } from "react";
-import { FullPageLoader } from "./full-page-loader";
+import { log } from '@repo/shared/logger';
+import type { JSX, ReactNode } from 'react';
+import { FullPageLoader } from './full-page-loader';
 
 interface SSRErrorBoundaryProps {
     children: ReactNode;
@@ -16,14 +16,14 @@ export function SSRErrorBoundary({ children, fallback }: SSRErrorBoundaryProps):
         // In production, just render children
         return <>{children}</>;
     } catch (error) {
-        log.warn("SSR Error Boundary caught an error:", { data: error });
+        log.warn('SSR Error Boundary caught an error:', { data: error });
 
         if (fallback) {
             return <>{fallback}</>;
         }
 
         return (
-            <div className="bg-background flex h-[100dvh] w-full items-center justify-center">
+            <div className='bg-background flex h-[100dvh] w-full items-center justify-center'>
                 <FullPageLoader />
             </div>
         );

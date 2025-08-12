@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useSubscriptionAccess } from "@repo/common/hooks/use-subscription-access";
-import { useChatStore } from "@repo/common/store";
-import { ChatModeConfig } from "@repo/shared/config";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { FeatureSlug } from "@repo/shared/types/subscription";
-import { Button, Tooltip } from "@repo/ui";
-import { Image } from "lucide-react";
-import { type FC, useState } from "react";
-import { GatedFeatureAlert } from "../gated-feature-alert";
-import { LoginRequiredDialog } from "../login-required-dialog";
+import { useSubscriptionAccess } from '@repo/common/hooks/use-subscription-access';
+import { useChatStore } from '@repo/common/store';
+import { ChatModeConfig } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug } from '@repo/shared/types/subscription';
+import { Button, Tooltip } from '@repo/ui';
+import { Image } from 'lucide-react';
+import { type FC, useState } from 'react';
+import { GatedFeatureAlert } from '../gated-feature-alert';
+import { LoginRequiredDialog } from '../login-required-dialog';
 
 // Create a wrapper component for Image to match expected icon prop type
-const ImageIcon: React.ComponentType<{ size?: number; className?: string }> = ({
+const ImageIcon: React.ComponentType<{ size?: number; className?: string; }> = ({
     size,
     className,
 }) => <Image className={className} size={size} />;
@@ -43,8 +43,8 @@ export const ImageUpload: FC<TImageUpload> = ({
     const hasImageAttached = imageAttachment?.file || imageAttachment?.base64;
 
     const chatModeConfig = ChatModeConfig[chatMode];
-    const requiresVTPlusForImageUpload =
-        chatModeConfig?.requiredPlan || chatModeConfig?.requiredFeature;
+    const requiresVTPlusForImageUpload = chatModeConfig?.requiredPlan
+        || chatModeConfig?.requiredFeature;
 
     const handleFileSelect = () => {
         if (!isSignedIn) {
@@ -74,54 +74,54 @@ export const ImageUpload: FC<TImageUpload> = ({
 
     const imageUploadButton = (
         <>
-            <label htmlFor={id} className="sr-only">
+            <label htmlFor={id} className='sr-only'>
                 {label}
             </label>
             <input
-                className="hidden"
+                className='hidden'
                 id={id}
                 onChange={handleImageUpload}
-                type="file"
+                type='file'
                 aria-label={label}
             />
             <Tooltip
-                content={
-                    hasImageAttached
-                        ? `Image attached: ${imageAttachment?.file?.name || "Unknown"}`
-                        : tooltip
-                }
+                content={hasImageAttached
+                    ? `Image attached: ${imageAttachment?.file?.name || 'Unknown'}`
+                    : tooltip}
             >
-                {showIcon ? (
-                    <Button
-                        className={
-                            hasImageAttached ? "border-blue-300 bg-blue-100 hover:bg-blue-200" : ""
-                        }
-                        onClick={handleFileSelect}
-                        size="icon-sm"
-                        variant={hasImageAttached ? "default" : "ghost"}
-                    >
-                        <Image size={16} strokeWidth={2} />
-                    </Button>
-                ) : (
-                    <Button
-                        className={
-                            hasImageAttached ? "border-blue-300 bg-blue-100 hover:bg-blue-200" : ""
-                        }
-                        onClick={handleFileSelect}
-                        variant={hasImageAttached ? "default" : "bordered"}
-                    >
-                        {label}
-                    </Button>
-                )}
+                {showIcon
+                    ? (
+                        <Button
+                            className={hasImageAttached
+                                ? 'border-blue-300 bg-blue-100 hover:bg-blue-200'
+                                : ''}
+                            onClick={handleFileSelect}
+                            size='icon-sm'
+                            variant={hasImageAttached ? 'default' : 'ghost'}
+                        >
+                            <Image size={16} strokeWidth={2} />
+                        </Button>
+                    )
+                    : (
+                        <Button
+                            className={hasImageAttached
+                                ? 'border-blue-300 bg-blue-100 hover:bg-blue-200'
+                                : ''}
+                            onClick={handleFileSelect}
+                            variant={hasImageAttached ? 'default' : 'bordered'}
+                        >
+                            {label}
+                        </Button>
+                    )}
             </Tooltip>
 
             {/* Login prompt dialog */}
             <LoginRequiredDialog
-                description="Please log in to upload and attach files to your messages."
+                description='Please log in to upload and attach files to your messages.'
                 icon={ImageIcon}
                 isOpen={showLoginPrompt}
                 onClose={() => setShowLoginPrompt(false)}
-                title="Login Required"
+                title='Login Required'
             />
         </>
     );
@@ -130,10 +130,10 @@ export const ImageUpload: FC<TImageUpload> = ({
     if (requiresVTPlusForImageUpload && isSignedIn) {
         return (
             <GatedFeatureAlert
-                message="Image upload with advanced models is a VT+ feature. Upgrade to access enhanced AI capabilities."
+                message='Image upload with advanced models is a VT+ feature. Upgrade to access enhanced AI capabilities.'
                 requiredFeature={chatModeConfig?.requiredFeature}
                 requiredPlan={chatModeConfig?.requiredPlan}
-                title="Image Upload Requires VT+"
+                title='Image Upload Requires VT+'
             >
                 {imageUploadButton}
             </GatedFeatureAlert>

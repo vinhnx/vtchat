@@ -149,7 +149,7 @@ const canUpgrade = user.planSlug !== 'vt_plus';
 ### After
 
 ```typescript
-import { hasVTPlusAccess, canUpgrade, PlanSlug } from '@repo/shared/utils/access-control';
+import { canUpgrade, hasVTPlusAccess, PlanSlug } from '@repo/shared/utils/access-control';
 
 // Unified checks
 if (hasVTPlusAccess(user)) {

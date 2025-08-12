@@ -1,27 +1,26 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Bundle analyzer configuration
-const withBundleAnalyzer =
-    process.env.ANALYZE === "true"
-        ? (await import("@next/bundle-analyzer")).default({
-              enabled: true,
-              openAnalyzer: true,
-          })
-        : (config) => config;
+const withBundleAnalyzer = process.env.ANALYZE === 'true'
+    ? (await import('@next/bundle-analyzer')).default({
+        enabled: true,
+        openAnalyzer: true,
+    })
+    : (config) => config;
 
 const nextConfig = {
     transpilePackages: [
-        "next-mdx-remote",
-        "@repo/shared",
-        "@repo/common",
-        "@repo/ui",
-        "@repo/ai",
-        "@repo/actions",
-        "@repo/orchestrator",
+        'next-mdx-remote',
+        '@repo/shared',
+        '@repo/common',
+        '@repo/ui',
+        '@repo/ai',
+        '@repo/actions',
+        '@repo/orchestrator',
     ],
 
     // Disable Vercel Analytics auto-injection
@@ -54,7 +53,7 @@ const nextConfig = {
         optimizeCss: true,
 
         // Additional memory optimizations
-        optimizePackageImports: ["@repo/shared", "@repo/common", "@repo/ui"],
+        optimizePackageImports: ['@repo/shared', '@repo/common', '@repo/ui'],
         serverMinification: true,
     },
 
@@ -69,12 +68,11 @@ const nextConfig = {
     // Performance optimizations
     compiler: {
         // Remove console.logs in production
-        removeConsole:
-            process.env.NODE_ENV === "production"
-                ? {
-                      exclude: ["error", "warn"],
-                  }
-                : false,
+        removeConsole: process.env.NODE_ENV === 'production'
+            ? {
+                exclude: ['error', 'warn'],
+            }
+            : false,
         // Enable SWC minification
         styledComponents: true,
     },
@@ -91,7 +89,7 @@ const nextConfig = {
     },
 
     // Additional development optimizations
-    ...(process.env.NODE_ENV === "development" && {
+    ...(process.env.NODE_ENV === 'development' && {
         // Optimize file watching
         useFileSystemPublicRoutes: true,
     }),
@@ -99,60 +97,60 @@ const nextConfig = {
     // Image optimization with balanced caching
     images: {
         remotePatterns: [
-            { hostname: "www.google.com" },
-            { hostname: "startupfa.me" },
-            { hostname: "producthunt.com" },
+            { hostname: 'www.google.com' },
+            { hostname: 'startupfa.me' },
+            { hostname: 'producthunt.com' },
             // Avatar services
-            { hostname: "lh3.googleusercontent.com" }, // Google avatars
-            { hostname: "avatars.githubusercontent.com" }, // GitHub avatars
-            { hostname: "cdn.discordapp.com" }, // Discord avatars
-            { hostname: "graph.facebook.com" }, // Facebook avatars
-            { hostname: "pbs.twimg.com" }, // Twitter avatars
+            { hostname: 'lh3.googleusercontent.com' }, // Google avatars
+            { hostname: 'avatars.githubusercontent.com' }, // GitHub avatars
+            { hostname: 'cdn.discordapp.com' }, // Discord avatars
+            { hostname: 'graph.facebook.com' }, // Facebook avatars
+            { hostname: 'pbs.twimg.com' }, // Twitter avatars
             // AI/LLM Provider Images
-            { hostname: "oaidalleapiprodscus.blob.core.windows.net" }, // OpenAI DALL-E
-            { hostname: "cdn.openai.com" }, // OpenAI CDN
-            { hostname: "images.openai.com" }, // OpenAI Images
-            { hostname: "storage.googleapis.com" }, // Google AI/Gemini storage
-            { hostname: "generativelanguage.googleapis.com" }, // Gemini API images
-            { hostname: "claude.ai" }, // Claude AI images
-            { hostname: "cdn.anthropic.com" }, // Anthropic CDN
-            { hostname: "images.anthropic.com" }, // Anthropic images
-            { hostname: "api.stability.ai" }, // Stability AI
-            { hostname: "cdn.stability.ai" }, // Stability AI CDN
+            { hostname: 'oaidalleapiprodscus.blob.core.windows.net' }, // OpenAI DALL-E
+            { hostname: 'cdn.openai.com' }, // OpenAI CDN
+            { hostname: 'images.openai.com' }, // OpenAI Images
+            { hostname: 'storage.googleapis.com' }, // Google AI/Gemini storage
+            { hostname: 'generativelanguage.googleapis.com' }, // Gemini API images
+            { hostname: 'claude.ai' }, // Claude AI images
+            { hostname: 'cdn.anthropic.com' }, // Anthropic CDN
+            { hostname: 'images.anthropic.com' }, // Anthropic images
+            { hostname: 'api.stability.ai' }, // Stability AI
+            { hostname: 'cdn.stability.ai' }, // Stability AI CDN
 
-            { hostname: "replicate.delivery" }, // Replicate model outputs
-            { hostname: "pbxt.replicate.delivery" }, // Replicate CDN
-            { hostname: "cdn.replicate.com" }, // Replicate CDN
-            { hostname: "huggingface.co" }, // Hugging Face
-            { hostname: "cdn-uploads.huggingface.co" }, // Hugging Face uploads
-            { hostname: "images.cohere.ai" }, // Cohere images
-            { hostname: "api.cohere.ai" }, // Cohere API
-            { hostname: "images.perplexity.ai" }, // Perplexity images
-            { hostname: "api.perplexity.ai" }, // Perplexity API
+            { hostname: 'replicate.delivery' }, // Replicate model outputs
+            { hostname: 'pbxt.replicate.delivery' }, // Replicate CDN
+            { hostname: 'cdn.replicate.com' }, // Replicate CDN
+            { hostname: 'huggingface.co' }, // Hugging Face
+            { hostname: 'cdn-uploads.huggingface.co' }, // Hugging Face uploads
+            { hostname: 'images.cohere.ai' }, // Cohere images
+            { hostname: 'api.cohere.ai' }, // Cohere API
+            { hostname: 'images.perplexity.ai' }, // Perplexity images
+            { hostname: 'api.perplexity.ai' }, // Perplexity API
             // Common CDN services
-            { hostname: "cdn.jsdelivr.net" },
-            { hostname: "unpkg.com" },
-            { hostname: "images.unsplash.com" },
-            { hostname: "via.placeholder.com" },
+            { hostname: 'cdn.jsdelivr.net' },
+            { hostname: 'unpkg.com' },
+            { hostname: 'images.unsplash.com' },
+            { hostname: 'via.placeholder.com' },
             // User-uploaded content (if you use these services)
-            { hostname: "cloudinary.com" },
-            { hostname: "*.cloudinary.com" },
-            { hostname: "imgur.com" },
-            { hostname: "i.imgur.com" },
+            { hostname: 'cloudinary.com' },
+            { hostname: '*.cloudinary.com' },
+            { hostname: 'imgur.com' },
+            { hostname: 'i.imgur.com' },
         ],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        formats: ["image/webp", "image/avif"],
+        formats: ['image/webp', 'image/avif'],
         minimumCacheTTL: 86400, // 1 day (reduced from 31 days for better cache invalidation)
         dangerouslyAllowSVG: true, // Allow SVG for icons and avatars
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     },
 
     // Webpack optimizations (only when not using Turbopack)
-    ...(process.env.TURBOPACK !== "1" && {
+    ...(process.env.TURBOPACK !== '1' && {
         webpack: (config, { dev, isServer }) => {
             // Memory-optimized settings for constrained environments
-            config.stats = "errors-only";
+            config.stats = 'errors-only';
             config.performance = {
                 hints: false,
             };
@@ -182,16 +180,16 @@ const nextConfig = {
                     ? config.externals
                     : [config.externals];
                 config.externals = externals.filter((external) => {
-                    if (typeof external === "function") {
+                    if (typeof external === 'function') {
                         return (context, request, callback) => {
-                            if (request === "undici" || request.startsWith("undici/")) {
+                            if (request === 'undici' || request.startsWith('undici/')) {
                                 return callback(); // Include in bundle
                             }
                             return external(context, request, callback);
                         };
                     }
-                    if (typeof external === "string") {
-                        return external !== "undici";
+                    if (typeof external === 'string') {
+                        return external !== 'undici';
                     }
                     return external;
                 });
@@ -201,21 +199,21 @@ const nextConfig = {
             if (!isServer) {
                 config.resolve.fallback = {
                     ...config.resolve.fallback,
-                    "node:events": "events",
-                    "node:path": "path-browserify",
-                    "node:fs": false,
-                    "node:crypto": "crypto-browserify",
-                    "node:stream": "stream-browserify",
-                    "node:util": "util",
-                    "node:url": "url",
-                    "node:querystring": "querystring-es3",
-                    "node:buffer": "buffer",
+                    'node:events': 'events',
+                    'node:path': 'path-browserify',
+                    'node:fs': false,
+                    'node:crypto': 'crypto-browserify',
+                    'node:stream': 'stream-browserify',
+                    'node:util': 'util',
+                    'node:url': 'url',
+                    'node:querystring': 'querystring-es3',
+                    'node:buffer': 'buffer',
                 };
 
                 // Minimal chunk splitting for low-memory environments
                 if (!dev) {
                     config.optimization.splitChunks = {
-                        chunks: "all",
+                        chunks: 'all',
                         maxInitialRequests: 10,
                         maxAsyncRequests: 15,
                         minSize: 50000,
@@ -224,9 +222,9 @@ const nextConfig = {
                             // Single vendor chunk
                             vendor: {
                                 test: /[\\/]node_modules[\\/]/,
-                                name: "vendor",
+                                name: 'vendor',
                                 priority: 20,
-                                chunks: "all",
+                                chunks: 'all',
                                 reuseExistingChunk: true,
                             },
                             // Default chunk - omit name to auto-generate
@@ -248,277 +246,278 @@ const nextConfig = {
         return [
             {
                 // Apply CORS headers to all API routes
-                source: "/api/:path*",
+                source: '/api/:path*',
                 headers: [
                     {
-                        key: "Access-Control-Allow-Origin",
-                        value: process.env.NEXT_PUBLIC_BASE_URL || "https://vtchat.io.vn",
+                        key: 'Access-Control-Allow-Origin',
+                        value: process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
                     },
                     {
-                        key: "Access-Control-Allow-Methods",
-                        value: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
                     },
                     {
-                        key: "Access-Control-Allow-Headers",
-                        value: "Content-Type, Authorization, X-Requested-With",
+                        key: 'Access-Control-Allow-Headers',
+                        value: 'Content-Type, Authorization, X-Requested-With',
                     },
                     {
-                        key: "Access-Control-Allow-Credentials",
-                        value: "true",
+                        key: 'Access-Control-Allow-Credentials',
+                        value: 'true',
                     },
                 ],
             },
             {
                 // CORS headers for AI provider image proxying
-                source: "/api/proxy/image/:path*",
+                source: '/api/proxy/image/:path*',
                 headers: [
                     {
-                        key: "Access-Control-Allow-Origin",
-                        value: "*",
+                        key: 'Access-Control-Allow-Origin',
+                        value: '*',
                     },
                     {
-                        key: "Access-Control-Allow-Methods",
-                        value: "GET, OPTIONS",
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, OPTIONS',
                     },
                     {
-                        key: "Access-Control-Allow-Headers",
-                        value: "Content-Type, Authorization",
+                        key: 'Access-Control-Allow-Headers',
+                        value: 'Content-Type, Authorization',
                     },
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400, stale-while-revalidate=604800", // 1 day with 1 week stale
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=604800', // 1 day with 1 week stale
                     },
                 ],
             },
             {
                 // Block sensitive areas completely
-                source: "/(profile|rag)/:path*",
+                source: '/(profile|rag)/:path*',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=n, search=n, inference=n",
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
                     },
                     {
-                        key: "X-Robots-Tag",
-                        value: "noindex, nofollow",
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
                     },
                 ],
             },
             {
                 // Content-Usage headers for public pages (allow AI training)
-                source: "/(about|faq|privacy|terms)/:path*",
+                source: '/(about|faq|privacy|terms)/:path*',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=y",
+                        key: 'Content-Usage',
+                        value: 'tdm=y',
                     },
                 ],
             },
             {
                 // Block all API routes from indexing
-                source: "/api/:path*",
+                source: '/api/:path*',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=n, search=n, inference=n",
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
                     },
                     {
-                        key: "X-Robots-Tag",
-                        value: "noindex, nofollow",
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
                     },
                     {
-                        key: "Cache-Control",
-                        value: "private, no-store",
+                        key: 'Cache-Control',
+                        value: 'private, no-store',
                     },
                 ],
             },
             {
                 // Block all chat routes from indexing (PII protection)
-                source: "/chat",
+                source: '/chat',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=n, search=n, inference=n",
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
                     },
                     {
-                        key: "X-Robots-Tag",
-                        value: "noindex, nofollow",
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
                     },
                 ],
             },
             {
                 // Block all chat thread pages from indexing (PII protection)
-                source: "/chat/:path*",
+                source: '/chat/:path*',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=n, search=n, inference=n",
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=n, inference=n',
                     },
                     {
-                        key: "X-Robots-Tag",
-                        value: "noindex, nofollow",
+                        key: 'X-Robots-Tag',
+                        value: 'noindex, nofollow',
                     },
                 ],
             },
             {
                 // Default Content-Usage header for all other pages
-                source: "/((?!api|_next|static|favicon\\.ico|robots\\.txt|profile|rag|chat).*)",
+                source: '/((?!api|_next|static|favicon\\.ico|robots\\.txt|profile|rag|chat).*)',
                 headers: [
                     {
-                        key: "Content-Usage",
-                        value: "tdm=n, search=y, inference=y",
+                        key: 'Content-Usage',
+                        value: 'tdm=n, search=y, inference=y',
                     },
                     {
-                        key: "X-DNS-Prefetch-Control",
-                        value: "on",
+                        key: 'X-DNS-Prefetch-Control',
+                        value: 'on',
                     },
                     {
-                        key: "X-Frame-Options",
-                        value: "DENY",
+                        key: 'X-Frame-Options',
+                        value: 'DENY',
                     },
                     {
-                        key: "X-Content-Type-Options",
-                        value: "nosniff",
+                        key: 'X-Content-Type-Options',
+                        value: 'nosniff',
                     },
                     {
-                        key: "Referrer-Policy",
-                        value: "origin-when-cross-origin",
+                        key: 'Referrer-Policy',
+                        value: 'origin-when-cross-origin',
                     },
                     {
-                        key: "Permissions-Policy",
-                        value: "camera=(), microphone=(), geolocation=()",
+                        key: 'Permissions-Policy',
+                        value: 'camera=(), microphone=(), geolocation=()',
                     },
                     {
-                        key: "Link",
-                        value: "</icon-192x192.png>; rel=preload; as=image, </icons/peerlist_badge.svg>; rel=preload; as=image",
+                        key: 'Link',
+                        value:
+                            '</icon-192x192.png>; rel=preload; as=image, </icons/peerlist_badge.svg>; rel=preload; as=image',
                     },
                 ],
             },
             {
                 // Optimized cache headers for static assets
-                source: "/(.*)\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2)",
+                source: '/(.*)\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2)',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=31536000, immutable", // 1 year for static assets with hash
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable', // 1 year for static assets with hash
                     },
                 ],
             },
             {
                 // Shorter cache for dynamic assets that might change
-                source: "/_next/static/(.*)\\.(js|css)",
+                source: '/_next/static/(.*)\\.(js|css)',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400, stale-while-revalidate=31536000", // 1 day with stale-while-revalidate
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=31536000', // 1 day with stale-while-revalidate
                     },
                 ],
             },
             {
                 // Font files with longer cache
-                source: "/(.*)\\.(woff|woff2|ttf|eot)",
+                source: '/(.*)\\.(woff|woff2|ttf|eot)',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=31536000, immutable",
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
                     },
                 ],
             },
             {
                 // Service Worker specific headers - never cache
-                source: "/sw.js",
+                source: '/sw.js',
                 headers: [
                     {
-                        key: "Content-Type",
-                        value: "application/javascript; charset=utf-8",
+                        key: 'Content-Type',
+                        value: 'application/javascript; charset=utf-8',
                     },
                     {
-                        key: "Cache-Control",
-                        value: "no-cache, no-store, must-revalidate",
+                        key: 'Cache-Control',
+                        value: 'no-cache, no-store, must-revalidate',
                     },
                     {
-                        key: "Content-Security-Policy",
+                        key: 'Content-Security-Policy',
                         value: "default-src 'self'; script-src 'self'",
                     },
                 ],
             },
             {
                 // Web App Manifest headers - moderate cache
-                source: "/manifest.webmanifest",
+                source: '/manifest.webmanifest',
                 headers: [
                     {
-                        key: "Content-Type",
-                        value: "application/manifest+json",
+                        key: 'Content-Type',
+                        value: 'application/manifest+json',
                     },
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400", // 1 day
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400', // 1 day
                     },
                 ],
             },
             {
                 // Offline page - moderate cache for PWA functionality
-                source: "/offline.html",
+                source: '/offline.html',
                 headers: [
                     {
-                        key: "Content-Type",
-                        value: "text/html; charset=utf-8",
+                        key: 'Content-Type',
+                        value: 'text/html; charset=utf-8',
                     },
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400", // 1 day
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400', // 1 day
                     },
                 ],
             },
             {
                 // Next.js optimized images - balanced cache
-                source: "/_next/image",
+                source: '/_next/image',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400, stale-while-revalidate=31536000", // 1 day with stale-while-revalidate
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=31536000', // 1 day with stale-while-revalidate
                     },
                 ],
             },
             {
                 // AI-generated images - shorter cache due to dynamic nature
-                source: "/api/ai/images/:path*",
+                source: '/api/ai/images/:path*',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=86400, stale-while-revalidate=604800", // 1 day with 1 week stale-while-revalidate
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=604800', // 1 day with 1 week stale-while-revalidate
                     },
                     {
-                        key: "Content-Type",
-                        value: "image/*",
+                        key: 'Content-Type',
+                        value: 'image/*',
                     },
                 ],
             },
             {
                 // HTML pages - short cache with revalidation
-                source: "/:path*.html",
+                source: '/:path*.html',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "public, max-age=300, stale-while-revalidate=86400", // 5 min with stale-while-revalidate
+                        key: 'Cache-Control',
+                        value: 'public, max-age=300, stale-while-revalidate=86400', // 5 min with stale-while-revalidate
                     },
                 ],
             },
             {
                 // API responses - no cache for dynamic content
-                source: "/api/:path*",
+                source: '/api/:path*',
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: "private, no-cache, no-store, must-revalidate",
+                        key: 'Cache-Control',
+                        value: 'private, no-cache, no-store, must-revalidate',
                     },
                     {
-                        key: "Pragma",
-                        value: "no-cache",
+                        key: 'Pragma',
+                        value: 'no-cache',
                     },
                     {
-                        key: "Expires",
-                        value: "0",
+                        key: 'Expires',
+                        value: '0',
                     },
                 ],
             },
@@ -528,22 +527,22 @@ const nextConfig = {
     async redirects() {
         return [
             {
-                source: "/plus",
-                destination: "/pricing",
+                source: '/plus',
+                destination: '/pricing',
                 permanent: true,
             },
         ];
     },
 
     // Fly.io-specific configuration for deployment
-    output: "standalone",
+    output: 'standalone',
     poweredByHeader: false,
     generateBuildId: async () => {
-        return process.env.BUILD_ID || "development";
+        return process.env.BUILD_ID || 'development';
     },
 
     // Production-specific optimizations
-    ...(process.env.NODE_ENV === "production" && {
+    ...(process.env.NODE_ENV === 'production' && {
         productionBrowserSourceMaps: false,
         // Additional memory optimizations for production
         experimental: {
@@ -564,7 +563,6 @@ const nextConfig = {
 
     // Skip middleware URL normalization for better performance
     skipMiddlewareUrlNormalize: true,
-
     // Note: Static page generation is disabled via layout.tsx exports
     // (dynamic = "force-dynamic", revalidate = 0, dynamicParams = true)
 };

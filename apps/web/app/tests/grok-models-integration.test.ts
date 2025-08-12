@@ -2,21 +2,21 @@
  * Test for Grok models integration and API key validation
  */
 
-import { ChatMode } from "@repo/shared/config";
-import { describe, expect, it } from "vitest";
+import { ChatMode } from '@repo/shared/config';
+import { describe, expect, it } from 'vitest';
 
-describe("Grok Models Integration", () => {
+describe('Grok Models Integration', () => {
     const grokModels = [ChatMode.GROK_3, ChatMode.GROK_3_MINI, ChatMode.GROK_4];
 
-    describe("ChatMode Configuration", () => {
-        it("should have all Grok models properly defined", () => {
-            expect(ChatMode.GROK_3).toBe("grok-3");
-            expect(ChatMode.GROK_3_MINI).toBe("grok-3-mini");
-            expect(ChatMode.GROK_4).toBe("grok-4");
+    describe('ChatMode Configuration', () => {
+        it('should have all Grok models properly defined', () => {
+            expect(ChatMode.GROK_3).toBe('grok-3');
+            expect(ChatMode.GROK_3_MINI).toBe('grok-3-mini');
+            expect(ChatMode.GROK_4).toBe('grok-4');
         });
     });
 
-    describe("API Key Requirements", () => {
+    describe('API Key Requirements', () => {
         // Mock API key validation function
         const mockHasApiKeyForChatMode = (chatMode: ChatMode, hasXaiKey: boolean = false) => {
             // Simulate the logic from api-keys.store.ts
@@ -32,7 +32,7 @@ describe("Grok Models Integration", () => {
             }
         };
 
-        it("should require XAI_API_KEY for all Grok models", () => {
+        it('should require XAI_API_KEY for all Grok models', () => {
             // Without XAI API key
             grokModels.forEach((model) => {
                 expect(mockHasApiKeyForChatMode(model, false)).toBe(false);
@@ -45,47 +45,47 @@ describe("Grok Models Integration", () => {
         });
     });
 
-    describe("BYOK Validation", () => {
+    describe('BYOK Validation', () => {
         // Mock BYOK mapping from byok-validation-dialog.tsx
         const CHAT_MODE_TO_API_KEY = {
-            [ChatMode.GROK_3]: "XAI_API_KEY",
-            [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
-            [ChatMode.GROK_4]: "XAI_API_KEY",
+            [ChatMode.GROK_3]: 'XAI_API_KEY',
+            [ChatMode.GROK_3_MINI]: 'XAI_API_KEY',
+            [ChatMode.GROK_4]: 'XAI_API_KEY',
         };
 
-        it("should have correct API key mappings for BYOK validation", () => {
+        it('should have correct API key mappings for BYOK validation', () => {
             grokModels.forEach((model) => {
-                expect(CHAT_MODE_TO_API_KEY[model]).toBe("XAI_API_KEY");
+                expect(CHAT_MODE_TO_API_KEY[model]).toBe('XAI_API_KEY');
             });
         });
     });
 
-    describe("Model Definitions", () => {
+    describe('Model Definitions', () => {
         // Mock model configuration
         const mockModels = {
-            "grok-3": { provider: "xai", maxTokens: 131_072, contextWindow: 131_072 },
-            "grok-3-mini": { provider: "xai", maxTokens: 131_072, contextWindow: 131_072 },
-            "grok-4": { provider: "xai", maxTokens: 256_000, contextWindow: 256_000 },
+            'grok-3': { provider: 'xai', maxTokens: 131_072, contextWindow: 131_072 },
+            'grok-3-mini': { provider: 'xai', maxTokens: 131_072, contextWindow: 131_072 },
+            'grok-4': { provider: 'xai', maxTokens: 256_000, contextWindow: 256_000 },
         };
 
-        it("should have proper model configurations", () => {
-            expect(mockModels["grok-3"].provider).toBe("xai");
-            expect(mockModels["grok-3-mini"].provider).toBe("xai");
-            expect(mockModels["grok-4"].provider).toBe("xai");
+        it('should have proper model configurations', () => {
+            expect(mockModels['grok-3'].provider).toBe('xai');
+            expect(mockModels['grok-3-mini'].provider).toBe('xai');
+            expect(mockModels['grok-4'].provider).toBe('xai');
         });
 
-        it("should have appropriate context windows", () => {
-            expect(mockModels["grok-3"].contextWindow).toBe(131_072);
-            expect(mockModels["grok-3-mini"].contextWindow).toBe(131_072);
-            expect(mockModels["grok-4"].contextWindow).toBe(256_000);
+        it('should have appropriate context windows', () => {
+            expect(mockModels['grok-3'].contextWindow).toBe(131_072);
+            expect(mockModels['grok-3-mini'].contextWindow).toBe(131_072);
+            expect(mockModels['grok-4'].contextWindow).toBe(256_000);
         });
     });
 
-    describe("Error Scenarios", () => {
-        it("should block requests when XAI_API_KEY is missing", () => {
+    describe('Error Scenarios', () => {
+        it('should block requests when XAI_API_KEY is missing', () => {
             const mockApiKeys = {
-                OPENAI_API_KEY: "sk-test-key",
-                ANTHROPIC_API_KEY: "ant-test-key",
+                OPENAI_API_KEY: 'sk-test-key',
+                ANTHROPIC_API_KEY: 'ant-test-key',
                 // XAI_API_KEY is missing
             };
 
@@ -95,14 +95,14 @@ describe("Grok Models Integration", () => {
             });
         });
 
-        it("should show BYOK dialog when API key is missing", () => {
+        it('should show BYOK dialog when API key is missing', () => {
             // This would trigger the BYOK validation dialog
             const shouldShowBYOKDialog = (chatMode: ChatMode, apiKeys: Record<string, string>) => {
                 const requiredKeyType = CHAT_MODE_TO_API_KEY[chatMode];
                 return requiredKeyType && !apiKeys[requiredKeyType];
             };
 
-            const mockApiKeys = { OPENAI_API_KEY: "test-key" };
+            const mockApiKeys = { OPENAI_API_KEY: 'test-key' };
 
             grokModels.forEach((model) => {
                 expect(shouldShowBYOKDialog(model, mockApiKeys)).toBe(true);
@@ -110,17 +110,17 @@ describe("Grok Models Integration", () => {
         });
     });
 
-    describe("Provider Integration", () => {
-        it("should use xAI provider for all Grok models", () => {
+    describe('Provider Integration', () => {
+        it('should use xAI provider for all Grok models', () => {
             // Mock the getModelFromChatMode function
             const getModelFromChatMode = (mode: ChatMode) => {
                 switch (mode) {
                     case ChatMode.GROK_3:
-                        return "grok-3";
+                        return 'grok-3';
                     case ChatMode.GROK_3_MINI:
-                        return "grok-3-mini";
+                        return 'grok-3-mini';
                     case ChatMode.GROK_4:
-                        return "grok-4";
+                        return 'grok-4';
                     default:
                         return null;
                 }
@@ -129,7 +129,7 @@ describe("Grok Models Integration", () => {
             grokModels.forEach((model) => {
                 const modelId = getModelFromChatMode(model);
                 expect(modelId).toBeTruthy();
-                expect(modelId).toContain("grok");
+                expect(modelId).toContain('grok');
             });
         });
     });
@@ -137,16 +137,16 @@ describe("Grok Models Integration", () => {
 
 // Test the CHAT_MODE_TO_API_KEY mapping specifically for the BYOK dialog issue
 const CHAT_MODE_TO_API_KEY = {
-    [ChatMode.GROK_3]: "XAI_API_KEY",
-    [ChatMode.GROK_3_MINI]: "XAI_API_KEY",
-    [ChatMode.GROK_4]: "XAI_API_KEY",
+    [ChatMode.GROK_3]: 'XAI_API_KEY',
+    [ChatMode.GROK_3_MINI]: 'XAI_API_KEY',
+    [ChatMode.GROK_4]: 'XAI_API_KEY',
 };
 
-describe("BYOK Dialog Grok Models Fix", () => {
+describe('BYOK Dialog Grok Models Fix', () => {
     it("should have mappings for all Grok models to prevent 'tap send does nothing'", () => {
         // This test verifies the fix for the main issue
-        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_3]).toBe("XAI_API_KEY");
-        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_3_MINI]).toBe("XAI_API_KEY");
-        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_4]).toBe("XAI_API_KEY");
+        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_3]).toBe('XAI_API_KEY');
+        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_3_MINI]).toBe('XAI_API_KEY');
+        expect(CHAT_MODE_TO_API_KEY[ChatMode.GROK_4]).toBe('XAI_API_KEY');
     });
 });

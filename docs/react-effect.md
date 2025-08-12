@@ -96,7 +96,7 @@ export function useRagOnboarding() {
 
     // Calculate derived state during render
     const hasApiKeys = Object.keys(apiKeys).some(
-        key => key === API_KEY_NAMES.GOOGLE || key === API_KEY_NAMES.OPENAI
+        key => key === API_KEY_NAMES.GOOGLE || key === API_KEY_NAMES.OPENAI,
     );
 
     // Derive showOnboarding directly from hasApiKeys
@@ -152,11 +152,11 @@ const debouncedError = useDebounced(threadItem.error, 50);
 // CURRENT - Complex effect logic
 useEffect(() => {
     if (
-        isSupported &&
-        !isInstalled &&
-        (deferredPrompt || isIOS) &&
-        isHomepage &&
-        !bannerDismissed
+        isSupported
+        && !isInstalled
+        && (deferredPrompt || isIOS)
+        && isHomepage
+        && !bannerDismissed
     ) {
         setShowBanner(true);
 
@@ -176,8 +176,8 @@ useEffect(() => {
 
 ```typescript
 // Derive banner visibility
-const shouldShowBanner =
-    isSupported && !isInstalled && (deferredPrompt || isIOS) && isHomepage && !bannerDismissed;
+const shouldShowBanner = isSupported && !isInstalled && (deferredPrompt || isIOS) && isHomepage
+    && !bannerDismissed;
 
 // Separate effect for auto-dismiss timer
 useEffect(() => {

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ShineText } from "@repo/common/components";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { Flex } from "@repo/ui";
-import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import { ShineText } from '@repo/common/components';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { Flex } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
 
 type PersonalizedGreetingProps = {
     session?: any;
@@ -17,13 +17,13 @@ export const PersonalizedGreeting = ({ session: initialSession }: PersonalizedGr
             user: initialSession?.user,
         },
     });
-    const [greeting, setGreeting] = React.useState<string>("");
+    const [greeting, setGreeting] = React.useState<string>('');
 
     React.useEffect(() => {
         const getTimeBasedGreeting = () => {
             const hour = new Date().getHours();
-            const userName = session?.user?.name || session?.user?.email?.split("@")[0] || "";
-            const userNamePart = userName ? `, ${userName}!` : "";
+            const userName = session?.user?.name || session?.user?.email?.split('@')[0] || '';
+            const userNamePart = userName ? `, ${userName}!` : '';
 
             if (hour >= 5 && hour < 12) {
                 return `Good morning${userNamePart}`;
@@ -47,22 +47,22 @@ export const PersonalizedGreeting = ({ session: initialSession }: PersonalizedGr
 
     return (
         <Flex
-            className="relative h-[100px] min-h-[100px] w-full items-center justify-center overflow-hidden"
-            direction="col"
+            className='relative h-[100px] min-h-[100px] w-full items-center justify-center overflow-hidden'
+            direction='col'
         >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode='wait'>
                 <motion.div
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-center"
+                    className='text-center'
                     exit={{ opacity: 0, y: 5 }}
                     initial={{ opacity: 0, y: -5 }}
                     key={greeting}
                     transition={{
                         duration: 0.8,
-                        ease: "easeInOut",
+                        ease: 'easeInOut',
                     }}
                 >
-                    <ShineText className="text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl">
+                    <ShineText className='text-2xl font-medium leading-relaxed tracking-tight sm:text-3xl md:text-4xl'>
                         {greeting}
                     </ShineText>
                 </motion.div>

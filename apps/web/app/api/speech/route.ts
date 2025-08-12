@@ -1,15 +1,15 @@
-import { openai } from "@ai-sdk/openai";
-import { experimental_generateSpeech as generateSpeech } from "ai";
-import { type NextRequest, NextResponse } from "next/server";
+import { openai } from '@ai-sdk/openai';
+import { experimental_generateSpeech as generateSpeech } from 'ai';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // This route handler will generate speech using the user's OpenAI API key
 export async function POST(req: NextRequest) {
     try {
         const { text } = await req.json();
 
-        if (!text || typeof text !== "string") {
+        if (!text || typeof text !== 'string') {
             return NextResponse.json(
-                { error: "Invalid or missing text parameter" },
+                { error: 'Invalid or missing text parameter' },
                 { status: 400 },
             );
         }
@@ -21,11 +21,11 @@ export async function POST(req: NextRequest) {
         // For simplicity, this example assumes the key is available or passed in a header.
         // A more robust solution would involve user authentication and session management.
 
-        const apiKey = req.headers.get("x-openai-api-key"); // Example: pass key in header
+        const apiKey = req.headers.get('x-openai-api-key'); // Example: pass key in header
 
         if (!apiKey) {
             return NextResponse.json(
-                { error: "OpenAI API key is required. Please configure your API key in settings." },
+                { error: 'OpenAI API key is required. Please configure your API key in settings.' },
                 { status: 401 },
             );
         }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         // This part depends on the exact usage of the ai-sdk.
 
         const { audio } = await generateSpeech({
-            model: openai.speech("tts-1"), // Using tts-1 as requested
+            model: openai.speech('tts-1'), // Using tts-1 as requested
             text: text,
             // voice: 'alloy', // Optional: specify voice if needed
             // speed: 1.0, // Optional: specify speed
@@ -69,23 +69,23 @@ export async function POST(req: NextRequest) {
             audioBuffer = await new Response(audioData).arrayBuffer();
         } else {
             // Fallback or error if the type is unexpected
-            throw new Error("Unsupported audio data type");
+            throw new Error('Unsupported audio data type');
         }
 
         // Return the audio data
         return new NextResponse(audioBuffer, {
             headers: {
-                "Content-Type": "audio/mpeg", // Adjust if the AI SDK provides a different type
+                'Content-Type': 'audio/mpeg', // Adjust if the AI SDK provides a different type
             },
         });
     } catch (error) {
-        console.error("Error generating speech:", error);
-        if (error instanceof Error && error.message.includes("API key")) {
+        console.error('Error generating speech:', error);
+        if (error instanceof Error && error.message.includes('API key')) {
             return NextResponse.json(
-                { error: "Invalid OpenAI API key. Please check your key in settings." },
+                { error: 'Invalid OpenAI API key. Please check your key in settings.' },
                 { status: 401 },
             );
         }
-        return NextResponse.json({ error: "Failed to generate speech" }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 });
     }
 }

@@ -7,20 +7,20 @@ The AI routing fix has been successfully implemented and deployed to production 
 ### Key Changes Made:
 
 1. **Modularized Routing Logic** (`packages/common/lib/ai-routing.ts`):
-    - `shouldUseServerSideAPI()` - Determines if request should route to `/api/completion`
-    - `needsServerSideForPlus()` - Checks if model needs server-side for VT+ users
-    - `getProviderKeyToRemove()` - Identifies which API key to remove for server calls
-    - `filterApiKeysForServerSide()` - Removes provider-specific keys for server routing
+   - `shouldUseServerSideAPI()` - Determines if request should route to `/api/completion`
+   - `needsServerSideForPlus()` - Checks if model needs server-side for VT+ users
+   - `getProviderKeyToRemove()` - Identifies which API key to remove for server calls
+   - `filterApiKeysForServerSide()` - Removes provider-specific keys for server routing
 
 2. **Updated Implementation** (`packages/common/hooks/agent-provider.tsx`):
-    - Refactored `handleSubmit` function to use new routing logic
-    - Proper API key filtering for server-side calls
-    - Detailed logging for debugging
+   - Refactored `handleSubmit` function to use new routing logic
+   - Proper API key filtering for server-side calls
+   - Detailed logging for debugging
 
 3. **Comprehensive Testing** (`packages/common/tests/ai-routing.test.ts`):
-    - Unit tests for all routing scenarios
-    - Edge case coverage
-    - All tests passing ✅
+   - Unit tests for all routing scenarios
+   - Edge case coverage
+   - All tests passing ✅
 
 ## 🚀 Deployment Status: LIVE
 

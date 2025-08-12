@@ -1,7 +1,7 @@
-import { ModelEnum } from "@repo/ai/models";
-import { ChatMode } from "@repo/shared/config";
-import type { NextRequest } from "next/server";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ModelEnum } from '@repo/ai/models';
+import { ChatMode } from '@repo/shared/config';
+import type { NextRequest } from 'next/server';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the auth module
 const mockAuth = {
@@ -10,7 +10,7 @@ const mockAuth = {
     },
 };
 
-vi.mock("@/lib/auth-server", () => ({
+vi.mock('@/lib/auth-server', () => ({
     auth: mockAuth,
 }));
 
@@ -20,29 +20,29 @@ const mockRateLimit = {
     recordRequest: vi.fn(),
 };
 
-vi.mock("@/lib/services/rate-limit", () => mockRateLimit);
+vi.mock('@/lib/services/rate-limit', () => mockRateLimit);
 
 // Mock the model functions
-vi.mock("@repo/ai/models", () => ({
+vi.mock('@repo/ai/models', () => ({
     ModelEnum: {
-        GEMINI_2_5_FLASH_LITE: "gemini-2.5-flash-lite-preview-06-17",
-        GPT_4o: "gpt-4o",
+        GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
+        GPT_4o: 'gpt-4o',
     },
     getModelFromChatMode: vi.fn(),
 }));
 
 // Import the route handler after mocks
-import { POST } from "@/app/api/completion/route";
+import { POST } from '@/app/api/completion/route';
 
-describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
-    const authenticatedUserId = "auth-user-123";
+describe('Gemini 2.5 Flash Lite - API Integration Tests', () => {
+    const authenticatedUserId = 'auth-user-123';
     const _unauthenticatedUser = null;
 
     beforeEach(() => {
         vi.clearAllMocks();
 
         // Mock getModelFromChatMode
-        const { getModelFromChatMode } = require("@repo/ai/models");
+        const { getModelFromChatMode } = require('@repo/ai/models');
         getModelFromChatMode.mockImplementation((mode: string) => {
             if (mode === ChatMode.GEMINI_2_5_FLASH_LITE) {
                 return ModelEnum.GEMINI_2_5_FLASH_LITE;
@@ -57,7 +57,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
     const createMockRequest = (body: any, headers: Record<string, string> = {}) => {
         const request = {
-            method: "POST",
+            method: 'POST',
             headers: new Headers(headers),
             json: vi.fn().mockResolvedValue(body),
             signal: new AbortController().signal,
@@ -67,16 +67,16 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
         return request;
     };
 
-    describe("Authentication Requirements for Free Model", () => {
-        it("should require authentication for Gemini 2.5 Flash Lite", async () => {
+    describe('Authentication Requirements for Free Model', () => {
+        it('should require authentication for Gemini 2.5 Flash Lite', async () => {
             // Mock unauthenticated user
             mockAuth.api.getSession.mockResolvedValue(null);
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
@@ -88,13 +88,13 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
             const responseData = await response.json();
             expect(responseData).toEqual({
-                error: "Authentication required",
-                message: "Please register to use the free Gemini 2.5 Flash Lite model.",
-                redirect: "/auth/login",
+                error: 'Authentication required',
+                message: 'Please register to use the free Gemini 2.5 Flash Lite model.',
+                redirect: '/auth/login',
             });
         });
 
-        it("should allow authenticated users to access free model (within limits)", async () => {
+        it('should allow authenticated users to access free model (within limits)', async () => {
             // Mock authenticated user
             mockAuth.api.getSession.mockResolvedValue({
                 user: { id: authenticatedUserId },
@@ -112,16 +112,16 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             // Note: This test would require more mocking of the completion stream
@@ -138,21 +138,21 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             );
         });
 
-        it("should allow paid models without authentication restrictions", async () => {
+        it('should allow paid models without authentication restrictions', async () => {
             // Mock unauthenticated user
             mockAuth.api.getSession.mockResolvedValue(null);
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GPT_4o, // Paid model
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             // Should not fail authentication for paid models
@@ -167,7 +167,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
         });
     });
 
-    describe("Rate Limit Enforcement", () => {
+    describe('Rate Limit Enforcement', () => {
         beforeEach(() => {
             // Mock authenticated user for all rate limit tests
             mockAuth.api.getSession.mockResolvedValue({
@@ -175,29 +175,29 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             });
         });
 
-        it("should reject requests when daily limit is exceeded", async () => {
+        it('should reject requests when daily limit is exceeded', async () => {
             mockRateLimit.checkRateLimit.mockResolvedValue({
                 allowed: false,
-                reason: "daily_limit_exceeded",
+                reason: 'daily_limit_exceeded',
                 remainingDaily: 0,
                 remainingMinute: 1,
                 resetTime: {
-                    daily: new Date("2024-01-02T00:00:00Z"),
+                    daily: new Date('2024-01-02T00:00:00Z'),
                     minute: new Date(),
                 },
             });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             const response = await POST(request);
@@ -206,44 +206,44 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
             const responseData = await response.json();
             expect(responseData).toEqual({
-                error: "Rate limit exceeded",
+                error: 'Rate limit exceeded',
                 message:
-                    "You have reached the daily limit of requests. Please try again tomorrow or use your own API key. Upgrade to VT+ for unlimited usage and advanced features!",
-                limitType: "daily_limit_exceeded",
+                    'You have reached the daily limit of requests. Please try again tomorrow or use your own API key. Upgrade to VT+ for unlimited usage and advanced features!',
+                limitType: 'daily_limit_exceeded',
                 remainingDaily: 0,
                 remainingMinute: 1,
-                resetTime: "2024-01-02T00:00:00.000Z",
-                upgradeUrl: "/pricing",
+                resetTime: '2024-01-02T00:00:00.000Z',
+                upgradeUrl: '/pricing',
             });
 
-            expect(response.headers.get("Retry-After")).toBeTruthy();
+            expect(response.headers.get('Retry-After')).toBeTruthy();
         });
 
-        it("should reject requests when per-minute limit is exceeded", async () => {
+        it('should reject requests when per-minute limit is exceeded', async () => {
             const nextMinuteReset = new Date(Date.now() + 45_000); // 45 seconds from now
 
             mockRateLimit.checkRateLimit.mockResolvedValue({
                 allowed: false,
-                reason: "minute_limit_exceeded",
+                reason: 'minute_limit_exceeded',
                 remainingDaily: 5,
                 remainingMinute: 0,
                 resetTime: {
-                    daily: new Date("2024-01-02T00:00:00Z"),
+                    daily: new Date('2024-01-02T00:00:00Z'),
                     minute: nextMinuteReset,
                 },
             });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             const response = await POST(request);
@@ -252,64 +252,64 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
             const responseData = await response.json();
             expect(responseData).toEqual({
-                error: "Rate limit exceeded",
+                error: 'Rate limit exceeded',
                 message:
-                    "You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.",
-                limitType: "minute_limit_exceeded",
+                    'You have reached your per-minute limit for the free Gemini model. Upgrade to VT+ for unlimited access.',
+                limitType: 'minute_limit_exceeded',
                 remainingDaily: 5,
                 remainingMinute: 0,
                 resetTime: nextMinuteReset.toISOString(),
-                upgradeUrl: "/pricing",
+                upgradeUrl: '/pricing',
             });
 
             // Should include Retry-After header
-            const retryAfter = response.headers.get("Retry-After");
+            const retryAfter = response.headers.get('Retry-After');
             expect(retryAfter).toBeTruthy();
             expect(Number.parseInt(retryAfter!)).toBeGreaterThan(0);
             expect(Number.parseInt(retryAfter!)).toBeLessThanOrEqual(45);
         });
 
-        it("should provide detailed error information for upgrade decisions", async () => {
+        it('should provide detailed error information for upgrade decisions', async () => {
             mockRateLimit.checkRateLimit.mockResolvedValue({
                 allowed: false,
-                reason: "daily_limit_exceeded",
+                reason: 'daily_limit_exceeded',
                 remainingDaily: 0,
                 remainingMinute: 0,
                 resetTime: {
-                    daily: new Date("2024-01-02T00:00:00Z"),
+                    daily: new Date('2024-01-02T00:00:00Z'),
                     minute: new Date(),
                 },
             });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             const response = await POST(request);
             const responseData = await response.json();
 
             // Should include all necessary information for user decision
-            expect(responseData).toHaveProperty("error");
-            expect(responseData).toHaveProperty("message");
-            expect(responseData).toHaveProperty("limitType");
-            expect(responseData).toHaveProperty("remainingDaily");
-            expect(responseData).toHaveProperty("remainingMinute");
-            expect(responseData).toHaveProperty("resetTime");
-            expect(responseData).toHaveProperty("upgradeUrl");
-            expect(responseData.upgradeUrl).toBe("/pricing");
+            expect(responseData).toHaveProperty('error');
+            expect(responseData).toHaveProperty('message');
+            expect(responseData).toHaveProperty('limitType');
+            expect(responseData).toHaveProperty('remainingDaily');
+            expect(responseData).toHaveProperty('remainingMinute');
+            expect(responseData).toHaveProperty('resetTime');
+            expect(responseData).toHaveProperty('upgradeUrl');
+            expect(responseData.upgradeUrl).toBe('/pricing');
         });
     });
 
-    describe("Request Recording", () => {
+    describe('Request Recording', () => {
         beforeEach(() => {
             mockAuth.api.getSession.mockResolvedValue({
                 user: { id: authenticatedUserId },
@@ -326,18 +326,18 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             });
         });
 
-        it("should record successful requests for rate limiting", async () => {
+        it('should record successful requests for rate limiting', async () => {
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             // This would require full mocking of the completion stream
@@ -355,8 +355,8 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
         });
     });
 
-    describe("Error Handling", () => {
-        it("should handle missing request body gracefully", async () => {
+    describe('Error Handling', () => {
+        it('should handle missing request body gracefully', async () => {
             mockAuth.api.getSession.mockResolvedValue({
                 user: { id: authenticatedUserId },
             });
@@ -364,30 +364,30 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             const request = createMockRequest(
                 {},
                 {
-                    "x-forwarded-for": "127.0.0.1",
+                    'x-forwarded-for': '127.0.0.1',
                 },
             );
 
             // Mock JSON parsing failure
-            request.json = vi.fn().mockRejectedValue(new Error("Invalid JSON"));
+            request.json = vi.fn().mockRejectedValue(new Error('Invalid JSON'));
 
             const response = await POST(request);
 
             expect(response.status).toBe(400);
             const responseData = await response.json();
-            expect(responseData.error).toBe("Invalid request body");
+            expect(responseData.error).toBe('Invalid request body');
         });
 
-        it("should handle missing IP address", async () => {
+        it('should handle missing IP address', async () => {
             mockAuth.api.getSession.mockResolvedValue({
                 user: { id: authenticatedUserId },
             });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
@@ -399,41 +399,41 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
 
             expect(response.status).toBe(401);
             const responseData = await response.json();
-            expect(responseData.error).toBe("Unauthorized");
+            expect(responseData.error).toBe('Unauthorized');
         });
 
-        it("should handle rate limit service errors", async () => {
+        it('should handle rate limit service errors', async () => {
             mockAuth.api.getSession.mockResolvedValue({
                 user: { id: authenticatedUserId },
             });
 
-            mockRateLimit.checkRateLimit.mockRejectedValue(new Error("Database connection failed"));
+            mockRateLimit.checkRateLimit.mockRejectedValue(new Error('Database connection failed'));
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             const request = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             const response = await POST(request);
 
             expect(response.status).toBe(500);
             const responseData = await response.json();
-            expect(responseData.error).toBe("Internal server error");
+            expect(responseData.error).toBe('Internal server error');
         });
     });
 
-    describe("Cross-User Isolation", () => {
-        it("should enforce rate limits independently per user account", async () => {
-            const user1 = "user-account-1";
-            const user2 = "user-account-2";
+    describe('Cross-User Isolation', () => {
+        it('should enforce rate limits independently per user account', async () => {
+            const user1 = 'user-account-1';
+            const user2 = 'user-account-2';
 
             // User 1 at limit
             mockAuth.api.getSession
@@ -443,7 +443,7 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
             mockRateLimit.checkRateLimit
                 .mockResolvedValueOnce({
                     allowed: false,
-                    reason: "daily_limit_exceeded",
+                    reason: 'daily_limit_exceeded',
                     remainingDaily: 0,
                     remainingMinute: 1,
                     resetTime: { daily: new Date(), minute: new Date() },
@@ -456,24 +456,24 @@ describe("Gemini 2.5 Flash Lite - API Integration Tests", () => {
                 });
 
             const requestBody = {
-                threadId: "thread-123",
-                threadItemId: "item-123",
-                parentThreadItemId: "parent-123",
-                prompt: "Test prompt",
+                threadId: 'thread-123',
+                threadItemId: 'item-123',
+                parentThreadItemId: 'parent-123',
+                prompt: 'Test prompt',
                 messages: [],
                 mode: ChatMode.GEMINI_2_5_FLASH_LITE,
             };
 
             // User 1 request - should be blocked
             const request1 = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
             const response1 = await POST(request1);
             expect(response1.status).toBe(429);
 
             // User 2 request - should be allowed
             const request2 = createMockRequest(requestBody, {
-                "x-forwarded-for": "127.0.0.1",
+                'x-forwarded-for': '127.0.0.1',
             });
 
             try {

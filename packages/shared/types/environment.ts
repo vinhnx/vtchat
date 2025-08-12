@@ -1,7 +1,7 @@
 export const EnvironmentType = {
-    PRODUCTION: "production",
-    SANDBOX: "sandbox",
-    DEVELOPMENT: "development",
+    PRODUCTION: 'production',
+    SANDBOX: 'sandbox',
+    DEVELOPMENT: 'development',
 } as const;
 
 export type EnvironmentType = (typeof EnvironmentType)[keyof typeof EnvironmentType];

@@ -55,7 +55,7 @@ class SessionCache {
 export const sessionCache = new SessionCache();
 
 // Auto cleanup every 5 minutes
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
     setInterval(
         () => {
             sessionCache.cleanup();

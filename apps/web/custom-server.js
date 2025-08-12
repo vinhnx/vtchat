@@ -3,23 +3,23 @@
 // Custom server wrapper for Next.js standalone mode
 // Ensures proper hostname binding for Fly.io deployment
 
-const { execSync } = require("node:child_process");
-const path = require("node:path");
+const { execSync } = require('node:child_process');
+const path = require('node:path');
 
 // Try to use the proper logger, fall back to console if not available in standalone build
 let log;
 try {
-    const { log: pinoLog } = require("@repo/shared/lib/logger");
+    const { log: pinoLog } = require('@repo/shared/lib/logger');
     log = pinoLog;
 } catch {
     // Fallback logger for standalone build
-    const IS_PRODUCTION = process.env.NODE_ENV === "production";
+    const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
     log = {
         info: (msg, obj) => {
             if (IS_PRODUCTION) return;
             const timestamp = new Date().toISOString();
-            if (typeof msg === "object") {
+            if (typeof msg === 'object') {
                 // eslint-disable-next-line no-console
                 console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
             } else if (obj) {
@@ -33,7 +33,7 @@ try {
         error: (msg, obj) => {
             // Always log errors even in production
             const timestamp = new Date().toISOString();
-            if (typeof msg === "object") {
+            if (typeof msg === 'object') {
                 // eslint-disable-next-line no-console
                 console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
             } else if (obj) {
@@ -47,7 +47,7 @@ try {
         warn: (msg, obj) => {
             // Always log warnings even in production
             const timestamp = new Date().toISOString();
-            if (typeof msg === "object") {
+            if (typeof msg === 'object') {
                 // eslint-disable-next-line no-console
                 console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
             } else if (obj) {
@@ -62,28 +62,28 @@ try {
 }
 
 // Set environment variables with fallbacks
-const PORT = process.env.PORT || "3000";
-const HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+const PORT = process.env.PORT || '3000';
+const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
-log.info("=== CUSTOM SERVER START ===");
+log.info('=== CUSTOM SERVER START ===');
 log.info(
     { PORT, HOSTNAME, NODE_ENV: process.env.NODE_ENV, cwd: process.cwd() },
-    "Server environment configured",
+    'Server environment configured',
 );
 
 // Verify server.js exists - check multiple possible locations
 const possibleServerPaths = [
-    path.join(process.cwd(), "server.js"), // Root level (expected in standalone)
-    path.join(process.cwd(), "apps/web/server.js"), // In apps/web directory
-    path.join(__dirname, "server.js"), // Same directory as custom-server.js
+    path.join(process.cwd(), 'server.js'), // Root level (expected in standalone)
+    path.join(process.cwd(), 'apps/web/server.js'), // In apps/web directory
+    path.join(__dirname, 'server.js'), // Same directory as custom-server.js
 ];
 
 let serverPath = null;
 for (const testPath of possibleServerPaths) {
     try {
-        require("node:fs").accessSync(testPath);
+        require('node:fs').accessSync(testPath);
         serverPath = testPath;
-        log.info({ serverPath }, "Server file found");
+        log.info({ serverPath }, 'Server file found');
         break;
     } catch {
         // Continue to next path
@@ -91,11 +91,11 @@ for (const testPath of possibleServerPaths) {
 }
 
 if (!serverPath) {
-    log.error("Server file not found in any expected location");
-    log.info("Directory contents:");
-    execSync("ls -la", { stdio: "inherit" });
-    log.info("apps/web contents:");
-    execSync("ls -la apps/web/", { stdio: "inherit" });
+    log.error('Server file not found in any expected location');
+    log.info('Directory contents:');
+    execSync('ls -la', { stdio: 'inherit' });
+    log.info('apps/web contents:');
+    execSync('ls -la apps/web/', { stdio: 'inherit' });
     process.exit(1);
 }
 
@@ -103,8 +103,8 @@ if (!serverPath) {
 process.env.PORT = PORT;
 process.env.HOSTNAME = HOSTNAME;
 
-log.info({ HOSTNAME, PORT, serverPath }, "Starting Next.js server");
-log.info("===========================");
+log.info({ HOSTNAME, PORT, serverPath }, 'Starting Next.js server');
+log.info('===========================');
 
 // Start the Next.js standalone server
 require(serverPath);

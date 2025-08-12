@@ -3,8 +3,8 @@ export function AccessibilityHead() {
     return (
         <>
             {/* Accessibility meta tags */}
-            <meta name="color-scheme" content="dark light" />
-            <meta name="theme-color" content="#000000" />
+            <meta name='color-scheme' content='dark light' />
+            <meta name='theme-color' content='#000000' />
 
             {/* Improve focus visibility */}
             <style
@@ -70,8 +70,8 @@ export function AccessibilityBody() {
         <>
             {/* Skip to main content link for screen readers */}
             <a
-                href="#main-content"
-                className="focus:bg-primary focus:text-primary-foreground focus:ring-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:outline-none focus:ring-2"
+                href='#main-content'
+                className='focus:bg-primary focus:text-primary-foreground focus:ring-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:outline-none focus:ring-2'
             >
                 Skip to main content
             </a>

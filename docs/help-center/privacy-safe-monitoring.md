@@ -171,5 +171,5 @@ If you prefer even more privacy, we considered these alternatives:
 
 We'll update this documentation if our monitoring approach changes, always with privacy-first principles.
 
-**Last Updated**: December 2024  
+**Last Updated**: December 2024\
 **Next Review**: March 2025

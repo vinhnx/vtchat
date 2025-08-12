@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Button,
@@ -8,10 +8,10 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@repo/ui";
-import { LogIn } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React from "react";
+} from '@repo/ui';
+import { LogIn } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 export interface LoginRequiredDialogProps {
     /** Whether the dialog is open */
@@ -60,11 +60,12 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
     ({
         isOpen,
         onClose,
-        title = "Sign in to Continue",
-        description = "Join VTChat to unlock all features and save your conversations. It only takes a moment!",
+        title = 'Sign in to Continue',
+        description =
+            'Join VTChat to unlock all features and save your conversations. It only takes a moment!',
         redirectUrl,
-        cancelText = "Not Now",
-        loginText = "Sign In",
+        cancelText = 'Not Now',
+        loginText = 'Sign In',
         showCancel = true,
     }) => {
         const router = useRouter();
@@ -73,7 +74,7 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
             onClose();
             const loginUrl = redirectUrl
                 ? `/login?redirect_url=${encodeURIComponent(redirectUrl)}`
-                : "/login";
+                : '/login';
             router.push(loginUrl);
         };
 
@@ -83,20 +84,20 @@ export const LoginRequiredDialog: React.FC<LoginRequiredDialogProps> = React.mem
 
         return (
             <Dialog onOpenChange={onClose} open={isOpen}>
-                <DialogContent className="max-w-md" aria-describedby="login-required-description">
+                <DialogContent className='max-w-md' aria-describedby='login-required-description'>
                     <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription id="login-required-description">
+                        <DialogDescription id='login-required-description'>
                             {description}
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="gap-3">
+                    <DialogFooter className='gap-3'>
                         {showCancel && (
-                            <Button onClick={handleCancel} variant="outline">
+                            <Button onClick={handleCancel} variant='outline'>
                                 {cancelText}
                             </Button>
                         )}
-                        <Button className="gap-2" onClick={handleLogin}>
+                        <Button className='gap-2' onClick={handleLogin}>
                             <LogIn size={16} />
                             {loginText}
                         </Button>
@@ -140,7 +141,7 @@ export const withLoginRequired = <T extends Record<string, any>>(
         description?: string;
     },
 ) => {
-    const WithLoginRequired = (props: T & { isSignedIn: boolean }) => {
+    const WithLoginRequired = (props: T & { isSignedIn: boolean; }) => {
         const { isSignedIn, ...componentProps } = props;
         const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
 
@@ -156,7 +157,7 @@ export const withLoginRequired = <T extends Record<string, any>>(
                         }}
                         style={{
                             opacity: 0.7,
-                            cursor: "pointer",
+                            cursor: 'pointer',
                         }}
                     />
                     <LoginRequiredDialog

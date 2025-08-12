@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import type { Source } from "@repo/shared/types";
-import { createContext, type PropsWithChildren, useEffect, useState } from "react";
+import type { Source } from '@repo/shared/types';
+import { createContext, type PropsWithChildren, useEffect, useState } from 'react';
 
 export type Citation = {
     url: string;
@@ -35,8 +35,8 @@ const _getFavIcon = (host?: string) => {
     }
     // Skip favicon for grounding API redirects
     if (
-        host.includes("vertexaisearch.cloud.google.com") ||
-        host.includes("grounding-api-redirect")
+        host.includes('vertexaisearch.cloud.google.com')
+        || host.includes('grounding-api-redirect')
     ) {
         return null;
     }
@@ -60,7 +60,7 @@ export const CitationProviderContext = createContext<CitationProviderContextType
 export const CitationProvider = ({
     sources,
     children,
-}: PropsWithChildren<{ sources?: Source[] }>) => {
+}: PropsWithChildren<{ sources?: Source[]; }>) => {
     const [sourceList, setSourceList] = useState<Source[]>([]);
 
     useEffect(() => {

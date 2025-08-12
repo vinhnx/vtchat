@@ -1,4 +1,4 @@
-import { log } from "@repo/shared/logger";
+import { log } from '@repo/shared/logger';
 
 /**
  * Check if Gemini models should be disabled due to budget constraints
@@ -7,17 +7,17 @@ import { log } from "@repo/shared/logger";
  */
 export async function shouldDisableGemini(): Promise<{
     shouldDisable: boolean;
-    status: "ok" | "warning" | "exceeded";
+    status: 'ok' | 'warning' | 'exceeded';
     reason?: string;
 }> {
     // Since we've removed cost tracking, budget monitoring is disabled
     // Rate limiting is handled separately in rate-limit.ts
     // Always allow requests - budget control is now handled externally
-    log.debug("Budget monitoring disabled - cost tracking removed, using rate limits only");
+    log.debug('Budget monitoring disabled - cost tracking removed, using rate limits only');
 
     return {
         shouldDisable: false,
-        status: "ok",
+        status: 'ok',
         reason: undefined,
     };
 }
@@ -27,7 +27,7 @@ export async function shouldDisableGemini(): Promise<{
  * Since budget monitoring is disabled, this is a no-op
  */
 export function refreshBudgetCache(): void {
-    log.debug("Budget cache refresh called - budget monitoring is disabled");
+    log.debug('Budget cache refresh called - budget monitoring is disabled');
 }
 
 /**
@@ -35,10 +35,10 @@ export function refreshBudgetCache(): void {
  * Since budget monitoring is disabled, always returns OK status
  */
 export async function getCurrentBudgetStatus() {
-    log.debug("Budget status requested - budget monitoring is disabled");
+    log.debug('Budget status requested - budget monitoring is disabled');
     return {
         shouldDisable: false,
-        status: "ok" as const,
+        status: 'ok' as const,
         totalCostUSD: 0,
         budgetLimitUSD: 0,
         percentageUsed: 0,

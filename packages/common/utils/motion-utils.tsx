@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { type MotionProps, motion } from "framer-motion";
-import { useReducedMotion } from "../contexts/accessibility-context";
+import { motion, type MotionProps } from 'framer-motion';
+import { useReducedMotion } from '../contexts/accessibility-context';
 
 // Type for motion component props
 export type AccessibleMotionProps = MotionProps & {
@@ -42,34 +42,34 @@ export function createAccessibleMotion<T extends keyof typeof motion>(
 
 // Pre-created accessible motion components
 export const AccessibleMotion = {
-    div: createAccessibleMotion("div"),
-    span: createAccessibleMotion("span"),
-    button: createAccessibleMotion("button"),
-    section: createAccessibleMotion("section"),
-    article: createAccessibleMotion("article"),
-    header: createAccessibleMotion("header"),
-    footer: createAccessibleMotion("footer"),
-    nav: createAccessibleMotion("nav"),
-    main: createAccessibleMotion("main"),
-    aside: createAccessibleMotion("aside"),
-    p: createAccessibleMotion("p"),
-    h1: createAccessibleMotion("h1"),
-    h2: createAccessibleMotion("h2"),
-    h3: createAccessibleMotion("h3"),
-    h4: createAccessibleMotion("h4"),
-    h5: createAccessibleMotion("h5"),
-    h6: createAccessibleMotion("h6"),
-    ul: createAccessibleMotion("ul"),
-    ol: createAccessibleMotion("ol"),
-    li: createAccessibleMotion("li"),
-    form: createAccessibleMotion("form"),
-    input: createAccessibleMotion("input"),
-    textarea: createAccessibleMotion("textarea"),
-    select: createAccessibleMotion("select"),
-    label: createAccessibleMotion("label"),
-    img: createAccessibleMotion("img"),
-    svg: createAccessibleMotion("svg"),
-    path: createAccessibleMotion("path"),
+    div: createAccessibleMotion('div'),
+    span: createAccessibleMotion('span'),
+    button: createAccessibleMotion('button'),
+    section: createAccessibleMotion('section'),
+    article: createAccessibleMotion('article'),
+    header: createAccessibleMotion('header'),
+    footer: createAccessibleMotion('footer'),
+    nav: createAccessibleMotion('nav'),
+    main: createAccessibleMotion('main'),
+    aside: createAccessibleMotion('aside'),
+    p: createAccessibleMotion('p'),
+    h1: createAccessibleMotion('h1'),
+    h2: createAccessibleMotion('h2'),
+    h3: createAccessibleMotion('h3'),
+    h4: createAccessibleMotion('h4'),
+    h5: createAccessibleMotion('h5'),
+    h6: createAccessibleMotion('h6'),
+    ul: createAccessibleMotion('ul'),
+    ol: createAccessibleMotion('ol'),
+    li: createAccessibleMotion('li'),
+    form: createAccessibleMotion('form'),
+    input: createAccessibleMotion('input'),
+    textarea: createAccessibleMotion('textarea'),
+    select: createAccessibleMotion('select'),
+    label: createAccessibleMotion('label'),
+    img: createAccessibleMotion('img'),
+    svg: createAccessibleMotion('svg'),
+    path: createAccessibleMotion('path'),
 };
 
 // Utility function to get motion props based on reduced motion preference

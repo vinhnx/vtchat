@@ -1,9 +1,9 @@
-import { log } from "@repo/shared/logger";
-import { useState, useEffect } from "react";
+import { log } from '@repo/shared/logger';
+import { useEffect, useState } from 'react';
 
 export interface BudgetStatus {
     global: {
-        status: "ok" | "warning" | "exceeded";
+        status: 'ok' | 'warning' | 'exceeded';
         totalCostUSD: number;
         budgetLimitUSD: number;
         percentageUsed: number;
@@ -13,7 +13,7 @@ export interface BudgetStatus {
     user: {
         totalCostUSD: number;
         requestCount: number;
-        modelBreakdown: Record<string, { cost: number; count: number }>;
+        modelBreakdown: Record<string, { cost: number; count: number; }>;
     };
     month: string;
 }
@@ -26,14 +26,14 @@ export function useBudgetStatus() {
     useEffect(() => {
         const fetchBudgetStatus = async () => {
             try {
-                const response = await fetch("/api/budget/status");
+                const response = await fetch('/api/budget/status');
                 if (response.ok) {
                     const data = await response.json();
                     setBudgetStatus(data);
                 }
             } catch (error) {
                 // Silently fail - budget warning is not critical
-                log.warn({ error }, "Failed to fetch budget status");
+                log.warn({ error }, 'Failed to fetch budget status');
             } finally {
                 setLoading(false);
             }

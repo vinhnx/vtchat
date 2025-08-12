@@ -60,9 +60,9 @@ This resolved the Turbopack error: "The packages specified in the 'transpilePack
 
 - Created `packages/shared/utils/date-utils.ts` to centralize all date-fns imports
 - Wrapped all date-fns functions with stable re-exports:
-    - `getStartOfDay`, `getDifferenceInDays`, `formatDate`
-    - `getFormatDistanceToNow`, `getCompareDesc`, `getIsAfter`
-    - `getIsToday`, `getIsYesterday`, `getSubDays`
+  - `getStartOfDay`, `getDifferenceInDays`, `formatDate`
+  - `getFormatDistanceToNow`, `getCompareDesc`, `getIsAfter`
+  - `getIsToday`, `getIsYesterday`, `getSubDays`
 - Moved `getRelativeDate` function to this module
 
 ### 3. Fixed All Direct date-fns Imports (CRITICAL FOLLOW-UP)

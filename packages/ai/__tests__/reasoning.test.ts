@@ -1,43 +1,43 @@
-import { describe, expect, it } from "vitest";
-import { ReasoningType } from "../constants/reasoning";
-import { getReasoningType, ModelEnum, supportsReasoning, supportsTools } from "../models";
+import { describe, expect, it } from 'vitest';
+import { ReasoningType } from '../constants/reasoning';
+import { getReasoningType, ModelEnum, supportsReasoning, supportsTools } from '../models';
 
-describe("Reasoning Support", () => {
-    describe("supportsReasoning", () => {
-        it("should return true for Gemini 2.5 models", () => {
+describe('Reasoning Support', () => {
+    describe('supportsReasoning', () => {
+        it('should return true for Gemini 2.5 models', () => {
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_FLASH)).toBe(true);
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO)).toBe(true);
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_FLASH_LITE)).toBe(true);
             expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO)).toBe(true);
         });
 
-        it("should return true for DeepSeek reasoning models", () => {
+        it('should return true for DeepSeek reasoning models', () => {
             expect(supportsReasoning(ModelEnum.DEEPSEEK_R1_FIREWORKS)).toBe(true);
             expect(supportsReasoning(ModelEnum.DEEPSEEK_R1)).toBe(true);
         });
 
-        it("should return true for Anthropic reasoning models", () => {
+        it('should return true for Anthropic reasoning models', () => {
             expect(supportsReasoning(ModelEnum.CLAUDE_4_SONNET)).toBe(true);
             expect(supportsReasoning(ModelEnum.CLAUDE_4_OPUS)).toBe(true);
         });
     });
 
-    describe("getReasoningType", () => {
-        it("should return gemini-thinking for Gemini models", () => {
+    describe('getReasoningType', () => {
+        it('should return gemini-thinking for Gemini models', () => {
             expect(getReasoningType(ModelEnum.GEMINI_2_5_FLASH)).toBe(
                 ReasoningType.GEMINI_THINKING,
             );
             expect(getReasoningType(ModelEnum.GEMINI_2_5_PRO)).toBe(ReasoningType.GEMINI_THINKING);
         });
 
-        it("should return deepseek-reasoning for DeepSeek models", () => {
+        it('should return deepseek-reasoning for DeepSeek models', () => {
             expect(getReasoningType(ModelEnum.DEEPSEEK_R1_FIREWORKS)).toBe(
                 ReasoningType.DEEPSEEK_REASONING,
             );
             expect(getReasoningType(ModelEnum.DEEPSEEK_R1)).toBe(ReasoningType.DEEPSEEK_REASONING);
         });
 
-        it("should return anthropic-reasoning for Anthropic models", () => {
+        it('should return anthropic-reasoning for Anthropic models', () => {
             expect(getReasoningType(ModelEnum.CLAUDE_4_SONNET)).toBe(
                 ReasoningType.ANTHROPIC_REASONING,
             );
@@ -52,46 +52,46 @@ describe("Reasoning Support", () => {
     });
 });
 
-describe("Reasoning Details Types", () => {
-    it("should handle text reasoning details", () => {
+describe('Reasoning Details Types', () => {
+    it('should handle text reasoning details', () => {
         const textDetail = {
-            type: "text" as const,
-            text: "Let me think about this step by step...",
-            signature: "reasoning-step-1",
+            type: 'text' as const,
+            text: 'Let me think about this step by step...',
+            signature: 'reasoning-step-1',
         };
 
-        expect(textDetail.type).toBe("text");
+        expect(textDetail.type).toBe('text');
         expect(textDetail.text).toBeDefined();
         expect(textDetail.signature).toBeDefined();
     });
 
-    it("should handle redacted reasoning details", () => {
+    it('should handle redacted reasoning details', () => {
         const redactedDetail = {
-            type: "redacted" as const,
-            data: "sensitive reasoning content",
+            type: 'redacted' as const,
+            data: 'sensitive reasoning content',
         };
 
-        expect(redactedDetail.type).toBe("redacted");
+        expect(redactedDetail.type).toBe('redacted');
         expect(redactedDetail.data).toBeDefined();
     });
 });
 
-describe("Reasoning Parts", () => {
-    it("should handle reasoning parts in messages", () => {
+describe('Reasoning Parts', () => {
+    it('should handle reasoning parts in messages', () => {
         const messageParts = [
             {
-                type: "text" as const,
-                text: "Here is my response:",
+                type: 'text' as const,
+                text: 'Here is my response:',
             },
             {
-                type: "reasoning" as const,
+                type: 'reasoning' as const,
                 details: [
                     {
-                        type: "text" as const,
-                        text: "First, I need to analyze the question...",
+                        type: 'text' as const,
+                        text: 'First, I need to analyze the question...',
                     },
                     {
-                        type: "redacted" as const,
+                        type: 'redacted' as const,
                     },
                 ],
             },
@@ -100,12 +100,12 @@ describe("Reasoning Parts", () => {
         const textPart = messageParts[0];
         const reasoningPart = messageParts[1];
 
-        expect(textPart.type).toBe("text");
+        expect(textPart.type).toBe('text');
         expect(textPart.text).toBeDefined();
 
-        expect(reasoningPart.type).toBe("reasoning");
+        expect(reasoningPart.type).toBe('reasoning');
         expect(reasoningPart.details).toHaveLength(2);
-        expect(reasoningPart.details?.[0].type).toBe("text");
-        expect(reasoningPart.details?.[1].type).toBe("redacted");
+        expect(reasoningPart.details?.[0].type).toBe('text');
+        expect(reasoningPart.details?.[1].type).toBe('redacted');
     });
 });

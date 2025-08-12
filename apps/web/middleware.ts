@@ -1,30 +1,30 @@
-import { isPublicRoute } from "@repo/shared/constants";
-import { log } from "@repo/shared/logger";
-import { type NextRequest, NextResponse } from "next/server";
+import { isPublicRoute } from '@repo/shared/constants';
+import { log } from '@repo/shared/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Privacy-safe traffic monitoring - only aggregate region stats, no IPs or personal data
-    const flyRegion =
-        request.headers.get("Fly-Region") || request.headers.get("fly-region") || "local";
-    log.info({ region: flyRegion, pathname }, "[Traffic] Request");
+    const flyRegion = request.headers.get('Fly-Region') || request.headers.get('fly-region')
+        || 'local';
+    log.info({ region: flyRegion, pathname }, '[Traffic] Request');
 
     // Redirect '/chat' to '/' (keep '/chat/{threadid}' intact)
     // Only redirect exact '/chat' path, not '/chat/' or '/chat/anything'
-    if (pathname === "/chat") {
-        return NextResponse.redirect(new URL("/", request.url), 301);
+    if (pathname === '/chat') {
+        return NextResponse.redirect(new URL('/', request.url), 301);
     }
 
     // Skip middleware for static files, API routes with their own protection, and Next.js internals
     if (
-        pathname.startsWith("/_next") ||
-        pathname.startsWith("/api/") ||
-        pathname.includes(".") || // Files with extensions
-        pathname.startsWith("/favicon") ||
-        pathname.startsWith("/robots") ||
-        pathname.startsWith("/sitemap") ||
-        pathname.startsWith("/manifest")
+        pathname.startsWith('/_next')
+        || pathname.startsWith('/api/')
+        || pathname.includes('.') // Files with extensions
+        || pathname.startsWith('/favicon')
+        || pathname.startsWith('/robots')
+        || pathname.startsWith('/sitemap')
+        || pathname.startsWith('/manifest')
     ) {
         return NextResponse.next();
     }
@@ -36,8 +36,8 @@ export default async function middleware(request: NextRequest) {
     if (!isPublic) {
         try {
             // Dynamic import to avoid Edge Runtime issues
-            const { getCookieCache } = await import("better-auth/cookies");
-            const { auth } = await import("@/lib/auth-server");
+            const { getCookieCache } = await import('better-auth/cookies');
+            const { auth } = await import('@/lib/auth-server');
 
             // First, try to get session from cookie cache (fastest)
             const cachedSession = await getCookieCache(request);
@@ -55,40 +55,40 @@ export default async function middleware(request: NextRequest) {
             // Increase timeout to 10 seconds to handle slow network conditions
             // and prevent false negatives during active chat sessions
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Auth timeout")), 10000),
+                setTimeout(() => reject(new Error('Auth timeout')), 10000)
             );
 
             const session = await Promise.race([sessionPromise, timeoutPromise]);
 
             if (!session) {
-                log.info({ pathname }, "[Middleware] No session found, redirecting to login");
-                const loginUrl = new URL("/login", request.url);
-                loginUrl.searchParams.set("redirect_url", pathname);
+                log.info({ pathname }, '[Middleware] No session found, redirecting to login');
+                const loginUrl = new URL('/login', request.url);
+                loginUrl.searchParams.set('redirect_url', pathname);
                 return NextResponse.redirect(loginUrl);
             }
         } catch (error) {
             // Distinguish between timeout and other errors for better debugging
-            const isTimeout = error instanceof Error && error.message === "Auth timeout";
+            const isTimeout = error instanceof Error && error.message === 'Auth timeout';
 
             if (isTimeout) {
-                log.warn({ pathname, timeout: "10s" }, "[Middleware] Auth check timed out");
+                log.warn({ pathname, timeout: '10s' }, '[Middleware] Auth check timed out');
 
                 // For timeout errors during chat sessions, try to preserve the session
                 // by allowing the request to proceed and let client-side auth handle it
-                if (pathname.startsWith("/chat/")) {
+                if (pathname.startsWith('/chat/')) {
                     log.info(
                         { pathname },
-                        "[Middleware] Allowing chat route to proceed despite timeout",
+                        '[Middleware] Allowing chat route to proceed despite timeout',
                     );
                     return NextResponse.next();
                 }
             } else {
-                log.warn({ error, pathname }, "[Middleware] Auth check failed");
+                log.warn({ error, pathname }, '[Middleware] Auth check failed');
             }
 
             // On auth failure, redirect to login for protected routes
-            const loginUrl = new URL("/login", request.url);
-            loginUrl.searchParams.set("redirect_url", pathname);
+            const loginUrl = new URL('/login', request.url);
+            loginUrl.searchParams.set('redirect_url', pathname);
             return NextResponse.redirect(loginUrl);
         }
     }
@@ -112,6 +112,6 @@ export const config = {
          * - public folder files
          * - healthz (health checks)
          */
-        "/((?!api/auth|api/chat|api/feedback|api/cron|api/metrics|api/health|_next/static|_next/image|favicon.ico|.*\\..*|public/|healthz).*)",
+        '/((?!api/auth|api/chat|api/feedback|api/cron|api/metrics|api/health|_next/static|_next/image|favicon.ico|.*\\..*|public/|healthz).*)',
     ],
 };

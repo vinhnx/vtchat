@@ -162,7 +162,7 @@ import {
     <DialogTrigger asChild>
         <Button>Open Dialog</Button>
     </DialogTrigger>
-    <PremiumDialogContent variant="premium" overlayVariant="blur" size="lg">
+    <PremiumDialogContent variant='premium' overlayVariant='blur' size='lg'>
         <PremiumDialogHeader>
             <PremiumDialogTitle>Premium Dialog</PremiumDialogTitle>
         </PremiumDialogHeader>
@@ -282,29 +282,29 @@ import { Badge } from '@repo/ui';
 
 ```tsx
 // Example: Premium pricing card
-<PremiumCard variant="spotlight" spotlight className="max-w-sm">
+<PremiumCard variant='spotlight' spotlight className='max-w-sm'>
     <PremiumCardHeader>
-        <Badge variant="premium" className="w-fit">
+        <Badge variant='premium' className='w-fit'>
             Most Popular
         </Badge>
-        <PremiumCardTitle className="text-2xl">Pro Plan</PremiumCardTitle>
+        <PremiumCardTitle className='text-2xl'>Pro Plan</PremiumCardTitle>
         <PremiumCardDescription>Everything you need for professional use</PremiumCardDescription>
     </PremiumCardHeader>
     <PremiumCardContent>
-        <div className="text-3xl font-bold">$29/month</div>
-        <ul className="mt-4 space-y-2">
-            <li className="flex items-center gap-2">
-                <Badge variant="success" size="xs" dot />
+        <div className='text-3xl font-bold'>$29/month</div>
+        <ul className='mt-4 space-y-2'>
+            <li className='flex items-center gap-2'>
+                <Badge variant='success' size='xs' dot />
                 Unlimited projects
             </li>
         </ul>
     </PremiumCardContent>
     <PremiumCardFooter>
-        <PremiumButton variant="premium" className="w-full" size="lg">
+        <PremiumButton variant='premium' className='w-full' size='lg'>
             Upgrade Now
         </PremiumButton>
     </PremiumCardFooter>
-</PremiumCard>
+</PremiumCard>;
 ```
 
 ## Testing Checklist

@@ -44,26 +44,26 @@ TTL: 300
 ### For Matbao.net Users:
 
 1. **Login to Matbao Control Panel**
-    - Go to: https://matbao.net
-    - Login with your account credentials
+   - Go to: https://matbao.net
+   - Login with your account credentials
 
 2. **Navigate to DNS Management**
-    - Find "Quản lý tên miền" (Domain Management)
-    - Select vtchat.io.vn
-    - Go to "Quản lý DNS" (DNS Management)
+   - Find "Quản lý tên miền" (Domain Management)
+   - Select vtchat.io.vn
+   - Go to "Quản lý DNS" (DNS Management)
 
 3. **Add CNAME Record**
 
-    ```
-    Loại bản ghi (Record Type): CNAME
-    Tên (Name): @ hoặc vtchat.io.vn
-    Giá trị (Value): vtchat.fly.dev
-    TTL: 300
-    ```
+   ```
+   Loại bản ghi (Record Type): CNAME
+   Tên (Name): @ hoặc vtchat.io.vn
+   Giá trị (Value): vtchat.fly.dev
+   TTL: 300
+   ```
 
 4. **Save Changes**
-    - Click "Lưu" or "Cập nhật" (Save/Update)
-    - DNS propagation takes 5-60 minutes
+   - Click "Lưu" or "Cập nhật" (Save/Update)
+   - DNS propagation takes 5-60 minutes
 
 ## ✅ Verification Steps
 
@@ -112,18 +112,18 @@ Once DNS is configured and certificate is ready:
 
 1. **Test Production Domain**
 
-    ```bash
-    curl -I https://vtchat.io.vn
-    ```
+   ```bash
+   curl -I https://vtchat.io.vn
+   ```
 
 2. **Update Application URLs**
-    - Verify all references to vtchat.fly.dev in production
-    - Update any hardcoded URLs if needed
+   - Verify all references to vtchat.fly.dev in production
+   - Update any hardcoded URLs if needed
 
 3. **Deploy with Custom Domain**
-    ```bash
-    ./deploy-fly.sh --clean --prod
-    ```
+   ```bash
+   ./deploy-fly.sh --clean --prod
+   ```
 
 ## 🔍 Troubleshooting
 

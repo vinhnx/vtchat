@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, cn } from "@repo/ui";
-import { AnimatePresence, motion, type PanInfo } from "framer-motion";
-import { ChevronDown, Maximize2, Mic, Minimize2, MoreHorizontal, Plus, Send } from "lucide-react";
-import { memo, useEffect, useRef, useState } from "react";
+import { Button, cn } from '@repo/ui';
+import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
+import { ChevronDown, Maximize2, Mic, Minimize2, MoreHorizontal, Plus, Send } from 'lucide-react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 // Simple media query hook
 function useMediaQuery(query: string) {
@@ -15,8 +15,8 @@ function useMediaQuery(query: string) {
             setMatches(media.matches);
         }
         const listener = () => setMatches(media.matches);
-        media.addEventListener("change", listener);
-        return () => media.removeEventListener("change", listener);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
     }, [matches, query]);
 
     return matches;
@@ -32,8 +32,8 @@ interface MobileChatHeaderProps {
 
 export const MobileChatHeader = memo(
     ({
-        title = "VT Assistant",
-        subtitle = "AI-powered chat",
+        title = 'VT Assistant',
+        subtitle = 'AI-powered chat',
         onMinimize,
         onMaximize,
         isMinimized = false,
@@ -41,45 +41,47 @@ export const MobileChatHeader = memo(
         return (
             <motion.div
                 animate={{ y: 0, opacity: 1 }}
-                className="gray-900 sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r p-4 text-white md:hidden"
+                className='gray-900 sticky top-0 z-50 flex items-center justify-between bg-gradient-to-r p-4 text-white md:hidden'
                 initial={{ y: -50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
             >
-                <div className="flex min-w-0 flex-1 items-center gap-3">
+                <div className='flex min-w-0 flex-1 items-center gap-3'>
                     <motion.div
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20"
+                        className='flex h-8 w-8 items-center justify-center rounded-full bg-white/20'
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <span className="text-lg font-bold">V</span>
+                        <span className='text-lg font-bold'>V</span>
                     </motion.div>
-                    <div className="min-w-0 flex-1">
-                        <h1 className="truncate text-base font-semibold">{title}</h1>
-                        <p className="truncate text-xs opacity-90">{subtitle}</p>
+                    <div className='min-w-0 flex-1'>
+                        <h1 className='truncate text-base font-semibold'>{title}</h1>
+                        <p className='truncate text-xs opacity-90'>{subtitle}</p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    {isMinimized ? (
-                        <Button
-                            className="text-white hover:bg-white/20"
-                            onClick={onMaximize}
-                            size="icon-sm"
-                            variant="ghost"
-                        >
-                            <Maximize2 size={16} />
-                        </Button>
-                    ) : (
-                        <Button
-                            className="text-white hover:bg-white/20"
-                            onClick={onMinimize}
-                            size="icon-sm"
-                            variant="ghost"
-                        >
-                            <Minimize2 size={16} />
-                        </Button>
-                    )}
-                    <Button className="text-white hover:bg-white/20" size="icon-sm" variant="ghost">
+                <div className='flex items-center gap-2'>
+                    {isMinimized
+                        ? (
+                            <Button
+                                className='text-white hover:bg-white/20'
+                                onClick={onMaximize}
+                                size='icon-sm'
+                                variant='ghost'
+                            >
+                                <Maximize2 size={16} />
+                            </Button>
+                        )
+                        : (
+                            <Button
+                                className='text-white hover:bg-white/20'
+                                onClick={onMinimize}
+                                size='icon-sm'
+                                variant='ghost'
+                            >
+                                <Minimize2 size={16} />
+                            </Button>
+                        )}
+                    <Button className='text-white hover:bg-white/20' size='icon-sm' variant='ghost'>
                         <MoreHorizontal size={16} />
                     </Button>
                 </div>
@@ -109,24 +111,24 @@ export const MobileInputToolbar = memo(
         return (
             <motion.div
                 animate={{ y: 0, opacity: 1 }}
-                className="flex items-center gap-2 border-t border-gray-200 bg-white p-3 md:hidden dark:border-gray-700 dark:bg-gray-800"
+                className='flex items-center gap-2 border-t border-gray-200 bg-white p-3 md:hidden dark:border-gray-700 dark:bg-gray-800'
                 initial={{ y: 50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
             >
                 {/* Voice input button */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
-                        className={cn("relative overflow-hidden", isRecording && "animate-pulse")}
+                        className={cn('relative overflow-hidden', isRecording && 'animate-pulse')}
                         disabled={disabled}
                         onClick={onVoiceInput}
-                        size="icon"
-                        variant={isRecording ? "destructive" : "outline"}
+                        size='icon'
+                        variant={isRecording ? 'destructive' : 'outline'}
                     >
                         <Mic size={18} />
                         {isRecording && (
                             <motion.div
                                 animate={{ opacity: [0, 1, 0] }}
-                                className="absolute inset-0 bg-red-500/20"
+                                className='absolute inset-0 bg-red-500/20'
                                 transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                             />
                         )}
@@ -135,37 +137,37 @@ export const MobileInputToolbar = memo(
 
                 {/* Attachment button */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button disabled={disabled} onClick={onAttach} size="icon" variant="outline">
+                    <Button disabled={disabled} onClick={onAttach} size='icon' variant='outline'>
                         <Plus size={18} />
                     </Button>
                 </motion.div>
 
                 {/* Spacer */}
-                <div className="flex-1" />
+                <div className='flex-1' />
 
                 {/* Send button - Optimized for mobile */}
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode='wait'>
                     {hasInput && (
                         <motion.div
                             animate={{ scale: 1, rotate: 0 }}
                             exit={{ scale: 0, rotate: 180 }}
                             initial={{ scale: 0, rotate: -180 }}
                             transition={{
-                                type: "spring",
+                                type: 'spring',
                                 stiffness: window.innerWidth < 768 ? 400 : 300,
                                 damping: window.innerWidth < 768 ? 25 : 20,
                                 mass: 0.8,
                             }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="transform-gpu will-change-transform"
+                            className='transform-gpu will-change-transform'
                         >
                             <Button
-                                className="bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg hover:from-blue-600 hover:to-purple-700"
+                                className='bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg hover:from-blue-600 hover:to-purple-700'
                                 disabled={disabled}
                                 onClick={onSend}
-                                size="icon"
-                                variant="default"
+                                size='icon'
+                                variant='default'
                             >
                                 <Send size={18} />
                             </Button>
@@ -216,14 +218,14 @@ export const SwipeableMessage = memo(
         return (
             <motion.div
                 animate={{ x: isDragging ? dragOffset : 0 }}
-                className={cn("relative touch-pan-y", className)}
-                drag="x"
+                className={cn('relative touch-pan-y', className)}
+                drag='x'
                 dragElastic={0.3}
                 dragMomentum={false}
                 onDrag={handleDrag}
                 onDragEnd={handleDragEnd}
                 onDragStart={handleDragStart}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
                 {/* Swipe indicators */}
                 <AnimatePresence>
@@ -232,11 +234,11 @@ export const SwipeableMessage = memo(
                             {dragOffset > 0 && onSwipeRight && (
                                 <motion.div
                                     animate={{ opacity: Math.min(dragOffset / dragThreshold, 1) }}
-                                    className="absolute bottom-0 left-0 top-0 flex w-16 items-center justify-center bg-green-500/20 text-green-600"
+                                    className='absolute bottom-0 left-0 top-0 flex w-16 items-center justify-center bg-green-500/20 text-green-600'
                                     exit={{ opacity: 0 }}
                                     initial={{ opacity: 0 }}
                                 >
-                                    <ChevronDown className="rotate-90" size={24} />
+                                    <ChevronDown className='rotate-90' size={24} />
                                 </motion.div>
                             )}
                             {dragOffset < 0 && onSwipeLeft && (
@@ -244,11 +246,11 @@ export const SwipeableMessage = memo(
                                     animate={{
                                         opacity: Math.min(Math.abs(dragOffset) / dragThreshold, 1),
                                     }}
-                                    className="absolute bottom-0 right-0 top-0 flex w-16 items-center justify-center bg-red-500/20 text-red-600"
+                                    className='absolute bottom-0 right-0 top-0 flex w-16 items-center justify-center bg-red-500/20 text-red-600'
                                     exit={{ opacity: 0 }}
                                     initial={{ opacity: 0 }}
                                 >
-                                    <ChevronDown className="-rotate-90" size={24} />
+                                    <ChevronDown className='-rotate-90' size={24} />
                                 </motion.div>
                             )}
                         </>
@@ -275,18 +277,18 @@ export const MobileOptimizedInput = memo(
         value,
         onChange,
         onSubmit,
-        placeholder = "Type a message...",
+        placeholder = 'Type a message...',
         disabled = false,
         maxRows = 4,
     }: MobileOptimizedInputProps) => {
         const textareaRef = useRef<HTMLTextAreaElement>(null);
         const [isFocused, setIsFocused] = useState(false);
-        const isMobile = useMediaQuery("(max-width: 768px)");
+        const isMobile = useMediaQuery('(max-width: 768px)');
 
         // Auto-resize textarea
         useEffect(() => {
             if (textareaRef.current) {
-                textareaRef.current.style.height = "auto";
+                textareaRef.current.style.height = 'auto';
                 const scrollHeight = textareaRef.current.scrollHeight;
                 const maxHeight = maxRows * 24; // Approximate line height
                 textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
@@ -294,7 +296,7 @@ export const MobileOptimizedInput = memo(
         }, [value, maxRows]);
 
         const handleKeyPress = (e: React.KeyboardEvent) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 onSubmit();
             }
@@ -304,9 +306,9 @@ export const MobileOptimizedInput = memo(
             return (
                 <textarea
                     className={cn(
-                        "w-full resize-none border-0 bg-transparent px-4 py-3 text-base",
-                        "placeholder:text-gray-500 focus:outline-none focus:ring-0",
-                        "max-h-[120px] min-h-[60px]",
+                        'w-full resize-none border-0 bg-transparent px-4 py-3 text-base',
+                        'placeholder:text-gray-500 focus:outline-none focus:ring-0',
+                        'max-h-[120px] min-h-[60px]',
                     )}
                     disabled={disabled}
                     onBlur={() => setIsFocused(false)}
@@ -324,20 +326,20 @@ export const MobileOptimizedInput = memo(
         return (
             <motion.div
                 className={cn(
-                    "relative flex min-h-[60px] w-full items-end",
-                    "rounded-2xl border bg-white dark:bg-gray-800",
+                    'relative flex min-h-[60px] w-full items-end',
+                    'rounded-2xl border bg-white dark:bg-gray-800',
                     isFocused
-                        ? "border-blue-500 shadow-lg ring-2 ring-blue-500/20"
-                        : "border-gray-300 dark:border-gray-600",
+                        ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20'
+                        : 'border-gray-300 dark:border-gray-600',
                 )}
                 layout
                 transition={{ duration: 0.2 }}
             >
                 <textarea
                     className={cn(
-                        "w-full resize-none border-0 bg-transparent px-4 py-4 text-base",
-                        "placeholder:text-gray-500 focus:outline-none focus:ring-0",
-                        "overflow-hidden rounded-2xl",
+                        'w-full resize-none border-0 bg-transparent px-4 py-4 text-base',
+                        'placeholder:text-gray-500 focus:outline-none focus:ring-0',
+                        'overflow-hidden rounded-2xl',
                     )}
                     disabled={disabled}
                     onBlur={() => setIsFocused(false)}
@@ -348,9 +350,9 @@ export const MobileOptimizedInput = memo(
                     ref={textareaRef}
                     rows={1}
                     style={{
-                        minHeight: "60px",
+                        minHeight: '60px',
                         maxHeight: `${maxRows * 24}px`,
-                        lineHeight: "24px",
+                        lineHeight: '24px',
                     }}
                     value={value}
                 />
@@ -360,12 +362,12 @@ export const MobileOptimizedInput = memo(
                     {isFocused && (
                         <motion.div
                             animate={{ opacity: 1, scale: 1 }}
-                            className="absolute right-2 top-2 flex items-center gap-1"
+                            className='absolute right-2 top-2 flex items-center gap-1'
                             exit={{ opacity: 0, scale: 0.8 }}
                             initial={{ opacity: 0, scale: 0.8 }}
                         >
-                            <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-                            <span className="text-xs font-medium text-gray-500">Ready</span>
+                            <div className='h-2 w-2 animate-pulse rounded-full bg-green-500' />
+                            <span className='text-xs font-medium text-gray-500'>Ready</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -416,8 +418,8 @@ export const MobilePullToRefresh = memo(
 
         return (
             <motion.div
-                className="h-full overflow-hidden"
-                drag="y"
+                className='h-full overflow-hidden'
+                drag='y'
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={0.2}
                 dragMomentum={false}
@@ -434,7 +436,7 @@ export const MobilePullToRefresh = memo(
                                 scaleY: isRefreshing ? 1 : Math.min(pullDistance / 60, 1),
                                 opacity: 1,
                             }}
-                            className="flex origin-top transform-gpu items-center justify-center bg-gradient-to-b from-blue-50 to-transparent will-change-transform dark:from-blue-900/20"
+                            className='flex origin-top transform-gpu items-center justify-center bg-gradient-to-b from-blue-50 to-transparent will-change-transform dark:from-blue-900/20'
                             exit={{ scaleY: 0, opacity: 0 }}
                             initial={{ scaleY: 0, opacity: 0 }}
                             style={{ height: 60 }}
@@ -445,18 +447,18 @@ export const MobilePullToRefresh = memo(
                                     scale: pullDistance > threshold ? 1.1 : 1, // Reduced scale for mobile
                                 }}
                                 className={cn(
-                                    "flex h-8 w-8 transform-gpu items-center justify-center rounded-full will-change-transform",
+                                    'flex h-8 w-8 transform-gpu items-center justify-center rounded-full will-change-transform',
                                     pullDistance > threshold
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-gray-200 text-gray-500 dark:bg-gray-700",
+                                        ? 'bg-blue-500 text-white'
+                                        : 'bg-gray-200 text-gray-500 dark:bg-gray-700',
                                 )}
                                 transition={{
                                     rotate: isRefreshing
                                         ? {
-                                              duration: window.innerWidth < 768 ? 1.5 : 1, // Slower on mobile
-                                              repeat: Number.POSITIVE_INFINITY,
-                                              ease: "linear",
-                                          }
+                                            duration: window.innerWidth < 768 ? 1.5 : 1, // Slower on mobile
+                                            repeat: Number.POSITIVE_INFINITY,
+                                            ease: 'linear',
+                                        }
                                         : { duration: 0.1 },
                                 }}
                             >
@@ -469,12 +471,12 @@ export const MobilePullToRefresh = memo(
                 <motion.div
                     animate={{ y: pullDistance }}
                     transition={{
-                        type: "spring",
+                        type: 'spring',
                         stiffness: window.innerWidth < 768 ? 400 : 300,
                         damping: window.innerWidth < 768 ? 35 : 30,
                         mass: 0.8,
                     }}
-                    className="transform-gpu will-change-transform"
+                    className='transform-gpu will-change-transform'
                 >
                     {children}
                 </motion.div>
@@ -483,8 +485,8 @@ export const MobilePullToRefresh = memo(
     },
 );
 
-MobileChatHeader.displayName = "MobileChatHeader";
-MobileInputToolbar.displayName = "MobileInputToolbar";
-SwipeableMessage.displayName = "SwipeableMessage";
-MobileOptimizedInput.displayName = "MobileOptimizedInput";
-MobilePullToRefresh.displayName = "MobilePullToRefresh";
+MobileChatHeader.displayName = 'MobileChatHeader';
+MobileInputToolbar.displayName = 'MobileInputToolbar';
+SwipeableMessage.displayName = 'SwipeableMessage';
+MobileOptimizedInput.displayName = 'MobileOptimizedInput';
+MobilePullToRefresh.displayName = 'MobilePullToRefresh';

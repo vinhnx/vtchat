@@ -3,6 +3,7 @@
 ## Changes Made
 
 ### 1. Performance Optimizations Component
+
 - Added preload directives for critical images:
   - `/icon-192x192.png` (VT logo)
   - `/icons/peerlist_badge.svg` (LCP element identified in Lighthouse)
@@ -10,11 +11,13 @@
 - Added font preloading for Google Fonts
 
 ### 2. Thread Component Optimization
+
 - Implemented skeleton loading for initial render
 - Added `fetchPriority="high"` and `decoding="async"` attributes to critical images
 - Reduced initial load time by showing immediate visual feedback
 
 ### 3. Next.js Configuration
+
 - Added HTTP Link headers for resource preloading
 - Enabled CSS optimization in experimental features
 

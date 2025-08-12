@@ -2,10 +2,10 @@
  * Test for the batch subscription fetch bug fix
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock the database module
-vi.mock("@/lib/database", () => ({
+vi.mock('@/lib/database', () => ({
     db: {
         select: vi.fn().mockReturnThis(),
         from: vi.fn().mockReturnThis(),
@@ -16,7 +16,7 @@ vi.mock("@/lib/database", () => ({
 }));
 
 // Mock redis cache
-vi.mock("@/lib/cache/redis-cache", () => ({
+vi.mock('@/lib/cache/redis-cache', () => ({
     redisCache: {
         mget: vi.fn(),
         setSubscription: vi.fn(),
@@ -24,24 +24,24 @@ vi.mock("@/lib/cache/redis-cache", () => ({
 }));
 
 // Mock other dependencies
-vi.mock("@repo/shared/lib/logger", () => ({
+vi.mock('@repo/shared/lib/logger', () => ({
     log: {
         error: vi.fn(),
         debug: vi.fn(),
     },
 }));
 
-vi.mock("@repo/shared/utils/subscription-grace-period", () => ({
+vi.mock('@repo/shared/utils/subscription-grace-period', () => ({
     hasSubscriptionAccess: vi.fn(() => true),
 }));
 
-describe("Batch Subscription Fix", () => {
-    it("should handle multiple user IDs in batch query correctly", async () => {
+describe('Batch Subscription Fix', () => {
+    it('should handle multiple user IDs in batch query correctly', async () => {
         const { getSubscriptionsBatch } = await import(
-            "@/lib/subscription/fast-subscription-access"
+            '@/lib/subscription/fast-subscription-access'
         );
-        const { db } = await import("@/lib/database");
-        const { redisCache } = await import("@/lib/cache/redis-cache");
+        const { db } = await import('@/lib/database');
+        const { redisCache } = await import('@/lib/cache/redis-cache');
 
         // Mock Redis cache miss for all users
         vi.mocked(redisCache.mget).mockResolvedValue([null, null, null]);
@@ -49,28 +49,28 @@ describe("Batch Subscription Fix", () => {
         // Mock database result with multiple users
         const mockDbResults = [
             {
-                userId: "user1",
-                planSlug: "vt-plus",
-                subPlan: "vt-plus",
-                status: "active",
-                currentPeriodEnd: new Date("2025-08-01"),
-                creemSubscriptionId: "sub_1",
+                userId: 'user1',
+                planSlug: 'vt-plus',
+                subPlan: 'vt-plus',
+                status: 'active',
+                currentPeriodEnd: new Date('2025-08-01'),
+                creemSubscriptionId: 'sub_1',
             },
             {
-                userId: "user2",
-                planSlug: "free",
+                userId: 'user2',
+                planSlug: 'free',
                 subPlan: null,
                 status: null,
                 currentPeriodEnd: null,
                 creemSubscriptionId: null,
             },
             {
-                userId: "user3",
-                planSlug: "vt-plus",
-                subPlan: "vt-plus",
-                status: "active",
-                currentPeriodEnd: new Date("2025-09-01"),
-                creemSubscriptionId: "sub_3",
+                userId: 'user3',
+                planSlug: 'vt-plus',
+                subPlan: 'vt-plus',
+                status: 'active',
+                currentPeriodEnd: new Date('2025-09-01'),
+                creemSubscriptionId: 'sub_3',
             },
         ];
 
@@ -87,28 +87,28 @@ describe("Batch Subscription Fix", () => {
             }),
         });
 
-        const userIds = ["user1", "user2", "user3"];
+        const userIds = ['user1', 'user2', 'user3'];
         const results = await getSubscriptionsBatch(userIds);
 
         // Verify all users are processed
         expect(results.size).toBe(3);
-        expect(results.has("user1")).toBe(true);
-        expect(results.has("user2")).toBe(true);
-        expect(results.has("user3")).toBe(true);
+        expect(results.has('user1')).toBe(true);
+        expect(results.has('user2')).toBe(true);
+        expect(results.has('user3')).toBe(true);
 
         // Verify user1 has VT+ access
-        const user1Data = results.get("user1");
+        const user1Data = results.get('user1');
         expect(user1Data?.isVtPlus).toBe(true);
-        expect(user1Data?.planSlug).toBe("vt-plus");
+        expect(user1Data?.planSlug).toBe('vt-plus');
 
         // Verify user2 is free tier
-        const user2Data = results.get("user2");
+        const user2Data = results.get('user2');
         expect(user2Data?.isVtPlus).toBe(false);
-        expect(user2Data?.planSlug).toBe("free");
+        expect(user2Data?.planSlug).toBe('free');
 
         // Verify user3 has VT+ access
-        const user3Data = results.get("user3");
+        const user3Data = results.get('user3');
         expect(user3Data?.isVtPlus).toBe(true);
-        expect(user3Data?.planSlug).toBe("vt-plus");
+        expect(user3Data?.planSlug).toBe('vt-plus');
     });
 });

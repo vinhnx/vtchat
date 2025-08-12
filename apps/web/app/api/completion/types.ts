@@ -1,5 +1,5 @@
-import { ChatMode } from "@repo/shared/config";
-import { z } from "zod";
+import { ChatMode } from '@repo/shared/config';
+import { z } from 'zod';
 
 export const completionRequestSchema = z.object({
     threadId: z.string(),
@@ -14,7 +14,7 @@ export const completionRequestSchema = z.object({
     charts: z.boolean().optional(),
     showSuggestions: z.boolean().optional(),
     customInstructions: z.string().optional(),
-    userTier: z.enum(["FREE", "PLUS"]).optional(),
+    userTier: z.enum(['FREE', 'PLUS']).optional(),
     thinkingMode: z
         .object({
             enabled: z.boolean(),
@@ -56,11 +56,11 @@ export type AgentEventResponse = {
 export type StreamController = ReadableStreamDefaultController<Uint8Array>;
 
 export const SSE_HEADERS = {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache, no-transform",
-    Connection: "keep-alive",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept",
-    "X-Accel-Buffering": "no",
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Accept',
+    'X-Accel-Buffering': 'no',
 } as const;

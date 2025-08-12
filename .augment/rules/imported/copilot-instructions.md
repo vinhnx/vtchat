@@ -1,6 +1,6 @@
 ---
-type: 'agent_requested'
-description: 'Example description'
+type: "agent_requested"
+description: "Example description"
 ---
 
 # VT Chat AI Development Instructions
@@ -150,9 +150,9 @@ bunx shadcn@latest add label
 
 ```typescript
 // vitest with jsdom, React Testing Library
-import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it } from 'vitest';
 
 // Required for all component tests
 expect.extend(matchers);

@@ -1,45 +1,45 @@
-import { getModelFromChatMode, models, type ModelEnum } from "@repo/ai/models";
-import { apiKeyMapper } from "@repo/ai/services/api-key-mapper";
-import { ChatMode, ChatModeConfig } from "@repo/shared/config";
-import { RATE_LIMIT_MESSAGES } from "@repo/shared/constants";
+import { auth } from '@/lib/auth-server';
+import { shouldDisableGemini } from '@/lib/services/budget-monitor';
+import { checkRateLimit, recordRequest } from '@/lib/services/rate-limit';
+import { getModelFromChatMode, type ModelEnum, models } from '@repo/ai/models';
+import { apiKeyMapper } from '@repo/ai/services/api-key-mapper';
+import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { RATE_LIMIT_MESSAGES } from '@repo/shared/constants';
 import {
     createSecureHeaders,
     extractApiKeysFromHeaders,
     validateHTTPS,
-} from "@repo/shared/constants/security-headers";
-import { log } from "@repo/shared/logger";
-import { isGeminiModel } from "@repo/shared/utils";
-import { type Geo, geolocation } from "@vercel/functions";
-import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth-server";
-import { shouldDisableGemini } from "@/lib/services/budget-monitor";
-import { checkRateLimit, recordRequest } from "@/lib/services/rate-limit";
-import { checkSignedInFeatureAccess, checkVTPlusAccess } from "../subscription/access-control";
+} from '@repo/shared/constants/security-headers';
+import { log } from '@repo/shared/logger';
+import { isGeminiModel } from '@repo/shared/utils';
+import { type Geo, geolocation } from '@vercel/functions';
+import type { NextRequest } from 'next/server';
+import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../subscription/access-control';
 
 // Force dynamic rendering for this route
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
-import { data } from "happy-dom/lib/PropertySymbol.js";
-import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from "./constants";
-import { executeStream, markControllerClosed } from "./stream-handlers";
-import { registerStream, unregisterStream } from "./stream-registry";
-import { completionRequestSchema, SSE_HEADERS } from "./types";
-import { getIp } from "./utils";
+import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
+import { data } from 'happy-dom/lib/PropertySymbol.js';
+import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
+import { executeStream, markControllerClosed } from './stream-handlers';
+import { registerStream, unregisterStream } from './stream-registry';
+import { completionRequestSchema, SSE_HEADERS } from './types';
+import { getIp } from './utils';
 
 export async function POST(request: NextRequest) {
-    if (request.method === "OPTIONS") {
+    if (request.method === 'OPTIONS') {
         return new Response(null, { headers: SSE_HEADERS });
     }
 
     try {
         // SECURITY: Check request size before processing
-        const contentLength = request.headers.get("content-length");
+        const contentLength = request.headers.get('content-length');
         if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) {
             // 10MB limit
-            return new Response(JSON.stringify({ error: "Request too large" }), {
+            return new Response(JSON.stringify({ error: 'Request too large' }), {
                 status: 413,
-                headers: { "Content-Type": "application/json" },
+                headers: { 'Content-Type': 'application/json' },
             });
         }
 
@@ -49,19 +49,19 @@ export async function POST(request: NextRequest) {
         const userId = session?.user?.id ?? undefined;
 
         // SECURITY: Validate HTTPS in production
-        if (process.env.NODE_ENV === "production" && !validateHTTPS(request)) {
-            log.warn("SECURITY: Non-HTTPS request rejected", {
+        if (process.env.NODE_ENV === 'production' && !validateHTTPS(request)) {
+            log.warn('SECURITY: Non-HTTPS request rejected', {
                 url: new URL(request.url).pathname,
             });
             return new Response(
                 JSON.stringify({
-                    error: "HTTPS required",
-                    message: "All API requests must use HTTPS for security.",
+                    error: 'HTTPS required',
+                    message: 'All API requests must use HTTPS for security.',
                 }),
                 {
                     status: 400,
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                         ...createSecureHeaders(),
                     },
                 },
@@ -75,14 +75,14 @@ export async function POST(request: NextRequest) {
         if (!validatedBody.success) {
             log.warn(
                 { validationError: validatedBody.error.format() },
-                "Request validation failed",
+                'Request validation failed',
             );
             return new Response(
                 JSON.stringify({
-                    error: "Invalid request body",
+                    error: 'Invalid request body',
                     details: validatedBody.error.format(),
                 }),
-                { status: 400, headers: { "Content-Type": "application/json" } },
+                { status: 400, headers: { 'Content-Type': 'application/json' } },
             );
         }
 
@@ -91,9 +91,9 @@ export async function POST(request: NextRequest) {
 
         // SECURITY: Validate IP format and reject invalid IPs
         if (!ip) {
-            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
                 status: 401,
-                headers: { "Content-Type": "application/json" },
+                headers: { 'Content-Type': 'application/json' },
             });
         }
 
@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
         const ipv4Regex =
             /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
         const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-        if (!ipv4Regex.test(ip) && !ipv6Regex.test(ip) && ip !== "::1" && ip !== "127.0.0.1") {
-            log.warn("Invalid IP format detected", { ip: `${ip.substring(0, 10)}...` });
+        if (!ipv4Regex.test(ip) && !ipv6Regex.test(ip) && ip !== '::1' && ip !== '127.0.0.1') {
+            log.warn('Invalid IP format detected', { ip: `${ip.substring(0, 10)}...` });
         }
 
         // SECURITY: Extract API keys from secure headers first, then fallback to body
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
         try {
             apiKeysFromHeaders = extractApiKeysFromHeaders(request.headers);
         } catch {
-            log.debug("No API keys found in headers", {
+            log.debug('No API keys found in headers', {
                 url: new URL(request.url).pathname,
             });
         }
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
         let transformedApiKeys: Record<string, string> | undefined;
         if (Object.keys(combinedApiKeys).length > 0) {
             // SECURITY: Log API key processing without exposing key names or metadata
-            log.info("Processing API keys", {
+            log.info('Processing API keys', {
                 keyCount: Object.keys(combinedApiKeys).length,
                 fromHeaders: Object.keys(apiKeysFromHeaders).length,
                 fromBody: Object.keys(data.apiKeys || {}).length,
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
                 transformedApiKeys = apiKeyMapper.mapFrontendToProvider(combinedApiKeys);
 
                 // SECURITY: Log transformation success without exposing key details
-                log.info("API key transformation completed", {
+                log.info('API key transformation completed', {
                     transformedKeyCount: Object.keys(transformedApiKeys).length,
                 });
 
@@ -149,23 +149,23 @@ export async function POST(request: NextRequest) {
                 if (modelProvider && transformedApiKeys) {
                     // Import validation functions
                     const { validateProviderKey, getProviderKeyName: _getProviderKeyName } =
-                        await import("@repo/ai/services/api-key-mapper");
+                        await import('@repo/ai/services/api-key-mapper');
                     const { generateErrorMessage } = await import(
-                        "@repo/ai/services/error-messages"
+                        '@repo/ai/services/error-messages'
                     );
 
                     // Use the provider directly from model configuration
                     const providerName = modelProvider;
 
                     if (
-                        providerName &&
-                        [
-                            "openai",
-                            "anthropic",
-                            "google",
-                            "xai",
-                            "fireworks",
-                            "openrouter",
+                        providerName
+                        && [
+                            'openai',
+                            'anthropic',
+                            'google',
+                            'xai',
+                            'fireworks',
+                            'openrouter',
                         ].includes(providerName)
                     ) {
                         const validation = validateProviderKey(
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
                         );
 
                         if (!validation.isValid) {
-                            const errorMsg = generateErrorMessage("API key required", {
+                            const errorMsg = generateErrorMessage('API key required', {
                                 provider: providerName as any,
                                 hasApiKey: validation.hasApiKey,
                                 isVtPlus: false, // Will be determined later
@@ -190,47 +190,47 @@ export async function POST(request: NextRequest) {
                                     settingsAction: errorMsg.settingsAction,
                                     provider: providerName,
                                 }),
-                                { status: 400, headers: { "Content-Type": "application/json" } },
+                                { status: 400, headers: { 'Content-Type': 'application/json' } },
                             );
                         }
                     }
                 }
             } catch (error) {
-                log.error({ error }, "Failed to transform or validate API keys");
+                log.error({ error }, 'Failed to transform or validate API keys');
 
                 // Provide more specific error message
-                const errorMessage = error instanceof Error ? error.message : "Unknown error";
-                let userMessage = "Failed to process API keys. Please check your key format.";
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                let userMessage = 'Failed to process API keys. Please check your key format.';
                 const statusCode = 400;
 
-                if (errorMessage.includes("Invalid API keys object")) {
+                if (errorMessage.includes('Invalid API keys object')) {
                     userMessage =
-                        "Invalid API key format. Please ensure all API keys are properly formatted strings.";
-                } else if (errorMessage.includes("validation")) {
+                        'Invalid API key format. Please ensure all API keys are properly formatted strings.';
+                } else if (errorMessage.includes('validation')) {
                     userMessage =
-                        "API key validation failed. Please check your API key format and try again.";
-                } else if (errorMessage.includes("mapping")) {
-                    userMessage = "API key mapping failed. Please refresh the page and try again.";
+                        'API key validation failed. Please check your API key format and try again.';
+                } else if (errorMessage.includes('mapping')) {
+                    userMessage = 'API key mapping failed. Please refresh the page and try again.';
                 }
 
                 return new Response(
                     JSON.stringify({
-                        error: "API Key Configuration Error",
+                        error: 'API Key Configuration Error',
                         message: userMessage,
-                        action: "Check your API keys in Settings → API Keys",
-                        settingsAction: "open_api_keys",
+                        action: 'Check your API keys in Settings → API Keys',
+                        settingsAction: 'open_api_keys',
                     }),
-                    { status: statusCode, headers: { "Content-Type": "application/json" } },
+                    { status: statusCode, headers: { 'Content-Type': 'application/json' } },
                 );
             }
         } else {
-            log.info("No API keys provided in request");
+            log.info('No API keys provided in request');
         }
 
         if (!!ChatModeConfig[data.mode]?.isAuthRequired && !userId) {
-            return new Response(JSON.stringify({ error: "Authentication required" }), {
+            return new Response(JSON.stringify({ error: 'Authentication required' }), {
                 status: 401,
-                headers: { "Content-Type": "application/json" },
+                headers: { 'Content-Type': 'application/json' },
             });
         }
 
@@ -251,7 +251,7 @@ export async function POST(request: NextRequest) {
         const hasByokGeminiKey = !!(geminiApiKey && geminiApiKey.trim().length > 0);
 
         // Declare vtPlusAccess in outer scope for access in onFinish callback
-        let vtPlusAccess: { hasAccess: boolean; reason?: string } | undefined;
+        let vtPlusAccess: { hasAccess: boolean; reason?: string; } | undefined;
 
         // BYOK validation for image analysis - ALL users must provide their own API keys for image processing
         const hasImages = hasImageAttachments({
@@ -270,15 +270,15 @@ export async function POST(request: NextRequest) {
             if (!validation.isValid) {
                 return new Response(
                     JSON.stringify({
-                        error: "API Key Required for Image Analysis",
+                        error: 'API Key Required for Image Analysis',
                         message: validation.errorMessage,
                         requiredApiKey: validation.requiredApiKey,
                         providerName: validation.providerName,
-                        settingsAction: "open_api_keys_settings",
+                        settingsAction: 'open_api_keys_settings',
                     }),
                     {
                         status: 403,
-                        headers: { "Content-Type": "application/json" },
+                        headers: { 'Content-Type': 'application/json' },
                     },
                 );
             }
@@ -291,16 +291,16 @@ export async function POST(request: NextRequest) {
                 if (budgetCheck.shouldDisable) {
                     return new Response(
                         JSON.stringify({
-                            error: "Service temporarily unavailable",
+                            error: 'Service temporarily unavailable',
                             message:
-                                "Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.",
-                            reason: "budget_exceeded",
-                            upgradeUrl: "/pricing",
-                            usageSettingsAction: "open_usage_settings",
+                                'Gemini models are temporarily unavailable due to budget constraints. Please try again next month or use your own API key.',
+                            reason: 'budget_exceeded',
+                            upgradeUrl: '/pricing',
+                            usageSettingsAction: 'open_usage_settings',
                         }),
                         {
                             status: 503,
-                            headers: { "Content-Type": "application/json" },
+                            headers: { 'Content-Type': 'application/json' },
                         },
                     );
                 }
@@ -310,14 +310,14 @@ export async function POST(request: NextRequest) {
                     if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE) {
                         return new Response(
                             JSON.stringify({
-                                error: "Authentication required",
+                                error: 'Authentication required',
                                 message:
-                                    "Please register to use Gemini models or provide your own API key.",
-                                redirect: "/auth/login",
+                                    'Please register to use Gemini models or provide your own API key.',
+                                redirect: '/auth/login',
                             }),
                             {
                                 status: 401,
-                                headers: { "Content-Type": "application/json" },
+                                headers: { 'Content-Type': 'application/json' },
                             },
                         );
                     }
@@ -327,24 +327,27 @@ export async function POST(request: NextRequest) {
                 // 1. GEMINI_2_5_FLASH_LITE is free for all users (no VT+ required)
                 // 2. Deep Research and Pro Search modes have their own access control logic below
                 // 3. Other Gemini models require VT+ subscription for server-side access
-                const isDeepResearchOrProSearch =
-                    data.mode === ChatMode.Deep || data.mode === ChatMode.Pro;
+                const isDeepResearchOrProSearch = data.mode === ChatMode.Deep
+                    || data.mode === ChatMode.Pro;
                 const isFlashLite = data.mode === ChatMode.GEMINI_2_5_FLASH_LITE;
 
-                if (!isFlashLite && data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE && !isDeepResearchOrProSearch) {
+                if (
+                    !isFlashLite && data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE
+                    && !isDeepResearchOrProSearch
+                ) {
                     // VT+ REQUIRED for server-funded Gemini access (except Flash Lite and Deep/Pro modes)
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                     if (!vtPlusAccess.hasAccess) {
                         const errorResponse = {
-                            error: "VT+ subscription required",
+                            error: 'VT+ subscription required',
                             message:
-                                "Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.",
-                            upgradeUrl: "/pricing",
-                            usageSettingsAction: "open_usage_settings",
+                                'Free users must provide their own Gemini API key. Upgrade to VT+ for server-side access to Gemini models.',
+                            upgradeUrl: '/pricing',
+                            usageSettingsAction: 'open_usage_settings',
                         };
                         return new Response(JSON.stringify(errorResponse), {
                             status: 403,
-                            headers: { "Content-Type": "application/json" },
+                            headers: { 'Content-Type': 'application/json' },
                         });
                     }
                 } else {
@@ -362,42 +365,40 @@ export async function POST(request: NextRequest) {
                 try {
                     rateLimitResult = await checkRateLimit(userId, selectedModel, isVTPlusUser);
                 } catch (error) {
-                    log.error({ error }, "Rate limit check failed");
+                    log.error({ error }, 'Rate limit check failed');
                     // Continue without rate limiting if check fails (graceful degradation)
                     rateLimitResult = { allowed: true };
                 }
 
                 if (!rateLimitResult.allowed) {
-                    const resetTime =
-                        rateLimitResult.reason === "daily_limit_exceeded"
-                            ? rateLimitResult.resetTime.daily
-                            : rateLimitResult.resetTime.minute;
+                    const resetTime = rateLimitResult.reason === 'daily_limit_exceeded'
+                        ? rateLimitResult.resetTime.daily
+                        : rateLimitResult.resetTime.minute;
 
-                    const message =
-                        rateLimitResult.reason === "daily_limit_exceeded"
-                            ? isVTPlusUser
-                                ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_VT_PLUS
-                                : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
-                            : isVTPlusUser
-                              ? RATE_LIMIT_MESSAGES.MINUTE_LIMIT_VT_PLUS
-                              : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
+                    const message = rateLimitResult.reason === 'daily_limit_exceeded'
+                        ? isVTPlusUser
+                            ? RATE_LIMIT_MESSAGES.DAILY_LIMIT_VT_PLUS
+                            : RATE_LIMIT_MESSAGES.DAILY_LIMIT_SIGNED_IN
+                        : isVTPlusUser
+                        ? RATE_LIMIT_MESSAGES.MINUTE_LIMIT_VT_PLUS
+                        : RATE_LIMIT_MESSAGES.MINUTE_LIMIT_SIGNED_IN;
 
                     return new Response(
                         JSON.stringify({
-                            error: "Rate limit exceeded",
+                            error: 'Rate limit exceeded',
                             message,
                             limitType: rateLimitResult.reason,
                             remainingDaily: rateLimitResult.remainingDaily,
                             remainingMinute: rateLimitResult.remainingMinute,
                             resetTime: resetTime.toISOString(),
-                            upgradeUrl: "/pricing",
-                            usageSettingsAction: "open_usage_settings",
+                            upgradeUrl: '/pricing',
+                            usageSettingsAction: 'open_usage_settings',
                         }),
                         {
                             status: 429,
                             headers: {
-                                "Content-Type": "application/json",
-                                "Retry-After": Math.ceil(
+                                'Content-Type': 'application/json',
+                                'Retry-After': Math.ceil(
                                     (resetTime.getTime() - Date.now()) / 1000,
                                 ).toString(),
                             },
@@ -411,10 +412,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate userTier against actual subscription status and check chart access
-        let actualUserTier: "FREE" | "PLUS" = "FREE";
+        let actualUserTier: 'FREE' | 'PLUS' = 'FREE';
         const accessResult = await checkVTPlusAccess({ userId, ip });
         if (accessResult.hasAccess) {
-            actualUserTier = "PLUS";
+            actualUserTier = 'PLUS';
         }
 
         // Charts are now available to all users - no restriction needed
@@ -439,15 +440,15 @@ export async function POST(request: NextRequest) {
                     if (!hasByokGeminiKeyForMode) {
                         return new Response(
                             JSON.stringify({
-                                error: "VT+ subscription or API key required",
+                                error: 'VT+ subscription or API key required',
                                 message:
-                                    "This feature requires VT+ subscription or your own Gemini API key.",
+                                    'This feature requires VT+ subscription or your own Gemini API key.',
                                 requiredPlan: modeConfig.requiredPlan,
                                 requiredFeature: modeConfig.requiredFeature,
                             }),
                             {
                                 status: 403,
-                                headers: { "Content-Type": "application/json" },
+                                headers: { 'Content-Type': 'application/json' },
                             },
                         );
                     }
@@ -457,14 +458,14 @@ export async function POST(request: NextRequest) {
                 if (!accessResult.hasAccess) {
                     return new Response(
                         JSON.stringify({
-                            error: "VT+ subscription required",
+                            error: 'VT+ subscription required',
                             reason: accessResult.reason,
                             requiredPlan: modeConfig.requiredPlan,
                             requiredFeature: modeConfig.requiredFeature,
                         }),
                         {
                             status: 403,
-                            headers: { "Content-Type": "application/json" },
+                            headers: { 'Content-Type': 'application/json' },
                         },
                     );
                 }
@@ -477,13 +478,13 @@ export async function POST(request: NextRequest) {
             if (!accessResult.hasAccess) {
                 return new Response(
                     JSON.stringify({
-                        error: "Sign in required for thinking mode",
-                        reason: "Thinking mode requires you to be signed in",
-                        requiredFeature: "THINKING_MODE",
+                        error: 'Sign in required for thinking mode',
+                        reason: 'Thinking mode requires you to be signed in',
+                        requiredFeature: 'THINKING_MODE',
                     }),
                     {
                         status: 403,
-                        headers: { "Content-Type": "application/json" },
+                        headers: { 'Content-Type': 'application/json' },
                     },
                 );
             }
@@ -505,7 +506,7 @@ export async function POST(request: NextRequest) {
             threadId: data.threadId,
         });
 
-        request.signal.addEventListener("abort", () => {
+        request.signal.addEventListener('abort', () => {
             abortController.abort();
             unregisterStream(requestId);
         });
@@ -535,12 +536,12 @@ export async function POST(request: NextRequest) {
 
         return new Response(stream, { headers: enhancedHeaders });
     } catch (error) {
-        log.error({ error }, "Error in POST handler");
+        log.error({ error }, 'Error in POST handler');
 
         // Use centralized error message service for consistent error handling
-        const { generateErrorMessage } = await import("@repo/ai/services/error-messages");
+        const { generateErrorMessage } = await import('@repo/ai/services/error-messages');
 
-        let errorMessage = "Internal server error";
+        let errorMessage = 'Internal server error';
         let statusCode = 500;
 
         if (error instanceof Error) {
@@ -560,22 +561,22 @@ export async function POST(request: NextRequest) {
             // Map error types to appropriate HTTP status codes
             const errorString = error.message.toLowerCase();
             if (
-                errorString.includes("unauthorized") ||
-                errorString.includes("forbidden") ||
-                structuredError.title.toLowerCase().includes("authentication")
+                errorString.includes('unauthorized')
+                || errorString.includes('forbidden')
+                || structuredError.title.toLowerCase().includes('authentication')
             ) {
                 statusCode = 401;
             } else if (
-                errorString.includes("rate limit") ||
-                errorString.includes("429") ||
-                structuredError.title.toLowerCase().includes("rate limit")
+                errorString.includes('rate limit')
+                || errorString.includes('429')
+                || structuredError.title.toLowerCase().includes('rate limit')
             ) {
                 statusCode = 429;
-            } else if (errorString.includes("network") || errorString.includes("fetch")) {
+            } else if (errorString.includes('network') || errorString.includes('fetch')) {
                 statusCode = 503;
-            } else if (errorString.includes("timeout")) {
+            } else if (errorString.includes('timeout')) {
                 statusCode = 408;
-            } else if (errorString.includes("parse") || errorString.includes("invalid")) {
+            } else if (errorString.includes('parse') || errorString.includes('invalid')) {
                 statusCode = 400;
             }
         }
@@ -584,11 +585,11 @@ export async function POST(request: NextRequest) {
             JSON.stringify({
                 error: errorMessage,
                 // SECURITY: Never expose stack traces, even in development
-                ...(process.env.NODE_ENV === "development" && {
-                    debugInfo: error instanceof Error ? error.message : "Unknown error",
+                ...(process.env.NODE_ENV === 'development' && {
+                    debugInfo: error instanceof Error ? error.message : 'Unknown error',
                 }),
             }),
-            { status: statusCode, headers: { "Content-Type": "application/json" } },
+            { status: statusCode, headers: { 'Content-Type': 'application/json' } },
         );
     }
 }
@@ -614,7 +615,7 @@ function createCompletionStream({
     selectedModel: ModelEnum;
     hasByokGeminiKey: boolean;
     isGeminiModelResult: boolean;
-    vtPlusAccess: { hasAccess: boolean; reason?: string } | undefined;
+    vtPlusAccess: { hasAccess: boolean; reason?: string; } | undefined;
 }) {
     const _encoder = new TextEncoder();
     let heartbeatInterval: NodeJS.Timeout | null = null;
@@ -638,7 +639,7 @@ function createCompletionStream({
                         controller.enqueue(_encoder.encode(HEARTBEAT_COMMENT));
                     } catch (error) {
                         // Controller is closed, clear interval
-                        if ((error as any)?.code === "ERR_INVALID_STATE" && heartbeatInterval) {
+                        if ((error as any)?.code === 'ERR_INVALID_STATE' && heartbeatInterval) {
                             isControllerClosed = true;
                             clearInterval(heartbeatInterval);
                             heartbeatInterval = null;
@@ -671,19 +672,19 @@ function createCompletionStream({
                                 );
                                 log.info(
                                     { userId, model: _selectedModel },
-                                    "Rate limit recorded via server-side safety net",
+                                    'Rate limit recorded via server-side safety net',
                                 );
                             } catch (error) {
                                 log.error(
                                     { error, userId, model: _selectedModel },
-                                    "Failed to record request in onFinish",
+                                    'Failed to record request in onFinish',
                                 );
                             }
                         }
                     },
                 });
             } catch (error) {
-                const { handleStreamError } = await import("./stream-error-handler");
+                const { handleStreamError } = await import('./stream-error-handler');
                 await handleStreamError({
                     error,
                     controller,
@@ -708,7 +709,7 @@ function createCompletionStream({
             }
         },
         cancel() {
-            log.info("cancelling stream");
+            log.info('cancelling stream');
             isControllerClosed = true;
             if (heartbeatInterval) {
                 clearInterval(heartbeatInterval);

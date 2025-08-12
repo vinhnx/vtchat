@@ -109,11 +109,11 @@ Both environments have health checks at `/api/health`:
 ```toml
 # Health check configuration (already set in fly.toml files)
 [[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"  # 60s for development
-  method = "GET"
-  timeout = "5s"
-  path = "/api/health"
+grace_period = "10s"
+interval = "30s" # 60s for development
+method = "GET"
+timeout = "5s"
+path = "/api/health"
 ```
 
 ## Deployment Process

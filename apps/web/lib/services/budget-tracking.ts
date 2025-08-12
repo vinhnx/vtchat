@@ -1,7 +1,7 @@
-import { log } from "@repo/shared/logger";
-import { and, eq, gte, sql } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { providerUsage } from "@/lib/database/schema";
+import { db } from '@/lib/database';
+import { providerUsage } from '@/lib/database/schema';
+import { log } from '@repo/shared/logger';
+import { and, eq, gte, sql } from 'drizzle-orm';
 
 /**
  * Record a request for provider usage tracking (rate limits only)
@@ -10,7 +10,7 @@ import { providerUsage } from "@/lib/database/schema";
 export async function recordProviderUsage(
     userId: string,
     modelId: string, // Accept any string for modelId
-    provider: string = "gemini",
+    provider: string = 'gemini',
 ): Promise<void> {
     // Accept any modelId, including Deep Research
     try {
@@ -27,10 +27,10 @@ export async function recordProviderUsage(
                 modelId,
                 provider,
             },
-            "Recorded provider usage for rate limit tracking",
+            'Recorded provider usage for rate limit tracking',
         );
     } catch (error) {
-        log.error({ error, userId, modelId }, "Failed to record provider usage");
+        log.error({ error, userId, modelId }, 'Failed to record provider usage');
         // Don't throw - tracking failure shouldn't break the main request
     }
 }
@@ -39,9 +39,9 @@ export async function recordProviderUsage(
  * Get monthly usage for provider (no cost tracking)
  */
 export async function getMonthlyUsage(
-    provider: string = "gemini",
+    provider: string = 'gemini',
     month: Date = new Date(),
-): Promise<{ requestCount: number }> {
+): Promise<{ requestCount: number; }> {
     const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
     const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59, 999);
 
@@ -67,7 +67,7 @@ export async function getMonthlyUsage(
             requestCount: Number(requestCount),
         };
     } catch (error) {
-        log.error({ error, provider, month }, "Failed to get monthly usage");
+        log.error({ error, provider, month }, 'Failed to get monthly usage');
         return { requestCount: 0 };
     }
 }
@@ -77,11 +77,11 @@ export async function getMonthlyUsage(
  */
 export async function getUserMonthlyUsage(
     userId: string,
-    provider: string = "gemini",
+    provider: string = 'gemini',
     month: Date = new Date(),
 ): Promise<{
     requestCount: number;
-    modelBreakdown: Record<string, { count: number }>;
+    modelBreakdown: Record<string, { count: number; }>;
 }> {
     const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
     const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59, 999);
@@ -104,7 +104,7 @@ export async function getUserMonthlyUsage(
             .groupBy(providerUsage.modelId);
 
         let totalRequestCount = 0;
-        const modelBreakdown: Record<string, { count: number }> = {};
+        const modelBreakdown: Record<string, { count: number; }> = {};
 
         for (const row of result) {
             const count = Number(row.requestCount);
@@ -119,7 +119,7 @@ export async function getUserMonthlyUsage(
             modelBreakdown,
         };
     } catch (error) {
-        log.error({ error, userId, provider, month }, "Failed to get user monthly usage");
+        log.error({ error, userId, provider, month }, 'Failed to get user monthly usage');
         return { requestCount: 0, modelBreakdown: {} };
     }
 }

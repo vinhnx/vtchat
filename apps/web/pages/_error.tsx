@@ -1,5 +1,5 @@
 // Custom error page to override Next.js default and avoid context issues
-import type { NextPageContext } from "next";
+import type { NextPageContext } from 'next';
 
 interface ErrorProps {
     statusCode?: number;
@@ -9,12 +9,13 @@ interface ErrorProps {
 
 function Error({ statusCode }: ErrorProps) {
     return (
-        <html lang="en">
+        <html lang='en'>
             <head>
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <title>{statusCode ? `${statusCode} - Server Error` : "Client Error"} | VT</title>
-                <style>{`
+                <meta charSet='utf-8' />
+                <meta name='viewport' content='width=device-width, initial-scale=1' />
+                <title>{statusCode ? `${statusCode} - Server Error` : 'Client Error'} | VT</title>
+                <style>
+                    {`
           * {
             box-sizing: border-box;
             margin: 0;
@@ -98,20 +99,21 @@ function Error({ statusCode }: ErrorProps) {
               background-color: hsl(0 0% 98% / 0.9);
             }
           }
-        `}</style>
+        `}
+                </style>
             </head>
             <body>
-                <div className="container">
-                    <div className="content">
-                        <h1 className="title">
-                            {statusCode ? `${statusCode} - Server Error` : "Client Error"}
+                <div className='container'>
+                    <div className='content'>
+                        <h1 className='title'>
+                            {statusCode ? `${statusCode} - Server Error` : 'Client Error'}
                         </h1>
-                        <p className="description">
+                        <p className='description'>
                             {statusCode === 404
                                 ? "Sorry, we couldn't find the page you're looking for."
-                                : "An unexpected error occurred. Please try again."}
+                                : 'An unexpected error occurred. Please try again.'}
                         </p>
-                        <a href="/" className="button">
+                        <a href='/' className='button'>
                             Back to VT
                         </a>
                     </div>

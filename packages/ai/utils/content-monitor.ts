@@ -5,8 +5,8 @@
  * on table generation or other problematic content patterns.
  */
 
-import { log } from "@repo/shared/logger";
-import { isLikelyTableGeneration } from "../config/formatting-guidelines";
+import { log } from '@repo/shared/logger';
+import { isLikelyTableGeneration } from '../config/formatting-guidelines';
 
 export interface ContentMonitorOptions {
     maxTableIndicators?: number;
@@ -26,7 +26,7 @@ export class ContentMonitor {
             maxRepetitivePatterns: 5,
             checkInterval: 1000, // 1 second
             onStuckDetected: (content, issue) => {
-                log.warn("Content generation issue detected", {
+                log.warn('Content generation issue detected', {
                     issue,
                     contentLength: content.length,
                 });
@@ -53,13 +53,13 @@ export class ContentMonitor {
 
         // Check for table generation issues
         if (isLikelyTableGeneration(content)) {
-            const issue = "Excessive table generation detected";
+            const issue = 'Excessive table generation detected';
             this.options.onStuckDetected(content, issue);
             return {
                 isStuck: true,
                 issue,
                 suggestion:
-                    "Consider using bullet points, lists, or inline formatting instead of tables",
+                    'Consider using bullet points, lists, or inline formatting instead of tables',
             };
         }
 
@@ -71,18 +71,18 @@ export class ContentMonitor {
             return {
                 isStuck: true,
                 issue,
-                suggestion: "Vary content structure and avoid repetitive formatting",
+                suggestion: 'Vary content structure and avoid repetitive formatting',
             };
         }
 
         // Check for stalled generation (same content repeated)
         if (this.isContentStalled(content)) {
-            const issue = "Content generation appears stalled";
+            const issue = 'Content generation appears stalled';
             this.options.onStuckDetected(content, issue);
             return {
                 isStuck: true,
                 issue,
-                suggestion: "Try a different approach or simplify the content structure",
+                suggestion: 'Try a different approach or simplify the content structure',
             };
         }
 
@@ -109,7 +109,7 @@ export class ContentMonitor {
         for (const pattern of patterns) {
             const matches = content.match(pattern);
             if (matches && matches.length > 0) {
-                return matches[0].substring(0, 50) + "...";
+                return matches[0].substring(0, 50) + '...';
             }
         }
 
@@ -199,22 +199,22 @@ export function checkContentForIssues(content: string): {
     // Check for table issues
     if (isLikelyTableGeneration(content)) {
         needsIntervention = true;
-        suggestions.push("Replace large tables with bullet points or inline formatting");
-        suggestions.push("Use structured lists instead of complex tables");
+        suggestions.push('Replace large tables with bullet points or inline formatting');
+        suggestions.push('Use structured lists instead of complex tables');
     }
 
     // Check for excessive formatting
     const boldCount = (content.match(/\*\*[^*]+\*\*/g) || []).length;
     if (boldCount > 20) {
         needsIntervention = true;
-        suggestions.push("Reduce excessive bold formatting");
+        suggestions.push('Reduce excessive bold formatting');
     }
 
     // Check for too many headings
     const headingCount = (content.match(/^#{1,6}\s+/gm) || []).length;
     if (headingCount > 10) {
         needsIntervention = true;
-        suggestions.push("Consolidate content under fewer headings");
+        suggestions.push('Consolidate content under fewer headings');
     }
 
     return { needsIntervention, suggestions };

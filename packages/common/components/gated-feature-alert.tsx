@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { FeatureSlug, PlanSlug } from "@repo/shared/types/subscription";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import {
     Button,
     Dialog,
@@ -10,11 +10,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@repo/ui";
-import { Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { useVtPlusAccess } from "../hooks/use-subscription-access";
+} from '@repo/ui';
+import { Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useVtPlusAccess } from '../hooks/use-subscription-access';
 
 export interface GatedFeatureAlertProps {
     /** The feature that requires a higher plan */
@@ -69,9 +69,9 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
     requiredFeature,
     requiredPlan,
     message,
-    title = "Unlock Premium Features",
+    title = 'Unlock Premium Features',
     onGatedClick,
-    upgradeUrl = "/pricing",
+    upgradeUrl = '/pricing',
     children,
     fallback,
     showAlert = true,
@@ -88,32 +88,32 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
         // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH)
         if (
-            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
-            requiredFeature === FeatureSlug.PRO_SEARCH
+            requiredFeature === FeatureSlug.DEEP_RESEARCH
+            || requiredFeature === FeatureSlug.PRO_SEARCH
         ) {
             return isVtPlus;
         }
 
         // Features now available to all logged-in users
         if (
-            requiredFeature === FeatureSlug.DARK_THEME ||
-            requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE ||
-            requiredFeature === FeatureSlug.STRUCTURED_OUTPUT ||
-            requiredFeature === FeatureSlug.THINKING_MODE ||
-            requiredFeature === FeatureSlug.DOCUMENT_PARSING ||
-            requiredFeature === FeatureSlug.REASONING_CHAIN ||
-            requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING ||
-            requiredFeature === FeatureSlug.CHART_VISUALIZATION
+            requiredFeature === FeatureSlug.DARK_THEME
+            || requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE
+            || requiredFeature === FeatureSlug.STRUCTURED_OUTPUT
+            || requiredFeature === FeatureSlug.THINKING_MODE
+            || requiredFeature === FeatureSlug.DOCUMENT_PARSING
+            || requiredFeature === FeatureSlug.REASONING_CHAIN
+            || requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING
+            || requiredFeature === FeatureSlug.CHART_VISUALIZATION
         ) {
             return true; // Available to all logged-in users
         }
 
         // For base features, always allow access for authenticated users
         if (
-            requiredFeature &&
-            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
-                requiredFeature === FeatureSlug.BASE_MODELS ||
-                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+            requiredFeature
+            && (requiredFeature === FeatureSlug.ACCESS_CHAT
+                || requiredFeature === FeatureSlug.BASE_MODELS
+                || requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
         ) {
             return true; // Base features are available to all authenticated users
         }
@@ -132,16 +132,16 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
         if (requiredFeature) {
             const featureName = requiredFeature
-                .replace(/_/g, " ")
+                .replace(/_/g, ' ')
                 .replace(/\b\w/g, (l) => l.toUpperCase());
             return `Unlock ${featureName} with VT+! Upgrade now to enjoy enhanced AI capabilities and unlock your potential.`;
         }
 
         if (requiredPlan === PlanSlug.VT_PLUS) {
-            return "Ready for more? This amazing feature is available with VT+. Join our community of power users today!";
+            return 'Ready for more? This amazing feature is available with VT+. Join our community of power users today!';
         }
 
-        return "Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.";
+        return 'Discover premium features! Upgrade your plan to unlock advanced capabilities and elevate your experience.';
     }, [message, requiredFeature, requiredPlan]);
 
     // Don't render anything while auth is loading
@@ -180,8 +180,8 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
 
     // Create gated version of children that shows alert on interaction
     // In React 19, we need to ensure we're only cloning valid elements that can receive DOM props
-    const gatedChildren =
-        React.isValidElement(children) && typeof children.type !== "symbol" ? (
+    const gatedChildren = React.isValidElement(children) && typeof children.type !== 'symbol'
+        ? (
             React.cloneElement(children as React.ReactElement<any>, {
                 onClick: (e: React.MouseEvent) => {
                     e.preventDefault();
@@ -190,11 +190,12 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                 },
                 style: {
                     ...(children as React.ReactElement<any>).props?.style,
-                    cursor: "pointer",
+                    cursor: 'pointer',
                     opacity: 0.7,
                 },
             })
-        ) : (
+        )
+        : (
             // If children can't receive DOM props, wrap in a div
             <div
                 onClick={(e: React.MouseEvent) => {
@@ -203,7 +204,7 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
                     handleGatedInteraction();
                 }}
                 style={{
-                    cursor: "pointer",
+                    cursor: 'pointer',
                     opacity: 0.7,
                 }}
             >
@@ -215,42 +216,42 @@ export const GatedFeatureAlert: React.FC<GatedFeatureAlertProps> = ({
         <>
             {gatedChildren}
             <Dialog onOpenChange={setShowUpgradeAlert} open={showUpgradeAlert}>
-                <DialogContent className="max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl">
-                    <DialogHeader className="pb-4 text-center">
-                        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg">
-                            <Sparkles className="text-white" size={24} />
+                <DialogContent className='max-w-md border-0 bg-gradient-to-br from-white to-gray-50 shadow-2xl'>
+                    <DialogHeader className='pb-4 text-center'>
+                        <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg'>
+                            <Sparkles className='text-white' size={24} />
                         </div>
-                        <DialogTitle className="text-xl font-bold text-gray-900">
+                        <DialogTitle className='text-xl font-bold text-gray-900'>
                             {title}
                         </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
+                        <DialogDescription className='text-muted-foreground leading-relaxed'>
                             {defaultMessage}
                         </DialogDescription>
 
                         {/* Free Trial & Cancel Anytime */}
-                        <div className="mt-3 flex items-center justify-center gap-3">
-                            <div className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs">
-                                <Sparkles className="h-3 w-3 text-green-600" />
-                                <span className="font-medium text-green-700">
+                        <div className='mt-3 flex items-center justify-center gap-3'>
+                            <div className='flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs'>
+                                <Sparkles className='h-3 w-3 text-green-600' />
+                                <span className='font-medium text-green-700'>
                                     Free trial included
                                 </span>
                             </div>
-                            <div className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs">
-                                <span className="h-3 w-3 text-blue-600">✓</span>
-                                <span className="font-medium text-blue-700">Cancel anytime</span>
+                            <div className='flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs'>
+                                <span className='h-3 w-3 text-blue-600'>✓</span>
+                                <span className='font-medium text-blue-700'>Cancel anytime</span>
                             </div>
                         </div>
                     </DialogHeader>
-                    <DialogFooter className="gap-3 pt-4">
+                    <DialogFooter className='gap-3 pt-4'>
                         <Button
-                            className="text-muted-foreground border-gray-200 hover:bg-gray-50"
+                            className='text-muted-foreground border-gray-200 hover:bg-gray-50'
                             onClick={() => setShowUpgradeAlert(false)}
-                            variant="outline"
+                            variant='outline'
                         >
                             Cancel
                         </Button>
                         <Button
-                            className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg hover:from-amber-600 hover:to-orange-600"
+                            className='gap-2 bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg hover:from-amber-600 hover:to-orange-600'
                             onClick={handleUpgrade}
                         >
                             <Sparkles size={16} />
@@ -276,36 +277,36 @@ export const useFeatureGate = (requiredFeature?: FeatureSlug, requiredPlan?: Pla
 
         // VT+ exclusive features (now only PRO_SEARCH, DEEP_RESEARCH)
         if (
-            requiredFeature === FeatureSlug.DEEP_RESEARCH ||
-            requiredFeature === FeatureSlug.PRO_SEARCH ||
-            requiredPlan === PlanSlug.VT_PLUS
+            requiredFeature === FeatureSlug.DEEP_RESEARCH
+            || requiredFeature === FeatureSlug.PRO_SEARCH
+            || requiredPlan === PlanSlug.VT_PLUS
         ) {
             return isVtPlus;
         }
 
         // Features now available to all logged-in users
         if (
-            requiredFeature === FeatureSlug.DARK_THEME ||
-            requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE ||
-            requiredFeature === FeatureSlug.STRUCTURED_OUTPUT ||
-            requiredFeature === FeatureSlug.THINKING_MODE ||
-            requiredFeature === FeatureSlug.DOCUMENT_PARSING ||
-            requiredFeature === FeatureSlug.REASONING_CHAIN ||
-            requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING ||
-            requiredFeature === FeatureSlug.CHART_VISUALIZATION
+            requiredFeature === FeatureSlug.DARK_THEME
+            || requiredFeature === FeatureSlug.THINKING_MODE_TOGGLE
+            || requiredFeature === FeatureSlug.STRUCTURED_OUTPUT
+            || requiredFeature === FeatureSlug.THINKING_MODE
+            || requiredFeature === FeatureSlug.DOCUMENT_PARSING
+            || requiredFeature === FeatureSlug.REASONING_CHAIN
+            || requiredFeature === FeatureSlug.GEMINI_EXPLICIT_CACHING
+            || requiredFeature === FeatureSlug.CHART_VISUALIZATION
         ) {
             return true; // Available to all logged-in users
         }
 
         // For base features, always allow access for authenticated users
         if (
-            requiredFeature &&
-            (requiredFeature === FeatureSlug.ACCESS_CHAT ||
-                requiredFeature === FeatureSlug.BASE_MODELS ||
-                requiredFeature === FeatureSlug.FREE_MODELS ||
-                requiredFeature === FeatureSlug.MATH_CALCULATOR ||
-                requiredFeature === FeatureSlug.BASE_FEATURES ||
-                requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
+            requiredFeature
+            && (requiredFeature === FeatureSlug.ACCESS_CHAT
+                || requiredFeature === FeatureSlug.BASE_MODELS
+                || requiredFeature === FeatureSlug.FREE_MODELS
+                || requiredFeature === FeatureSlug.MATH_CALCULATOR
+                || requiredFeature === FeatureSlug.BASE_FEATURES
+                || requiredFeature === FeatureSlug.ADVANCED_CHAT_MODES)
         ) {
             return true;
         }

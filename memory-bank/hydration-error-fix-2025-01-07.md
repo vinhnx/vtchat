@@ -16,23 +16,23 @@ Badge components (which render as `<div>` elements) were placed inside `<p>` ele
 ## Invalid HTML Structure (Before)
 
 ```tsx
-<p className="text-muted-foreground text-xs">
-    <Badge variant="default" className="mr-1">
+<p className='text-muted-foreground text-xs'>
+    <Badge variant='default' className='mr-1'>
         {stats.conversionRate}%
     </Badge>
     conversion rate
-</p>
+</p>;
 ```
 
 ## Fixed HTML Structure (After)
 
 ```tsx
-<div className="text-muted-foreground text-xs">
-    <Badge variant="default" className="mr-1">
+<div className='text-muted-foreground text-xs'>
+    <Badge variant='default' className='mr-1'>
         {stats.conversionRate}%
     </Badge>
     conversion rate
-</div>
+</div>;
 ```
 
 ## Files Changed

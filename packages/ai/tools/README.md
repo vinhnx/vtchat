@@ -25,9 +25,9 @@ Currently supports:
 #### Basic Usage
 
 ```typescript
+import { openai } from '@ai-sdk/openai';
 import { openaiWebSearchTool } from '@repo/ai/tools';
 import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
 
 const result = await generateText({
     model: openai('gpt-4o-mini'),
@@ -51,8 +51,8 @@ const tools = {
 #### Auto-detect Tool Based on Model
 
 ```typescript
-import { getWebSearchTool } from '@repo/ai/tools';
 import { ModelEnum } from '@repo/ai/models';
+import { getWebSearchTool } from '@repo/ai/tools';
 
 const model = ModelEnum.GPT_4o_Mini;
 const webSearchTools = getWebSearchTool(model);
@@ -125,8 +125,8 @@ if (!result.success) {
 The web search tools can be integrated with existing workflow patterns:
 
 ```typescript
-import { getWebSearchTool } from '@repo/ai/tools';
 import { getModelFromChatMode, ModelEnum } from '@repo/ai/models';
+import { getWebSearchTool } from '@repo/ai/tools';
 import { ChatMode } from '@repo/shared/config';
 
 // Get model based on chat mode

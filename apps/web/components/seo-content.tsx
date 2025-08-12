@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useSession } from "@repo/shared/lib/auth-client";
+import { useSession } from '@repo/shared/lib/auth-client';
 
 interface SEOContentProps {
     showOnHomepage?: boolean;
     className?: string;
 }
 
-export function SEOContent({ showOnHomepage = false, className = "" }: SEOContentProps) {
+export function SEOContent({ showOnHomepage = false, className = '' }: SEOContentProps) {
     const { data: session, isPending } = useSession();
 
     // Only show SEO content for non-logged users or when explicitly requested
@@ -18,7 +18,7 @@ export function SEOContent({ showOnHomepage = false, className = "" }: SEOConten
     return (
         <div className={`seo-content ${className}`}>
             {/* Additional structured content for search engines - completely hidden */}
-            <div className="sr-only pointer-events-none invisible absolute h-0 w-0 overflow-hidden opacity-0">
+            <div className='sr-only pointer-events-none invisible absolute h-0 w-0 overflow-hidden opacity-0'>
                 <article>
                     <h2>Complete Guide to Artificial Intelligence (AI)</h2>
                     <p>
@@ -32,28 +32,30 @@ export function SEOContent({ showOnHomepage = false, className = "" }: SEOConten
                     <h3>Types of Artificial Intelligence Systems</h3>
                     <ol>
                         <li>
-                            <strong>Generative AI:</strong> Creates new content, text, images, and
-                            solutions using advanced algorithms
+                            <strong>Generative AI:</strong>{' '}
+                            Creates new content, text, images, and solutions using advanced
+                            algorithms
                         </li>
                         <li>
-                            <strong>Deep Learning AI:</strong> Uses deep neural networks with hidden
-                            layers for complex pattern recognition
+                            <strong>Deep Learning AI:</strong>{' '}
+                            Uses deep neural networks with hidden layers for complex pattern
+                            recognition
                         </li>
                         <li>
-                            <strong>Natural Language Processing (NLP):</strong> Enables human-like
-                            conversation and text understanding
+                            <strong>Natural Language Processing (NLP):</strong>{' '}
+                            Enables human-like conversation and text understanding
                         </li>
                         <li>
-                            <strong>Machine Learning AI:</strong> Learns from large amounts of data
-                            to improve performance over time
+                            <strong>Machine Learning AI:</strong>{' '}
+                            Learns from large amounts of data to improve performance over time
                         </li>
                         <li>
-                            <strong>Computer Vision AI:</strong> Processes and analyzes visual
-                            content in real-time
+                            <strong>Computer Vision AI:</strong>{' '}
+                            Processes and analyzes visual content in real-time
                         </li>
                         <li>
-                            <strong>Large Language Models (LLMs):</strong> Advanced AI systems
-                            trained on massive datasets
+                            <strong>Large Language Models (LLMs):</strong>{' '}
+                            Advanced AI systems trained on massive datasets
                         </li>
                     </ol>
 

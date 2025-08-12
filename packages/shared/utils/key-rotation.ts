@@ -1,4 +1,4 @@
-import { log } from "@repo/shared/logger";
+import { log } from '@repo/shared/logger';
 
 /**
  * Key rotation and security management utilities
@@ -55,12 +55,12 @@ export function secureCompareKeys(a: string, b: string): boolean {
  */
 export function maskApiKey(key: string): string {
     if (!key || key.length < 8) {
-        return "****";
+        return '****';
     }
 
     const prefix = key.substring(0, 4);
     const suffix = key.substring(key.length - 4);
-    const masked = "*".repeat(Math.max(4, key.length - 8));
+    const masked = '*'.repeat(Math.max(4, key.length - 8));
 
     return `${prefix}${masked}${suffix}`;
 }
@@ -148,33 +148,33 @@ export function validateKeyFormat(
     isValid: boolean;
     reason?: string;
 } {
-    if (!key || typeof key !== "string") {
-        return { isValid: false, reason: "Key must be a non-empty string" };
+    if (!key || typeof key !== 'string') {
+        return { isValid: false, reason: 'Key must be a non-empty string' };
     }
 
     // Basic length validation (provider-specific logic can be added)
     if (key.length < 8) {
-        return { isValid: false, reason: "Key too short" };
+        return { isValid: false, reason: 'Key too short' };
     }
 
     if (key.length > 512) {
-        return { isValid: false, reason: "Key too long" };
+        return { isValid: false, reason: 'Key too long' };
     }
 
     // Provider-specific validation
     switch (provider.toLowerCase()) {
-        case "openai":
-            if (!key.startsWith("sk-")) {
+        case 'openai':
+            if (!key.startsWith('sk-')) {
                 return { isValid: false, reason: "OpenAI keys must start with 'sk-'" };
             }
             break;
-        case "anthropic":
-            if (!key.startsWith("sk-ant-")) {
+        case 'anthropic':
+            if (!key.startsWith('sk-ant-')) {
                 return { isValid: false, reason: "Anthropic keys must start with 'sk-ant-'" };
             }
             break;
-        case "openrouter":
-            if (!key.startsWith("sk-or-")) {
+        case 'openrouter':
+            if (!key.startsWith('sk-or-')) {
                 return { isValid: false, reason: "OpenRouter keys must start with 'sk-or-'" };
             }
             break;
@@ -187,7 +187,7 @@ export function validateKeyFormat(
  * Securely logs key operations without exposing sensitive data
  */
 export function logKeyOperation(
-    operation: "created" | "rotated" | "validated" | "expired" | "failed",
+    operation: 'created' | 'rotated' | 'validated' | 'expired' | 'failed',
     provider: string,
     success: boolean = true,
 ): void {

@@ -1,8 +1,8 @@
-import { type QuotaWindow, VtPlusFeature } from "@repo/common/config/vtPlusLimits";
-import { log } from "@repo/shared/lib/logger";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { type QuotaWindow, VtPlusFeature } from '@repo/common/config/vtPlusLimits';
+import { log } from '@repo/shared/lib/logger';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 
 // Quota usage data structure
 export interface QuotaUsage {
@@ -72,10 +72,10 @@ export const useQuotaStore = create<QuotaStore>()(
                 });
 
                 try {
-                    const response = await fetch("/api/vtplus/usage", {
-                        method: "GET",
+                    const response = await fetch('/api/vtplus/usage', {
+                        method: 'GET',
                         headers: {
-                            "Content-Type": "application/json",
+                            'Content-Type': 'application/json',
                         },
                     });
 
@@ -113,16 +113,16 @@ export const useQuotaStore = create<QuotaStore>()(
                         state.lastUpdated = new Date();
                     });
 
-                    log.info("[QuotaStore] Usage data fetched successfully");
+                    log.info('[QuotaStore] Usage data fetched successfully');
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
                     set((state) => {
                         state.isLoading = false;
                         state.error = errorMessage;
                     });
 
-                    log.error({ error }, "[QuotaStore] Failed to fetch usage data");
+                    log.error({ error }, '[QuotaStore] Failed to fetch usage data');
                 }
             },
 
@@ -160,7 +160,7 @@ export const useQuotaStore = create<QuotaStore>()(
             },
         })),
         {
-            name: "quota-storage",
+            name: 'quota-storage',
             partialize: (state) => ({
                 usage: state.usage,
                 lastUpdated: state.lastUpdated,

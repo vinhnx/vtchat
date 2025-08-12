@@ -3,20 +3,20 @@
  * This service ensures only one active subscription per user
  */
 
-import { log } from "@repo/shared/logger";
-import { PlanSlug } from "@repo/shared/types/subscription";
-import { SubscriptionStatusEnum } from "@repo/shared/types/subscription-status";
-import { and, eq, inArray } from "drizzle-orm";
-import { db } from "@/lib/database";
-import { type NewUserSubscription, userSubscriptions, users } from "@/lib/database/schema";
-import { invalidateUserCaches } from "@/lib/subscription/fast-subscription-access";
+import { db } from '@/lib/database';
+import { type NewUserSubscription, users, userSubscriptions } from '@/lib/database/schema';
+import { invalidateUserCaches } from '@/lib/subscription/fast-subscription-access';
+import { log } from '@repo/shared/logger';
+import { PlanSlug } from '@repo/shared/types/subscription';
+import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
+import { and, eq, inArray } from 'drizzle-orm';
 
 export class DuplicateActiveSubscriptionError extends Error {
     constructor(userId: string, existingSubscriptions: string[]) {
         super(
-            `User ${userId} has multiple active subscriptions: ${existingSubscriptions.join(", ")}`,
+            `User ${userId} has multiple active subscriptions: ${existingSubscriptions.join(', ')}`,
         );
-        this.name = "DuplicateActiveSubscriptionError";
+        this.name = 'DuplicateActiveSubscriptionError';
     }
 }
 
@@ -26,7 +26,7 @@ export class SubscriptionService {
      */
     static async upsertSubscription(
         userId: string,
-        subscriptionData: Omit<NewUserSubscription, "userId">,
+        subscriptionData: Omit<NewUserSubscription, 'userId'>,
     ): Promise<string> {
         return await db.transaction(async (tx) => {
             try {
@@ -37,17 +37,17 @@ export class SubscriptionService {
                     .where(
                         and(
                             eq(userSubscriptions.userId, userId),
-                            inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                            inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                         ),
                     );
 
                 // 2. If creating a new active subscription and there are existing ones, cancel them first
                 if (
-                    subscriptionData.status &&
-                    ["active", "trialing", "past_due"].includes(subscriptionData.status) &&
-                    existingActive.length > 0
+                    subscriptionData.status
+                    && ['active', 'trialing', 'past_due'].includes(subscriptionData.status)
+                    && existingActive.length > 0
                 ) {
-                    log.warn("Canceling existing active subscriptions before creating new one", {
+                    log.warn('Canceling existing active subscriptions before creating new one', {
                         userId,
                         existingSubscriptions: existingActive.map((s) => s.id),
                         newSubscriptionData: subscriptionData,
@@ -64,9 +64,9 @@ export class SubscriptionService {
                             and(
                                 eq(userSubscriptions.userId, userId),
                                 inArray(userSubscriptions.status, [
-                                    "active",
-                                    "trialing",
-                                    "past_due",
+                                    'active',
+                                    'trialing',
+                                    'past_due',
                                 ]),
                             ),
                         );
@@ -129,10 +129,9 @@ export class SubscriptionService {
                 }
 
                 // 4. Update users.plan_slug to match the subscription
-                const planSlug =
-                    subscriptionData.plan === PlanSlug.VT_PLUS
-                        ? PlanSlug.VT_PLUS
-                        : PlanSlug.VT_BASE;
+                const planSlug = subscriptionData.plan === PlanSlug.VT_PLUS
+                    ? PlanSlug.VT_PLUS
+                    : PlanSlug.VT_BASE;
                 await tx
                     .update(users)
                     .set({
@@ -141,7 +140,7 @@ export class SubscriptionService {
                     })
                     .where(eq(users.id, userId));
 
-                log.info("Subscription upserted successfully", {
+                log.info('Subscription upserted successfully', {
                     userId,
                     subscriptionId,
                     plan: subscriptionData.plan,
@@ -150,7 +149,7 @@ export class SubscriptionService {
 
                 return subscriptionId;
             } catch (error) {
-                log.error("Failed to upsert subscription", { userId, error, subscriptionData });
+                log.error('Failed to upsert subscription', { userId, error, subscriptionData });
                 throw error;
             }
         });
@@ -177,13 +176,15 @@ export class SubscriptionService {
                 .where(
                     and(
                         eq(userSubscriptions.userId, userId),
-                        inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                        inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                     ),
                 );
 
             if (activeSubscriptions.length > 1) {
                 issues.push(
-                    `Multiple active subscriptions found: ${activeSubscriptions.map((s) => s.id).join(", ")}`,
+                    `Multiple active subscriptions found: ${
+                        activeSubscriptions.map((s) => s.id).join(', ')
+                    }`,
                 );
             }
 
@@ -198,8 +199,9 @@ export class SubscriptionService {
                 const userPlanSlug = user[0].planSlug;
                 const subscriptionPlan = activeSubscriptions[0].plan;
 
-                const expectedPlanSlug =
-                    subscriptionPlan === PlanSlug.VT_PLUS ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
+                const expectedPlanSlug = subscriptionPlan === PlanSlug.VT_PLUS
+                    ? PlanSlug.VT_PLUS
+                    : PlanSlug.VT_BASE;
 
                 if (userPlanSlug !== expectedPlanSlug) {
                     issues.push(
@@ -213,11 +215,13 @@ export class SubscriptionService {
                 issues,
             };
         } catch (error) {
-            log.error("Failed to validate user subscriptions", { userId, error });
+            log.error('Failed to validate user subscriptions', { userId, error });
             return {
                 isValid: false,
                 issues: [
-                    `Validation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+                    `Validation failed: ${
+                        error instanceof Error ? error.message : 'Unknown error'
+                    }`,
                 ],
             };
         }
@@ -230,11 +234,11 @@ export class SubscriptionService {
         const validation = await SubscriptionService.validateUserSubscriptions(userId);
 
         if (validation.isValid) {
-            log.info("User subscriptions are already valid", { userId });
+            log.info('User subscriptions are already valid', { userId });
             return;
         }
 
-        log.warn("Fixing subscription data integrity issues", {
+        log.warn('Fixing subscription data integrity issues', {
             userId,
             issues: validation.issues,
         });
@@ -247,7 +251,7 @@ export class SubscriptionService {
                 .where(
                     and(
                         eq(userSubscriptions.userId, userId),
-                        inArray(userSubscriptions.status, ["active", "trialing", "past_due"]),
+                        inArray(userSubscriptions.status, ['active', 'trialing', 'past_due']),
                     ),
                 )
                 .orderBy(userSubscriptions.currentPeriodEnd, userSubscriptions.updatedAt);
@@ -257,7 +261,7 @@ export class SubscriptionService {
                 const keepSubscription = activeSubscriptions[activeSubscriptions.length - 1];
                 const cancelSubscriptions = activeSubscriptions.slice(0, -1);
 
-                log.info("Keeping most recent subscription, canceling others", {
+                log.info('Keeping most recent subscription, canceling others', {
                     userId,
                     keeping: keepSubscription.id,
                     canceling: cancelSubscriptions.map((s) => s.id),
@@ -277,10 +281,9 @@ export class SubscriptionService {
                     );
 
                 // Update users.plan_slug to match the kept subscription
-                const planSlug =
-                    keepSubscription.plan === PlanSlug.VT_PLUS
-                        ? PlanSlug.VT_PLUS
-                        : PlanSlug.VT_BASE;
+                const planSlug = keepSubscription.plan === PlanSlug.VT_PLUS
+                    ? PlanSlug.VT_PLUS
+                    : PlanSlug.VT_BASE;
                 await tx
                     .update(users)
                     .set({
@@ -294,6 +297,6 @@ export class SubscriptionService {
         // Invalidate caches after fixing
         await invalidateUserCaches(userId);
 
-        log.info("Fixed subscription data integrity issues", { userId });
+        log.info('Fixed subscription data integrity issues', { userId });
     }
 }

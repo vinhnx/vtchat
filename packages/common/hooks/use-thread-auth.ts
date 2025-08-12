@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useSession } from "@repo/shared/lib/auth-client";
-import { log } from "@repo/shared/logger";
-import { monitorAuth } from "@repo/shared/utils/performance-monitor";
-import { useEffect, useRef } from "react";
-import { useApiKeysStore } from "../store/api-keys.store";
-import { useChatStore } from "../store/chat.store";
+import { useSession } from '@repo/shared/lib/auth-client';
+import { log } from '@repo/shared/logger';
+import { monitorAuth } from '@repo/shared/utils/performance-monitor';
+import { useEffect, useRef } from 'react';
+import { useApiKeysStore } from '../store/api-keys.store';
+import { useChatStore } from '../store/chat.store';
 
 /**
  * Hook to manage thread database switching based on user authentication
@@ -26,10 +26,10 @@ export const useThreadAuth = () => {
         if (currentUserId !== previousUserId) {
             log.info(
                 {
-                    previousUserId: previousUserId || "anonymous",
-                    currentUserId: currentUserId || "anonymous",
+                    previousUserId: previousUserId || 'anonymous',
+                    currentUserId: currentUserId || 'anonymous',
                 },
-                "[ThreadAuth] User changed",
+                '[ThreadAuth] User changed',
             );
 
             // Monitor the database switching performance
@@ -38,12 +38,12 @@ export const useThreadAuth = () => {
                     // Switch to the appropriate user database for threads
                     await switchUserDatabase(currentUserId);
                     log.info(
-                        { userId: currentUserId || "anonymous" },
-                        "[ThreadAuth] Successfully switched to database for user",
+                        { userId: currentUserId || 'anonymous' },
+                        '[ThreadAuth] Successfully switched to database for user',
                     );
                 })
                 .catch((error) => {
-                    log.error({ error }, "[ThreadAuth] Failed to switch user database");
+                    log.error({ error }, '[ThreadAuth] Failed to switch user database');
                 });
 
             // Switch to the appropriate user storage for API keys

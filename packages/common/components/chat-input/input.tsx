@@ -1,33 +1,33 @@
-"use client";
+'use client';
 import {
     BYOKValidationDialog,
     ImageAttachment,
     ImageDropzoneRoot,
     InlineLoader,
-} from "@repo/common/components";
-import { useDocumentAttachment, useImageAttachment } from "@repo/common/hooks";
-import { useVtPlusAccess } from "@repo/common/hooks/use-subscription-access";
-import { useApiKeysStore } from "@repo/common/store";
-import { isGeminiModel } from "@repo/common/utils";
-import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from "@repo/shared/config";
-import { useSession } from "@repo/shared/lib/auth-client";
-import { generateThreadId } from "@repo/shared/lib/thread-id";
-import { log } from "@repo/shared/logger";
-import { hasImageAttachments, validateByokForImageAnalysis } from "@repo/shared/utils";
-import { Flex, cn, useToast } from "@repo/ui";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { useAgentStream } from "../../hooks/agent-provider";
-import { useChatEditor } from "../../hooks/use-editor";
-import { useChatStore } from "../../store";
-import { ExamplePrompts } from "../example-prompts";
-import { LMStudioSetupBanner } from "../lm-studio-setup-banner";
-import { LoginRequiredDialog } from "../login-required-dialog";
-import { OllamaSetupBanner } from "../ollama-setup-banner";
-import { PersonalizedGreeting } from "../personalized-greeting";
-import { StructuredDataDisplay } from "../structured-data-display";
-import { UserTierBadge } from "../user-tier-badge";
+} from '@repo/common/components';
+import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
+import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
+import { useApiKeysStore } from '@repo/common/store';
+import { isGeminiModel } from '@repo/common/utils';
+import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
+import { useSession } from '@repo/shared/lib/auth-client';
+import { generateThreadId } from '@repo/shared/lib/thread-id';
+import { log } from '@repo/shared/logger';
+import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
+import { cn, Flex, useToast } from '@repo/ui';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useAgentStream } from '../../hooks/agent-provider';
+import { useChatEditor } from '../../hooks/use-editor';
+import { useChatStore } from '../../store';
+import { ExamplePrompts } from '../example-prompts';
+import { LMStudioSetupBanner } from '../lm-studio-setup-banner';
+import { LoginRequiredDialog } from '../login-required-dialog';
+import { OllamaSetupBanner } from '../ollama-setup-banner';
+import { PersonalizedGreeting } from '../personalized-greeting';
+import { StructuredDataDisplay } from '../structured-data-display';
+import { UserTierBadge } from '../user-tier-badge';
 import {
     ChartsButton,
     ChatModeButton,
@@ -35,14 +35,14 @@ import {
     MathCalculatorButton,
     SendStopButton,
     WebSearchButton,
-} from "./chat-actions";
-import { ChatEditor } from "./chat-editor";
-import { DocumentAttachment } from "./document-attachment";
-import { DocumentUploadButton } from "./document-upload-button";
-import { ImageUpload } from "./image-upload";
-import { MultiModalAttachmentButton } from "./multi-modal-attachment-button";
-import { MultiModalAttachmentsDisplay } from "./multi-modal-attachments-display";
-import { StructuredOutputButton } from "./structured-output-button";
+} from './chat-actions';
+import { ChatEditor } from './chat-editor';
+import { DocumentAttachment } from './document-attachment';
+import { DocumentUploadButton } from './document-upload-button';
+import { ImageUpload } from './image-upload';
+import { MultiModalAttachmentButton } from './multi-modal-attachment-button';
+import { MultiModalAttachmentsDisplay } from './multi-modal-attachments-display';
+import { StructuredOutputButton } from './structured-output-button';
 
 export const ChatInput = ({
     showGreeting = true,
@@ -65,9 +65,9 @@ export const ChatInput = ({
 
     const { threadId: currentThreadId } = useParams();
     const { editor } = useChatEditor({
-        placeholder: isFollowUp ? "Ask follow up" : "Ask anything",
+        placeholder: isFollowUp ? 'Ask follow up' : 'Ask anything',
         onInit: ({ editor }) => {
-            if (typeof window !== "undefined" && !isFollowUp && !isSignedIn) {
+            if (typeof window !== 'undefined' && !isFollowUp && !isSignedIn) {
                 const draftMessage = window.localStorage.getItem(STORAGE_KEYS.DRAFT_MESSAGE);
                 if (draftMessage) {
                     editor.commands.setContent(draftMessage, true);
@@ -77,12 +77,12 @@ export const ChatInput = ({
             // Login will be prompted only when they try to send a message
         },
         onUpdate: ({ editor }) => {
-            if (typeof window !== "undefined" && !isFollowUp) {
+            if (typeof window !== 'undefined' && !isFollowUp) {
                 window.localStorage.setItem(STORAGE_KEYS.DRAFT_MESSAGE, editor.getText());
             }
         },
     });
-    const size = currentThreadId ? "base" : "sm";
+    const size = currentThreadId ? 'base' : 'sm';
     const getThreadItems = useChatStore((state) => state.getThreadItems);
     const threadItemsLength = useChatStore(useShallow((state) => state.threadItems.length));
     const { handleSubmit } = useAgentStream();
@@ -94,7 +94,7 @@ export const ChatInput = ({
     const isGenerating = useChatStore((state) => state.isGenerating);
     const setIsGenerating = useChatStore((state) => state.setIsGenerating);
     const pathname = usePathname();
-    const isChatPage = pathname.startsWith("/chat/");
+    const isChatPage = pathname.startsWith('/chat/');
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const documentAttachment = useChatStore((state) => state.documentAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
@@ -131,8 +131,8 @@ export const ChatInput = ({
 
     const sendMessage = async () => {
         const messageText = editor?.getText();
-        log.info("📤 sendMessage called", {
-            messageText: messageText?.substring(0, 50) + "...",
+        log.info('📤 sendMessage called', {
+            messageText: messageText?.substring(0, 50) + '...',
             isSignedIn,
             currentThreadId,
             timestamp: Date.now(),
@@ -141,7 +141,7 @@ export const ChatInput = ({
 
         // Prevent multiple rapid calls
         if (isSending) {
-            log.warn("🚫 sendMessage already in progress, ignoring duplicate call");
+            log.warn('🚫 sendMessage already in progress, ignoring duplicate call');
             return;
         }
 
@@ -211,9 +211,9 @@ export const ChatInput = ({
 
                 if (!validation.isValid) {
                     toast({
-                        title: "API Key Required for Image Analysis",
+                        title: 'API Key Required for Image Analysis',
                         description: validation.errorMessage,
-                        variant: "destructive",
+                        variant: 'destructive',
                     });
                     return;
                 }
@@ -231,33 +231,34 @@ export const ChatInput = ({
                     id: optimisticThreadItemId,
                     createdAt: new Date(),
                     updatedAt: new Date(),
-                    status: "QUEUED" as const,
+                    status: 'QUEUED' as const,
                     threadId: optimisticId,
-                    query: editor?.getText() || "",
-                    imageAttachment: imageAttachment?.base64 || "",
+                    query: editor?.getText() || '',
+                    imageAttachment: imageAttachment?.base64 || '',
                     documentAttachment: documentAttachment
                         ? {
-                              base64: documentAttachment.base64,
-                              mimeType: documentAttachment.mimeType,
-                              fileName: documentAttachment.fileName,
-                          }
+                            base64: documentAttachment.base64,
+                            mimeType: documentAttachment.mimeType,
+                            fileName: documentAttachment.fileName,
+                        }
                         : undefined,
-                    attachments:
-                        multiModalAttachments.length > 0 ? multiModalAttachments : undefined,
+                    attachments: multiModalAttachments.length > 0
+                        ? multiModalAttachments
+                        : undefined,
                     mode: chatMode,
                 };
 
                 // Create thread first (this sets currentThreadId and clears threadItems)
-                log.info({ optimisticId }, "🆕 Creating new thread");
+                log.info({ optimisticId }, '🆕 Creating new thread');
                 await createThread(optimisticId, {
-                    title: editor?.getText() || "New Chat",
+                    title: editor?.getText() || 'New Chat',
                 });
                 threadId = optimisticId;
 
                 // Add the optimistic thread item to store after thread creation
                 const createThreadItem = useChatStore.getState().createThreadItem;
 
-                log.info({ optimisticUserThreadItem }, "📝 Creating optimistic thread item");
+                log.info({ optimisticUserThreadItem }, '📝 Creating optimistic thread item');
                 await createThreadItem(optimisticUserThreadItem);
 
                 // Verify the thread item was created
@@ -274,37 +275,37 @@ export const ChatInput = ({
                             .getState()
                             .threads.some((t) => t.id === optimisticId),
                     },
-                    "✅ Verified optimistic thread item and thread state",
+                    '✅ Verified optimistic thread item and thread state',
                 );
 
                 // Set loading state and navigate - user message will be immediately visible
                 setIsGenerating(true);
-                log.info({ optimisticId }, "🚀 Navigating to thread page");
+                log.info({ optimisticId }, '🚀 Navigating to thread page');
                 router.push(`/chat/${optimisticId}`);
             }
             // Removed duplicated block and misplaced return
 
             // First submit the message
             const formData = new FormData();
-            formData.append("query", editor?.getText() || "");
-            imageAttachment?.base64 && formData.append("imageAttachment", imageAttachment?.base64);
-            documentAttachment?.base64 &&
-                formData.append("documentAttachment", documentAttachment?.base64);
-            documentAttachment?.mimeType &&
-                formData.append("documentMimeType", documentAttachment?.mimeType);
-            documentAttachment?.fileName &&
-                formData.append("documentFileName", documentAttachment?.fileName);
+            formData.append('query', editor?.getText() || '');
+            imageAttachment?.base64 && formData.append('imageAttachment', imageAttachment?.base64);
+            documentAttachment?.base64
+                && formData.append('documentAttachment', documentAttachment?.base64);
+            documentAttachment?.mimeType
+                && formData.append('documentMimeType', documentAttachment?.mimeType);
+            documentAttachment?.fileName
+                && formData.append('documentFileName', documentAttachment?.fileName);
 
             // Add multi-modal attachments
             if (multiModalAttachments.length > 0) {
-                formData.append("multiModalAttachments", JSON.stringify(multiModalAttachments));
+                formData.append('multiModalAttachments', JSON.stringify(multiModalAttachments));
             }
 
             const threadItems = currentThreadId
                 ? await getThreadItems(currentThreadId.toString())
                 : [];
 
-            log.info({ data: threadItems }, "threadItems");
+            log.info({ data: threadItems }, 'threadItems');
 
             log.info(
                 {
@@ -312,7 +313,7 @@ export const ChatInput = ({
                     useMathCalculator,
                     useCharts,
                 },
-                "🚀 Sending to handleSubmit with flags",
+                '🚀 Sending to handleSubmit with flags',
             );
 
             // For new threads, pass the optimistic thread item ID to update the existing item
@@ -338,107 +339,113 @@ export const ChatInput = ({
             setMultiModalAttachments([]);
         } finally {
             setIsSending(false);
-            log.info("📤 sendMessage completed, resetting isSending flag");
+            log.info('📤 sendMessage completed, resetting isSending flag');
         }
     };
 
     const renderChatInput = () => (
         <div
             className={cn(
-                "w-full", // Removed all padding/margins
-                currentThreadId ? "pb-2 md:pb-0" : "mb-2 md:mb-0",
+                'w-full', // Removed all padding/margins
+                currentThreadId ? 'pb-2 md:pb-0' : 'mb-2 md:mb-0',
             )}
         >
             <Flex
                 className={cn(
-                    "bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border",
+                    'bg-background border-border/60 relative z-10 mx-auto w-full max-w-4xl rounded-2xl border',
                 )}
-                direction="col"
+                direction='col'
             >
                 <ImageDropzoneRoot dropzoneProps={dropzonProps}>
-                    <div className="flex w-full flex-shrink-0 overflow-hidden rounded-lg">
-                        {editor?.isEditable ? (
-                            <div className="w-full">
-                                <div className="flex flex-col gap-2">
-                                    <ImageAttachment />
-                                    <DocumentAttachment />
-                                    <StructuredDataDisplay />
-                                    {multiModalAttachments.length > 0 && (
-                                        <MultiModalAttachmentsDisplay
-                                            attachments={multiModalAttachments}
-                                            onRemove={removeMultiModalAttachment}
-                                        />
-                                    )}
-                                </div>
-                                <Flex className="flex w-full flex-row items-end gap-0">
-                                    <ChatEditor
-                                        className=""
-                                        editor={editor}
-                                        sendMessage={sendMessage}
-                                    />
-                                </Flex>{" "}
-                                <Flex
-                                    className="border-border w-full gap-3 border-t border-dashed px-4 py-3"
-                                    gap="none"
-                                    items="center"
-                                    justify="between"
-                                >
-                                    {isGenerating && !isChatPage ? (
-                                        <GeneratingStatus />
-                                    ) : (
-                                        <Flex
-                                            className="scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap"
-                                            gap="xs"
-                                            items="center"
-                                        >
-                                            <ChatModeButton />
-
-                                            {/* AI Enhancement Tools Group */}
-                                            <div className="bg-border/50 mx-1 h-4 w-px" />
-                                            <WebSearchButton />
-                                            <ChartsButton />
-                                            <MathCalculatorButton />
-
-                                            {/* File Upload Tools Group */}
-                                            <div className="bg-border/50 mx-1 h-4 w-px" />
-                                            <DocumentUploadButton />
-                                            {supportsMultiModal(chatMode) ? (
-                                                <MultiModalAttachmentButton
-                                                    attachments={multiModalAttachments}
-                                                    disabled={isGenerating}
-                                                    onAttachmentsChange={setMultiModalAttachments}
-                                                />
-                                            ) : (
-                                                <ImageUpload
-                                                    handleImageUpload={handleImageUpload}
-                                                    id="image-attachment"
-                                                    label="Image"
-                                                    showIcon={true}
-                                                    tooltip="Image Attachment"
-                                                />
-                                            )}
-
-                                            {/* Data Processing Tools Group */}
-                                            <div className="bg-border/50 mx-1 h-4 w-px" />
-                                            <StructuredOutputButton />
-                                        </Flex>
-                                    )}
-
-                                    <Flex className="ml-auto flex-shrink-0" gap="sm" items="center">
-                                        <SendStopButton
-                                            hasTextInput={hasTextInput}
-                                            isGenerating={isGenerating}
+                    <div className='flex w-full flex-shrink-0 overflow-hidden rounded-lg'>
+                        {editor?.isEditable
+                            ? (
+                                <div className='w-full'>
+                                    <div className='flex flex-col gap-2'>
+                                        <ImageAttachment />
+                                        <DocumentAttachment />
+                                        <StructuredDataDisplay />
+                                        {multiModalAttachments.length > 0 && (
+                                            <MultiModalAttachmentsDisplay
+                                                attachments={multiModalAttachments}
+                                                onRemove={removeMultiModalAttachment}
+                                            />
+                                        )}
+                                    </div>
+                                    <Flex className='flex w-full flex-row items-end gap-0'>
+                                        <ChatEditor
+                                            className=''
+                                            editor={editor}
                                             sendMessage={sendMessage}
-                                            stopGeneration={stopGeneration}
                                         />
+                                    </Flex>{' '}
+                                    <Flex
+                                        className='border-border w-full gap-3 border-t border-dashed px-4 py-3'
+                                        gap='none'
+                                        items='center'
+                                        justify='between'
+                                    >
+                                        {isGenerating && !isChatPage ? <GeneratingStatus /> : (
+                                            <Flex
+                                                className='scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap'
+                                                gap='xs'
+                                                items='center'
+                                            >
+                                                <ChatModeButton />
+
+                                                {/* AI Enhancement Tools Group */}
+                                                <div className='bg-border/50 mx-1 h-4 w-px' />
+                                                <WebSearchButton />
+                                                <ChartsButton />
+                                                <MathCalculatorButton />
+
+                                                {/* File Upload Tools Group */}
+                                                <div className='bg-border/50 mx-1 h-4 w-px' />
+                                                <DocumentUploadButton />
+                                                {supportsMultiModal(chatMode)
+                                                    ? (
+                                                        <MultiModalAttachmentButton
+                                                            attachments={multiModalAttachments}
+                                                            disabled={isGenerating}
+                                                            onAttachmentsChange={setMultiModalAttachments}
+                                                        />
+                                                    )
+                                                    : (
+                                                        <ImageUpload
+                                                            handleImageUpload={handleImageUpload}
+                                                            id='image-attachment'
+                                                            label='Image'
+                                                            showIcon={true}
+                                                            tooltip='Image Attachment'
+                                                        />
+                                                    )}
+
+                                                {/* Data Processing Tools Group */}
+                                                <div className='bg-border/50 mx-1 h-4 w-px' />
+                                                <StructuredOutputButton />
+                                            </Flex>
+                                        )}
+
+                                        <Flex
+                                            className='ml-auto flex-shrink-0'
+                                            gap='sm'
+                                            items='center'
+                                        >
+                                            <SendStopButton
+                                                hasTextInput={hasTextInput}
+                                                isGenerating={isGenerating}
+                                                sendMessage={sendMessage}
+                                                stopGeneration={stopGeneration}
+                                            />
+                                        </Flex>
                                     </Flex>
-                                </Flex>
-                            </div>
-                        ) : (
-                            <div className="flex h-24 w-full items-center justify-center">
-                                <InlineLoader />
-                            </div>
-                        )}
+                                </div>
+                            )
+                            : (
+                                <div className='flex h-24 w-full items-center justify-center'>
+                                    <InlineLoader />
+                                </div>
+                            )}
                     </div>
                 </ImageDropzoneRoot>
             </Flex>
@@ -447,7 +454,7 @@ export const ChatInput = ({
 
     const renderChatBottom = () => (
         <>
-            <Flex gap="sm" items="center" justify="center">
+            <Flex gap='sm' items='center' justify='center'>
                 {/* <ScrollToBottomButton /> */}
             </Flex>
             {renderChatInput()}
@@ -455,7 +462,7 @@ export const ChatInput = ({
     );
 
     useEffect(() => {
-        editor?.commands.focus("end");
+        editor?.commands.focus('end');
     }, [currentThreadId]);
 
     // Auto-focus input when user types anywhere on the page
@@ -467,66 +474,65 @@ export const ChatInput = ({
             // 3. User pressed non-printable keys (arrows, escape, etc.)
             // 4. Editor is not available or not editable
             const target = event.target as HTMLElement;
-            const isInputElement =
-                target.tagName === "INPUT" ||
-                target.tagName === "TEXTAREA" ||
-                target.contentEditable === "true" ||
-                target.closest('[contenteditable="true"]');
+            const isInputElement = target.tagName === 'INPUT'
+                || target.tagName === 'TEXTAREA'
+                || target.contentEditable === 'true'
+                || target.closest('[contenteditable="true"]');
 
             const isModifierKey = event.ctrlKey || event.metaKey || event.altKey;
-            const isSpecialKey = event.key.length > 1 && !["Enter", "Space"].includes(event.key);
+            const isSpecialKey = event.key.length > 1 && !['Enter', 'Space'].includes(event.key);
 
             if (isInputElement || isModifierKey || isSpecialKey || !editor?.isEditable) {
                 return;
             }
 
             // Focus the editor and let the character be typed
-            editor?.commands.focus("end");
+            editor?.commands.focus('end');
         };
 
         // Add global keydown listener
-        document.addEventListener("keydown", handleGlobalKeyDown);
+        document.addEventListener('keydown', handleGlobalKeyDown);
 
         // Cleanup
         return () => {
-            document.removeEventListener("keydown", handleGlobalKeyDown);
+            document.removeEventListener('keydown', handleGlobalKeyDown);
         };
     }, [editor?.commands, editor?.isEditable]);
 
     return (
         <div
             className={cn(
-                "bg-secondary w-full",
+                'bg-secondary w-full',
                 currentThreadId
-                    ? "chat-input-thread pb-safe" // Removed margin-top
-                    : "chat-input-homepage pb-safe", // Center positioning for homepage
+                    ? 'chat-input-thread pb-safe' // Removed margin-top
+                    : 'chat-input-homepage pb-safe', // Center positioning for homepage
             )}
         >
             <div
                 className={cn(
-                    "mx-auto flex w-full max-w-3xl flex-col",
-                    !threadItemsLength && !currentThreadId && "homepage-center-layout",
-                    currentThreadId && "items-start justify-start",
-                    size === "sm" && "px-8",
-                    "px-2 md:px-0", // Reduced mobile padding for better space usage
-                    currentThreadId && "pb-safe", // Add safe area padding for thread mode
+                    'mx-auto flex w-full max-w-3xl flex-col',
+                    !threadItemsLength && !currentThreadId && 'homepage-center-layout',
+                    currentThreadId && 'items-start justify-start',
+                    size === 'sm' && 'px-8',
+                    'px-2 md:px-0', // Reduced mobile padding for better space usage
+                    currentThreadId && 'pb-safe', // Add safe area padding for thread mode
                 )}
             >
                 <Flex
                     className={cn(
-                        "pb-safe w-full pb-2 md:pb-4", // Reduced mobile bottom padding
-                        threadItemsLength > 0 ? "mb-2 md:mb-4" : "", // Reduced mobile margin
+                        'pb-safe w-full pb-2 md:pb-4', // Reduced mobile bottom padding
+                        threadItemsLength > 0 ? 'mb-2 md:mb-4' : '', // Reduced mobile margin
                         // Dynamic alignment based on context
                         !currentThreadId && !threadItemsLength
-                            ? "flex-1 items-center justify-center"
-                            : "items-start justify-start",
+                            ? 'flex-1 items-center justify-center'
+                            : 'items-start justify-start',
                     )}
-                    direction="col"
-                    items={!currentThreadId && !threadItemsLength ? "center" : "start"}
-                    justify={!currentThreadId && !threadItemsLength ? "center" : "start"}
+                    direction='col'
+                    items={!currentThreadId && !threadItemsLength ? 'center' : 'start'}
+                    justify={!currentThreadId && !threadItemsLength ? 'center' : 'start'}
                 >
                     {!currentThreadId && showGreeting && (
-                        <div className="mb-6 flex w-full flex-col items-center gap-2">
+                        <div className='mb-6 flex w-full flex-col items-center gap-2'>
                             {!isPlusTier && <UserTierBadge showUpgradePrompt={true} />}
                             <PersonalizedGreeting session={session} />
                         </div>
@@ -535,22 +541,21 @@ export const ChatInput = ({
                     {renderChatBottom()}
 
                     {/* Show LM Studio setup banner for local models */}
-                    {!currentThreadId && chatMode.startsWith("lmstudio-") && (
-                        <LMStudioSetupBanner />
-                    )}
+                    {!currentThreadId && chatMode.startsWith('lmstudio-')
+                        && <LMStudioSetupBanner />}
 
                     {/* Show Ollama setup banner for local models */}
-                    {!currentThreadId && chatMode.startsWith("ollama-") && <OllamaSetupBanner />}
+                    {!currentThreadId && chatMode.startsWith('ollama-') && <OllamaSetupBanner />}
 
                     {!currentThreadId && showGreeting && <ExamplePrompts />}
                 </Flex>
             </div>
             {showLoginPrompt && (
                 <LoginRequiredDialog
-                    description="Please log in to start chatting or save your conversation."
+                    description='Please log in to start chatting or save your conversation.'
                     isOpen={showLoginPrompt}
                     onClose={() => setShowLoginPrompt(false)}
-                    title="Login Required"
+                    title='Login Required'
                 />
             )}
             {showBYOKDialog && (

@@ -35,9 +35,9 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 - **Added missing GEMINI_2_5_FLASH_LITE** to the Google provider section
 - **Added Gift icons** to all free Gemini models:
-    - GEMINI_2_5_FLASH_LITE ✅ (newly added)
-    - GEMINI_2_5_FLASH_PREVIEW ✅
-    - GEMINI_2_5_PRO_PREVIEW ✅
+  - GEMINI_2_5_FLASH_LITE ✅ (newly added)
+  - GEMINI_2_5_FLASH_PREVIEW ✅
+  - GEMINI_2_5_PRO_PREVIEW ✅
 
 #### Workflow Utils (packages/ai/workflow/utils.ts)
 
@@ -56,16 +56,16 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 #### Pricing Configuration (apps/web/lib/config/pricing.ts)
 
 - **Enhanced "Access to Free Models" benefit** to include all available free models:
-    - Gemini 2.5 Pro Preview
-    - Gemini 2.5 Flash
-    - Gemini 2.5 Flash Lite Preview
-    - DeepSeek V3
-    - DeepSeek R1
-    - Qwen3 14B
+  - Gemini 2.5 Pro Preview
+  - Gemini 2.5 Flash
+  - Gemini 2.5 Flash Lite Preview
+  - DeepSeek V3
+  - DeepSeek R1
+  - Qwen3 14B
 - **Maintained existing benefits**:
-    - Mathematical Calculator Tools (with detailed description)
-    - Access to Base Features
-    - Perfect for Getting Started with VT
+  - Mathematical Calculator Tools (with detailed description)
+  - Access to Base Features
+  - Perfect for Getting Started with VT
 
 ### 3. Enhanced Subscription Benefits
 
@@ -73,22 +73,22 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 - **Updated "Access to Free Models" description** to include all 4 free Gemini models
 - **Enhanced model list** now includes:
-    - Gemini 2.5 Flash
-    - Gemini 2.5 Flash Lite (1M input/64K output tokens)
-    - Gemini 2.5 Pro
-    - Gemini 2.5 Flash Preview
-    - DeepSeek V3, DeepSeek R1, Qwen3 14B (OpenRouter models)
+  - Gemini 2.5 Flash
+  - Gemini 2.5 Flash Lite (1M input/64K output tokens)
+  - Gemini 2.5 Pro
+  - Gemini 2.5 Flash Preview
+  - DeepSeek V3, DeepSeek R1, Qwen3 14B (OpenRouter models)
 
 #### Enhanced Plus Tier Benefits (apps/web/lib/config/pricing.ts)
 
 - **Added "All Benefits from Base Plan"** as first benefit
 - **Clear hierarchy** showing Plus builds on Free tier
 - **Maintained existing Plus features**:
-    - Grounding Web Search
-    - Dark Mode
-    - Priority Support
-    - Unlimited Usage
-    - Advanced AI Capabilities
+  - Grounding Web Search
+  - Dark Mode
+  - Priority Support
+  - Unlimited Usage
+  - Advanced AI Capabilities
 
 #### API Key Configuration Updates
 

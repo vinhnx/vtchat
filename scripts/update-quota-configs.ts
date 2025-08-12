@@ -5,12 +5,12 @@
  * Usage: bun run scripts/update-quota-configs.ts
  */
 
-import { log } from "@repo/shared/lib/logger";
-import { db } from "../apps/web/lib/database/index";
+import { log } from '@repo/shared/lib/logger';
+import { db } from '../apps/web/lib/database/index';
 
 async function updateQuotaConfigs() {
     try {
-        console.log("🔄 Updating quota configurations...");
+        console.log('🔄 Updating quota configurations...');
 
         // Update Deep Research quotas
         await db.execute(`
@@ -38,7 +38,7 @@ async function updateQuotaConfigs() {
             WHERE feature = 'PS' AND plan = 'vt_base'
         `);
 
-        console.log("✅ Quota configurations updated successfully!");
+        console.log('✅ Quota configurations updated successfully!');
 
         // Verify the updates
         const result = await db.execute(`
@@ -47,13 +47,13 @@ async function updateQuotaConfigs() {
             ORDER BY feature, plan
         `);
 
-        console.log("\n📊 Current quota configurations:");
+        console.log('\n📊 Current quota configurations:');
         console.table(result.rows);
 
-        log.info("Quota configurations updated via script");
+        log.info('Quota configurations updated via script');
     } catch (error) {
-        console.error("❌ Failed to update quota configurations:", error);
-        log.error({ error }, "Failed to update quota configurations via script");
+        console.error('❌ Failed to update quota configurations:', error);
+        log.error({ error }, 'Failed to update quota configurations via script');
         process.exit(1);
     }
 }
@@ -61,10 +61,10 @@ async function updateQuotaConfigs() {
 // Run the script
 updateQuotaConfigs()
     .then(() => {
-        console.log("\n🎉 Script completed successfully!");
+        console.log('\n🎉 Script completed successfully!');
         process.exit(0);
     })
     .catch((error) => {
-        console.error("💥 Script failed:", error);
+        console.error('💥 Script failed:', error);
         process.exit(1);
     });

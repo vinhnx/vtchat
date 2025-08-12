@@ -15,16 +15,16 @@ export class PerformanceMonitor {
 
     startTimer(operation: string): void {
         this.timers.set(operation, performance.now());
-        if (process.env.NODE_ENV === "development") {
-            log.info({ operation }, "Performance timer started");
+        if (process.env.NODE_ENV === 'development') {
+            log.info({ operation }, 'Performance timer started');
         }
     }
 
     endTimer(operation: string): number {
         const startTime = this.timers.get(operation);
         if (!startTime) {
-            if (process.env.NODE_ENV === "development") {
-                log.warn({ operation }, "Performance timer not found for operation");
+            if (process.env.NODE_ENV === 'development') {
+                log.warn({ operation }, 'Performance timer not found for operation');
             }
             return 0;
         }
@@ -32,13 +32,13 @@ export class PerformanceMonitor {
         const duration = performance.now() - startTime;
         this.timers.delete(operation);
 
-        if (process.env.NODE_ENV === "development") {
-            log.info({ operation, duration: duration.toFixed(2) }, "Performance timer completed");
+        if (process.env.NODE_ENV === 'development') {
+            log.info({ operation, duration: duration.toFixed(2) }, 'Performance timer completed');
         }
 
         // Log slow operations
-        if (duration > 2000 && process.env.NODE_ENV === "development") {
-            log.warn({ operation, duration: duration.toFixed(2) }, "Slow operation detected");
+        if (duration > 2000 && process.env.NODE_ENV === 'development') {
+            log.warn({ operation, duration: duration.toFixed(2) }, 'Slow operation detected');
         }
 
         return duration;
@@ -52,13 +52,13 @@ export class PerformanceMonitor {
             return result;
         } catch (error) {
             this.endTimer(operation);
-            if (process.env.NODE_ENV === "development") {
+            if (process.env.NODE_ENV === 'development') {
                 log.error(
                     {
                         operation,
-                        error: error instanceof Error ? error.message : "Unknown error",
+                        error: error instanceof Error ? error.message : 'Unknown error',
                     },
-                    "Performance timer failed",
+                    'Performance timer failed',
                 );
             }
             throw error;
@@ -68,14 +68,14 @@ export class PerformanceMonitor {
 
 export const perfMonitor = PerformanceMonitor.getInstance();
 
-import { log } from "@repo/shared/logger";
+import { log } from '@repo/shared/logger';
 
 // Auth-specific performance monitoring
 export const monitorAuth = {
-    sessionCheck: (fn: () => Promise<any>) => perfMonitor.measureAsync("auth-session-check", fn),
+    sessionCheck: (fn: () => Promise<any>) => perfMonitor.measureAsync('auth-session-check', fn),
 
     subscriptionFetch: (fn: () => Promise<any>) =>
-        perfMonitor.measureAsync("subscription-fetch", fn),
+        perfMonitor.measureAsync('subscription-fetch', fn),
 
-    middlewareAuth: (fn: () => Promise<any>) => perfMonitor.measureAsync("middleware-auth", fn),
+    middlewareAuth: (fn: () => Promise<any>) => perfMonitor.measureAsync('middleware-auth', fn),
 };

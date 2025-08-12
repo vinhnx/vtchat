@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { Transition, Variants } from "framer-motion";
+import type { Transition, Variants } from 'framer-motion';
 
 /**
  * Mobile-optimized animation utilities to prevent flashing and improve performance
@@ -9,24 +9,24 @@ import type { Transition, Variants } from "framer-motion";
 
 // Device detection
 export const isMobileDevice = () => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
     return (
-        window.innerWidth < 768 ||
-        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        window.innerWidth < 768
+        || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 };
 
 export const prefersReducedMotion = () => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 // Hardware acceleration utilities
 export const HARDWARE_ACCELERATION = {
-    transform3d: "translate3d(0, 0, 0)",
-    backfaceVisibility: "hidden" as const,
-    willChange: "transform" as const,
-    perspective: "1000px",
+    transform3d: 'translate3d(0, 0, 0)',
+    backfaceVisibility: 'hidden' as const,
+    willChange: 'transform' as const,
+    perspective: '1000px',
 } as const;
 
 // Mobile-optimized transitions
@@ -34,26 +34,26 @@ export const MOBILE_TRANSITIONS = {
     // Ultra-fast for mobile to prevent flashing
     instant: {
         duration: 0.1,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Fast transitions for mobile interactions
     fast: {
         duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.15 : 0.2,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Standard mobile-optimized transitions
     standard: {
         duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.2 : 0.3,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // Tween-based for consistent mobile performance
     mobileTween: {
-        type: "tween" as const,
+        type: 'tween' as const,
         duration: prefersReducedMotion() ? 0.01 : 0.15,
-        ease: "easeOut",
+        ease: 'easeOut',
     } as Transition,
 
     // No animation for reduced motion
@@ -101,20 +101,20 @@ export const MOBILE_VARIANTS = {
 
 // CSS classes for hardware acceleration
 export const MOBILE_ACCELERATION_CLASSES = {
-    base: "transform-gpu will-change-transform",
-    backdrop: "transform-gpu will-change-opacity",
-    sidebar: "transform-gpu will-change-transform",
-    modal: "transform-gpu will-change-transform will-change-opacity",
+    base: 'transform-gpu will-change-transform',
+    backdrop: 'transform-gpu will-change-opacity',
+    sidebar: 'transform-gpu will-change-transform',
+    modal: 'transform-gpu will-change-transform will-change-opacity',
 } as const;
 
 // Mobile-specific AnimatePresence props
 export const MOBILE_ANIMATE_PRESENCE_PROPS = {
-    mode: "wait" as const,
+    mode: 'wait' as const,
     initial: false,
 };
 
 // Optimized motion props for mobile sidebar
-export const createMobileSidebarProps = (placement: "left" | "right" = "left") => {
+export const createMobileSidebarProps = (placement: 'left' | 'right' = 'left') => {
     if (prefersReducedMotion()) {
         return {
             initial: false,
@@ -127,9 +127,9 @@ export const createMobileSidebarProps = (placement: "left" | "right" = "left") =
     }
 
     return {
-        initial: placement === "left" ? { x: -300 } : { x: 300 },
+        initial: placement === 'left' ? { x: -300 } : { x: 300 },
         animate: { x: 0 },
-        exit: placement === "left" ? { x: -300 } : { x: 300 },
+        exit: placement === 'left' ? { x: -300 } : { x: 300 },
         transition: MOBILE_TRANSITIONS.mobileTween,
         className: MOBILE_ACCELERATION_CLASSES.sidebar,
         style: HARDWARE_ACCELERATION,
@@ -185,7 +185,7 @@ export const createMobileModalProps = () => {
 // Utility to apply mobile optimizations to any motion component
 export const withMobileOptimization = (baseProps: any) => {
     const mobileOptimizations = {
-        className: `${baseProps.className || ""} ${MOBILE_ACCELERATION_CLASSES.base}`.trim(),
+        className: `${baseProps.className || ''} ${MOBILE_ACCELERATION_CLASSES.base}`.trim(),
         style: {
             ...baseProps.style,
             ...HARDWARE_ACCELERATION,
@@ -210,8 +210,8 @@ export const withMobileOptimization = (baseProps: any) => {
             transition: {
                 ...baseProps.transition,
                 duration: Math.min(baseProps.transition?.duration || 0.3, 0.2),
-                type: "tween",
-                ease: "easeOut",
+                type: 'tween',
+                ease: 'easeOut',
             },
         };
     }
@@ -243,29 +243,29 @@ export const useMobileAnimationSettings = () => {
 // CSS-in-JS styles for mobile optimization
 export const MOBILE_OPTIMIZATION_STYLES = {
     container: {
-        contain: "layout style paint",
-        transform: "translate3d(0, 0, 0)",
-        backfaceVisibility: "hidden" as const,
+        contain: 'layout style paint',
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden' as const,
     },
 
     sidebar: {
-        contain: "layout style paint",
-        transform: "translate3d(0, 0, 0)",
-        backfaceVisibility: "hidden" as const,
-        willChange: "transform" as const,
+        contain: 'layout style paint',
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden' as const,
+        willChange: 'transform' as const,
     },
 
     backdrop: {
-        transform: "translate3d(0, 0, 0)",
-        backfaceVisibility: "hidden" as const,
-        willChange: "opacity" as const,
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden' as const,
+        willChange: 'opacity' as const,
     },
 
     modal: {
-        contain: "layout style paint",
-        transform: "translate3d(0, 0, 0)",
-        backfaceVisibility: "hidden" as const,
-        willChange: "transform, opacity" as const,
+        contain: 'layout style paint',
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden' as const,
+        willChange: 'transform, opacity' as const,
     },
 } as const;
 
@@ -273,14 +273,14 @@ export const MOBILE_OPTIMIZATION_STYLES = {
 export const preventLayoutShift = (element: HTMLElement | null) => {
     if (!element || !isMobileDevice()) return;
 
-    element.style.contain = "layout style paint";
-    element.style.transform = "translate3d(0, 0, 0)";
-    element.style.backfaceVisibility = "hidden";
+    element.style.contain = 'layout style paint';
+    element.style.transform = 'translate3d(0, 0, 0)';
+    element.style.backfaceVisibility = 'hidden';
 };
 
 // Debug utility to log animation performance
 export const debugMobileAnimation = (componentName: string, animationType: string) => {
-    if (process.env.NODE_ENV === "development" && isMobileDevice()) {
+    if (process.env.NODE_ENV === 'development' && isMobileDevice()) {
         console.log(`[Mobile Animation] ${componentName} - ${animationType}`, {
             isMobile: isMobileDevice(),
             reducedMotion: prefersReducedMotion(),

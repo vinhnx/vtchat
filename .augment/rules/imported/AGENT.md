@@ -1,6 +1,6 @@
 ---
-type: 'agent_requested'
-description: 'Example description'
+type: "agent_requested"
+description: "Example description"
 ---
 
 # AGENT.md - Development Guidelines

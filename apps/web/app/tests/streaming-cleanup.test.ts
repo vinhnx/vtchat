@@ -1,7 +1,7 @@
-import { useChatStore } from "@repo/common/store";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useChatStore } from '@repo/common/store';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-describe("Streaming Cleanup Fix", () => {
+describe('Streaming Cleanup Fix', () => {
     let mockAbortController: any;
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe("Streaming Cleanup Fix", () => {
         vi.clearAllMocks();
     });
 
-    it("should stop existing generation when starting new conversation", () => {
+    it('should stop existing generation when starting new conversation', () => {
         const store = useChatStore.getState();
 
         // Simulate an active generation
@@ -49,7 +49,7 @@ describe("Streaming Cleanup Fix", () => {
         expect(mockAbortController.abort).toHaveBeenCalled();
     });
 
-    it("should properly reset streaming state", () => {
+    it('should properly reset streaming state', () => {
         const store = useChatStore.getState();
 
         // Set up streaming state
@@ -72,7 +72,7 @@ describe("Streaming Cleanup Fix", () => {
         expect(state.generationStartTime).toBe(null);
     });
 
-    it("should handle multiple abort controllers properly", () => {
+    it('should handle multiple abort controllers properly', () => {
         const store = useChatStore.getState();
 
         const controller1 = {
@@ -98,12 +98,12 @@ describe("Streaming Cleanup Fix", () => {
         expect(controller1.abort).not.toHaveBeenCalled();
     });
 
-    it("should prevent completed thread items from re-animating", () => {
+    it('should prevent completed thread items from re-animating', () => {
         // This test verifies the fix for the streaming persistence issue
         // where completed responses would re-animate when new messages were sent
 
         // Test the shouldAnimate logic directly
-        const completedStatuses = ["COMPLETED", "ERROR", "ABORTED"];
+        const completedStatuses = ['COMPLETED', 'ERROR', 'ABORTED'];
 
         completedStatuses.forEach((status) => {
             // Simulate conditions where re-animation bug would occur:
@@ -115,10 +115,9 @@ describe("Streaming Cleanup Fix", () => {
             const threadItemStatus = status;
 
             // The fix: shouldAnimate should be false for completed items
-            const shouldAnimate =
-                isLast &&
-                isGenerating &&
-                !["COMPLETED", "ERROR", "ABORTED"].includes(threadItemStatus);
+            const shouldAnimate = isLast
+                && isGenerating
+                && !['COMPLETED', 'ERROR', 'ABORTED'].includes(threadItemStatus);
 
             expect(shouldAnimate).toBe(false);
         });
@@ -126,15 +125,15 @@ describe("Streaming Cleanup Fix", () => {
         // Test that non-completed items can still animate
         const isLast = true;
         const isGenerating = true;
-        const threadItemStatus = "GENERATING";
+        const threadItemStatus = 'GENERATING';
 
-        const shouldAnimate =
-            isLast && isGenerating && !["COMPLETED", "ERROR", "ABORTED"].includes(threadItemStatus);
+        const shouldAnimate = isLast && isGenerating
+            && !['COMPLETED', 'ERROR', 'ABORTED'].includes(threadItemStatus);
 
         expect(shouldAnimate).toBe(true);
     });
 
-    it("should not mark completed items as ABORTED during cleanup", () => {
+    it('should not mark completed items as ABORTED during cleanup', () => {
         // This test verifies the fix for incorrect ABORTED status display
         // when new messages are sent in existing threads
 
@@ -142,12 +141,12 @@ describe("Streaming Cleanup Fix", () => {
         const mockAbortController = {
             signal: {
                 aborted: true,
-                reason: "cleanup", // This indicates cleanup abort, not user abort
+                reason: 'cleanup', // This indicates cleanup abort, not user abort
             },
         };
 
         // With cleanup reason, items should not be marked as ABORTED
-        const isCleanupAbort = mockAbortController.signal.reason === "cleanup";
+        const isCleanupAbort = mockAbortController.signal.reason === 'cleanup';
         expect(isCleanupAbort).toBe(true);
 
         // Test user-initiated abort
@@ -158,9 +157,8 @@ describe("Streaming Cleanup Fix", () => {
             },
         };
 
-        const isUserAbort =
-            !mockUserAbortController.signal.reason ||
-            mockUserAbortController.signal.reason !== "cleanup";
+        const isUserAbort = !mockUserAbortController.signal.reason
+            || mockUserAbortController.signal.reason !== 'cleanup';
         expect(isUserAbort).toBe(true);
     });
 });

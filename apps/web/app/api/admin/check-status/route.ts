@@ -1,7 +1,7 @@
-import { log } from "@repo/shared/lib/logger";
-import { type NextRequest, NextResponse } from "next/server";
-import { isUserAdmin } from "@/lib/admin";
-import { auth } from "@/lib/auth-server";
+import { isUserAdmin } from '@/lib/admin';
+import { auth } from '@/lib/auth-server';
+import { log } from '@repo/shared/lib/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
     try {
@@ -21,12 +21,12 @@ export async function GET(request: NextRequest) {
                 email: session.user.email,
                 adminStatus,
             },
-            "Admin status check",
+            'Admin status check',
         );
 
         return NextResponse.json({ isAdmin: adminStatus });
     } catch (error) {
-        log.error({ error }, "Error checking admin status");
+        log.error({ error }, 'Error checking admin status');
         return NextResponse.json({ isAdmin: false });
     }
 }

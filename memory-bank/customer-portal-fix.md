@@ -60,33 +60,33 @@ Invalid response format from Creem API - no URL found
 
 ```typescript
 <Button
-  disabled={isPortalLoading}
-  onClick={handleManageSubscription}
+    disabled={isPortalLoading}
+    onClick={handleManageSubscription}
 >
-  {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
-</Button>
+    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+</Button>;
 ```
 
 **File:** `packages/common/components/side-bar.tsx`
 
 ```typescript
 <Button
-  disabled={isPortalLoading}
-  onClick={() => openCustomerPortal()}
+    disabled={isPortalLoading}
+    onClick={() => openCustomerPortal()}
 >
-  {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
-</Button>
+    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+</Button>;
 ```
 
 **File:** `apps/web/app/plus/page.tsx`
 
 ```typescript
 <ButtonAnimatedGradient
-  disabled={isPortalLoading || isPaymentLoading}
-  onClick={handleSubscribe}
+    disabled={isPortalLoading || isPaymentLoading}
+    onClick={handleSubscribe}
 >
-  {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
-</ButtonAnimatedGradient>
+    {isPortalLoading ? 'Loading...' : 'Manage Subscription'}
+</ButtonAnimatedGradient>;
 ```
 
 ## 🧪 Verification

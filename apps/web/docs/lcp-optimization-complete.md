@@ -7,25 +7,33 @@ I've successfully implemented several optimizations to improve the Largest Conte
 ## Key Optimizations Implemented
 
 ### 1. Resource Preloading
+
 Enhanced `components/performance-optimizations.tsx` with preload directives for critical assets:
+
 - VT logo (`/icon-192x192.png`)
 - Peerlist badge (`/icons/peerlist_badge.svg`) - identified as LCP element
 - Favicon (`/favicon.ico`)
 - Google Fonts stylesheet
 
 ### 2. Thread Component Optimization
+
 Modified `packages/common/components/thread/thread-combo.tsx`:
+
 - Added skeleton loading during initial render for immediate visual feedback
 - Implemented `fetchPriority="high"` and `decoding="async"` attributes on critical images
 - Reduced initial load time perception
 
 ### 3. Next.js Configuration
+
 Updated `next.config.mjs`:
+
 - Added HTTP Link headers for server-side resource preloading
 - Enabled CSS optimization in experimental features
 
 ### 4. Testing Infrastructure
+
 Created comprehensive test files:
+
 - `app/tests/lcp-optimization.test.ts` - Playwright tests for LCP verification
 - `lib/lcp-test-utils.ts` - Utility functions for preload verification
 - Added development-time logging in homepage component

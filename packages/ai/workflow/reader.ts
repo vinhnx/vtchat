@@ -1,6 +1,6 @@
-import { log } from "@repo/shared/logger";
-import { parse } from "node-html-parser";
-import TurndownService from "turndown";
+import { log } from '@repo/shared/logger';
+import { parse } from 'node-html-parser';
+import TurndownService from 'turndown';
 
 const turndownService = new TurndownService();
 
@@ -14,17 +14,17 @@ export type TReaderResponse = {
 
 function cleanHtml(html: string): string {
     return html
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
-        .replace(/<header[\s\S]*?>[\s\S]*?<\/header>/gi, "")
-        .replace(/<footer[\s\S]*?>[\s\S]*?<\/footer>/gi, "")
-        .replace(/<nav[\s\S]*?>[\s\S]*?<\/nav>/gi, "")
-        .replace(/<aside[\s\S]*?>[\s\S]*?<\/aside>/gi, "")
-        .replace(/<form[\s\S]*?>[\s\S]*?<\/form>/gi, "")
-        .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, "")
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+        .replace(/<header[\s\S]*?>[\s\S]*?<\/header>/gi, '')
+        .replace(/<footer[\s\S]*?>[\s\S]*?<\/footer>/gi, '')
+        .replace(/<nav[\s\S]*?>[\s\S]*?<\/nav>/gi, '')
+        .replace(/<aside[\s\S]*?>[\s\S]*?<\/aside>/gi, '')
+        .replace(/<form[\s\S]*?>[\s\S]*?<\/form>/gi, '')
+        .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, '')
         .replace(
             /<div[^>]*class\s*=\s*["']?(?:ad|advertisement|banner)["']?[^>]*>[\s\S]*?<\/div>/gi,
-            "",
+            '',
         );
 }
 
@@ -47,8 +47,8 @@ const readURL = async (url: string): Promise<TReaderResult> => {
         const root = parse(cleanedHtml);
 
         // Extract title from HTML
-        const titleElement = root.querySelector("title");
-        const title = titleElement ? titleElement.text : "";
+        const titleElement = root.querySelector('title');
+        const title = titleElement ? titleElement.text : '';
 
         // Extract main content
         // This is a simplistic approach - you may need to enhance this
@@ -65,11 +65,11 @@ const readURL = async (url: string): Promise<TReaderResult> => {
                     markdown,
                 };
             }
-            log.info({ contentLength: markdown.length }, "Content too short, falling back to Jina");
+            log.info({ contentLength: markdown.length }, 'Content too short, falling back to Jina');
         }
         return { success: false };
     } catch (error) {
-        log.error({ error }, "Error in readURL");
+        log.error({ error }, 'Error in readURL');
         return { success: false };
     }
 };
@@ -78,13 +78,13 @@ const readURL = async (url: string): Promise<TReaderResult> => {
 function extractMainContent(root: any): string {
     // First try to find common content containers
     const contentSelectors = [
-        "article",
-        "main",
-        ".content",
-        ".post",
-        "#content",
-        ".article-content",
-        ".post-content",
+        'article',
+        'main',
+        '.content',
+        '.post',
+        '#content',
+        '.article-content',
+        '.post-content',
     ];
 
     for (const selector of contentSelectors) {
@@ -95,8 +95,8 @@ function extractMainContent(root: any): string {
     }
 
     // If no content container found, return the body content
-    const body = root.querySelector("body");
-    return body ? body.innerHTML : "";
+    const body = root.querySelector('body');
+    return body ? body.innerHTML : '';
 }
 
 export const readWebPagesWithTimeout = async (
@@ -117,16 +117,16 @@ export const readWebPagesWithTimeout = async (
         const results = await Promise.allSettled(readPromises);
 
         return results.map((result) => {
-            if (result.status === "fulfilled") {
+            if (result.status === 'fulfilled') {
                 return result.value;
             }
             return { success: false };
         });
     } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-            log.info("Reading operation timed out, returning partial results");
+        if (error instanceof DOMException && error.name === 'AbortError') {
+            log.info('Reading operation timed out, returning partial results');
         } else {
-            log.error({ error }, "Error in readWebPagesWithTimeout");
+            log.error({ error }, 'Error in readWebPagesWithTimeout');
         }
         return [];
     } finally {

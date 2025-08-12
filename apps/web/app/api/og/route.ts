@@ -1,5 +1,5 @@
-import { log } from "@repo/shared/lib/logger";
-import { type NextRequest, NextResponse } from "next/server";
+import { log } from '@repo/shared/lib/logger';
+import { type NextRequest, NextResponse } from 'next/server';
 
 interface OGData {
     title?: string;
@@ -29,7 +29,7 @@ async function fetchOGData(url: string): Promise<OGData | null> {
 
         const response = await fetch(url, {
             headers: {
-                "User-Agent": "Mozilla/5.0 (compatible; VTChat/1.0; +https://vtchat.io.vn)",
+                'User-Agent': 'Mozilla/5.0 (compatible; VTChat/1.0; +https://vtchat.io.vn)',
             },
             signal: controller.signal,
         });
@@ -78,14 +78,14 @@ async function fetchOGData(url: string): Promise<OGData | null> {
         if (imageMatch) {
             ogData.image = imageMatch[1];
             // Handle relative URLs
-            if (ogData.image && !ogData.image.startsWith("http")) {
+            if (ogData.image && !ogData.image.startsWith('http')) {
                 const urlObj = new URL(url);
-                if (ogData.image.startsWith("//")) {
+                if (ogData.image.startsWith('//')) {
                     ogData.image = urlObj.protocol + ogData.image;
-                } else if (ogData.image.startsWith("/")) {
+                } else if (ogData.image.startsWith('/')) {
                     ogData.image = urlObj.origin + ogData.image;
                 } else {
-                    ogData.image = urlObj.origin + "/" + ogData.image;
+                    ogData.image = urlObj.origin + '/' + ogData.image;
                 }
             }
         }
@@ -112,8 +112,8 @@ async function fetchOGData(url: string): Promise<OGData | null> {
 
         return ogData;
     } catch (error) {
-        if (process.env.NODE_ENV === "development") {
-            log.warn({ url, error }, "Failed to fetch OG data");
+        if (process.env.NODE_ENV === 'development') {
+            log.warn({ url, error }, 'Failed to fetch OG data');
         }
         return null;
     }
@@ -122,32 +122,32 @@ async function fetchOGData(url: string): Promise<OGData | null> {
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
-        const url = searchParams.get("url");
+        const url = searchParams.get('url');
 
         if (!url) {
-            return NextResponse.json({ error: "URL parameter is required" }, { status: 400 });
+            return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
         }
 
         // Validate URL
         try {
             new URL(url);
         } catch {
-            return NextResponse.json({ error: "Invalid URL format" }, { status: 400 });
+            return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 });
         }
 
         const ogData = await fetchOGData(url);
 
         if (!ogData) {
-            return NextResponse.json({ error: "Failed to fetch OG data" }, { status: 404 });
+            return NextResponse.json({ error: 'Failed to fetch OG data' }, { status: 404 });
         }
 
         return NextResponse.json(ogData, {
             headers: {
-                "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+                'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
             },
         });
     } catch (error) {
-        log.error({ error }, "Error in OG API");
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        log.error({ error }, 'Error in OG API');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
