@@ -1,6 +1,18 @@
 # Progress Log
 
-## Latest Session - January 2025
+## Latest Session - July 2025
+
+### ✅ Deep Research Model Update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Switched Deep Research workflow to Gemini 2.5 Flash model
+- Updated tasks, model mapping, tests, and help docs
+
+---
+
+## Previous Session - January 2025
 
 ### ✅ useSession Runtime Error Fix
 

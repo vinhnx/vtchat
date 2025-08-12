@@ -107,7 +107,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
         const byokKeys = context?.get("apiKeys");
 
         // Select an appropriate model based on available API keys
-        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_PRO, byokKeys);
+        const selectedModel = selectAvailableModel(ModelEnum.GEMINI_2_5_FLASH, byokKeys);
 
         // Determine VT+ feature based on mode
         const chatMode = context?.get("mode");

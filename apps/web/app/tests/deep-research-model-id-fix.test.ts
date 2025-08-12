@@ -52,12 +52,12 @@ describe("Deep Research Model ID Fix", () => {
 
     it("should record Deep Research requests with DEEP_RESEARCH model ID for VT+ users", async () => {
         const userId = "vt-plus-user-123";
-        const modelId = ModelEnum.GEMINI_2_5_PRO; // Used by Deep Research
+        const modelId = ModelEnum.GEMINI_2_5_FLASH; // Used by Deep Research
         const isVTPlusUser = true;
 
         await recordRequest(userId, modelId, isVTPlusUser);
 
-        // Verify recordProviderUsage was called with DEEP_RESEARCH instead of GEMINI_2_5_PRO
+        // Verify recordProviderUsage was called with DEEP_RESEARCH instead of GEMINI_2_5_FLASH
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
             "DEEP_RESEARCH", // This should be the feature ID, not the model ID
@@ -97,7 +97,7 @@ describe("Deep Research Model ID Fix", () => {
 
     it("should record requests with original model ID for free users", async () => {
         const userId = "free-user-123";
-        const modelId = ModelEnum.GEMINI_2_5_PRO; // Used by Deep Research
+        const modelId = ModelEnum.GEMINI_2_5_FLASH; // Used by Deep Research
         const isVTPlusUser = false; // Free user
 
         await recordRequest(userId, modelId, isVTPlusUser);
@@ -105,7 +105,7 @@ describe("Deep Research Model ID Fix", () => {
         // Verify recordProviderUsage was called with the original model ID for free users
         expect(mockRecordProviderUsage).toHaveBeenCalledWith(
             userId,
-            ModelEnum.GEMINI_2_5_PRO, // Should remain as the original model ID for free users
+            ModelEnum.GEMINI_2_5_FLASH, // Should remain as the original model ID for free users
             "gemini",
         );
     });

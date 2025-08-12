@@ -277,7 +277,7 @@ export const models: Model[] = [
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
         case ChatMode.Deep:
-            return ModelEnum.GEMINI_2_5_PRO;
+            return ModelEnum.GEMINI_2_5_FLASH;
         case ChatMode.Pro:
             return ModelEnum.GEMINI_2_5_FLASH;
         case ChatMode.GEMINI_2_5_FLASH_LITE:

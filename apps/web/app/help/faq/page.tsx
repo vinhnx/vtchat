@@ -208,7 +208,7 @@ function HelpCenterContent() {
                                     </li>
                                     <li className="text-muted-foreground">
                                         <strong>Deep Research:</strong> Comprehensive multi-step
-                                        research using Gemini 2.5 Pro for in-depth analysis (VT+
+                                        research using Gemini 2.5 Flash for in-depth analysis (VT+
                                         exclusive - 10 requests/day)
                                     </li>
                                     <li className="text-muted-foreground">

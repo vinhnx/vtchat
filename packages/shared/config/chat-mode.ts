@@ -427,7 +427,7 @@ export function getModelDisplayName(mode: string): string {
 export const getChatModeName = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Deep:
-            return "Deep Research - Gemini 2.5 Pro";
+            return "Deep Research - Gemini 2.5 Flash";
         case ChatMode.Pro:
             return "Pro Search - Gemini 2.5 Flash";
         case ChatMode.GPT_4_1:

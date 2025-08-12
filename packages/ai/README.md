@@ -19,7 +19,7 @@ A flexible and powerful system for building AI agent workflows using a graph-bas
     - Fireworks
     - xAI
 - Specialized research workflows:
-    - Deep Research: Comprehensive analysis using Gemini 2.5 Pro
+    - Deep Research: Comprehensive analysis using Gemini 2.5 Flash
     - Pro Search: Fast web search using Gemini 2.5 Flash
 
 ## Getting Started
