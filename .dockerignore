@@ -30,10 +30,12 @@ coverage
 .turbo
 .build-cache-warmed
 
-# Next.js build output (will be generated during build)
-apps/web/.next/
+# Next.js build output (exclude cache but keep standalone build)
+apps/web/.next/cache/
+apps/web/.next/trace
 packages/*/.next/
-.next/
+.next/cache/
+.next/trace
 
 # Documentation and development files
 docs/
