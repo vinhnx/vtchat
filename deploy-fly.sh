@@ -217,7 +217,7 @@ build_application() {
     # Build the application
     print_info "Running build command..."
     if bun run build; then
-        print_success "Application built successfully"
+        print_status "Application built successfully"
 
         # Verify standalone build exists
         if [ ! -d "apps/web/.next/standalone" ]; then
@@ -231,7 +231,7 @@ build_application() {
             exit 1
         fi
 
-        print_success "Build verification completed"
+        print_status "Build verification completed"
     else
         print_error "Build failed with exit code $?"
         exit 1
