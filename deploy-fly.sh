@@ -83,16 +83,16 @@ get_current_version() {
 increment_version() {
     local version=$1
     local type=$2
-    
+
     # Extract only numeric parts, ignore any suffixes like -beta.1
     local clean_version=$(echo "$version" | sed 's/-.*$//')
     IFS='.' read -r major minor patch <<< "$clean_version"
-    
+
     # Ensure we have numeric values
     major=${major:-0}
     minor=${minor:-0}
     patch=${patch:-0}
-    
+
     case $type in
         "major")
             major=$((major + 1))
@@ -111,26 +111,26 @@ increment_version() {
             exit 1
             ;;
     esac
-    
+
     echo "$major.$minor.$patch"
 }
 
 # Function to check git status
 check_git_status() {
     print_step "Checking git repository status..."
-    
+
     # Check if we're in a git repository
     if ! git rev-parse --git-dir > /dev/null 2>&1; then
         print_error "Not in a git repository!"
         exit 1
     fi
-    
+
     # Check for uncommitted changes
     if ! git diff-index --quiet HEAD --; then
         print_warning "You have uncommitted changes:"
         git status --porcelain >&2
         echo "" >&2
-        
+
         print_info "Auto-committing changes..."
         git add -A
         git commit -m "Auto-commit before deployment"
@@ -138,7 +138,7 @@ check_git_status() {
     else
         print_status "Working directory is clean"
     fi
-    
+
     # Check if we're on main/master branch
     current_branch=$(git branch --show-current)
     if [ "$current_branch" != "main" ] && [ "$current_branch" != "master" ]; then
@@ -151,22 +151,22 @@ check_git_status() {
 create_version_tag() {
     local version_type=$1
     local auto_mode=$2
-    
+
     print_step "Creating version tag..."
-    
+
     local current_version=$(get_current_version)
     print_info "Current version: v$current_version"
-    
+
     # Default to patch version if not specified
     if [ -z "$version_type" ]; then
         version_type="patch"
     fi
-    
+
     local new_version=$(increment_version $current_version $version_type)
     local tag_name="v$new_version"
-    
+
     print_info "New version: $tag_name"
-    
+
     # Create tag
     local tag_message="Release $tag_name
 
@@ -174,12 +174,12 @@ Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
 Branch: $(git branch --show-current)
 Commit: $(git rev-parse --short HEAD)
 Fly.io App: vtchat"
-    
+
     print_info "Creating tag $tag_name..."
-    
+
     git tag -a "$tag_name" -m "$tag_message"
     print_status "Created tag: $tag_name"
-    
+
     echo "$tag_name"
 }
 
@@ -187,46 +187,87 @@ Fly.io App: vtchat"
 push_to_remote() {
     local tag_name=$1
     local auto_mode=$2
-    
+
     print_step "Pushing to remote repository..."
-    
+
     # Push commits and tags
     git push origin $(git branch --show-current)
     git push origin "$tag_name"
-    
+
     print_status "Pushed to remote repository"
+}
+
+# Function to build the application
+build_application() {
+    print_step "Building Next.js application..."
+
+    # Check if bun is installed
+    if ! command -v bun &> /dev/null; then
+        print_error "Bun is not installed. Please install it first:"
+        echo "curl -fsSL https://bun.sh/install | bash"
+        exit 1
+    fi
+
+    # Install dependencies if node_modules doesn't exist
+    if [ ! -d "node_modules" ]; then
+        print_info "Installing dependencies..."
+        bun install
+    fi
+
+    # Build the application
+    print_info "Running build command..."
+    if bun run build; then
+        print_success "Application built successfully"
+
+        # Verify standalone build exists
+        if [ ! -d "apps/web/.next/standalone" ]; then
+            print_error "Standalone build not found at apps/web/.next/standalone"
+            print_error "Check your Next.js configuration for output: 'standalone'"
+            exit 1
+        fi
+
+        if [ ! -d "apps/web/.next/static" ]; then
+            print_error "Static build not found at apps/web/.next/static"
+            exit 1
+        fi
+
+        print_success "Build verification completed"
+    else
+        print_error "Build failed with exit code $?"
+        exit 1
+    fi
 }
 
 # Function to deploy to Fly.io
 deploy_to_fly() {
     local tag_name=$1
     local auto_mode=$2
-    
+
     print_step "Deploying to Fly.io..."
-    
+
     # Enable BuildKit for optimization
     export DOCKER_BUILDKIT=1
-    
+
     # App configuration
     local FLY_APP="vtchat"
-    
+
     print_info "App: $FLY_APP"
     print_info "Version: $tag_name"
     print_info "Config: fly.toml"
-    
+
     # Check if app exists
     if ! flyctl apps list | grep -q "^$FLY_APP" 2>/dev/null; then
         print_warning "App '$FLY_APP' does not exist. Creating it..."
         flyctl apps create "$FLY_APP" --region sin
         print_status "App '$FLY_APP' created successfully"
     fi
-    
+
     # Deploy
     print_status "Starting deployment..."
     print_info "Running: flyctl deploy --app $FLY_APP"
     print_info "You can also monitor deployment progress at: https://fly.io/apps/$FLY_APP"
     print_info "View deployment logs at: https://fly.io/apps/$FLY_APP/monitoring"
-    
+
     # Run deployment with verbose output
     if flyctl deploy --app "$FLY_APP" --verbose; then
         print_status "Deployment completed successfully!"
@@ -235,11 +276,11 @@ deploy_to_fly() {
         echo "   https://vtchat.io.vn" >&2
         echo "   https://vtchat.fly.dev" >&2
         echo "" >&2
-        
+
         # Show app status
         print_info "Checking app status..."
         flyctl status --app "$FLY_APP"
-        
+
         print_status "Deployment completed!"
     else
         print_error "Deployment failed with exit code $?"
@@ -252,7 +293,7 @@ deploy_to_fly() {
 main() {
     local auto_mode=""
     local version_type=""
-    
+
     # Parse arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -270,22 +311,25 @@ main() {
                 ;;
         esac
     done
-    
+
     echo "" >&2
     print_step "Starting deployment pipeline..."
-    
+
     # Step 1: Check git status
     check_git_status "$auto_mode"
-    
+
     # Step 2: Create version tag
     local tag_name=$(create_version_tag "$version_type" "$auto_mode")
-    
+
     # Step 3: Push to remote
     push_to_remote "$tag_name" "$auto_mode"
-    
-    # Step 4: Deploy to Fly.io
+
+    # Step 4: Build application
+    build_application
+
+    # Step 5: Deploy to Fly.io
     deploy_to_fly "$tag_name" "$auto_mode"
-    
+
     echo "" >&2
     print_status "Deployment pipeline completed successfully!"
     echo -e "${YELLOW}Summary:${NC}" >&2
