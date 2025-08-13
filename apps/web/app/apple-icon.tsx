@@ -17,13 +17,13 @@ export default function AppleIcon() {
             <div
                 style={{
                     fontSize: 48,
-                    background: 'linear-gradient(45deg, #667eea 0%, #764ba2 100%)',
+                    background: '#BFB38F',
                     width: '100%',
                     height: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
+                    color: '#262626',
                     fontWeight: 'bold',
                     borderRadius: '16px',
                 }}
