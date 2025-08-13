@@ -178,3 +178,55 @@ integrate https://github.com/e2b-dev/fragments/tree/main/sandbox-templates
 --
 
 https://ai-sdk.dev/cookbook/guides/gemini-2-5
+
+--
+
+Based on my analysis, here's the implementation status of the LOC reduction plans:
+
+📊 Implementation Status Report
+✅ FULLY IMPLEMENTED
+ky HTTP Client (✅ Complete)
+
+Dependency installed
+Migration guide created
+Agent documentation updated
+Status: All fetch() calls have been migrated
+@tanstack/react-query (✅ Installed, 🔄 Partially Implemented)
+
+Dependency installed: @tanstack/react-query: ^5.85.0
+Provider setup: react-query.tsx
+Status: Infrastructure ready but not fully utilized in high-impact areas
+🔄 PARTIALLY IMPLEMENTED
+@t3-oss/env-nextjs (✅ Installed, ❌ Not Implemented)
+Dependency installed: @t3-oss/env-nextjs: ^0.13.8
+Custom env utils exist: env.ts
+Status: Library installed but not replacing custom env handling
+❌ NOT IMPLEMENTED
+react-hook-form (✅ Installed, ❌ Not Used)
+
+Dependency installed: react-hook-form: ^7.62.0
+Status: Zero usage found in codebase - forms still using custom validation
+@radix-ui/react-form - Not mentioned in dependencies
+
+@react-hookz/web - Not mentioned in dependencies
+
+🎯 Next Implementation Steps
+Phase 1: Complete React Query Migration
+The biggest remaining opportunity is fully utilizing React Query in:
+
+chat.store.ts (2,011 LOC)
+agent-provider.tsx (1,109 LOC)
+Admin dashboard API calls
+Phase 2: Implement react-hook-form
+Replace custom form handling in:
+
+user-profile-settings.tsx (936 LOC)
+settings-modal.tsx (699 LOC)
+Phase 3: Complete env-nextjs Setup
+Replace custom env handling with type-safe validation.
+
+📈 Current Impact Achieved
+ky migration: ~200-500 LOC reduced ✅
+Total remaining potential: ~1,500-2,000 LOC reduction available
+Summary: You have excellent foundation with all major dependencies installed, but significant LOC reduction potential remains unrealized through fuller implementation of React Query and react-hook-form.
+docs/guides/loc-reduction-analysis.md
