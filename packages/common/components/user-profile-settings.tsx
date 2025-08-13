@@ -162,15 +162,11 @@ export const UserProfileSettings = () => {
         setSuccess('');
 
         try {
-            const response = await fetch('/api/auth/update-user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const response = await http.post('/api/auth/update-user', {
+                body: {
                     ...formData,
                     email: session.user.email || '',
-                }),
+                },
             });
 
             if (!response.ok) {

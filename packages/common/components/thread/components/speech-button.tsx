@@ -1,6 +1,7 @@
 'use client';
 
 import { useApiKeysStore } from '@repo/common/store';
+import { http } from '@repo/shared/lib/http-client';
 import { Button, cn } from '@repo/ui';
 import { useLegacyToast } from '@repo/ui/src/components/use-toast';
 import { Volume2, VolumeX } from 'lucide-react';
@@ -30,13 +31,11 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
 
         try {
             setIsSpeaking(true);
-            const response = await fetch('/api/speech', {
-                method: 'POST',
+            const response = await http.post('/api/speech', {
+                body: { text },
                 headers: {
-                    'Content-Type': 'application/json',
                     'x-openai-api-key': openaiApiKey || '',
                 },
-                body: JSON.stringify({ text }),
             });
 
             if (!response.ok) {

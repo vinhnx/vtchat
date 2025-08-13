@@ -39,6 +39,37 @@
 - PRs should include: clear description, linked issues, screenshots for UI changes, and test notes.
 - Run `bun run lint`, `bun run fmt`, and `bun run build` before opening a PR.
 
+## HTTP Client & API Guidelines
+
+- **Always use the centralized ky HTTP client**: `import { http } from '@repo/shared/lib/http-client'`
+- **Never use fetch() directly** - it bypasses security, error handling, and standardization
+- **Automatic JSON handling**: Methods return parsed JSON automatically
+- **Built-in error handling**: HTTP errors are handled consistently
+- **API key security**: Pass keys via `apiKeys` option, never in headers
+
+### Common Patterns:
+
+```typescript
+// GET requests
+const data = await http.get('/api/user/profile');
+
+// POST with data
+const result = await http.post('/api/completion', { body: requestData });
+
+// Streaming responses (for AI completions)
+const response = await http.postStream('/api/completion', { body, signal });
+
+// Requests with API keys
+const result = await http.post('/api/external', {
+    body: data,
+    apiKeys: { openai: 'sk-...', anthropic: 'sk-...' },
+});
+
+// PUT/DELETE operations
+const updated = await http.put('/api/user/settings', { body: settings });
+await http.delete('/api/user/session');
+```
+
 ## Security & Configuration Tips
 
 - Bun auto-loads `.env`. Do not check secrets into git.

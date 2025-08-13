@@ -1,4 +1,5 @@
 import { useSession } from '@repo/shared/lib/auth-client';
+import { http } from '@repo/shared/lib/http-client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Simple in-memory cache for admin status to avoid duplicate requests
@@ -38,11 +39,10 @@ export function useAdmin(): UseAdminResult {
 
             const requestPromise = (async () => {
                 try {
-                    const response = await fetch('/api/admin/check-status', { signal });
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    const data = await response.json();
+                    const data = await http.get('/api/admin/check-status', {
+                        signal,
+                        retry: 0, // No retries for admin check
+                    });
                     const adminStatus = Boolean(data.isAdmin);
 
                     // Cache the result

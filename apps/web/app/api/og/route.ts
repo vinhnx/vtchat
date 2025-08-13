@@ -1,4 +1,5 @@
 import { log } from '@repo/shared/lib/logger';
+import ky from 'ky';
 import { type NextRequest, NextResponse } from 'next/server';
 
 interface OGData {
@@ -24,20 +25,57 @@ async function fetchOGData(url: string): Promise<OGData | null> {
             return cached;
         }
 
+        // Special handling for Google Vertex AI Search grounding API URLs
+        // These URLs are protected and return 403, so we'll return a default response
+        if (url.includes('vertexaisearch.cloud.google.com/grounding-api-redirect')) {
+            const ogData: OGData = {
+                title: 'Google Search Result',
+                description: 'Content from Google Search',
+                siteName: 'Google Search',
+                url: url,
+            };
+
+            // Cache the result
+            ogCache.set(cacheKey, ogData);
+            cacheTimestamps.set(cacheKey, Date.now());
+
+            return ogData;
+        }
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-        const response = await fetch(url, {
+        // Using ky for cleaner HTTP requests with built-in error handling
+        // Don't throw HTTP errors so we can handle them manually
+        const response = await ky.get(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (compatible; VTChat/1.0; +https://vtchat.io.vn)',
             },
             signal: controller.signal,
+            timeout: 10000,
+            throwHttpErrors: false,
+            retry: {
+                limit: 2,
+                methods: ['get'],
+                statusCodes: [408, 413, 429, 500, 502, 503, 504],
+            },
         });
 
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-            return null;
+        // Check for 403 status and handle gracefully
+        if (response.status === 403) {
+            const ogData: OGData = {
+                title: 'Protected Content',
+                description: 'This content is protected and cannot be previewed',
+                url: url,
+            };
+
+            // Cache the result to avoid repeated failed attempts
+            ogCache.set(url, ogData);
+            cacheTimestamps.set(url, Date.now());
+
+            return ogData;
         }
 
         const html = await response.text();
@@ -111,9 +149,10 @@ async function fetchOGData(url: string): Promise<OGData | null> {
         cacheTimestamps.set(cacheKey, Date.now());
 
         return ogData;
-    } catch (error) {
+    } catch (error: any) {
+        // Handle network errors, timeouts, etc.
         if (process.env.NODE_ENV === 'development') {
-            log.warn({ url, error }, 'Failed to fetch OG data');
+            log.warn({ url, error: error?.message || error }, 'Failed to fetch OG data');
         }
         return null;
     }

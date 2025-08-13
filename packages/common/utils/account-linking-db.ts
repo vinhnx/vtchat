@@ -1,4 +1,5 @@
 import { log } from '@repo/shared/logger';
+
 /**
  * Database queries for account linking using Neon MCP
  * Provides accurate account linking status from the database
@@ -25,19 +26,7 @@ export async function getLinkedAccountsFromDB(_userId: string): Promise<LinkedAc
         // For now, we'll use the Better Auth API to get linked accounts
         // In production, this would use Neon MCP to query the accounts table directly
 
-        const response = await fetch('/api/auth/list-accounts', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            log.warn({ status: response.status }, 'Failed to fetch linked accounts from API');
-            return [];
-        }
-
-        const data = await response.json();
+        const data = await http.get('/api/auth/list-accounts');
         return data.accounts || [];
     } catch (error) {
         log.error({ error }, 'Error fetching linked accounts from database');
@@ -91,14 +80,14 @@ export async function getLinkedAccountsFromNeonMCP(userId: string): Promise<Link
     // In practice, you would configure Neon MCP in your environment
 
     const query = `
-        SELECT 
+        SELECT
             id,
             account_id as "accountId",
-            provider_id as "providerId", 
+            provider_id as "providerId",
             user_id as "userId",
             created_at as "createdAt",
             updated_at as "updatedAt"
-        FROM accounts 
+        FROM accounts
         WHERE user_id = $1
         ORDER BY created_at DESC;
     `;
@@ -125,7 +114,7 @@ export async function getLinkedAccountsFromNeonMCP(userId: string): Promise<Link
 export async function isProviderLinkedMCP(userId: string, providerId: string): Promise<boolean> {
     const query = `
         SELECT EXISTS(
-            SELECT 1 FROM accounts 
+            SELECT 1 FROM accounts
             WHERE user_id = $1 AND provider_id = $2
         ) as "exists";
     `;

@@ -26,6 +26,23 @@ description: "Example description"
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
 
+## HTTP Client & API Requests
+
+- **Always use the centralized ky HTTP client**: `import { http } from '@repo/shared/lib/http-client'`
+- **Never use fetch() directly** - bypasses security, error handling, and standardization
+- **Automatic JSON handling**: Methods return parsed JSON automatically
+- **Built-in error handling**: HTTP errors are handled consistently
+- **API key security**: Pass keys via `apiKeys` option, never in headers
+- **Streaming support**: Use `postStream()` for AI completion endpoints
+
+```typescript
+// Examples
+const data = await http.get('/api/endpoint');
+const result = await http.post('/api/completion', { body: requestData });
+const stream = await http.postStream('/api/completion', { body, signal });
+const secure = await http.get('/api/admin', { apiKeys: { openai: 'sk-...' } });
+```
+
 ## Tech Stack
 
 - Next.js 14 with App Router, TypeScript, Tailwind CSS

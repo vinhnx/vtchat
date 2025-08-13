@@ -1,4 +1,5 @@
-import { log } from '@repo/shared/lib/logger';
+import { http } from '@repo/shared/lib/http-client';
+import { log } from '@repo/shared/logger';
 import { type FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { create } from 'zustand';
@@ -84,18 +85,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
                 });
 
                 try {
-                    const response = await fetch('/api/subscription', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch subscription: ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
+                    const data = await http.get('/api/subscription');
 
                     set((state) => {
                         if (data.subscription) {

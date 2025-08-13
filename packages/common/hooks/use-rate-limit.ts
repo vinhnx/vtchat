@@ -35,15 +35,9 @@ export function useRateLimit(modelId: ModelEnum) {
             setError(null);
 
             try {
-                const response = await fetch(
+                const data = await http.get(
                     `/api/rate-limit/status?model=${encodeURIComponent(modelId)}`,
                 );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const data = await response.json();
 
                 if (data) {
                     // Convert date strings back to Date objects

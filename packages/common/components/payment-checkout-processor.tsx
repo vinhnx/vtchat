@@ -1,5 +1,6 @@
 'use client';
 
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { useToast } from '@repo/ui';
@@ -145,12 +146,8 @@ export function CreemCheckoutProcessor() {
                             session_id: sessionId || undefined,
                         };
 
-                        const response = await fetch('/api/payment-success', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(paymentData),
+                        const response = await http.post('/api/payment-success', {
+                            body: paymentData,
                         });
 
                         log.info(
@@ -171,14 +168,8 @@ export function CreemCheckoutProcessor() {
                                     {},
                                     '[CreemCheckoutProcessor] Invalidating subscription cache...',
                                 );
-                                const cacheResponse = await fetch(
+                                const cacheResponse = await http.post(
                                     '/api/subscription/invalidate-cache',
-                                    {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                    },
                                 );
 
                                 if (cacheResponse.ok) {

@@ -30,6 +30,15 @@ This file is intentionally short to reduce context size. For the complete contri
 
 - Never run `./deploy-fly.sh` without explicit approval.
 
+## HTTP Client & API Requests
+
+- **Use ky HTTP client**: `import { http } from '@repo/shared/lib/http-client'`
+- **Never use fetch directly** - always use the centralized http client
+- GET: `const data = await http.get('/api/endpoint')`
+- POST: `const result = await http.post('/api/endpoint', { body: data })`
+- Streaming: `const response = await http.postStream('/api/completion', { body, signal })`
+- API keys: `http.get('/api/endpoint', { apiKeys: { openai: 'sk-...' } })`
+
 ## Logging & Error Handling
 
 - Use Pino: `import { log } from '@repo/shared/lib/logger'`.

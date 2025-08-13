@@ -1,6 +1,7 @@
 'use client';
 
 import { ErrorBoundary } from '@repo/common/components';
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
 import type { PaginationState } from '@tanstack/react-table';
@@ -63,10 +64,7 @@ export default function AdminUsersPage() {
                 if (planFilter && planFilter !== 'all') params.append('plan', planFilter);
                 if (statusFilter && statusFilter !== 'all') params.append('status', statusFilter);
 
-                const response = await fetch(`/api/admin/users?${params}`);
-                if (!response.ok) throw new Error('Failed to fetch users');
-
-                const data: ApiResponse = await response.json();
+                const data: ApiResponse = await http.get(`/api/admin/users?${params}`);
                 setUsers(data.users || []);
                 setStats(data.statistics || null);
                 setPageCount(data.pagination?.totalPages || 0);
@@ -90,13 +88,9 @@ export default function AdminUsersPage() {
 
     const handleUserAction = async (userId: string, action: string, data?: any) => {
         try {
-            const response = await fetch('/api/admin/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action, userId, data }),
+            await http.post('/api/admin/users', {
+                body: { action, userId, data },
             });
-
-            if (!response.ok) throw new Error('Failed to update user');
 
             // Refresh the users list
             fetchUsers();

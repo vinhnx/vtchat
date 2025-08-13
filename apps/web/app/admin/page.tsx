@@ -75,22 +75,32 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const [analyticsResponse, infrastructureResponse, securityResponse] = await Promise
-                    .all([
-                        fetch('/api/admin/analytics'),
-                        fetch('/api/admin/infrastructure'),
-                        fetch('/api/admin/security'),
+                // Use Promise.allSettled to handle partial failures gracefully
+                const [analyticsResult, infrastructureResult, securityResult] = await Promise
+                    .allSettled([
+                        http.get('/api/admin/analytics'),
+                        http.get('/api/admin/infrastructure'),
+                        http.get('/api/admin/security'),
                     ]);
 
-                if (analyticsResponse.ok) {
-                    const analytics = await analyticsResponse.json();
+                // Extract data from successful responses
+                const analytics = analyticsResult.status === 'fulfilled'
+                    ? analyticsResult.value
+                    : null;
+                const infrastructure = infrastructureResult.status === 'fulfilled'
+                    ? infrastructureResult.value
+                    : null;
+                const security = securityResult.status === 'fulfilled'
+                    ? securityResult.value
+                    : null;
+
+                if (analytics) {
                     let systemHealth: 'good' | 'warning' | 'critical' = 'good';
                     let lastMaintenanceRun = new Date().toISOString();
                     let bannedUsers = 0;
 
                     // Try to get infrastructure data for more accurate system health
-                    if (infrastructureResponse.ok) {
-                        const infrastructure = await infrastructureResponse.json();
+                    if (infrastructure) {
                         systemHealth = normalizeSystemHealth(
                             infrastructure.infrastructure.systemHealth,
                         );
@@ -98,8 +108,7 @@ export default function AdminDashboard() {
                     }
 
                     // Try to get security data for banned users count
-                    if (securityResponse.ok) {
-                        const security = await securityResponse.json();
+                    if (security) {
                         bannedUsers = security.securityMetrics.totalBannedUsers;
                     }
 
@@ -175,11 +184,8 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchWebSearchDebug = async () => {
             try {
-                const response = await fetch('/api/debug/web-search');
-                if (response.ok) {
-                    const data = await response.json();
-                    setWebSearchDebug(data);
-                }
+                const data = await http.get('/api/debug/web-search');
+                setWebSearchDebug(data);
             } catch (error) {
                 log.error({ error }, 'Failed to fetch web search debug');
             }

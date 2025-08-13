@@ -1,5 +1,6 @@
 'use client';
 
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
 import { Badge, Card, CardContent, CardHeader, CardTitle, LoadingSpinner } from '@repo/ui';
 import { Activity, Clock, Database, TrendingUp } from 'lucide-react';
@@ -44,13 +45,8 @@ export function DatabaseHealthMetrics() {
     useEffect(() => {
         const fetchMetrics = async () => {
             try {
-                const response = await fetch('/api/admin/database-metrics');
-                if (response.ok) {
-                    const data = await response.json();
-                    setMetrics(data.database);
-                } else {
-                    setError('Failed to fetch database metrics');
-                }
+                const data = await http.get('/api/admin/database-metrics');
+                setMetrics(data.database);
             } catch (err) {
                 log.error({ error: err }, 'Failed to fetch database metrics');
                 setError('Error fetching database metrics');

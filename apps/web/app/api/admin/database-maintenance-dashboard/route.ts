@@ -32,13 +32,7 @@ export async function GET(request: NextRequest) {
         const metricsUrl = new URL('/api/metrics/database-maintenance', url.origin);
         metricsUrl.searchParams.set('hours', hours.toString());
 
-        const response = await fetch(metricsUrl.toString());
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch metrics: ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        const data = await http.get(metricsUrl.toString());
 
         // Generate dashboard data
         const dashboard = {

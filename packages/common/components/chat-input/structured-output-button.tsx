@@ -282,18 +282,14 @@ const StructuredOutputButton = () => {
             const { type } = getDocumentType(textContent, file.name);
 
             // Call the server-side API route for structured extraction
-            const response = await fetch('/api/tools/structured-extract', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const response = await http.post('/api/tools/structured-extract', {
+                body: {
                     textContent,
                     documentType: type,
                     fileName: file.name,
                     chatMode,
                     userApiKeys: getAllKeys, // Pass user's API keys for non-VT+ users
-                }),
+                },
             });
 
             if (!response.ok) {

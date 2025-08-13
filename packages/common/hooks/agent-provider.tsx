@@ -7,11 +7,13 @@ import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import { getRateLimitMessage } from '@repo/shared/constants';
 import { UserTier } from '@repo/shared/constants/user-tiers';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { useToast } from '@repo/ui/src/components/use-sonner-toast';
+import ky from 'ky';
 import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
@@ -70,9 +72,10 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
     const instanceId = useRef(Math.random().toString(36).substring(7));
 
     useEffect(() => {
-        log.info('🏗️ AgentProvider instance created', { instanceId: instanceId.current });
+        const currentInstanceId = instanceId.current;
+        log.info('🏗️ AgentProvider instance created', { instanceId: currentInstanceId });
         return () => {
-            log.info('🗑️ AgentProvider instance destroyed', { instanceId: instanceId.current });
+            log.info('🗑️ AgentProvider instance destroyed', { instanceId: currentInstanceId });
         };
     }, []);
 
@@ -345,12 +348,8 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             });
 
             try {
-                const response = await fetch('/api/completion', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body),
-                    credentials: 'include',
-                    cache: 'no-store',
+                const response = await http.postStream('/api/completion', {
+                    body,
                     signal: abortController.signal,
                 });
 
@@ -525,7 +524,9 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                                 try {
                                     const data = JSON.parse(dataMatch[1]);
                                     if (
-                                        EVENT_TYPES.includes(currentEvent)
+                                        EVENT_TYPES.includes(
+                                            currentEvent as typeof EVENT_TYPES[number],
+                                        )
                                         && data?.threadId
                                         && data?.threadItemId
                                     ) {
@@ -571,12 +572,12 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                                             );
 
                                             if (isGemini) {
-                                                fetch(
+                                                // Using ky for cleaner HTTP handling
+                                                ky.post(
                                                     `/api/rate-limit/status?model=${
                                                         encodeURIComponent(modelId)
                                                     }`,
                                                     {
-                                                        method: 'POST',
                                                         credentials: 'include',
                                                     },
                                                 ).catch(() => {

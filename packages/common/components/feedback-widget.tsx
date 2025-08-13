@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/logger';
 import { Button, Textarea } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -22,9 +23,8 @@ export const FeedbackWidget = () => {
         setIsSubmitting(true);
 
         try {
-            await fetch('/api/feedback', {
-                method: 'POST',
-                body: JSON.stringify({ feedback }),
+            await http.post('/api/feedback', {
+                body: { feedback },
             });
             setIsSuccess(true);
             setFeedback('');

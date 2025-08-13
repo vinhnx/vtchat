@@ -1,17 +1,30 @@
+import { log } from '@repo/shared/lib/logger';
 import { eq } from 'drizzle-orm';
 import { auth } from './auth-server';
 import { db } from './database';
 import { users } from './database/schema';
 
 export async function isUserAdmin(userId?: string): Promise<boolean> {
-    if (!userId) return false;
+    if (!userId) {
+        log.debug('isUserAdmin: No userId provided');
+        return false;
+    }
 
     try {
         // Check if user is in the configured admin user IDs (supports comma-separated values)
         const adminUserIds = (process.env.ADMIN_USER_IDS || process.env.ADMIN_USER_ID || '')
             .split(',')
             .filter(Boolean);
+
+        log.debug({
+            userId,
+            adminUserIds,
+            envVar: process.env.ADMIN_USER_IDS,
+            isMatch: adminUserIds.includes(userId),
+        }, 'Admin check debug');
+
         if (adminUserIds.includes(userId)) {
+            log.debug('User is admin via ADMIN_USER_IDS');
             return true;
         }
 
@@ -25,7 +38,7 @@ export async function isUserAdmin(userId?: string): Promise<boolean> {
         // User must have admin role and not be banned
         return user[0]?.role === 'admin' && !user[0]?.banned;
     } catch (error) {
-        console.error('Admin check error:', error);
+        log.error({ error }, 'Admin check error');
         // Handle error silently - user is not admin
         return false;
     }

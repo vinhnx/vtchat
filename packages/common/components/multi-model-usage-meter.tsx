@@ -2,6 +2,7 @@
 
 import { ModelEnum } from '@repo/ai/models';
 import { GEMINI_LIMITS } from '@repo/shared/constants/rate-limits';
+import { http } from '@repo/shared/lib/http-client';
 import {
     Button,
     Card,
@@ -80,13 +81,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
             setLoading(true);
 
             // Fetch rate limit status for all models in a single API call
-            const response = await fetch('/api/rate-limit/status');
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch usage data: ${response.status}`);
-            }
-
-            const allStatuses = await response.json();
+            const allStatuses = await http.get('/api/rate-limit/status');
 
             // Filter and validate the response
             const statuses: Record<string, RateLimitStatus> = {};
@@ -599,21 +594,16 @@ function VtPlusUsageChart({ userId }: VtPlusUsageChartProps) {
         const fetchVtPlusUsage = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/vtplus/usage');
+                const data = await http.get('/api/vtplus/usage');
 
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        setError('Please sign in to view VT+ usage');
-                        return;
-                    }
-                    throw new Error('Failed to fetch VT+ usage data');
-                }
-
-                const data = await response.json();
                 setVtPlusUsage(data);
                 setError(null);
-            } catch {
-                setError('Failed to load VT+ usage data');
+            } catch (error) {
+                if (error instanceof Error && error.message.includes('401')) {
+                    setError('Please sign in to view VT+ usage');
+                } else {
+                    setError('Failed to load VT+ usage data');
+                }
             } finally {
                 setLoading(false);
             }

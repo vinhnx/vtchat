@@ -137,22 +137,11 @@ export const useLogout = () => {
 
             // 6. Invalidate server-side subscription cache (before sign out)
             try {
-                const cacheResponse = await fetch('/api/subscription/invalidate-cache', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({}),
+                await http.post('/api/subscription/invalidate-cache', {
+                    body: {},
                 });
 
-                if (cacheResponse.ok) {
-                    log.info('[Logout] ✅ Invalidated server-side subscription cache');
-                } else {
-                    log.warn(
-                        { status: cacheResponse.status },
-                        '[Logout] ⚠️ Server cache invalidation returned error',
-                    );
-                }
+                log.info('[Logout] ✅ Invalidated server-side subscription cache');
             } catch (cacheError) {
                 log.warn(
                     { error: cacheError },

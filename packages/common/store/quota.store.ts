@@ -72,18 +72,7 @@ export const useQuotaStore = create<QuotaStore>()(
                 });
 
                 try {
-                    const response = await fetch('/api/vtplus/usage', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch usage: ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
+                    const data = await http.get('/api/vtplus/usage');
 
                     set((state) => {
                         // Update usage data for each feature

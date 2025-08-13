@@ -70,9 +70,9 @@ export function Thread() {
             <div className='flex min-w-full flex-col gap-6 px-2 py-4 pt-6'>
                 {/* Skeleton for first message */}
                 <div className='flex animate-pulse space-x-4'>
-                    <div className='bg-muted-foreground/20 rounded-full h-10 w-10' />
+                    <div className='bg-muted-foreground/20 h-10 w-10 rounded-full' />
                     <div className='flex-1 space-y-2'>
-                        <div className='bg-muted-foreground/20 h-4 rounded w-3/4' />
+                        <div className='bg-muted-foreground/20 h-4 w-3/4 rounded' />
                         <div className='bg-muted-foreground/20 h-4 rounded' />
                     </div>
                 </div>
@@ -139,7 +139,7 @@ Modify dynamic imports in `page.tsx` to prioritize critical components:
 // In apps/web/app/page.tsx, adjust the dynamic imports:
 const ThreadWithSuspense = NextDynamic(
     () =>
-        import('../components/lazy-components').then((mod) => ({
+        import('../components/lazy-components').then(mod => ({
             default: mod.ThreadWithSuspense,
         })),
     {

@@ -7,6 +7,7 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
 import { useToast } from '@repo/ui';
+import ky from 'ky';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
@@ -53,29 +54,12 @@ export function useCreemSubscription() {
         try {
             log.info({}, '[useCreemSubscription] Requesting customer portal for user');
 
-            // Call the portal API endpoint
-            const response = await fetch('/api/portal', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            // Call the portal API endpoint using ky for cleaner HTTP handling
+            const result = await ky.post('/api/portal', {
+                json: {
                     returnUrl: `${window.location.origin}/`, // Return to chat page
-                }),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                log.error(
-                    { status: response.status, errorText },
-                    '[useCreemSubscription] Portal API error',
-                );
-                throw new Error(
-                    `Failed to get portal URL: ${response.status} ${response.statusText}`,
-                );
-            }
-
-            const result = await response.json();
+                },
+            }).json<{ success: boolean; url?: string; error?: string; }>();
 
             if (result.success && result.url) {
                 log.info({}, '[useCreemSubscription] Opening portal in new tab');
@@ -160,7 +144,7 @@ export function useCreemSubscription() {
         } finally {
             setIsPortalLoading(false);
         }
-    }, [user, router, toast, refreshSubscriptionStatus]);
+    }, [user, router, toast, refreshSubscriptionStatus, setIsPortalReturn]);
 
     /**
      * Start a checkout flow to subscribe to VT+
@@ -175,32 +159,12 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            // Call the checkout API endpoint instead of direct service call
-            const response = await fetch(ApiRoutes.CHECKOUT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            // Call the checkout API endpoint using ky for cleaner HTTP handling
+            const result = await ky.post(ApiRoutes.CHECKOUT, {
+                json: {
                     priceId: PlanSlug.VT_PLUS, // Using the PlanSlug.VT_PLUS value
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                const errorMessage = errorData.message
-                    || `Failed to start checkout: ${response.statusText}`;
-                log.error({ errorMessage }, 'Error starting subscription checkout (!response.ok)');
-                setError(errorMessage);
-                toast({
-                    title: 'Subscription Error',
-                    description: errorMessage,
-                    variant: 'destructive',
-                });
-                return; // Exit after handling
-            }
-
-            const result = await response.json(); // This could also throw if response.ok but body is not JSON
+                },
+            }).json<{ success: boolean; url?: string; message?: string; }>();
 
             if (result.success && result.url) {
                 // Refresh subscription status with payment trigger before redirecting
@@ -249,7 +213,7 @@ export function useCreemSubscription() {
         } finally {
             setIsLoading(false);
         }
-    }, [user, router, toast]);
+    }, [user, router, toast, refreshSubscriptionStatus]);
 
     return {
         isPlusSubscriber,

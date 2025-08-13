@@ -10,6 +10,15 @@ This guide is streamlined to reduce context size. Use AGENTS.md for the authorit
 - Use enums for reusable keys; configuration via environment variables only.
 - UI follows shadcn/ui minimal principles; neutral palette; minimal icons.
 
+## HTTP Client Guidelines
+
+- **Use ky HTTP client only**: `import { http } from '@repo/shared/lib/http-client'`
+- **Never use fetch directly** - bypasses security and standardization
+- GET: `const data = await http.get('/api/endpoint')`
+- POST: `const result = await http.post('/api/endpoint', { body: data })`
+- Streaming: `const response = await http.postStream('/api/completion', { body, signal })`
+- API keys: `http.post('/api/external', { body, apiKeys: { openai: 'sk-...' } })`
+
 ## Structure & Commands
 
 - Apps in `apps/` (Next.js in `apps/web`); shared packages in `packages/` (`@repo/ui`, `@repo/shared`, `@repo/common`).

@@ -26,11 +26,8 @@ export function useBudgetStatus() {
     useEffect(() => {
         const fetchBudgetStatus = async () => {
             try {
-                const response = await fetch('/api/budget/status');
-                if (response.ok) {
-                    const data = await response.json();
-                    setBudgetStatus(data);
-                }
+                const data = await http.get('/api/budget/status');
+                setBudgetStatus(data);
             } catch (error) {
                 // Silently fail - budget warning is not critical
                 log.warn({ error }, 'Failed to fetch budget status');

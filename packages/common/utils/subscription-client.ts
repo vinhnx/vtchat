@@ -1,4 +1,6 @@
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/logger';
+
 /**
  * Client-side subscription utilities
  * Utilities for managing subscription state and cache on the client
@@ -10,24 +12,13 @@ import { log } from '@repo/shared/logger';
  */
 export async function invalidateSubscriptionCacheAfterPayment(): Promise<void> {
     try {
-        const response = await fetch('/api/subscription/invalidate-cache', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({}), // Will invalidate current user's cache
+        await http.post('/api/subscription/invalidate-cache', {
+            body: {},
         });
 
-        if (response.ok) {
-            log.info(
-                '[Subscription Utils] Successfully invalidated server-side cache after payment',
-            );
-        } else {
-            log.warn(
-                { statusText: response.statusText },
-                '[Subscription Utils] Failed to invalidate server-side cache',
-            );
-        }
+        log.info(
+            '[Subscription Utils] Successfully invalidated server-side cache after payment',
+        );
     } catch (error) {
         log.error({ error }, '[Subscription Utils] Error invalidating server-side cache');
     }
@@ -74,12 +65,8 @@ export async function clearSubscriptionDataOnLogout(): Promise<void> {
 
         // Invalidate server-side cache (best effort)
         try {
-            await fetch('/api/subscription/invalidate-cache', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}),
+            await http.post('/api/subscription/invalidate-cache', {
+                body: {},
             });
             log.info('[Subscription Utils] Successfully invalidated server-side cache');
         } catch (serverError) {

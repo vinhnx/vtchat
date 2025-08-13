@@ -85,83 +85,81 @@ export async function POST(request: NextRequest) {
             isSubscription,
         });
 
-        // Start database transaction
-        await db.transaction(async (tx) => {
-            // Get current user to determine current plan
-            const currentUser = await tx
-                .select({ planSlug: users.planSlug })
-                .from(users)
-                .where(eq(users.id, userId))
-                .limit(1);
+        // Note: neon-http driver doesn't support transactions, so we'll execute operations sequentially
+        // Get current user to determine current plan
+        const currentUser = await db
+            .select({ planSlug: users.planSlug })
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
 
-            const currentPlan = currentUser[0]?.planSlug || PlanSlug.VT_BASE;
+        const currentPlan = currentUser[0]?.planSlug || PlanSlug.VT_BASE;
 
-            log.info('[Payment Success API] Plan update:', {
-                currentPlan,
-                newPlan: planSlug,
-                isSubscription,
-            });
-
-            // Update user record with customer ID and plan
-            await tx
-                .update(users)
-                .set({
-                    creemCustomerId: validatedData.customer_id,
-                    planSlug,
-                    updatedAt: new Date(),
-                })
-                .where(eq(users.id, userId));
-
-            log.info('[Payment Success API] Updated user record:', {
-                userId,
-                customerId: validatedData.customer_id,
-                planSlug,
-                currentPlan,
-                isSubscription,
-            });
-
-            // If it's a subscription, update or create subscription record
-            if (isSubscription && validatedData.subscription_id) {
-                // Check if subscription record exists
-                const existingSubscription = await tx
-                    .select()
-                    .from(userSubscriptions)
-                    .where(eq(userSubscriptions.userId, userId))
-                    .limit(1);
-
-                const subscriptionData = {
-                    userId,
-                    plan: planSlug,
-                    status: SubscriptionStatusEnum.ACTIVE,
-                    creemCustomerId: validatedData.customer_id, // Using Creem customer ID
-                    creemSubscriptionId: validatedData.subscription_id,
-                    currentPeriodStart: new Date(),
-                    currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-                    updatedAt: new Date(),
-                };
-
-                if (existingSubscription.length > 0) {
-                    // Update existing subscription
-                    await tx
-                        .update(userSubscriptions)
-                        .set(subscriptionData)
-                        .where(eq(userSubscriptions.userId, userId));
-
-                    log.info('[Payment Success API] Updated existing subscription');
-                } else {
-                    // Create new subscription
-                    await tx.insert(userSubscriptions).values({
-                        id: `sub_${Date.now()}_${userId}`,
-                        ...subscriptionData,
-                        createdAt: new Date(),
-                    });
-
-                    log.info('[Payment Success API] Created new subscription');
-                }
-            }
+        log.info('[Payment Success API] Plan update:', {
+            currentPlan,
+            newPlan: planSlug,
+            isSubscription,
         });
 
-        log.info('[Payment Success API] Database transaction completed successfully');
+        // Update user record with customer ID and plan
+        await db
+            .update(users)
+            .set({
+                creemCustomerId: validatedData.customer_id,
+                planSlug,
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId));
+
+        log.info('[Payment Success API] Updated user record:', {
+            userId,
+            customerId: validatedData.customer_id,
+            planSlug,
+            currentPlan,
+            isSubscription,
+        });
+
+        // If it's a subscription, update or create subscription record
+        if (isSubscription && validatedData.subscription_id) {
+            // Check if subscription record exists
+            const existingSubscription = await db
+                .select()
+                .from(userSubscriptions)
+                .where(eq(userSubscriptions.userId, userId))
+                .limit(1);
+
+            const subscriptionData = {
+                userId,
+                plan: planSlug,
+                status: SubscriptionStatusEnum.ACTIVE,
+                creemCustomerId: validatedData.customer_id, // Using Creem customer ID
+                creemSubscriptionId: validatedData.subscription_id,
+                currentPeriodStart: new Date(),
+                currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+                updatedAt: new Date(),
+            };
+
+            if (existingSubscription.length > 0) {
+                // Update existing subscription
+                await db
+                    .update(userSubscriptions)
+                    .set(subscriptionData)
+                    .where(eq(userSubscriptions.userId, userId));
+
+                log.info('[Payment Success API] Updated existing subscription');
+            } else {
+                // Create new subscription
+                await db.insert(userSubscriptions).values({
+                    id: `sub_${Date.now()}_${userId}`,
+                    ...subscriptionData,
+                    createdAt: new Date(),
+                });
+
+                log.info('[Payment Success API] Created new subscription');
+            }
+        }
+
+        log.info('[Payment Success API] Database operations completed successfully');
 
         // Invalidate all caches for the user after successful payment
         await invalidateAllCaches(userId);

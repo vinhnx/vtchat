@@ -124,6 +124,33 @@ applyTo: "**"
 - Use `tailwind-merge` for merging Tailwind classes
 - Use `framer-motion` for animations
 
+## HTTP Client & API Requests
+
+- **Always use the centralized ky HTTP client**: `import { http } from '@repo/shared/lib/http-client'`
+- **Never use fetch() directly** - bypasses security, error handling, and standardization
+- **Automatic JSON handling**: Methods return parsed JSON automatically
+- **Built-in error handling**: HTTP errors are handled consistently
+- **API key security**: Pass keys via `apiKeys` option, never in headers
+
+### Common Patterns:
+
+```typescript
+// GET requests
+const data = await http.get('/api/user/profile');
+
+// POST with data
+const result = await http.post('/api/completion', { body: requestData });
+
+// Streaming responses (for AI completions)
+const response = await http.postStream('/api/completion', { body, signal });
+
+// Requests with API keys
+const result = await http.post('/api/external', {
+    body: data,
+    apiKeys: { openai: 'sk-...', anthropic: 'sk-...' },
+});
+```
+
 ## Error Handling
 
 - Use `try/catch` for async operations

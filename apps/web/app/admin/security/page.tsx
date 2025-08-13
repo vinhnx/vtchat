@@ -1,6 +1,7 @@
 'use client';
 
 import { SecurityOverviewChart } from '@repo/common/components/admin/security-overview-chart';
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
 import {
     Badge,
@@ -74,11 +75,8 @@ export default function AdminSecurityPage() {
     useEffect(() => {
         const fetchSecurityData = async () => {
             try {
-                const response = await fetch('/api/admin/security');
-                if (response.ok) {
-                    const result = await response.json();
-                    setData(result);
-                }
+                const result = await http.get('/api/admin/security');
+                setData(result);
             } catch (error) {
                 log.error({ error }, 'Failed to fetch security data');
             } finally {

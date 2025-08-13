@@ -18,6 +18,8 @@ export function PerformanceOptimizations() {
                 href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
                 rel='preload'
                 as='style'
+                crossOrigin='anonymous'
+                referrerPolicy='strict-origin-when-cross-origin'
             />
 
             {/* Optimize viewport for mobile */}
