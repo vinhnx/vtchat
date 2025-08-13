@@ -12,13 +12,22 @@ export const defaultMetadata: Metadata = {
     },
     icons: {
         icon: [
-            { url: '/favicon.ico', sizes: '32x32' },
+            { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
             { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
             { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
             { url: '/logo.svg', type: 'image/svg+xml' },
         ],
-        shortcut: '/favicon.ico',
-        apple: '/apple-icon.png',
+        shortcut: [{ url: '/favicon.ico', type: 'image/x-icon' }],
+        apple: [
+            { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+        ],
+        other: [
+            {
+                rel: 'mask-icon',
+                url: '/logo.svg',
+                color: '#000000',
+            },
+        ],
     },
     description:
         'Advanced AI chat platform with generative AI, deep learning, and natural language processing (NLP). Experience artificial intelligence with large language models (LLMs), machine learning, and real-time AI processing. Privacy-first AI systems for specific tasks requiring human intelligence.',
@@ -115,6 +124,13 @@ export const defaultMetadata: Metadata = {
         // google: "your-google-verification-code",
         // yandex: "your-yandex-verification-code",
         // yahoo: "your-yahoo-verification-code",
+    },
+    other: {
+        'application-name': 'VT - AI Chat Platform',
+        'apple-mobile-web-app-title': 'VT AI',
+        'apple-mobile-web-app-capable': 'yes',
+        'apple-mobile-web-app-status-bar-style': 'default',
+        'mobile-web-app-capable': 'yes',
     },
 };
 
