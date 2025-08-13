@@ -191,10 +191,10 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
 
             // Verify the tool call would be valid
             expect(expectedToolCall.toolName).toBe('barChart');
-            expect(expectedToolCall.args.title).toBeDefined();
-            expect(expectedToolCall.args.data).toHaveLength(3);
-            expect(expectedToolCall.args.data[0]).toHaveProperty('name');
-            expect(expectedToolCall.args.data[0]).toHaveProperty('value');
+            expect(expectedToolCall.input.title).toBeDefined();
+            expect(expectedToolCall.input.data).toHaveLength(3);
+            expect(expectedToolCall.input.data[0]).toHaveProperty('name');
+            expect(expectedToolCall.input.data[0]).toHaveProperty('value');
         });
     });
 });

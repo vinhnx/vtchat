@@ -48,15 +48,15 @@ const mockContext = {
 
 // Simulate the source processing logic from completion.ts
 function processWebSearchSources(toolResult, existingSources = []) {
-    if (toolResult.toolName !== 'web_search' || !toolResult.result?.sources) {
+    if (toolResult.toolName !== 'web_search' || !toolResult.output?.sources) {
         return existingSources;
     }
 
     log.info(
         {
             toolName: toolResult.toolName,
-            sourcesCount: toolResult.result.sources.length,
-            sources: toolResult.result.sources.map((source) => ({
+            sourcesCount: toolResult.output.sources.length,
+            sources: toolResult.output.sources.map((source) => ({
                 title: source.title,
                 url: source.url,
                 snippet: source.snippet?.substring(0, 100) + '...',
@@ -69,7 +69,7 @@ function processWebSearchSources(toolResult, existingSources = []) {
     const uniqueNewSources = [];
     const seenUrls = new Set(existingSources.map((source) => source.link));
 
-    for (const source of toolResult.result.sources) {
+    for (const source of toolResult.output.sources) {
         if (source?.url && !seenUrls.has(source.url)) {
             seenUrls.add(source.url);
             uniqueNewSources.push(source);
@@ -99,7 +99,7 @@ async function testSourceDuplicationFix() {
     console.log('🧪 Testing Source Duplication Fix\n');
 
     console.log('📋 Input Data:');
-    console.log('- Mock tool result sources:', mockToolResult.result.sources.length);
+    console.log('- Mock tool result sources:', mockToolResult.output.sources.length);
     console.log('- Existing sources:', mockContext.sources.length);
     console.log();
 

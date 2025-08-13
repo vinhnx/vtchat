@@ -330,7 +330,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     chunkBuffer.add(chunk);
                 },
                 onToolCall: (toolCall) => {
-                    log.info({ toolName: toolCall.toolName, args: toolCall.args }, 'Tool call');
+                    log.info({ toolName: toolCall.toolName, input: toolCall.input }, 'Tool call');
                     // Send tool call event to UI
                     events?.update('steps', (prev) => ({
                         ...prev,
@@ -343,7 +343,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                 toolCall: {
                                     data: {
                                         toolName: toolCall.toolName,
-                                        args: toolCall.args,
+                                        input: toolCall.input,
                                         type: charts
                                                 && Object.keys(chartTools()).includes(
                                                     toolCall.toolName,
@@ -365,23 +365,23 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         {
                             toolCallId: toolCall.toolCallId,
                             toolName: toolCall.toolName,
-                            args: toolCall.args,
+                            input: toolCall.input,
                         },
                     ]);
                 },
                 onToolResult: (toolResult) => {
                     log.info(
-                        { toolName: toolResult.toolName, result: toolResult.result },
+                        { toolName: toolResult.toolName, output: toolResult.output },
                         'Tool result for',
                     );
 
                     // Handle web search tool results - extract and add sources
-                    if (toolResult.toolName === 'web_search' && toolResult.result?.sources) {
+                    if (toolResult.toolName === 'web_search' && toolResult.output?.sources) {
                         log.info(
                             {
                                 toolName: toolResult.toolName,
-                                sourcesCount: toolResult.result.sources.length,
-                                sources: toolResult.result.sources.map((source: any) => ({
+                                sourcesCount: toolResult.output.sources.length,
+                                sources: toolResult.output.sources.map((source: any) => ({
                                     title: source.title,
                                     url: source.url,
                                     snippet: source.snippet?.substring(0, 100) + '...',
@@ -398,7 +398,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             const uniqueNewSources = [];
                             const seenUrls = new Set(existingSources.map((source) => source.link));
 
-                            for (const source of toolResult.result.sources) {
+                            for (const source of toolResult.output.sources) {
                                 if (source?.url && !seenUrls.has(source.url)) {
                                     seenUrls.add(source.url);
                                     uniqueNewSources.push(source);
@@ -417,7 +417,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             log.info(
                                 {
                                     existingCount: existingSources.length,
-                                    originalNewCount: toolResult.result.sources.length,
+                                    originalNewCount: toolResult.output.sources.length,
                                     filteredNewCount: newSources?.length || 0,
                                     totalCount: (existingSources.length || 0)
                                         + (newSources?.length || 0),
@@ -437,7 +437,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     ) {
                         lastMathResult = {
                             toolName: toolResult.toolName,
-                            result: toolResult.result,
+                            output: toolResult.output,
                         };
                     }
 
@@ -452,7 +452,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                 ...prev?.[0]?.steps,
                                 toolResult: {
                                     data: {
-                                        result: toolResult.result,
+                                        output: toolResult.output,
                                         type: charts
                                                 && Object.keys(chartTools()).includes(
                                                     toolResult.toolName || '',
@@ -476,7 +476,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         {
                             toolCallId: toolResult.toolCallId,
                             toolName: toolResult.toolName || 'unknown',
-                            result: toolResult.result,
+                            output: toolResult.output,
                         },
                     ]);
                 },
@@ -568,9 +568,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 3) Avoids mentioning internal tools or JSON
 
 Tool output JSON:\n\n${
-                    typeof lastMathResult.result === 'string'
-                        ? lastMathResult.result
-                        : JSON.stringify(lastMathResult.result)
+                    typeof lastMathResult.output === 'string'
+                        ? lastMathResult.output
+                        : JSON.stringify(lastMathResult.output)
                 }`;
 
                 const fallback = await generateText({

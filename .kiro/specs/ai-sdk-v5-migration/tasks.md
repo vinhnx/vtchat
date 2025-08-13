@@ -23,14 +23,14 @@
   - Replace `providerMetadata` with `providerOptions` for input parameters
   - _Requirements: 1.1, 1.2, 1.3, 1.6_
 
-- [ ] 1.3 Update tool definitions throughout the codebase
+- [x] 1.3 Update tool definitions throughout the codebase
   - Replace `parameters` with `inputSchema` in all tool definitions in `packages/ai/tools/`
   - Update tool property access from `args/result` to `input/output`
   - Replace `experimental_toToolResultContent` with `toModelOutput`
   - Add proper type narrowing for dynamic tools
   - _Requirements: 1.4, 1.5, 3.1, 3.2_
 
-- [ ] 1.4 Update media type handling across the application
+- [x] 1.4 Update media type handling across the application
   - Replace `mimeType` with `mediaType` in all file handling code
   - Update file part structures to use v5 patterns
   - Test file upload and processing functionality

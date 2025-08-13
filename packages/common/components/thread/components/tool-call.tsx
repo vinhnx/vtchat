@@ -94,7 +94,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                             </div>
                             <CodeBlock
                                 className='border-muted/50 rounded-md'
-                                code={JSON.stringify(toolCall.args, null, 2)}
+                                code={JSON.stringify(toolCall.input, null, 2)}
                                 lang='json'
                                 showHeader={false}
                                 variant='secondary'

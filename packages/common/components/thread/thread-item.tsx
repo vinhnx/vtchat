@@ -148,19 +148,18 @@ export const ThreadItem = memo(
                     )
                     .flatMap((step) =>
                         step.steps?.read?.data?.map(
-                            (result: any, i: number) =>
-                                (({
-                                    title: typeof result.title === 'string' && result.title.trim()
-                                        ? result.title
-                                        : result.link,
+                            (result: any, i: number) => (({
+                                title: typeof result.title === 'string' && result.title.trim()
+                                    ? result.title
+                                    : result.link,
 
-                                    link: result.link,
-                                    index: typeof result.index === 'number' ? result.index : i
-                                }) as {
-                                    title: string;
-                                    link: string;
-                                    index: number;
-                                }),
+                                link: result.link,
+                                index: typeof result.index === 'number' ? result.index : i,
+                            }) as {
+                                title: string;
+                                link: string;
+                                index: number;
+                            }),
                         )
                     )
                     .filter((r): r is { title: string; link: string; index: number; } => !!r)
@@ -289,7 +288,7 @@ export const ThreadItem = memo(
                             || threadItem.status === 'ABORTED'
                             || threadItem.status === 'ERROR'
                             || (!isGenerating && hasAnswer)) && ( // Show for completed threads or non-generating threads with answers
-                                (<div className='mb-4 mt-2 flex flex-col gap-1'>
+                                <div className='mb-4 mt-2 flex flex-col gap-1'>
                                     <div className='flex items-center gap-2'>
                                         <SpeechButton
                                             text={threadItem.answer?.text || ''}
@@ -306,7 +305,7 @@ export const ThreadItem = memo(
                                         <div className='mt-4 w-full space-y-4'>
                                             {chartToolResults.map((toolResult) => (
                                                 <ChartComponent
-                                                    chartData={toolResult.result}
+                                                    chartData={toolResult.output}
                                                     key={toolResult.toolCallId}
                                                 />
                                             ))}
@@ -320,7 +319,7 @@ export const ThreadItem = memo(
                                         </div>
                                     )}
                                     {/* Footer sources removed to avoid duplication; shown above under MDX content */}
-                                </div>)
+                                </div>
                             )}
                         {/* Follow-up suggestions are disabled entirely */}
                     </div>

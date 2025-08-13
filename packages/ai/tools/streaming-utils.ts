@@ -62,8 +62,8 @@ export function createToolResult(
         type: 'tool-result',
         toolCallId: toolCall.toolCallId,
         toolName: toolCall.toolName,
-        args: toolCall.args,
-        result,
+        input: toolCall.input,
+        output: result,
         state: 'result',
         executionTime,
         timestamp: Date.now(),
@@ -82,8 +82,8 @@ export function createToolError(
         type: 'tool-result',
         toolCallId: toolCall.toolCallId,
         toolName: toolCall.toolName,
-        args: toolCall.args,
-        result: error,
+        input: toolCall.input,
+        output: error,
         state: 'error',
         executionTime,
         timestamp: Date.now(),
@@ -150,7 +150,7 @@ export class StreamingToolExecutor {
             this.onToolCallUpdate?.(executingCall);
 
             // Execute the tool
-            const result = await executor(toolCall.args);
+            const result = await executor(toolCall.input);
             const executionTime = Date.now() - startTime;
 
             // Create and emit result
