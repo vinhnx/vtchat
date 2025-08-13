@@ -24,7 +24,7 @@ async function testOllamaIntegration() {
         await generateText({
             model,
             prompt: 'What is the capital of Japan? Answer in one word.',
-            maxTokens: 10,
+            maxOutputTokens: 10,
             maxRetries: 1, // Recommended for immediate feedback if server isn't running
         });
 
@@ -33,7 +33,7 @@ async function testOllamaIntegration() {
         await generateText({
             model: qwenModel,
             prompt: 'Hello! How are you today?',
-            maxTokens: 20,
+            maxOutputTokens: 20,
             maxRetries: 1,
         });
 
@@ -42,7 +42,7 @@ async function testOllamaIntegration() {
         await generateText({
             model: llama31Model,
             prompt: 'What is 5 + 3? Answer with just the number.',
-            maxTokens: 5,
+            maxOutputTokens: 5,
             maxRetries: 1,
         });
     } catch (error) {

@@ -149,17 +149,18 @@ export const ThreadItem = memo(
                     .flatMap((step) =>
                         step.steps?.read?.data?.map(
                             (result: any, i: number) =>
-                                ({
+                                (({
                                     title: typeof result.title === 'string' && result.title.trim()
                                         ? result.title
                                         : result.link,
+
                                     link: result.link,
-                                    index: typeof result.index === 'number' ? result.index : i,
+                                    index: typeof result.index === 'number' ? result.index : i
                                 }) as {
                                     title: string;
                                     link: string;
                                     index: number;
-                                },
+                                }),
                         )
                     )
                     .filter((r): r is { title: string; link: string; index: number; } => !!r)
@@ -236,8 +237,8 @@ export const ThreadItem = memo(
                                     <SourceGrid sources={validSources} />
 
                                     {/* Show thinking log if reasoning data is available */}
-                                    {(threadItem.reasoning
-                                        || threadItem.reasoningDetails?.length
+                                    {(threadItem.reasoningText
+                                        || threadItem.reasoningText?.length
                                         || threadItem.parts?.some(
                                             (part) => part.type === 'reasoning',
                                         )) && <ThinkingLog thread={threadItem} />}
@@ -288,7 +289,7 @@ export const ThreadItem = memo(
                             || threadItem.status === 'ABORTED'
                             || threadItem.status === 'ERROR'
                             || (!isGenerating && hasAnswer)) && ( // Show for completed threads or non-generating threads with answers
-                                <div className='mb-4 mt-2 flex flex-col gap-1'>
+                                (<div className='mb-4 mt-2 flex flex-col gap-1'>
                                     <div className='flex items-center gap-2'>
                                         <SpeechButton
                                             text={threadItem.answer?.text || ''}
@@ -300,7 +301,6 @@ export const ThreadItem = memo(
                                             threadItem={threadItem}
                                         />
                                     </div>
-
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
                                         <div className='mt-4 w-full space-y-4'>
@@ -312,7 +312,6 @@ export const ThreadItem = memo(
                                             ))}
                                         </div>
                                     )}
-
                                     {threadItem.documentAttachment && (
                                         <div className='flex justify-start'>
                                             <DocumentSidePanel
@@ -320,9 +319,8 @@ export const ThreadItem = memo(
                                             />
                                         </div>
                                     )}
-
                                     {/* Footer sources removed to avoid duplication; shown above under MDX content */}
-                                </div>
+                                </div>)
                             )}
                         {/* Follow-up suggestions are disabled entirely */}
                     </div>

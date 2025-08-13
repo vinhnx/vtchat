@@ -51,7 +51,7 @@ describe('Gemini 2.5 Flash Lite Free Model', () => {
             name: 'Gemini 2.5 Flash Lite Preview 06-17',
             provider: 'google',
             isFree: true,
-            maxTokens: 65_536,
+            maxOutputTokens: 65_536,
             contextWindow: 65_536,
         });
     });

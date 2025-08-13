@@ -2,13 +2,12 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
 import type { createOpenAICompatible } from '@ai-sdk/openai-compatible';
-import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
-import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
+import { wrapLanguageModel } from 'ai';
 export const Providers = {
     OPENAI: 'openai',
     ANTHROPIC: 'anthropic',
@@ -282,7 +281,7 @@ export const getProviderInstance = (
 
 export const getLanguageModel = (
     m: ModelEnum,
-    middleware?: LanguageModelV1Middleware,
+    middleware?: LanguageModelMiddleware,
     byokKeys?: Record<string, string>,
     useSearchGrounding?: boolean,
     cachedContent?: string,
@@ -356,7 +355,7 @@ export const getLanguageModel = (
                 const createModel = instance as (
                     id: string,
                     options?: Record<string, unknown>,
-                ) => LanguageModelV1;
+                ) => LanguageModel;
                 const selectedModel = createModel(modelId, modelOptions);
                 log.info('Gemini model created with options:', {
                     hasModel: !!selectedModel,
@@ -370,9 +369,9 @@ export const getLanguageModel = (
                     return wrapLanguageModel({
                         model: selectedModel,
                         middleware,
-                    }) as LanguageModelV1;
+                    }) as LanguageModel;
                 }
-                return selectedModel as LanguageModelV1;
+                return selectedModel as LanguageModel;
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : String(error);
                 const errorStack = error instanceof Error ? error.stack : undefined;
@@ -404,7 +403,7 @@ export const getLanguageModel = (
         });
 
         try {
-            const createModel = instance as (id: string) => LanguageModelV1;
+            const createModel = instance as (id: string) => LanguageModel;
             const selectedModel = createModel(modelId);
             log.info('Standard model created:', {
                 hasModel: !!selectedModel,
@@ -418,10 +417,10 @@ export const getLanguageModel = (
                 return wrapLanguageModel({
                     model: selectedModel,
                     middleware,
-                }) as LanguageModelV1;
+                }) as LanguageModel;
             }
             log.info('=== getLanguageModel END ===');
-            return selectedModel as LanguageModelV1;
+            return selectedModel as LanguageModel;
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             const errorStack = error instanceof Error ? error.stack : undefined;

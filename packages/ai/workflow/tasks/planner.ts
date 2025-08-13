@@ -84,7 +84,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
             prompt,
             model,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()),
             }),
             byokKeys: context?.get('apiKeys'),
@@ -101,7 +101,7 @@ export const plannerTask = createTask<WorkflowEventSchema, WorkflowContextSchema
 
         updateStep({
             stepId,
-            text: object.reasoning,
+            text: object.reasoningText,
             stepStatus: 'PENDING',
             subSteps: {
                 search: {

@@ -134,24 +134,24 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             const prevItem = threadItemMap.get(threadItemId) || ({} as ThreadItem);
 
             // Extract reasoning from steps if present
-            let reasoning = prevItem.reasoning;
-            let reasoningDetails = prevItem.reasoningDetails;
+            let reasoning = prevItem.reasoningText;
+            let reasoningDetails = prevItem.reasoningText;
 
             if (eventType === 'steps' && eventData?.steps) {
                 // Look for reasoning in the steps structure
                 const stepsData = eventData.steps;
-                if (stepsData[0]?.steps?.reasoning?.data) {
-                    reasoning = stepsData[0].steps.reasoning.data;
+                if (stepsData[0]?.steps?.reasoningText?.data) {
+                    reasoning = stepsData[0].steps.reasoningText.data;
                 }
                 // Look for structured reasoning details
-                if (stepsData[0]?.steps?.reasoningDetails?.data) {
-                    reasoningDetails = stepsData[0].steps.reasoningDetails.data;
+                if (stepsData[0]?.steps?.reasoningText?.data) {
+                    reasoningDetails = stepsData[0].steps.reasoningText.data;
                 }
             }
 
             // Handle reasoning details from answer events if present
-            if (eventType === 'answer' && eventData?.answer?.reasoningDetails) {
-                reasoningDetails = eventData.answer.reasoningDetails;
+            if (eventType === 'answer' && eventData?.answer?.reasoningText) {
+                reasoningDetails = eventData.answer.reasoningText;
             }
 
             const updatedItem: ThreadItem = {
@@ -162,8 +162,8 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 parentId: parentThreadItemId || prevItem.parentId,
                 id: threadItemId,
                 object: eventData?.object || prevItem.object,
-                reasoning,
-                reasoningDetails,
+                reasoningText,
+                reasoningText,
                 createdAt: prevItem.createdAt || new Date(),
                 updatedAt: new Date(),
                 ...(eventType === 'answer'

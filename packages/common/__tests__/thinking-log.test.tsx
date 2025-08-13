@@ -43,7 +43,7 @@ describe('ThinkingLog', () => {
 
     it('should render reasoning log when reasoning data is available', () => {
         const threadItem = createThreadItem({
-            reasoning: 'This is my reasoning process...',
+            reasoningText: 'This is my reasoning process...',
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -54,7 +54,7 @@ describe('ThinkingLog', () => {
 
     it('should expand and show reasoning content when clicked', async () => {
         const threadItem = createThreadItem({
-            reasoning: '# Step-by-step reasoning\n\n1. First, I analyze...\n2. Then, I consider...',
+            reasoningText: '# Step-by-step reasoning\n\n1. First, I analyze...\n2. Then, I consider...',
         });
 
         render(<ThinkingLog threadItem={threadItem} />);
@@ -70,7 +70,7 @@ describe('ThinkingLog', () => {
 
     it('should render reasoning details from AI SDK format', async () => {
         const threadItem = createThreadItem({
-            reasoningDetails: [
+            reasoningText: [
                 {
                     type: 'text',
                     text: 'Let me think about this...',
@@ -123,7 +123,7 @@ describe('ThinkingLog', () => {
 
     it('should not render when user lacks access', () => {
         const { rerender } = render(
-            <ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />,
+            <ThinkingLog threadItem={createThreadItem({ reasoningText: 'test' })} />,
         );
 
         // Mock no access
@@ -131,7 +131,7 @@ describe('ThinkingLog', () => {
             require('@repo/common/hooks/use-subscription-access').useFeatureAccess,
         ).mockReturnValue(false);
 
-        rerender(<ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />);
+        rerender(<ThinkingLog threadItem={createThreadItem({ reasoningText: 'test' })} />);
 
         expect(screen.queryByText('AI Reasoning Process')).not.toBeInTheDocument();
     });
@@ -148,7 +148,7 @@ describe('ThinkingLog', () => {
             });
         });
 
-        render(<ThinkingLog threadItem={createThreadItem({ reasoning: 'test' })} />);
+        render(<ThinkingLog threadItem={createThreadItem({ reasoningText: 'test' })} />);
 
         expect(screen.queryByText('AI Reasoning Process')).not.toBeInTheDocument();
     });

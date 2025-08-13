@@ -204,7 +204,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         status: 'COMPLETED',
                         steps: {
                             ...prev?.[0]?.steps,
-                            reasoning: {
+                            reasoningText: {
                                 data: fullText,
                                 status: 'COMPLETED',
                             },
@@ -312,7 +312,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             status: 'COMPLETED',
                             steps: {
                                 ...prev?.[0]?.steps,
-                                reasoningDetails: {
+                                reasoningText: {
                                     data: details,
                                     status: 'COMPLETED',
                                 },

@@ -13,7 +13,7 @@ import {
 
 const ClarificationResponseSchema = z.object({
     needsClarification: z.boolean(),
-    reasoning: z.string().optional(),
+    reasoningText: z.string().optional(),
     clarifyingQuestion: z
         .object({
             question: z.string(),
@@ -129,8 +129,8 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
 
         if (object?.needsClarification) {
             // Build a robust fallback message when reasoning is missing or empty
-            const hasReasoning = typeof object.reasoning === 'string'
-                && object.reasoning.trim().length > 0;
+            const hasReasoning = typeof object.reasoningText === 'string'
+                && object.reasoningText.trim().length > 0;
             const hasQuestion = !!object?.clarifyingQuestion?.question;
             const hasOptions = Array.isArray(object?.clarifyingQuestion?.options)
                 && object?.clarifyingQuestion?.options.length > 0;
@@ -138,7 +138,7 @@ export const refineQueryTask = createTask<WorkflowEventSchema, WorkflowContextSc
             const fallbackIntro =
                 'Your query is too broad for Deep Research. Please clarify so I can proceed effectively.';
 
-            let composedMessage = hasReasoning ? object.reasoning!.trim() : fallbackIntro;
+            let composedMessage = hasReasoning ? object.reasoningText!.trim() : fallbackIntro;
 
             if (hasQuestion) {
                 const q = object.clarifyingQuestion!.question.trim();

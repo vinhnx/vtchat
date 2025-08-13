@@ -45,7 +45,7 @@ export type WorkflowEventSchema = {
         >;
         toolCalls?: any[];
         toolResults?: any[];
-        reasoning?: {
+        reasoningText?: {
             text: string;
             final: boolean;
             status?: 'PENDING' | 'COMPLETED' | 'FAILED';

@@ -97,9 +97,9 @@ export type ThreadItem = {
     // Multi-modal attachments (VT+ feature)
     attachments?: Attachment[];
     // Thinking mode data (VT+ feature) - contains AI reasoning/thoughts
-    reasoning?: string;
+    reasoningText?: string;
     // Structured reasoning details from AI SDK (includes text and redacted content)
-    reasoningDetails?: Array<{
+    reasoningText?: Array<{
         type: 'text' | 'redacted';
         text?: string;
         data?: string;

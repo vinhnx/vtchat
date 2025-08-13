@@ -129,7 +129,7 @@ describe('OpenRouter Request Authenticity', () => {
 
                 // Verify model IDs follow OpenRouter format (provider/model)
                 expect(model.id).toMatch(/^[a-z0-9-]+\/[a-z0-9-]+/);
-                expect(model.maxTokens).toBeGreaterThan(0);
+                expect(model.maxOutputTokens).toBeGreaterThan(0);
                 expect(model.contextWindow).toBeGreaterThan(0);
             });
         });
