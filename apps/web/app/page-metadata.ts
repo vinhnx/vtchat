@@ -10,6 +10,16 @@ export const defaultMetadata: Metadata = {
         default: 'VT - Advanced AI Chat Platform with Generative AI & Deep Learning',
         template: '%s | VT - AI Platform',
     },
+    icons: {
+        icon: [
+            { url: '/favicon.ico', sizes: '32x32' },
+            { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+            { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+            { url: '/logo.svg', type: 'image/svg+xml' },
+        ],
+        shortcut: '/favicon.ico',
+        apple: '/apple-icon.png',
+    },
     description:
         'Advanced AI chat platform with generative AI, deep learning, and natural language processing (NLP). Experience artificial intelligence with large language models (LLMs), machine learning, and real-time AI processing. Privacy-first AI systems for specific tasks requiring human intelligence.',
     keywords: [

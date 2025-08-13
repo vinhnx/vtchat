@@ -36,11 +36,14 @@ export default function ParentLayout({
                 <PerformanceOptimizations />
                 <AccessibilityHead />
                 {/* Favicon and Icons - Multiple formats for better compatibility */}
-                <link href='/favicon.ico' rel='icon' sizes='32x32' />
-                <link href='/logo.svg' rel='icon' type='image/svg+xml' />
-                <link href='/apple-icon.png' rel='apple-touch-icon' />
-                <link href='/icon-192x192.png' rel='icon' sizes='192x192' type='image/png' />
-                <link href='/icon-512x512.png' rel='icon' sizes='512x512' type='image/png' />
+                <link rel='icon' href='/favicon.ico' sizes='32x32' />
+                <link rel='icon' href='/icon-192x192.png' sizes='192x192' type='image/png' />
+                <link rel='icon' href='/icon-512x512.png' sizes='512x512' type='image/png' />
+                <link rel='icon' href='/logo.svg' type='image/svg+xml' />
+                <link rel='apple-touch-icon' href='/apple-icon.png' />
+
+                {/* Legacy favicon support */}
+                <link rel='shortcut icon' href='/favicon.ico' />
 
                 {/* Additional meta tags for better search engine recognition */}
                 <meta name='theme-color' content='#ffffff' />
@@ -49,9 +52,6 @@ export default function ParentLayout({
 
                 {/* Preload critical favicon for faster loading */}
                 <link rel='preload' href='/favicon.ico' as='image' type='image/x-icon' />
-
-                {/* Canonical link for favicon */}
-                <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
                 <script
                     type='application/ld+json'
                     dangerouslySetInnerHTML={{

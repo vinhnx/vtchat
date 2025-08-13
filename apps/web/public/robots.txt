@@ -22,6 +22,10 @@ Allow: /docs
 Allow: /ai-resources
 Allow: /ai-glossary
 Allow: /faq
+Allow: /favicon.ico
+Allow: /icon-*.png
+Allow: /logo.svg
+Allow: /apple-icon.png
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -38,7 +42,6 @@ Disallow: /test-*
 Disallow: /tests/
 Disallow: /lingo/
 Disallow: /_next/
-Disallow: /favicon.ico
 Disallow: *.woff2
 Disallow: *.woff
 Disallow: *.ttf
@@ -54,6 +57,10 @@ Allow: /docs
 Allow: /ai-resources
 Allow: /ai-glossary
 Allow: /faq
+Allow: /favicon.ico
+Allow: /icon-*.png
+Allow: /logo.svg
+Allow: /apple-icon.png
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -70,7 +77,6 @@ Disallow: /test-*
 Disallow: /tests/
 Disallow: /lingo/
 Disallow: /_next/
-Disallow: /favicon.ico
 Disallow: *.woff2
 Disallow: *.woff
 Disallow: *.ttf
@@ -86,6 +92,10 @@ Allow: /docs
 Allow: /ai-resources
 Allow: /ai-glossary
 Allow: /faq
+Allow: /favicon.ico
+Allow: /icon-*.png
+Allow: /logo.svg
+Allow: /apple-icon.png
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -102,7 +112,6 @@ Disallow: /test-*
 Disallow: /tests/
 Disallow: /lingo/
 Disallow: /_next/
-Disallow: /favicon.ico
 Disallow: *.woff2
 Disallow: *.woff
 Disallow: *.ttf
@@ -119,6 +128,10 @@ Allow: /ai-resources
 Allow: /ai-glossary
 Allow: /faq
 Allow: /
+Allow: /favicon.ico
+Allow: /icon-*.png
+Allow: /logo.svg
+Allow: /apple-icon.png
 Disallow: /profile/
 Disallow: /api/
 Disallow: /chat/
@@ -135,7 +148,6 @@ Disallow: /test-*
 Disallow: /tests/
 Disallow: /lingo/
 Disallow: /_next/
-Disallow: /favicon.ico
 Disallow: *.woff2
 Disallow: *.woff
 Disallow: *.ttf
