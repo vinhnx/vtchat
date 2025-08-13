@@ -35,16 +35,6 @@ export default function ParentLayout({
             <head>
                 <PerformanceOptimizations />
                 <AccessibilityHead />
-                {/* Favicon and Icons - Multiple formats for better compatibility */}
-                <link rel='icon' href='/favicon.ico' sizes='32x32' />
-                <link rel='icon' href='/icon-192x192.png' sizes='192x192' type='image/png' />
-                <link rel='icon' href='/icon-512x512.png' sizes='512x512' type='image/png' />
-                <link rel='icon' href='/logo.svg' type='image/svg+xml' />
-                <link rel='apple-touch-icon' href='/apple-icon.png' />
-
-                {/* Legacy favicon support */}
-                <link rel='shortcut icon' href='/favicon.ico' />
-
                 {/* Additional meta tags for better search engine recognition */}
                 <meta name='theme-color' content='#ffffff' />
                 <meta name='msapplication-TileColor' content='#ffffff' />
