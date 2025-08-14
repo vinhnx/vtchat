@@ -12,8 +12,8 @@ export const ConditionalFooter = () => {
     }
 
     return (
-        <footer className='border-border/50 bg-background mt-auto border-t'>
-            <div className='mx-auto max-w-7xl'>
+        <footer className='border-border/50 bg-background relative z-0 mt-auto border-t mb-4 pb-safe sm:mb-4 md:mb-6'>
+            <div className='mx-auto w-full max-w-7xl'>
                 <Footer />
             </div>
         </footer>

@@ -1,10 +1,7 @@
 import Link from 'next/link';
 
+// Reduced to essential footer items only (max 4 items as requested)
 const links = [
-    {
-        title: 'Home',
-        href: '/',
-    },
     {
         title: 'Terms',
         href: '/terms',
@@ -14,59 +11,40 @@ const links = [
         href: '/privacy',
     },
     {
-        title: 'VT+',
-        href: '/pricing',
-    },
-    {
-        title: 'Hello',
-        href: 'mailto:hello@vtdotai.io.vn',
-    },
-    {
         title: 'Help',
         href: '/help',
     },
     {
-        title: 'About',
-        href: '/about',
-    },
-    {
-        title: 'FAQ',
-        href: '/faq',
-    },
-    {
-        title: 'AI Glossary',
-        href: '/ai-glossary',
-    },
-    {
-        title: 'AI Resources',
-        href: '/ai-resources',
-    },
-    {
-        title: 'X',
-        href: 'https://x.com/vtdotai',
+        title: 'VT+',
+        href: '/pricing',
     },
 ];
 
 export const Footer = () => {
     return (
-        <footer className='py-4 md:py-16'>
-            <div className='mx-auto max-w-5xl px-4 md:px-6'>
-                <div className='my-2 flex flex-wrap justify-center gap-3 text-xs md:my-8 md:gap-6 md:text-sm'>
+        <footer className='relative z-0 py-2 pb-safe sm:py-3 md:py-4'>
+            <div className='mx-auto max-w-5xl px-3 sm:px-4 md:px-6'>
+                {/* Mobile-first responsive design with reduced spacing */}
+                <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm'>
                     {links.map((link, index) => (
                         <Link
                             key={index}
                             href={link.href}
-                            className='text-muted-foreground hover:text-primary block duration-150'
+                            className='text-muted-foreground hover:text-primary duration-150 transition-colors'
                         >
                             <span>{link.title}</span>
                         </Link>
                     ))}
                 </div>
-                <span className='text-muted-foreground block text-center text-xs md:text-sm'>
-                    {' '}
+                
+                {/* Copyright with reduced spacing and mobile optimization */}
+                <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm'>
                     © {new Date().getFullYear()} VT, All rights reserved
-                </span>
+                </div>
             </div>
+            
+            {/* Mobile viewport spacing adjustment for chat input overlap prevention */}
+            <div className='h-2 sm:h-3 md:h-4' />
         </footer>
     );
 };
