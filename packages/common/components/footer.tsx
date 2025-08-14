@@ -22,25 +22,23 @@ const links = [
 
 export const Footer = () => {
     return (
-        <footer className='relative z-0 py-2 pb-safe sm:py-3 md:py-4'>
-            <div className='mx-auto max-w-5xl px-3 sm:px-4 md:px-6'>
-                {/* Mobile-first responsive design with reduced spacing */}
-                <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm'>
-                    {links.map((link, index) => (
-                        <Link
-                            key={index}
-                            href={link.href}
-                            className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                        >
-                            <span>{link.title}</span>
-                        </Link>
-                    ))}
-                </div>
-                
-                {/* Copyright with reduced spacing and mobile optimization */}
-                <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm'>
-                    © {new Date().getFullYear()} VT, All rights reserved
-                </div>
+        <footer className='relative z-0 py-2 pb-safe sm:py-3 md:py-4 mt-auto bg-transparent'>
+            {/* Mobile-first responsive design with reduced spacing */}
+            <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm px-3 sm:px-4 md:px-6'>
+                {links.map((link, index) => (
+                    <Link
+                        key={index}
+                        href={link.href}
+                        className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                    >
+                        <span>{link.title}</span>
+                    </Link>
+                ))}
+            </div>
+            
+            {/* Copyright with reduced spacing and mobile optimization */}
+            <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm px-3 sm:px-4 md:px-6'>
+                © {new Date().getFullYear()} VT, All rights reserved
             </div>
             
             {/* Mobile viewport spacing adjustment for chat input overlap prevention */}

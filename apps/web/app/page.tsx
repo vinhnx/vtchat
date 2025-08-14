@@ -2,6 +2,7 @@
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import log from '@repo/shared/logger';
+import { TypographySmall } from '@repo/ui';
 import NextDynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { SEOContent } from '../components/seo-content';
@@ -19,7 +20,9 @@ const ThreadWithSuspense = NextDynamic(
         ssr: false,
         loading: () => (
             <div className='flex h-full items-center justify-center'>
-                <div className='animate-pulse'>Loading AI chat...</div>
+                <div className='animate-pulse'>
+                    <TypographySmall>Loading AI chat...</TypographySmall>
+                </div>
             </div>
         ),
     },
@@ -32,11 +35,6 @@ const ChatInputWithSuspense = NextDynamic(
         })),
     {
         ssr: false,
-        loading: () => (
-            <div className='flex h-16 items-center justify-center'>
-                <div className='animate-pulse'>Loading AI input...</div>
-            </div>
-        ),
     },
 );
 
