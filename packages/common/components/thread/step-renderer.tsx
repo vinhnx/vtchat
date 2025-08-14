@@ -78,8 +78,8 @@ export const StepRenderer = ({ step }: StepRendererType) => {
 
     const renderReasoningStep = () => {
         if (step?.steps && 'reasoning' in step.steps) {
-            const reasoningData = typeof step.steps?.reasoning?.data === 'string'
-                ? step.steps.reasoning.data
+            const reasoningData = typeof step.steps?.reasoningText?.data === 'string'
+                ? step.steps.reasoningText.data
                 : '';
 
             return (

@@ -110,7 +110,7 @@ Current date: ${getHumanizedDate()}
             prompt,
             model: selectedModel,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()).optional().nullable(),
             }),
             byokKeys,
@@ -126,18 +126,18 @@ Current date: ${getHumanizedDate()}
 
         context?.update('queries', (current) => [...(current ?? []), ...(object?.queries ?? [])]);
 
-        if (object?.reasoning) {
+        if (object?.reasoningText) {
             updateStep({
                 stepId: newStepId,
                 stepStatus: 'PENDING',
-                text: object?.reasoning,
+                text: object?.reasoningText,
                 subSteps: {
                     search: { status: 'COMPLETED', data: object?.queries },
                 },
             });
         }
 
-        if (!(object?.queries?.length && object?.reasoning)) {
+        if (!(object?.queries?.length && object?.reasoningText)) {
             redirectTo('analysis');
         }
 

@@ -37,8 +37,8 @@ export interface GenerateTextWithReasoningResult {
     text: string;
     sources?: any[];
     groundingMetadata?: any;
-    reasoning?: string;
-    reasoningDetails?: ReasoningDetail[];
+    reasoningText?: string;
+    reasoning?: ReasoningDetail[];
 }
 
 /**
@@ -68,6 +68,6 @@ export interface ReasoningProviderOptions {
         thinkingConfig?: GoogleThinkingConfig;
     };
     anthropic?: {
-        reasoning?: boolean;
+        reasoningText?: boolean;
     };
 }

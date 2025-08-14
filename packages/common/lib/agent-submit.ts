@@ -1,13 +1,13 @@
 import type { ChatMode, UserTier } from '@repo/shared/config';
 import { log } from '@repo/shared/lib/logger';
-import type { CoreMessage } from 'ai';
+import type { ModelMessage } from 'ai';
 
 export type ThreadMeta = {
     threadId: string;
     query: string;
     optimisticAiThreadItemId: string;
     mode: ChatMode;
-    coreMessages: CoreMessage[];
+    coreMessages: ModelMessage[];
 };
 
 export type SubmitOptions = {

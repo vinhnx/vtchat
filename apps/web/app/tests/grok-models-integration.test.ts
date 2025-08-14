@@ -63,9 +63,9 @@ describe('Grok Models Integration', () => {
     describe('Model Definitions', () => {
         // Mock model configuration
         const mockModels = {
-            'grok-3': { provider: 'xai', maxTokens: 131_072, contextWindow: 131_072 },
-            'grok-3-mini': { provider: 'xai', maxTokens: 131_072, contextWindow: 131_072 },
-            'grok-4': { provider: 'xai', maxTokens: 256_000, contextWindow: 256_000 },
+            'grok-3': { provider: 'xai', maxOutputTokens: 131_072, contextWindow: 131_072 },
+            'grok-3-mini': { provider: 'xai', maxOutputTokens: 131_072, contextWindow: 131_072 },
+            'grok-4': { provider: 'xai', maxOutputTokens: 256_000, contextWindow: 256_000 },
         };
 
         it('should have proper model configurations', () => {

@@ -22,7 +22,7 @@ export const chartTools = (config?: {
         barChart: tool({
             description:
                 'Create a bar chart with data points. Useful for comparing categorical data or showing distributions.',
-            parameters: z.object({
+            inputSchema: z.object({
                 title: z.string().describe('Chart title'),
                 data: z.array(chartDataSchema).describe('Array of data points with name and value'),
                 xAxisLabel: z.string().optional().describe('X-axis label'),
@@ -44,7 +44,7 @@ export const chartTools = (config?: {
         lineChart: tool({
             description:
                 'Create a line chart to show trends over time or continuous data. Perfect for time series data.',
-            parameters: z.object({
+            inputSchema: z.object({
                 title: z.string().describe('Chart title'),
                 data: z
                     .array(multiSeriesDataSchema)
@@ -80,7 +80,7 @@ export const chartTools = (config?: {
         areaChart: tool({
             description:
                 'Create an area chart to show cumulative totals over time or to emphasize the magnitude of change.',
-            parameters: z.object({
+            inputSchema: z.object({
                 title: z.string().describe('Chart title'),
                 data: z
                     .array(multiSeriesDataSchema)
@@ -116,7 +116,7 @@ export const chartTools = (config?: {
         pieChart: tool({
             description:
                 'Create a pie chart to show proportions and percentages of a whole. Great for showing distribution of categories.',
-            parameters: z.object({
+            inputSchema: z.object({
                 title: z.string().describe('Chart title'),
                 data: z.array(chartDataSchema).describe('Array of data points with name and value'),
                 showLabels: z.boolean().optional().describe('Whether to show data labels'),
@@ -136,7 +136,7 @@ export const chartTools = (config?: {
         radarChart: tool({
             description:
                 'Create a radar/spider chart to show multivariate data. Perfect for comparing multiple categories or metrics.',
-            parameters: z.object({
+            inputSchema: z.object({
                 title: z.string().describe('Chart title'),
                 data: z
                     .array(

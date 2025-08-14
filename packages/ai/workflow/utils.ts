@@ -8,9 +8,9 @@ import {
     isEligibleForQuotaConsumption,
 } from '@repo/shared/utils/access-control';
 import {
-    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
+    type ModelMessage,
     streamText,
     type ToolSet,
 } from 'ai';
@@ -90,7 +90,7 @@ export const generateTextWithGeminiSearch = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -417,7 +417,7 @@ export const generateTextWithGeminiSearch = async ({
                     throw new Error('Operation aborted');
                 }
 
-                if (chunk.type === 'text-delta') {
+                if (chunk.type === 'text') {
                     fullText += chunk.textDelta;
                     onChunk?.(chunk.textDelta, fullText);
                 }
@@ -453,11 +453,11 @@ export const generateTextWithGeminiSearch = async ({
 
         try {
             log.info('Checking streamResult.providerMetadata:', {
-                hasProviderMetadata: !!streamResult?.providerMetadata,
-                providerMetadataType: typeof streamResult?.providerMetadata,
+                hasProviderMetadata: !!streamResult?.providerOptions,
+                providerMetadataType: typeof streamResult?.providerOptions,
             });
-            if (streamResult?.providerMetadata) {
-                const metadata = await streamResult.providerMetadata;
+            if (streamResult?.providerOptions) {
+                const metadata = await streamResult.providerOptions;
                 log.info('ProviderMetadata resolved:', {
                     hasMetadata: !!metadata,
                     hasGoogle: !!metadata?.google,
@@ -475,8 +475,8 @@ export const generateTextWithGeminiSearch = async ({
         let reasoningDetails: any[] = [];
 
         try {
-            if (streamResult?.reasoning) {
-                reasoning = (await streamResult.reasoning) || '';
+            if (streamResult?.reasoningText) {
+                reasoning = (await streamResult.reasoningText) || '';
                 log.info('Reasoning extracted:', { data: reasoning.length });
             }
         } catch (error) {
@@ -484,8 +484,8 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         try {
-            if (streamResult?.reasoningDetails) {
-                reasoningDetails = (await streamResult.reasoningDetails) || [];
+            if (streamResult?.reasoning) {
+                reasoningDetails = (await streamResult.reasoning) || [];
                 log.info('ReasoningDetails extracted:', {
                     data: reasoningDetails.length,
                 });
@@ -498,8 +498,8 @@ export const generateTextWithGeminiSearch = async ({
             text: fullText,
             sources: resolvedSources,
             groundingMetadata,
+            reasoningText,
             reasoning,
-            reasoningDetails,
         };
 
         log.info('=== generateTextWithGeminiSearch END ===');
@@ -507,8 +507,8 @@ export const generateTextWithGeminiSearch = async ({
             textLength: result.text.length,
             sourcesCount: result.sources.length,
             hasGroundingMetadata: !!result.groundingMetadata,
-            hasReasoning: !!result.reasoning,
-            reasoningDetailsCount: result.reasoningDetails.length,
+            hasReasoning: !!result.reasoningText,
+            reasoningDetailsCount: result.reasoning.length,
         });
 
         return result;
@@ -569,7 +569,7 @@ export const generateText = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
     onReasoningDetails?: (details: ReasoningDetail[]) => void;
     tools?: ToolSet;
@@ -723,7 +723,7 @@ export const generateText = async ({
                         case 'anthropic-reasoning':
                             // Anthropic Claude 4 models support reasoning through beta features
                             providerOptions.anthropic = {
-                                reasoning: true,
+                                reasoningText: true,
                             };
                             break;
 
@@ -853,7 +853,7 @@ export const generateText = async ({
                         throw new Error('Operation aborted');
                     }
 
-                    if (chunk.type === 'text-delta') {
+                    if (chunk.type === 'text') {
                         fullText += chunk.textDelta;
                         onChunk?.(chunk.textDelta, fullText);
                     }
@@ -876,8 +876,8 @@ export const generateText = async ({
 
                 // Extract reasoning details if available
                 try {
-                    if (streamResult?.reasoningDetails) {
-                        const reasoningDetails = (await streamResult.reasoningDetails) || [];
+                    if (streamResult?.reasoning) {
+                        const reasoningDetails = (await streamResult.reasoning) || [];
                         if (reasoningDetails.length > 0) {
                             onReasoningDetails?.(reasoningDetails);
                         }
@@ -928,7 +928,7 @@ export const generateObject = async ({
     prompt: string;
     model: ModelEnum;
     schema: ZodSchema;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -1054,7 +1054,7 @@ export const generateObject = async ({
                 case ReasoningType.ANTHROPIC_REASONING:
                     // Anthropic Claude 4 models support reasoning through beta features
                     providerOptions.anthropic = {
-                        reasoning: true,
+                        reasoningText: true,
                     };
                     break;
 

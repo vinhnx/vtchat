@@ -68,7 +68,7 @@ ${getFormattingInstructions('analysis')}
                     stepStatus: 'PENDING',
                     text: chunk,
                     subSteps: {
-                        reasoning: { status: 'PENDING', data: fullText },
+                        reasoningText: { status: 'PENDING', data: fullText },
                     },
                 });
             },
@@ -99,7 +99,7 @@ ${getFormattingInstructions('analysis')}
                     stepId,
                     stepStatus: 'COMPLETED',
                     subSteps: {
-                        reasoningDetails: {
+                        reasoning: {
                             status: 'COMPLETED',
                             data: details,
                         },
@@ -114,7 +114,7 @@ ${getFormattingInstructions('analysis')}
             stepId,
             stepStatus: 'COMPLETED',
             subSteps: {
-                reasoning: { status: 'COMPLETED' },
+                reasoningText: { status: 'COMPLETED' },
             },
         });
 
