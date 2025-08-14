@@ -12,6 +12,42 @@ jobs:
         concurrency: deploy-group # optional: ensure only one action runs at a time
         steps:
             - uses: actions/checkout@v4
+            
+            # Setup Bun for building the application
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v1
+              with:
+                  bun-version: latest
+                  
+            # Install dependencies
+            - name: Install dependencies
+              run: bun install
+              
+            # Build the Next.js application
+            - name: Build application
+              run: bun run build
+              env:
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+                  NODE_ENV: production
+                  NEXT_PUBLIC_BASE_URL: https://vtchat.io.vn
+                  NEXT_PUBLIC_APP_URL: https://vtchat.io.vn
+                  BETTER_AUTH_URL: https://vtchat.io.vn
+                  CREEM_ENVIRONMENT: production
+              
+            # Verify build output exists
+            - name: Verify build output
+              run: |
+                  if [ ! -d "apps/web/.next/standalone" ]; then
+                      echo "Error: Standalone build not found at apps/web/.next/standalone"
+                      exit 1
+                  fi
+                  if [ ! -d "apps/web/.next/static" ]; then
+                      echo "Error: Static build not found at apps/web/.next/static"
+                      exit 1
+                  fi
+                  echo "Build verification completed successfully"
+                  
+            # Setup Flyctl and deploy
             - uses: superfly/flyctl-actions/setup-flyctl@master
             - run: flyctl deploy --remote-only
               env:
