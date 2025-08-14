@@ -92,6 +92,7 @@
         "entities": "4.5.0"
     },
     "dependencies": {
+        "@react-spring/web": "^9.7.3",
         "@ai-sdk/anthropic": "^2.0.1",
         "@ai-sdk/fireworks": "^1.0.3",
         "@ai-sdk/google": "^1.2.22",
