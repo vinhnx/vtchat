@@ -3,7 +3,7 @@
 import { LoginForm } from '@/components/login-form';
 import { ShineText } from '@repo/common/components';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { CobeGlobe } from '@/components/cobe-globe';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -77,15 +77,7 @@ export default function LoginPage() {
                 animate={animationProps.animate}
                 transition={{ ...animationProps.transition, delay: 0.3 }}
             >
-                <Image
-                    alt='VT Background'
-                    className='object-cover'
-                    fill
-                    priority
-                    quality={100}
-                    sizes='(max-width: 1024px) 100vw, 50vw'
-                    src='/bg/bg_vt.avif'
-                />
+                <CobeGlobe />
             </motion.div>
         </div>
     );
