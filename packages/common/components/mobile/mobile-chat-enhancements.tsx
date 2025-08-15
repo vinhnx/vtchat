@@ -32,7 +32,7 @@ interface MobileChatHeaderProps {
 
 export const MobileChatHeader = memo(
     ({
-        title = 'VT Assistant',
+        title = 'VT Chat',
         subtitle = 'AI-powered chat',
         onMinimize,
         onMaximize,

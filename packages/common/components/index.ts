@@ -41,6 +41,7 @@ export * from './math-calculator-indicator';
 export * from './mdx';
 export * from './minimal-layout';
 export * from './mobile/mobile-chat-enhancements';
+export * from './mobile/mobile-top-navigation';
 export * from './mode-toggle';
 export * from './motion-skeleton';
 export { default as MultiModelUsageMeter } from './multi-model-usage-meter';

@@ -91,7 +91,7 @@ export const PremiumAIResponse = memo(
                         <div className='border-200 from-100 dark:border-700 dark:from-900/30 flex items-center gap-2 rounded-full border bg-gradient-to-r to-blue-100 px-3 py-1 dark:to-blue-900/30'>
                             <Sparkles className='text-600 dark:text-400' size={14} />
                             <span className='text-700 dark:text-300 text-sm font-medium'>
-                                VT Assistant
+                                VT Chat
                             </span>
                             {isGenerating && (
                                 <motion.div
@@ -161,7 +161,7 @@ export const PremiumAIResponse = memo(
                             initial={{ opacity: 0 }}
                             transition={{ delay: 0.6 }}
                         >
-                            <span>Model: {threadItem.model || 'VT Assistant'}</span>
+                            <span>Model: {threadItem.model || 'VT Chat'}</span>
                             <span>•</span>
                             <span>Response time: ~2.3s</span>
                             <span>•</span>
