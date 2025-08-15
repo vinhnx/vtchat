@@ -6,6 +6,10 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+- **Mobile Floating Menu Visibility Fix - COMPLETE ✅**:
+  - Ensured floating menu buttons remain visible on mobile by limiting `rounded-sm` and `overflow-hidden` to desktop screens
+  - Files: `packages/common/components/layout/root.tsx`
+
 - **Chat Input Button Selection Logic - COMPLETE ✅**:
   - **Issue Resolved**: Implemented comprehensive button selection logic to ensure only one button and only one mode is selected at a time
   - **Key Features**:
