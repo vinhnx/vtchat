@@ -59,7 +59,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
     useMobilePWANotification();
 
     const containerClass =
-        'relative flex flex-1 flex-row h-[100dvh] border border-border rounded-sm bg-secondary w-full overflow-hidden shadow-sm';
+        'relative flex flex-1 flex-row h-[100dvh] border border-border bg-secondary w-full shadow-sm md:rounded-sm md:overflow-hidden';
 
     // Hide drop shadow on plus page
     const shouldShowDropShadow = pathname !== '/pricing';
