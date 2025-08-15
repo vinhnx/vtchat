@@ -328,12 +328,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             // Prevent clicks on user profile trigger from closing mobile sidebar
                                             e.stopPropagation();
-                                            e.preventDefault();
                                         }}
                                         onTouchEnd={(e) => {
                                             // Handle iOS touch events specifically
                                             e.stopPropagation();
-                                            e.preventDefault();
                                         }}
                                     >
                                         <UnifiedAvatar
@@ -384,6 +382,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                             e.preventDefault();
                                         }
                                     }}
+                                    sideOffset={4}
+                                    {...(forceMobile && { className: 'z-[303] w-56 pl-2' })}
                                 >
                                     {/* Account Management */}
                                     <DropdownMenuLabel>Account</DropdownMenuLabel>
