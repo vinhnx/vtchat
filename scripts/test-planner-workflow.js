@@ -24,7 +24,7 @@ async function testPlannerWorkflow() {
             prompt: 'Plan a search for: who is vinhnx',
             model: ModelEnum.GEMINI_2_5_FLASH_LITE,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()),
             }),
             byokKeys: {}, // Empty - should use system key
@@ -41,7 +41,7 @@ async function testPlannerWorkflow() {
         const result = await generateObject(testParams);
 
         console.log('✅ SUCCESS: generateObject completed successfully!');
-        console.log(`  - Reasoning: ${result.reasoning?.substring(0, 100)}...`);
+        console.log(`  - Reasoning: ${result.reasoningText?.substring(0, 100)}...`);
         console.log(`  - Queries: ${result.queries?.length} queries generated`);
 
         return true;

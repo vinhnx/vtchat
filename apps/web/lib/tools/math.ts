@@ -44,7 +44,7 @@ export const calculatorTools = (config?: {
     const tools: Partial<Record<CalculatorTools, Tool>> = {
         add: tool({
             description: 'Add two numbers and return the result',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().describe('First number'),
                 b: z.number().describe('Second number'),
             }),
@@ -54,7 +54,7 @@ export const calculatorTools = (config?: {
         }),
         subtract: tool({
             description: 'Subtract second number from first and return the result',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().describe('First number'),
                 b: z.number().describe('Second number'),
             }),
@@ -64,7 +64,7 @@ export const calculatorTools = (config?: {
         }),
         multiply: tool({
             description: 'Multiply two numbers and return the result',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().describe('First number'),
                 b: z.number().describe('Second number'),
             }),
@@ -74,7 +74,7 @@ export const calculatorTools = (config?: {
         }),
         divide: tool({
             description: 'Divide first number by second and return the result',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().describe('Numerator'),
                 b: z.number().describe('Denominator'),
             }),
@@ -84,7 +84,7 @@ export const calculatorTools = (config?: {
         }),
         exponentiate: tool({
             description: 'Raise first number to the power of the second number',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().describe('Base'),
                 b: z.number().describe('Exponent'),
             }),
@@ -94,7 +94,7 @@ export const calculatorTools = (config?: {
         }),
         factorial: tool({
             description: 'Calculate the factorial of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().int().describe('Number to calculate the factorial of'),
             }),
             execute: async ({ n }) => {
@@ -103,7 +103,7 @@ export const calculatorTools = (config?: {
         }),
         isPrime: tool({
             description: 'Check if a number is prime',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().int().describe('Number to check if prime'),
             }),
             execute: async ({ n }) => {
@@ -112,7 +112,7 @@ export const calculatorTools = (config?: {
         }),
         squareRoot: tool({
             description: 'Calculate the square root of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate the square root of'),
             }),
             execute: async ({ n }) => {
@@ -121,7 +121,7 @@ export const calculatorTools = (config?: {
         }),
         sin: tool({
             description: 'Calculate the sine of an angle in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
@@ -130,7 +130,7 @@ export const calculatorTools = (config?: {
         }),
         cos: tool({
             description: 'Calculate the cosine of an angle in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
@@ -139,7 +139,7 @@ export const calculatorTools = (config?: {
         }),
         tan: tool({
             description: 'Calculate the tangent of an angle in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Angle in radians'),
             }),
             execute: async ({ n }) => {
@@ -148,7 +148,7 @@ export const calculatorTools = (config?: {
         }),
         sqrt: tool({
             description: 'Calculate the square root of a number (alias for squareRoot)',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate the square root of'),
             }),
             execute: async ({ n }) => {
@@ -157,7 +157,7 @@ export const calculatorTools = (config?: {
         }),
         log: tool({
             description: 'Calculate the natural logarithm (base e) of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate the logarithm of'),
             }),
             execute: async ({ n }) => {
@@ -166,7 +166,7 @@ export const calculatorTools = (config?: {
         }),
         exp: tool({
             description: 'Calculate e raised to the power of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Power to raise e to'),
             }),
             execute: async ({ n }) => {
@@ -176,7 +176,7 @@ export const calculatorTools = (config?: {
         evaluateExpression: tool({
             description:
                 'Evaluate a complete mathematical expression with proper order of operations (PEMDAS). Supports +, -, *, /, ^, (), sqrt(), sin(), cos(), tan(), log(), exp(), abs(), floor(), ceil(), round(), pi, e',
-            parameters: z.object({
+            inputSchema: z.object({
                 expression: z
                     .string()
                     .describe(
@@ -189,7 +189,7 @@ export const calculatorTools = (config?: {
         }),
         abs: tool({
             description: 'Calculate the absolute value of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to get absolute value of'),
             }),
             execute: async ({ n }) => {
@@ -198,7 +198,7 @@ export const calculatorTools = (config?: {
         }),
         floor: tool({
             description: 'Round a number down to the nearest integer',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to floor'),
             }),
             execute: async ({ n }) => {
@@ -207,7 +207,7 @@ export const calculatorTools = (config?: {
         }),
         ceil: tool({
             description: 'Round a number up to the nearest integer',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to ceil'),
             }),
             execute: async ({ n }) => {
@@ -216,7 +216,7 @@ export const calculatorTools = (config?: {
         }),
         round: tool({
             description: 'Round a number to the nearest integer',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to round'),
                 decimals: z
                     .number()
@@ -230,7 +230,7 @@ export const calculatorTools = (config?: {
         }),
         min: tool({
             description: 'Find the minimum value from a list of numbers',
-            parameters: z.object({
+            inputSchema: z.object({
                 numbers: z.array(z.number()).describe('Array of numbers to find minimum from'),
             }),
             execute: async ({ numbers }) => {
@@ -239,7 +239,7 @@ export const calculatorTools = (config?: {
         }),
         max: tool({
             description: 'Find the maximum value from a list of numbers',
-            parameters: z.object({
+            inputSchema: z.object({
                 numbers: z.array(z.number()).describe('Array of numbers to find maximum from'),
             }),
             execute: async ({ numbers }) => {
@@ -248,7 +248,7 @@ export const calculatorTools = (config?: {
         }),
         getConstants: tool({
             description: 'Get mathematical constants (pi, e, golden ratio, etc.)',
-            parameters: z.object({
+            inputSchema: z.object({
                 constant: z
                     .enum(['pi', 'e', 'goldenRatio', 'euler', 'sqrt2'])
                     .describe('Which constant to get'),
@@ -259,7 +259,7 @@ export const calculatorTools = (config?: {
         }),
         asin: tool({
             description: 'Calculate the arcsine (inverse sine) of a number in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number between -1 and 1'),
             }),
             execute: async ({ n }) => {
@@ -268,7 +268,7 @@ export const calculatorTools = (config?: {
         }),
         acos: tool({
             description: 'Calculate the arccosine (inverse cosine) of a number in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number between -1 and 1'),
             }),
             execute: async ({ n }) => {
@@ -277,7 +277,7 @@ export const calculatorTools = (config?: {
         }),
         atan: tool({
             description: 'Calculate the arctangent (inverse tangent) of a number in radians',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate arctangent of'),
             }),
             execute: async ({ n }) => {
@@ -286,7 +286,7 @@ export const calculatorTools = (config?: {
         }),
         sinh: tool({
             description: 'Calculate the hyperbolic sine of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate hyperbolic sine of'),
             }),
             execute: async ({ n }) => {
@@ -295,7 +295,7 @@ export const calculatorTools = (config?: {
         }),
         cosh: tool({
             description: 'Calculate the hyperbolic cosine of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate hyperbolic cosine of'),
             }),
             execute: async ({ n }) => {
@@ -304,7 +304,7 @@ export const calculatorTools = (config?: {
         }),
         tanh: tool({
             description: 'Calculate the hyperbolic tangent of a number',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().describe('Number to calculate hyperbolic tangent of'),
             }),
             execute: async ({ n }) => {
@@ -313,7 +313,7 @@ export const calculatorTools = (config?: {
         }),
         gcd: tool({
             description: 'Calculate the Greatest Common Divisor (GCD) of two integers',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().int().describe('First integer'),
                 b: z.number().int().describe('Second integer'),
             }),
@@ -323,7 +323,7 @@ export const calculatorTools = (config?: {
         }),
         lcm: tool({
             description: 'Calculate the Least Common Multiple (LCM) of two integers',
-            parameters: z.object({
+            inputSchema: z.object({
                 a: z.number().int().describe('First integer'),
                 b: z.number().int().describe('Second integer'),
             }),
@@ -334,7 +334,7 @@ export const calculatorTools = (config?: {
         permutation: tool({
             description:
                 'Calculate permutations (nPr): number of ways to arrange r items from n items',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().int().describe('Total number of items'),
                 r: z.number().int().describe('Number of items to arrange'),
             }),
@@ -345,7 +345,7 @@ export const calculatorTools = (config?: {
         combination: tool({
             description:
                 'Calculate combinations (nCr): number of ways to choose r items from n items',
-            parameters: z.object({
+            inputSchema: z.object({
                 n: z.number().int().describe('Total number of items'),
                 r: z.number().int().describe('Number of items to choose'),
             }),
@@ -355,7 +355,7 @@ export const calculatorTools = (config?: {
         }),
         mean: tool({
             description: 'Calculate the arithmetic mean (average) of a list of numbers',
-            parameters: z.object({
+            inputSchema: z.object({
                 numbers: z.array(z.number()).describe('Array of numbers to calculate mean of'),
             }),
             execute: async ({ numbers }) => {
@@ -364,7 +364,7 @@ export const calculatorTools = (config?: {
         }),
         median: tool({
             description: 'Calculate the median (middle value) of a list of numbers',
-            parameters: z.object({
+            inputSchema: z.object({
                 numbers: z.array(z.number()).describe('Array of numbers to find median of'),
             }),
             execute: async ({ numbers }) => {
@@ -373,7 +373,7 @@ export const calculatorTools = (config?: {
         }),
         standardDeviation: tool({
             description: 'Calculate the standard deviation of a list of numbers',
-            parameters: z.object({
+            inputSchema: z.object({
                 numbers: z
                     .array(z.number())
                     .describe('Array of numbers to calculate standard deviation of'),

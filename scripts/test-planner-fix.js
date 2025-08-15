@@ -24,7 +24,7 @@ async function testFreeUserPlannerWithoutApiKey() {
             prompt: 'Plan a search for: who is vinhnx',
             model: ModelEnum.GEMINI_2_5_FLASH_LITE,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()),
             }),
             byokKeys: {}, // Empty API keys object - matches the real scenario
@@ -62,7 +62,7 @@ async function testFreeUserPlannerWithApiKey() {
             prompt: 'Plan a search for: who is vinhnx',
             model: ModelEnum.GEMINI_2_5_FLASH_LITE,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()),
             }),
             byokKeys: { GEMINI_API_KEY: 'fake-user-api-key' }, // User provided key
@@ -104,7 +104,7 @@ async function testFreeUserPlannerWithSystemKey() {
             prompt: 'Plan a search for: who is vinhnx',
             model: ModelEnum.GEMINI_2_5_FLASH_LITE,
             schema: z.object({
-                reasoning: z.string(),
+                reasoningText: z.string(),
                 queries: z.array(z.string()),
             }),
             byokKeys: {}, // Empty API keys object

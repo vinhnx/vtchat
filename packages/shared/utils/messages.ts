@@ -31,8 +31,11 @@ export const buildCoreMessagesFromThreadItems = ({
             // For document attachments (e.g., PDF), include as file part with mediaType
             content.push({
                 type: 'file',
-                data: item.documentAttachment.base64,
-                mediaType: item.documentAttachment.mimeType,
+
+                file: {
+                    data: item.documentAttachment.base64,
+                    mediaType: item.documentAttachment.mimeType,
+                },
             });
         }
 
@@ -45,8 +48,11 @@ export const buildCoreMessagesFromThreadItems = ({
                     // For PDF attachments, include as file part with mediaType
                     content.push({
                         type: 'file',
-                        data: attachment.url,
-                        mediaType: attachment.contentType,
+
+                        file: {
+                            data: attachment.url,
+                            mediaType: attachment.contentType,
+                        },
                     });
                 }
             });
@@ -75,8 +81,11 @@ export const buildCoreMessagesFromThreadItems = ({
         // For document attachments (e.g., PDF), include as file part with mediaType
         currentContent.push({
             type: 'file',
-            data: documentAttachment.base64,
-            mediaType: documentAttachment.mimeType,
+
+            file: {
+                data: documentAttachment.base64,
+                mediaType: documentAttachment.mimeType,
+            },
         });
     }
 
@@ -89,8 +98,11 @@ export const buildCoreMessagesFromThreadItems = ({
                 // For PDF attachments, include as file part with mediaType
                 currentContent.push({
                     type: 'file',
-                    data: attachment.url,
-                    mediaType: attachment.contentType,
+
+                    file: {
+                        data: attachment.url,
+                        mediaType: attachment.contentType,
+                    },
                 });
             }
         });

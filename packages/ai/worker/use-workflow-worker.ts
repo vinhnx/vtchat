@@ -2,7 +2,7 @@
 
 import type { ChatMode } from '@repo/shared/config';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
-import type { CoreAssistantMessage, CoreUserMessage } from 'ai';
+import type { ModelAssistantMessage, ModelUserMessage } from 'ai';
 import { useEffect, useRef, useState } from 'react';
 
 export type WorkflowConfig = {
@@ -45,7 +45,7 @@ export type WorkflowEventSchema = {
         >;
         toolCalls?: any[];
         toolResults?: any[];
-        reasoning?: {
+        reasoningText?: {
             text: string;
             final: boolean;
             status?: 'PENDING' | 'COMPLETED' | 'FAILED';
@@ -132,7 +132,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
         threadItemId: string;
         parentThreadItemId: string;
         customInstructions?: string;
-        messages: (CoreUserMessage | CoreAssistantMessage)[];
+        messages: (ModelUserMessage | ModelAssistantMessage)[];
         config?: WorkflowConfig;
         apiKeys?: Record<string, string>;
         mcpConfig?: Record<string, string>;

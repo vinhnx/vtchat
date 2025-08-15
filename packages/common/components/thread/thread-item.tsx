@@ -148,18 +148,18 @@ export const ThreadItem = memo(
                     )
                     .flatMap((step) =>
                         step.steps?.read?.data?.map(
-                            (result: any, i: number) =>
-                                ({
-                                    title: typeof result.title === 'string' && result.title.trim()
-                                        ? result.title
-                                        : result.link,
-                                    link: result.link,
-                                    index: typeof result.index === 'number' ? result.index : i,
-                                }) as {
-                                    title: string;
-                                    link: string;
-                                    index: number;
-                                },
+                            (result: any, i: number) => (({
+                                title: typeof result.title === 'string' && result.title.trim()
+                                    ? result.title
+                                    : result.link,
+
+                                link: result.link,
+                                index: typeof result.index === 'number' ? result.index : i,
+                            }) as {
+                                title: string;
+                                link: string;
+                                index: number;
+                            }),
                         )
                     )
                     .filter((r): r is { title: string; link: string; index: number; } => !!r)
@@ -236,8 +236,8 @@ export const ThreadItem = memo(
                                     <SourceGrid sources={validSources} />
 
                                     {/* Show thinking log if reasoning data is available */}
-                                    {(threadItem.reasoning
-                                        || threadItem.reasoningDetails?.length
+                                    {(threadItem.reasoningText
+                                        || threadItem.reasoning?.length
                                         || threadItem.parts?.some(
                                             (part) => part.type === 'reasoning',
                                         )) && <ThinkingLog thread={threadItem} />}
@@ -300,7 +300,6 @@ export const ThreadItem = memo(
                                             threadItem={threadItem}
                                         />
                                     </div>
-
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
                                         <div className='mt-4 w-full space-y-4'>
@@ -312,7 +311,6 @@ export const ThreadItem = memo(
                                             ))}
                                         </div>
                                     )}
-
                                     {threadItem.documentAttachment && (
                                         <div className='flex justify-start'>
                                             <DocumentSidePanel
@@ -320,7 +318,6 @@ export const ThreadItem = memo(
                                             />
                                         </div>
                                     )}
-
                                     {/* Footer sources removed to avoid duplication; shown above under MDX content */}
                                 </div>
                             )}

@@ -161,7 +161,7 @@ describe('Gemini Quota Logic', () => {
                 model: 'gemini-2.5-pro',
                 messages: [{ role: 'user', content: 'Hello' }],
                 temperature: 0.7,
-                maxTokens: 1000,
+                maxOutputTokens: 1000,
             };
 
             // The function should pass through all parameters unchanged
@@ -170,7 +170,7 @@ describe('Gemini Quota Logic', () => {
             expect(passedParams.model).toBe(complexParams.model);
             expect(passedParams.messages).toEqual(complexParams.messages);
             expect(passedParams.temperature).toBe(complexParams.temperature);
-            expect(passedParams.maxTokens).toBe(complexParams.maxTokens);
+            expect(passedParams.maxOutputTokens).toBe(complexParams.maxOutputTokens);
         });
     });
 

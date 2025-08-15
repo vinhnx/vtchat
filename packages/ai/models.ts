@@ -1,5 +1,5 @@
 import { ChatMode } from '@repo/shared/config';
-import type { CoreMessage } from 'ai';
+import type { ModelMessage } from 'ai';
 import { ReasoningTagName, ReasoningType } from './constants/reasoning';
 import type { ProviderEnumType } from './providers';
 
@@ -45,7 +45,7 @@ export type Model = {
     id: ModelEnum;
     name: string;
     provider: ProviderEnumType;
-    maxTokens: number;
+    maxOutputTokens: number;
     contextWindow: number;
     isFree?: boolean; // Add flag for free models
 };
@@ -55,112 +55,112 @@ export const models: Model[] = [
         id: ModelEnum.GPT_5,
         name: 'GPT-5',
         provider: 'openai',
-        maxTokens: 128_000,
+        maxOutputTokens: 128_000,
         contextWindow: 400_000,
     },
     {
         id: ModelEnum.GPT_4o,
         name: 'GPT-4o',
         provider: 'openai',
-        maxTokens: 16_384,
+        maxOutputTokens: 16_384,
         contextWindow: 128_000,
     },
     {
         id: ModelEnum.GPT_4_1_Mini,
         name: 'GPT-4.1 Mini',
         provider: 'openai',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.GPT_4_1,
         name: 'GPT-4.1',
         provider: 'openai',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.O3,
         name: 'o3',
         provider: 'openai',
-        maxTokens: 100_000,
+        maxOutputTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.O3_Mini,
         name: 'o3-mini',
         provider: 'openai',
-        maxTokens: 100_000,
+        maxOutputTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.O4_Mini,
         name: 'o4 mini',
         provider: 'openai',
-        maxTokens: 100_000,
+        maxOutputTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.GPT_4_1_Nano,
         name: 'GPT-4.1 Nano',
         provider: 'openai',
-        maxTokens: 16_384,
+        maxOutputTokens: 16_384,
         contextWindow: 1_047_576,
     },
     {
         id: ModelEnum.O1_MINI,
         name: 'o1-mini',
         provider: 'openai',
-        maxTokens: 65_536,
+        maxOutputTokens: 65_536,
         contextWindow: 128_000,
     },
     {
         id: ModelEnum.O1,
         name: 'o1',
         provider: 'openai',
-        maxTokens: 100_000,
+        maxOutputTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.GPT_4o_Mini,
         name: 'GPT-4o Mini',
         provider: 'openai',
-        maxTokens: 100_000,
+        maxOutputTokens: 100_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.CLAUDE_4_1_OPUS,
         name: 'Claude 4.1 Opus',
         provider: 'anthropic',
-        maxTokens: 64_000,
+        maxOutputTokens: 64_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.CLAUDE_4_SONNET,
         name: 'Claude 4 Sonnet',
         provider: 'anthropic',
-        maxTokens: 64_000,
+        maxOutputTokens: 64_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.CLAUDE_4_OPUS,
         name: 'Claude 4 Opus',
         provider: 'anthropic',
-        maxTokens: 32_000,
+        maxOutputTokens: 32_000,
         contextWindow: 200_000,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH,
         name: 'Gemini 2.5 Flash',
         provider: 'google',
-        maxTokens: 1_048_576,
+        maxOutputTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH_LITE,
         name: 'Gemini 2.5 Flash Lite Preview 06-17',
         provider: 'google',
-        maxTokens: 65_536,
+        maxOutputTokens: 65_536,
         contextWindow: 65_536,
         isFree: true,
     },
@@ -168,28 +168,28 @@ export const models: Model[] = [
         id: ModelEnum.GEMINI_2_5_PRO,
         name: 'Gemini 2.5 Pro',
         provider: 'google',
-        maxTokens: 1_048_576,
+        maxOutputTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
         id: ModelEnum.GROK_3,
         name: 'Grok 3',
         provider: 'xai',
-        maxTokens: 131_072,
+        maxOutputTokens: 131_072,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GROK_3_MINI,
         name: 'Grok 3 Mini',
         provider: 'xai',
-        maxTokens: 131_072,
+        maxOutputTokens: 131_072,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GROK_4,
         name: 'Grok 4',
         provider: 'xai',
-        maxTokens: 256_000,
+        maxOutputTokens: 256_000,
         contextWindow: 256_000,
     },
     // Fireworks models
@@ -197,14 +197,14 @@ export const models: Model[] = [
         id: ModelEnum.DEEPSEEK_R1_FIREWORKS,
         name: 'DeepSeek R1 (Fireworks)',
         provider: 'fireworks',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 163_840,
     },
     {
         id: ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS,
         name: 'Kimi K2 Instruct (Fireworks)',
         provider: 'fireworks',
-        maxTokens: 4_096,
+        maxOutputTokens: 4_096,
         contextWindow: 131_072,
     },
     // OpenRouter models
@@ -212,42 +212,42 @@ export const models: Model[] = [
         id: ModelEnum.DEEPSEEK_V3_0324,
         name: 'DeepSeek V3 0324',
         provider: 'openrouter',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 163_840,
     },
     {
         id: ModelEnum.DEEPSEEK_R1,
         name: 'DeepSeek R1',
         provider: 'openrouter',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 163_840,
     },
     {
         id: ModelEnum.QWEN3_235B_A22B,
         name: 'Qwen3 235B A22B',
         provider: 'openrouter',
-        maxTokens: 8192,
+        maxOutputTokens: 8192,
         contextWindow: 40_960,
     },
     {
         id: ModelEnum.QWEN3_32B,
         name: 'Qwen3 32B',
         provider: 'openrouter',
-        maxTokens: 8192,
+        maxOutputTokens: 8192,
         contextWindow: 40_960,
     },
     {
         id: ModelEnum.MISTRAL_NEMO,
         name: 'Mistral Nemo',
         provider: 'openrouter',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.QWEN3_14B,
         name: 'Qwen3 14B',
         provider: 'openrouter',
-        maxTokens: 8192,
+        maxOutputTokens: 8192,
         contextWindow: 40_960,
         isFree: true,
     },
@@ -255,21 +255,21 @@ export const models: Model[] = [
         id: ModelEnum.KIMI_K2,
         name: 'Kimi K2 (OpenRouter)',
         provider: 'openrouter',
-        maxTokens: 4096,
+        maxOutputTokens: 4096,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GPT_OSS_120B,
         name: 'OpenAI gpt-oss-120b (via OpenRouter)',
         provider: 'openrouter',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 131_072,
     },
     {
         id: ModelEnum.GPT_OSS_20B,
         name: 'OpenAI gpt-oss-20b (via OpenRouter)',
         provider: 'openrouter',
-        maxTokens: 32_768,
+        maxOutputTokens: 32_768,
         contextWindow: 131_072,
     },
 ];
@@ -413,7 +413,7 @@ export const estimateTokensByWordCount = (text: string): number => {
     return estimatedTokens;
 };
 
-export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
+export const estimateTokensForMessages = (messages: ModelMessage[]): number => {
     let totalTokens = 0;
 
     for (const message of messages) {
@@ -457,7 +457,7 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     return openaiWebSearchModels.includes(model);
 };
 
-export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: ChatMode) => {
+export const trimMessageHistoryEstimated = (messages: ModelMessage[], chatMode: ChatMode) => {
     const maxTokens = getChatModeMaxTokens(chatMode);
     let trimmedMessages = [...messages];
 
