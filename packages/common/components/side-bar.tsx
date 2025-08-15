@@ -495,7 +495,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                            </DropdownMenu>
                         )
                         : (
                             <Button
