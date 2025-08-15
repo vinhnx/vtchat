@@ -319,10 +319,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 <DropdownMenuTrigger asChild>
                                     <div
                                         className={cn(
-                                            'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
+                                            'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center border shadow-sm transition-all duration-200',
                                             isSidebarOpen
-                                                ? 'w-full flex-row gap-3 px-3 py-2'
-                                                : 'h-7 w-7 p-0',
+                                                ? 'w-full rounded-lg flex-row gap-3 px-3 py-2'
+                                                : 'h-7 w-7 rounded-full p-0',
                                         )}
                                         data-testid='sidebar-user-trigger'
                                     >
