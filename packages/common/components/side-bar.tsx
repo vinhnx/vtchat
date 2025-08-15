@@ -696,6 +696,33 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                             )}
                         </Button>
 
+                        {/* Settings Button */}
+                        <Button
+                            className={cn(
+                                'transition-all duration-200',
+                                isSidebarOpen
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
+                            )}
+                            onClick={() => {
+                                push('/settings');
+                                // Close mobile drawer if open
+                                if (forceMobile) {
+                                    setIsMobileSidebarOpen(false);
+                                }
+                            }}
+                            roundedSm='lg'
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant='ghost'
+                        >
+                            <Settings
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                size={16}
+                                strokeWidth={2}
+                            />
+                            {isSidebarOpen && 'Settings'}
+                        </Button>
+
                         {
                             /*
                          Button */
