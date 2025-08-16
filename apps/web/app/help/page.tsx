@@ -7,6 +7,13 @@ import {
     AccordionTrigger,
     Button,
     TypographyH1,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    InternalLinks,
 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -34,18 +41,36 @@ export const metadata: Metadata = {
 export const dynamic = 'force-static';
 
 export default function HelpCenterPage() {
+    const internalLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/terms', label: 'Terms' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/pricing', label: 'VT+' },
+        { href: '/hello', label: 'Hello' },
+        { href: '/help', label: 'Help' },
+        { href: '/feedback', label: 'Feedback' },
+        { href: '/about', label: 'About' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/ai-glossary', label: 'AI Glossary' },
+        { href: '/ai-resources', label: 'AI Resources' },
+    ];
+
     return (
         <div className='bg-background min-h-screen'>
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>Help Center</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Help Center</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
             </header>
 
@@ -58,7 +83,8 @@ export default function HelpCenterPage() {
 
             {/* Footer */}
             <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
+                <div className='mx-auto w-full max-w-7xl px-4 py-8'>
+                    <InternalLinks links={internalLinks} />
                     <Footer />
                 </div>
             </footer>
@@ -882,7 +908,7 @@ function HelpCenterContent() {
                                 How can I get help or report issues?
                             </AccordionTrigger>
                             <AccordionContent>
-                                <p className='text-muted-foreground'>
+.                                <p className='text-muted-foreground'>
                                     We're here to help! You can reach us through:
                                 </p>
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
