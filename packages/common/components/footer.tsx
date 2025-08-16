@@ -61,24 +61,29 @@ export const Footer = () => {
                     {links.map((link, index) => {
                         const isExternal = link.href.startsWith('http') || link.href.startsWith('mailto') || link.href.startsWith('/hello');
                         const shouldOpenInNewTab = link.href.startsWith('http') || link.href.startsWith('mailto');
-                        return isExternal ? (
-                            <a
-                                key={index}
-                                href={link.href}
-                                target={shouldOpenInNewTab ? '_blank' : undefined}
-                                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                            >
-                                <span>{link.title}</span>
-                            </a>
-                        ) : (
-                            <Link
-                                key={index}
-                                href={link.href}
-                                className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                            >
-                                <span>{link.title}</span>
-                            </Link>
+                        return (
+                            <div key={index} className='inline-flex items-center'>
+                                {isExternal ? (
+                                    <a
+                                        href={link.href}
+                                        target={shouldOpenInNewTab ? '_blank' : undefined}
+                                        rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                        className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                                    >
+                                        <span>{link.title}</span>
+                                    </a>
+                                ) : (
+                                    <Link
+                                        href={link.href}
+                                        className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                                    >
+                                        <span>{link.title}</span>
+                                    </Link>
+                                )}
+                                {index < links.length - 1 && (
+                                    <span className='text-muted-foreground/30 mx-1'>|</span>
+                                )}
+                            </div>
                         );
                     })}
                 </div>
