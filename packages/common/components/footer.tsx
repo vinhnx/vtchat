@@ -46,12 +46,13 @@ export const Footer = () => {
                             <ul className='space-y-2'>
                                 {group.links.map((link, linkIndex) => {
                                     const isExternal = link.href.startsWith('http') || link.href.startsWith('mailto');
+                                    const shouldOpenInNewTab = link.href.startsWith('http') || link.href.startsWith('mailto');
                                     return (
                                         <li key={linkIndex}>
                                             {isExternal ? (
                                                 <a
                                                     href={link.href}
-                                                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                                                    target={shouldOpenInNewTab ? '_blank' : undefined}
                                                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                                                     className='text-sm text-muted-foreground hover:text-primary duration-150 transition-colors'
                                                 >
