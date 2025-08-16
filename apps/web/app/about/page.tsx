@@ -470,18 +470,15 @@ function AboutContent() {
                                 <BadgesSection className='mb-6' />
                             </div>
 
-                            <div className='mt-6'>
-                                <p className='text-muted-foreground text-center text-sm'>
-                                    Last updated: July 13, 2025 | Production Status: ✅ Live at{' '}
-                                    <Link
-                                        href='https://vtchat.io.vn'
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                        className='text-primary hover:underline'
-                                    >
-                                        vtchat.io.vn
-                                    </Link>
-                                </p>
+                            <div className='flex justify-center pt-6'>
+                                <Link
+                                    href='https://vtchat.userjot.com'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    className='text-primary hover:text-primary/80 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted'
+                                >
+                                    Send Feedback
+                                </Link>
                             </div>
                         </div>
                     </div>
