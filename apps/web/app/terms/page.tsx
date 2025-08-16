@@ -83,12 +83,7 @@ export default function TermsPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl px-4 py-8'>
-                    <InternalLinks links={internalLinks} />
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
