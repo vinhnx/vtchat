@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '../../lib/utils'
 
-const internalLinksVariants = cva('flex flex-col space-y-2')
+const internalLinksVariants = cva('list-none space-y-1 pl-0')
 
 export interface InternalLinksProps
     extends React.HTMLAttributes<HTMLDivElement>,
@@ -20,30 +20,33 @@ const InternalLinks = React.forwardRef<HTMLDivElement, InternalLinksProps>(
         return (
             <div ref={ref} className={cn('py-8', className)} {...props}>
                 {title && <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>}
-                <div className={cn(internalLinksVariants())}>
+                <ul className={cn(internalLinksVariants())}>
                     {links.map(link => {
                         const isExternal = link.href.startsWith('http');
-                        return isExternal ? (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
-                            >
-                                {link.label}
-                            </a>
-                        ) : (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
-                            >
-                                {link.label}
-                            </Link>
+                        return (
+                            <li key={link.href} className="flex items-start">
+                                <span className="mr-2 text-muted-foreground">•</span>
+                                {isExternal ? (
+                                    <a
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        href={link.href}
+                                        className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                )}
+                            </li>
                         );
                     })}
-                </div>
+                </ul>
             </div>
         )
     }
