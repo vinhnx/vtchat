@@ -1,8 +1,10 @@
 import { Slot as SlotPrimitive } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { motion, type MotionProps } from 'framer-motion';
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
+import { createSquashStretch, createSecondaryAction, ANIMATION_MOTION_VARIANTS } from '../lib/animation-utils';
 import { Tooltip } from './tooltip';
 
 const buttonVariants = cva(
@@ -45,11 +47,27 @@ export interface ButtonProps
     tooltip?: string;
     tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
     roundedSm?: 'sm' | 'md' | 'lg' | 'full';
+    // Animation enhancements following 12 Principles
+    animationType?: 'none' | 'gentle' | 'squash' | 'secondary';
+    anticipation?: boolean;
+    motionProps?: Partial<MotionProps>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
-        { className, variant, size, asChild = false, tooltip, tooltipSide, roundedSm, ...props },
+        { 
+            className, 
+            variant, 
+            size, 
+            asChild = false, 
+            tooltip, 
+            tooltipSide, 
+            roundedSm,
+            animationType = 'gentle',
+            anticipation = false,
+            motionProps,
+            ...props 
+        },
         ref,
     ) => {
         const Comp = asChild ? SlotPrimitive.Slot : 'button';
@@ -63,10 +81,45 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             }[roundedSm]
             : '';
 
-        const buttonElement = (
+        // Apply animation principles based on type
+        const getAnimationProps = (): Partial<MotionProps> => {
+            if (animationType === 'none') return {};
+
+            const baseProps: Partial<MotionProps> = {
+                ...ANIMATION_MOTION_VARIANTS.buttonPress,
+                whileHover: { scale: 1.02 },
+                ...motionProps,
+            };
+
+            switch (animationType) {
+                case 'squash':
+                    return {
+                        ...baseProps,
+                        ...createSquashStretch('subtle'),
+                    };
+                case 'secondary':
+                    return {
+                        ...baseProps,
+                        ...createSecondaryAction('glow'),
+                    };
+                case 'gentle':
+                default:
+                    return baseProps;
+            }
+        };
+
+        // Enhanced button with animation principles
+        const buttonElement = asChild ? (
             <Comp
                 className={cn(buttonVariants({ variant, size }), roundedClass, className)}
                 ref={ref}
+                {...props}
+            />
+        ) : (
+            <motion.button
+                className={cn(buttonVariants({ variant, size }), roundedClass, className)}
+                ref={ref}
+                {...getAnimationProps()}
                 {...props}
             />
         );
