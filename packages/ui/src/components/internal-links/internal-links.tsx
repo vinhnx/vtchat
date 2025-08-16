@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '../../lib/utils'
 
-const internalLinksVariants = cva('grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5')
+const internalLinksVariants = cva('flex flex-col space-y-2')
 
 export interface InternalLinksProps
     extends React.HTMLAttributes<HTMLDivElement>,
@@ -29,7 +29,7 @@ const InternalLinks = React.forwardRef<HTMLDivElement, InternalLinksProps>(
                                 href={link.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
                             >
                                 {link.label}
                             </a>
@@ -37,7 +37,7 @@ const InternalLinks = React.forwardRef<HTMLDivElement, InternalLinksProps>(
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
                             >
                                 {link.label}
                             </Link>
