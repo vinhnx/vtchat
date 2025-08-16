@@ -3,43 +3,34 @@ import { describe, expect, it } from 'vitest';
 import { Footer } from '../footer';
 
 describe('Footer Component', () => {
-    it('should render footer with link groups', () => {
+    it('should render footer with links', () => {
         render(<Footer />);
 
-        // Check for some links in each group (desktop version)
-        const links = screen.getAllByRole('link', { name: 'Home' });
-        expect(links.length).toBeGreaterThan(0);
-        
-        const termsLinks = screen.getAllByRole('link', { name: 'Terms' });
-        expect(termsLinks.length).toBeGreaterThan(0);
-        
-        const helpLinks = screen.getAllByRole('link', { name: 'Help' });
-        expect(helpLinks.length).toBeGreaterThan(0);
+        // Check for common footer elements
+        expect(screen.getByText('Terms')).toBeInTheDocument();
+        expect(screen.getByText('Privacy')).toBeInTheDocument();
+        expect(screen.getByText('Help')).toBeInTheDocument();
+        expect(screen.getByText('VT+')).toBeInTheDocument();
     });
 
     it('should have proper link hrefs', () => {
         render(<Footer />);
 
-        // Check desktop version links
-        const allHomeLinks = screen.getAllByRole('link', { name: 'Home' });
-        const homeLink = allHomeLinks[0]; // Get the first one (desktop)
-        
-        const allTermsLinks = screen.getAllByRole('link', { name: 'Terms' });
-        const termsLink = allTermsLinks[0];
-        
-        const allContactLinks = screen.getAllByRole('link', { name: 'Contact' });
-        const contactLink = allContactLinks[0];
+        const termsLink = screen.getByRole('link', { name: 'Terms' });
+        const privacyLink = screen.getByRole('link', { name: 'Privacy' });
+        const helpLink = screen.getByRole('link', { name: 'Help' });
+        const vtplusLink = screen.getByRole('link', { name: 'VT+' });
 
-        expect(homeLink).toHaveAttribute('href', '/');
         expect(termsLink).toHaveAttribute('href', '/terms');
-        expect(contactLink).toHaveAttribute('href', 'mailto:hello@vtchat.io.vn');
+        expect(privacyLink).toHaveAttribute('href', '/privacy');
+        expect(helpLink).toHaveAttribute('href', '/help');
+        expect(vtplusLink).toHaveAttribute('href', '/pricing');
     });
 
     it('should render copyright text', () => {
         render(<Footer />);
         
         const currentYear = new Date().getFullYear();
-        const copyrightTexts = screen.getAllByText(new RegExp(`${currentYear} VT\\. All rights reserved\\.`));
-        expect(copyrightTexts.length).toBeGreaterThan(0);
+        expect(screen.getByText(new RegExp(`${currentYear} VT, All rights reserved`))).toBeInTheDocument();
     });
 });
