@@ -66,7 +66,7 @@ export const Footer = () => {
                     </Link>
                 ))}
             </div>
-            
+
             {/* Copyright with reduced spacing and mobile optimization */}
             <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm px-3 sm:px-4 md:px-6'>
                 © {new Date().getFullYear()} VT, All rights reserved

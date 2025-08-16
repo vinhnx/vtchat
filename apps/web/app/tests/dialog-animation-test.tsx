@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@repo/ui';
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@repo/ui';
 import { HelpCircle } from 'lucide-react';
 
 export default function DialogAnimationTest() {
@@ -72,7 +80,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Middle Left Position</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the middle-left trigger position.
+                                    This dialog should animate from the middle-left trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
@@ -104,7 +113,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Middle Right Position</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the middle-right trigger position.
+                                    This dialog should animate from the middle-right trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
@@ -123,7 +133,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Bottom Left Position</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the bottom-left trigger position.
+                                    This dialog should animate from the bottom-left trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
@@ -139,7 +150,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Bottom Center Position</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the bottom-center trigger position.
+                                    This dialog should animate from the bottom-center trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
@@ -155,7 +167,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Bottom Right Position</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the bottom-right trigger position.
+                                    This dialog should animate from the bottom-right trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
@@ -176,7 +189,8 @@ export default function DialogAnimationTest() {
                             <DialogHeader>
                                 <DialogTitle>Small Icon Trigger</DialogTitle>
                                 <DialogDescription>
-                                    This dialog should animate from the small help icon trigger position.
+                                    This dialog should animate from the small help icon trigger
+                                    position.
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>

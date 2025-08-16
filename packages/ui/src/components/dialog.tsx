@@ -9,8 +9,8 @@ import { cn } from '../lib/utils';
 
 // Context to track trigger position for transform origin
 const DialogTriggerPositionContext = React.createContext<{
-    triggerPosition: { x: number; y: number } | null;
-    setTriggerPosition: (position: { x: number; y: number } | null) => void;
+    triggerPosition: { x: number; y: number; } | null;
+    setTriggerPosition: (position: { x: number; y: number; } | null) => void;
 }>({
     triggerPosition: null,
     setTriggerPosition: () => {},
@@ -19,8 +19,12 @@ const DialogTriggerPositionContext = React.createContext<{
 const DialogRoot = DialogPrimitive.Root;
 
 // Enhanced Dialog with transform origin animation support
-const Dialog: React.FC<React.ComponentProps<typeof DialogPrimitive.Root>> = ({ children, ...props }) => {
-    const [triggerPosition, setTriggerPosition] = React.useState<{ x: number; y: number } | null>(null);
+const Dialog: React.FC<React.ComponentProps<typeof DialogPrimitive.Root>> = (
+    { children, ...props },
+) => {
+    const [triggerPosition, setTriggerPosition] = React.useState<{ x: number; y: number; } | null>(
+        null,
+    );
 
     return (
         <DialogTriggerPositionContext.Provider value={{ triggerPosition, setTriggerPosition }}>
@@ -42,19 +46,25 @@ const DialogTrigger = React.forwardRef<
 
     React.useImperativeHandle(ref, () => triggerRef.current!);
 
-    const handleClick = (event: React.MouseEvent) => {
+    // Narrow the click event to HTMLButtonElement so it matches the ref type
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (triggerRef.current) {
             const rect = triggerRef.current.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            
+
             // Convert to viewport percentage for transform origin
             const x = (centerX / window.innerWidth) * 100;
             const y = (centerY / window.innerHeight) * 100;
-            
+
             setTriggerPosition({ x, y });
         }
-        props.onClick?.(event);
+
+        // Forward to user's onClick if provided. Cast to any because
+        // DialogPrimitive.Trigger props may have a differently-typed onClick.
+        // This avoids mismatched element generic types causing a TS error.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (props as any).onClick?.(event);
     };
 
     return (
@@ -104,34 +114,43 @@ const DialogContent = React.forwardRef<
                 {...props}
             >
                 <motion.div
-                    initial={{ 
-                        opacity: 0, 
+                    initial={{
+                        opacity: 0,
                         scale: 0.95,
                         originX: triggerPosition ? triggerPosition.x / 100 : 0.5,
-                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5
+                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5,
                     }}
-                    animate={{ 
-                        opacity: 1, 
+                    animate={{
+                        opacity: 1,
                         scale: 1,
                         originX: triggerPosition ? triggerPosition.x / 100 : 0.5,
-                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5
+                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5,
                     }}
-                    exit={{ 
-                        opacity: 0, 
+                    exit={{
+                        opacity: 0,
                         scale: 0.95,
                         originX: triggerPosition ? triggerPosition.x / 100 : 0.5,
-                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5
+                        originY: triggerPosition ? triggerPosition.y / 100 : 0.5,
                     }}
+                    // Use a tween with ease-out for a natural deceleration when opening
+                    // and a slightly faster ease-in when closing. Easing is the most
+                    // important part of an animation — it makes motion feel natural.
+                    // Default to ease-out for open and ease-in for exit to mimic
+                    // real-world acceleration/deceleration (think of a car).
                     transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 30,
-                        mass: 0.8
+                        type: 'tween',
+                        duration: 0.18,
+                        // framer-motion accepts named easings: 'easeOut' / 'easeIn'
+                        ease: 'easeOut',
                     }}
                     style={{
-                        transformOrigin: triggerPosition 
-                            ? `${triggerPosition.x}% ${triggerPosition.y}%` 
-                            : 'center center'
+                        // Set transform-origin to the trigger's viewport position (as a percent)
+                        // so the dialog scales from the button/icon that opened it. This
+                        // makes the motion feel anchored and natural instead of appearing
+                        // to pop from the center every time.
+                        transformOrigin: triggerPosition
+                            ? `${triggerPosition.x}% ${triggerPosition.y}%`
+                            : 'center center',
                     }}
                     className={cn(
                         'bg-background fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:rounded-lg',
@@ -139,7 +158,9 @@ const DialogContent = React.forwardRef<
                     )}
                 >
                     {!props['aria-describedby']
-                        && !props.children?.toString().includes('aria-describedby') && (
+                        && !((props as any).children?.toString?.() ?? '').includes(
+                            'aria-describedby',
+                        ) && (
                         <span id='dialog-description' className='sr-only'>
                             Dialog content
                         </span>
