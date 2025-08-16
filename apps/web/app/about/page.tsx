@@ -1,4 +1,6 @@
 import { BadgesSection } from '@/components/badges';
+import { BreadcrumbNav } from '@/components/breadcrumb-nav';
+import { RelatedLinks, aiRelatedLinks } from '@/components/internal-links';
 import { Footer } from '@repo/common/components';
 import { Button } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
@@ -44,14 +46,19 @@ export default function AboutPage() {
         <div className='bg-background min-h-screen'>
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>About</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <div className='flex items-center justify-between'>
+                        <Link href='/'>
+                            <Button className='gap-2' size='sm' variant='ghost'>
+                                <ArrowLeft size={16} />
+                                Back to VT
+                            </Button>
+                        </Link>
+                        <div className='text-muted-foreground text-sm'>About</div>
+                    </div>
+                    <div className='mt-3'>
+                        <BreadcrumbNav />
+                    </div>
                 </div>
             </header>
 
@@ -481,6 +488,13 @@ function AboutContent() {
                                 </Link>
                             </div>
                         </div>
+
+                        {/* Related Links - Enhanced Internal Linking for SEO */}
+                        <RelatedLinks 
+                            links={aiRelatedLinks.filter(link => link.href !== '/about')} 
+                            title='Explore More AI Resources'
+                            className='mt-12'
+                        />
                     </div>
                 </div>
             </div>
