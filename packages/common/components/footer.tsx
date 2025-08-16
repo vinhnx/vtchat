@@ -26,6 +26,10 @@ const links = [
         href: '/help',
     },
     {
+        title: 'Feedback',
+        href: 'https://vtchat.userjot.com',
+    },
+    {
         title: 'About',
         href: '/about',
     },

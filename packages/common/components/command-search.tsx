@@ -195,6 +195,14 @@ export const CommandSearch = () => {
             },
         },
         {
+            name: 'Send Feedback',
+            icon: MessageCircle,
+            action: () => {
+                window.open('https://vtchat.userjot.com', '_blank', 'noopener,noreferrer');
+                onClose();
+            },
+        },
+        {
             name: 'FAQ',
             icon: HelpCircle,
             action: () => {

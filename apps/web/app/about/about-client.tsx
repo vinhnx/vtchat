@@ -78,6 +78,18 @@ export function AboutPageClient() {
                     </div>
 
                     <WrapperDisclosure className='mt-4' />
+                    
+                    <div className='flex justify-center pt-6'>
+                        <Link
+                            href='https://vtchat.userjot.com'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-primary hover:text-primary/80 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted'
+                        >
+                            Send Feedback
+                        </Link>
+                    </div>
+                    
                     <div className='flex flex-wrap items-center justify-center gap-4 pt-8'>
                         <Link
                             href='https://peerlist.io/vinhnx/project/vt'
