@@ -62,7 +62,7 @@ VT is built with **privacy-first principles** at its core:
 - **Account Management:** Create and manage your account, authenticate users
 - **Free Model Management:** We monitor daily usage and enforce rate limits for our server-funded AI models to ensure fair access for all users.
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
-- **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 20/day, DEEP_RESEARCH: 10/day) while providing all premium AI models free to logged-in users with BYOK
+- **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 50/day, DEEP_RESEARCH: 25/day) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
 - **Service Communications:** Send important service updates, security alerts
 
