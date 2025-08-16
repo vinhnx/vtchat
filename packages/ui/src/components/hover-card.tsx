@@ -22,6 +22,8 @@ type HoverCardContextType = {
         setFloating: (node: HTMLElement | null) => void;
     };
     floatingStyles: React.CSSProperties;
+    placement: string;
+    transformOrigin: string;
 };
 
 const HoverCardContext = React.createContext<HoverCardContextType | null>(null);
@@ -43,7 +45,7 @@ type HoverCardProps = {
 const HoverCard = ({ openDelay = 200, closeDelay = 200, children }: HoverCardProps) => {
     const [open, setOpen] = React.useState(false);
 
-    const { refs, floatingStyles, context } = useFloating({
+    const { refs, floatingStyles, context, placement } = useFloating({
         open,
         onOpenChange: setOpen,
         middleware: [offset(4), flip(), shift()],
@@ -55,6 +57,38 @@ const HoverCard = ({ openDelay = 200, closeDelay = 200, children }: HoverCardPro
 
     const { getReferenceProps, getFloatingProps } = useInteractions([hover]);
 
+    // Calculate transform origin based on placement
+    const getTransformOrigin = React.useCallback((placement: string) => {
+        switch (placement) {
+            case 'top':
+                return 'bottom center';
+            case 'bottom':
+                return 'top center';
+            case 'left':
+                return 'right center';
+            case 'right':
+                return 'left center';
+            case 'top-start':
+                return 'bottom left';
+            case 'top-end':
+                return 'bottom right';
+            case 'bottom-start':
+                return 'top left';
+            case 'bottom-end':
+                return 'top right';
+            case 'left-start':
+                return 'right top';
+            case 'left-end':
+                return 'right bottom';
+            case 'right-start':
+                return 'left top';
+            case 'right-end':
+                return 'left bottom';
+            default:
+                return 'center';
+        }
+    }, []);
+
     const contextValue = React.useMemo(
         () => ({
             open,
@@ -63,8 +97,10 @@ const HoverCard = ({ openDelay = 200, closeDelay = 200, children }: HoverCardPro
             getFloatingProps,
             refs,
             floatingStyles,
+            placement,
+            transformOrigin: getTransformOrigin(placement),
         }),
-        [open, getReferenceProps, getFloatingProps, refs, floatingStyles],
+        [open, getReferenceProps, getFloatingProps, refs, floatingStyles, placement, getTransformOrigin],
     );
 
     return <HoverCardContext.Provider value={contextValue}>{children}</HoverCardContext.Provider>;
@@ -99,7 +135,7 @@ type HoverCardContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(
     ({ className, ...props }, ref) => {
-        const { open, getFloatingProps, refs, floatingStyles } = useHoverCard();
+        const { open, getFloatingProps, refs, floatingStyles, transformOrigin } = useHoverCard();
 
         if (!open) {
             return null;
@@ -116,7 +152,11 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
                             ref.current = node;
                         }
                     }}
-                    style={{ ...floatingStyles, zIndex: 999 }}
+                    style={{ 
+                        ...floatingStyles, 
+                        zIndex: 999,
+                        transformOrigin: transformOrigin,
+                    }}
                     {...getFloatingProps()}
                     className={cn(
                         'bg-background text-card-foreground outline-hidden isolate z-[200] flex max-w-64 flex-col items-start rounded-md border p-4 shadow-md',
