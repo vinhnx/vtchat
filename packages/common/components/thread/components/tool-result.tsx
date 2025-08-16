@@ -9,11 +9,46 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Activity, CheckCheck, CheckCircle, ChevronDown } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
+// Import AI Elements components
+import { Tool, ToolContent, ToolHeader, ToolOutput } from '@/components/ai-elements';
+
 export type ToolResultProps = {
     toolResult: ToolResultType;
 };
 
-export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
+// AI Elements version with modern design
+export const AIElementsToolResultStep = memo(({ toolResult }: ToolResultProps) => {
+    // Check if this is a chart tool result
+    const isResultChartTool = isChartTool(toolResult.toolName);
+
+    // Map our tool result to AI Elements format
+    const mappedToolResult = {
+        type: `tool-${toolResult.toolName}` as const,
+        state: 'output-available' as const, // Tool results are always output-available when rendered
+        output: isResultChartTool 
+            ? <DynamicChartRenderer {...(toolResult.result as any)} />
+            : JSON.stringify(toolResult.result, null, 2),
+        errorText: undefined, // No error since this is a successful result
+    };
+
+    return (
+        <Tool defaultOpen={true} className="border-muted/50 bg-muted/20"> {/* Auto-open results */}
+            <ToolHeader 
+                type={toolResult.toolName} 
+                state={mappedToolResult.state}
+            />
+            <ToolContent>
+                <ToolOutput 
+                    output={mappedToolResult.output}
+                    errorText={mappedToolResult.errorText}
+                />
+            </ToolContent>
+        </Tool>
+    );
+});
+
+// Legacy version (keeping for backward compatibility during transition)
+export const LegacyToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
 
@@ -107,7 +142,12 @@ export const ToolInvocationStep = memo(({ toolResult }: ToolResultProps) => {
     );
 });
 
+// Use AI Elements version by default
+export const ToolInvocationStep = AIElementsToolResultStep;
+
+LegacyToolInvocationStep.displayName = 'LegacyToolInvocationStep';
 ToolInvocationStep.displayName = 'ToolInvocationStep';
+AIElementsToolResultStep.displayName = 'AIElementsToolResultStep';
 
 // Keep the original component for backward compatibility
 export const ToolResultStep = memo(({ toolResult }: ToolResultProps) => {
