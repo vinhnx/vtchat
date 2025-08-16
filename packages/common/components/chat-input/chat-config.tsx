@@ -133,7 +133,7 @@ export const getProviderIcon = (provider: ProviderEnumType, size = 16) => {
             alt={`${provider} logo`}
             width={size}
             height={size}
-            className='flex-shrink-0 dark:invert'
+            className='flex-shrink-0 rounded bg-gray-100 p-1 dark:invert'
             onError={(e) => {
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = DEFAULT_LOGO_PATH;

@@ -11,6 +11,7 @@
 - Removed dependency on @lobehub/icons
 - Added fallback to default VT logo when provider logo unavailable
 - Provider logos now adapt to dark and light themes automatically
+- Added soft gray background to provider icons for improved dark mode visibility
 
 ### ✅ Deep Research Model Update
 
