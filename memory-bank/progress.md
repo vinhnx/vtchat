@@ -2,6 +2,24 @@
 
 ## Latest Session - July 2025
 
+### ✅ Provider Logos Source Update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Replaced model provider logos with models.dev resources
+- Removed dependency on @lobehub/icons
+- Added fallback to default VT logo when provider logo unavailable
+- Provider logos now adapt to dark and light themes automatically
+- Added soft gray background to provider icons for improved dark mode visibility
+
+### ✅ Provider Icon UI Refinement
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Enlarged provider logos and tightened background padding for clarity
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
