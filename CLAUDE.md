@@ -265,3 +265,7 @@ For more information, read the Bun API docs in `node_modules/bun-types/docs/**.m
 ## React Best Practices
 
 - For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
+
+to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
+
+To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.

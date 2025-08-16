@@ -51,3 +51,7 @@ VT delivers powerful AI conversations with complete privacy protection—startin
 - **Production URL**: https://vtchat.io.vn
 - **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
 - **Status**: Production-ready with comprehensive monitoring and security
+
+to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
+
+To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.

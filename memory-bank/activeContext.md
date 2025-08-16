@@ -6,6 +6,8 @@ The immediate focus is on completing UI enhancements and ensuring consistency ac
 
 ## Recent Changes
 
+- Updated gitchamber.com usage instructions in agent guide files
+
 - **Mobile Floating Menu Visibility Fix - COMPLETE ✅**:
   - Ensured floating menu buttons remain visible on mobile by limiting `rounded-sm` and `overflow-hidden` to desktop screens
   - Files: `packages/common/components/layout/root.tsx`

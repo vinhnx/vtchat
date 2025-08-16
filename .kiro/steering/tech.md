@@ -101,3 +101,7 @@ bun run bundle:track      # Track bundle size changes
 - **Chunk Splitting**: Optimized for production bundles
 - **Caching**: Aggressive caching strategies for static assets
 - **React Scan**: Development performance monitoring
+
+to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
+
+To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.

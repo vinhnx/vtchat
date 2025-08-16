@@ -2,6 +2,15 @@
 
 ## Latest Session - July 2025
 
+### ✅ Agent guideline update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Updated gitchamber.com usage instructions across agent guide files
+
+---
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
