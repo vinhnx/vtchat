@@ -3,40 +3,52 @@ import { describe, expect, it } from 'vitest';
 import { Footer } from '../footer';
 
 describe('Footer Component', () => {
-    it('should render footer with links', () => {
+    it('should render footer with all specified links', () => {
         render(<Footer />);
 
-        // Check for common footer elements
+        // Check for all footer elements
         expect(screen.getByText('Home')).toBeInTheDocument();
-        expect(screen.getByText('About')).toBeInTheDocument();
         expect(screen.getByText('Terms')).toBeInTheDocument();
         expect(screen.getByText('Privacy')).toBeInTheDocument();
-        expect(screen.getByText('Help')).toBeInTheDocument();
-        expect(screen.getByText('FAQ')).toBeInTheDocument();
         expect(screen.getByText('VT+')).toBeInTheDocument();
-        expect(screen.getByText('Contact')).toBeInTheDocument();
+        expect(screen.getByText('Hello')).toBeInTheDocument();
+        expect(screen.getByText('Help')).toBeInTheDocument();
+        expect(screen.getByText('Feedback')).toBeInTheDocument();
+        expect(screen.getByText('About')).toBeInTheDocument();
+        expect(screen.getByText('FAQ')).toBeInTheDocument();
+        expect(screen.getByText('AI Glossary')).toBeInTheDocument();
+        expect(screen.getByText('AI Resources')).toBeInTheDocument();
+        expect(screen.getByText('X')).toBeInTheDocument();
     });
 
     it('should have proper link hrefs', () => {
         render(<Footer />);
 
         const homeLink = screen.getByRole('link', { name: 'Home' });
-        const aboutLink = screen.getByRole('link', { name: 'About' });
         const termsLink = screen.getByRole('link', { name: 'Terms' });
         const privacyLink = screen.getByRole('link', { name: 'Privacy' });
-        const helpLink = screen.getByRole('link', { name: 'Help' });
-        const faqLink = screen.getByRole('link', { name: 'FAQ' });
         const vtplusLink = screen.getByRole('link', { name: 'VT+' });
-        const contactLink = screen.getByRole('link', { name: 'Contact' });
+        const helloLink = screen.getByRole('link', { name: 'Hello' });
+        const helpLink = screen.getByRole('link', { name: 'Help' });
+        const feedbackLink = screen.getByRole('link', { name: 'Feedback' });
+        const aboutLink = screen.getByRole('link', { name: 'About' });
+        const faqLink = screen.getByRole('link', { name: 'FAQ' });
+        const aiGlossaryLink = screen.getByRole('link', { name: 'AI Glossary' });
+        const aiResourcesLink = screen.getByRole('link', { name: 'AI Resources' });
+        const xLink = screen.getByRole('link', { name: 'X' });
 
         expect(homeLink).toHaveAttribute('href', '/');
-        expect(aboutLink).toHaveAttribute('href', '/about');
         expect(termsLink).toHaveAttribute('href', '/terms');
         expect(privacyLink).toHaveAttribute('href', '/privacy');
-        expect(helpLink).toHaveAttribute('href', '/help');
-        expect(faqLink).toHaveAttribute('href', '/faq');
         expect(vtplusLink).toHaveAttribute('href', '/pricing');
-        expect(contactLink).toHaveAttribute('href', 'mailto:hello@vtchat.io.vn');
+        expect(helloLink).toHaveAttribute('href', '/hello');
+        expect(helpLink).toHaveAttribute('href', '/help');
+        expect(feedbackLink).toHaveAttribute('href', 'https://vtchat.userjot.com');
+        expect(aboutLink).toHaveAttribute('href', '/about');
+        expect(faqLink).toHaveAttribute('href', '/faq');
+        expect(aiGlossaryLink).toHaveAttribute('href', '/ai-glossary');
+        expect(aiResourcesLink).toHaveAttribute('href', '/ai-resources');
+        expect(xLink).toHaveAttribute('href', 'https://x.com/vtdotai');
     });
 
     it('should render copyright text', () => {

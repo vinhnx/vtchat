@@ -1,14 +1,10 @@
 import Link from 'next/link';
 
-// Essential footer items for all public pages
+// Complete set of footer links as specified
 const links = [
     {
         title: 'Home',
         href: '/',
-    },
-    {
-        title: 'About',
-        href: '/about',
     },
     {
         title: 'Terms',
@@ -19,20 +15,40 @@ const links = [
         href: '/privacy',
     },
     {
+        title: 'VT+',
+        href: '/pricing',
+    },
+    {
+        title: 'Hello',
+        href: '/hello',
+    },
+    {
         title: 'Help',
         href: '/help',
+    },
+    {
+        title: 'Feedback',
+        href: 'https://vtchat.userjot.com',
+    },
+    {
+        title: 'About',
+        href: '/about',
     },
     {
         title: 'FAQ',
         href: '/faq',
     },
     {
-        title: 'VT+',
-        href: '/pricing',
+        title: 'AI Glossary',
+        href: '/ai-glossary',
     },
     {
-        title: 'Contact',
-        href: 'mailto:hello@vtchat.io.vn',
+        title: 'AI Resources',
+        href: '/ai-resources',
+    },
+    {
+        title: 'X',
+        href: 'https://x.com/vtdotai',
     },
 ];
 
@@ -43,7 +59,7 @@ export const Footer = () => {
                 {/* Mobile-first responsive design with reduced spacing */}
                 <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm'>
                     {links.map((link, index) => {
-                        const isExternal = link.href.startsWith('http') || link.href.startsWith('mailto');
+                        const isExternal = link.href.startsWith('http') || link.href.startsWith('mailto') || link.href.startsWith('/hello');
                         const shouldOpenInNewTab = link.href.startsWith('http') || link.href.startsWith('mailto');
                         return isExternal ? (
                             <a
