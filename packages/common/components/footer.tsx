@@ -38,8 +38,8 @@ const linkGroups = [
 export const Footer = () => {
     return (
         <footer className='relative z-0 py-6 pb-safe mt-auto bg-transparent border-t border-border/50'>
-            <div className='container px-4 md:px-6'>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-8'>
+            <div className='container px-4 sm:px-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8'>
                     {linkGroups.map((group, groupIndex) => (
                         <div key={groupIndex} className='space-y-3'>
                             <h3 className='text-sm font-medium leading-none text-foreground'>{group.title}</h3>
