@@ -56,15 +56,28 @@ export const Footer = () => {
         <footer className='relative z-0 py-2 pb-safe sm:py-3 md:py-4 mt-auto bg-transparent'>
             {/* Mobile-first responsive design with reduced spacing */}
             <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm px-3 sm:px-4 md:px-6'>
-                {links.map((link, index) => (
-                    <Link
-                        key={index}
-                        href={link.href}
-                        className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                    >
-                        <span>{link.title}</span>
-                    </Link>
-                ))}
+                {links.map((link, index) => {
+                    const isExternal = link.href.startsWith('http');
+                    return isExternal ? (
+                        <a
+                            key={index}
+                            href={link.href}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                        >
+                            <span>{link.title}</span>
+                        </a>
+                    ) : (
+                        <Link
+                            key={index}
+                            href={link.href}
+                            className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                        >
+                            <span>{link.title}</span>
+                        </Link>
+                    );
+                })}
             </div>
             
             {/* Copyright with reduced spacing and mobile optimization */}

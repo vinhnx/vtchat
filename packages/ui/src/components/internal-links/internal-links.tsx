@@ -21,15 +21,28 @@ const InternalLinks = React.forwardRef<HTMLDivElement, InternalLinksProps>(
             <div ref={ref} className={cn('py-8', className)} {...props}>
                 {title && <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>}
                 <div className={cn(internalLinksVariants())}>
-                    {links.map(link => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
+                    {links.map(link => {
+                        const isExternal = link.href.startsWith('http');
+                        return isExternal ? (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                {link.label}
+                            </a>
+                        ) : (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                {link.label}
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
         )
