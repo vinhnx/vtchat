@@ -8,6 +8,7 @@
 **Status**: Completed
 
 - Updated gitchamber.com usage instructions across agent guide files
+- Added models.dev API usage instructions and removed models-data.json file
 
 ---
 
