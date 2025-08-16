@@ -189,8 +189,8 @@ export const UserMessage = memo(({ message, imageAttachment, threadItem }: UserM
             <motion.div
                 animate={{ scale: 1, opacity: 1 }}
                 className='flex-shrink-0 self-start'
-                initial={{ scale: 0.8, opacity: 0 }}
-                transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
+                initial={{ scale: 0.93, opacity: 0 }}
+                transition={{ delay: 0.1, duration: 0.125, ease: 'easeOut' }}
             >
                 <div className='relative mt-1'>
                     <UnifiedAvatar

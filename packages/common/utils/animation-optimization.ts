@@ -40,13 +40,13 @@ export const TRANSITIONS = {
 
     // Fast transitions for mobile
     fast: {
-        duration: 0.12,
+        duration: 0.125,
         ease: 'easeOut',
     } as Transition,
 
     // Standard transitions with mobile optimization
     standard: {
-        duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.15 : 0.2,
+        duration: prefersReducedMotion() ? 0.08 : isMobile() ? 0.125 : 0.2,
         ease: 'easeOut',
     } as Transition,
 
@@ -122,9 +122,9 @@ export const ANIMATION_VARIANTS = {
 
     // Scale animations (GPU-accelerated)
     scaleIn: {
-        initial: { opacity: 0, scale: 0.9 },
+        initial: { opacity: 0, scale: 0.93 },
         animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.9 },
+        exit: { opacity: 0, scale: 0.93 },
     } as Variants,
 
     scaleOut: {
@@ -135,9 +135,9 @@ export const ANIMATION_VARIANTS = {
 
     // Gentle scale for mobile
     scaleMobile: {
-        initial: { opacity: 0, scale: 0.95 },
+        initial: { opacity: 0, scale: 0.93 },
         animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.95 },
+        exit: { opacity: 0, scale: 0.93 },
     } as Variants,
 
     // Stagger children animations

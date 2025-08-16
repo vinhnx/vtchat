@@ -111,9 +111,9 @@ export const accessibleVariants = {
         exit: { opacity: 0, x: 20 },
     },
     scale: {
-        initial: { opacity: 0, scale: 0.95 },
+        initial: { opacity: 0, scale: 0.93 },
         animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.95 },
+        exit: { opacity: 0, scale: 0.93 },
     },
     stagger: {
         animate: {

@@ -363,8 +363,8 @@ export const MobileOptimizedInput = memo(
                         <motion.div
                             animate={{ opacity: 1, scale: 1 }}
                             className='absolute right-2 top-2 flex items-center gap-1'
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            initial={{ opacity: 0, scale: 0.8 }}
+                            exit={{ opacity: 0, scale: 0.93 }}
+                            initial={{ opacity: 0, scale: 0.93 }}
                         >
                             <div className='h-2 w-2 animate-pulse rounded-full bg-green-500' />
                             <span className='text-xs font-medium text-gray-500'>Ready</span>
