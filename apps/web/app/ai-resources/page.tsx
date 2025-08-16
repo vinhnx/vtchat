@@ -1,3 +1,4 @@
+import { aiRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer } from '@repo/common/components';
 import {
     Breadcrumb,
@@ -8,11 +9,7 @@ import {
     BreadcrumbSeparator,
     InternalLinks,
 } from '@repo/ui';
-import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { aiRelatedLinks } from '@/lib/constants/ai-links';
 
 export const dynamic = 'force-static';
 
@@ -49,20 +46,6 @@ export const metadata: Metadata = {
 };
 
 export default function AIResourcesPage() {
-    const internalLinks = [
-        { href: '/', label: 'Home' },
-        { href: '/terms', label: 'Terms' },
-        { href: '/privacy', label: 'Privacy' },
-        { href: '/pricing', label: 'VT+' },
-        { href: '/hello', label: 'Hello' },
-        { href: '/help', label: 'Help' },
-        { href: '/feedback', label: 'Feedback' },
-        { href: '/about', label: 'About' },
-        { href: '/faq', label: 'FAQ' },
-        { href: '/ai-glossary', label: 'AI Glossary' },
-        { href: '/ai-resources', label: 'AI Resources' },
-    ];
-
     const resources = [
         {
             category: 'Getting Started with AI',
@@ -199,7 +182,7 @@ export default function AIResourcesPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -228,23 +211,23 @@ export default function AIResourcesPage() {
 
                     <div className='space-y-12'>
                         {resources.map((section, sectionIndex) => (
-                            <div key={sectionIndex} className='space-y-6'>
+                            <section key={sectionIndex} className='space-y-4'>
                                 <h2 className='text-foreground border-border/30 border-b pb-2 text-2xl font-bold'>
                                     {section.category}
                                 </h2>
-                                <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                                <ul className='divide-y divide-border'>
                                     {section.items.map((item, itemIndex) => (
-                                        <div key={itemIndex} className='bg-card rounded-lg p-6'>
-                                            <h3 className='text-foreground mb-3 text-lg font-semibold'>
+                                        <li key={itemIndex} className='py-4'>
+                                            <p className='text-foreground text-base font-medium'>
                                                 {item.title}
-                                            </h3>
-                                            <p className='text-muted-foreground text-sm leading-relaxed'>
+                                            </p>
+                                            <p className='text-muted-foreground mt-1 text-sm leading-relaxed'>
                                                 {item.description}
                                             </p>
-                                        </div>
+                                        </li>
                                     ))}
-                                </div>
-                            </div>
+                                </ul>
+                            </section>
                         ))}
                     </div>
 
@@ -389,7 +372,11 @@ export default function AIResourcesPage() {
                     </div>
                     {/* Related Links - Enhanced Internal Linking for SEO */}
                     <InternalLinks
-                        links={Array.isArray(aiRelatedLinks) ? aiRelatedLinks.filter(link => link.href !== '/ai-resources').map(link => ({ href: link.href, label: link.title })) : []}
+                        links={Array.isArray(aiRelatedLinks)
+                            ? aiRelatedLinks.filter(link => link.href !== '/ai-resources').map(
+                                link => ({ href: link.href, label: link.title }),
+                            )
+                            : []}
                         title='Explore More AI Resources'
                         className='mt-12'
                     />
