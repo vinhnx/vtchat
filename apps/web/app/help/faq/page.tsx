@@ -52,11 +52,7 @@ export default function HelpCenterPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
