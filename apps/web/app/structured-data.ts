@@ -1,4 +1,4 @@
-import type { Organization, Product, WebSite, SoftwareApplication, WithContext } from 'schema-dts';
+import type { Organization, Product, SoftwareApplication, WebSite, WithContext } from 'schema-dts';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn';
 
@@ -13,24 +13,26 @@ export const organizationSchema: WithContext<Organization> = {
         url: `${baseUrl}/icon-512x512.png`,
         width: 512,
         height: 512,
-        caption: 'VT AI Platform Logo'
+        caption: 'VT AI Platform Logo',
     },
-    description: 'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
+    description:
+        'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
     foundingDate: '2025',
     contactPoint: {
         '@type': 'ContactPoint',
         email: 'hello@vtchat.io.vn',
         contactType: 'customer service',
         areaServed: 'Worldwide',
-        availableLanguage: 'English'
+        availableLanguage: 'English',
     },
     sameAs: ['https://github.com/vinhnx/vtchat', 'https://x.com/vinhnx'],
-    keywords: 'artificial intelligence, AI, generative AI, deep learning, machine learning, natural language processing, large language models, computer vision, AI systems',
+    keywords:
+        'artificial intelligence, AI, generative AI, deep learning, machine learning, natural language processing, large language models, computer vision, AI systems',
     industry: 'Artificial Intelligence',
     numberOfEmployees: {
         '@type': 'QuantitativeValue',
-        value: '1-10'
-    }
+        value: '1-10',
+    },
 };
 
 export const websiteSchema: WithContext<WebSite> = {
@@ -39,10 +41,12 @@ export const websiteSchema: WithContext<WebSite> = {
     name: 'VT - Advanced AI Platform',
     alternateName: 'VT AI Chat Platform',
     url: baseUrl,
-    description: 'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
+    description:
+        'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
     inLanguage: 'en-US',
     isAccessibleForFree: true,
-    keywords: 'artificial intelligence, AI chat, generative AI, deep learning, natural language processing, large language models, machine learning, computer vision, AI systems',
+    keywords:
+        'artificial intelligence, AI chat, generative AI, deep learning, natural language processing, large language models, machine learning, computer vision, AI systems',
     potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -60,16 +64,17 @@ export const websiteSchema: WithContext<WebSite> = {
             '@type': 'Offer',
             price: '0',
             priceCurrency: 'USD',
-            description: 'Free AI chat with premium models'
-        }
-    }
+            description: 'Free AI chat with premium models',
+        },
+    },
 };
 
 export const productSchema: WithContext<Product> = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: 'VT+ - Premium AI Research Tools',
-    description: 'Premium AI chat features with exclusive research capabilities including Deep Research, Pro Search, and enhanced AI tools for professionals.',
+    description:
+        'Premium AI chat features with exclusive research capabilities including Deep Research, Pro Search, and enhanced AI tools for professionals.',
     category: 'AI Software',
     brand: {
         '@type': 'Brand',
@@ -85,15 +90,15 @@ export const productSchema: WithContext<Product> = {
         validFrom: '2025-01-01',
         seller: {
             '@type': 'Organization',
-            name: 'VT'
-        }
+            name: 'VT',
+        },
     },
     features: [
         'Deep Research capabilities',
-        'Pro Search functionality', 
+        'Pro Search functionality',
         'Google Dynamic Retrieval',
         'All Gemini Models without BYOK',
-        'Flexible database-driven quotas'
+        'Flexible database-driven quotas',
     ],
     aggregateRating: {
         '@type': 'AggregateRating',
@@ -110,7 +115,8 @@ export const softwareApplicationSchema: WithContext<SoftwareApplication> = {
     name: 'VT - Advanced AI Chat Platform',
     alternateName: 'VT AI',
     url: baseUrl,
-    description: 'Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.',
+    description:
+        'Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.',
     applicationCategory: 'AI Chat Application',
     operatingSystem: 'Web Browser, Cross-platform',
     softwareVersion: '1.0',
@@ -118,33 +124,33 @@ export const softwareApplicationSchema: WithContext<SoftwareApplication> = {
     author: {
         '@type': 'Person',
         name: 'Vinh Nguyen',
-        url: 'https://vinhnx.github.io/'
+        url: 'https://vinhnx.github.io/',
     },
     publisher: {
         '@type': 'Organization',
-        name: 'VT - Advanced AI Platform'
+        name: 'VT - Advanced AI Platform',
     },
     offers: {
         '@type': 'Offer',
         price: '0',
         priceCurrency: 'USD',
         description: 'Free AI chat with premium models',
-        availability: 'https://schema.org/InStock'
+        availability: 'https://schema.org/InStock',
     },
     featureList: [
         'Generative AI',
         'Deep Learning',
         'Natural Language Processing (NLP)',
-        'Large Language Models (LLMs)', 
+        'Large Language Models (LLMs)',
         'Machine Learning Models',
         'Computer Vision',
         'Real-time AI Processing',
-        'Privacy-first AI Systems'
+        'Privacy-first AI Systems',
     ],
     screenshot: {
         '@type': 'ImageObject',
         url: `${baseUrl}/og-image-v3.jpg`,
-        caption: 'VT AI Chat Interface Screenshot'
+        caption: 'VT AI Chat Interface Screenshot',
     },
     downloadUrl: baseUrl,
     installUrl: baseUrl,
@@ -153,8 +159,8 @@ export const softwareApplicationSchema: WithContext<SoftwareApplication> = {
         ratingValue: '4.9',
         reviewCount: '200',
         bestRating: '5',
-        worstRating: '1'
-    }
+        worstRating: '1',
+    },
 };
 
 export function generateStructuredData(type: 'organization' | 'website' | 'product' | 'software') {

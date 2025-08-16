@@ -151,8 +151,7 @@ describe('VT+ Limits Configuration', () => {
 
     describe('Budget considerations', () => {
         it('should have reasonable limits for budget constraints', () => {
-            const totalRequests =
-                VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit
+            const totalRequests = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit
                 + VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit;
 
             // Daily limits should be reasonable for VT+ users

@@ -1,4 +1,6 @@
+import { helpRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer, MarkdownContent } from '@repo/common/components';
+import { privacyPolicy } from '@repo/shared/config';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,11 +11,9 @@ import {
     Button,
     InternalLinks,
 } from '@repo/ui';
-import { privacyPolicy } from '@repo/shared/config';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { helpRelatedLinks } from '@/lib/constants/ai-links';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy | VT',
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -77,7 +77,11 @@ export default function PrivacyPage() {
                     </div>
                     {/* Related Links - Enhanced Internal Linking for SEO */}
                     <InternalLinks
-                        links={Array.isArray(helpRelatedLinks) ? helpRelatedLinks.filter(link => link.href !== '/privacy').map(link => ({ href: link.href, label: link.title })) : []}
+                        links={Array.isArray(helpRelatedLinks)
+                            ? helpRelatedLinks.filter(link => link.href !== '/privacy').map(
+                                link => ({ href: link.href, label: link.title }),
+                            )
+                            : []}
                         title='Helpful Resources'
                         className='mt-12'
                     />

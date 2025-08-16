@@ -1,4 +1,6 @@
+import { helpRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer, MarkdownContent } from '@repo/common/components';
+import { termsMdx } from '@repo/shared/config';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,12 +10,10 @@ import {
     BreadcrumbSeparator,
     InternalLinks,
 } from '@repo/ui';
-import { termsMdx } from '@repo/shared/config';
 import { Button } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { helpRelatedLinks } from '@/lib/constants/ai-links';
 
 export const metadata: Metadata = {
     title: 'Terms of Service | VT',
@@ -55,7 +55,7 @@ export default function TermsPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -75,7 +75,12 @@ export default function TermsPage() {
                     </div>
                     {/* Related Links - Enhanced Internal Linking for SEO */}
                     <InternalLinks
-                        links={Array.isArray(helpRelatedLinks) ? helpRelatedLinks.filter(link => link.href !== '/terms').map(link => ({ href: link.href, label: link.title })) : []}
+                        links={Array.isArray(helpRelatedLinks)
+                            ? helpRelatedLinks.filter(link => link.href !== '/terms').map(link => ({
+                                href: link.href,
+                                label: link.title,
+                            }))
+                            : []}
                         title='Helpful Resources'
                         className='mt-12'
                     />

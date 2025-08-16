@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const currentDate = new Date();
     const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
     const oneMonthAgo = new Date(currentDate.getTime() - 30 * 24 * 60 * 60 * 1000);
-    
+
     return [
         {
             url: baseUrl,
