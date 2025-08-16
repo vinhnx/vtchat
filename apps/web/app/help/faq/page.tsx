@@ -52,11 +52,7 @@ export default function HelpCenterPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
@@ -210,12 +206,12 @@ function HelpCenterContent() {
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
                                         Comprehensive multi-step research using Gemini 2.5 Flash for
-                                        in-depth analysis (VT+ exclusive - 10 requests/day)
+                                        in-depth analysis (VT+ exclusive - 25 requests/day)
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
                                         Fast grounding web search using Gemini 2.5 Flash for quick
-                                        information retrieval (VT+ exclusive - 20 requests/day)
+                                        information retrieval (VT+ exclusive - 50 requests/day)
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Document Processing:</strong>{' '}
@@ -293,12 +289,12 @@ function HelpCenterContent() {
                                 <ul className='mt-2 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        Lightning-fast web search with AI grounding (20
+                                        Lightning-fast web search with AI grounding (50
                                         requests/day)
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        Comprehensive multi-step research and analysis (10
+                                        Comprehensive multi-step research and analysis (25
                                         requests/day)
                                     </li>
                                 </ul>
@@ -363,12 +359,12 @@ function HelpCenterContent() {
                                         <strong>Deep Research (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Pro for comprehensive, multi-step research
                                         with detailed analysis and thorough investigation of complex
-                                        topics (10 requests/day)
+                                        topics (25 requests/day)
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Flash for fast, efficient web search and
-                                        information retrieval with quick grounding capabilities (20
+                                        information retrieval with quick grounding capabilities (50
                                         requests/day)
                                     </li>
                                     <li className='text-muted-foreground'>

@@ -1,9 +1,19 @@
 import { Footer, MarkdownContent } from '@repo/common/components';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    Button,
+    InternalLinks,
+} from '@repo/ui';
 import { privacyPolicy } from '@repo/shared/config';
-import { Button } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { helpRelatedLinks } from '@/lib/constants/ai-links';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy | VT',
@@ -25,18 +35,36 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
+    const internalLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/terms', label: 'Terms' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/pricing', label: 'VT+' },
+        { href: '/hello', label: 'Hello' },
+        { href: '/help', label: 'Help' },
+        { href: '/feedback', label: 'Feedback' },
+        { href: '/about', label: 'About' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/ai-glossary', label: 'AI Glossary' },
+        { href: '/ai-resources', label: 'AI Resources' },
+    ];
+
     return (
         <div className='bg-background min-h-screen'>
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>Privacy Policy</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Privacy Policy</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
             </header>
 
@@ -47,15 +75,17 @@ export default function PrivacyPage() {
                     <div className='prose prose-neutral dark:prose-invert max-w-none'>
                         <MarkdownContent content={privacyPolicy} />
                     </div>
+                    {/* Related Links - Enhanced Internal Linking for SEO */}
+                    <InternalLinks
+                        links={Array.isArray(helpRelatedLinks) ? helpRelatedLinks.filter(link => link.href !== '/privacy').map(link => ({ href: link.href, label: link.title })) : []}
+                        title='Helpful Resources'
+                        className='mt-12'
+                    />
                 </div>
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

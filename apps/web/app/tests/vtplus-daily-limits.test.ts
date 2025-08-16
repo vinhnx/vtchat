@@ -48,12 +48,12 @@ describe('VT+ Daily Limits', () => {
     describe('Configuration', () => {
         it('should set daily limits for Deep Research and Pro Search', () => {
             expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toEqual({
-                limit: 5,
+                limit: 25,
                 window: 'daily',
             });
 
             expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toEqual({
-                limit: 10,
+                limit: 50,
                 window: 'daily',
             });
         });
@@ -128,8 +128,8 @@ describe('VT+ Daily Limits', () => {
             expect(mockDb.select).toHaveBeenCalledTimes(1);
 
             // Verify correct limits are applied
-            expect(allUsage[VtPlusFeature.DEEP_RESEARCH].limit).toBe(5);
-            expect(allUsage[VtPlusFeature.PRO_SEARCH].limit).toBe(10);
+            expect(allUsage[VtPlusFeature.DEEP_RESEARCH].limit).toBe(25);
+            expect(allUsage[VtPlusFeature.PRO_SEARCH].limit).toBe(50);
         });
     });
 

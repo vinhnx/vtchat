@@ -35,8 +35,8 @@ describe('VT+ Limits Configuration', () => {
 
         it('should use default values when env vars not set', () => {
             // Test the fallback logic directly
-            expect(Number(undefined) || 5).toBe(5);
-            expect(Number(undefined) || 10).toBe(10);
+            expect(Number(undefined) || 25).toBe(25);
+            expect(Number(undefined) || 50).toBe(50);
 
             // Verify current config has reasonable defaults
             expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit).toBeGreaterThan(0);
@@ -151,11 +151,12 @@ describe('VT+ Limits Configuration', () => {
 
     describe('Budget considerations', () => {
         it('should have reasonable limits for budget constraints', () => {
-            const totalRequests = VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit
+            const totalRequests =
+                VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH].limit
                 + VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH].limit;
 
             // Daily limits should be reasonable for VT+ users
-            expect(totalRequests).toBeLessThanOrEqual(50);
+            expect(totalRequests).toBeLessThanOrEqual(100);
         });
 
         it('should have Deep Research limit lower than Pro Search', () => {

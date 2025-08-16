@@ -1,8 +1,17 @@
+// Server Component: remove 'use client' to allow metadata export
+
+import { aiRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer } from '@repo/common/components';
-import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    InternalLinks,
+} from '@repo/ui';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const dynamic = 'force-static';
 
@@ -41,106 +50,118 @@ export const metadata: Metadata = {
 export default function AIGlossaryPage() {
     const glossaryTerms = [
         {
-            term: 'Artificial Intelligence (AI)',
-            definition:
-                'A branch of computer science that aims to create machines capable of performing tasks that typically require human intelligence, including learning, reasoning, problem-solving, and understanding natural language.',
-        },
-        {
-            term: 'Generative AI',
-            definition:
-                'AI systems that can create new content, including text, images, code, and other media, by learning patterns from training data and generating novel outputs based on prompts or inputs.',
-        },
-        {
-            term: 'Deep Learning',
-            definition:
-                'A subset of machine learning that uses deep neural networks with multiple hidden layers to process and analyze complex patterns in large amounts of data, mimicking the way human brains work.',
-        },
-        {
-            term: 'Natural Language Processing (NLP)',
-            definition:
-                'A field of AI that focuses on enabling computers to understand, interpret, and generate human language in a way that is both meaningful and useful for real-world applications.',
-        },
-        {
-            term: 'Large Language Models (LLMs)',
-            definition:
-                'Advanced AI systems trained on massive datasets of text to understand and generate human-like language, capable of performing various language tasks with human-level proficiency.',
-        },
-        {
-            term: 'Machine Learning',
-            definition:
-                'A method of data analysis that automates analytical model building, allowing AI systems to learn from data, identify patterns, and make decisions with minimal human intervention.',
-        },
-        {
-            term: 'Computer Vision',
-            definition:
-                'An AI field that trains computers to interpret and understand visual information from the world, enabling machines to identify objects, analyze images, and process visual data in real-time.',
-        },
-        {
-            term: 'Neural Networks',
-            definition:
-                'Computing systems inspired by biological neural networks, consisting of interconnected nodes (neurons) that process information and learn patterns from data.',
-        },
-        {
-            term: 'Deep Neural Networks',
-            definition:
-                'Neural networks with multiple hidden layers that can learn complex patterns and representations from data, forming the foundation of deep learning systems.',
-        },
-        {
-            term: 'Hidden Layers',
-            definition:
-                'Intermediate layers in neural networks between input and output layers that process and transform data, enabling the network to learn complex patterns and relationships.',
-        },
-        {
-            term: 'Artificial General Intelligence (AGI)',
-            definition:
-                'A theoretical form of AI that would match or exceed human cognitive abilities across all domains, capable of understanding, learning, and applying intelligence to any problem.',
-        },
-        {
-            term: 'Machine Learning Models',
-            definition:
-                'Mathematical algorithms and statistical models that enable computers to learn from and make predictions or decisions based on data without being explicitly programmed for each task.',
-        },
-        {
-            term: 'Real-Time Processing',
-            definition:
-                'The ability of AI systems to process and respond to data immediately as it is received, enabling instant analysis and decision-making for time-sensitive applications.',
-        },
-        {
-            term: 'Training Data',
-            definition:
-                'Large amounts of data used to teach AI systems how to perform specific tasks, providing examples and patterns that the AI learns from to improve its performance.',
-        },
-        {
-            term: 'AI Systems',
-            definition:
-                'Complete artificial intelligence solutions that combine various AI technologies, algorithms, and models to perform complex tasks that traditionally require human intelligence.',
-        },
-        {
-            term: 'Human Intelligence',
-            definition:
-                'The cognitive abilities that humans possess, including reasoning, learning, problem-solving, creativity, and emotional understanding, which AI systems aim to replicate or augment.',
-        },
-        {
-            term: 'Specific Tasks',
-            definition:
-                'Particular functions or activities that AI systems are designed to perform, such as image recognition, language translation, or data analysis, often excelling in narrow domains.',
+            term: 'Agentic AI',
+            definition: 'AI systems that can work autonomously to achieve goals without direct human input.',
         },
         {
             term: 'Algorithm',
-            definition:
-                'A set of rules or instructions that AI systems follow to solve problems, process data, or make decisions, forming the logical foundation of artificial intelligence operations.',
+            definition: 'A set of rules or instructions that a machine follows to complete a task.',
         },
         {
-            term: 'Pattern Recognition',
-            definition:
-                'The ability of AI systems to identify regularities, trends, and structures in data, enabling them to classify information and make predictions based on learned patterns.',
+            term: 'Artificial General Intelligence (AGI)',
+            definition: 'A type of AI that can perform any intellectual task a human can.',
+        },
+        {
+            term: 'Artificial Intelligence (AI)',
+            definition: 'The simulation of human intelligence in machines, enabling them to think and learn.',
+        },
+        {
+            term: 'Autonomous',
+            definition: 'A machine that can perform its tasks without human intervention.',
+        },
+        {
+            term: 'Big Data',
+            definition: 'Extremely large and complex datasets that require specialized tools to process.',
+        },
+        {
+            term: 'Chatbot',
+            definition: 'A program designed to simulate human conversation through text or voice.',
         },
         {
             term: 'Cognitive Computing',
-            definition:
-                'AI systems that simulate human thought processes to solve complex problems, combining machine learning, natural language processing, and other AI technologies.',
+            definition: 'AI systems that simulate human thought processes to solve complex problems, combining machine learning, natural language processing, and other AI technologies.',
         },
-    ];
+        {
+            term: 'Computer Vision',
+            definition: 'An AI field that trains computers to interpret and understand visual information from the world, enabling machines to identify objects, analyze images, and process visual data in real-time.',
+        },
+        {
+            term: 'Data Mining',
+            definition: 'The process of analyzing large datasets to find new patterns and insights.',
+        },
+        {
+            term: 'Deep Learning',
+            definition: 'A subfield of machine learning that uses neural networks with many layers to learn from large amounts of data.',
+        },
+        {
+            term: 'Deep Neural Networks',
+            definition: 'Neural networks with multiple hidden layers that can learn complex patterns and representations from data, forming the foundation of deep learning systems.',
+        },
+        {
+            term: 'Generative AI',
+            definition: 'AI models that can create new and original content, such as text, images, or music.',
+        },
+        {
+            term: 'Hallucination',
+            definition: 'A confident response from an AI that is not justified by its training data.',
+        },
+        {
+            term: 'Hidden Layers',
+            definition: 'Intermediate layers in neural networks between input and output layers that process and transform data, enabling the network to learn complex patterns and relationships.',
+        },
+        {
+            term: 'Human Intelligence',
+            definition: 'The cognitive abilities that humans possess, including reasoning, learning, problem-solving, creativity, and emotional understanding, which AI systems aim to replicate or augment.',
+        },
+        {
+            term: 'Large Language Model (LLM)',
+            definition: 'A type of AI model trained on vast amounts of text data to understand and generate human-like language.',
+        },
+        {
+            term: 'Machine Learning (ML)',
+            definition: 'A subset of AI that allows computers to learn from data and improve their performance over time without being explicitly programmed.',
+        },
+        {
+            term: 'Machine Learning Models',
+            definition: 'Mathematical algorithms and statistical models that enable computers to learn from and make predictions or decisions based on data without being explicitly programmed for each task.',
+        },
+        {
+            term: 'Natural Language Processing (NLP)',
+            definition: 'A field of AI that focuses on the interaction between computers and human language.',
+        },
+        {
+            term: 'Neural Network',
+            definition: 'A computer system modeled after the human brain, used for tasks like speech and image recognition.',
+        },
+        {
+            term: 'Pattern Recognition',
+            definition: 'The ability of AI systems to identify regularities, trends, and structures in data, enabling them to classify information and make predictions based on learned patterns.',
+        },
+        {
+            term: 'Prompt',
+            definition: 'The input given to an AI model to guide its output.',
+        },
+        {
+            term: 'Real-Time Processing',
+            definition: 'The ability of AI systems to process and respond to data immediately as it is received, enabling instant analysis and decision-making for time-sensitive applications.',
+        },
+        {
+            term: 'Specific Tasks',
+            definition: 'Particular functions or activities that AI systems are designed to perform, such as image recognition, language translation, or data analysis, often excelling in narrow domains.',
+        },
+        {
+            term: 'Supervised Learning',
+            definition: 'A type of machine learning where the model is trained on labeled data.',
+        },
+        {
+            term: 'Training Data',
+            definition: 'Large amounts of data used to teach AI systems how to perform specific tasks, providing examples and patterns that the AI learns from to improve its performance.',
+        },
+        {
+            term: 'Unsupervised Learning',
+            definition: 'A type of machine learning where the model finds patterns in unlabeled data.',
+        },
+    ].sort((a, b) => a.term.localeCompare(b.term));
 
     return (
         <div className='bg-background min-h-screen'>
@@ -151,14 +172,18 @@ export default function AIGlossaryPage() {
 
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>AI Glossary</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>AI Glossary</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
             </header>
 
@@ -177,18 +202,21 @@ export default function AIGlossaryPage() {
                         </p>
                     </div>
 
-                    <div className='space-y-6'>
-                        {glossaryTerms.map((item, index) => (
-                            <div key={index} className='bg-card rounded-lg p-6'>
-                                <h3 className='text-foreground mb-3 text-xl font-semibold'>
-                                    {item.term}
-                                </h3>
-                                <p className='text-muted-foreground leading-relaxed'>
-                                    {item.definition}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    <section aria-labelledby='glossary-heading'>
+                        <h2 id='glossary-heading' className='sr-only'>Glossary terms</h2>
+                        <dl className='divide-y divide-border'>
+                            {glossaryTerms.map((item, index) => (
+                                <div key={index} className='py-5'>
+                                    <dt className='text-foreground text-lg font-semibold'>
+                                        {item.term}
+                                    </dt>
+                                    <dd className='text-muted-foreground mt-1 leading-relaxed'>
+                                        {item.definition}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </section>
 
                     {/* Additional AI Context */}
                     <div className='mt-12 space-y-8'>
@@ -234,15 +262,21 @@ export default function AIGlossaryPage() {
                             </p>
                         </div>
                     </div>
+                    {/* Related Links - Enhanced Internal Linking for SEO */}
+                    <InternalLinks
+                        links={Array.isArray(aiRelatedLinks)
+                            ? aiRelatedLinks.filter(link => link.href !== '/ai-glossary').map(
+                                link => ({ href: link.href, label: link.title }),
+                            )
+                            : []}
+                        title='Explore More AI Resources'
+                        className='mt-12'
+                    />
                 </div>
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

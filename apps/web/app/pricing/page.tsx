@@ -115,11 +115,7 @@ export default function PricingPage() {
             />
             <PricingClient />
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </>
     );
 }
