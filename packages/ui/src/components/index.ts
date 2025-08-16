@@ -68,3 +68,8 @@ export * from './use-sonner-toast';
 export * from './use-toast';
 export * from './visually-hidden';
 export * from './vt-plus-badge';
+
+// Animation-enhanced components following 12 Principles of Animation
+export * from './animated-toast';
+export * from './enhanced-loading';
+export * from './staged-modal';
