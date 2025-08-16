@@ -1,7 +1,15 @@
 import Link from 'next/link';
 
-// Reduced to essential footer items only (max 4 items as requested)
+// Essential footer items for all public pages
 const links = [
+    {
+        title: 'Home',
+        href: '/',
+    },
+    {
+        title: 'About',
+        href: '/about',
+    },
     {
         title: 'Terms',
         href: '/terms',
@@ -15,8 +23,16 @@ const links = [
         href: '/help',
     },
     {
+        title: 'FAQ',
+        href: '/faq',
+    },
+    {
         title: 'VT+',
         href: '/pricing',
+    },
+    {
+        title: 'Contact',
+        href: 'mailto:hello@vtchat.io.vn',
     },
 ];
 
