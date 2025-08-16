@@ -10,6 +10,7 @@
 - Replaced model provider logos with models.dev resources
 - Removed dependency on @lobehub/icons
 - Added fallback to default VT logo when provider logo unavailable
+- Provider logos now adapt to dark and light themes automatically
 
 ### ✅ Deep Research Model Update
 

@@ -133,10 +133,11 @@ export const getProviderIcon = (provider: ProviderEnumType, size = 16) => {
             alt={`${provider} logo`}
             width={size}
             height={size}
-            className='flex-shrink-0'
+            className='flex-shrink-0 dark:invert'
             onError={(e) => {
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = DEFAULT_LOGO_PATH;
+                e.currentTarget.classList.remove('dark:invert');
             }}
         />
     );
