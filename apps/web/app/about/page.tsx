@@ -11,7 +11,7 @@ import {
 import { aiRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer } from '@repo/common/components';
 import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -487,9 +487,9 @@ function AboutContent() {
                                     href='https://vtchat.userjot.com'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='text-primary hover:text-primary/80 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted'
                                 >
-                                    <Button variant='outline'>
+                                    <Button variant='outline' className='gap-2'>
+                                        <MessageCircle className='h-4 w-4' />
                                         Send Feedback
                                     </Button>
                                 </Link>
