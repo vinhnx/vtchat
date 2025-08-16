@@ -2,6 +2,15 @@
 
 ## Latest Session - July 2025
 
+### ✅ Provider Logos Source Update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Replaced model provider logos with models.dev resources
+- Removed dependency on @lobehub/icons
+- Added fallback to default VT logo when provider logo unavailable
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
