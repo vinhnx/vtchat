@@ -2,7 +2,7 @@
 import { Footer, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { Button } from '@repo/ui';
 import { ArrowLeft, Home } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -26,9 +26,9 @@ const ChatInput = dynamic(
     },
 );
 
-const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => {
-    const params = use(props.params);
-    const threadId = params.threadId;
+export function ChatSessionPage({ params }: { params: Promise<{ threadId: string; }>; }) {
+    const resolvedParams = use(params);
+    const threadId = resolvedParams.threadId;
     const router = useRouter();
     const { data: session, isPending } = useSession();
     const isGenerating = useChatStore((state) => state.isGenerating);
@@ -454,6 +454,6 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => 
             </div>
         </div>
     );
-};
+}
 
 export default ChatSessionPage;

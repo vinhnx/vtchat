@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import log from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { TypographySmall } from '@repo/ui';
 import NextDynamic from 'next/dynamic';
 import { useEffect } from 'react';
@@ -49,7 +49,7 @@ const FooterWithSuspense = NextDynamic(
     },
 );
 
-export default function HomePage() {
+export function HomePage() {
     const { data: session, isPending } = useSession();
 
     // Log LCP optimization verification in development
@@ -66,9 +66,12 @@ export default function HomePage() {
             ].every((resource) => preloadHrefs.includes(resource));
 
             if (hasCriticalResources) {
-                log.info('✅ LCP: Critical resources are properly preloaded');
+                log.info({ lcp: 'preload-ok' }, 'Critical resources are properly preloaded');
             } else {
-                log.info('⚠️ LCP: Some critical resources may not be preloaded');
+                log.info(
+                    { lcp: 'preload-missing' },
+                    'Some critical resources may not be preloaded',
+                );
             }
         }
     }, []);
@@ -594,3 +597,5 @@ export default function HomePage() {
         </div>
     );
 }
+
+export default HomePage;
