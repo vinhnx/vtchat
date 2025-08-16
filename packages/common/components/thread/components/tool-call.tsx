@@ -8,11 +8,37 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, FileText, Play, Settings, Sigma } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 
+// Import AI Elements components
+import { Tool, ToolContent, ToolHeader, ToolInput } from '@/components/ai-elements';
+
 export type ToolCallProps = {
     toolCall: ToolCallType;
 };
 
-export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
+// AI Elements version with modern design
+export const AIElementsToolCallStep = memo(({ toolCall }: ToolCallProps) => {
+    // Map our tool call to AI Elements format
+    const mappedToolCall = {
+        type: `tool-${toolCall.toolName}` as const,
+        state: 'input-available' as const, // Tool calls are always input-available when rendered
+        input: toolCall.args,
+    };
+
+    return (
+        <Tool defaultOpen={false} className="border-muted/50 bg-muted/30">
+            <ToolHeader 
+                type={toolCall.toolName} 
+                state={mappedToolCall.state}
+            />
+            <ToolContent>
+                <ToolInput input={mappedToolCall.input} />
+            </ToolContent>
+        </Tool>
+    );
+});
+
+// Legacy version (keeping for backward compatibility during transition)
+export const LegacyToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
 
@@ -107,4 +133,9 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
     );
 });
 
+// Use AI Elements version by default
+export const ToolCallStep = AIElementsToolCallStep;
+
 ToolCallStep.displayName = 'ToolCallStep';
+AIElementsToolCallStep.displayName = 'AIElementsToolCallStep';
+LegacyToolCallStep.displayName = 'LegacyToolCallStep';
