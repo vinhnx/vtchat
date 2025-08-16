@@ -13,6 +13,13 @@
 - Provider logos now adapt to dark and light themes automatically
 - Added soft gray background to provider icons for improved dark mode visibility
 
+### ✅ Provider Icon UI Refinement
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Enlarged provider logos and tightened background padding for clarity
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
