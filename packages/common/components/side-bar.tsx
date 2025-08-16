@@ -393,6 +393,15 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     <DropdownMenuItem
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            window.open('https://vtchat.userjot.com', '_blank', 'noopener,noreferrer');
+                                        }}
+                                    >
+                                        <MessageCircleMore size={16} strokeWidth={2} />
+                                        Send Feedback
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             push('/about');
                                             if (forceMobile) {
                                                 setIsMobileSidebarOpen(false);

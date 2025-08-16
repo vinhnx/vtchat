@@ -8,8 +8,8 @@ describe('Gemini Chart Tools Integration', () => {
             const testModel = ModelEnum.GEMINI_2_5_FLASH_LITE;
             expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
 
-            // This model should support charts according to the models-data.json
-            // "charts": true is set for this model
+            // This model should support charts according to the models.dev API
+            // "charts": true is set for this model in the API response
         });
 
         it('should have chart tools available', () => {
