@@ -9,7 +9,7 @@ import { Brain, Gift } from 'lucide-react';
 const MODEL_LOGO_BASE_URL = 'https://models.dev/logos';
 const DEFAULT_LOGO_PATH = '/logo.svg';
 const PROVIDER_ICON_SIZE = 20;
-const PROVIDER_ICON_CLASS = 'flex-shrink-0 rounded bg-gray-100 p-0.5 dark:invert';
+const PROVIDER_ICON_CLASS = 'flex-shrink-0 rounded bg-gray-100 p-1 dark:invert';
 
 export const chatOptions = [
     {
