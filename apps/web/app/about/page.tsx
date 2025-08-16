@@ -222,12 +222,12 @@ function AboutContent() {
                             <ul className='text-muted-foreground list-inside list-disc space-y-2'>
                                 <li>
                                     <strong>Deep Research:</strong>{' '}
-                                    Advanced research capabilities with comprehensive analysis - 10
+                                    Advanced research capabilities with comprehensive analysis - 25
                                     daily uses for VT+ subscribers
                                 </li>
                                 <li>
                                     <strong>Pro Search:</strong>{' '}
-                                    Enhanced search with web integration - 20 daily uses for VT+
+                                    Enhanced search with web integration - 50 daily uses for VT+
                                     subscribers
                                 </li>
                                 <li>

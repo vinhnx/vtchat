@@ -298,12 +298,12 @@ function HelpCenterContent() {
                                 <ul className='mt-2 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        Lightning-fast web search with AI grounding - 20 requests
+                                        Lightning-fast web search with AI grounding - 50 requests
                                         per day
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        Comprehensive multi-step research and analysis - 10 requests
+                                        Comprehensive multi-step research and analysis - 25 requests
                                         per day
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -373,12 +373,12 @@ function HelpCenterContent() {
                                         <strong>Deep Research (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Pro for comprehensive, multi-step research
                                         with detailed analysis and thorough investigation of complex
-                                        topics - 10 requests per day
+                                        topics - 25 requests per day
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Flash for fast, efficient web search and
-                                        information retrieval with quick grounding capabilities - 20
+                                        information retrieval with quick grounding capabilities - 50
                                         requests per day
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -410,12 +410,12 @@ function HelpCenterContent() {
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        10 requests per day for VT+ subscribers, 0 for base plan
+                                        25 requests per day for VT+ subscribers, 0 for base plan
                                         users
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        20 requests per day for VT+ subscribers, 0 for base plan
+                                        50 requests per day for VT+ subscribers, 0 for base plan
                                         users
                                     </li>
                                     <li className='text-muted-foreground'>
