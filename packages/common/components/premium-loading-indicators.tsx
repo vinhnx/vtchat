@@ -79,9 +79,9 @@ export const PremiumTypingIndicator = memo(
                     <motion.div
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         className='flex max-w-sm items-start gap-3'
-                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                        exit={{ opacity: 0, scale: 0.93, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.93, y: 20 }}
+                        transition={{ duration: 0.125, ease: 'easeOut' }}
                     >
                         {/* Avatar - Optimized with transform-based animation */}
                         <motion.div
@@ -314,7 +314,7 @@ export const PremiumProgressIndicator = memo(
                 <motion.div
                     animate={{ opacity: 1, scale: 1 }}
                     className='flex items-center gap-3'
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.93 }}
                 >
                     <div className='relative'>
                         <svg

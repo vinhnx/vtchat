@@ -49,10 +49,10 @@ export function SendStopButton({
                     ? (
                         <motion.div
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            exit={{ scale: 0.93, opacity: 0 }}
+                            initial={{ scale: 0.93, opacity: 0 }}
                             key='stop-button'
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.125, ease: 'easeOut' }}
                         >
                             <Button
                                 aria-label='Stop Generation'
@@ -85,10 +85,10 @@ export function SendStopButton({
                     : (
                         <motion.div
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            exit={{ scale: 0.93, opacity: 0 }}
+                            initial={{ scale: 0.93, opacity: 0 }}
                             key='send-button'
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.125, ease: 'easeOut' }}
                         >
                             <Button
                                 aria-label='Send Message'
