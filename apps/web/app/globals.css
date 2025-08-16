@@ -1,4 +1,6 @@
 @import "@repo/tailwind-config/tailwind.css";
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {

@@ -15,6 +15,7 @@
         "start": "next start",
         "lint": "oxlint",
         "prepare": "husky",
+        "postinstall": "fumadocs-mdx",
         "generate": "bunx drizzle-kit generate",
         "scan": "bunx react-scan localhost:3000",
         "test:gemini": "DATABASE_URL=postgresql://test:test@localhost:5432/test bun test app/tests/rate-limit-simple.test.ts app/tests/implementation-check.test.ts",
