@@ -1,35 +1,19 @@
 'use client';
-import { CommandSearch } from '@repo/common/components';
+import { CommandSearch, MobileTopNavigation } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
 import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
-import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
 import {
-    AvatarLegacy as Avatar,
     Badge,
     Button,
     cn,
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
     Flex,
     SonnerToaster,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    FileText,
-    HelpCircle,
-    Info,
-    LogOut,
-    Menu,
-    Settings,
-    Shield,
-    Terminal,
-    User,
     X,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -43,15 +27,13 @@ export type TRootLayout = {
 };
 
 export const RootLayout: FC<TRootLayout> = ({ children }) => {
-    const { isSidebarOpen, isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } =
+    const { isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } =
         useRootContext();
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isAdmin } = useAdmin();
 
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
-    const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
-    const setSettingTab = useAppStore((state) => state.setSettingTab);
     const router = useRouter();
     const { logout, isLoggingOut } = useLogout();
 
@@ -289,173 +271,8 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                 </div>
             )}
 
-            {/* Mobile Floating Buttons Container */}
-            {isClient && (
-                <motion.div
-                    className={cn(
-                        'fixed left-4 flex flex-col gap-4 md:hidden',
-                        // Adjust positioning based on page type and navigation presence
-                        pathname.startsWith('/chat/')
-                            ? 'top-36 gap-3'
-                            : pathname.startsWith('/settings')
-                                    || pathname.startsWith('/about')
-                                    || pathname.startsWith('/help')
-                                    || pathname.startsWith('/privacy')
-                                    || pathname.startsWith('/terms')
-                                    || pathname.startsWith('/profile')
-                                    || pathname.startsWith('/admin')
-                            ? 'top-20 gap-4' // Pages with navigation headers (80px to clear header + padding)
-                            : 'pt-safe top-0 gap-6', // Home and other pages
-                        isMobileSidebarOpen ? 'z-[9999]' : 'z-[9998]',
-                    )}
-                    style={{
-                        paddingTop: pathname.startsWith('/chat/')
-                            ? '0'
-                            : pathname.startsWith('/settings')
-                                    || pathname.startsWith('/about')
-                                    || pathname.startsWith('/help')
-                                    || pathname.startsWith('/privacy')
-                                    || pathname.startsWith('/terms')
-                                    || pathname.startsWith('/profile')
-                                    || pathname.startsWith('/admin')
-                            ? 'max(env(safe-area-inset-top), 0.5rem)' // Reduced padding for pages with headers
-                            : 'max(env(safe-area-inset-top), 1rem)',
-                    }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.5 }}
-                >
-                    {/* Profile Button */}
-                    {session && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: 0.6 }}
-                        >
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        className={cn(
-                                            'bg-primary rounded-full border-0 p-0 shadow-lg transition-shadow hover:shadow-xl',
-                                            // Smaller size on thread pages
-                                            pathname.startsWith('/chat/')
-                                                ? 'h-10 w-10'
-                                                : 'h-12 w-12',
-                                        )}
-                                        size='icon'
-                                        variant='default'
-                                    >
-                                        <Avatar
-                                            className={cn(
-                                                'rounded-full',
-                                                // Smaller avatar on thread pages with proper sizing
-                                                pathname.startsWith('/chat/')
-                                                    ? 'h-8 w-8'
-                                                    : 'h-10 w-10',
-                                            )}
-                                            name={session.user?.name || session.user?.email
-                                                || 'User'}
-                                            size={pathname.startsWith('/chat/') ? 'sm' : 'md'}
-                                            src={getSessionCacheBustedAvatarUrl(
-                                                session.user?.image,
-                                            ) || undefined}
-                                        />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align='start' className='z-[200] mb-2 w-48'>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                            router.push('/settings?tab=profile');
-                                            setIsMobileSidebarOpen(false);
-                                        }}
-                                    >
-                                        <User className='mr-2' size={16} strokeWidth={2} />
-                                        Profile
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                            router.push('/settings');
-                                            setIsMobileSidebarOpen(false);
-                                        }}
-                                    >
-                                        <Settings className='mr-2' size={16} strokeWidth={2} />
-                                        Settings
-                                    </DropdownMenuItem>
-
-                                    {/* Admin Menu Item */}
-                                    {isAdmin && (
-                                        <DropdownMenuItem onClick={() => router.push('/admin')}>
-                                            <Terminal className='mr-2' size={16} strokeWidth={2} />
-                                            VT Terminal
-                                        </DropdownMenuItem>
-                                    )}
-
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => router.push('/about')}>
-                                        <Info className='mr-2' size={16} strokeWidth={2} />
-                                        About
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/help')}>
-                                        <HelpCircle className='mr-2' size={16} strokeWidth={2} />
-                                        Help Center
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/faq')}>
-                                        <HelpCircle className='mr-2' size={16} strokeWidth={2} />
-                                        FAQ
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/ai-glossary')}>
-                                        <FileText className='mr-2' size={16} strokeWidth={2} />
-                                        AI Glossary
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/ai-resources')}>
-                                        <FileText className='mr-2' size={16} strokeWidth={2} />
-                                        AI Resources
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/privacy')}>
-                                        <Shield className='mr-2' size={16} strokeWidth={2} />
-                                        Privacy Policy
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push('/terms')}>
-                                        <FileText className='mr-2' size={16} strokeWidth={2} />
-                                        Terms of Service
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        className={isLoggingOut
-                                            ? 'cursor-not-allowed opacity-50'
-                                            : ''}
-                                        disabled={isLoggingOut}
-                                        onClick={() => logout()}
-                                    >
-                                        <LogOut className='mr-2' size={16} strokeWidth={2} />
-                                        {isLoggingOut ? 'Signing out...' : 'Sign out'}
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </motion.div>
-                    )}
-
-                    {/* Sidebar Menu Button */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: session ? 0.7 : 0.6 }}
-                    >
-                        <Button
-                            className={cn(
-                                'bg-primary text-primary-foreground rounded-full shadow-lg transition-shadow hover:shadow-xl',
-                                // Smaller size on thread pages
-                                pathname.startsWith('/chat/') ? 'h-10 w-10' : 'h-12 w-12',
-                            )}
-                            onClick={() => setIsMobileSidebarOpen(true)}
-                            size='icon'
-                            variant='default'
-                        >
-                            <Menu size={pathname.startsWith('/chat/') ? 18 : 20} strokeWidth={2} />
-                        </Button>
-                    </motion.div>
-                </motion.div>
-            )}
+            {/* Mobile Top Navigation Bar */}
+            <MobileTopNavigation />
         </div>
     );
 };

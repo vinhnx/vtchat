@@ -98,9 +98,9 @@ export function CobeGlobe({ className }: CobeGlobeProps) {
             style={{
                 position: 'absolute',
                 inset: 0,
-                // Subtle soft-white radial glow, thin and gentle
+                // Subtle, light radial shade behind the globe
                 background:
-                    'radial-gradient(55% 55% at 50% 40%, rgba(255,255,255,0.12), rgba(255,255,255,0.05) 35%, transparent 60%)',
+                    'radial-gradient(60% 60% at 50% 40%, rgba(191,179,143,0.18), rgba(191,179,143,0.06) 45%, transparent 75%)',
             }}
         >
             <canvas

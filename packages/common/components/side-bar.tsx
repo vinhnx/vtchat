@@ -315,26 +315,16 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                 >
                     {isSignedIn
                         ? (
-                            <DropdownMenu>
+                            <DropdownMenu modal={forceMobile}>
                                 <DropdownMenuTrigger asChild>
                                     <div
                                         className={cn(
-                                            'border-sidebar-border bg-sidebar-accent/30 hover:bg-sidebar-accent flex cursor-pointer items-center justify-center rounded-lg border shadow-sm transition-all duration-200',
+                                            'border-sidebar-border flex cursor-pointer items-center justify-center border shadow-sm transition-all duration-200',
                                             isSidebarOpen
-                                                ? 'w-full flex-row gap-3 px-3 py-2'
-                                                : 'h-7 w-7 p-0',
+                                                ? 'w-full rounded-lg bg-sidebar-accent/30 hover:bg-sidebar-accent flex-row gap-3 px-3 py-2'
+                                                : 'h-7 w-7 rounded-full p-0',
                                         )}
                                         data-testid='sidebar-user-trigger'
-                                        onClick={(e) => {
-                                            // Prevent clicks on user profile trigger from closing mobile sidebar
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                        }}
-                                        onTouchEnd={(e) => {
-                                            // Handle iOS touch events specifically
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                        }}
                                     >
                                         <UnifiedAvatar
                                             name={user?.name || user?.email || 'User'}
@@ -367,23 +357,8 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent
                                     align='start'
-                                    className='w-56 pl-2'
-                                    onClick={(e) => {
-                                        // Prevent clicks inside dropdown from closing mobile sidebar
-                                        e.stopPropagation();
-                                    }}
-                                    onEscapeKeyDown={(e) => {
-                                        // Allow escape key to close dropdown but not sidebar
-                                        if (forceMobile) {
-                                            e.stopPropagation();
-                                        }
-                                    }}
-                                    onPointerDownOutside={(e) => {
-                                        // Prevent dropdown from closing when clicking outside on mobile
-                                        if (forceMobile) {
-                                            e.preventDefault();
-                                        }
-                                    }}
+                                    className={cn('w-56 pl-2', forceMobile && 'z-[303]')}
+                                    sideOffset={4}
                                 >
                                     {/* Account Management */}
                                     <DropdownMenuLabel>Account</DropdownMenuLabel>
@@ -391,6 +366,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/profile');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <User size={16} strokeWidth={2} />
@@ -400,6 +378,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/settings');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <Settings size={16} strokeWidth={2} />
@@ -412,7 +393,19 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     <DropdownMenuItem
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            window.open('https://vtchat.userjot.com', '_blank', 'noopener,noreferrer');
+                                        }}
+                                    >
+                                        <MessageCircleMore size={16} strokeWidth={2} />
+                                        Send Feedback
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             push('/about');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <Info size={16} strokeWidth={2} />
@@ -422,6 +415,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/help');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <HelpCircle size={16} strokeWidth={2} />
@@ -431,6 +427,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/faq');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <MessageCircleMore size={16} strokeWidth={2} />
@@ -440,6 +439,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/ai-glossary');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <FileText size={16} strokeWidth={2} />
@@ -449,6 +451,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/ai-resources');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <FileText size={16} strokeWidth={2} />
@@ -458,6 +463,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/privacy');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <Shield size={16} strokeWidth={2} />
@@ -467,6 +475,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             push('/terms');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <FileText size={16} strokeWidth={2} />
@@ -483,6 +494,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             logout();
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
                                         }}
                                     >
                                         <LogOut size={16} strokeWidth={2} />
@@ -694,6 +708,33 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     </Badge>
                                 </div>
                             )}
+                        </Button>
+
+                        {/* Settings Button */}
+                        <Button
+                            className={cn(
+                                'transition-all duration-200',
+                                isSidebarOpen
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
+                            )}
+                            onClick={() => {
+                                push('/settings');
+                                // Close mobile drawer if open
+                                if (forceMobile) {
+                                    setIsMobileSidebarOpen(false);
+                                }
+                            }}
+                            roundedSm='lg'
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant='ghost'
+                        >
+                            <Settings
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                size={16}
+                                strokeWidth={2}
+                            />
+                            {isSidebarOpen && 'Settings'}
                         </Button>
 
                         {

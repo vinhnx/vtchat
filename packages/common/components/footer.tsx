@@ -1,7 +1,10 @@
 import Link from 'next/link';
 
-// Reduced to essential footer items only (max 4 items as requested)
 const links = [
+    {
+        title: 'Home',
+        href: '/',
+    },
     {
         title: 'Terms',
         href: '/terms',
@@ -11,12 +14,40 @@ const links = [
         href: '/privacy',
     },
     {
+        title: 'VT+',
+        href: '/pricing',
+    },
+    {
+        title: 'Hello',
+        href: 'mailto:hello@vtdotai.io.vn',
+    },
+    {
         title: 'Help',
         href: '/help',
     },
     {
-        title: 'VT+',
-        href: '/pricing',
+        title: 'Feedback',
+        href: 'https://vtchat.userjot.com',
+    },
+    {
+        title: 'About',
+        href: '/about',
+    },
+    {
+        title: 'FAQ',
+        href: '/faq',
+    },
+    {
+        title: 'AI Glossary',
+        href: '/ai-glossary',
+    },
+    {
+        title: 'AI Resources',
+        href: '/ai-resources',
+    },
+    {
+        title: 'X',
+        href: 'https://x.com/vtdotai',
     },
 ];
 
@@ -40,9 +71,6 @@ export const Footer = () => {
             <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm px-3 sm:px-4 md:px-6'>
                 © {new Date().getFullYear()} VT, All rights reserved
             </div>
-            
-            {/* Mobile viewport spacing adjustment for chat input overlap prevention */}
-            <div className='h-2 sm:h-3 md:h-4' />
         </footer>
     );
 };
