@@ -59,36 +59,42 @@ export const Footer = () => {
                 {/* Mobile-first responsive design with reduced spacing */}
                 <div className='flex flex-wrap items-center justify-center gap-2 text-xs sm:gap-3 sm:text-sm md:gap-4 md:text-sm'>
                     {links.map((link, index) => {
-                        const isExternal = link.href.startsWith('http') || link.href.startsWith('mailto') || link.href.startsWith('/hello');
-                        const shouldOpenInNewTab = link.href.startsWith('http') || link.href.startsWith('mailto');
-                        return isExternal ? (
-                            <a
-                                key={index}
-                                href={link.href}
-                                target={shouldOpenInNewTab ? '_blank' : undefined}
-                                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                            >
-                                <span>{link.title}</span>
-                            </a>
-                        ) : (
-                            <Link
-                                key={index}
-                                href={link.href}
-                                className='text-muted-foreground hover:text-primary duration-150 transition-colors'
-                            >
-                                <span>{link.title}</span>
-                            </Link>
-                        );
+                        const isExternal = link.href.startsWith('http')
+                            || link.href.startsWith('mailto') || link.href.startsWith('/hello');
+                        const shouldOpenInNewTab = link.href.startsWith('http')
+                            || link.href.startsWith('mailto');
+                        return isExternal
+                            ? (
+                                <a
+                                    key={index}
+                                    href={link.href}
+                                    target={shouldOpenInNewTab ? '_blank' : undefined}
+                                    rel={link.href.startsWith('http')
+                                        ? 'noopener noreferrer'
+                                        : undefined}
+                                    className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                                >
+                                    <span>{link.title}</span>
+                                </a>
+                            )
+                            : (
+                                <Link
+                                    key={index}
+                                    href={link.href}
+                                    className='text-muted-foreground hover:text-primary duration-150 transition-colors'
+                                >
+                                    <span>{link.title}</span>
+                                </Link>
+                            );
                     })}
                 </div>
-                
+
                 {/* Copyright with reduced spacing and mobile optimization */}
                 <div className='text-muted-foreground mt-1 text-center text-xs sm:mt-2 sm:text-xs md:mt-3 md:text-sm'>
                     © {new Date().getFullYear()} VT, All rights reserved
                 </div>
             </div>
-            
+
             {/* Mobile viewport spacing adjustment for chat input overlap prevention */}
             <div className='h-2 sm:h-3 md:h-4' />
         </footer>

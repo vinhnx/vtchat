@@ -1,4 +1,6 @@
 import { BadgesSection } from '@/components/badges';
+import { aiRelatedLinks } from '@/lib/constants/ai-links';
+import { Footer } from '@repo/common/components';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,8 +10,6 @@ import {
     BreadcrumbSeparator,
     InternalLinks,
 } from '@repo/ui';
-import { aiRelatedLinks } from '@/lib/constants/ai-links';
-import { Footer } from '@repo/common/components';
 import { Button } from '@repo/ui';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -72,7 +72,7 @@ export default function AboutPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -441,7 +441,7 @@ function AboutContent() {
                             <h3 className='mb-6 text-center text-xl font-semibold'>
                                 Community & Recognition
                             </h3>
-                            
+
                             <div className='mb-8'>
                                 <BadgesSection className='mb-6' />
                             </div>
@@ -498,7 +498,11 @@ function AboutContent() {
 
                         {/* Related Links - Enhanced Internal Linking for SEO */}
                         <InternalLinks
-                            links={Array.isArray(aiRelatedLinks) ? aiRelatedLinks.filter(link => link.href !== '/about').map(link => ({ href: link.href, label: link.title })) : []}
+                            links={Array.isArray(aiRelatedLinks)
+                                ? aiRelatedLinks.filter(link => link.href !== '/about').map(
+                                    link => ({ href: link.href, label: link.title }),
+                                )
+                                : []}
                             title='Explore More AI Resources'
                             className='mt-12'
                         />

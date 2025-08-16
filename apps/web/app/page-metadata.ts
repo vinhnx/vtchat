@@ -83,7 +83,7 @@ export const defaultMetadata: Metadata = {
         'ai integration',
         'enterprise ai',
         'ai platform',
-        'ai solutions'
+        'ai solutions',
     ],
     authors: [{ name: 'Vinh Nguyen', url: 'https://vinhnx.github.io/' }],
     creator: 'Vinh Nguyen',

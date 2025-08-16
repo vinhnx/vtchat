@@ -53,8 +53,9 @@ describe('Footer Component', () => {
 
     it('should render copyright text', () => {
         render(<Footer />);
-        
+
         const currentYear = new Date().getFullYear();
-        expect(screen.getByText(new RegExp(`${currentYear} VT, All rights reserved`))).toBeInTheDocument();
+        expect(screen.getByText(new RegExp(`${currentYear} VT, All rights reserved`)))
+            .toBeInTheDocument();
     });
 });

@@ -6,12 +6,12 @@
     xmlns="http://www.w3.org/2000/svg"
 >
     <style>
-        .bg { fill: #BFB38F; }
-        .text { fill: #262626; stroke: #262626; stroke-width: 1; }
-        @media (prefers-color-scheme: dark) {
-            .bg { fill: #262626; }
-            .text { fill: #f0f0f0; stroke: #f0f0f0; }
-        }
+    .bg { fill: #BFB38F; }
+    .text { fill: #262626; stroke: #262626; stroke-width: 1; }
+    @media (prefers-color-scheme: dark) {
+        .bg { fill: #262626; }
+        .text { fill: #f0f0f0; stroke: #f0f0f0; }
+    }
     </style>
     <title>VT Icon</title>
     <rect x="0" y="0" width="32" height="32" rx="4" class="bg" />

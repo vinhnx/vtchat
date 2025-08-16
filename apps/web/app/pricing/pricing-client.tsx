@@ -9,9 +9,6 @@ import {
     Announcement,
     AnnouncementTag,
     AnnouncementTitle,
-    TypographyH2,
-    TypographyH3,
-    TypographyMuted,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
@@ -19,6 +16,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
     InternalLinks,
+    TypographyH2,
+    TypographyH3,
+    TypographyMuted,
 } from '@repo/ui';
 import { ArrowUpRight, Check, CheckCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -141,7 +141,7 @@ export function PricingClient() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>

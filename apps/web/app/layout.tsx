@@ -108,43 +108,51 @@ export default function ParentLayout({
                                         url: 'https://vtchat.io.vn/icon-512x512.png',
                                         width: 512,
                                         height: 512,
-                                        caption: 'VT AI Platform Logo'
+                                        caption: 'VT AI Platform Logo',
                                     },
-                                    description: 'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
+                                    description:
+                                        'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
                                     foundingDate: '2025',
                                     contactPoint: {
                                         '@type': 'ContactPoint',
                                         url: 'https://vtchat.io.vn/hello',
                                         contactType: 'customer service',
                                         areaServed: 'Worldwide',
-                                        availableLanguage: 'English'
+                                        availableLanguage: 'English',
                                     },
-                                    sameAs: ['https://github.com/vinhnx/vtchat', 'https://x.com/vinhnx'],
-                                    keywords: 'artificial intelligence, AI, generative AI, deep learning, machine learning, natural language processing, large language models, computer vision, AI systems',
-                                    industry: 'Artificial Intelligence'
+                                    sameAs: [
+                                        'https://github.com/vinhnx/vtchat',
+                                        'https://x.com/vinhnx',
+                                    ],
+                                    keywords:
+                                        'artificial intelligence, AI, generative AI, deep learning, machine learning, natural language processing, large language models, computer vision, AI systems',
+                                    industry: 'Artificial Intelligence',
                                 },
                                 {
                                     '@type': 'WebSite',
                                     '@id': 'https://vtchat.io.vn/#website',
                                     url: 'https://vtchat.io.vn',
                                     name: 'VT - Advanced AI Platform',
-                                    description: 'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
+                                    description:
+                                        'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
                                     publisher: { '@id': 'https://vtchat.io.vn/#organization' },
                                     inLanguage: 'en-US',
                                     potentialAction: {
                                         '@type': 'SearchAction',
                                         target: {
                                             '@type': 'EntryPoint',
-                                            urlTemplate: 'https://vtchat.io.vn/chat?q={search_term_string}',
+                                            urlTemplate:
+                                                'https://vtchat.io.vn/chat?q={search_term_string}',
                                         },
                                         'query-input': 'required name=search_term_string',
-                                    }
+                                    },
                                 },
                                 {
                                     '@type': 'SoftwareApplication',
                                     name: 'VT - Advanced AI Chat Platform',
                                     url: 'https://vtchat.io.vn',
-                                    description: 'Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.',
+                                    description:
+                                        'Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.',
                                     applicationCategory: 'AI Chat Application',
                                     operatingSystem: 'Web Browser, Cross-platform',
                                     softwareVersion: '1.0',
@@ -152,7 +160,7 @@ export default function ParentLayout({
                                     author: {
                                         '@type': 'Person',
                                         name: 'Vinh Nguyen',
-                                        url: 'https://vinhnx.github.io/'
+                                        url: 'https://vinhnx.github.io/',
                                     },
                                     publisher: { '@id': 'https://vtchat.io.vn/#organization' },
                                     offers: {
@@ -160,7 +168,7 @@ export default function ParentLayout({
                                         price: '0',
                                         priceCurrency: 'USD',
                                         description: 'Free AI chat with premium models',
-                                        availability: 'https://schema.org/InStock'
+                                        availability: 'https://schema.org/InStock',
                                     },
                                     featureList: [
                                         'Generative AI',
@@ -170,22 +178,22 @@ export default function ParentLayout({
                                         'Machine Learning Models',
                                         'Computer Vision',
                                         'Real-time AI Processing',
-                                        'Privacy-first AI Systems'
+                                        'Privacy-first AI Systems',
                                     ],
                                     screenshot: {
                                         '@type': 'ImageObject',
                                         url: 'https://vtchat.io.vn/og-image-v3.jpg',
-                                        caption: 'VT AI Chat Interface Screenshot'
+                                        caption: 'VT AI Chat Interface Screenshot',
                                     },
                                     aggregateRating: {
                                         '@type': 'AggregateRating',
                                         ratingValue: '4.9',
                                         reviewCount: '200',
                                         bestRating: '5',
-                                        worstRating: '1'
-                                    }
-                                }
-                            ]
+                                        worstRating: '1',
+                                    },
+                                },
+                            ],
                         }),
                     }}
                 />

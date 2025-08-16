@@ -5,17 +5,9 @@ import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from '@r
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
-import {
-    Badge,
-    Button,
-    cn,
-    Flex,
-    SonnerToaster,
-} from '@repo/ui';
+import { Badge, Button, cn, Flex, SonnerToaster } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-    X,
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { type FC, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -27,8 +19,7 @@ export type TRootLayout = {
 };
 
 export const RootLayout: FC<TRootLayout> = ({ children }) => {
-    const { isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } =
-        useRootContext();
+    const { isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } = useRootContext();
     const pathname = usePathname();
     const { data: session } = useSession();
     const { isAdmin } = useAdmin();

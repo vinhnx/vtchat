@@ -5,15 +5,15 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-    Button,
-    TypographyH1,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
+    Button,
     InternalLinks,
+    TypographyH1,
 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -63,7 +63,7 @@ export default function HelpCenterPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -903,7 +903,8 @@ function HelpCenterContent() {
                                 How can I get help or report issues?
                             </AccordionTrigger>
                             <AccordionContent>
-.                                <p className='text-muted-foreground'>
+                                .{' '}
+                                <p className='text-muted-foreground'>
                                     We're here to help! You can reach us through:
                                 </p>
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>

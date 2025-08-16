@@ -1,3 +1,4 @@
+import { helpRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer } from '@repo/common/components';
 import {
     Breadcrumb,
@@ -12,7 +13,6 @@ import { Button } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { helpRelatedLinks } from '@/lib/constants/ai-links';
 
 export const dynamic = 'force-static';
 
@@ -71,7 +71,7 @@ export default function FAQPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -297,7 +297,12 @@ export default function FAQPage() {
                     </div>
                     {/* Related Links - Enhanced Internal Linking for SEO */}
                     <InternalLinks
-                        links={Array.isArray(helpRelatedLinks) ? helpRelatedLinks.filter(link => link.href !== '/faq').map(link => ({ href: link.href, label: link.title })) : []}
+                        links={Array.isArray(helpRelatedLinks)
+                            ? helpRelatedLinks.filter(link => link.href !== '/faq').map(link => ({
+                                href: link.href,
+                                label: link.title,
+                            }))
+                            : []}
                         title='Helpful Resources'
                         className='mt-12'
                     />
