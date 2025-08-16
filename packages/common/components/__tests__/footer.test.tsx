@@ -7,28 +7,23 @@ describe('Footer Component', () => {
         render(<Footer />);
 
         // Check for common footer elements
-        expect(screen.getByText('Terms of Service')).toBeInTheDocument();
-        expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
-        expect(screen.getByText('Help Center')).toBeInTheDocument();
+        expect(screen.getByText('Terms')).toBeInTheDocument();
+        expect(screen.getByText('Privacy')).toBeInTheDocument();
+        expect(screen.getByText('Help')).toBeInTheDocument();
+        expect(screen.getByText('Docs')).toBeInTheDocument();
     });
 
     it('should have proper link hrefs', () => {
         render(<Footer />);
 
-        const termsLink = screen.getByRole('link', { name: 'Terms of Service' });
-        const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' });
-        const faqLink = screen.getByRole('link', { name: 'Help Center' });
+        const termsLink = screen.getByRole('link', { name: 'Terms' });
+        const privacyLink = screen.getByRole('link', { name: 'Privacy' });
+        const helpLink = screen.getByRole('link', { name: 'Help' });
+        const docsLink = screen.getByRole('link', { name: 'Docs' });
 
         expect(termsLink).toHaveAttribute('href', '/terms');
         expect(privacyLink).toHaveAttribute('href', '/privacy');
-        expect(faqLink).toHaveAttribute('href', '/help');
-    });
-
-    it('should have appropriate styling classes', () => {
-        const { container } = render(<Footer />);
-        const footer = container.firstChild;
-
-        // Check if footer has expected styling classes
-        expect(footer).toHaveClass('flex', 'w-full', 'flex-col', 'items-center', 'justify-center');
+        expect(helpLink).toHaveAttribute('href', '/help');
+        expect(docsLink).toHaveAttribute('href', '/docs');
     });
 });

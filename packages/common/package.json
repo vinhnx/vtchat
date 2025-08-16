@@ -24,6 +24,7 @@
         "./utils/avatar-cache": "./utils/avatar-cache.ts",
         "./constants/math-tools": "./constants/math-tools.ts",
         "./constants/chart-tools": "./constants/chart-tools.ts",
+        "./constants/docs": "./constants/docs.ts",
         "./components/plus-defaults-provider": "./components/plus-defaults-provider.tsx",
         "./hooks/use-plus-defaults": "./hooks/use-plus-defaults.ts",
         "./utils/analytics": "./utils/analytics.ts",

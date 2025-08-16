@@ -4,6 +4,8 @@ import { useLogout } from '@repo/common/hooks';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { useSession } from '@repo/shared/lib/auth-client';
 // import { log } from '@repo/shared/lib/logger';
+import { DocsPath } from '@repo/common/constants/docs';
+import { useAppStore } from '@repo/common/store';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
     Button,
@@ -15,7 +17,16 @@ import {
     DropdownMenuTrigger,
     UnifiedAvatar,
 } from '@repo/ui';
-import { FileText, HelpCircle, LogOut, Palette, Settings, Shield, User } from 'lucide-react';
+import {
+    BookOpen,
+    FileText,
+    HelpCircle,
+    LogOut,
+    Palette,
+    Settings,
+    Shield,
+    User,
+} from 'lucide-react';
 import Link from 'next/link';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { ThemeSwitcher } from './theme-switcher';
@@ -96,6 +107,12 @@ export function UserButton({ showName = false }: UserButtonProps) {
                     <DropdownMenuItem>
                         <HelpCircle className='mr-2 h-4 w-4' />
                         Help Center
+                    </DropdownMenuItem>
+                </Link>
+                <Link className='w-full' href={DocsPath.Route}>
+                    <DropdownMenuItem>
+                        <BookOpen className='mr-2 h-4 w-4' />
+                        Documentation
                     </DropdownMenuItem>
                 </Link>
                 <Link className='w-full' href='/terms'>
