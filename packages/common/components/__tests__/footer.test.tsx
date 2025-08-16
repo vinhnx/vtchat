@@ -3,32 +3,38 @@ import { describe, expect, it } from 'vitest';
 import { Footer } from '../footer';
 
 describe('Footer Component', () => {
-    it('should render footer with links', () => {
+    it('should render footer with link groups', () => {
         render(<Footer />);
 
-        // Check for common footer elements
-        expect(screen.getByText('Terms of Service')).toBeInTheDocument();
-        expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
-        expect(screen.getByText('Help Center')).toBeInTheDocument();
+        // Check for group titles
+        expect(screen.getByText('Product')).toBeInTheDocument();
+        expect(screen.getByText('Legal')).toBeInTheDocument();
+        expect(screen.getByText('Support')).toBeInTheDocument();
+        expect(screen.getByText('Resources')).toBeInTheDocument();
+
+        // Check for some links in each group
+        expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Terms' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Help' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'AI Glossary' })).toBeInTheDocument();
     });
 
     it('should have proper link hrefs', () => {
         render(<Footer />);
 
-        const termsLink = screen.getByRole('link', { name: 'Terms of Service' });
-        const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' });
-        const faqLink = screen.getByRole('link', { name: 'Help Center' });
+        const homeLink = screen.getByRole('link', { name: 'Home' });
+        const termsLink = screen.getByRole('link', { name: 'Terms' });
+        const contactLink = screen.getByRole('link', { name: 'Contact' });
 
+        expect(homeLink).toHaveAttribute('href', '/');
         expect(termsLink).toHaveAttribute('href', '/terms');
-        expect(privacyLink).toHaveAttribute('href', '/privacy');
-        expect(faqLink).toHaveAttribute('href', '/help');
+        expect(contactLink).toHaveAttribute('href', 'mailto:hello@vtchat.io.vn');
     });
 
-    it('should have appropriate styling classes', () => {
-        const { container } = render(<Footer />);
-        const footer = container.firstChild;
-
-        // Check if footer has expected styling classes
-        expect(footer).toHaveClass('flex', 'w-full', 'flex-col', 'items-center', 'justify-center');
+    it('should render copyright text', () => {
+        render(<Footer />);
+        
+        const currentYear = new Date().getFullYear();
+        expect(screen.getByText(new RegExp(`${currentYear} VT\\. All rights reserved\\.`))).toBeInTheDocument();
     });
 });
