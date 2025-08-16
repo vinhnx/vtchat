@@ -61,7 +61,7 @@ export default function ParentLayout({
                             foundingDate: '2025',
                             contactPoint: {
                                 '@type': 'ContactPoint',
-                                email: 'hello@vtchat.io.vn',
+                                url: 'https://vtchat.io.vn/hello',
                                 contactType: 'customer service',
                             },
                             sameAs: ['https://github.com/vinhnx/vtchat', 'https://x.com/vinhnx'],
@@ -114,7 +114,7 @@ export default function ParentLayout({
                                     foundingDate: '2025',
                                     contactPoint: {
                                         '@type': 'ContactPoint',
-                                        email: 'hello@vtchat.io.vn',
+                                        url: 'https://vtchat.io.vn/hello',
                                         contactType: 'customer service',
                                         areaServed: 'Worldwide',
                                         availableLanguage: 'English'
