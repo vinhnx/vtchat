@@ -1,0 +1,5 @@
+- Updated core dependencies to avoid duplicate versions across workspace:
+  - Aligned react and react-dom to 19.1.1 everywhere
+  - Standardized lucide-react to 0.525.0
+  - Raised drizzle-orm, pino, pino-pretty, nanoid, zustand to latest shared versions
+- Documented rationale for dedupe in codebase
