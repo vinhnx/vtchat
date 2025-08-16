@@ -74,6 +74,7 @@
         "autoprefixer": "10.4.21",
         "dprint": "^0.50.1",
         "drizzle-kit": "^0.31.4",
+        "entities": "6.0.1",
         "globals": "^16.3.0",
         "happy-dom": "^18.0.1",
         "jsdom": "^26.1.0",
@@ -390,6 +391,7 @@
   "overrides": {
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
+    "entities": "6.0.1",
   },
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.4.3", "", {}, "sha512-VQKMkwriZbaOgVCby1UDY/LDk5fIjhQicCvVPFqfe+69fWaPWydbWJ3wRt59/YzIwda1I81loas3oCoHxnqvdA=="],
