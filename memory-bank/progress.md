@@ -20,6 +20,16 @@
 
 - Enlarged provider logos and tightened background padding for clarity
 
+### ✅ Agent guideline update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Updated gitchamber.com usage instructions across agent guide files
+- Added models.dev API usage instructions and removed models-data.json file
+
+---
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
