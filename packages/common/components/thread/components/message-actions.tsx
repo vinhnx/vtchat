@@ -1,6 +1,6 @@
 'use client';
 import { ChatModeOptions } from '@repo/common/components';
-import { useAgentStream, useCopyText } from '@repo/common/hooks';
+import { useAgentStream, useCopyText, useContextualFeedback } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { type ChatMode, getChatModeName } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
@@ -11,6 +11,8 @@ import {
     Button,
     DropdownMenu,
     DropdownMenuTrigger,
+    CopyButton,
+    ContextualNotification,
 } from '@repo/ui';
 import {
     AlertCircle,
@@ -36,6 +38,8 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         const useWebSearch = useChatStore((state) => state.useWebSearch);
         const [chatMode, setChatMode] = useState<ChatMode>(threadItem.mode);
         const { copyToClipboard, status, copyMarkdown, markdownCopyStatus } = useCopyText();
+        const copyFeedback = useContextualFeedback({ successDuration: 1500 });
+        const markdownCopyFeedback = useContextualFeedback({ successDuration: 1500 });
         const [gatedFeatureAlert, setGatedFeatureAlert] = useState<
             {
                 feature?: string;
@@ -55,53 +59,75 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
             <div className='flex flex-col gap-2'>
                 <div className='flex flex-row items-center gap-1 py-2'>
                     {threadItem?.answer?.text && (
-                        <Button
-                            onClick={() => {
-                                if (ref && 'current' in ref && ref.current) {
-                                    copyToClipboard(ref.current);
-                                }
-                            }}
-                            size='icon-sm'
-                            tooltip='Copy'
-                            variant='secondary'
-                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
-                        >
-                            {status === 'copied'
-                                ? <Check className='h-4 w-4' strokeWidth={2} />
-                                : <Clipboard className='h-4 w-4' strokeWidth={2} />}
-                        </Button>
+                        <div className='relative'>
+                            <CopyButton
+                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                onCopy={async () => {
+                                    await copyFeedback.executeAction(async () => {
+                                        if (ref && 'current' in ref && ref.current) {
+                                            const success = await copyToClipboard(ref.current);
+                                            if (!success) throw new Error('Copy failed');
+                                        }
+                                    });
+                                }}
+                                size='icon-sm'
+                                tooltip='Copy text'
+                                variant='secondary'
+                                resetDelay={1500}
+                            />
+                            <ContextualNotification
+                                position='overlay'
+                                show={copyFeedback.status === 'success'}
+                                variant='success'
+                                overlayOffset={{ y: -35 }}
+                                className='text-xs'
+                            >
+                                Copied!
+                            </ContextualNotification>
+                        </div>
                     )}
 
                     {threadItem?.answer?.text && (
-                        <Button
-                            onClick={() => {
-                                // Get text content from the DOM element (same as regular copy)
-                                let textContent = '';
-                                if (ref && 'current' in ref && ref.current) {
-                                    textContent = ref.current.innerText || ref.current.textContent
-                                        || '';
-                                }
+                        <div className='relative'>
+                            <CopyButton
+                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                idleIcon={<FileText className='h-4 w-4' strokeWidth={2} />}
+                                onCopy={async () => {
+                                    await markdownCopyFeedback.executeAction(async () => {
+                                        // Get text content from the DOM element (same as regular copy)
+                                        let textContent = '';
+                                        if (ref && 'current' in ref && ref.current) {
+                                            textContent = ref.current.innerText || ref.current.textContent || '';
+                                        }
 
-                                // Build references section
-                                const referencesSection = threadItem?.sources?.length
-                                    ? `\n\n## References\n${
-                                        threadItem.sources
-                                            .map((source) => `[${source.index}] ${source.link}`)
-                                            .join('\n')
-                                    }`
-                                    : '';
+                                        // Build references section
+                                        const referencesSection = threadItem?.sources?.length
+                                            ? `\n\n## References\n${
+                                                threadItem.sources
+                                                    .map((source) => `[${source.index}] ${source.link}`)
+                                                    .join('\n')
+                                            }`
+                                            : '';
 
-                                copyMarkdown(`${textContent}${referencesSection}`);
-                            }}
-                            size='icon-sm'
-                            tooltip='Copy Markdown'
-                            variant='secondary'
-                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
-                        >
-                            {markdownCopyStatus === 'copied'
-                                ? <Check className='h-4 w-4' strokeWidth={2} />
-                                : <FileText className='h-4 w-4' strokeWidth={2} />}
-                        </Button>
+                                        const success = await copyMarkdown(`${textContent}${referencesSection}`);
+                                        if (!success) throw new Error('Markdown copy failed');
+                                    });
+                                }}
+                                size='icon-sm'
+                                tooltip='Copy as Markdown'
+                                variant='secondary'
+                                resetDelay={1500}
+                            />
+                            <ContextualNotification
+                                position='overlay'
+                                show={markdownCopyFeedback.status === 'success'}
+                                variant='success'
+                                overlayOffset={{ y: -35 }}
+                                className='text-xs'
+                            >
+                                Markdown copied!
+                            </ContextualNotification>
+                        </div>
                     )}
                     {threadItem.status !== 'ERROR'
                         && threadItem.answer?.status !== 'HUMAN_REVIEW' && (
