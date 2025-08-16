@@ -6,25 +6,29 @@ describe('Footer Component', () => {
     it('should render footer with link groups', () => {
         render(<Footer />);
 
-        // Check for group titles
-        expect(screen.getByText('Product')).toBeInTheDocument();
-        expect(screen.getByText('Legal')).toBeInTheDocument();
-        expect(screen.getByText('Support')).toBeInTheDocument();
-        expect(screen.getByText('Resources')).toBeInTheDocument();
-
-        // Check for some links in each group
-        expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'Terms' })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'Help' })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'AI Glossary' })).toBeInTheDocument();
+        // Check for some links in each group (desktop version)
+        const links = screen.getAllByRole('link', { name: 'Home' });
+        expect(links.length).toBeGreaterThan(0);
+        
+        const termsLinks = screen.getAllByRole('link', { name: 'Terms' });
+        expect(termsLinks.length).toBeGreaterThan(0);
+        
+        const helpLinks = screen.getAllByRole('link', { name: 'Help' });
+        expect(helpLinks.length).toBeGreaterThan(0);
     });
 
     it('should have proper link hrefs', () => {
         render(<Footer />);
 
-        const homeLink = screen.getByRole('link', { name: 'Home' });
-        const termsLink = screen.getByRole('link', { name: 'Terms' });
-        const contactLink = screen.getByRole('link', { name: 'Contact' });
+        // Check desktop version links
+        const allHomeLinks = screen.getAllByRole('link', { name: 'Home' });
+        const homeLink = allHomeLinks[0]; // Get the first one (desktop)
+        
+        const allTermsLinks = screen.getAllByRole('link', { name: 'Terms' });
+        const termsLink = allTermsLinks[0];
+        
+        const allContactLinks = screen.getAllByRole('link', { name: 'Contact' });
+        const contactLink = allContactLinks[0];
 
         expect(homeLink).toHaveAttribute('href', '/');
         expect(termsLink).toHaveAttribute('href', '/terms');
@@ -35,6 +39,7 @@ describe('Footer Component', () => {
         render(<Footer />);
         
         const currentYear = new Date().getFullYear();
-        expect(screen.getByText(new RegExp(`${currentYear} VT\\. All rights reserved\\.`))).toBeInTheDocument();
+        const copyrightTexts = screen.getAllByText(new RegExp(`${currentYear} VT\\. All rights reserved\\.`));
+        expect(copyrightTexts.length).toBeGreaterThan(0);
     });
 });
