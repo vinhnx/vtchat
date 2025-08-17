@@ -1,15 +1,15 @@
 'use client';
 
 import { type MotionProps, type Variants } from 'framer-motion';
-import { 
-    ANIMATION_DURATION, 
-    EASING, 
-    STAGGER_DELAY, 
-    ANTICIPATION, 
-    FOLLOW_THROUGH,
+import {
+    ANIMATION_DURATION,
+    ANTICIPATION,
+    EASING,
     EXAGGERATION,
+    FOLLOW_THROUGH,
     MOTION_VARIANTS as MOTION_VARIANTS_CONST,
-    REDUCED_MOTION_VARIANTS 
+    REDUCED_MOTION_VARIANTS,
+    STAGGER_DELAY,
 } from './animation-constants';
 
 // Re-export constants for convenience
@@ -19,7 +19,9 @@ export { ANIMATION_DURATION, EASING, STAGGER_DELAY } from './animation-constants
  * PRINCIPLE 1: SQUASH & STRETCH
  * Creates deformation effects to convey weight and impact
  */
-export function createSquashStretch(intensity: 'subtle' | 'moderate' | 'strong' = 'subtle'): MotionProps {
+export function createSquashStretch(
+    intensity: 'subtle' | 'moderate' | 'strong' = 'subtle',
+): MotionProps {
     const deformation = {
         subtle: { scaleX: 1.02, scaleY: 0.98 },
         moderate: { scaleX: 1.05, scaleY: 0.95 },
@@ -36,7 +38,9 @@ export function createSquashStretch(intensity: 'subtle' | 'moderate' | 'strong' 
  * PRINCIPLE 2: ANTICIPATION
  * Prepares user for upcoming action with subtle pre-movement
  */
-export function createAnticipation(direction: 'up' | 'down' | 'left' | 'right' | 'scale' = 'scale'): Variants {
+export function createAnticipation(
+    direction: 'up' | 'down' | 'left' | 'right' | 'scale' = 'scale',
+): Variants {
     const prep = {
         up: { y: ANTICIPATION.translatePrep },
         down: { y: -ANTICIPATION.translatePrep },
@@ -48,12 +52,12 @@ export function createAnticipation(direction: 'up' | 'down' | 'left' | 'right' |
     return {
         initial: { opacity: 0 },
         anticipate: { ...prep, opacity: ANTICIPATION.opacityPrep },
-        animate: { 
-            opacity: 1, 
-            x: 0, 
-            y: 0, 
+        animate: {
+            opacity: 1,
+            x: 0,
+            y: 0,
             scale: 1,
-            transition: { duration: ANIMATION_DURATION.normal / 1000, ease: EASING.spring }
+            transition: { duration: ANIMATION_DURATION.normal / 1000, ease: EASING.spring },
         },
         exit: { opacity: 0 },
     };
@@ -65,7 +69,7 @@ export function createAnticipation(direction: 'up' | 'down' | 'left' | 'right' |
  */
 export function createStaging(
     delay: keyof typeof STAGGER_DELAY = 'normal',
-    priority: 'primary' | 'secondary' | 'tertiary' = 'primary'
+    priority: 'primary' | 'secondary' | 'tertiary' = 'primary',
 ): Variants {
     const delayValue = STAGGER_DELAY[delay];
     const priorityDelay = {
@@ -76,14 +80,14 @@ export function createStaging(
 
     return {
         initial: { opacity: 0, y: 20 },
-        animate: { 
-            opacity: 1, 
+        animate: {
+            opacity: 1,
             y: 0,
-            transition: { 
+            transition: {
                 delay: priorityDelay / 1000,
                 duration: ANIMATION_DURATION.normal / 1000,
-                ease: EASING.easeOut
-            }
+                ease: EASING.easeOut,
+            },
         },
         exit: { opacity: 0, y: -10 },
     };
@@ -94,23 +98,25 @@ export function createStaging(
  * Optimized keyframe interpolation for smooth motion
  */
 export function createSmoothPath(
-    from: { x?: number; y?: number; scale?: number; opacity?: number },
-    to: { x?: number; y?: number; scale?: number; opacity?: number },
-    keyframes?: Array<{ x?: number; y?: number; scale?: number; opacity?: number }>
+    from: { x?: number; y?: number; scale?: number; opacity?: number; },
+    to: { x?: number; y?: number; scale?: number; opacity?: number; },
+    keyframes?: Array<{ x?: number; y?: number; scale?: number; opacity?: number; }>,
 ): Variants {
     return {
         initial: from,
-        animate: keyframes ? {
-            ...to,
-            transition: {
-                duration: ANIMATION_DURATION.slow / 1000,
-                ease: EASING.easeInOut,
-                times: keyframes.map((_, i) => i / (keyframes.length - 1)),
+        animate: keyframes
+            ? {
+                ...to,
+                transition: {
+                    duration: ANIMATION_DURATION.slow / 1000,
+                    ease: EASING.easeInOut,
+                    times: keyframes.map((_, i) => i / (keyframes.length - 1)),
+                },
             }
-        } : {
-            ...to,
-            transition: { duration: ANIMATION_DURATION.normal / 1000, ease: EASING.easeOut }
-        },
+            : {
+                ...to,
+                transition: { duration: ANIMATION_DURATION.normal / 1000, ease: EASING.easeOut },
+            },
     };
 }
 
@@ -121,15 +127,15 @@ export function createSmoothPath(
 export function createFollowThrough(elementCount: number): Variants {
     return {
         initial: { opacity: 0, y: 30 },
-        animate: { 
-            opacity: 1, 
+        animate: {
+            opacity: 1,
             y: 0,
             transition: {
                 duration: ANIMATION_DURATION.normal / 1000,
                 ease: EASING.spring,
                 staggerChildren: STAGGER_DELAY.normal / 1000,
                 delayChildren: 0.1,
-            }
+            },
         },
         exit: {
             opacity: 0,
@@ -138,7 +144,7 @@ export function createFollowThrough(elementCount: number): Variants {
                 duration: ANIMATION_DURATION.quick / 1000,
                 staggerChildren: 0.05,
                 staggerDirection: -1,
-            }
+            },
         },
     };
 }
@@ -148,7 +154,7 @@ export function createFollowThrough(elementCount: number): Variants {
  * Adds supporting micro-interactions without stealing focus
  */
 export function createSecondaryAction(
-    type: 'ripple' | 'glow' | 'sparkle' = 'glow'
+    type: 'ripple' | 'glow' | 'sparkle' = 'glow',
 ): MotionProps {
     const effects = {
         ripple: {
@@ -156,9 +162,9 @@ export function createSecondaryAction(
             transition: { duration: 0.6, ease: EASING.easeOut },
         },
         glow: {
-            whileHover: { 
+            whileHover: {
                 boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
-                transition: { duration: ANIMATION_DURATION.normal / 1000 }
+                transition: { duration: ANIMATION_DURATION.normal / 1000 },
             },
         },
         sparkle: {
@@ -195,44 +201,44 @@ export function getTimingForContext(context: 'tooltip' | 'button' | 'modal' | 'p
  * Amplified effects for important feedback
  */
 export function createExaggeration(
-    type: 'error' | 'success' | 'attention' | 'celebration' = 'attention'
+    type: 'error' | 'success' | 'attention' | 'celebration' = 'attention',
 ): Variants {
     const effects = {
         error: {
             initial: { x: 0 },
-            animate: { 
+            animate: {
                 x: EXAGGERATION.shake.x,
-                transition: { 
+                transition: {
                     duration: EXAGGERATION.shake.duration / 1000,
                     ease: EASING.sharp,
-                    times: [0, 0.25, 0.5, 0.75, 1]
-                }
+                    times: [0, 0.25, 0.5, 0.75, 1],
+                },
             },
         },
         success: {
             initial: { scale: 1 },
-            animate: { 
+            animate: {
                 scale: [1, 1.1, 1.05, 1],
-                transition: { duration: 0.6, ease: EASING.bounceSoft }
+                transition: { duration: 0.6, ease: EASING.bounceSoft },
             },
         },
         attention: {
             initial: { rotate: 0 },
-            animate: { 
+            animate: {
                 rotate: EXAGGERATION.wiggle.rotation,
-                transition: { 
+                transition: {
                     duration: EXAGGERATION.wiggle.duration / 1000,
                     ease: EASING.easeInOut,
-                    repeat: 2
-                }
+                    repeat: 2,
+                },
             },
         },
         celebration: {
             initial: { scale: 1, rotate: 0 },
-            animate: { 
+            animate: {
                 scale: [1, 1.2, 1.1, 1],
                 rotate: [0, 10, -5, 0],
-                transition: { duration: 0.8, ease: EASING.spring }
+                transition: { duration: 0.8, ease: EASING.spring },
             },
         },
     };
@@ -245,49 +251,49 @@ export function createExaggeration(
  * Delightful animations that create emotional connection
  */
 export function createAppeal(
-    type: 'heartbeat' | 'float' | 'breathe' | 'dance' = 'float'
+    type: 'heartbeat' | 'float' | 'breathe' | 'dance' = 'float',
 ): MotionProps {
     const appeals = {
         heartbeat: {
-            animate: { 
+            animate: {
                 scale: [1, 1.05, 1],
-                transition: { 
+                transition: {
                     duration: 0.8,
                     ease: EASING.easeInOut,
-                    repeat: Number.POSITIVE_INFINITY
-                }
+                    repeat: Number.POSITIVE_INFINITY,
+                },
             },
         },
         float: {
-            animate: { 
+            animate: {
                 y: [0, -8, 0],
-                transition: { 
+                transition: {
                     duration: 3,
                     ease: EASING.easeInOut,
-                    repeat: Number.POSITIVE_INFINITY
-                }
+                    repeat: Number.POSITIVE_INFINITY,
+                },
             },
         },
         breathe: {
-            animate: { 
+            animate: {
                 scale: [1, 1.02, 1],
                 opacity: [0.8, 1, 0.8],
-                transition: { 
+                transition: {
                     duration: 4,
                     ease: EASING.easeInOut,
-                    repeat: Number.POSITIVE_INFINITY
-                }
+                    repeat: Number.POSITIVE_INFINITY,
+                },
             },
         },
         dance: {
-            animate: { 
+            animate: {
                 rotate: [0, 2, -2, 0],
                 scale: [1, 1.02, 1],
-                transition: { 
+                transition: {
                     duration: 2,
                     ease: EASING.easeInOut,
-                    repeat: Number.POSITIVE_INFINITY
-                }
+                    repeat: Number.POSITIVE_INFINITY,
+                },
             },
         },
     };
@@ -300,7 +306,7 @@ export function createAppeal(
  */
 export function getAccessibleVariants(
     variants: Variants,
-    shouldReduceMotion: boolean = false
+    shouldReduceMotion: boolean = false,
 ): Variants {
     if (shouldReduceMotion) {
         return REDUCED_MOTION_VARIANTS.static;
@@ -311,11 +317,13 @@ export function getAccessibleVariants(
 /**
  * Utility to create complex animation sequences
  */
-export function createAnimationSequence(steps: Array<{
-    element: string;
-    variant: Variants;
-    delay?: number;
-}>): Variants {
+export function createAnimationSequence(
+    steps: Array<{
+        element: string;
+        variant: Variants;
+        delay?: number;
+    }>,
+): Variants {
     return {
         initial: 'initial',
         animate: 'animate',

@@ -1,21 +1,21 @@
 'use client';
 
-import { cn } from '../lib/utils';
-import { Button, type ButtonProps } from './button';
 import { AnimatePresence, motion } from 'framer-motion';
-import { 
-    Check, 
-    Clipboard, 
-    Download, 
-    Save, 
-    Share, 
-    Heart, 
-    Star,
-    Bookmark,
+import {
     AlertCircle,
-    Loader2
+    Bookmark,
+    Check,
+    Clipboard,
+    Download,
+    Heart,
+    Loader2,
+    Save,
+    Share,
+    Star,
 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
+import { cn } from '../lib/utils';
+import { Button, type ButtonProps } from './button';
 
 type ActionStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -62,9 +62,9 @@ export function ContextualButton({
         try {
             setStatus('loading');
             onStatusChange?.('loading');
-            
+
             await action();
-            
+
             setStatus('success');
             onStatusChange?.('success');
 
@@ -119,8 +119,9 @@ export function ContextualButton({
             {...props}
             className={cn(
                 'transition-colors duration-200 min-w-max',
-                status === 'success' && 'text-green-600 border-green-200 dark:text-green-400 dark:border-green-800',
-                className
+                status === 'success'
+                    && 'text-green-600 border-green-200 dark:text-green-400 dark:border-green-800',
+                className,
             )}
             disabled={disabled || status === 'loading'}
             onClick={handleClick}
@@ -266,7 +267,9 @@ export function LikeButton({
             idleIcon={<Heart size={16} strokeWidth={2} fill={isLiked ? 'currentColor' : 'none'} />}
             idleText={isLiked ? 'Liked' : 'Like'}
             loadingText={isLiked ? 'Unliking...' : 'Liking...'}
-            successIcon={<Heart size={16} strokeWidth={2} fill={!isLiked ? 'currentColor' : 'none'} />}
+            successIcon={
+                <Heart size={16} strokeWidth={2} fill={!isLiked ? 'currentColor' : 'none'} />
+            }
             successText={!isLiked ? 'Liked' : 'Unliked'}
             showTextOnSuccess
             {...props}
@@ -288,10 +291,18 @@ export function BookmarkButton({
             action={onBookmark}
             className={cn('min-w-[100px]', className)}
             errorText='Failed'
-            idleIcon={<Bookmark size={16} strokeWidth={2} fill={isBookmarked ? 'currentColor' : 'none'} />}
+            idleIcon={
+                <Bookmark size={16} strokeWidth={2} fill={isBookmarked ? 'currentColor' : 'none'} />
+            }
             idleText={isBookmarked ? 'Bookmarked' : 'Bookmark'}
             loadingText={isBookmarked ? 'Removing...' : 'Adding...'}
-            successIcon={<Bookmark size={16} strokeWidth={2} fill={!isBookmarked ? 'currentColor' : 'none'} />}
+            successIcon={
+                <Bookmark
+                    size={16}
+                    strokeWidth={2}
+                    fill={!isBookmarked ? 'currentColor' : 'none'}
+                />
+            }
             successText={!isBookmarked ? 'Bookmarked' : 'Removed'}
             showTextOnSuccess
             {...props}

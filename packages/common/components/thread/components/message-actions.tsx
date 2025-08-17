@@ -1,6 +1,6 @@
 'use client';
 import { ChatModeOptions } from '@repo/common/components';
-import { useAgentStream, useCopyText, useContextualFeedback } from '@repo/common/hooks';
+import { useAgentStream, useContextualFeedback, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { type ChatMode, getChatModeName } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
@@ -9,11 +9,11 @@ import {
     AlertDescription,
     AlertTitle,
     Button,
-    DropdownMenu,
-    DropdownMenuTrigger,
-    CopyButton,
     ContextualButton,
     ContextualNotification,
+    CopyButton,
+    DropdownMenu,
+    DropdownMenuTrigger,
 } from '@repo/ui';
 import {
     AlertCircle,
@@ -97,19 +97,24 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                         // Get text content from the DOM element (same as regular copy)
                                         let textContent = '';
                                         if (ref && 'current' in ref && ref.current) {
-                                            textContent = ref.current.innerText || ref.current.textContent || '';
+                                            textContent = ref.current.innerText
+                                                || ref.current.textContent || '';
                                         }
 
                                         // Build references section
                                         const referencesSection = threadItem?.sources?.length
                                             ? `\n\n## References\n${
                                                 threadItem.sources
-                                                    .map((source) => `[${source.index}] ${source.link}`)
+                                                    .map((source) =>
+                                                        `[${source.index}] ${source.link}`
+                                                    )
                                                     .join('\n')
                                             }`
                                             : '';
 
-                                        const success = await copyMarkdown(`${textContent}${referencesSection}`);
+                                        const success = await copyMarkdown(
+                                            `${textContent}${referencesSection}`,
+                                        );
                                         if (!success) throw new Error('Markdown copy failed');
                                     });
                                 }}
@@ -189,7 +194,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                         />
                     )}
                 </div>
-                
+
                 {/* Gated Feature Alert */}
                 {gatedFeatureAlert && (
                     <Alert>

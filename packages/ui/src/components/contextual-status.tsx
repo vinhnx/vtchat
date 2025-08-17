@@ -1,10 +1,10 @@
 'use client';
 
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, AlertCircle, Clock, Loader2, X, Info } from 'lucide-react';
+import { AlertCircle, Check, Clock, Info, Loader2, X } from 'lucide-react';
 import React from 'react';
+import { cn } from '../lib/utils';
 
 const contextualStatusVariants = cva(
     'inline-flex items-center gap-2 text-sm font-medium transition-all duration-200',
@@ -28,10 +28,13 @@ const contextualStatusVariants = cva(
             variant: 'idle',
             size: 'default',
         },
-    }
+    },
 );
 
-const getStatusIcon = (variant: VariantProps<typeof contextualStatusVariants>['variant'], size = 16) => {
+const getStatusIcon = (
+    variant: VariantProps<typeof contextualStatusVariants>['variant'],
+    size = 16,
+) => {
     switch (variant) {
         case 'loading':
             return <Loader2 size={size} className='animate-spin' strokeWidth={2} />;
@@ -115,13 +118,18 @@ export function ProgressStatus({
     compact = false,
 }: ProgressStatusProps) {
     if (compact) {
-        const activeStep = steps.find(step => step.id === currentStep) || steps.find(step => step.status === 'loading');
-        
+        const activeStep = steps.find(step => step.id === currentStep)
+            || steps.find(step => step.status === 'loading');
+
         if (!activeStep) return null;
 
         return (
             <ContextualStatus
-                status={activeStep.status === 'loading' ? 'loading' : activeStep.status === 'completed' ? 'success' : 'error'}
+                status={activeStep.status === 'loading'
+                    ? 'loading'
+                    : activeStep.status === 'completed'
+                    ? 'success'
+                    : 'error'}
                 message={activeStep.message || activeStep.label}
                 className={className}
             />
@@ -138,15 +146,13 @@ export function ProgressStatus({
                     transition={{ duration: 0.2 }}
                 >
                     <ContextualStatus
-                        status={
-                            step.status === 'loading' 
-                                ? 'loading' 
-                                : step.status === 'completed' 
-                                ? 'success' 
-                                : step.status === 'error' 
-                                ? 'error' 
-                                : 'idle'
-                        }
+                        status={step.status === 'loading'
+                            ? 'loading'
+                            : step.status === 'completed'
+                            ? 'success'
+                            : step.status === 'error'
+                            ? 'error'
+                            : 'idle'}
                         message={step.label}
                         size='sm'
                     />
@@ -190,8 +196,8 @@ export function LiveStatus({
         >
             <motion.div
                 animate={{
-                    backgroundColor: isActive 
-                        ? ['#10b981', '#059669', '#10b981'] 
+                    backgroundColor: isActive
+                        ? ['#10b981', '#059669', '#10b981']
                         : '#6b7280',
                 }}
                 className='w-2 h-2 rounded-full'
@@ -201,12 +207,14 @@ export function LiveStatus({
                     ease: 'easeInOut',
                 }}
             />
-            <span className={cn(
-                'text-sm font-medium transition-colors',
-                isActive 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-muted-foreground'
-            )}>
+            <span
+                className={cn(
+                    'text-sm font-medium transition-colors',
+                    isActive
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-muted-foreground',
+                )}
+            >
                 {isActive ? activeMessage : inactiveMessage}
             </span>
         </motion.div>

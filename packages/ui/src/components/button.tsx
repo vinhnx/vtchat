@@ -53,17 +53,17 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
-        { 
-            className, 
-            variant, 
-            size, 
-            asChild = false, 
-            tooltip, 
-            tooltipSide, 
+        {
+            className,
+            variant,
+            size,
+            asChild = false,
+            tooltip,
+            tooltipSide,
             roundedSm,
             animationType = 'gentle',
             anticipation = false,
-            ...props 
+            ...props
         },
         ref,
     ) => {

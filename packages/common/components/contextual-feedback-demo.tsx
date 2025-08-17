@@ -2,6 +2,7 @@
 
 import { useContextualFeedback } from '@repo/common/hooks';
 import {
+    BookmarkButton,
     Button,
     Card,
     CardContent,
@@ -11,14 +12,13 @@ import {
     ContextualButton,
     ContextualNotification,
     CopyButton,
-    SaveButton,
     DownloadButton,
-    ShareButton,
-    BookmarkButton,
     FieldFeedback,
     Input,
     Label,
+    SaveButton,
     Separator,
+    ShareButton,
 } from '@repo/ui';
 import { useState } from 'react';
 
@@ -30,14 +30,16 @@ export function ContextualFeedbackDemo() {
     const [formValue, setFormValue] = useState('');
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [showInlineNotification, setShowInlineNotification] = useState(false);
-    const [validationStatus, setValidationStatus] = useState<'idle' | 'validating' | 'valid' | 'invalid'>('idle');
-    
+    const [validationStatus, setValidationStatus] = useState<
+        'idle' | 'validating' | 'valid' | 'invalid'
+    >('idle');
+
     const { status, message, executeAction } = useContextualFeedback();
 
     const simulateAction = async (actionName: string, shouldFail = false) => {
         // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-        
+
         if (shouldFail) {
             throw new Error(`${actionName} failed - simulated error`);
         }
@@ -46,7 +48,7 @@ export function ContextualFeedbackDemo() {
     const validateEmail = async (email: string) => {
         setValidationStatus('validating');
         await new Promise(resolve => setTimeout(resolve, 800)); // Simulate validation delay
-        
+
         const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         setValidationStatus(isValid ? 'valid' : 'invalid');
     };
@@ -65,7 +67,8 @@ export function ContextualFeedbackDemo() {
                 <CardHeader>
                     <CardTitle>Contextual Action Buttons</CardTitle>
                     <CardDescription>
-                        Buttons that provide immediate visual feedback without disrupting the user experience
+                        Buttons that provide immediate visual feedback without disrupting the user
+                        experience
                     </CardDescription>
                 </CardHeader>
                 <CardContent className='space-y-4'>
@@ -74,28 +77,28 @@ export function ContextualFeedbackDemo() {
                             text='This text will be copied to your clipboard!'
                             size='sm'
                         />
-                        
+
                         <SaveButton
                             onSave={async () => {
                                 await simulateAction('Save');
                             }}
                             size='sm'
                         />
-                        
+
                         <DownloadButton
                             onDownload={async () => {
                                 await simulateAction('Download');
                             }}
                             size='sm'
                         />
-                        
+
                         <ShareButton
                             onShare={async () => {
                                 await simulateAction('Share');
                             }}
                             size='sm'
                         />
-                        
+
                         <BookmarkButton
                             isBookmarked={isBookmarked}
                             onBookmark={async () => {
@@ -105,9 +108,9 @@ export function ContextualFeedbackDemo() {
                             size='sm'
                         />
                     </div>
-                    
+
                     <Separator />
-                    
+
                     <div className='space-y-2'>
                         <h4 className='font-medium'>Custom Contextual Button</h4>
                         <div className='flex gap-3'>
@@ -123,7 +126,7 @@ export function ContextualFeedbackDemo() {
                                 variant='outline'
                                 size='sm'
                             />
-                            
+
                             <ContextualButton
                                 action={async () => {
                                     await simulateAction('Failing Action', true);
@@ -160,7 +163,7 @@ export function ContextualFeedbackDemo() {
                         >
                             Show Notification
                         </Button>
-                        
+
                         <ContextualNotification
                             show={showInlineNotification}
                             variant='success'
@@ -198,15 +201,13 @@ export function ContextualFeedbackDemo() {
                         />
                         <FieldFeedback
                             status={validationStatus}
-                            message={
-                                validationStatus === 'validating' 
-                                    ? 'Validating email...'
-                                    : validationStatus === 'valid'
-                                    ? 'Email looks good!'
-                                    : validationStatus === 'invalid'
-                                    ? 'Please enter a valid email address'
-                                    : undefined
-                            }
+                            message={validationStatus === 'validating'
+                                ? 'Validating email...'
+                                : validationStatus === 'valid'
+                                ? 'Email looks good!'
+                                : validationStatus === 'invalid'
+                                ? 'Please enter a valid email address'
+                                : undefined}
                         />
                     </div>
                 </CardContent>
@@ -230,7 +231,7 @@ export function ContextualFeedbackDemo() {
                                         loadingMessage: 'Processing your request...',
                                         successMessage: 'Request completed successfully!',
                                         errorMessage: 'Request failed. Please try again.',
-                                    }
+                                    },
                                 );
                             }}
                             variant='outline'
@@ -239,17 +240,15 @@ export function ContextualFeedbackDemo() {
                         >
                             Execute Action
                         </Button>
-                        
+
                         {status !== 'idle' && (
                             <ContextualNotification
                                 show={true}
-                                variant={
-                                    status === 'loading' 
-                                        ? 'info' 
-                                        : status === 'success' 
-                                        ? 'success' 
-                                        : 'error'
-                                }
+                                variant={status === 'loading'
+                                    ? 'info'
+                                    : status === 'success'
+                                    ? 'success'
+                                    : 'error'}
                             >
                                 {message}
                             </ContextualNotification>
@@ -265,12 +264,30 @@ export function ContextualFeedbackDemo() {
                 </CardHeader>
                 <CardContent>
                     <ul className='space-y-2 text-sm text-muted-foreground'>
-                        <li>• <strong>Clean UI:</strong> No intrusive popups or overlays that block content</li>
-                        <li>• <strong>Contextual:</strong> Feedback appears exactly where the action occurred</li>
-                        <li>• <strong>Non-disruptive:</strong> Users can continue their workflow uninterrupted</li>
-                        <li>• <strong>Accessible:</strong> Screen readers can easily announce status changes</li>
-                        <li>• <strong>Performance:</strong> Lightweight animations and minimal DOM changes</li>
-                        <li>• <strong>Consistent:</strong> Unified feedback patterns across the application</li>
+                        <li>
+                            • <strong>Clean UI:</strong>{' '}
+                            No intrusive popups or overlays that block content
+                        </li>
+                        <li>
+                            • <strong>Contextual:</strong>{' '}
+                            Feedback appears exactly where the action occurred
+                        </li>
+                        <li>
+                            • <strong>Non-disruptive:</strong>{' '}
+                            Users can continue their workflow uninterrupted
+                        </li>
+                        <li>
+                            • <strong>Accessible:</strong>{' '}
+                            Screen readers can easily announce status changes
+                        </li>
+                        <li>
+                            • <strong>Performance:</strong>{' '}
+                            Lightweight animations and minimal DOM changes
+                        </li>
+                        <li>
+                            • <strong>Consistent:</strong>{' '}
+                            Unified feedback patterns across the application
+                        </li>
                     </ul>
                 </CardContent>
             </Card>

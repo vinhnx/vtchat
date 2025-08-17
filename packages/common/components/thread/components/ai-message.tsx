@@ -54,14 +54,20 @@ export const AIMessage = memo(
                         >
                             {(() => {
                                 // Find the model option that matches the thread item's mode
-                                const selectedOption = modelOptions.find((option) => option.value === threadItem.mode);
-                                
+                                const selectedOption = modelOptions.find((option) =>
+                                    option.value === threadItem.mode
+                                );
+
                                 // Get the provider icon for the selected option
                                 const selectedProviderIcon = (selectedOption as any)?.providerIcon;
-                                
+
                                 return (
                                     <>
-                                        {selectedProviderIcon && <div className='flex items-center'>{selectedProviderIcon}</div>}
+                                        {selectedProviderIcon && (
+                                            <div className='flex items-center'>
+                                                {selectedProviderIcon}
+                                            </div>
+                                        )}
                                         <span className='text-muted-foreground text-xs font-medium'>
                                             {getModelDisplayName(threadItem.mode)}
                                         </span>

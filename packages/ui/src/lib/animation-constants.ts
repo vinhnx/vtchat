@@ -6,64 +6,64 @@
 // TIMING - Keep durations under 300ms for most interactions
 export const ANIMATION_DURATION = {
     instant: 0,
-    quick: 150,     // For tooltips, button states
-    normal: 200,    // Standard UI transitions
-    slow: 300,      // Complex animations, modals
-    extended: 500,  // Page transitions, loading states
-    dramatic: 800,  // Special effects, onboarding
+    quick: 150, // For tooltips, button states
+    normal: 200, // Standard UI transitions
+    slow: 300, // Complex animations, modals
+    extended: 500, // Page transitions, loading states
+    dramatic: 800, // Special effects, onboarding
 } as const;
 
 // SLOW IN & SLOW OUT - Natural easing curves
 export const EASING = {
     // Standard easings following natural motion
-    easeOut: [0.25, 0.46, 0.45, 0.94],        // Fast start, slow end - snappy feel
-    easeIn: [0.55, 0.085, 0.68, 0.53],        // Slow start, fast end - entering elements
-    easeInOut: [0.445, 0.05, 0.55, 0.95],     // Smooth both ends - balanced
-    
+    easeOut: [0.25, 0.46, 0.45, 0.94], // Fast start, slow end - snappy feel
+    easeIn: [0.55, 0.085, 0.68, 0.53], // Slow start, fast end - entering elements
+    easeInOut: [0.445, 0.05, 0.55, 0.95], // Smooth both ends - balanced
+
     // Spring-like motion for organic feel
-    spring: [0.175, 0.885, 0.32, 1.275],      // Slight overshoot
-    bounceSoft: [0.68, -0.55, 0.265, 1.55],   // Gentle bounce
-    
+    spring: [0.175, 0.885, 0.32, 1.275], // Slight overshoot
+    bounceSoft: [0.68, -0.55, 0.265, 1.55], // Gentle bounce
+
     // Sharp transitions for emphasis
-    sharp: [0.4, 0, 0.2, 1],                  // Material Design standard
-    linear: 'linear',                          // Use sparingly
+    sharp: [0.4, 0, 0.2, 1], // Material Design standard
+    linear: 'linear', // Use sparingly
 } as const;
 
 // STAGING - Staggered delays for sequential animations
 export const STAGGER_DELAY = {
     none: 0,
-    tight: 50,      // Quick succession
-    normal: 100,    // Standard stagger
-    relaxed: 150,   // Leisurely pace
-    dramatic: 300,  // Emphasized sequence
+    tight: 50, // Quick succession
+    normal: 100, // Standard stagger
+    relaxed: 150, // Leisurely pace
+    dramatic: 300, // Emphasized sequence
 } as const;
 
 // ANTICIPATION - Preparation before main action
 export const ANTICIPATION = {
-    scalePrep: 0.95,        // Slight scale down before action
-    translatePrep: 4,       // Small movement before main motion
-    opacityPrep: 0.8,       // Subtle fade before appearance
-    rotatePrep: -2,         // Small counter-rotation
+    scalePrep: 0.95, // Slight scale down before action
+    translatePrep: 4, // Small movement before main motion
+    opacityPrep: 0.8, // Subtle fade before appearance
+    rotatePrep: -2, // Small counter-rotation
 } as const;
 
 // FOLLOW THROUGH & OVERLAPPING ACTION - Natural continuation
 export const FOLLOW_THROUGH = {
-    overshoot: 1.02,        // Slight overshoot past target
-    settle: 0.98,           // Settle back slightly
-    damping: 0.6,           // Spring damping factor
-    stiffness: 300,         // Spring stiffness
+    overshoot: 1.02, // Slight overshoot past target
+    settle: 0.98, // Settle back slightly
+    damping: 0.6, // Spring damping factor
+    stiffness: 300, // Spring stiffness
 } as const;
 
 // SQUASH & STRETCH - Deformation for weight and impact
 export const DEFORMATION = {
-    subtle: { scaleX: 1.02, scaleY: 0.98 },    // Light press effect
-    moderate: { scaleX: 1.05, scaleY: 0.95 },  // Button press
-    strong: { scaleX: 1.1, scaleY: 0.9 },      // Impact effect
+    subtle: { scaleX: 1.02, scaleY: 0.98 }, // Light press effect
+    moderate: { scaleX: 1.05, scaleY: 0.95 }, // Button press
+    strong: { scaleX: 1.1, scaleY: 0.9 }, // Impact effect
 } as const;
 
 // SECONDARY ACTIONS - Supporting micro-interactions
 export const SECONDARY = {
-    rippleDuration: 600,    // Material ripple effect
+    rippleDuration: 600, // Material ripple effect
     sparkle: {
         particles: 6,
         spread: 20,
@@ -135,9 +135,9 @@ export const MOTION_VARIANTS = {
     },
     buttonPress: {
         initial: { scale: 1 },
-        whileTap: { 
+        whileTap: {
             scale: ANTICIPATION.scalePrep,
-            transition: { duration: 0.1, ease: EASING.easeIn }
+            transition: { duration: 0.1, ease: EASING.easeIn },
         },
         animate: { scale: 1 },
         transition: { duration: ANIMATION_DURATION.quick / 1000, ease: EASING.easeOut },
@@ -157,7 +157,9 @@ export const CSS_TRANSITIONS = {
     base: `all ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
     quick: `all ${ANIMATION_DURATION.quick}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
     slow: `all ${ANIMATION_DURATION.slow}ms cubic-bezier(${EASING.easeInOut.join(', ')})`,
-    colors: `background-color ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')}), color ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
+    colors: `background-color ${ANIMATION_DURATION.normal}ms cubic-bezier(${
+        EASING.easeOut.join(', ')
+    }), color ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
     transform: `transform ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.spring.join(', ')})`,
     opacity: `opacity ${ANIMATION_DURATION.quick}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
 } as const;

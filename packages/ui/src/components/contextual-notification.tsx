@@ -1,10 +1,10 @@
 'use client';
 
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, AlertCircle, Info, X, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle2, Info, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { cn } from '../lib/utils';
 
 const contextualNotificationVariants = cva(
     'inline-flex items-center gap-2 text-sm font-medium transition-all duration-200',
@@ -18,7 +18,8 @@ const contextualNotificationVariants = cva(
             },
             position: {
                 inline: '',
-                overlay: 'absolute z-10 bg-background/95 backdrop-blur-sm border rounded-md px-2 py-1 shadow-sm',
+                overlay:
+                    'absolute z-10 bg-background/95 backdrop-blur-sm border rounded-md px-2 py-1 shadow-sm',
                 tooltip: 'absolute z-20 bg-popover border rounded-md px-2 py-1 shadow-md text-xs',
             },
         },
@@ -26,22 +27,29 @@ const contextualNotificationVariants = cva(
             variant: 'info',
             position: 'inline',
         },
-    }
+    },
 );
 
-type ContextualNotificationProps = {
-    children: React.ReactNode;
-    show: boolean;
-    variant?: VariantProps<typeof contextualNotificationVariants>['variant'];
-    position?: VariantProps<typeof contextualNotificationVariants>['position'];
-    autoHide?: boolean;
-    duration?: number;
-    className?: string;
-    onHide?: () => void;
-} & (
-    | { position: 'overlay'; overlayOffset?: { x?: number; y?: number } }
-    | { position?: Exclude<VariantProps<typeof contextualNotificationVariants>['position'], 'overlay'> }
-);
+type ContextualNotificationProps =
+    & {
+        children: React.ReactNode;
+        show: boolean;
+        variant?: VariantProps<typeof contextualNotificationVariants>['variant'];
+        position?: VariantProps<typeof contextualNotificationVariants>['position'];
+        autoHide?: boolean;
+        duration?: number;
+        className?: string;
+        onHide?: () => void;
+    }
+    & (
+        | { position: 'overlay'; overlayOffset?: { x?: number; y?: number; }; }
+        | {
+            position?: Exclude<
+                VariantProps<typeof contextualNotificationVariants>['position'],
+                'overlay'
+            >;
+        }
+    );
 
 const getIcon = (variant: VariantProps<typeof contextualNotificationVariants>['variant']) => {
     switch (variant) {
@@ -102,7 +110,9 @@ export function ContextualNotification({
                         exit={{ opacity: 0, scale: 0.95 }}
                         initial={{ opacity: 0, scale: 0.95 }}
                         style={{
-                            transform: `translate(${overlayOffset?.x || 0}px, ${overlayOffset?.y || -4}px)`,
+                            transform: `translate(${overlayOffset?.x || 0}px, ${
+                                overlayOffset?.y || -4
+                            }px)`,
                         }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
                     >
@@ -155,7 +165,10 @@ export function ButtonStatusIndicator({
         return (
             <motion.span
                 animate={{ scale: 1, opacity: 1 }}
-                className={cn('inline-flex items-center gap-1 text-green-600 dark:text-green-400', className)}
+                className={cn(
+                    'inline-flex items-center gap-1 text-green-600 dark:text-green-400',
+                    className,
+                )}
                 initial={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
             >
@@ -169,7 +182,10 @@ export function ButtonStatusIndicator({
         return (
             <motion.span
                 animate={{ scale: 1, opacity: 1 }}
-                className={cn('inline-flex items-center gap-1 text-red-600 dark:text-red-400', className)}
+                className={cn(
+                    'inline-flex items-center gap-1 text-red-600 dark:text-red-400',
+                    className,
+                )}
                 initial={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
             >
@@ -186,7 +202,9 @@ export function ButtonStatusIndicator({
                 className={cn('inline-block', className)}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
             >
-                {loadingIcon || <div className='h-4 w-4 border-2 border-current border-t-transparent rounded-full' />}
+                {loadingIcon || (
+                    <div className='h-4 w-4 border-2 border-current border-t-transparent rounded-full' />
+                )}
             </motion.span>
         );
     }
@@ -216,9 +234,17 @@ export function FieldFeedback({ status, message, className }: FieldFeedbackProps
                 <ContextualNotification
                     autoHide={false}
                     show={true}
-                    variant={status === 'valid' ? 'success' : status === 'invalid' ? 'error' : 'info'}
+                    variant={status === 'valid'
+                        ? 'success'
+                        : status === 'invalid'
+                        ? 'error'
+                        : 'info'}
                 >
-                    {message || (status === 'validating' ? 'Checking...' : status === 'valid' ? 'Valid' : 'Invalid')}
+                    {message || (status === 'validating'
+                        ? 'Checking...'
+                        : status === 'valid'
+                        ? 'Valid'
+                        : 'Invalid')}
                 </ContextualNotification>
             </motion.div>
         </AnimatePresence>

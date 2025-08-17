@@ -55,7 +55,7 @@ export function useContextualFeedback({
                 return result;
             } catch (error) {
                 log.error('Action failed:', { error });
-                
+
                 setStatus('error');
                 setMessage(typeof error === 'string' ? error : errorMessage);
                 onError?.(error);
@@ -68,7 +68,7 @@ export function useContextualFeedback({
                 throw error;
             }
         },
-        [successDuration, errorDuration, onSuccess, onError]
+        [successDuration, errorDuration, onSuccess, onError],
     );
 
     const reset = useCallback(() => {
@@ -218,18 +218,20 @@ export function useContextualCopy() {
  * Hook for form field validation with contextual feedback
  */
 export function useFieldValidation() {
-    const [validationStatus, setValidationStatus] = useState<Record<string, {
-        status: 'idle' | 'validating' | 'valid' | 'invalid';
-        message?: string;
-    }>>({});
+    const [validationStatus, setValidationStatus] = useState<
+        Record<string, {
+            status: 'idle' | 'validating' | 'valid' | 'invalid';
+            message?: string;
+        }>
+    >({});
 
     const validateField = useCallback(async (
         fieldName: string,
-        validator: () => Promise<{ valid: boolean; message?: string }>
+        validator: () => Promise<{ valid: boolean; message?: string; }>,
     ) => {
         setValidationStatus(prev => ({
             ...prev,
-            [fieldName]: { status: 'validating' }
+            [fieldName]: { status: 'validating' },
         }));
 
         try {
@@ -238,8 +240,8 @@ export function useFieldValidation() {
                 ...prev,
                 [fieldName]: {
                     status: result.valid ? 'valid' : 'invalid',
-                    message: result.message
-                }
+                    message: result.message,
+                },
             }));
             return result;
         } catch (error) {
@@ -247,8 +249,8 @@ export function useFieldValidation() {
                 ...prev,
                 [fieldName]: {
                     status: 'invalid',
-                    message: 'Validation failed'
-                }
+                    message: 'Validation failed',
+                },
             }));
             throw error;
         }
@@ -257,7 +259,7 @@ export function useFieldValidation() {
     const resetField = useCallback((fieldName: string) => {
         setValidationStatus(prev => ({
             ...prev,
-            [fieldName]: { status: 'idle' }
+            [fieldName]: { status: 'idle' },
         }));
     }, []);
 

@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ContextualNotification, CopyButton, ContextualStatus } from '@repo/ui';
 import { useContextualFeedback } from '@repo/common/hooks';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { ContextualNotification, ContextualStatus, CopyButton } from '@repo/ui';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock navigator.clipboard
 const mockClipboard = {
@@ -34,7 +34,7 @@ function TestContextualFeedback() {
                         async () => {
                             await new Promise(resolve => setTimeout(resolve, 100));
                         },
-                        { successMessage: 'Action completed!' }
+                        { successMessage: 'Action completed!' },
                     );
                 }}
                 data-testid='action-button'
@@ -61,7 +61,7 @@ describe('Contextual Notifications', () => {
             render(
                 <ContextualNotification show={true} variant='success'>
                     Success message
-                </ContextualNotification>
+                </ContextualNotification>,
             );
 
             expect(screen.getByText('Success message')).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('Contextual Notifications', () => {
             render(
                 <ContextualNotification show={false} variant='success'>
                     Success message
-                </ContextualNotification>
+                </ContextualNotification>,
             );
 
             expect(screen.queryByText('Success message')).not.toBeInTheDocument();
@@ -81,7 +81,7 @@ describe('Contextual Notifications', () => {
             const { rerender } = render(
                 <ContextualNotification show={true} variant='success'>
                     Success
-                </ContextualNotification>
+                </ContextualNotification>,
             );
 
             let notification = screen.getByText('Success').closest('span');
@@ -90,7 +90,7 @@ describe('Contextual Notifications', () => {
             rerender(
                 <ContextualNotification show={true} variant='error'>
                     Error
-                </ContextualNotification>
+                </ContextualNotification>,
             );
 
             notification = screen.getByText('Error').closest('span');
@@ -101,7 +101,7 @@ describe('Contextual Notifications', () => {
     describe('CopyButton Component', () => {
         it('should copy text to clipboard and show success state', async () => {
             render(
-                <CopyButton text='Test text to copy' data-testid='copy-button' />
+                <CopyButton text='Test text to copy' data-testid='copy-button' />,
             );
 
             const copyButton = screen.getByTestId('copy-button');
@@ -121,7 +121,7 @@ describe('Contextual Notifications', () => {
             mockClipboard.writeText.mockRejectedValueOnce(new Error('Copy failed'));
 
             render(
-                <CopyButton text='Test text' data-testid='copy-button' />
+                <CopyButton text='Test text' data-testid='copy-button' />,
             );
 
             const copyButton = screen.getByTestId('copy-button');
@@ -134,7 +134,7 @@ describe('Contextual Notifications', () => {
 
         it('should reset to idle state after success duration', async () => {
             render(
-                <CopyButton text='Test text' resetDelay={200} data-testid='copy-button' />
+                <CopyButton text='Test text' resetDelay={200} data-testid='copy-button' />,
             );
 
             const copyButton = screen.getByTestId('copy-button');
@@ -150,7 +150,7 @@ describe('Contextual Notifications', () => {
                 () => {
                     expect(screen.getByText('Copy')).toBeInTheDocument();
                 },
-                { timeout: 500 }
+                { timeout: 500 },
             );
         });
     });
@@ -158,19 +158,19 @@ describe('Contextual Notifications', () => {
     describe('ContextualStatus Component', () => {
         it('should render different status variants correctly', () => {
             const { rerender } = render(
-                <ContextualStatus status='loading' message='Loading...' />
+                <ContextualStatus status='loading' message='Loading...' />,
             );
 
             expect(screen.getByText('Loading...')).toBeInTheDocument();
 
             rerender(
-                <ContextualStatus status='success' message='Completed!' />
+                <ContextualStatus status='success' message='Completed!' />,
             );
 
             expect(screen.getByText('Completed!')).toBeInTheDocument();
 
             rerender(
-                <ContextualStatus status='error' message='Failed!' />
+                <ContextualStatus status='error' message='Failed!' />,
             );
 
             expect(screen.getByText('Failed!')).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe('Contextual Notifications', () => {
 
         it('should show icons by default', () => {
             render(
-                <ContextualStatus status='success' message='Success' />
+                <ContextualStatus status='success' message='Success' />,
             );
 
             // Check for icon presence (SVG element)
@@ -188,11 +188,11 @@ describe('Contextual Notifications', () => {
 
         it('should hide icons when showIcon is false', () => {
             render(
-                <ContextualStatus 
-                    status='success' 
-                    message='Success' 
-                    showIcon={false} 
-                />
+                <ContextualStatus
+                    status='success'
+                    message='Success'
+                    showIcon={false}
+                />,
             );
 
             const container = screen.getByText('Success').closest('div');
@@ -219,7 +219,7 @@ describe('Integration with Existing Components', () => {
     it('should replace toast notifications without breaking functionality', () => {
         // Test that contextual notifications can be used as drop-in replacements
         // for toast notifications in existing components
-        
+
         const TestComponent = () => {
             const [showNotification, setShowNotification] = React.useState(false);
 

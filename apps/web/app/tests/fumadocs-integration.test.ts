@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 describe('Fumadocs Integration', () => {
     test('should have Fumadocs dependencies installed', () => {
         const packageJson = require('../../package.json');
-        
+
         // Check if Fumadocs dependencies are present
         expect(packageJson.dependencies).toHaveProperty('fumadocs-ui');
         expect(packageJson.dependencies).toHaveProperty('fumadocs-core');

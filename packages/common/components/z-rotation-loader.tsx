@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { cn } from '@repo/ui';
+import { motion } from 'framer-motion';
 import type { HTMLAttributes } from 'react';
 
 export type ZRotationLoaderProps = {

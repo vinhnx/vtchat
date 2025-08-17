@@ -3,13 +3,13 @@
 import { motion, type Variants } from 'framer-motion';
 import * as React from 'react';
 
-import { cn } from '../lib/utils';
-import { 
-    ANIMATION_DURATION, 
-    EASING, 
+import {
+    ANIMATION_DURATION,
+    EASING,
+    FOLLOW_THROUGH,
     STAGGER_DELAY,
-    FOLLOW_THROUGH 
 } from '../lib/animation-constants';
+import { cn } from '../lib/utils';
 
 interface EnhancedLoadingProps {
     type?: 'dots' | 'bars' | 'spinner' | 'pulse' | 'skeleton';
@@ -27,7 +27,7 @@ const baseTransition = {
 };
 
 // PRINCIPLE 5: FOLLOW THROUGH & OVERLAPPING ACTION - Dots with staggered motion
-const DotsLoader = ({ size = 'md' }: { size: string }) => {
+const DotsLoader = ({ size = 'md' }: { size: string; }) => {
     const dotSizes = {
         sm: 'w-1 h-1',
         md: 'w-2 h-2',
@@ -44,10 +44,10 @@ const DotsLoader = ({ size = 'md' }: { size: string }) => {
     };
 
     const dotVariants: Variants = {
-        initial: { 
-            y: 0, 
+        initial: {
+            y: 0,
             opacity: 0.7,
-            scale: 1 
+            scale: 1,
         },
         animate: {
             y: [0, -8, 0],
@@ -61,11 +61,11 @@ const DotsLoader = ({ size = 'md' }: { size: string }) => {
     };
 
     return (
-        <motion.div 
+        <motion.div
             variants={containerVariants}
-            initial="initial"
-            animate="animate"
-            className="flex items-center gap-1"
+            initial='initial'
+            animate='animate'
+            className='flex items-center gap-1'
         >
             {[0, 1, 2].map((i) => (
                 <motion.div
@@ -73,7 +73,7 @@ const DotsLoader = ({ size = 'md' }: { size: string }) => {
                     variants={dotVariants}
                     className={cn(
                         'rounded-full bg-current',
-                        dotSizes
+                        dotSizes,
                     )}
                 />
             ))}
@@ -82,7 +82,7 @@ const DotsLoader = ({ size = 'md' }: { size: string }) => {
 };
 
 // PRINCIPLE 1: SQUASH & STRETCH - Bars with deformation
-const BarsLoader = ({ size = 'md' }: { size: string }) => {
+const BarsLoader = ({ size = 'md' }: { size: string; }) => {
     const barSizes = {
         sm: 'w-0.5 h-4',
         md: 'w-1 h-6',
@@ -100,9 +100,9 @@ const BarsLoader = ({ size = 'md' }: { size: string }) => {
 
     // PRINCIPLE 1: SQUASH & STRETCH applied to height
     const barVariants: Variants = {
-        initial: { 
+        initial: {
             scaleY: 0.3,
-            opacity: 0.6 
+            opacity: 0.6,
         },
         animate: {
             scaleY: [0.3, 1, 0.3],
@@ -115,11 +115,11 @@ const BarsLoader = ({ size = 'md' }: { size: string }) => {
     };
 
     return (
-        <motion.div 
+        <motion.div
             variants={containerVariants}
-            initial="initial"
-            animate="animate"
-            className="flex items-center gap-1"
+            initial='initial'
+            animate='animate'
+            className='flex items-center gap-1'
         >
             {[0, 1, 2, 3].map((i) => (
                 <motion.div
@@ -127,7 +127,7 @@ const BarsLoader = ({ size = 'md' }: { size: string }) => {
                     variants={barVariants}
                     className={cn(
                         'rounded-sm bg-current origin-bottom',
-                        barSizes
+                        barSizes,
                     )}
                 />
             ))}
@@ -136,7 +136,7 @@ const BarsLoader = ({ size = 'md' }: { size: string }) => {
 };
 
 // PRINCIPLE 7: ARCS - Circular motion with organic path
-const SpinnerLoader = ({ size = 'md' }: { size: string }) => {
+const SpinnerLoader = ({ size = 'md' }: { size: string; }) => {
     const spinnerSizes = {
         sm: 'w-4 h-4',
         md: 'w-6 h-6',
@@ -155,19 +155,19 @@ const SpinnerLoader = ({ size = 'md' }: { size: string }) => {
     };
 
     return (
-        <motion.div 
+        <motion.div
             variants={spinVariants}
-            animate="animate"
+            animate='animate'
             className={cn(
                 'border-2 border-current border-t-transparent rounded-full',
-                spinnerSizes
+                spinnerSizes,
             )}
         />
     );
 };
 
 // PRINCIPLE 12: APPEAL - Breathing pulse effect
-const PulseLoader = ({ size = 'md' }: { size: string }) => {
+const PulseLoader = ({ size = 'md' }: { size: string; }) => {
     const pulseSizes = {
         sm: 'w-3 h-3',
         md: 'w-4 h-4',
@@ -187,19 +187,19 @@ const PulseLoader = ({ size = 'md' }: { size: string }) => {
     };
 
     return (
-        <motion.div 
+        <motion.div
             variants={pulseVariants}
-            animate="animate"
+            animate='animate'
             className={cn(
                 'rounded-full bg-current',
-                pulseSizes
+                pulseSizes,
             )}
         />
     );
 };
 
 // PRINCIPLE 3: STAGING - Skeleton with sequential loading effect
-const SkeletonLoader = ({ size = 'md' }: { size: string }) => {
+const SkeletonLoader = ({ size = 'md' }: { size: string; }) => {
     const skeletonSizes = {
         sm: { width: 'w-32', height: 'h-3' },
         md: { width: 'w-48', height: 'h-4' },
@@ -228,22 +228,22 @@ const SkeletonLoader = ({ size = 'md' }: { size: string }) => {
 
     const lineVariants: Variants = {
         initial: { opacity: 0, width: 0 },
-        animate: { 
-            opacity: 1, 
+        animate: {
+            opacity: 1,
             width: '100%',
-            transition: { 
-                duration: 0.5, 
-                ease: EASING.easeOut 
-            }
+            transition: {
+                duration: 0.5,
+                ease: EASING.easeOut,
+            },
         },
     };
 
     return (
-        <motion.div 
+        <motion.div
             variants={containerVariants}
-            initial="initial"
-            animate="animate"
-            className="space-y-2"
+            initial='initial'
+            animate='animate'
+            className='space-y-2'
         >
             {[0, 1, 2].map((i) => (
                 <motion.div
@@ -252,13 +252,13 @@ const SkeletonLoader = ({ size = 'md' }: { size: string }) => {
                     className={cn(
                         'relative overflow-hidden rounded bg-muted',
                         skeletonSizes.height,
-                        i === 2 ? 'w-3/4' : skeletonSizes.width // Last line shorter
+                        i === 2 ? 'w-3/4' : skeletonSizes.width, // Last line shorter
                     )}
                 >
                     {/* Shimmer effect */}
                     <motion.div
                         variants={shimmerVariants}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent'
                     />
                 </motion.div>
             ))}
@@ -267,9 +267,9 @@ const SkeletonLoader = ({ size = 'md' }: { size: string }) => {
 };
 
 // PRINCIPLE 8: SECONDARY ACTION - Message with typewriter effect
-const LoadingMessage = ({ message, isVisible }: { message: string; isVisible: boolean }) => {
+const LoadingMessage = ({ message, isVisible }: { message: string; isVisible: boolean; }) => {
     const [displayText, setDisplayText] = React.useState('');
-    
+
     React.useEffect(() => {
         if (!isVisible || !message) {
             setDisplayText('');
@@ -291,14 +291,14 @@ const LoadingMessage = ({ message, isVisible }: { message: string; isVisible: bo
 
     const messageVariants: Variants = {
         initial: { opacity: 0, y: 10 },
-        animate: { 
-            opacity: 1, 
+        animate: {
+            opacity: 1,
             y: 0,
-            transition: { 
+            transition: {
                 delay: 0.3,
                 duration: ANIMATION_DURATION.normal / 1000,
-                ease: EASING.easeOut 
-            }
+                ease: EASING.easeOut,
+            },
         },
         exit: { opacity: 0, y: -10 },
     };
@@ -308,20 +308,20 @@ const LoadingMessage = ({ message, isVisible }: { message: string; isVisible: bo
     return (
         <motion.p
             variants={messageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="text-sm text-muted-foreground mt-4 text-center"
+            initial='initial'
+            animate='animate'
+            exit='exit'
+            className='text-sm text-muted-foreground mt-4 text-center'
         >
             {displayText}
             <motion.span
                 animate={{ opacity: [1, 0] }}
-                transition={{ 
-                    duration: 0.8, 
+                transition={{
+                    duration: 0.8,
                     repeat: Number.POSITIVE_INFINITY,
-                    ease: 'easeInOut'
+                    ease: 'easeInOut',
                 }}
-                className="ml-0.5"
+                className='ml-0.5'
             >
                 |
             </motion.span>
@@ -346,14 +346,14 @@ export function EnhancedLoading({
 
     return (
         <div className={cn('flex flex-col items-center justify-center p-4', className)}>
-            <div className="text-muted-foreground">
+            <div className='text-muted-foreground'>
                 <LoaderComponent size={size} />
             </div>
-            
+
             {showMessage && (
-                <LoadingMessage 
-                    message={message || 'Loading...'} 
-                    isVisible={true} 
+                <LoadingMessage
+                    message={message || 'Loading...'}
+                    isVisible={true}
                 />
             )}
         </div>
@@ -361,10 +361,10 @@ export function EnhancedLoading({
 }
 
 // Export individual loaders for specific use cases (renamed to avoid conflicts)
-export { 
-    DotsLoader as AnimatedDotsLoader, 
-    BarsLoader as AnimatedBarsLoader, 
-    SpinnerLoader as AnimatedSpinnerLoader, 
-    PulseLoader as AnimatedPulseLoader, 
-    SkeletonLoader as AnimatedSkeletonLoader 
+export {
+    BarsLoader as AnimatedBarsLoader,
+    DotsLoader as AnimatedDotsLoader,
+    PulseLoader as AnimatedPulseLoader,
+    SkeletonLoader as AnimatedSkeletonLoader,
+    SpinnerLoader as AnimatedSpinnerLoader,
 };

@@ -1,18 +1,18 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { CheckCircle, X, AlertTriangle, Info, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, X, XCircle } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '../lib/utils';
-import { 
-    createAnticipation, 
-    createFollowThrough, 
-    createSecondaryAction, 
-    createExaggeration, 
+import {
     ANIMATION_DURATION,
-    EASING 
+    createAnticipation,
+    createExaggeration,
+    createFollowThrough,
+    createSecondaryAction,
+    EASING,
 } from '../lib/animation-utils';
+import { cn } from '../lib/utils';
 
 // Toast types with different animation behaviors
 type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -29,11 +29,11 @@ interface AnimatedToastProps {
 
 // PRINCIPLE 3: STAGING - Sequential appearance of elements
 const containerVariants: Variants = {
-    hidden: { 
-        opacity: 0, 
-        scale: 0.8, 
+    hidden: {
+        opacity: 0,
+        scale: 0.8,
         y: -50,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
     },
     visible: {
         opacity: 1,
@@ -59,7 +59,7 @@ const containerVariants: Variants = {
 
 // PRINCIPLE 5: FOLLOW THROUGH & OVERLAPPING ACTION - Icon and content animate separately
 const iconVariants: Variants = {
-    hidden: { 
+    hidden: {
         scale: 0,
         rotate: -180,
     },
@@ -143,7 +143,7 @@ export function AnimatedToast({
 }: AnimatedToastProps) {
     const config = getToastConfig(type);
     const Icon = config.icon;
-    
+
     // Auto-close timer
     React.useEffect(() => {
         if (isVisible && duration > 0) {
@@ -171,54 +171,52 @@ export function AnimatedToast({
                 config.bgColor,
                 config.textColor,
                 config.borderColor,
-                getPositionClasses()
+                getPositionClasses(),
             )}
             variants={containerVariants}
-            initial="hidden"
+            initial='hidden'
             animate={isVisible ? 'visible' : 'hidden'}
-            exit="exit"
+            exit='exit'
             {...getExaggeratedMotion(type)}
         >
             {/* PRINCIPLE 2: ANTICIPATION - Icon appears with slight delay and rotation */}
             <motion.div
                 variants={iconVariants}
-                className="flex-shrink-0 mt-0.5"
+                className='flex-shrink-0 mt-0.5'
             >
                 <Icon size={20} />
             </motion.div>
 
             {/* PRINCIPLE 5: FOLLOW THROUGH - Content slides in after icon */}
-            <motion.div 
-                className="flex-1 space-y-1"
+            <motion.div
+                className='flex-1 space-y-1'
                 variants={{
                     hidden: { opacity: 0, x: -20 },
-                    visible: { 
-                        opacity: 1, 
+                    visible: {
+                        opacity: 1,
                         x: 0,
-                        transition: { 
-                            delay: 0.15, 
+                        transition: {
+                            delay: 0.15,
                             duration: ANIMATION_DURATION.normal / 1000,
-                            ease: EASING.easeOut
-                        }
+                            ease: EASING.easeOut,
+                        },
                     },
                 }}
             >
-                <h4 className="text-sm font-semibold">{title}</h4>
-                {description && (
-                    <p className="text-sm opacity-90">{description}</p>
-                )}
+                <h4 className='text-sm font-semibold'>{title}</h4>
+                {description && <p className='text-sm opacity-90'>{description}</p>}
             </motion.div>
 
             {/* PRINCIPLE 8: SECONDARY ACTION - Close button with hover effect */}
             <motion.button
-                className="flex-shrink-0 rounded-md p-1 hover:bg-white/20 transition-colors"
+                className='flex-shrink-0 rounded-md p-1 hover:bg-white/20 transition-colors'
                 onClick={onClose}
                 variants={{
                     hidden: { opacity: 0, scale: 0.8 },
-                    visible: { 
-                        opacity: 1, 
+                    visible: {
+                        opacity: 1,
                         scale: 1,
-                        transition: { delay: 0.2 }
+                        transition: { delay: 0.2 },
                     },
                 }}
                 whileHover={{ scale: 1.1 }}
@@ -232,35 +230,35 @@ export function AnimatedToast({
 }
 
 // PRINCIPLE 9: TIMING - Toast manager with proper sequencing
-export function ToastContainer({ 
-    toasts 
-}: { 
-    toasts: Array<AnimatedToastProps & { id: string }> 
+export function ToastContainer({
+    toasts,
+}: {
+    toasts: Array<AnimatedToastProps & { id: string; }>;
 }) {
     return (
-        <div className="fixed inset-0 pointer-events-none z-50">
+        <div className='fixed inset-0 pointer-events-none z-50'>
             {toasts.map((toast, index) => (
                 <motion.div
                     key={toast.id}
                     initial={{ y: -100, opacity: 0 }}
-                    animate={{ 
+                    animate={{
                         y: index * 80, // Stack toasts with proper spacing
                         opacity: 1,
                         transition: {
                             delay: index * 0.1, // PRINCIPLE 5: Staggered appearance
                             duration: ANIMATION_DURATION.normal / 1000,
                             ease: EASING.spring,
-                        }
+                        },
                     }}
-                    exit={{ 
-                        x: 300, 
+                    exit={{
+                        x: 300,
                         opacity: 0,
                         transition: {
                             duration: ANIMATION_DURATION.quick / 1000,
-                        }
+                        },
                     }}
-                    className="absolute"
-                    style={{ 
+                    className='absolute'
+                    style={{
                         top: toast.position?.includes('top') ? '1rem' : 'auto',
                         bottom: toast.position?.includes('bottom') ? '1rem' : 'auto',
                         right: toast.position?.includes('right') ? '1rem' : 'auto',
@@ -276,21 +274,24 @@ export function ToastContainer({
 
 // Hook for managing toast state with animations
 export function useAnimatedToast() {
-    const [toasts, setToasts] = React.useState<Array<AnimatedToastProps & { id: string }>>([]);
+    const [toasts, setToasts] = React.useState<Array<AnimatedToastProps & { id: string; }>>([]);
 
-    const showToast = React.useCallback((toast: Omit<AnimatedToastProps, 'isVisible' | 'onClose'>) => {
-        const id = Math.random().toString(36).substr(2, 9);
-        const newToast = {
-            ...toast,
-            id,
-            isVisible: true,
-            onClose: () => {
-                setToasts(prev => prev.filter(t => t.id !== id));
-            },
-        };
-        
-        setToasts(prev => [...prev, newToast]);
-    }, []);
+    const showToast = React.useCallback(
+        (toast: Omit<AnimatedToastProps, 'isVisible' | 'onClose'>) => {
+            const id = Math.random().toString(36).substr(2, 9);
+            const newToast = {
+                ...toast,
+                id,
+                isVisible: true,
+                onClose: () => {
+                    setToasts(prev => prev.filter(t => t.id !== id));
+                },
+            };
+
+            setToasts(prev => [...prev, newToast]);
+        },
+        [],
+    );
 
     const clearToasts = React.useCallback(() => {
         setToasts([]);
@@ -300,13 +301,13 @@ export function useAnimatedToast() {
         toasts,
         showToast,
         clearToasts,
-        success: (title: string, description?: string) => 
+        success: (title: string, description?: string) =>
             showToast({ type: 'success', title, description }),
-        error: (title: string, description?: string) => 
+        error: (title: string, description?: string) =>
             showToast({ type: 'error', title, description }),
-        warning: (title: string, description?: string) => 
+        warning: (title: string, description?: string) =>
             showToast({ type: 'warning', title, description }),
-        info: (title: string, description?: string) => 
+        info: (title: string, description?: string) =>
             showToast({ type: 'info', title, description }),
     };
 }

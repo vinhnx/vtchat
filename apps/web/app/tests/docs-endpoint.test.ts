@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test';
 describe('Docs Endpoint Implementation', () => {
     test('should have docs route structure', () => {
         const fs = require('fs');
-        
+
         // Check if docs directory and files exist
         expect(fs.existsSync('./app/docs')).toBe(true);
         expect(fs.existsSync('./app/docs/layout.tsx')).toBe(true);

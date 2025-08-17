@@ -204,7 +204,11 @@ export const MobileTopNavigation: FC<MobileTopNavigationProps> = ({ className })
                     <motion.div
                         initial={{ opacity: 0, scale: 0.93 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.125, ease: 'easeOut', delay: session ? 0.2 : 0.1 }}
+                        transition={{
+                            duration: 0.125,
+                            ease: 'easeOut',
+                            delay: session ? 0.2 : 0.1,
+                        }}
                     >
                         <Button
                             className='bg-primary text-primary-foreground rounded-full shadow-sm transition-shadow hover:shadow-md h-7 w-7 sm:h-8 sm:w-8'
