@@ -241,13 +241,13 @@ export const CommandSearch = () => {
                     <CommandInput placeholder='Search...' className='border-none' />
                 </div>
             </div>
-            <CommandList className='max-h-[300px] touch-pan-y overflow-y-auto overscroll-contain p-0.5 pt-1.5'>
+            <CommandList className='max-h-[300px] touch-pan-y overflow-y-auto p-0.5 pt-1.5'>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     {actions.map((action, index) => {
                         const actionItem = (
                             <CommandItem
-                                className='gap-'
+                                className='gap-2'
                                 key={`action-${action.name}-${index}`}
                                 onSelect={action.action}
                                 value={action.name}
