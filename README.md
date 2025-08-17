@@ -273,6 +273,22 @@ VT is production-ready and deployed on Fly.io:
 - **Health Checks**: HTTP and TCP monitoring
 - **Auto-scaling**: Suspend/resume based on traffic
 
+### Changelog Generation
+
+VT uses [changelogithub](https://github.com/antfu/changelogithub) to automatically generate changelogs for each release. When you deploy using the `deploy-fly.sh` script, it will:
+
+1. Automatically generate a changelog based on conventional commits
+2. Create a Git tag with the new version
+3. Push the tag to GitHub
+
+The GitHub Actions workflow in `.github/workflows/release.yml` will then automatically create a GitHub release with the generated changelog.
+
+To enable full changelog generation with GitHub integration, set the `GITHUB_TOKEN` environment variable when running the deploy script:
+
+```bash
+GITHUB_TOKEN=your_token_here ./deploy-fly.sh
+```
+
 ## Documentation
 
 ### **Core Documentation**

@@ -49,8 +49,12 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "  • Git dirty state checking"
     echo "  • Semantic versioning with timestamps"
     echo "  • Automatic git tagging and pushing"
+    echo "  • Changelog generation with changelogithub"
     echo "  • Fly.io deployment integration"
     echo "  • Build optimization with cache"
+    echo ""
+    echo -e "${YELLOW}Environment Variables:${NC}"
+    echo "  GITHUB_TOKEN    GitHub token for changelog generation (optional)"
     exit 0
 fi
 
@@ -65,6 +69,14 @@ fi
 if ! flyctl auth whoami &> /dev/null; then
     print_error "Not logged in to Fly.io. Please run: flyctl auth login"
     exit 1
+fi
+
+# Check if Node.js is installed (required for changelogithub)
+if ! command -v node &> /dev/null; then
+    print_warning "Node.js is not installed. Changelog generation will be skipped."
+    NODE_AVAILABLE=false
+else
+    NODE_AVAILABLE=true
 fi
 
 print_status "flyctl is installed and user is authenticated"
@@ -147,6 +159,41 @@ check_git_status() {
     fi
 }
 
+# Function to generate changelog
+generate_changelog() {
+    local tag_name=$1
+    local previous_tag=$2
+
+    if [ "$NODE_AVAILABLE" = false ]; then
+        print_warning "Skipping changelog generation (Node.js not available)"
+        return
+    fi
+
+    print_step "Generating changelog..."
+
+    # Try to generate changelog using changelogithub
+    if command -v npx &> /dev/null; then
+        print_info "Using changelogithub to generate changelog..."
+        
+        # Set the GITHUB_TOKEN if it exists in environment
+        local github_token_args=""
+        if [ -n "$GITHUB_TOKEN" ]; then
+            github_token_args="--github-token $GITHUB_TOKEN"
+        fi
+        
+        # Generate changelog in dry-run mode to see what would be generated
+        if npx changelogithub --dry $github_token_args > /tmp/changelog.md 2>/dev/null; then
+            print_info "Changelog preview:"
+            head -20 /tmp/changelog.md
+            print_status "Changelog generated successfully (preview above)"
+        else
+            print_warning "Failed to generate changelog with changelogithub"
+        fi
+    else
+        print_warning "npx not found, skipping changelog generation"
+    fi
+}
+
 # Function to create version tag
 create_version_tag() {
     local version_type=$1
@@ -155,7 +202,8 @@ create_version_tag() {
     print_step "Creating version tag..."
 
     local current_version=$(get_current_version)
-    print_info "Current version: v$current_version"
+    local previous_tag="v$current_version"
+    print_info "Current version: $previous_tag"
 
     # Default to patch version if not specified
     if [ -z "$version_type" ]; then
@@ -166,6 +214,9 @@ create_version_tag() {
     local tag_name="v$new_version"
 
     print_info "New version: $tag_name"
+
+    # Generate changelog before creating tag
+    generate_changelog "$tag_name" "$previous_tag"
 
     # Create tag
     local tag_message="Release $tag_name
