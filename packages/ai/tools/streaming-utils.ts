@@ -162,7 +162,7 @@ export class StreamingToolExecutor {
             const executionTime = Date.now() - startTime;
             const toolError = createToolError(toolCall, error, executionTime);
             this.onToolResult?.(toolError);
-            
+
             // Also emit a tool-error event for enhanced error handling
             if (this.onToolCallUpdate) {
                 const errorCall = {
@@ -173,7 +173,7 @@ export class StreamingToolExecutor {
                 };
                 this.onToolCallUpdate(errorCall);
             }
-            
+
             return toolError;
         }
     }

@@ -372,7 +372,7 @@ export const getLanguageModel = (
                     ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
                     ...getMiddlewareForContext(m, middlewareConfig),
                 ];
-                
+
                 if (allMiddleware.length > 0) {
                     log.info('Wrapping model with middleware...', {
                         middlewareCount: allMiddleware.length,
@@ -428,7 +428,7 @@ export const getLanguageModel = (
                 ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
                 ...getMiddlewareForContext(m, middlewareConfig),
             ];
-            
+
             if (allMiddleware.length > 0) {
                 log.info('Wrapping model with middleware...', {
                     middlewareCount: allMiddleware.length,

@@ -5,90 +5,97 @@ VT Chat implements a flexible middleware system for language models using the AI
 ## Available Middlewares
 
 ### 1. Logging Middleware
+
 Logs parameters and generated text of language model calls for debugging and monitoring.
 
 ### 2. Caching Middleware
+
 Caches generated text based on parameters to reduce API costs and improve response times.
 
 ### 3. Guardrails Middleware
+
 Filters sensitive content from generated text to ensure safe and appropriate responses.
 
 ## Usage
 
 ### Basic Usage
+
 To use middleware, you can pass it when getting a language model:
 
 ```typescript
-import { getLanguageModel } from '@repo/ai/providers';
 import { loggingMiddleware } from '@repo/ai/middleware';
+import { getLanguageModel } from '@repo/ai/providers';
 
 const model = getLanguageModel(
-  modelEnum,
-  loggingMiddleware, // Single middleware
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus
+    modelEnum,
+    loggingMiddleware, // Single middleware
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
 );
 ```
 
 ### Multiple Middlewares
+
 You can also pass an array of middlewares:
 
 ```typescript
+import { cachingMiddleware, loggingMiddleware } from '@repo/ai/middleware';
 import { getLanguageModel } from '@repo/ai/providers';
-import { loggingMiddleware, cachingMiddleware } from '@repo/ai/middleware';
 
 const model = getLanguageModel(
-  modelEnum,
-  [loggingMiddleware, cachingMiddleware], // Multiple middlewares
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus
+    modelEnum,
+    [loggingMiddleware, cachingMiddleware], // Multiple middlewares
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
 );
 ```
 
 ### Using Middleware Configuration
+
 For more flexible configuration, you can use the middleware configuration system:
 
 ```typescript
-import { getLanguageModel } from '@repo/ai/providers';
 import { MiddlewarePresets } from '@repo/ai/middleware/config';
+import { getLanguageModel } from '@repo/ai/providers';
 
 const model = getLanguageModel(
-  modelEnum,
-  undefined, // No direct middleware
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus,
-  MiddlewarePresets.DEVELOPMENT // Use a preset
+    modelEnum,
+    undefined, // No direct middleware
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
+    MiddlewarePresets.DEVELOPMENT, // Use a preset
 );
 ```
 
 ### Custom Configuration
+
 You can also create custom middleware configurations:
 
 ```typescript
 import { getLanguageModel } from '@repo/ai/providers';
 
 const model = getLanguageModel(
-  modelEnum,
-  undefined,
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus,
-  {
-    enableLogging: true,
-    enableCaching: true,
-    enableGuardrails: false,
-  }
+    modelEnum,
+    undefined,
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
+    {
+        enableLogging: true,
+        enableCaching: true,
+        enableGuardrails: false,
+    },
 );
 ```
 
@@ -100,27 +107,27 @@ You can create your own middleware by implementing the `LanguageModelV2Middlewar
 import type { LanguageModelV2Middleware } from '@ai-sdk/provider';
 
 export const yourCustomMiddleware: LanguageModelV2Middleware = {
-  wrapGenerate: async ({ doGenerate, params }) => {
-    // Modify parameters before calling the model
-    const modifiedParams = {
-      ...params,
-      // Add your modifications here
-    };
+    wrapGenerate: async ({ doGenerate, params }) => {
+        // Modify parameters before calling the model
+        const modifiedParams = {
+            ...params,
+            // Add your modifications here
+        };
 
-    // Call the model
-    const result = await doGenerate(modifiedParams);
+        // Call the model
+        const result = await doGenerate(modifiedParams);
 
-    // Modify the result before returning
-    return {
-      ...result,
-      // Add your modifications here
-    };
-  },
+        // Modify the result before returning
+        return {
+            ...result,
+            // Add your modifications here
+        };
+    },
 
-  wrapStream: async ({ doStream, params }) => {
-    // Similar pattern for streaming
-    return doStream(params);
-  },
+    wrapStream: async ({ doStream, params }) => {
+        // Similar pattern for streaming
+        return doStream(params);
+    },
 };
 ```
 

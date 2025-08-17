@@ -7,16 +7,19 @@ This implementation adds a comprehensive middleware system to VT Chat's language
 ## Key Components
 
 ### 1. Middleware Implementations
+
 - **Logging Middleware**: Logs parameters and generated text for debugging and monitoring
 - **Caching Middleware**: Caches generated text to reduce API costs and improve response times
 - **Guardrails Middleware**: Filters sensitive content to ensure safe and appropriate responses
 
 ### 2. Configuration System
+
 - Flexible configuration through the `MiddlewareConfig` interface
 - Presets for common use cases (DEVELOPMENT, PRODUCTION, PERFORMANCE, PRIVACY)
 - Easy integration with existing code through the `getLanguageModel` function
 
 ### 3. Integration Points
+
 - Seamless integration with the existing `getLanguageModel` function
 - Backward compatibility with existing middleware parameters
 - Automatic combination of provided and configured middleware
@@ -24,6 +27,7 @@ This implementation adds a comprehensive middleware system to VT Chat's language
 ## Implementation Details
 
 ### File Structure
+
 ```
 packages/ai/middleware/
 ├── caching-middleware.ts
@@ -37,6 +41,7 @@ packages/ai/middleware/
 ```
 
 ### Key Features
+
 1. **Flexible Application**: Support for single or multiple middleware
 2. **Configuration-Based Selection**: Easy-to-use presets and custom configurations
 3. **Extensibility**: Simple interface for creating custom middleware
@@ -44,7 +49,9 @@ packages/ai/middleware/
 5. **Comprehensive Testing**: Unit tests for all middleware components
 
 ### Integration with Existing Code
+
 The middleware system was integrated by:
+
 1. Adding a new `middlewareConfig` parameter to `getLanguageModel`
 2. Updating the function to combine provided middleware with configured middleware
 3. Maintaining full backward compatibility
@@ -52,48 +59,52 @@ The middleware system was integrated by:
 ## Usage Examples
 
 ### Using Presets
+
 ```typescript
-import { getLanguageModel } from '@repo/ai/providers';
 import { MiddlewarePresets } from '@repo/ai/middleware/config';
+import { getLanguageModel } from '@repo/ai/providers';
 
 const model = getLanguageModel(
-  modelEnum,
-  undefined,
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus,
-  MiddlewarePresets.DEVELOPMENT
+    modelEnum,
+    undefined,
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
+    MiddlewarePresets.DEVELOPMENT,
 );
 ```
 
 ### Custom Configuration
+
 ```typescript
 const model = getLanguageModel(
-  modelEnum,
-  undefined,
-  byokKeys,
-  useSearchGrounding,
-  cachedContent,
-  claude4InterleavedThinking,
-  isVtPlus,
-  {
-    enableLogging: true,
-    enableCaching: true,
-    enableGuardrails: false,
-  }
+    modelEnum,
+    undefined,
+    byokKeys,
+    useSearchGrounding,
+    cachedContent,
+    claude4InterleavedThinking,
+    isVtPlus,
+    {
+        enableLogging: true,
+        enableCaching: true,
+        enableGuardrails: false,
+    },
 );
 ```
 
 ## Testing
 
 The implementation includes comprehensive tests that verify:
+
 - All middleware components are properly defined
 - Middleware presets are correctly configured
 - Content filtering functionality works as expected
 
 Tests can be run with:
+
 ```bash
 bun test packages/ai/__tests__/middleware.test.ts
 ```

@@ -10,13 +10,13 @@ Regular errors are handled using standard try/catch blocks:
 import { generateText } from 'ai';
 
 try {
-  const { text } = await generateText({
-    model: 'openai/gpt-4.1',
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { text } = await generateText({
+        model: 'openai/gpt-4.1',
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 } catch (error) {
-  // Handle error appropriately
-  console.error('Error generating text:', error);
+    // Handle error appropriately
+    console.error('Error generating text:', error);
 }
 ```
 
@@ -30,17 +30,17 @@ For streams that don't support error chunks, errors are thrown as regular errors
 import { streamText } from 'ai';
 
 try {
-  const { textStream } = streamText({
-    model: 'openai/gpt-4.1',
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { textStream } = streamText({
+        model: 'openai/gpt-4.1',
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 
-  for await (const textPart of textStream) {
-    process.stdout.write(textPart);
-  }
+    for await (const textPart of textStream) {
+        process.stdout.write(textPart);
+    }
 } catch (error) {
-  // Handle streaming error
-  console.error('Error in text stream:', error);
+    // Handle streaming error
+    console.error('Error in text stream:', error);
 }
 ```
 
@@ -52,42 +52,42 @@ Full streams support error parts that can be handled along with other parts:
 import { streamText } from 'ai';
 
 try {
-  const { fullStream } = streamText({
-    model: 'openai/gpt-4.1',
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { fullStream } = streamText({
+        model: 'openai/gpt-4.1',
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 
-  for await (const part of fullStream) {
-    switch (part.type) {
-      case 'text-delta': {
-        process.stdout.write(part.textDelta);
-        break;
-      }
+    for await (const part of fullStream) {
+        switch (part.type) {
+            case 'text-delta': {
+                process.stdout.write(part.textDelta);
+                break;
+            }
 
-      case 'error': {
-        const error = part.error;
-        // Handle error specifically
-        console.error('Stream error:', error);
-        break;
-      }
+            case 'error': {
+                const error = part.error;
+                // Handle error specifically
+                console.error('Stream error:', error);
+                break;
+            }
 
-      case 'abort': {
-        // Handle stream abort
-        console.log('Stream was aborted');
-        break;
-      }
+            case 'abort': {
+                // Handle stream abort
+                console.log('Stream was aborted');
+                break;
+            }
 
-      case 'tool-error': {
-        const error = part.error;
-        // Handle tool error specifically
-        console.error('Tool error:', error);
-        break;
-      }
+            case 'tool-error': {
+                const error = part.error;
+                // Handle tool error specifically
+                console.error('Tool error:', error);
+                break;
+            }
+        }
     }
-  }
 } catch (error) {
-  // Handle any errors that occur outside of streaming
-  console.error('Error in full stream:', error);
+    // Handle any errors that occur outside of streaming
+    console.error('Error in full stream:', error);
 }
 ```
 
@@ -99,20 +99,20 @@ When streams are aborted (e.g., via chat stop button), use the `onAbort` callbac
 import { streamText } from 'ai';
 
 const { textStream } = streamText({
-  model: 'openai/gpt-4.1',
-  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  onAbort: ({ steps }) => {
-    // Update stored messages or perform cleanup
-    console.log('Stream aborted after', steps.length, 'steps');
-  },
-  onFinish: ({ steps, totalUsage }) => {
-    // This is called on normal completion
-    console.log('Stream completed normally');
-  },
+    model: 'openai/gpt-4.1',
+    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    onAbort: ({ steps }) => {
+        // Update stored messages or perform cleanup
+        console.log('Stream aborted after', steps.length, 'steps');
+    },
+    onFinish: ({ steps, totalUsage }) => {
+        // This is called on normal completion
+        console.log('Stream completed normally');
+    },
 });
 
 for await (const textPart of textStream) {
-  process.stdout.write(textPart);
+    process.stdout.write(textPart);
 }
 ```
 
@@ -122,19 +122,19 @@ You can also handle abort events directly in the stream:
 import { streamText } from 'ai';
 
 const { fullStream } = streamText({
-  model: 'openai/gpt-4.1',
-  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    model: 'openai/gpt-4.1',
+    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
 });
 
 for await (const chunk of fullStream) {
-  switch (chunk.type) {
-    case 'abort': {
-      // Handle abort directly in stream
-      console.log('Stream was aborted');
-      break;
+    switch (chunk.type) {
+        case 'abort': {
+            // Handle abort directly in stream
+            console.log('Stream was aborted');
+            break;
+        }
+            // ... handle other part types
     }
-    // ... handle other part types
-  }
 }
 ```
 

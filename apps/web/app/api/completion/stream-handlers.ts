@@ -1,4 +1,5 @@
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
+import { StreamingErrorHandler } from '@repo/ai/tools/streaming-error-utils';
 import { runWorkflow } from '@repo/ai/workflow';
 import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
@@ -6,7 +7,6 @@ import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/envir
 import type { Geo } from '@vercel/functions';
 import type { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
-import { StreamingErrorHandler } from '@repo/ai/tools/streaming-error-utils';
 
 // Track closed controllers to prevent infinite loops
 const closedControllers = new WeakSet<StreamController>();
@@ -199,7 +199,7 @@ export async function executeStream({
                 });
                 return;
             }
-            
+
             // Handle tool-error events specifically
             if (event === 'tool-error') {
                 sendMessage(controller, encoder, {
@@ -212,7 +212,7 @@ export async function executeStream({
                 });
                 return;
             }
-            
+
             // Handle abort events specifically
             if (event === 'abort') {
                 sendMessage(controller, encoder, {

@@ -38,16 +38,16 @@ import { dateStringToDate } from '@repo/shared/utils/zod-date-utils';
 
 // Create a schema with proper date handling
 const userSchema = z.object({
-  name: z.string(),
-  birthDate: dateStringToDate.describe('User\'s date of birth'),
-  createdAt: datetimeStringToDate.describe('When the user was created'),
+    name: z.string(),
+    birthDate: dateStringToDate.describe("User's date of birth"),
+    createdAt: datetimeStringToDate.describe('When the user was created'),
 });
 
 // Parse data - dates will be JavaScript Date objects
 const userData = {
-  name: "John Doe",
-  birthDate: "1990-01-01",
-  createdAt: "2023-01-01T10:00:00Z"
+    name: 'John Doe',
+    birthDate: '1990-01-01',
+    createdAt: '2023-01-01T10:00:00Z',
 };
 
 const parsedUser = userSchema.parse(userData);
@@ -61,7 +61,7 @@ import { debugAIResponse } from '@repo/ai/utils/debug-utils';
 
 // Use in development to debug AI SDK operations
 if (process.env.NODE_ENV === 'development') {
-  debugAIResponse(result, 'User profile extraction');
+    debugAIResponse(result, 'User profile extraction');
 }
 ```
 

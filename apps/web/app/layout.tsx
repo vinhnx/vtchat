@@ -216,7 +216,9 @@ export default function ParentLayout({
                                         <SubscriptionProvider>
                                             <PlusDefaultsProvider>
                                                 <RootProvider>
-                                                    <FumadocsRootProvider search={{ enabled: false }}>
+                                                    <FumadocsRootProvider
+                                                        search={{ enabled: false }}
+                                                    >
                                                         {/* React Scan for performance monitoring in development */}
                                                         <ReactScan />
                                                         {/* PWA Manager for install prompts and service worker */}

@@ -2,7 +2,7 @@
 import { ChatModeOptions } from '@repo/common/components';
 import { useAgentStream, useContextualFeedback, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import { type ChatMode, getChatModeName } from '@repo/shared/config';
+import { type ChatMode } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
 import {
     Alert,
@@ -15,16 +15,9 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
 } from '@repo/ui';
-import {
-    AlertCircle,
-    Check,
-    Clipboard,
-    FileText,
-    MessageCircleX,
-    RefreshCcw,
-    Trash2,
-} from 'lucide-react';
+import { AlertCircle, FileText, MessageCircleX, RefreshCcw } from 'lucide-react';
 import React, { forwardRef, useState } from 'react';
+import './message-actions.css';
 
 type MessageActionsProps = {
     threadItem: ThreadItem;
@@ -58,11 +51,11 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         );
         return (
             <div className='flex flex-col gap-2'>
-                <div className='flex flex-row items-center gap-1'>
+                <div className='message-actions-container flex w-full min-w-0 flex-row flex-wrap items-center gap-1 sm:gap-2'>
                     {threadItem?.answer?.text && (
                         <div className='relative'>
                             <CopyButton
-                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-2 sm:px-3 copy-button'
                                 onCopy={async () => {
                                     await copyFeedback.executeAction(async () => {
                                         if (ref && 'current' in ref && ref.current) {
@@ -91,7 +84,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                     {threadItem?.answer?.text && (
                         <div className='relative'>
                             <ContextualButton
-                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-2 sm:px-3 contextual-button'
                                 action={async () => {
                                     await markdownCopyFeedback.executeAction(async () => {
                                         // Get text content from the DOM element (same as regular copy)
@@ -103,7 +96,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
 
                                         // Build references section
                                         const referencesSection = threadItem?.sources?.length
-                                            ? `\n\n## References\n${
+                                            ? `\n## References\n${
                                                 threadItem.sources
                                                     .map((source) =>
                                                         `[${source.index}] ${source.link}`
@@ -127,6 +120,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                 idleIcon={<FileText className='h-4 w-4' strokeWidth={2} />}
                                 loadingText='Copying...'
                                 successText='Copied!'
+                                hideTextOnMobile
                             />
                             <ContextualNotification
                                 position='overlay'
@@ -147,11 +141,11 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                     size='sm'
                                     tooltip='Rewrite message'
                                     variant='secondary'
-                                    className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                                    className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-2 sm:px-3 dropdown-button'
                                 >
-                                    <div className='flex items-center gap-2'>
+                                    <div className='flex items-center gap-1 sm:gap-2'>
                                         <RefreshCcw className='h-4 w-4' strokeWidth={2} />
-                                        <span>Rewrite</span>
+                                        <span className='hidden sm:inline'>Rewrite</span>
                                     </div>
                                 </Button>
                             </DropdownMenuTrigger>
@@ -185,12 +179,13 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                             size='sm'
                             tooltip='Remove message'
                             variant='secondary'
-                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
+                            className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-2 sm:px-3 contextual-button'
                             idleIcon={<MessageCircleX className='h-4 w-4' strokeWidth={2} />}
                             idleText='Remove'
                             loadingText='Removing...'
                             successText='Removed!'
                             errorText='Failed'
+                            hideTextOnMobile
                         />
                     )}
                 </div>

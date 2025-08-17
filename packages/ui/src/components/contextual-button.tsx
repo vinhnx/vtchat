@@ -33,6 +33,7 @@ type ContextualButtonProps = ButtonProps & {
     showTextOnError?: boolean;
     resetDelay?: number;
     onStatusChange?: (status: ActionStatus) => void;
+    hideTextOnMobile?: boolean;
 };
 
 export function ContextualButton({
@@ -52,6 +53,7 @@ export function ContextualButton({
     className,
     children,
     disabled,
+    hideTextOnMobile,
     ...props
 }: ContextualButtonProps) {
     const [status, setStatus] = useState<ActionStatus>('idle');
@@ -138,7 +140,7 @@ export function ContextualButton({
                 >
                     {getCurrentIcon()}
                     {(getCurrentText() || children) && (
-                        <span className='truncate'>
+                        <span className={cn('truncate', hideTextOnMobile && 'hidden sm:inline')}>
                             {getCurrentText() || children}
                         </span>
                     )}

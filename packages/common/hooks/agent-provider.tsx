@@ -538,7 +538,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
 
                                 try {
                                     const data = JSON.parse(dataMatch[1]);
-                                    
+
                                     // Handle error events in the stream
                                     if (currentEvent === 'error') {
                                         const error = data.error || 'Unknown error occurred';
@@ -557,14 +557,14 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                                         });
                                         break;
                                     }
-                                    
+
                                     // Handle tool-error events
                                     if (currentEvent === 'tool-error') {
                                         const error = data.error || 'Tool execution failed';
                                         log.error({ error }, 'Tool error event received');
                                         // Continue processing but log the error
                                     }
-                                    
+
                                     // Handle abort events
                                     if (currentEvent === 'abort') {
                                         log.info('Stream abort event received');

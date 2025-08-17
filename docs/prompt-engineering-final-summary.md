@@ -13,11 +13,12 @@ We've successfully implemented several key prompt engineering best practices tha
 We've updated all AI calls to use `temperature: 0` to ensure deterministic and consistent results:
 
 - Updated `generateText` calls in `packages/ai/workflow/utils.ts`
-- Updated `generateObject` calls in `packages/ai/workflow/utils.ts` 
+- Updated `generateObject` calls in `packages/ai/workflow/utils.ts`
 - Updated structured extraction in `packages/ai/workflow/tasks/structured-extraction.ts`
 - Updated web search tools in `packages/ai/tools/openai-web-search.ts`
 
 Benefits:
+
 - More consistent outputs for the same inputs
 - Particularly important for tools requiring deterministic behavior (math calculations, structured data extraction, chart generation)
 
@@ -30,6 +31,7 @@ We've updated Zod schemas to use `.nullable()` instead of `.optional()` for bett
 - Updated web search tool parameters in `packages/ai/tools/openai-web-search.ts`
 
 Benefits:
+
 - Better compatibility with strict schema validation
 - More predictable parameter handling
 
@@ -41,6 +43,7 @@ We've ensured all tool parameters use semantically meaningful names with descrip
 - Used clear parameter names that indicate their function
 
 Benefits:
+
 - Improved code readability
 - Better understanding of parameter purposes
 - Easier maintenance and debugging
@@ -53,6 +56,7 @@ We've created utilities for proper date handling in Zod schemas:
 - Created example schemas in `packages/shared/utils/zod-date-examples.ts`
 
 Benefits:
+
 - Proper mapping between string dates (what models return) and JavaScript Date objects (what the application uses)
 - Consistent date handling across the application
 - Reusable utilities for date transformations
@@ -64,6 +68,7 @@ We've created utilities to inspect warnings and request bodies:
 - Created `packages/ai/utils/debug-utils.ts` for inspecting AI SDK warnings and request bodies
 
 Benefits:
+
 - Ability to identify unsupported features
 - Insight into raw HTTP request bodies
 - Better debugging capabilities for AI SDK operations

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 /**
  * Utility functions for handling Zod date transformations
- * These help with mapping between string dates (what models return) 
+ * These help with mapping between string dates (what models return)
  * and JavaScript Date objects (what the application uses)
  */
 
@@ -11,34 +11,34 @@ import { z } from 'zod';
  * Use this for date fields in your schemas when you need actual Date objects
  */
 export const dateStringToDate = z
-  .string()
-  .date()
-  .transform((value) => new Date(value));
+    .string()
+    .date()
+    .transform((value) => new Date(value));
 
 /**
  * Zod schema for datetime strings that transforms to JavaScript Date objects
  * Use this for datetime fields in your schemas when you need actual Date objects
  */
 export const datetimeStringToDate = z
-  .string()
-  .datetime()
-  .transform((value) => new Date(value));
+    .string()
+    .datetime()
+    .transform((value) => new Date(value));
 
 /**
  * Example usage in a schema:
- * 
+ *
  * const userSchema = z.object({
  *   name: z.string(),
  *   birthDate: dateStringToDate, // Will be a Date object after parsing
  *   lastLogin: datetimeStringToDate, // Will be a Date object after parsing
  * });
- * 
+ *
  * const result = userSchema.parse({
  *   name: "John Doe",
  *   birthDate: "1990-01-01",
  *   lastLogin: "2023-01-01T10:00:00Z"
  * });
- * 
+ *
  * console.log(result.birthDate instanceof Date); // true
  * console.log(result.lastLogin instanceof Date); // true
  */
@@ -48,8 +48,8 @@ export const datetimeStringToDate = z
  * Useful for filtering data by date ranges
  */
 export const dateRangeSchema = z.object({
-  startDate: dateStringToDate,
-  endDate: dateStringToDate,
+    startDate: dateStringToDate,
+    endDate: dateStringToDate,
 });
 
 /**
@@ -57,8 +57,8 @@ export const dateRangeSchema = z.object({
  * Useful for filtering data by datetime ranges
  */
 export const datetimeRangeSchema = z.object({
-  startDateTime: datetimeStringToDate,
-  endDateTime: datetimeStringToDate,
+    startDateTime: datetimeStringToDate,
+    endDateTime: datetimeStringToDate,
 });
 
 /**
@@ -66,7 +66,7 @@ export const datetimeRangeSchema = z.object({
  * Ensures consistent formatting across the application
  */
 export const formatDateToString = (date: Date): string => {
-  return date.toISOString().split('T')[0];
+    return date.toISOString().split('T')[0];
 };
 
 /**
@@ -74,5 +74,5 @@ export const formatDateToString = (date: Date): string => {
  * Ensures consistent formatting across the application
  */
 export const formatDateTimeToString = (date: Date): string => {
-  return date.toISOString();
+    return date.toISOString();
 };

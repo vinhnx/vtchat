@@ -1,15 +1,15 @@
 {
-  "types": {
-    "feat": { "title": "Features" },
-    "fix": { "title": "Bug Fixes" },
-    "perf": { "title": "Performance Improvements" },
-    "revert": { "title": "Reverts" },
-    "chore": { "title": "Chores" },
-    "docs": { "title": "Documentation" },
-    "style": { "title": "Styles" },
-    "refactor": { "title": "Refactors" },
-    "test": { "title": "Tests" },
-    "build": { "title": "Build System" },
-    "ci": { "title": "Continuous Integration" }
-  }
+    "types": {
+        "feat": { "title": "Features" },
+        "fix": { "title": "Bug Fixes" },
+        "perf": { "title": "Performance Improvements" },
+        "revert": { "title": "Reverts" },
+        "chore": { "title": "Chores" },
+        "docs": { "title": "Documentation" },
+        "style": { "title": "Styles" },
+        "refactor": { "title": "Refactors" },
+        "test": { "title": "Tests" },
+        "build": { "title": "Build System" },
+        "ci": { "title": "Continuous Integration" }
+    }
 }

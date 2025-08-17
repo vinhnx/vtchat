@@ -51,26 +51,31 @@ This document summarizes the improvements made to error handling in the VT Chat 
 ## Key Improvements
 
 ### 1. Better Error Categorization
+
 - Distinguish between regular errors, tool errors, and stream aborts
 - Provide specific error handling for each category
 - Emit appropriate events for different error types
 
 ### 2. Enhanced Stream Abort Handling
+
 - Added proper onAbort callback pattern
 - Clearer user feedback when streams are aborted
 - Better cleanup of resources on abort
 
 ### 3. Tool Error Handling
+
 - Specific handling for tool execution errors
 - Enhanced error reporting for tool failures
 - Proper categorization of tool-related issues
 
 ### 4. Improved User Feedback
+
 - More descriptive error messages
 - Better error categorization for user-friendly messages
 - Enhanced error suggestions based on error type
 
 ### 5. Documentation
+
 - Created comprehensive guide on error handling in VT Chat
 - Explained best practices following AI SDK patterns
 - Provided examples for different error handling scenarios
@@ -85,6 +90,7 @@ The implementation follows the AI SDK error handling patterns:
 4. **Tool Error Handling**: Specific handling for tool execution errors
 
 These improvements ensure that:
+
 - Errors are properly categorized and handled
 - Users receive meaningful error messages
 - Resources are properly cleaned up on abort

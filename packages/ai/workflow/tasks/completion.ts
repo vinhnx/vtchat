@@ -544,7 +544,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         return;
                     }
                 }
-                
+
                 // Handle tool errors specifically
                 if (errorMessage.includes('tool')) {
                     events?.update('tool-error', (_prev) => ({
@@ -597,7 +597,10 @@ Tool output JSON:\n\n${
                 // Debug the fallback response if in development
                 if (process.env.NODE_ENV === 'development') {
                     const { debugAIResponse } = await import('../../utils/debug-utils');
-                    debugAIResponse({ warnings: [], request: { body: null } }, 'Fallback generateText');
+                    debugAIResponse(
+                        { warnings: [], request: { body: null } },
+                        'Fallback generateText',
+                    );
                 }
 
                 if (fallback && fallback.trim().length > 0) {

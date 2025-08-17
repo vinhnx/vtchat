@@ -1,0 +1,49 @@
+/* Mobile optimizations for message actions */
+@media (max-width: 640px) {
+  .message-actions-container {
+    gap: 0.5rem !important;
+  }
+  
+  .message-actions-container .button-text {
+    display: none !important;
+  }
+  
+  .message-actions-container .button-icon-only {
+    padding: 0.25rem !important;
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  
+  .message-actions-container .contextual-button {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    min-width: auto !important;
+  }
+  
+  .message-actions-container .dropdown-button {
+    padding: 0.25rem 0.5rem !important;
+  }
+  
+  .message-actions-container .dropdown-button span {
+    display: none !important;
+  }
+  
+  .message-actions-container .dropdown-button svg {
+    margin-right: 0 !important;
+  }
+  
+  .message-actions-container .copy-button {
+    padding: 0.25rem !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: auto !important;
+  }
+  
+  .message-actions-container .copy-button span {
+    display: none !important;
+  }
+  
+  .message-actions-container .copy-button svg {
+    margin-right: 0 !important;
+  }
+}
