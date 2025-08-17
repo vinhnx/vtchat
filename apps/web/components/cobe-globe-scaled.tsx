@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from 'react';
 import createGlobe from 'cobe';
+import { useEffect, useRef } from 'react';
 
 // Convert hex to normalized RGB tuple [0..1]
 function hexToRgbNorm(hex: string): [number, number, number] {

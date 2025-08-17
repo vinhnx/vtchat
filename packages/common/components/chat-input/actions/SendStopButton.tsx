@@ -5,6 +5,8 @@ import { Button } from '@repo/ui';
 import { cn } from '@repo/ui/src/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, CircleStop, Clock, Square } from 'lucide-react';
+import { ZRotationLoader } from '../../z-rotation-loader'; // Import ZRotationLoader
+import { createAnticipation, createSquashStretch, ANIMATION_DURATION, EASING } from '@repo/ui/src/lib/animation-utils';
 import { ICON_SIZES } from '../config/constants';
 
 interface SendStopButtonProps {
@@ -42,17 +44,40 @@ export function SendStopButton({
         return 'Stop Generation';
     };
 
+    // PRINCIPLE 2: ANTICIPATION - Create anticipatory variants
+    const anticipationVariants = createAnticipation('up');
+    
     return (
         <div className='flex flex-row items-center gap-2'>
             <AnimatePresence initial={false} mode='wait'>
                 {isGenerating
                     ? (
                         <motion.div
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            variants={{
+                                initial: { scale: 0.9, opacity: 0, y: 5 },
+                                animate: { 
+                                    scale: 1, 
+                                    opacity: 1, 
+                                    y: 0,
+                                    transition: {
+                                        duration: ANIMATION_DURATION.normal / 1000,
+                                        ease: EASING.spring,
+                                    }
+                                },
+                                exit: { 
+                                    scale: 0.8, 
+                                    opacity: 0, 
+                                    y: -5,
+                                    transition: {
+                                        duration: ANIMATION_DURATION.quick / 1000,
+                                        ease: EASING.easeIn,
+                                    }
+                                }
+                            }}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
                             key='stop-button'
-                            transition={{ duration: 0.2 }}
                         >
                             <Button
                                 aria-label='Stop Generation'
@@ -67,42 +92,67 @@ export function SendStopButton({
                                         : 'hover:bg-muted-foreground/10',
                                 )}
                                 disabled={isGenerating && showTimeoutIndicator}
+                                animationType="squash"
                             >
-                                {showTimeoutIndicator
-                                    ? <Clock size={ICON_SIZES.small} strokeWidth={2} />
-                                    : isGenerating
-                                    ? (
-                                        <CircleStop
-                                            size={ICON_SIZES.small}
-                                            strokeWidth={2}
-                                            className='animate-spin'
-                                        />
-                                    )
-                                    : <Square size={ICON_SIZES.small} strokeWidth={2} />}
+                                {/* Use ZRotationLoader for the stop button animation */}
+                                {showTimeoutIndicator ? (
+                                    <Clock size={ICON_SIZES.small} strokeWidth={2} />
+                                ) : isGenerating ? (
+                                    <ZRotationLoader size="xs" speed="fast" />
+                                ) : (
+                                    <Square size={ICON_SIZES.small} strokeWidth={2} />
+                                )}
                             </Button>
                         </motion.div>
                     )
                     : (
                         <motion.div
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            variants={{
+                                ...anticipationVariants,
+                                animate: {
+                                    ...anticipationVariants.animate,
+                                    // PRINCIPLE 12: APPEAL - Slight float when ready
+                                    y: hasTextInput ? [0, -1, 0] : 0,
+                                    transition: {
+                                        ...anticipationVariants.animate?.transition,
+                                        y: hasTextInput ? {
+                                            duration: 2,
+                                            repeat: Number.POSITIVE_INFINITY,
+                                            ease: 'easeInOut'
+                                        } : {}
+                                    }
+                                }
+                            }}
+                            initial="initial" 
+                            animate="animate"
+                            exit="exit"
                             key='send-button'
-                            transition={{ duration: 0.2 }}
                         >
                             <Button
                                 aria-label='Send Message'
                                 disabled={!hasTextInput}
                                 onClick={(e) => {
-                                    e.preventDefault(); // Prevent any default behavior
+                                    e.preventDefault();
                                     sendMessage();
                                 }}
                                 size='icon-sm'
                                 tooltip='Send Message'
                                 variant='default'
-                                className='hover:bg-muted-foreground/10 transition-all duration-200'
+                                className={cn(
+                                    'hover:bg-muted-foreground/10 transition-all duration-200',
+                                    hasTextInput && 'hover:shadow-lg hover:shadow-primary/20'
+                                )}
+                                animationType="secondary"
                             >
-                                <ArrowUp size={ICON_SIZES.small} strokeWidth={2} />
+                                {/* PRINCIPLE 2: ANTICIPATION - Arrow shows readiness with slight prep */}
+                                <motion.div
+                                    animate={hasTextInput ? {
+                                        y: [-0.5, 0.5, -0.5],
+                                        transition: { duration: 2, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }
+                                    } : {}}
+                                >
+                                    <ArrowUp size={ICON_SIZES.small} strokeWidth={2} />
+                                </motion.div>
                             </Button>
                         </motion.div>
                     )}

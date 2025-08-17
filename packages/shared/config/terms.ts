@@ -22,7 +22,7 @@ VT is an independent AI wrapper platform that provides user-friendly interfaces 
 - **Intelligent Tool Router**: AI-powered semantic routing automatically activates tools based on query intent
 - **Advanced Features**: Chart visualization, reasoning mode, document processing, web search integration
 - **Subscription Tiers**: VT_BASE (free) and VT_PLUS (premium) with clear feature differentiation
-- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite (20/day), 2.5 Flash (10/day), and 2.5 Pro (5/day), with daily request limits. VT+ users receive higher limits and access to expanded Gemini models plus exclusive research features (Pro Search: 20/day, Deep Research: 10/day).
+- **Free Gemini Model**: All logged-in users get free access to a range of Gemini models, including 2.5 Flash Lite (20/day), 2.5 Flash (10/day), and 2.5 Pro (5/day), with daily request limits. VT+ users receive higher limits and access to expanded Gemini models plus exclusive research features (Pro Search: 50/day, Deep Research: 25/day).
 - **Local Privacy**: Zero server-side storage of chat data for maximum privacy
 - **Mathematical Tools**: Built-in calculator with advanced mathematical functions
 - **Document Processing**: Upload and analyze various document formats (Free feature)
@@ -120,8 +120,8 @@ VT_BASE is our free tier for logged-in users that includes:
 VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** that includes:
 - **All Free Tier Features**: Complete access to all premium AI models and advanced features
 - **Two Exclusive Research Features with Daily Quotas**:
-  - **Enhanced Web Search (PRO_SEARCH)**: 20 requests per day (resets at 00:00 UTC)
-  - **Deep Research (DEEP_RESEARCH)**: 10 requests per day (resets at 00:00 UTC)
+  - **Enhanced Web Search (PRO_SEARCH)**: 50 requests per day (resets at 00:00 UTC)
+  - **Deep Research (DEEP_RESEARCH)**: 25 requests per day (resets at 00:00 UTC)
 - **Expanded Gemini Access**: VT+ subscribers receive expanded, server-funded access to all Gemini models, including Gemini 2.5 Pro (25 requests/day), Gemini 2.5 Flash (50 requests/day), and Gemini 2.5 Flash Lite (100 requests/day), all without needing your own API keys.
 - **Priority Support**: Enhanced customer support
 - **Daily Reset Schedule**: Pro Search and Deep Research quotas reset every day at 00:00 UTC to provide consistent daily usage

@@ -1,9 +1,9 @@
 'use client';
 
+import { CobeGlobe } from '@/components/cobe-globe';
 import { LoginForm } from '@/components/login-form';
 import { ShineText } from '@repo/common/components';
 import { motion } from 'framer-motion';
-import { CobeGlobe } from '@/components/cobe-globe';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

@@ -24,7 +24,7 @@ import {
 } from '@repo/ui';
 import { Brain, Globe, Wrench } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoginRequiredDialog } from '../../../login-required-dialog';
 import { chatOptions, modelOptions, modelOptionsByProvider } from '../../chat-config';
 import { getIconByName } from '../../config/icons';
@@ -54,6 +54,9 @@ export function ChatModeOptions({
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
     const isVtPlus = useVtPlusAccess();
+
+    // Animation state for dropdown items
+    const [isAnimating, setIsAnimating] = useState(false);
 
     // Helper function to check if a mode is gated (replaces useChatModeAccess hook logic)
     const isModeGated = (mode: ChatMode) => {
@@ -207,11 +210,18 @@ export function ChatModeOptions({
         handleModeSelect(mode);
     };
 
+    // Trigger animation when component mounts
+    useEffect(() => {
+        setIsAnimating(true);
+        const timer = setTimeout(() => setIsAnimating(false), 300);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <>
             <DropdownMenuContent
                 align='start'
-                className='no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px]'
+                className='no-scrollbar max-h-[300px] w-[320px] touch-pan-y overflow-y-auto overscroll-contain md:w-[300px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-90 data-[state=open]:zoom-in-90 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 duration-300 origin-[var(--radix-dropdown-menu-content-transform-origin)]'
                 side='bottom'
             >
                 {/* Search input (filters Models section) */}
@@ -227,16 +237,21 @@ export function ChatModeOptions({
                 </div>
                 <DropdownMenuGroup>
                     <DropdownMenuLabel>Advanced Mode</DropdownMenuLabel>
-                    {chatOptions.map((option) => {
+                    {chatOptions.map((option, index) => {
                         return (
                             <DropdownMenuItem
                                 className={cn(
-                                    'h-auto',
+                                    'h-auto transition-all duration-200 ease-out',
+                                    isAnimating
+                                        && 'animate-in slide-in-from-left-1 fade-in-0 duration-300',
                                     option.value === _chatMode
                                         && 'border-muted-foreground/30 border',
                                 )}
                                 key={`advanced-${option.value}`}
                                 onSelect={() => handleDropdownSelect(option.value)}
+                                style={{
+                                    animationDelay: isAnimating ? `${index * 30}ms` : '0ms',
+                                }}
                             >
                                 <div className='flex w-full flex-row items-start gap-1.5 px-1.5 py-1.5'>
                                     <div className='flex flex-col gap-0 pt-1'>
@@ -300,21 +315,32 @@ export function ChatModeOptions({
                             );
                         }
 
+                        // Flatten all options for animation indexing
+                        let optionIndex = chatOptions.length; // Start after chat options
+
                         return visible.map(([providerName, options]) => (
                             <div key={providerName}>
                                 <DropdownMenuLabel className='text-muted-foreground py-1 pl-2 text-xs font-normal'>
                                     {providerName}
                                 </DropdownMenuLabel>
                                 {options.map((option) => {
+                                    optionIndex++;
                                     return (
                                         <DropdownMenuItem
                                             className={cn(
-                                                'h-auto pl-4',
+                                                'h-auto pl-4 transition-all duration-200 ease-out',
+                                                isAnimating
+                                                    && 'animate-in slide-in-from-left-1 fade-in-0 duration-300',
                                                 option.value === _chatMode
                                                     && 'border-muted-foreground/30 border',
                                             )}
                                             key={`model-${option.value}`}
                                             onSelect={() => handleDropdownSelect(option.value)}
+                                            style={{
+                                                animationDelay: isAnimating
+                                                    ? `${optionIndex * 30}ms`
+                                                    : '0ms',
+                                            }}
                                         >
                                             <div className='flex w-full flex-row items-center gap-2.5 px-1.5 py-1.5'>
                                                 {(option as any).providerIcon && (

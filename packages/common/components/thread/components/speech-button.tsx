@@ -131,7 +131,10 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
             title={isSpeaking ? 'Stop speaking' : 'Read aloud'}
             disabled={isSpeaking}
         >
-            {isSpeaking ? <VolumeX className='h-4 w-4' /> : <Volume2 className='h-4 w-4' />}
+            <div className='flex items-center gap-2'>
+                {isSpeaking ? <VolumeX className='h-4 w-4' /> : <Volume2 className='h-4 w-4' />}
+                <span>{isSpeaking ? 'Stop' : 'Read Aloud'}</span>
+            </div>
         </Button>
     );
 };

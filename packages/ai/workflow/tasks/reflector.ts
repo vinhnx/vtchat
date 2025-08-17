@@ -111,7 +111,7 @@ Current date: ${getHumanizedDate()}
             model: selectedModel,
             schema: z.object({
                 reasoning: z.string(),
-                queries: z.array(z.string()).optional().nullable(),
+                queries: z.array(z.string()).nullish(),
             }),
             byokKeys,
             messages: messages as any,

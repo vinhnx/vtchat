@@ -12,11 +12,11 @@ describe('VT+ Configuration', () => {
     describe('VT+ Limits', () => {
         it('should have correct default limits with windows', () => {
             expect(VT_PLUS_LIMITS[VtPlusFeature.DEEP_RESEARCH]).toEqual({
-                limit: 10,
+                limit: 25,
                 window: QUOTA_WINDOW.DAILY,
             });
             expect(VT_PLUS_LIMITS[VtPlusFeature.PRO_SEARCH]).toEqual({
-                limit: 20,
+                limit: 50,
                 window: QUOTA_WINDOW.DAILY,
             });
         });

@@ -2,6 +2,7 @@ export * from './agent-provider';
 export * from './use-admin';
 export * from './use-animate-text';
 export * from './use-clipboard';
+export * from './use-contextual-feedback';
 export * from './use-copy-text';
 export * from './use-debounced';
 export * from './use-document-attachment';

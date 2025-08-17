@@ -9,6 +9,13 @@ import {
     Announcement,
     AnnouncementTag,
     AnnouncementTitle,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    InternalLinks,
     TypographyH2,
     TypographyH3,
     TypographyMuted,
@@ -112,10 +119,37 @@ export function PricingClient() {
         return `Upgrade to ${PRICING_CONFIG.product.name}`;
     };
 
+    const internalLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/terms', label: 'Terms' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/pricing', label: 'VT+' },
+        { href: '/hello', label: 'Hello' },
+        { href: '/help', label: 'Help' },
+        { href: '/feedback', label: 'Feedback' },
+        { href: '/about', label: 'About' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/ai-glossary', label: 'AI Glossary' },
+        { href: '/ai-resources', label: 'AI Resources' },
+    ];
+
     return (
         <div className='relative min-h-dvh w-full'>
             <h1 className='sr-only'>Pricing</h1>
             <div className='container relative z-10 mx-auto px-2 py-4 pt-8 md:px-4 md:py-8 md:pt-16'>
+                <div className='mb-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Pricing</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
                 {/* Hero Section */}
                 <div className='mb-4 space-y-3 pt-4 text-center md:mb-8 md:pt-8'>
                     <div className='space-y-2 md:space-y-3'>
@@ -357,6 +391,7 @@ export function PricingClient() {
                         </a>
                     </p>
                 </div>
+                <InternalLinks links={internalLinks} />
             </div>
         </div>
     );

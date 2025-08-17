@@ -28,7 +28,6 @@ import { Steps } from './components/goals';
 import { MessageActions } from './components/message-actions';
 import { QuestionPrompt } from './components/question-prompt';
 import { SourceGrid } from './components/source-grid';
-import { SpeechButton } from './components/speech-button';
 import { UserMessage } from './components/user-message';
 
 export const ThreadItem = memo(
@@ -288,12 +287,8 @@ export const ThreadItem = memo(
                             || threadItem.status === 'ABORTED'
                             || threadItem.status === 'ERROR'
                             || (!isGenerating && hasAnswer)) && ( // Show for completed threads or non-generating threads with answers
-                                <div className='mb-4 mt-2 flex flex-col gap-1'>
-                                    <div className='flex items-center gap-2'>
-                                        <SpeechButton
-                                            text={threadItem.answer?.text || ''}
-                                            className='h-8 px-3'
-                                        />
+                                <>
+                                    <div className='mb-4 mt-2 flex flex-col gap-2'>
                                         <MessageActions
                                             isLast={isLast}
                                             ref={messageRef}
@@ -322,7 +317,7 @@ export const ThreadItem = memo(
                                     )}
 
                                     {/* Footer sources removed to avoid duplication; shown above under MDX content */}
-                                </div>
+                                </>
                             )}
                         {/* Follow-up suggestions are disabled entirely */}
                     </div>

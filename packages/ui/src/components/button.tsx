@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 import { Tooltip } from './tooltip';
 
 const buttonVariants = cva(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm transition-colors duration-200 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 btn-hover-effect',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm transition-colors duration-200 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 btn-hover-effect select-none',
     {
         variants: {
             variant: {
@@ -45,11 +45,26 @@ export interface ButtonProps
     tooltip?: string;
     tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
     roundedSm?: 'sm' | 'md' | 'lg' | 'full';
+    // Animation enhancements following 12 Principles
+    animationType?: 'none' | 'gentle' | 'squash' | 'secondary';
+    anticipation?: boolean;
+    // Remove motionProps since we're not importing MotionProps directly
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
-        { className, variant, size, asChild = false, tooltip, tooltipSide, roundedSm, ...props },
+        { 
+            className, 
+            variant, 
+            size, 
+            asChild = false, 
+            tooltip, 
+            tooltipSide, 
+            roundedSm,
+            animationType = 'gentle',
+            anticipation = false,
+            ...props 
+        },
         ref,
     ) => {
         const Comp = asChild ? SlotPrimitive.Slot : 'button';
@@ -63,8 +78,36 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             }[roundedSm]
             : '';
 
+        // Apply animation principles based on type
+        const getAnimationProps = (): Partial<MotionProps> => {
+            if (animationType === 'none') return {};
+
+            const baseProps: Partial<MotionProps> = {
+                ...ANIMATION_MOTION_VARIANTS.buttonPress,
+                whileHover: { scale: 1.02 },
+                ...motionProps,
+            };
+
+            switch (animationType) {
+                case 'squash':
+                    return {
+                        ...baseProps,
+                        ...createSquashStretch('subtle'),
+                    };
+                case 'secondary':
+                    return {
+                        ...baseProps,
+                        ...createSecondaryAction('glow'),
+                    };
+                case 'gentle':
+                default:
+                    return baseProps;
+            }
+        };
+
+        // Enhanced button with animation principles
         const buttonElement = (
-            <Comp
+            <button
                 className={cn(buttonVariants({ variant, size }), roundedClass, className)}
                 ref={ref}
                 {...props}

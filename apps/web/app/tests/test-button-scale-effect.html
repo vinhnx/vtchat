@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Scale Effect Test</title>
+    <style>
+        body {
+            padding: 40px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        
+        .test-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            margin: 8px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out, transform 0.15s ease-in-out;
+        }
+        
+        .test-button:hover {
+            background: #f3f4f6;
+        }
+        
+        .test-button:active {
+            background: #e5e7eb;
+            transform: scale(0.98);
+        }
+        
+        .test-section {
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <h1>Button Scale Effect Test</h1>
+    
+    <div class="test-section">
+        <h2>Basic Button</h2>
+        <button class="test-button">Click me to test scale effect</button>
+        <button class="test-button">Another button</button>
+        <button class="test-button">And one more</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Instructions</h2>
+        <p>Click and hold any button above to see the scale down effect (should scale to 0.98 with smooth transition).</p>
+        <p>The effect should be subtle but noticeable, making the interface feel more responsive.</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Button scale effect test page loaded');
+            
+            // Add click handlers for demo
+            const buttons = document.querySelectorAll('.test-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('Button clicked:', this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

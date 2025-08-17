@@ -1,8 +1,8 @@
-/* Enhanced hover effects for VT Chat components - Soft Alpha Adaptive */
+/* Enhanced hover effects for VT Chat components - Following 12 Principles of Animation */
 
-/* Button hover effects */
+/* Button hover effects - PRINCIPLE 6: SLOW IN & SLOW OUT */
 .btn-hover-effect {
-    transition: all 0.2s ease-in-out;
+    transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     z-index: 1;
 }
@@ -13,6 +13,7 @@
 
 .btn-hover-effect:active {
     background-color: rgba(var(--foreground-rgb), 0.05);
+    transform: scale(0.98);
 }
 
 .dark .btn-hover-effect:hover {
@@ -21,12 +22,13 @@
 
 .dark .btn-hover-effect:active {
     background-color: rgba(255, 255, 255, 0.08);
+    transform: scale(0.98);
 }
 
-/* Link hover effects */
+/* Link hover effects - PRINCIPLE 7: ARCS & PRINCIPLE 2: ANTICIPATION */
 .link-hover-effect {
     position: relative;
-    transition: opacity 0.2s ease;
+    transition: opacity 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .link-hover-effect::after {
@@ -38,7 +40,7 @@
     left: 0;
     background-color: currentColor;
     opacity: 0.7;
-    transition: width 0.3s ease;
+    transition: width 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .link-hover-effect:hover {
@@ -69,16 +71,25 @@
 /* Icon button hover effects */
 .icon-btn-hover {
     transition:
-        background-color 0.2s ease,
-        opacity 0.2s ease;
+        background-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.15s ease-in-out;
 }
 
 .icon-btn-hover:hover {
     background-color: rgba(var(--foreground-rgb), 0.04);
 }
 
+.icon-btn-hover:active {
+    transform: scale(0.98);
+}
+
 .dark .icon-btn-hover:hover {
     background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark .icon-btn-hover:active {
+    transform: scale(0.98);
 }
 
 /* Input hover effects */
@@ -135,6 +146,7 @@
 .premium-btn-hover {
     position: relative;
     overflow: hidden;
+    transition: all 0.15s ease-in-out, transform 0.15s ease-in-out;
 }
 
 .premium-btn-hover::before {
@@ -156,8 +168,16 @@
     background-color: rgba(var(--foreground-rgb), 0.02);
 }
 
+.premium-btn-hover:active {
+    transform: scale(0.98);
+}
+
 .dark .premium-btn-hover:hover {
     background-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark .premium-btn-hover:active {
+    transform: scale(0.98);
 }
 
 /* Sidebar item hover effects */
