@@ -1,7 +1,7 @@
 'use client';
 
-import { cn } from '@repo/ui/lib/utils';
-import { Button, type ButtonProps } from '@repo/ui/src/components/button';
+import { cn } from '../lib/utils';
+import { Button, type ButtonProps } from './button';
 import { AnimatePresence, motion } from 'framer-motion';
 import { 
     Check, 
@@ -118,7 +118,7 @@ export function ContextualButton({
         <Button
             {...props}
             className={cn(
-                'transition-colors duration-200',
+                'transition-colors duration-200 min-w-max',
                 status === 'success' && 'text-green-600 border-green-200 dark:text-green-400 dark:border-green-800',
                 className
             )}
@@ -129,15 +129,18 @@ export function ContextualButton({
             <AnimatePresence mode='wait'>
                 <motion.span
                     animate={{ scale: 1, opacity: 1 }}
-                    className='flex items-center gap-2'
+                    className='flex items-center gap-2 min-w-0'
                     exit={{ scale: 0.8, opacity: 0 }}
                     initial={{ scale: 0.8, opacity: 0 }}
                     key={status}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
                 >
                     {getCurrentIcon()}
-                    {getCurrentText() && <span>{getCurrentText()}</span>}
-                    {!getCurrentText() && children}
+                    {(getCurrentText() || children) && (
+                        <span className='truncate'>
+                            {getCurrentText() || children}
+                        </span>
+                    )}
                 </motion.span>
             </AnimatePresence>
         </Button>
@@ -148,6 +151,7 @@ export function ContextualButton({
 export function CopyButton({
     onCopy,
     text,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onCopy?: () => Promise<void> | void;
@@ -167,6 +171,7 @@ export function CopyButton({
     return (
         <ContextualButton
             action={handleCopy}
+            className={cn('min-w-[100px]', className)}
             errorText='Failed'
             idleIcon={<Clipboard size={16} strokeWidth={2} />}
             idleText='Copy'
@@ -180,6 +185,7 @@ export function CopyButton({
 
 export function SaveButton({
     onSave,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onSave: () => Promise<void> | void;
@@ -187,6 +193,7 @@ export function SaveButton({
     return (
         <ContextualButton
             action={onSave}
+            className={cn('min-w-[100px]', className)}
             errorText='Save failed'
             idleIcon={<Save size={16} strokeWidth={2} />}
             idleText='Save'
@@ -200,6 +207,7 @@ export function SaveButton({
 
 export function DownloadButton({
     onDownload,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onDownload: () => Promise<void> | void;
@@ -207,6 +215,7 @@ export function DownloadButton({
     return (
         <ContextualButton
             action={onDownload}
+            className={cn('min-w-[100px]', className)}
             errorText='Download failed'
             idleIcon={<Download size={16} strokeWidth={2} />}
             idleText='Download'
@@ -220,6 +229,7 @@ export function DownloadButton({
 
 export function ShareButton({
     onShare,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onShare: () => Promise<void> | void;
@@ -227,6 +237,7 @@ export function ShareButton({
     return (
         <ContextualButton
             action={onShare}
+            className={cn('min-w-[100px]', className)}
             errorText='Share failed'
             idleIcon={<Share size={16} strokeWidth={2} />}
             idleText='Share'
@@ -241,6 +252,7 @@ export function ShareButton({
 export function LikeButton({
     onLike,
     isLiked = false,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onLike: () => Promise<void> | void;
@@ -249,6 +261,7 @@ export function LikeButton({
     return (
         <ContextualButton
             action={onLike}
+            className={cn('min-w-[100px]', className)}
             errorText='Failed'
             idleIcon={<Heart size={16} strokeWidth={2} fill={isLiked ? 'currentColor' : 'none'} />}
             idleText={isLiked ? 'Liked' : 'Like'}
@@ -264,6 +277,7 @@ export function LikeButton({
 export function BookmarkButton({
     onBookmark,
     isBookmarked = false,
+    className,
     ...props
 }: Omit<ContextualButtonProps, 'action' | 'idleIcon' | 'successIcon'> & {
     onBookmark: () => Promise<void> | void;
@@ -272,6 +286,7 @@ export function BookmarkButton({
     return (
         <ContextualButton
             action={onBookmark}
+            className={cn('min-w-[100px]', className)}
             errorText='Failed'
             idleIcon={<Bookmark size={16} strokeWidth={2} fill={isBookmarked ? 'currentColor' : 'none'} />}
             idleText={isBookmarked ? 'Bookmarked' : 'Bookmark'}

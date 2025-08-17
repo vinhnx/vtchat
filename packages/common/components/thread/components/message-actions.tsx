@@ -12,6 +12,7 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
     CopyButton,
+    ContextualButton,
     ContextualNotification,
 } from '@repo/ui';
 import {
@@ -57,7 +58,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         );
         return (
             <div className='flex flex-col gap-2'>
-                <div className='flex flex-row items-center gap-1 py-2'>
+                <div className='flex flex-row items-center gap-1'>
                     {threadItem?.answer?.text && (
                         <div className='relative'>
                             <CopyButton
@@ -89,10 +90,9 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
 
                     {threadItem?.answer?.text && (
                         <div className='relative'>
-                            <CopyButton
+                            <ContextualButton
                                 className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
-                                idleIcon={<FileText className='h-4 w-4' strokeWidth={2} />}
-                                onCopy={async () => {
+                                action={async () => {
                                     await markdownCopyFeedback.executeAction(async () => {
                                         // Get text content from the DOM element (same as regular copy)
                                         let textContent = '';
@@ -113,10 +113,15 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                                         if (!success) throw new Error('Markdown copy failed');
                                     });
                                 }}
-                                size='icon-sm'
+                                size='sm'
                                 tooltip='Copy as Markdown'
                                 variant='secondary'
                                 resetDelay={1500}
+                                errorText='Failed'
+                                idleText='Copy Markdown'
+                                idleIcon={<FileText className='h-4 w-4' strokeWidth={2} />}
+                                loadingText='Copying...'
+                                successText='Copied!'
                             />
                             <ContextualNotification
                                 position='overlay'
@@ -134,12 +139,15 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
-                                    size='icon-sm'
-                                    tooltip='Rewrite'
+                                    size='sm'
+                                    tooltip='Rewrite message'
                                     variant='secondary'
                                     className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
                                 >
-                                    <RefreshCcw className='h-4 w-4' strokeWidth={2} />
+                                    <div className='flex items-center gap-2'>
+                                        <RefreshCcw className='h-4 w-4' strokeWidth={2} />
+                                        <span>Rewrite</span>
+                                    </div>
                                 </Button>
                             </DropdownMenuTrigger>
                             <ChatModeOptions
@@ -165,26 +173,23 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
                     )}
 
                     {isLast && (
-                        <Button
-                            onClick={() => {
+                        <ContextualButton
+                            action={() => {
                                 removeThreadItem(threadItem.id);
                             }}
-                            size='icon-sm'
-                            tooltip='Remove'
+                            size='sm'
+                            tooltip='Remove message'
                             variant='secondary'
                             className='bg-muted/30 text-muted-foreground hover:bg-muted h-8 rounded-md border px-3'
-                        >
-                            <MessageCircleX className='h-4 w-4' strokeWidth={2} />
-                        </Button>
-                    )}
-                    {threadItem.mode && (
-                        <p className='text-muted-foreground px-2 text-xs'>
-                            Generated with {getChatModeName(threadItem.mode)}
-                            {threadItem.model ? ` using ${threadItem.model}` : ''}
-                        </p>
+                            idleIcon={<MessageCircleX className='h-4 w-4' strokeWidth={2} />}
+                            idleText='Remove'
+                            loadingText='Removing...'
+                            successText='Removed!'
+                            errorText='Failed'
+                        />
                     )}
                 </div>
-
+                
                 {/* Gated Feature Alert */}
                 {gatedFeatureAlert && (
                     <Alert>

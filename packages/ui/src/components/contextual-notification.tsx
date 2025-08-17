@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@repo/ui/lib/utils';
+import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, AlertCircle, Info, X, CheckCircle2 } from 'lucide-react';
