@@ -24,7 +24,9 @@
         "./workflow/tasks/gemini-web-search": "./workflow/tasks/gemini-web-search.ts",
         "./worker": "./worker/index.ts",
         "./constants/reasoning": "./constants/reasoning.ts",
-        "./cache": "./cache/gemini-cache.ts"
+        "./cache": "./cache/gemini-cache.ts",
+        "./middleware": "./middleware/index.ts",
+        "./middleware/config": "./middleware/config.ts"
     },
     "dependencies": {
         "@ai-sdk/anthropic": "^1.2.12",

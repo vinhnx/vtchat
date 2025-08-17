@@ -11,6 +11,9 @@ export * from './registry';
 // Enhanced streaming utilities
 export * from './streaming-utils';
 
+// Middleware exports
+export * from '../middleware';
+
 import { type ModelEnum, supportsOpenAIWebSearch as modelSupportsOpenAIWebSearch } from '../models';
 import { openaiWebSearchTool } from './openai-web-search';
 

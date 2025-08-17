@@ -9,6 +9,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
 import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
+import { getMiddlewareForContext, type MiddlewareConfig } from './middleware/config';
 export const Providers = {
     OPENAI: 'openai',
     ANTHROPIC: 'anthropic',
@@ -288,6 +289,7 @@ export const getLanguageModel = (
     cachedContent?: string,
     claude4InterleavedThinking?: boolean,
     isVtPlus?: boolean,
+    middlewareConfig?: MiddlewareConfig,
 ) => {
     log.info('=== getLanguageModel START ===');
     log.info('Parameters:', {
@@ -365,11 +367,19 @@ export const getLanguageModel = (
                     hasCachedContent: !!cachedContent,
                 });
 
-                if (middleware) {
-                    log.info('Wrapping model with middleware...');
+                // Combine provided middleware with our configured middleware
+                const allMiddleware = [
+                    ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
+                    ...getMiddlewareForContext(m, middlewareConfig),
+                ];
+                
+                if (allMiddleware.length > 0) {
+                    log.info('Wrapping model with middleware...', {
+                        middlewareCount: allMiddleware.length,
+                    });
                     return wrapLanguageModel({
                         model: selectedModel,
-                        middleware,
+                        middleware: allMiddleware,
                     }) as LanguageModelV1;
                 }
                 return selectedModel as LanguageModelV1;
@@ -413,11 +423,19 @@ export const getLanguageModel = (
                 modelName: model?.name,
             });
 
-            if (middleware) {
-                log.info('Wrapping model with middleware...');
+            // Combine provided middleware with our configured middleware
+            const allMiddleware = [
+                ...(middleware ? (Array.isArray(middleware) ? middleware : [middleware]) : []),
+                ...getMiddlewareForContext(m, middlewareConfig),
+            ];
+            
+            if (allMiddleware.length > 0) {
+                log.info('Wrapping model with middleware...', {
+                    middlewareCount: allMiddleware.length,
+                });
                 return wrapLanguageModel({
                     model: selectedModel,
-                    middleware,
+                    middleware: allMiddleware,
                 }) as LanguageModelV1;
             }
             log.info('=== getLanguageModel END ===');
