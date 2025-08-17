@@ -5,6 +5,7 @@ import { AccessibilityProvider } from '@repo/common/contexts/accessibility-conte
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
 import { TooltipProvider } from '@repo/ui';
+import { RootProvider as FumadocsRootProvider } from 'fumadocs-ui/provider';
 import type { Metadata, Viewport } from 'next';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { OfflineIndicator } from '../components/offline-indicator';
@@ -215,18 +216,20 @@ export default function ParentLayout({
                                         <SubscriptionProvider>
                                             <PlusDefaultsProvider>
                                                 <RootProvider>
-                                                    {/* React Scan for performance monitoring in development */}
-                                                    <ReactScan />
-                                                    {/* PWA Manager for install prompts and service worker */}
-                                                    <PWAManager />
-                                                    {/* Offline status indicator */}
-                                                    <OfflineIndicator />
-                                                    {/* @ts-ignore - Type compatibility issue between React versions */}
-                                                    <RootLayout>
-                                                        <main className='flex flex-1 flex-col'>
-                                                            {children}
-                                                        </main>
-                                                    </RootLayout>
+                                                    <FumadocsRootProvider>
+                                                        {/* React Scan for performance monitoring in development */}
+                                                        <ReactScan />
+                                                        {/* PWA Manager for install prompts and service worker */}
+                                                        <PWAManager />
+                                                        {/* Offline status indicator */}
+                                                        <OfflineIndicator />
+                                                        {/* @ts-ignore - Type compatibility issue between React versions */}
+                                                        <RootLayout>
+                                                            <main className='flex flex-1 flex-col'>
+                                                                {children}
+                                                            </main>
+                                                        </RootLayout>
+                                                    </FumadocsRootProvider>
                                                 </RootProvider>
                                             </PlusDefaultsProvider>
                                         </SubscriptionProvider>

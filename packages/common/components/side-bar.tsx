@@ -469,6 +469,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     <DropdownMenuItem
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            push('/docs');
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
+                                        }}
+                                    >
+                                        <FileText size={16} strokeWidth={2} />
+                                        Documentation
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             push('/privacy');
                                             if (forceMobile) {
                                                 setIsMobileSidebarOpen(false);
@@ -715,6 +727,33 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     </Badge>
                                 </div>
                             )}
+                        </Button>
+
+                        {/* Docs Button */}
+                        <Button
+                            className={cn(
+                                'transition-all duration-200',
+                                isSidebarOpen
+                                    ? 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground h-10 w-10 justify-center',
+                            )}
+                            onClick={() => {
+                                push('/docs');
+                                // Close mobile drawer if open
+                                if (forceMobile) {
+                                    setIsMobileSidebarOpen(false);
+                                }
+                            }}
+                            roundedSm='lg'
+                            size={isSidebarOpen ? 'sm' : 'icon-sm'}
+                            variant='ghost'
+                        >
+                            <FileText
+                                className={cn('flex-shrink-0', isSidebarOpen && 'mr-2')}
+                                size={16}
+                                strokeWidth={2}
+                            />
+                            {isSidebarOpen && 'Documentation'}
                         </Button>
 
                         {/* Settings Button */}
