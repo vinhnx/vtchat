@@ -37,8 +37,8 @@ The VT+ rate limiting system provides quota-based access control for three premi
 
 | Feature       | Code | Default Limit | Reset Window      | Estimated Cost |
 | ------------- | ---- | ------------- | ----------------- | -------------- |
-| Deep Research | `DR` | 5 requests    | Daily (00:00 UTC) | ~$1-2/day      |
-| Pro Search    | `PS` | 10 requests   | Daily (00:00 UTC) | ~$2-3/day      |
+| Deep Research | `DR` | 25 requests   | Daily (00:00 UTC) | ~$1-2/day      |
+| Pro Search    | `PS` | 50 requests   | Daily (00:00 UTC) | ~$2-3/day      |
 
 **Important Changes:**
 
@@ -51,8 +51,8 @@ Override defaults with environment variables:
 
 ```bash
 # VT+ Rate Limiting Configuration
-VTPLUS_DAILY_LIMIT_DR=10      # Deep Research - requests per day
-VTPLUS_DAILY_LIMIT_PS=10     # Pro Search - requests per day
+VTPLUS_DAILY_LIMIT_DR=25      # Deep Research - requests per day
+VTPLUS_DAILY_LIMIT_PS=50     # Pro Search - requests per day
 
 # Legacy monthly limits (for backward compatibility)
 VTPLUS_LIMIT_DR=500          # Legacy: Deep Research monthly limit
@@ -66,12 +66,12 @@ VTPLUS_LIMIT_PS=800          # Legacy: Pro Search monthly limit
 **Updated Counting Logic:**
 
 - **Deep Research**: 1 quota unit per user request (regardless of internal API calls)
-  - Daily limit: 5 requests per day
+  - Daily limit: 25 requests per day
   - Resets every day at 00:00 UTC
   - Each research request consumes 1 unit from daily quota
 
 - **Pro Search**: 1 quota unit per user request
-  - Daily limit: 10 requests per day
+  - Daily limit: 50 requests per day
   - Resets every day at 00:00 UTC
   - Each search request consumes 1 unit from daily quota
 

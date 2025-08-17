@@ -5,6 +5,7 @@ import { Button } from '@repo/ui';
 import { cn } from '@repo/ui/src/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, CircleStop, Clock, Square } from 'lucide-react';
+import { ZRotationLoader } from '../../z-rotation-loader'; // Import ZRotationLoader
 import { createAnticipation, createSquashStretch, ANIMATION_DURATION, EASING } from '@repo/ui/src/lib/animation-utils';
 import { ICON_SIZES } from '../config/constants';
 
@@ -93,25 +94,14 @@ export function SendStopButton({
                                 disabled={isGenerating && showTimeoutIndicator}
                                 animationType="squash"
                             >
-                                {/* PRINCIPLE 8: SECONDARY ACTION - Icon with subtle animation */}
-                                <motion.div
-                                    animate={showTimeoutIndicator ? {
-                                        rotate: [0, 5, -5, 0],
-                                        transition: { duration: 2, repeat: Number.POSITIVE_INFINITY }
-                                    } : {}}
-                                >
-                                    {showTimeoutIndicator
-                                        ? <Clock size={ICON_SIZES.small} strokeWidth={2} />
-                                        : isGenerating
-                                        ? (
-                                            <CircleStop
-                                                size={ICON_SIZES.small}
-                                                strokeWidth={2}
-                                                className='animate-spin'
-                                            />
-                                        )
-                                        : <Square size={ICON_SIZES.small} strokeWidth={2} />}
-                                </motion.div>
+                                {/* Use ZRotationLoader for the stop button animation */}
+                                {showTimeoutIndicator ? (
+                                    <Clock size={ICON_SIZES.small} strokeWidth={2} />
+                                ) : isGenerating ? (
+                                    <ZRotationLoader size="xs" speed="fast" />
+                                ) : (
+                                    <Square size={ICON_SIZES.small} strokeWidth={2} />
+                                )}
                             </Button>
                         </motion.div>
                     )

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from 'react';
-import createGlobe from 'cobe';
 import { useSpring } from '@react-spring/web';
+import createGlobe from 'cobe';
+import { useEffect, useRef } from 'react';
 
 type CobeGlobeProps = {
     className?: string;

@@ -5,7 +5,14 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
     Button,
+    InternalLinks,
     TypographyH1,
 } from '@repo/ui';
 import { ArrowLeft } from 'lucide-react';
@@ -34,18 +41,36 @@ export const metadata: Metadata = {
 export const dynamic = 'force-static';
 
 export default function HelpCenterPage() {
+    const internalLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/terms', label: 'Terms' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/pricing', label: 'VT+' },
+        { href: '/hello', label: 'Hello' },
+        { href: '/help', label: 'Help' },
+        { href: '/feedback', label: 'Feedback' },
+        { href: '/about', label: 'About' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/ai-glossary', label: 'AI Glossary' },
+        { href: '/ai-resources', label: 'AI Resources' },
+    ];
+
     return (
         <div className='bg-background min-h-screen'>
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>Help Center</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Help Center</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
             </header>
 
@@ -57,11 +82,7 @@ export default function HelpCenterPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
@@ -298,12 +319,12 @@ function HelpCenterContent() {
                                 <ul className='mt-2 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        Lightning-fast web search with AI grounding - 20 requests
+                                        Lightning-fast web search with AI grounding - 50 requests
                                         per day
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        Comprehensive multi-step research and analysis - 10 requests
+                                        Comprehensive multi-step research and analysis - 25 requests
                                         per day
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -373,12 +394,12 @@ function HelpCenterContent() {
                                         <strong>Deep Research (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Pro for comprehensive, multi-step research
                                         with detailed analysis and thorough investigation of complex
-                                        topics - 10 requests per day
+                                        topics - 25 requests per day
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search (VT+ exclusive):</strong>{' '}
                                         Uses Gemini 2.5 Flash for fast, efficient web search and
-                                        information retrieval with quick grounding capabilities - 20
+                                        information retrieval with quick grounding capabilities - 50
                                         requests per day
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -410,12 +431,12 @@ function HelpCenterContent() {
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        10 requests per day for VT+ subscribers, 0 for base plan
+                                        25 requests per day for VT+ subscribers, 0 for base plan
                                         users
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        20 requests per day for VT+ subscribers, 0 for base plan
+                                        50 requests per day for VT+ subscribers, 0 for base plan
                                         users
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -882,6 +903,7 @@ function HelpCenterContent() {
                                 How can I get help or report issues?
                             </AccordionTrigger>
                             <AccordionContent>
+                                .{' '}
                                 <p className='text-muted-foreground'>
                                     We're here to help! You can reach us through:
                                 </p>

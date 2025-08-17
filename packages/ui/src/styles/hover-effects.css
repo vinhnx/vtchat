@@ -13,6 +13,7 @@
 
 .btn-hover-effect:active {
     background-color: rgba(var(--foreground-rgb), 0.05);
+    transform: scale(0.98);
 }
 
 .dark .btn-hover-effect:hover {
@@ -21,6 +22,7 @@
 
 .dark .btn-hover-effect:active {
     background-color: rgba(255, 255, 255, 0.08);
+    transform: scale(0.98);
 }
 
 /* Link hover effects - PRINCIPLE 7: ARCS & PRINCIPLE 2: ANTICIPATION */
@@ -69,16 +71,25 @@
 /* Icon button hover effects */
 .icon-btn-hover {
     transition:
-        background-color 0.2s ease,
-        opacity 0.2s ease;
+        background-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.15s ease-in-out;
 }
 
 .icon-btn-hover:hover {
     background-color: rgba(var(--foreground-rgb), 0.04);
 }
 
+.icon-btn-hover:active {
+    transform: scale(0.98);
+}
+
 .dark .icon-btn-hover:hover {
     background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark .icon-btn-hover:active {
+    transform: scale(0.98);
 }
 
 /* Input hover effects */
@@ -135,6 +146,7 @@
 .premium-btn-hover {
     position: relative;
     overflow: hidden;
+    transition: all 0.15s ease-in-out, transform 0.15s ease-in-out;
 }
 
 .premium-btn-hover::before {
@@ -156,8 +168,16 @@
     background-color: rgba(var(--foreground-rgb), 0.02);
 }
 
+.premium-btn-hover:active {
+    transform: scale(0.98);
+}
+
 .dark .premium-btn-hover:hover {
     background-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark .premium-btn-hover:active {
+    transform: scale(0.98);
 }
 
 /* Sidebar item hover effects */

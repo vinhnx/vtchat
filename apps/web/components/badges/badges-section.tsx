@@ -13,7 +13,7 @@ export function BadgesSection({ className }: BadgesSectionProps) {
             className={`badges-section ${className || ''}`}
             aria-label='Recognition and community badges'
         >
-            <div className='flex flex-wrap items-center justify-center gap-8 md:gap-12'>
+            <div className='flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-8 md:gap-12'>
                 {/* AI Tools Badge */}
                 <div className='badge-item flex-shrink-0'>
                     <AiToolsBadge className='transition-transform duration-200 hover:scale-105 focus:scale-105' />
@@ -26,7 +26,7 @@ export function BadgesSection({ className }: BadgesSectionProps) {
             </div>
 
             {/* Optional: Add a subtle description */}
-            <p className='text-muted-foreground mt-4 text-center text-sm'>
+            <p className='text-muted-foreground mt-6 text-center text-sm'>
                 VT is recognized by leading AI and software directories
             </p>
         </section>
