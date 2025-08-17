@@ -64,6 +64,7 @@ export const openaiWebSearchTool = () =>
                             tools: {
                                 web_search_preview: openai.tools.webSearchPreview(),
                             },
+                            temperature: 0, // Use temperature 0 for deterministic tool calling
                         });
 
                         // Add detailed logging for debugging source issues
@@ -168,7 +169,7 @@ export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
             query: z.string().describe('The search query to find information about'),
             maxResults: z
                 .number()
-                .optional()
+                .nullable()
                 .describe('Maximum number of results to return (if supported)'),
         }),
         execute: async ({ query, maxResults }) => {
@@ -216,6 +217,7 @@ export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
                                 web_search_preview: openai.tools.webSearchPreview(),
                             },
                             maxSteps: 5, // Allow multiple search steps if needed
+                            temperature: 0, // Use temperature 0 for deterministic tool calling
                         });
 
                         const result = {

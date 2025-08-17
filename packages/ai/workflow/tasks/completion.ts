@@ -586,6 +586,12 @@ Tool output JSON:\n\n${
                     mode: context?.get('mode'),
                 });
 
+                // Debug the fallback response if in development
+                if (process.env.NODE_ENV === 'development') {
+                    const { debugAIResponse } = await import('../../utils/debug-utils');
+                    debugAIResponse({ warnings: [], request: { body: null } }, 'Fallback generateText');
+                }
+
                 if (fallback && fallback.trim().length > 0) {
                     finalResponse = fallback;
                 }

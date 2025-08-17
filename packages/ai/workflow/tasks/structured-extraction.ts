@@ -157,7 +157,14 @@ export async function extractStructuredData(documentText: string, model = 'gemin
 
             Document content:
             ${documentText}`,
+            temperature: 0, // Use temperature 0 for deterministic structured extraction
         });
+
+        // Debug the response in development mode
+        if (process.env.NODE_ENV === 'development') {
+            const { debugAIResponse } = await import('../../utils/debug-utils');
+            debugAIResponse(result, `Structured extraction for ${type}`);
+        }
 
         return {
             success: true,

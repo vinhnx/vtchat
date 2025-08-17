@@ -25,9 +25,9 @@ export const chartTools = (config?: {
             parameters: z.object({
                 title: z.string().describe('Chart title'),
                 data: z.array(chartDataSchema).describe('Array of data points with name and value'),
-                xAxisLabel: z.string().optional().describe('X-axis label'),
-                yAxisLabel: z.string().optional().describe('Y-axis label'),
-                color: z.string().optional().describe('Chart color theme (blue, red, green, etc.)'),
+                xAxisLabel: z.string().nullable().describe('X-axis label'),
+                yAxisLabel: z.string().nullable().describe('Y-axis label'),
+                color: z.string().nullable().describe('Chart color theme (blue, red, green, etc.)'),
             }),
             execute: async ({ title, data, xAxisLabel, yAxisLabel, color = 'blue' }) => {
                 return {
@@ -49,11 +49,11 @@ export const chartTools = (config?: {
                 data: z
                     .array(multiSeriesDataSchema)
                     .describe('Array of data points with name and values'),
-                xAxisLabel: z.string().optional().describe('X-axis label'),
-                yAxisLabel: z.string().optional().describe('Y-axis label'),
-                series1Name: z.string().optional().describe('Name for first data series'),
-                series2Name: z.string().optional().describe('Name for second data series'),
-                series3Name: z.string().optional().describe('Name for third data series'),
+                xAxisLabel: z.string().nullable().describe('X-axis label'),
+                yAxisLabel: z.string().nullable().describe('Y-axis label'),
+                series1Name: z.string().nullable().describe('Name for first data series'),
+                series2Name: z.string().nullable().describe('Name for second data series'),
+                series3Name: z.string().nullable().describe('Name for third data series'),
             }),
             execute: async ({
                 title,
@@ -85,11 +85,11 @@ export const chartTools = (config?: {
                 data: z
                     .array(multiSeriesDataSchema)
                     .describe('Array of data points with name and values'),
-                xAxisLabel: z.string().optional().describe('X-axis label'),
-                yAxisLabel: z.string().optional().describe('Y-axis label'),
-                series1Name: z.string().optional().describe('Name for first data series'),
-                series2Name: z.string().optional().describe('Name for second data series'),
-                stacked: z.boolean().optional().describe('Whether to stack the areas'),
+                xAxisLabel: z.string().nullable().describe('X-axis label'),
+                yAxisLabel: z.string().nullable().describe('Y-axis label'),
+                series1Name: z.string().nullable().describe('Name for first data series'),
+                series2Name: z.string().nullable().describe('Name for second data series'),
+                stacked: z.boolean().nullable().describe('Whether to stack the areas'),
             }),
             execute: async ({
                 title,
@@ -119,8 +119,8 @@ export const chartTools = (config?: {
             parameters: z.object({
                 title: z.string().describe('Chart title'),
                 data: z.array(chartDataSchema).describe('Array of data points with name and value'),
-                showLabels: z.boolean().optional().describe('Whether to show data labels'),
-                showLegend: z.boolean().optional().describe('Whether to show legend'),
+                showLabels: z.boolean().nullable().describe('Whether to show data labels'),
+                showLegend: z.boolean().nullable().describe('Whether to show legend'),
             }),
             execute: async ({ title, data, showLabels = true, showLegend = true }) => {
                 return {
@@ -145,12 +145,12 @@ export const chartTools = (config?: {
                             value: z.number().describe('Value for this category'),
                             fullMark: z
                                 .number()
-                                .optional()
+                                .nullable()
                                 .describe('Maximum possible value for this category'),
                         }),
                     )
                     .describe('Array of categories with their values'),
-                maxValue: z.number().optional().describe('Maximum value for scaling'),
+                maxValue: z.number().nullable().describe('Maximum value for scaling'),
             }),
             execute: async ({ title, data, maxValue }) => {
                 return {

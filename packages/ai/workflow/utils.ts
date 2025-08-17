@@ -748,6 +748,7 @@ export const generateText = async ({
                         maxSteps,
                         toolChoice: toolChoice as any,
                         abortSignal: signal,
+                        temperature: 0, // Use temperature 0 for deterministic tool calling
                         ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                     }
                     : {
@@ -757,6 +758,7 @@ export const generateText = async ({
                         maxSteps,
                         toolChoice: toolChoice as any,
                         abortSignal: signal,
+                        temperature: 0, // Use temperature 0 for deterministic tool calling
                         ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                     };
 
@@ -1085,6 +1087,7 @@ export const generateObject = async ({
                     ...filteredMessages,
                 ],
                 abortSignal: signal,
+                temperature: 0, // Use temperature 0 for deterministic structured extraction
                 ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
             }
             : {
@@ -1092,6 +1095,7 @@ export const generateObject = async ({
                 model: selectedModel,
                 schema,
                 abortSignal: signal,
+                temperature: 0, // Use temperature 0 for deterministic structured extraction
                 ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
             };
 

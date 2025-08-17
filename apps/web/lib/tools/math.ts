@@ -221,7 +221,7 @@ export const calculatorTools = (config?: {
                 decimals: z
                     .number()
                     .int()
-                    .optional()
+                    .nullable()
                     .describe('Number of decimal places (default: 0)'),
             }),
             execute: async ({ n, decimals = 0 }) => {
