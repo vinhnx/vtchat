@@ -34,6 +34,8 @@ export const PROVIDER_SETUP_URLS = {
     [Providers.FIREWORKS]: 'https://app.fireworks.ai/',
     [Providers.XAI]: 'https://x.ai/api',
     [Providers.OPENROUTER]: 'https://openrouter.ai/keys',
+    [Providers.LMSTUDIO]: 'https://lmstudio.ai/docs/local-server',
+    [Providers.OLLAMA]: 'https://ollama.ai/download',
 } as const;
 
 // Provider display names for user-friendly messages
@@ -45,6 +47,8 @@ export const PROVIDER_DISPLAY_NAMES = {
     [Providers.FIREWORKS]: 'Fireworks AI',
     [Providers.XAI]: 'xAI Grok',
     [Providers.OPENROUTER]: 'OpenRouter',
+    [Providers.LMSTUDIO]: 'LM Studio',
+    [Providers.OLLAMA]: 'Ollama',
 } as const;
 
 export class ErrorMessageService {
@@ -66,6 +70,31 @@ export class ErrorMessageService {
 
         const providerName = PROVIDER_DISPLAY_NAMES[provider];
         const setupUrl = PROVIDER_SETUP_URLS[provider];
+
+        // Special handling for local providers (LM Studio, Ollama)
+        if (provider === Providers.LMSTUDIO) {
+            return {
+                title: 'LM Studio Not Configured',
+                message:
+                    'To use LM Studio models, you need to have LM Studio running locally with the server enabled. Make sure to set the LM Studio server URL in your settings.',
+                action:
+                    '1. Download and install LM Studio from their website\n2. Start LM Studio and load a model\n3. Enable the local server in LM Studio settings\n4. Configure the LM Studio server URL in Settings → API Keys → LM Studio',
+                helpUrl: setupUrl,
+                settingsAction: 'open_api_keys',
+            };
+        }
+
+        if (provider === Providers.OLLAMA) {
+            return {
+                title: 'Ollama Not Configured',
+                message:
+                    'To use Ollama models, you need to have Ollama running locally. Make sure to set the Ollama server URL in your settings.',
+                action:
+                    '1. Download and install Ollama from their website\n2. Start Ollama service\n3. Pull a model (e.g., "ollama pull llama3")\n4. Configure the Ollama server URL in Settings → API Keys → Ollama',
+                helpUrl: setupUrl,
+                settingsAction: 'open_api_keys',
+            };
+        }
 
         // Enhanced messages for cloud providers
         const baseMessage = isVtPlus
@@ -106,7 +135,7 @@ export class ErrorMessageService {
             return {
                 title: `${providerName} Authentication Failed`,
                 message:
-                    `Your ${providerName} API key is invalid, expired, or doesn't have the required permissions.`,
+                    `Your ${providerName} API key is invalid or has expired.`,
                 action:
                     `1. Check your ${providerName} account is active and has billing set up\n2. Verify your API key hasn't expired\n3. Generate a new API key if needed\n4. Update it in Settings → API Keys → ${providerName}`,
                 helpUrl: setupUrl,
@@ -215,6 +244,19 @@ export class ErrorMessageService {
         const { provider, originalError } = context;
         const providerName = provider ? PROVIDER_DISPLAY_NAMES[provider] : 'AI service';
 
+        // Special handling for local providers
+        if (provider === Providers.LMSTUDIO) {
+            if (originalError?.includes('ECONNREFUSED')) {
+                return {
+                    title: 'LM Studio Connection Failed',
+                    message:
+                        'Unable to connect to LM Studio. Please make sure LM Studio is running and the local server is enabled.',
+                    action:
+                        '1. Start LM Studio\n2. Load a model\n3. Enable the local server in LM Studio settings\n4. Check that the server URL in Settings → API Keys → LM Studio is correct',
+                };
+            }
+        }
+
         if (originalError?.includes('timeout') || originalError?.includes('ETIMEDOUT')) {
             return {
                 title: 'Request Timeout',
@@ -279,9 +321,9 @@ export class ErrorMessageService {
         if (provider === Providers.GOOGLE && !context.hasApiKey) {
             if (isVtPlus) {
                 return {
-                    title: 'VT+ Daily Quota Exceeded',
+                    title: 'VT+ Monthly Quota Exceeded',
                     message:
-                        "You've used all your VT+ quota for today. Add your own API key for unlimited usage.",
+                        "You've used all your VT+ quota for this month. Add your own API key for unlimited usage.",
                     action: 'Add your own Gemini API key in Settings → API Keys → Google Gemini',
                     helpUrl: PROVIDER_SETUP_URLS[provider],
                     settingsAction: 'open_api_keys',

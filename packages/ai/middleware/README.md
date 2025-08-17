@@ -2,6 +2,11 @@
 
 VT Chat implements a flexible middleware system for language models using the AI SDK's middleware capabilities. This allows us to enhance language model behavior with features like logging, caching, and content filtering in a provider-agnostic way.
 
+## Documentation
+
+- [Middleware Guide](./GUIDE.md) - Comprehensive guide on language model middleware for AI SDK v4
+- [Error Handling Guide](../error-handling/GUIDE.md) - Guide to error handling patterns in AI SDK v4 and VT Chat
+
 ## Available Middlewares
 
 ### 1. Logging Middleware

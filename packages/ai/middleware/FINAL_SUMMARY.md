@@ -36,6 +36,7 @@ packages/ai/middleware/
 ├── index.ts
 ├── logging-middleware.ts
 ├── README.md
+├── GUIDE.md
 ├── SUMMARY.md
 └── example.ts
 ```

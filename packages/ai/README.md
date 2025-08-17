@@ -2,6 +2,11 @@
 
 A flexible and powerful system for building AI agent workflows using a graph-based architecture.
 
+## Documentation
+
+- [Middleware Guide](./middleware/GUIDE.md) - Comprehensive guide to language model middleware in AI SDK v4
+- [Error Handling Guide](./error-handling/GUIDE.md) - Guide to error handling patterns in AI SDK v4 and VT Chat
+
 ## Features
 
 - Graph-based workflow management

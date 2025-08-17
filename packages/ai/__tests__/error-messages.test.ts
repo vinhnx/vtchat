@@ -140,7 +140,7 @@ describe('Error Message Service', () => {
                 originalError: 'ECONNREFUSED',
             });
             expect(result.title).toBe('LM Studio Connection Failed');
-            expect(result.message).toContain('Cannot connect');
+            expect(result.message).toContain('Unable to connect');
         });
 
         it('should detect timeout errors', () => {
@@ -240,7 +240,7 @@ describe('Error Message Service', () => {
                 hasApiKey: true,
             });
             expect(result.title).toBe('LM Studio Connection Failed');
-            expect(result.message).toContain('Cannot connect');
+            expect(result.message).toContain('Unable to connect');
         });
 
         it('should return generic error for unknown errors', () => {
