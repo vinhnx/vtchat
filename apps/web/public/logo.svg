@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--License: OFL. Made by kudakurage: https://github.com/kudakurage/LigatureSymbols-->
 <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
+    width="800px"
+    height="800px"
+    viewBox="-7.5 0 32 32"
+    version="1.1"
     xmlns="http://www.w3.org/2000/svg"
 >
-    <style>
-    .bg { fill: #BFB38F; }
-    .text { fill: #262626; stroke: #262626; stroke-width: 1; }
-    @media (prefers-color-scheme: dark) {
-        .bg { fill: #262626; }
-        .text { fill: #f0f0f0; stroke: #f0f0f0; }
-    }
-    </style>
-    <title>VT Icon</title>
-    <rect x="0" y="0" width="32" height="32" rx="4" class="bg" />
+    <title>v</title>
+    <rect x="-7.5" y="0" width="32" height="32" fill="#BFB38F" />
     <path
-        d="M12.906 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
+        d="M8.406 20.625l5.281-11.469h2.469l-7.75 16.844-7.781-16.844h2.469z"
         fill="none"
-        class="text"
+        stroke="#262626"
+        stroke-width="1"
     />
 </svg>

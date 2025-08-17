@@ -38,7 +38,7 @@ export default function ParentLayout({
                 {/* Additional meta tags for better search engine recognition */}
                 <meta name='theme-color' content='#ffffff' />
                 <meta name='msapplication-TileColor' content='#ffffff' />
-                <meta name='msapplication-TileImage' content='/icon-512.png' />
+                <meta name='msapplication-TileImage' content='/icon-512x512.png' />
 
                 {/* Preload critical favicon for faster loading */}
                 <link rel='preload' href='/favicon.ico' as='image' type='image/x-icon' />
@@ -52,7 +52,7 @@ export default function ParentLayout({
                             url: 'https://vtchat.io.vn',
                             logo: {
                                 '@type': 'ImageObject',
-                                url: 'https://vtchat.io.vn/icon-512.png',
+                                url: 'https://vtchat.io.vn/icon-512x512.png',
                                 width: 512,
                                 height: 512,
                             },

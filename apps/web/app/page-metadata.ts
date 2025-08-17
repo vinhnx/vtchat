@@ -13,10 +13,20 @@ export const defaultMetadata: Metadata = {
     icons: {
         icon: [
             { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
-            { url: '/icon.svg', type: 'image/svg+xml' },
+            { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+            { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+            { url: '/logo.svg', type: 'image/svg+xml' },
         ],
+        shortcut: [{ url: '/favicon.ico', type: 'image/x-icon' }],
         apple: [
-            { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+            { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+        ],
+        other: [
+            {
+                rel: 'mask-icon',
+                url: '/logo.svg',
+                color: '#000000',
+            },
         ],
     },
     description:
