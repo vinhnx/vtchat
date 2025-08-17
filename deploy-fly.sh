@@ -46,7 +46,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo ""
     echo -e "${YELLOW}Features:${NC}"
     echo "  • Interactive version selection (patch/minor/major)"
-    echo "  • Git dirty state checking"
+    echo "  • Git dirty state checking with user confirmation"
     echo "  • Semantic versioning with timestamps"
     echo "  • Automatic git tagging and pushing"
     echo "  • Changelog generation with changelogithub"
@@ -129,6 +129,8 @@ increment_version() {
 
 # Function to check git status
 check_git_status() {
+    local auto_mode=$1
+
     print_step "Checking git repository status..."
 
     # Check if we're in a git repository
@@ -143,10 +145,35 @@ check_git_status() {
         git status --porcelain >&2
         echo "" >&2
 
-        print_info "Auto-committing changes..."
-        git add -A
-        git commit -m "Auto-commit before deployment"
-        print_status "Changes committed successfully"
+        # If in auto mode, ask for confirmation before committing
+        if [ "$auto_mode" = "--auto" ]; then
+            print_info "In auto mode, but there are uncommitted changes."
+            echo -n "Do you want to commit these changes? (y/N): " >&2
+            read -r answer
+            
+            if [[ "$answer" =~ ^[Yy]$ ]]; then
+                print_info "Committing changes..."
+                git add -A
+                git commit -m "Auto-commit before deployment"
+                print_status "Changes committed successfully"
+            else
+                print_error "Deployment cancelled by user."
+                exit 1
+            fi
+        else
+            # In interactive mode, always ask
+            echo -n "Do you want to commit these changes before deployment? (y/N): " >&2
+            read -r answer
+            
+            if [[ "$answer" =~ ^[Yy]$ ]]; then
+                print_info "Committing changes..."
+                git add -A
+                git commit -m "Commit before deployment"
+                print_status "Changes committed successfully"
+            else
+                print_info "Proceeding without committing changes..."
+            fi
+        fi
     else
         print_status "Working directory is clean"
     fi
@@ -155,7 +182,17 @@ check_git_status() {
     current_branch=$(git branch --show-current)
     if [ "$current_branch" != "main" ] && [ "$current_branch" != "master" ]; then
         print_warning "You're not on main/master branch (current: $current_branch)"
-        print_info "Continuing deployment anyway..."
+        if [ "$auto_mode" != "--auto" ]; then
+            echo -n "Do you want to continue anyway? (y/N): " >&2
+            read -r answer
+            
+            if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+                print_error "Deployment cancelled by user."
+                exit 1
+            fi
+        else
+            print_info "Continuing deployment anyway (auto mode)..."
+        fi
     fi
 }
 
