@@ -39,7 +39,7 @@ export const MOBILE_TRANSITIONS = {
 
     // Fast transitions for mobile interactions
     fast: {
-        duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.15 : 0.2,
+        duration: prefersReducedMotion() ? 0.01 : isMobileDevice() ? 0.125 : 0.125,
         ease: 'easeOut',
     } as Transition,
 
@@ -52,7 +52,7 @@ export const MOBILE_TRANSITIONS = {
     // Tween-based for consistent mobile performance
     mobileTween: {
         type: 'tween' as const,
-        duration: prefersReducedMotion() ? 0.01 : 0.15,
+        duration: prefersReducedMotion() ? 0.01 : 0.125,
         ease: 'easeOut',
     } as Transition,
 
@@ -86,9 +86,9 @@ export const MOBILE_VARIANTS = {
 
     // Modal scale (mobile-optimized)
     modalScale: {
-        initial: { opacity: 0, scale: 0.95 },
+        initial: { opacity: 0, scale: 0.93 },
         animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.95 },
+        exit: { opacity: 0, scale: 0.93 },
     } as Variants,
 
     // Simple fade for mobile
@@ -173,9 +173,9 @@ export const createMobileModalProps = () => {
     }
 
     return {
-        initial: { opacity: 0, scale: 0.98 },
+        initial: { opacity: 0, scale: 0.93 },
         animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.98 },
+        exit: { opacity: 0, scale: 0.93 },
         transition: MOBILE_TRANSITIONS.fast,
         className: MOBILE_ACCELERATION_CLASSES.modal,
         style: HARDWARE_ACCELERATION,

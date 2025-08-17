@@ -553,7 +553,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 /**
  * Checks if a model supports tool calls/function calling
  * Based on capabilities from the models.dev API
-*/
+ */
 export const supportsTools = (model: ModelEnum): boolean => {
     // OpenAI models that support tools
     const openaiToolModels = [

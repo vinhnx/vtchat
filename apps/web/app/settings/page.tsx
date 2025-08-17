@@ -67,11 +67,7 @@ export default async function SettingsPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background mt-8 border-t md:mt-12'>
-                <div className='mx-auto w-full max-w-7xl px-4'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

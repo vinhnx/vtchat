@@ -60,14 +60,50 @@ export function ChatModeButton() {
             <DropdownMenu onOpenChange={setIsChatModeOpen} open={isChatModeOpen}>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        className='border-muted-foreground/30 border'
+                        aria-expanded={isChatModeOpen}
+                        data-testid='model-selector'
+                        className={`
+                            border-muted-foreground/30 border transition-all duration-300 ease-out
+                            data-[state=open]:bg-accent/20
+                            ${
+                            isChatModeOpen
+                                ? 'scale-[1.03] shadow-sm ring-2 ring-accent/30'
+                                : 'scale-100 hover:scale-[1.02] hover:shadow-xs'
+                        }
+                        `}
                         size='xs'
                         variant={'secondary'}
                     >
-                        {selectedProviderIcon && <div className='mr-1'>{selectedProviderIcon}</div>}
+                        {selectedProviderIcon && (
+                            <div
+                                className={`
+                                    mr-1 transition-all duration-300 ease-out
+                                    ${isChatModeOpen ? 'translate-y-0 rotate-12' : 'translate-y-0'}
+                                `}
+                            >
+                                {selectedProviderIcon}
+                            </div>
+                        )}
                         {selectedIcon}
-                        {selectedOption?.label}
-                        <ChevronDown size={14} strokeWidth={2} />
+                        <span
+                            className={`ml-1 transition-all duration-200 ${
+                                isChatModeOpen ? 'font-medium' : ''
+                            }`}
+                        >
+                            {selectedOption?.label}
+                        </span>
+                        <ChevronDown
+                            size={14}
+                            strokeWidth={2}
+                            className={`
+                                ml-1 transition-all duration-300 ease-out
+                                ${
+                                isChatModeOpen
+                                    ? 'rotate-180 translate-y-0.5 text-accent-foreground'
+                                    : 'rotate-0 translate-y-0'
+                            }
+                            `}
+                        />
                     </Button>
                 </DropdownMenuTrigger>
                 <ChatModeOptions

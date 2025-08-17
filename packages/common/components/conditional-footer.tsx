@@ -11,7 +11,5 @@ export const ConditionalFooter = () => {
         return null;
     }
 
-    return (
-        <Footer />
-    );
+    return <Footer />;
 };

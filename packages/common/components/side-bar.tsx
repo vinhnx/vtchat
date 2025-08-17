@@ -319,10 +319,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 <DropdownMenuTrigger asChild>
                                     <div
                                         className={cn(
-                                            'border-sidebar-border flex cursor-pointer items-center justify-center border shadow-sm transition-all duration-200',
+                                            'border-sidebar-border flex cursor-pointer items-center justify-center border shadow-sm transition-all duration-300 ease-out',
                                             isSidebarOpen
-                                                ? 'w-full rounded-lg bg-sidebar-accent/30 hover:bg-sidebar-accent flex-row gap-3 px-3 py-2'
-                                                : 'h-7 w-7 rounded-full p-0',
+                                                ? 'w-full rounded-lg bg-sidebar-accent/30 hover:bg-sidebar-accent hover:scale-[1.02] active:scale-[0.98] flex-row gap-3 px-3 py-2'
+                                                : 'h-7 w-7 rounded-full p-0 hover:scale-110 active:scale-95',
                                         )}
                                         data-testid='sidebar-user-trigger'
                                     >
@@ -348,7 +348,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                         )}
                                         {isSidebarOpen && (
                                             <ChevronsUpDown
-                                                className='text-sidebar-foreground/60 flex-shrink-0'
+                                                className='text-sidebar-foreground/60 flex-shrink-0 transition-transform duration-300 data-[state=open]:rotate-180'
                                                 size={14}
                                                 strokeWidth={2}
                                             />
@@ -357,7 +357,10 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent
                                     align='start'
-                                    className={cn('w-56 pl-2', forceMobile && 'z-[303]')}
+                                    className={cn(
+                                        'w-56 pl-2 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-90 data-[state=open]:zoom-in-90 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 duration-300 origin-[var(--radix-dropdown-menu-content-transform-origin)]',
+                                        forceMobile && 'z-[303]',
+                                    )}
                                     sideOffset={4}
                                 >
                                     {/* Account Management */}
@@ -393,7 +396,11 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     <DropdownMenuItem
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            window.open('https://vtchat.userjot.com', '_blank', 'noopener,noreferrer');
+                                            window.open(
+                                                'https://vtchat.userjot.com',
+                                                '_blank',
+                                                'noopener,noreferrer',
+                                            );
                                         }}
                                     >
                                         <MessageCircleMore size={16} strokeWidth={2} />

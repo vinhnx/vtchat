@@ -7,9 +7,9 @@ export const StepStatus = ({ status }: { status: ItemStatus; }) => {
             return (
                 <motion.span
                     className='relative flex size-3 items-center justify-center overflow-hidden'
-                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    initial={{ scale: 0.93, opacity: 0.5 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 0.125, ease: 'easeOut' }}
                 >
                     {/* Enhanced shimmer effect for pending steps */}
                     <motion.span
@@ -55,7 +55,7 @@ export const StepStatus = ({ status }: { status: ItemStatus; }) => {
             return (
                 <motion.span
                     className='relative flex size-3 items-center justify-center'
-                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    initial={{ scale: 0.93, opacity: 0.5 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{
                         duration: 0.4,
@@ -81,9 +81,9 @@ export const StepStatus = ({ status }: { status: ItemStatus; }) => {
             return (
                 <motion.span
                     className='relative flex size-3 items-center justify-center'
-                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    initial={{ scale: 0.93, opacity: 0.5 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 0.125, ease: 'easeOut' }}
                 >
                     <motion.span
                         className='relative flex size-1.5'
@@ -105,7 +105,7 @@ export const StepStatus = ({ status }: { status: ItemStatus; }) => {
                     className='relative flex size-3 items-center justify-center'
                     initial={{ scale: 0.8, opacity: 0.3 }}
                     animate={{ scale: 1, opacity: 0.6 }}
-                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 0.125, ease: 'easeOut' }}
                 >
                     <span className='relative flex size-1'>
                         <span className='bg-muted-foreground/40 relative inline-flex size-1 rounded-full' />

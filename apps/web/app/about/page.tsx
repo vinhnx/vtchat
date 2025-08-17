@@ -1,7 +1,17 @@
 import { BadgesSection } from '@/components/badges';
+import { aiRelatedLinks } from '@/lib/constants/ai-links';
 import { Footer } from '@repo/common/components';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+    InternalLinks,
+} from '@repo/ui';
 import { Button } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -40,18 +50,36 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+    const internalLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/terms', label: 'Terms' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/pricing', label: 'VT+' },
+        { href: '/hello', label: 'Hello' },
+        { href: '/help', label: 'Help' },
+        { href: '/feedback', label: 'Feedback' },
+        { href: '/about', label: 'About' },
+        { href: '/faq', label: 'FAQ' },
+        { href: '/ai-glossary', label: 'AI Glossary' },
+        { href: '/ai-resources', label: 'AI Resources' },
+    ];
+
     return (
         <div className='bg-background min-h-screen'>
             {/* Header */}
             <header className='border-border/50 bg-background sticky top-0 z-50 border-b backdrop-blur-sm'>
-                <div className='mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4'>
-                    <Link href='/'>
-                        <Button className='gap-2' size='sm' variant='ghost'>
-                            <ArrowLeft size={16} />
-                            Back to VT
-                        </Button>
-                    </Link>
-                    <div className='text-muted-foreground text-sm'>About</div>
+                <div className='mx-auto w-full max-w-7xl px-4 py-4'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>About</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
             </header>
 
@@ -67,11 +95,7 @@ export default function AboutPage() {
             </main>
 
             {/* Footer */}
-            <footer className='border-border/50 bg-background border-t'>
-                <div className='mx-auto w-full max-w-7xl'>
-                    <Footer />
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
@@ -222,12 +246,12 @@ function AboutContent() {
                             <ul className='text-muted-foreground list-inside list-disc space-y-2'>
                                 <li>
                                     <strong>Deep Research:</strong>{' '}
-                                    Advanced research capabilities with comprehensive analysis - 10
+                                    Advanced research capabilities with comprehensive analysis - 25
                                     daily uses for VT+ subscribers
                                 </li>
                                 <li>
                                     <strong>Pro Search:</strong>{' '}
-                                    Enhanced search with web integration - 20 daily uses for VT+
+                                    Enhanced search with web integration - 50 daily uses for VT+
                                     subscribers
                                 </li>
                                 <li>
@@ -413,17 +437,16 @@ function AboutContent() {
                             </div>
                         </div>
 
-                        <div>
-                            <h3 className='mb-4 text-xl font-semibold'>
-                                Open Source & Community
+                        <div className='mt-12 border-t border-border/50 pt-8'>
+                            <h3 className='mb-6 text-center text-xl font-semibold'>
+                                Community & Recognition
                             </h3>
-                            <p className='text-muted-foreground mb-4'>
-                                VT is built with transparency and community in mind. We believe in
-                                open development practices and welcome contributions from the
-                                community.
-                            </p>
 
-                            <div className='mt-6 flex flex-wrap items-center justify-center gap-4'>
+                            <div className='mb-8'>
+                                <BadgesSection className='mb-6' />
+                            </div>
+
+                            <div className='flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4'>
                                 <Link
                                     href='https://github.com/vinhnx/vtchat'
                                     target='_blank'
@@ -460,27 +483,29 @@ function AboutContent() {
                                         Share on X
                                     </Button>
                                 </Link>
-                            </div>
-
-                            {/* Badges Section - Organized and Performance Optimized */}
-                            <div className='mt-8 border-t pt-6'>
-                                <h4 className='mb-4 text-center text-lg font-semibold'>
-                                    Recognition & Community
-                                </h4>
-                                <BadgesSection className='mb-6' />
-                            </div>
-
-                            <div className='flex justify-center pt-6'>
                                 <Link
                                     href='https://vtchat.userjot.com'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='text-primary hover:text-primary/80 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted'
                                 >
-                                    Send Feedback
+                                    <Button variant='outline' className='gap-2'>
+                                        <MessageCircle className='h-4 w-4' />
+                                        Send Feedback
+                                    </Button>
                                 </Link>
                             </div>
                         </div>
+
+                        {/* Related Links - Enhanced Internal Linking for SEO */}
+                        <InternalLinks
+                            links={Array.isArray(aiRelatedLinks)
+                                ? aiRelatedLinks.filter(link => link.href !== '/about').map(
+                                    link => ({ href: link.href, label: link.title }),
+                                )
+                                : []}
+                            title='Explore More AI Resources'
+                            className='mt-12'
+                        />
                     </div>
                 </div>
             </div>
