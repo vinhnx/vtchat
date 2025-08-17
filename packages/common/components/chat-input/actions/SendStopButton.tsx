@@ -6,6 +6,7 @@ import { cn } from '@repo/ui/src/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, CircleStop, Clock, Square } from 'lucide-react';
 import { ICON_SIZES } from '../config/constants';
+import { ZRotationLoader } from '@repo/common/components';
 
 interface SendStopButtonProps {
     isGenerating: boolean;
@@ -72,10 +73,10 @@ export function SendStopButton({
                                     ? <Clock size={ICON_SIZES.small} strokeWidth={2} />
                                     : isGenerating
                                     ? (
-                                        <CircleStop
-                                            size={ICON_SIZES.small}
-                                            strokeWidth={2}
-                                            className='animate-spin'
+                                        <ZRotationLoader
+                                            size='xs'
+                                            speed='fast'
+                                            data-testid='z-rotation-loader'
                                         />
                                     )
                                     : <Square size={ICON_SIZES.small} strokeWidth={2} />}
