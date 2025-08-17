@@ -499,6 +499,21 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 let buffer = '';
                 let consecutiveErrors = 0;
 
+                // Handle stream abort with onAbort callback
+                const handleStreamAbort = () => {
+                    log.info('Stream was aborted by user');
+                    setIsGenerating(false);
+                    updateThreadItem(body.threadId, {
+                        id: body.threadItemId,
+                        status: 'ABORTED',
+                        error: 'Generation stopped by user',
+                        persistToDB: true,
+                    });
+                };
+
+                // Add abort event listener
+                abortController.signal.addEventListener('abort', handleStreamAbort);
+
                 while (true) {
                     try {
                         const { value, done } = await reader.read();
@@ -523,6 +538,40 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
 
                                 try {
                                     const data = JSON.parse(dataMatch[1]);
+                                    
+                                    // Handle error events in the stream
+                                    if (currentEvent === 'error') {
+                                        const error = data.error || 'Unknown error occurred';
+                                        log.error({ error }, 'Stream error event received');
+                                        updateThreadItem(body.threadId, {
+                                            id: body.threadItemId,
+                                            status: 'ERROR',
+                                            error: error,
+                                            persistToDB: true,
+                                        });
+                                        // Show error to user
+                                        toast({
+                                            title: 'Stream Error',
+                                            description: error,
+                                            variant: 'destructive',
+                                        });
+                                        break;
+                                    }
+                                    
+                                    // Handle tool-error events
+                                    if (currentEvent === 'tool-error') {
+                                        const error = data.error || 'Tool execution failed';
+                                        log.error({ error }, 'Tool error event received');
+                                        // Continue processing but log the error
+                                    }
+                                    
+                                    // Handle abort events
+                                    if (currentEvent === 'abort') {
+                                        log.info('Stream abort event received');
+                                        handleStreamAbort();
+                                        break;
+                                    }
+
                                     if (
                                         EVENT_TYPES.includes(
                                             currentEvent as typeof EVENT_TYPES[number],
@@ -621,6 +670,17 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                         // If we've had too many consecutive errors, break the loop
                         if (consecutiveErrors > 3) {
                             log.error('Too many consecutive stream read errors, breaking loop');
+                            updateThreadItem(body.threadId, {
+                                id: body.threadItemId,
+                                status: 'ERROR',
+                                error: 'Too many stream errors occurred',
+                                persistToDB: true,
+                            });
+                            toast({
+                                title: 'Stream Error',
+                                description: 'Too many stream errors occurred. Please try again.',
+                                variant: 'destructive',
+                            });
                             break;
                         }
 
@@ -643,19 +703,21 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 );
                 setIsGenerating(false);
 
-                // Extract meaningful error message using ProviderErrorExtractor
-                let errorMessage = 'Something went wrong. Please try again.';
-                let errorTitle = 'Stream Error';
-
-                if (streamError.name === 'AbortError') {
+                // Handle abort errors specifically
+                if (streamError.name === 'AbortError' || abortController.signal.aborted) {
+                    log.info('Stream was aborted by user');
                     updateThreadItem(body.threadId, {
                         id: body.threadItemId,
                         status: 'ABORTED',
-                        error: 'Generation aborted',
+                        error: 'Generation stopped by user',
                         persistToDB: true,
                     });
                     return; // Early return for abort errors
                 }
+
+                // Extract meaningful error message using ProviderErrorExtractor
+                let errorMessage = 'Something went wrong. Please try again.';
+                let errorTitle = 'Stream Error';
 
                 // Use ProviderErrorExtractor to get structured error information
                 const errorResult = ProviderErrorExtractor.extractError(streamError);

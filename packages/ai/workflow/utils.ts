@@ -1429,6 +1429,7 @@ export const handleError = (error: Error, { events }: TaskParams) => {
     const errorMessage = generateErrorMessage(error);
     log.error('Task failed', { data: error });
 
+    // Send error event with enhanced error information
     events?.update('error', (prev) => ({
         ...prev,
         error: errorMessage,

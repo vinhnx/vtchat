@@ -201,6 +201,13 @@ Please include:
                 });
             }
 
+            // Send error event with enhanced error information
+            events?.update('error', (prev) => ({
+                ...prev,
+                error: error.message || 'Web search failed',
+                status: 'ERROR',
+            }));
+
             // Provide more user-friendly error messages based on model and API key status
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
             const hasUserApiKey = userApiKeys?.GEMINI_API_KEY;

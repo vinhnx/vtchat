@@ -162,6 +162,18 @@ export class StreamingToolExecutor {
             const executionTime = Date.now() - startTime;
             const toolError = createToolError(toolCall, error, executionTime);
             this.onToolResult?.(toolError);
+            
+            // Also emit a tool-error event for enhanced error handling
+            if (this.onToolCallUpdate) {
+                const errorCall = {
+                    ...toolCall,
+                    state: 'error' as ToolCallStreamingState,
+                    error: error instanceof Error ? error.message : String(error),
+                    timestamp: Date.now(),
+                };
+                this.onToolCallUpdate(errorCall);
+            }
+            
             return toolError;
         }
     }

@@ -17,6 +17,7 @@
         "./services/error-messages": "./services/error-messages.ts",
         "./services/provider-error-extractor": "./services/provider-error-extractor.ts",
         "./tools": "./tools/index.ts",
+        "./tools/streaming-error-utils": "./tools/streaming-error-utils.ts",
         "./workflow": "./workflow/flow.ts",
         "./workflow/utils": "./workflow/utils.ts",
         "./workflow/tasks/chat-mode-router": "./workflow/tasks/chat-mode-router.ts",

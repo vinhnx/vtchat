@@ -6,6 +6,7 @@ import { EnvironmentType, getCurrentEnvironment } from '@repo/shared/types/envir
 import type { Geo } from '@vercel/functions';
 import type { CompletionRequestType, StreamController } from './types';
 import { sanitizePayloadForJSON } from './utils';
+import { StreamingErrorHandler } from '@repo/ai/tools/streaming-error-utils';
 
 // Track closed controllers to prevent infinite loops
 const closedControllers = new WeakSet<StreamController>();
@@ -187,6 +188,43 @@ export async function executeStream({
         });
 
         workflow.onAll((event, payload) => {
+            // Handle error events specifically
+            if (event === 'error') {
+                sendMessage(controller, encoder, {
+                    type: 'error',
+                    error: payload.error || 'Unknown error occurred',
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    parentThreadItemId: data.parentThreadItemId,
+                });
+                return;
+            }
+            
+            // Handle tool-error events specifically
+            if (event === 'tool-error') {
+                sendMessage(controller, encoder, {
+                    type: 'tool-error',
+                    error: payload.error || 'Tool execution failed',
+                    toolName: payload.toolName || 'Unknown tool',
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    parentThreadItemId: data.parentThreadItemId,
+                });
+                return;
+            }
+            
+            // Handle abort events specifically
+            if (event === 'abort') {
+                sendMessage(controller, encoder, {
+                    type: 'abort',
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    parentThreadItemId: data.parentThreadItemId,
+                    steps: payload.steps || [],
+                });
+                return;
+            }
+
             sendMessage(controller, encoder, {
                 type: event,
                 threadId: data.threadId,
@@ -223,14 +261,8 @@ export async function executeStream({
         return { success: true };
     } catch (error) {
         if (abortController.signal.aborted) {
-            // Aborts are normal user actions, not errors
-            if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {
-                log.debug('Workflow aborted', { threadId: data.threadId });
-            }
-
-            sendMessage(controller, encoder, {
-                type: 'done',
-                status: 'aborted',
+            // Handle stream abort with enhanced error handling
+            await StreamingErrorHandler.handleStreamAbort(controller, encoder, {
                 threadId: data.threadId,
                 threadItemId: data.threadItemId,
                 parentThreadItemId: data.parentThreadItemId,

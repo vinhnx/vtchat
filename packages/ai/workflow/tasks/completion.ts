@@ -492,7 +492,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     userMessage: pdfError.userMessage,
                 });
 
-                // Provide user-friendly error message
+                // Send error event with enhanced error information
                 events?.update('error', (_prev) => ({
                     error: pdfError.userMessage,
                     suggestion: pdfError.suggestion,
@@ -543,6 +543,14 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         chunkBuffer.end();
                         return;
                     }
+                }
+                
+                // Handle tool errors specifically
+                if (errorMessage.includes('tool')) {
+                    events?.update('tool-error', (_prev) => ({
+                        error: error.message,
+                        status: 'ERROR',
+                    }));
                 }
             }
 
