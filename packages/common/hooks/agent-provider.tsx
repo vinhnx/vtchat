@@ -1016,10 +1016,8 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 );
 
                 // Clear active submission when workflow completes
-                const originalOnFinish = onFinish;
                 const wrappedOnFinish = (data: any) => {
                     activeSubmissionRef.current = null;
-                    originalOnFinish?.(data);
                 };
 
                 startWorkflow({
