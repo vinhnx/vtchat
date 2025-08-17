@@ -42,7 +42,7 @@ export const useCopyText = () => {
     }, []);
 
     const copyMarkdown = useCallback(async (text?: string) => {
-        if (!text || typeof window === 'undefined' || typeof document === 'undefined') return;
+        if (!text || typeof window === 'undefined' || typeof document === 'undefined') return false;
 
         try {
             // Try modern clipboard API first
@@ -50,7 +50,7 @@ export const useCopyText = () => {
                 await navigator.clipboard.writeText(text);
                 setMarkdownCopyStatus('copied');
                 setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
-                return;
+                return true;
             }
 
             // Fallback to legacy method
@@ -69,6 +69,7 @@ export const useCopyText = () => {
             if (successful) {
                 setMarkdownCopyStatus('copied');
                 setTimeout(() => setMarkdownCopyStatus('idle'), 2000);
+                return true;
             } else {
                 throw new Error('Copy command failed');
             }
@@ -76,6 +77,7 @@ export const useCopyText = () => {
             log.error('Copy markdown failed:', { data: err });
             setMarkdownCopyStatus('error');
             setTimeout(() => setMarkdownCopyStatus('idle'), 3000);
+            return false;
         }
     }, []);
 

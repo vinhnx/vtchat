@@ -5,9 +5,9 @@ import { getModelDisplayName } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
 import { memo, useRef } from 'react';
 import './message-animations.css';
+import { modelOptions } from '../../chat-input/chat-config';
 
 interface AIMessageProps {
     content: string;
@@ -52,10 +52,22 @@ export const AIMessage = memo(
                                 'ai-message-badge',
                             )}
                         >
-                            <Sparkles className='text-muted-foreground h-3 w-3' />
-                            <span className='text-muted-foreground text-xs font-medium'>
-                                {getModelDisplayName(threadItem.mode)}
-                            </span>
+                            {(() => {
+                                // Find the model option that matches the thread item's mode
+                                const selectedOption = modelOptions.find((option) => option.value === threadItem.mode);
+                                
+                                // Get the provider icon for the selected option
+                                const selectedProviderIcon = (selectedOption as any)?.providerIcon;
+                                
+                                return (
+                                    <>
+                                        {selectedProviderIcon && <div className='flex items-center'>{selectedProviderIcon}</div>}
+                                        <span className='text-muted-foreground text-xs font-medium'>
+                                            {getModelDisplayName(threadItem.mode)}
+                                        </span>
+                                    </>
+                                );
+                            })()}
                             {isGenerating && (
                                 <motion.div
                                     animate={{ rotate: 360 }}
