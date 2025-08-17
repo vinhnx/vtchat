@@ -80,9 +80,9 @@ transition: {
 **Purpose:** Natural acceleration/deceleration
 
 **Key Easing Curves:**
-- `easeOut`: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' - Snappy feel
-- `easeIn`: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)' - Entering elements
-- `spring`: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' - Organic motion
+- `easeOut`: [0.25, 0.46, 0.45, 0.94] - Snappy feel
+- `easeIn`: [0.55, 0.085, 0.68, 0.53] - Entering elements
+- `spring`: [0.175, 0.885, 0.32, 1.275] - Organic motion
 
 ### 7. Arcs
 **Location:** Link hover effects, spinner animations

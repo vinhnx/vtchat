@@ -177,7 +177,7 @@ export function createSecondaryAction(
  */
 export function getTimingForContext(context: 'tooltip' | 'button' | 'modal' | 'page' | 'loading'): {
     duration: number;
-    ease: string;
+    ease: string | number[];
 } {
     const timingMap = {
         tooltip: { duration: ANIMATION_DURATION.quick, ease: EASING.easeOut },

@@ -16,17 +16,17 @@ export const ANIMATION_DURATION = {
 // SLOW IN & SLOW OUT - Natural easing curves
 export const EASING = {
     // Standard easings following natural motion
-    easeOut: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',        // Fast start, slow end - snappy feel
-    easeIn: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',       // Slow start, fast end - entering elements
-    easeInOut: 'cubic-bezier(0.445, 0.05, 0.55, 0.95)',    // Smooth both ends - balanced
+    easeOut: [0.25, 0.46, 0.45, 0.94],        // Fast start, slow end - snappy feel
+    easeIn: [0.55, 0.085, 0.68, 0.53],        // Slow start, fast end - entering elements
+    easeInOut: [0.445, 0.05, 0.55, 0.95],     // Smooth both ends - balanced
     
     // Spring-like motion for organic feel
-    spring: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',     // Slight overshoot
-    bounceSoft: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',  // Gentle bounce
+    spring: [0.175, 0.885, 0.32, 1.275],      // Slight overshoot
+    bounceSoft: [0.68, -0.55, 0.265, 1.55],   // Gentle bounce
     
     // Sharp transitions for emphasis
-    sharp: 'cubic-bezier(0.4, 0.0, 0.2, 1)',               // Material Design standard
-    linear: 'linear',                                        // Use sparingly
+    sharp: [0.4, 0, 0.2, 1],                  // Material Design standard
+    linear: 'linear',                          // Use sparingly
 } as const;
 
 // STAGING - Staggered delays for sequential animations
@@ -154,12 +154,12 @@ export const MOTION_VARIANTS = {
 
 // CSS TRANSITION UTILITIES
 export const CSS_TRANSITIONS = {
-    base: `all ${ANIMATION_DURATION.normal}ms ${EASING.easeOut}`,
-    quick: `all ${ANIMATION_DURATION.quick}ms ${EASING.easeOut}`,
-    slow: `all ${ANIMATION_DURATION.slow}ms ${EASING.easeInOut}`,
-    colors: `background-color ${ANIMATION_DURATION.normal}ms ${EASING.easeOut}, color ${ANIMATION_DURATION.normal}ms ${EASING.easeOut}`,
-    transform: `transform ${ANIMATION_DURATION.normal}ms ${EASING.spring}`,
-    opacity: `opacity ${ANIMATION_DURATION.quick}ms ${EASING.easeOut}`,
+    base: `all ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
+    quick: `all ${ANIMATION_DURATION.quick}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
+    slow: `all ${ANIMATION_DURATION.slow}ms cubic-bezier(${EASING.easeInOut.join(', ')})`,
+    colors: `background-color ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')}), color ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
+    transform: `transform ${ANIMATION_DURATION.normal}ms cubic-bezier(${EASING.spring.join(', ')})`,
+    opacity: `opacity ${ANIMATION_DURATION.quick}ms cubic-bezier(${EASING.easeOut.join(', ')})`,
 } as const;
 
 // ACCESSIBILITY - Respect reduced motion preferences

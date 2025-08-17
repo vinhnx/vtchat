@@ -1,10 +1,8 @@
 import { Slot as SlotPrimitive } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { motion, type MotionProps } from 'framer-motion';
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
-import { createSquashStretch, createSecondaryAction, ANIMATION_MOTION_VARIANTS } from '../lib/animation-utils';
 import { Tooltip } from './tooltip';
 
 const buttonVariants = cva(
@@ -50,7 +48,7 @@ export interface ButtonProps
     // Animation enhancements following 12 Principles
     animationType?: 'none' | 'gentle' | 'squash' | 'secondary';
     anticipation?: boolean;
-    motionProps?: Partial<MotionProps>;
+    // Remove motionProps since we're not importing MotionProps directly
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -65,7 +63,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             roundedSm,
             animationType = 'gentle',
             anticipation = false,
-            motionProps,
             ...props 
         },
         ref,
@@ -109,17 +106,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         };
 
         // Enhanced button with animation principles
-        const buttonElement = asChild ? (
-            <Comp
+        const buttonElement = (
+            <button
                 className={cn(buttonVariants({ variant, size }), roundedClass, className)}
                 ref={ref}
-                {...props}
-            />
-        ) : (
-            <motion.button
-                className={cn(buttonVariants({ variant, size }), roundedClass, className)}
-                ref={ref}
-                {...getAnimationProps()}
                 {...props}
             />
         );
