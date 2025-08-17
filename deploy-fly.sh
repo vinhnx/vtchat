@@ -182,10 +182,16 @@ generate_changelog() {
         fi
         
         # Generate changelog in dry-run mode to see what would be generated
-        if npx changelogithub --dry $github_token_args > /tmp/changelog.md 2>/dev/null; then
-            print_info "Changelog preview:"
-            head -20 /tmp/changelog.md
-            print_status "Changelog generated successfully (preview above)"
+        # We redirect stderr to stdout to capture all output, then filter out the URL line
+        if npx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > /tmp/changelog.md; then
+            # Check if the changelog has meaningful content (not just version info)
+            if grep -q "Features\|Bug Fixes\|Performance" /tmp/changelog.md; then
+                print_info "Changelog preview:"
+                head -20 /tmp/changelog.md
+                print_status "Changelog generated successfully (preview above)"
+            else
+                print_info "No significant changes to include in changelog"
+            fi
         else
             print_warning "Failed to generate changelog with changelogithub"
         fi
