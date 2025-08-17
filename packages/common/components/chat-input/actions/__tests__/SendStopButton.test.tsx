@@ -78,12 +78,12 @@ describe('SendStopButton', () => {
         expect(sendButton).toBeDisabled();
     });
 
-    it('shows loading spinner when timeout indicator is active', () => {
-        // Mock the timeout indicator
+    it('shows z-rotation loader when generating', () => {
+        // Ensure timeout indicator is false so loader appears
         (useChatStore as any).mockImplementation((selector) => {
             const state = {
-                showTimeoutIndicator: true,
-                generationStartTime: Date.now() - 10000, // 10 seconds ago
+                showTimeoutIndicator: false,
+                generationStartTime: Date.now() - 10000,
             };
             return selector(state);
         });
@@ -100,8 +100,8 @@ describe('SendStopButton', () => {
         const stopButton = screen.getByLabelText('Stop Generation');
         expect(stopButton).toBeInTheDocument();
 
-        // Check for the spinner element
-        const spinner = document.querySelector('.animate-spin');
-        expect(spinner).toBeInTheDocument();
+        // Check for the z-rotation loader element via test id
+        const loader = screen.getByTestId('z-rotation-loader');
+        expect(loader).toBeInTheDocument();
     });
 });
