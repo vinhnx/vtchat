@@ -447,6 +447,10 @@ We welcome contributions! Please follow these guidelines:
 - Ensure all tests pass before submitting
 - Update AGENTS.md with any significant changes
 
+## Acknowledgements
+
+This project is based on llmchat. We acknowledge and appreciate the excellent work of the llmchat team. Our main contributions focus on privacy-first architecture, advanced AI capabilities, and comprehensive multi-AI provider support.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
