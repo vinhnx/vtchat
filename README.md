@@ -449,24 +449,11 @@ We welcome contributions! Please follow these guidelines:
 
 ## Acknowledgements
 
-This project is based on llmchat. We acknowledge and appreciate the excellent work of the llmchat team. Our main contributions focus on privacy-first architecture, advanced AI capabilities, and comprehensive multi-AI provider support.
+This project is based on [llmchat](https://github.com/trendy-design/llmchat). We acknowledge and appreciate the excellent work of the Trendy Design team. Our main contributions focus on privacy-first architecture, advanced AI capabilities, and comprehensive multi-AI provider support.
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Achievements
-
-- **Zero TypeScript Errors**: Complete type safety across the entire codebase
-- **87% Performance Improvement**: Optimized compilation (24s → 3s) and runtime efficiency
-- **Smart UX Design**: All tools discoverable through always-enabled buttons with intelligent gated dialogs
-- **Production-Ready**: Successfully deployed and running at [https://vtchat.io.vn](https://vtchat.io.vn)
-- **Security Hardened**: Comprehensive protection with bot detection and Better Auth integration
-- **Privacy-First**: Complete local storage architecture with zero server-side chat data storage
-- **Generous Free Tier**: All premium AI models available to logged-in users with BYOK
-- **Focused Premium Value**: VT+ exclusively offers 3 research-oriented features for professionals
-- **Modern Stack**: Next.js 15, React 19, TypeScript, Bun, and cutting-edge development tools
-- **Comprehensive Testing**: Vitest with Testing Library for reliable code quality assurance
 
 ---
 
