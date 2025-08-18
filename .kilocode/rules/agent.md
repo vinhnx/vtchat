@@ -1,0 +1,420 @@
+# VTChat Custom Rules for Kilo Code
+
+## Project Overview
+
+VTChat is an AI-powered chat application built with Next.js, TypeScript, and Tailwind CSS in a monorepo structure using Turborepo. The application provides advanced conversational capabilities with multiple AI models, subscription tiers, and enterprise-grade features.
+
+## Monorepo Structure
+
+### Workspace Organization
+
+- **Root Workspace**: `apps/` and `packages/` directories
+- **Web Application**: `apps/web/` - Main Next.js application
+- **Shared Libraries**: `packages/` for reusable code:
+  - `@repo/shared`: Types, utils, logger (`@repo/shared/lib/logger`)
+  - `@repo/common`: Reusable hooks, components, store
+  - `@repo/ui`: Base UI components (shadcn/ui based)
+  - `@repo/ai`: AI models, providers, tools, workflow logic
+  - `@repo/actions`: Server actions
+  - `@repo/orchestrator`: Task orchestration logic
+  - `@repo/tailwind-config`: Shared Tailwind CSS configuration
+  - `@repo/typescript-config`: Shared TypeScript configurations
+
+### Package Management
+
+- **Package Manager**: Bun (primary) with npm fallback
+- **Monorepo Tool**: Turborepo for build orchestration
+- **Workspaces**: Defined in root `package.json` with proper exclusions
+
+## Development Environment
+
+### Required Tools
+
+- **Node.js**: >=20.0.0
+- **Bun**: >=1.1.19
+- **TypeScript**: 5.9.2
+
+### Development Commands
+
+```bash
+# Install dependencies
+bun install
+
+# Development (all apps)
+bun dev
+
+# Development without Turbopack
+bun dev-no-turbo
+
+# Build
+bun run build
+
+# Linting (oxlint)
+bun run lint
+
+# Format code (dprint)
+bun run fmt
+
+# Format Markdown only (Prettier)
+bun run format
+
+# Testing (Vitest)
+bun test
+bun run test:ui
+bun run test:coverage
+```
+
+## Code Style and Standards
+
+### TypeScript Configuration
+
+- **Target**: ES2020+ with modern features
+- **Module Resolution**: Node.js with path aliases
+- **Strict Mode**: Enabled with comprehensive type checking
+- **Imports**: Use explicit extensions for TypeScript files
+
+### Formatting and Linting
+
+- **Primary Formatter**: dprint for TypeScript, JavaScript, JSON, TOML, Markdown
+- **Secondary Formatter**: Prettier for Markdown and JSONC files
+- **Linter**: oxlint with OXC rules
+- **VSCode Settings**: Configured for consistent formatting across the team
+
+### Code Style Rules
+
+- **Indentation**: 4 spaces
+- **Quotes**: Single quotes
+- **Line Length**: 100 characters maximum
+- **Naming Conventions**:
+  - Components: PascalCase
+  - Hooks and Utils: camelCase
+  - File Names: kebab-case
+- **Exports**: Prefer named exports over default exports
+- **Constants**: Centralize in enums, avoid hard-coded strings
+
+## Architecture Patterns
+
+### Frontend Architecture
+
+- **Framework**: Next.js 15 with App Router
+- **Rendering**: Hybrid SSR/CSR with static generation where possible
+- **State Management**: Zustand with individual selectors to prevent infinite re-renders
+- **Data Fetching**: React Query for client-side caching and synchronization
+- **Styling**: Tailwind CSS 4 with shadcn/ui components
+
+### State Management Best Practices (Zustand)
+
+```typescript
+// ✅ Correct: Individual selectors
+const value1 = useStore(state => state.value1);
+const value2 = useStore(state => state.value2);
+
+// ❌ Incorrect: Object destructuring (causes infinite loops)
+const { value1, value2 } = useStore(state => ({
+    value1: state.value1,
+    value2: state.value2,
+}));
+```
+
+### Component Architecture
+
+- **Provider Pattern**: For theming, React Query, and global state
+- **Custom Hooks**: For reusable logic and state management
+- **Server Components**: Use for static, data-fetching, and SEO-critical components
+- **Client Components**: Use for interactivity and client-side state
+
+### Authentication and Authorization
+
+- **Authentication**: Better Auth with comprehensive session management
+- **Authorization**: Role-based access control with subscription tiers
+- **Session Management**: Cookie caching with 5-minute TTL for performance
+- **Security**: HTTPS validation, secure headers, API key management
+
+## Database and Data Layer
+
+### Database Configuration
+
+- **ORM**: Drizzle ORM with TypeScript-first schema definition
+- **Database**: PostgreSQL (Neon for serverless)
+- **Migrations**: Drizzle Kit for schema management
+- **Connection Pooling**: Optimized for production with proper timeout handling
+
+### Database Best Practices
+
+- **Indexing**: Comprehensive indexes for Better Auth tables and common queries
+- **Connection Management**: Proper pool configuration with error handling
+- **Type Safety**: Full TypeScript integration with Drizzle
+- **Performance**: Query optimization and connection reuse
+
+## API and Backend Patterns
+
+### API Design
+
+- **Structure**: Next.js API routes with RESTful design
+- **Security**: HTTPS validation, rate limiting, API key management
+- **Error Handling**: Centralized error messages with user-friendly responses
+- **Validation**: Zod schemas for request/response validation
+
+### Security Best Practices
+
+- **API Keys**: Secure header-based transmission, never in request bodies
+- **Rate Limiting**: Tier-based limits with proper tracking
+- **HTTPS**: Mandatory in production with validation
+- **Headers**: Security headers (CSP, XSS protection, etc.)
+- **Logging**: Structured logging with sensitive data sanitization
+
+## Testing Standards
+
+### Testing Framework
+
+- **Primary Framework**: Vitest with Happy DOM
+- **Testing Library**: @testing-library/react and @testing-library/jest-dom
+- **Coverage**: v8 provider with comprehensive reporting
+- **Environment**: Browser API mocking for realistic testing
+
+### Test Organization
+
+- **Location**: `apps/web/app/tests/` for web application tests
+- **Naming**: `*.test.ts` and `*.test.tsx` for test files
+- **Structure**: Component tests, integration tests, and E2E tests
+- **Coverage**: Focus on critical paths and edge cases
+
+### Testing Best Practices
+
+- **Component Testing**: Test rendering, interactions, and accessibility
+- **Integration Testing**: Test user workflows and API interactions
+- **E2E Testing**: Playwright for full application testing
+- **Mocking**: Proper mocking of external dependencies and browser APIs
+
+## Subscription and Feature Management
+
+### Subscription Tiers
+
+- **Anonymous**: Basic chat access with limited features
+- **VT Base**: Free tier with advanced features for logged-in users
+- **VT Plus**: Premium tier with exclusive research capabilities
+
+### Feature Access Control
+
+- **Plan-based Features**: Centralized feature configuration
+- **BYOK Support**: Bring Your Own Key for premium model access
+- **Rate Limiting**: Tier-based limits with proper tracking
+- **Grace Period**: Subscription grace period handling
+
+### Feature Configuration
+
+- **Centralized**: All features defined in `packages/shared/types/subscription.ts`
+- **Type Safety**: Full TypeScript integration for feature access
+- **Dynamic**: Runtime feature access checking
+- **Extensible**: Easy addition of new features and plans
+
+## UI/UX Guidelines
+
+### Design System
+
+- **Component Library**: shadcn/ui with custom enhancements
+- **Theme**: Light and dark theme support with proper theming
+- **Colors**: Neutral palette with minimal icons
+- **Typography**: Typography-first design approach
+- **Accessibility**: WCAG-compliant color contrast and keyboard navigation
+
+### Component Patterns
+
+- **Consistency**: Unified component API across the application
+- **Reusability**: Generic components with proper prop interfaces
+- **Performance**: Optimized rendering with proper memoization
+- **Responsive**: Mobile-first design with proper breakpoints
+
+### State Management in UI
+
+- **Local State**: useState for component-specific state
+- **Global State**: Zustand for application-wide state
+- **Server State**: React Query for server data synchronization
+- **Form State**: React Hook Form with Zod validation
+
+## Performance Optimization
+
+### Build Optimization
+
+- **Turbopack**: Enabled for faster development builds
+- **Bundle Analysis**: Regular bundle size monitoring
+- **Code Splitting**: Automatic and manual code splitting
+- **Caching**: Aggressive caching for builds and dependencies
+
+### Runtime Optimization
+
+- **Authentication Performance**: Cookie caching, request deduplication
+- **Database Performance**: Connection pooling, indexing, query optimization
+- **API Performance**: Rate limiting, caching, proper error handling
+- **Frontend Performance**: Lazy loading, image optimization, proper caching
+
+### Monitoring and Logging
+
+- **Structured Logging**: Pino logger with proper metadata
+- **Performance Monitoring**: Custom performance tracking utilities
+- **Error Tracking**: Comprehensive error handling and reporting
+- **User Analytics**: Hotjar integration for user behavior analysis
+
+## Deployment and Operations
+
+### Deployment Strategy
+
+- **Platform**: Fly.io for production deployment
+- **CI/CD**: Automated deployment with proper testing
+- **Environment Management**: Proper environment variable handling
+- **Database Migrations**: Automated migration application
+
+### Production Checklist
+
+- **Security**: All security headers and configurations
+- **Performance**: Optimized builds and caching strategies
+- **Monitoring**: Proper logging and error tracking
+- **Backup**: Database backup and recovery procedures
+
+### Environment Configuration
+
+- **Development**: Local development with proper tooling
+- **Staging**: Production-like environment for testing
+- **Production**: Optimized for performance and security
+- **Environment Variables**: Proper management and validation
+
+## Security Best Practices
+
+### Application Security
+
+- **Authentication**: Better Auth with proper session management
+- **Authorization**: Role-based access control
+- **Input Validation**: Comprehensive validation with Zod schemas
+- **XSS Prevention**: Proper content sanitization and CSP headers
+
+### API Security
+
+- **Rate Limiting**: Tier-based rate limiting with proper tracking
+- **API Key Management**: Secure handling and validation
+- **HTTPS Enforcement**: Mandatory HTTPS in production
+- **CORS**: Proper CORS configuration for API endpoints
+
+### Data Security
+
+- **Encryption**: Proper encryption for sensitive data
+- **Logging**: Structured logging with sensitive data sanitization
+- **Database Security**: Proper access controls and encryption
+- **Backup**: Regular backups with proper encryption
+
+## Documentation Standards
+
+### Code Documentation
+
+- **JSDoc**: Comprehensive documentation for all public APIs
+- **TypeScript**: Proper type definitions and interfaces
+- **Comments**: Clear comments for complex logic
+- **Examples**: Usage examples for complex components
+
+### Project Documentation
+
+- **README**: Comprehensive project overview and setup instructions
+- **API Documentation**: Detailed API documentation with examples
+- **Deployment Guide**: Step-by-step deployment instructions
+- **Troubleshooting**: Common issues and solutions
+
+### Memory Bank
+
+- **Structure**: Core files (projectbrief.md, activeContext.md, systemPatterns.md, techContext.md, progress.md)
+- **Updates**: Regular updates with project progress and decisions
+- **Accessibility**: Easy access to project context and history
+- **Maintenance**: Regular cleanup and organization
+
+## Git and Version Control
+
+### Commit Standards
+
+- **Conventional Commits**: Follow conventional commit format
+- **Commit Messages**: Clear, descriptive commit messages
+- **Branching**: Feature branching with proper naming
+- **Pull Requests**: Comprehensive PR descriptions with testing notes
+
+### Repository Management
+
+- **Branch Protection**: Protected branches for main and development
+- **Code Review**: Mandatory code review for all changes
+- **Automated Checks**: Automated linting, formatting, and testing
+- **Release Management**: Proper versioning and release notes
+
+## Quality Assurance
+
+### Code Quality
+
+- **Linting**: oxlint with comprehensive rules
+- **Formatting**: dprint for consistent code formatting
+- **Type Checking**: Strict TypeScript configuration
+- **Testing**: Comprehensive test coverage with Vitest
+
+### Performance Quality
+
+- **Bundle Analysis**: Regular bundle size monitoring
+- **Performance Testing**: Regular performance testing and optimization
+- **Load Testing**: Load testing for high-traffic scenarios
+- **Monitoring**: Continuous performance monitoring
+
+### Security Quality
+
+- **Security Scanning**: Regular security scanning and vulnerability assessment
+- **Dependency Management**: Regular dependency updates and security patches
+- **Access Control**: Regular review of access controls and permissions
+- **Audit Trails**: Comprehensive audit trails for all actions
+
+## Development Workflow
+
+### Local Development
+
+- **Setup**: Automated setup scripts and documentation
+- **Development**: Hot reload with proper tooling
+- **Testing**: Local testing with comprehensive coverage
+- **Debugging**: Proper debugging tools and configurations
+
+### Team Collaboration
+
+- **Code Review**: Comprehensive code review process
+- **Documentation**: Regular documentation updates
+- **Communication**: Clear communication channels and processes
+- **Knowledge Sharing**: Regular knowledge sharing sessions
+
+### Continuous Integration
+
+- **Automated Testing**: Automated testing on all changes
+- **Automated Deployment**: Automated deployment with proper checks
+- **Quality Gates**: Quality gates for all changes
+- **Monitoring**: Continuous monitoring of all systems
+
+## Future Considerations
+
+### Scalability
+
+- **Horizontal Scaling**: Design for horizontal scaling
+- **Database Scaling**: Database scaling strategies
+- **Cache Strategies**: Comprehensive caching strategies
+- **Load Balancing**: Proper load balancing configurations
+
+### Maintainability
+
+- **Code Organization**: Proper code organization and structure
+- **Documentation**: Comprehensive documentation
+- **Testing**: Comprehensive testing coverage
+- **Monitoring**: Comprehensive monitoring and alerting
+
+### Extensibility
+
+- **Plugin Architecture**: Plugin architecture for extensibility
+- **API Design**: Extensible API design
+- **Configuration**: Flexible configuration system
+- **Integration**: Easy integration with external systems
+
+to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
+
+To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.
+
+You can access this data through an API.
+
+curl https://models.dev/api.json
+
+Use the Model ID field to do a lookup on any model; it's the identifier used by AI SDK.
