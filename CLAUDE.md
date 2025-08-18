@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 ## Package Management
 
 - Use `bun` instead of `npm` for all operations
@@ -265,6 +269,36 @@ For more information, read the Bun API docs in `node_modules/bun-types/docs/**.m
 ## React Best Practices
 
 - For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
+
+## Build Commands
+
+- `bun run dev` - Start development server with Turbopack
+- `bun run build` - Build for production
+- `bun run start` - Start production server
+- `bun run test` - Run tests
+- `bun run lint` - Lint with oxlint
+- `bun run fmt:check` - Check code formatting with dprint
+
+## Database
+
+- Uses Drizzle ORM with PostgreSQL (Neon)
+- Schema defined in `apps/web/lib/database/schema.ts`
+- Run `cd apps/web && bun run generate` to generate migrations
+- Configuration in `apps/web/drizzle.config.ts`
+
+## Tailwind CSS
+
+- Uses Tailwind v4 with CSS-based configuration
+- Main configuration in `packages/tailwind-config/tailwind.css`
+- PostCSS configuration in `packages/tailwind-config/postcss.js`
+- Content paths configured via `@source` directives in CSS
+
+## Next.js Configuration
+
+- Config file: `apps/web/next.config.mjs`
+- Uses Turbopack for development
+- Optimized for memory-constrained environments
+- Bundle analyzer available with `ANALYZE=true bun run build`
 
 to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
 
