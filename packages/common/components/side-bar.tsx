@@ -5,6 +5,7 @@ import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
+import { PublicRoutes } from '@repo/shared/constants/routes';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { Thread } from '@repo/shared/types';
@@ -65,6 +66,10 @@ import {
 import { Logo } from './logo';
 import './sidebar.css';
 import { UserTierBadge as SidebarUserTierBadge } from './user-tier-badge';
+
+enum SidebarLinkText {
+    ENTRYPOINTS = 'Entrypoints',
+}
 
 export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}) => {
     const { setIsCommandSearchOpen, setIsMobileSidebarOpen } = useRootContext();
@@ -465,6 +470,18 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                     >
                                         <FileText size={16} strokeWidth={2} />
                                         AI Resources
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            push(PublicRoutes.ENTRYPOINTS);
+                                            if (forceMobile) {
+                                                setIsMobileSidebarOpen(false);
+                                            }
+                                        }}
+                                    >
+                                        <Terminal size={16} strokeWidth={2} />
+                                        {SidebarLinkText.ENTRYPOINTS}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={(e) => {

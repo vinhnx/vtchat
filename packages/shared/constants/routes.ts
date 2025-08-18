@@ -15,6 +15,8 @@ export const PublicRoutes = {
     TERMS: '/terms',
     HELP: '/help',
     ABOUT: '/about',
+    ENTRYPOINTS: '/entrypoints',
+    RECENT: '/recent',
 } as const;
 
 export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
