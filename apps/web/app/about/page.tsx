@@ -466,7 +466,7 @@ function AboutContent() {
                                     </Button>
                                 </Link>
                                 <Link
-                                    href='https://twitter.com/intent/tweet?text=Check%20out%20VT%20-%20Privacy-first%20AI%20chat%20with%20all%20premium%20models%20for%20free!&url=https://vtchat.io.vn'
+                                    href='https://twitter.com/intent/tweet?text=Check%20out%20VT%20-%20Privacy-first%20AI%20chat%20with%20all%20premium%20models%20for%20free!%20Share%20that%20has%20most%20retweet/likes%20of%20the%20day%20@vtdotai%20@vinhnx&url=https://vtchat.io.vn'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                     className='text-primary hover:underline'
