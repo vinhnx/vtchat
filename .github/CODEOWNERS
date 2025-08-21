@@ -1,0 +1,17 @@
+# Code owners map paths to GitHub usernames or teams.
+# Update these to the correct owners for your org.
+
+# Default owners for everything
+* @vinhnx
+
+# Apps
+/apps/web/ @vinhnx
+
+# Packages
+/packages/ @vinhnx
+
+# Docs and repo guidelines
+/AGENTS.md @vinhnx
+/CONTRIBUTING.md @vinhnx
+/README.md @vinhnx
+

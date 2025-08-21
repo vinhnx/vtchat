@@ -1,81 +1,44 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-
-- Monorepo with Turborepo. Top-level workspace folders: `apps/` and `packages/`.
-- Web app lives in `apps/web`; shared libraries in `packages/`:
-  - `@repo/shared`: types, utils, logger (`@repo/shared/lib/logger`).
-  - `@repo/common` and `@repo/ui`: reusable hooks/components.
-- Tests live under `apps/web/app/tests/`. Avoid adding debug/test files in repo root.
-- Large prebuilt assets (e.g., the PDF.js worker) should be loaded from a CDN, not committed.
+- Apps live in `apps/` (web app in `apps/web`). Shared code in `packages/` (`@repo/shared`, `@repo/common`, `@repo/ui`).
+- Tests reside under `apps/web/app/tests/`.
+- Do not commit large binaries; load large prebuilt assets (e.g., PDF.js worker) from a CDN.
 
 ## Build, Test, and Development Commands
-
-- Install: `bun install`
-- Dev (all apps): `bun dev`
-- Build: `bun run build`
-- Lint (oxlint): `bun run lint`
-- Format Markdown only (Prettier): `bun run format`
+- Install deps: `bun install`
+- Start dev server: `bun dev`
+- Build all apps/packages: `bun run build`
+- Lint codebase: `bun run lint`
+- Format Markdown: `bun run format`
 - Code format (dprint): `bun run fmt`
-- Tests (Vitest via Bun): `bun test` or `bun run test`
+- Run tests: `bun test`
 
 ## Coding Style & Naming Conventions
+- Indentation: 4 spaces; quotes: single; max line length: 100 chars.
+- Components: PascalCase. Hooks/utils: camelCase. File names: kebab-case. Prefer named exports.
+- Centralize custom keys/enums; avoid hard-coded strings; use environment variables for configuration.
+- UI: shadcn/ui principles — neutral palette, minimal icons, typography-first.
 
-- 4-space indentation, single quotes, 100-char line length.
-- Components PascalCase; hooks/utils camelCase; file names kebab-case.
-- Prefer named exports; centralize custom keys in enums; do not hard-code strings.
-- Configuration via environment variables (e.g., `ADMIN_USER_IDS` comma-separated, API keys).
-- UI: shadcn/ui principles; neutral palette; minimal icons; typography first.
+## API, Logging, and Errors
+- HTTP: always use the shared ky client, not `fetch`.
+  - Example: `import { http } from '@repo/shared/lib/http-client'`
+  - GET: `await http.get('/api/endpoint')`
+  - POST: `await http.post('/api/endpoint', { body: data })`
+  - Streaming: `await http.postStream('/api/completion', { body, signal })`
+- Logging: use Pino via `import { log } from '@repo/shared/lib/logger'`; log structured metadata, not `console.*`.
 
 ## Testing Guidelines
-
-- Framework: Vitest with `@testing-library/*` and `@testing-library/jest-dom/vitest`.
-- Place tests in `apps/web/app/tests/`; name as `*.test.ts`/`*.test.tsx`.
-- Cover critical paths and edge cases; run locally with `bun test`.
+- Runner: `bun test`. Place tests under `apps/web/app/tests/`.
+- Add tests for new logic and regressions. Keep tests fast and deterministic.
+- Prefer clear, behavior-focused test names; group by feature or route.
 
 ## Commit & Pull Request Guidelines
+- Commits: concise, imperative; prefer Conventional Commits (`feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`) with optional scope (`web`, `shared`, `ui`).
+  - Example: `feat(web): add chat sidebar`
+- PRs: include a descriptive summary, linked issues, and screenshots for UI changes. Ensure lint, format, and tests pass; update docs when behavior changes.
 
-- Do not commit or deploy without approval. Never run `./deploy-fly.sh` without explicit consent.
-- PRs should include: clear description, linked issues, screenshots for UI changes, and test notes.
-- Run `bun run lint`, `bun run fmt`, and `bun run build` before opening a PR.
+## Security & Deployment
+- Keep secrets in env vars; never commit keys. Inject API keys via the HTTP client options when required.
+- Deployment: never run `./deploy-fly.sh` without explicit approval.
 
-## HTTP Client & API Guidelines
-
-- **Always use the centralized ky HTTP client**: `import { http } from '@repo/shared/lib/http-client'`
-- **Never use fetch() directly** - it bypasses security, error handling, and standardization
-- **Automatic JSON handling**: Methods return parsed JSON automatically
-- **Built-in error handling**: HTTP errors are handled consistently
-- **API key security**: Pass keys via `apiKeys` option, never in headers
-
-### Common Patterns:
-
-```typescript
-// GET requests
-const data = await http.get('/api/user/profile');
-
-// POST with data
-const result = await http.post('/api/completion', { body: requestData });
-
-// Streaming responses (for AI completions)
-const response = await http.postStream('/api/completion', { body, signal });
-
-// Requests with API keys
-const result = await http.post('/api/external', {
-    body: data,
-    apiKeys: { openai: 'sk-...', anthropic: 'sk-...' },
-});
-
-// PUT/DELETE operations
-const updated = await http.put('/api/user/settings', { body: settings });
-await http.delete('/api/user/session');
-```
-
-## Security & Configuration Tips
-
-- Bun auto-loads `.env`. Do not check secrets into git.
-- Always use the Pino logger: `import { log } from '@repo/shared/lib/logger'`.
-- Log with structured metadata: `log.info({ userId }, 'action')`; avoid `console.*`.
-
-## React Best Practices
-
-- For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
