@@ -1,8 +1,14 @@
 # TODO
 
+ok go-> https://vtchat.io.vn/
+
+---
+
+Research and rename "VT" to better and memorable name
+
 --
 
-check deep research. pro search. web search 
+double check https://ai-sdk.dev/docs/migration-guides/migration-guide-5-0 on AI.SDK v5 migration make sure follow guide and migrated all core and workflow. make sure core functionalities in the app and core VT+ features work as is.
 
 --
 
@@ -54,26 +60,16 @@ check deep research. pro search. web search
 - Explore advanced AI SDK v5 features
 - Consider implementing vision capabilities with Gemini 2.5
 
---
+## --
 
-ok go-> https://vtchat.io.vn/
-
----
-
-Research and rename "VT" to better and memorable name
+use ai gateway as a way to test v5 migration. then
 
 --
-
-use ai gateway as a way to test v5 migration. then 
-
---
-
 
 migrate business logic and unified ai gateway. to simplified logic and models support
 
 https://vercel.com/blog/ai-gateway-is-now-generally-available
 https://vercel.com/ai-gateway/models
-
 
 --
 
