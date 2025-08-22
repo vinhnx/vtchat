@@ -213,7 +213,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 ### Production-Ready Quality Assurance
 
 - **Zero TypeScript Errors**: Full type safety maintained across codebase
-- **oxlint Compliance**: Modern linting with zero warnings
+- **oxlint Compliance**: Type-aware linting with zero warnings
 - **Automated Testing**: Vitest setup with comprehensive test coverage
 - **Performance Monitoring**: Built-in metrics and error tracking
 

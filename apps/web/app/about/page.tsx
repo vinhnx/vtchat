@@ -390,7 +390,7 @@ function AboutContent() {
                                         </li>
                                         <li>
                                             <strong>Code Quality:</strong>{' '}
-                                            dprint + oxlint for comprehensive linting
+                                            dprint + oxlint (type-aware) for comprehensive linting
                                         </li>
                                         <li>
                                             <strong>Type Checking:</strong>{' '}

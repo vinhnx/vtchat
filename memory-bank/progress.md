@@ -1,6 +1,18 @@
 # Progress Log
 
-## Latest Session - July 2025
+## Latest Session - August 2025
+
+### ✅ Oxlint Type-Aware Integration
+
+**Date**: August 22, 2025
+**Status**: Completed
+
+- Enabled type-aware linting with `oxlint-tsgolint`
+- Added `lint:type-aware` script and updated documentation
+
+---
+
+## Previous Session - July 2025
 
 ### ✅ Deep Research Model Update
 

@@ -81,7 +81,7 @@ vtchat/
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
-- **Code Quality**: dprint (formatting) + oxlint (comprehensive linting)
+- **Code Quality**: dprint (formatting) + oxlint (type-aware linting available)
 - **Type Checking**: TypeScript with strict configuration
 - **Performance Monitoring**: React Scan for development performance optimization
 
@@ -115,7 +115,7 @@ vtchat/
 - 4-space indentation, single quotes, 100 char line length
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
-- Use oxlint for fast comprehensive linting
+- Use `bun run lint:type-aware` for type-aware linting
 - Use Prettier for markdown files only
 
 ### UI/UX Design Principles
@@ -132,7 +132,7 @@ vtchat/
 - Plan before implementing significant tasks; request maintainer feedback on the plan
 - **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` or use commit tools
-- Run `bun run lint` (oxlint) for comprehensive error checking
+- Run `bun run lint:type-aware` for comprehensive error checking
 - Run `bun run build` to verify compilation before major changes
 - Test core functionality after significant changes
 
@@ -214,7 +214,7 @@ Security: NEXT_PUBLIC_BASE_URL
 ## Code Quality & Testing
 
 ### Linting & Formatting
-- oxlint for comprehensive error checking
+- oxlint (type-aware) for comprehensive error checking
 - dprint for code formatting and style enforcement
 - TypeScript strict configuration for type safety
 

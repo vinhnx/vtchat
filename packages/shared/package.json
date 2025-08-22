@@ -52,6 +52,7 @@
     },
     "scripts": {
         "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware",
         "type-check": "tsc --noEmit",
         "test": "vitest",
         "test:run": "vitest run",

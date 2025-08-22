@@ -8,6 +8,7 @@
     "main": "./main.ts",
     "scripts": {
         "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware",
         "type-check": "tsc --noEmit"
     },
     "exports": {

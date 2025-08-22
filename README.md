@@ -138,7 +138,7 @@ vtchat/
 - **Runtime**: Bun (package manager + JavaScript runtime)
 - **Monorepo**: Turborepo with optimized caching
 - **Testing**: Vitest with Testing Library
-- **Code Quality**: dprint (formatting) + oxlint (comprehensive linting)
+- **Code Quality**: dprint (formatting) + oxlint (type-aware linting available)
 - **Type Checking**: TypeScript with strict configuration
 - **Performance Monitoring**: React Scan for development performance optimization
 
@@ -228,6 +228,7 @@ bun test:coverage      # Run tests with coverage
 
 # Code Quality
 bun lint               # Lint with oxlint
+bun run lint:type-aware # Lint with oxlint --type-aware
 bun run fmt:check    # Check code formatting with dprint
 
 # Database

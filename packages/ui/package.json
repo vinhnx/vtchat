@@ -9,6 +9,7 @@
     "types": "./index.ts",
     "scripts": {
         "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware",
         "generate:component": "turbo gen react-component"
     },
     "dependencies": {

@@ -14,6 +14,7 @@
         "analyze": "ANALYZE=true next build",
         "start": "next start",
         "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware",
         "prepare": "husky",
         "postinstall": "fumadocs-mdx",
         "generate": "bunx drizzle-kit generate",
