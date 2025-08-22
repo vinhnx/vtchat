@@ -1,0 +1,20 @@
+# Bun Configuration
+# This project uses Bun as the primary package manager
+
+[install]
+# Cache packages for faster installs
+cache = true
+
+# Use exact versions to ensure consistency
+exact = false
+
+# Lockfile settings
+lockfile = "bun.lock"
+
+# Registry settings
+registry = "https://registry.npmjs.org"
+
+# Development settings
+[dev]
+# Prefer Bun for all package management operations
+preferBun = true

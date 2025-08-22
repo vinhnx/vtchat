@@ -1,20 +1,24 @@
 # VT Chat Language Model Middleware Implementation
 
 ## Overview
+
 This implementation adds a flexible middleware system to VT Chat's language model infrastructure, allowing for enhanced behavior through intercepting and modifying calls to language models.
 
 ## Files Created
 
 ### Middleware Implementations
+
 1. `packages/ai/middleware/logging-middleware.ts` - Logs parameters and generated text for debugging
 2. `packages/ai/middleware/caching-middleware.ts` - Caches generated text to reduce API costs
 3. `packages/ai/middleware/guardrails-middleware.ts` - Filters sensitive content for safety
 
 ### Configuration
+
 4. `packages/ai/middleware/config.ts` - Middleware configuration system with presets
 5. `packages/ai/middleware/index.ts` - Export all middleware components
 
 ### Documentation and Examples
+
 6. `packages/ai/middleware/README.md` - Documentation on how to use the middleware system
 7. `packages/ai/middleware/GUIDE.md` - Comprehensive guide on language model middleware for AI SDK v4
 8. `packages/ai/middleware/example.ts` - Example usage of the middleware system

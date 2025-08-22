@@ -80,7 +80,7 @@ ${getFormattingInstructions('writer')}
         }
         // Initialize content monitor to prevent getting stuck on tables
         const contentMonitor = new ContentMonitor({
-            onStuckDetected: (content, issue) => {
+            onStuckDetected: (_content, _issue) => {
                 updateAnswer({
                     text:
                         '\n\n**Note**: Switching to alternative formatting to improve readability...\n\n',

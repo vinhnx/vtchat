@@ -235,6 +235,42 @@ cd apps/web
 bun run generate       # Generate Drizzle schema
 ```
 
+## Troubleshooting
+
+### Common Development Issues
+
+**Multiple Lockfiles Warning**
+
+```
+⚠ Warning: Found multiple lockfiles. Selecting package-lock.json.
+   Consider removing the lockfiles at: * /path/to/bun.lock
+```
+
+This project uses **Bun as the primary package manager**. If you see this warning:
+
+- Always use `bun install` instead of `npm install`
+- The warning about `package-lock.json` in parent directories can be safely ignored
+- Ensure you're using Bun commands: `bun dev`, `bun build`, `bun test`
+
+**Package Installation Issues**
+
+```bash
+# Clear cache and reinstall
+rm -rf node_modules
+bun install
+
+# Verify Bun version
+bun --version  # Should be 1.1.19 or higher
+```
+
+**TypeScript Errors**
+
+```bash
+# Refresh type definitions
+bun install
+bunx tsc --noEmit  # Check for type errors
+```
+
 ## Configuration
 
 ### Environment Setup
