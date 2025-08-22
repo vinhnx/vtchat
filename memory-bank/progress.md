@@ -755,7 +755,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 - **Gemini 2.5 Pro** - Pro-level access
 - **Gemini 2.5 Flash** - Fast, efficient general-purpose model
-- **Gemini 2.5 Flash Lite Preview** - Latest preview features
+- **Gemini 2.5 Flash Lite** - Latest features
 
 **OpenRouter Models (Free)**:
 
@@ -942,3 +942,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 - **Build Status**: ✅ All changes compile successfully with no breaking changes
 
 **Result**: VT offers free tier, and with VT+ focusing only on 3 exclusive research capabilities: Deep Research, Pro Search.
+
+### 2025-08-22
+
+- Updated Gemini 2.5 Flash Lite references to stable model and ID across codebase and docs.

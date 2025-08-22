@@ -381,7 +381,7 @@ export interface RateLimitStatus {
  * Check if user can make a request to the specified model
  * Rate limits are enforced PER USER ACCOUNT
  * VT+ users get enhanced limits
- * VT+ users have unlimited access to gemini-2.5-flash-lite-preview-06-17
+ * VT+ users have unlimited access to gemini-2.5-flash-lite
  * VT+ users using other Gemini models count against both model-specific AND Flash Lite quotas
  */
 export async function checkRateLimit(
@@ -670,7 +670,7 @@ export async function recordRequest(
 
 /**
  * Get current rate limit status for a user and model
- * VT+ users have unlimited access to gemini-2.5-flash-lite-preview-06-17 but usage is tracked for display
+ * VT+ users have unlimited access to gemini-2.5-flash-lite but usage is tracked for display
  * VT+ users using other Gemini models show dual quota status
  */
 export async function getRateLimitStatus(

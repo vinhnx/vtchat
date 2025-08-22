@@ -42,7 +42,7 @@ The AI routing fix has been successfully implemented and deployed to production 
 
 #### ✅ Should Route to `/api/completion`:
 
-- **Free Models**: Gemini 2.5 Flash Lite Preview
+- **Free Models**: Gemini 2.5 Flash Lite
 - **VT+ Models**: Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
 - **VT+ Features**: Deep Research, Pro Search
 

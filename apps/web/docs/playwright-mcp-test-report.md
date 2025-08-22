@@ -106,7 +106,7 @@ This report documents the real-time testing of the VT Chat authentication system
 - ✅ Home page loads successfully for unauthenticated users
 - ✅ Shows "Good evening" greeting
 - ✅ Chat interface is available
-- ✅ Model selector shows "Gemini 2.5 Flash Lite Preview"
+- ✅ Model selector shows "Gemini 2.5 Flash Lite"
 - ✅ Upgrade button visible (Free tier indication)
 - ✅ Footer links present and accessible
 

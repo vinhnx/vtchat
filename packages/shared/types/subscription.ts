@@ -235,7 +235,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,
         name: 'All Gemini Models Without BYOK',
         description:
-            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite Preview) plus enhanced tools (web search, math calculator, charts) without needing your own API keys',
+            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite) plus enhanced tools (web search, math calculator, charts) without needing your own API keys',
     },
 };
 

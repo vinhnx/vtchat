@@ -11,7 +11,7 @@ async function testServerWebSearch() {
     console.log('\n📋 Testing web search via server request');
 
     const requestBody = {
-        mode: 'gemini-2.5-flash-lite-preview-06-17',
+        mode: 'gemini-2.5-flash-lite',
         prompt: 'who is vinhnx',
         threadId: 'test-thread-' + Date.now(),
         messages: [{ role: 'user', content: 'who is vinhnx?' }],

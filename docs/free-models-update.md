@@ -58,7 +58,7 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 - **Enhanced "Access to Free Models" benefit** to include all available free models:
   - Gemini 2.5 Pro Preview
   - Gemini 2.5 Flash
-  - Gemini 2.5 Flash Lite Preview
+  - Gemini 2.5 Flash Lite
   - DeepSeek V3
   - DeepSeek R1
   - Qwen3 14B
@@ -115,7 +115,7 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 ### Google Gemini (Free Tier)
 
 - **Gemini 2.5 Flash** - Fast, efficient model for general tasks
-- **Gemini 2.5 Flash Lite Preview** - Preview access to latest features
+- **Gemini 2.5 Flash Lite** - Access to latest features
 - **Gemini 2.5 Pro Preview** - Preview access to Pro-level capabilities (Note: Gemini 2.5 Pro is premium only)
 
 ### OpenRouter Models (Free Tier)

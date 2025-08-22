@@ -11,7 +11,7 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
             expect(supportsTools(model)).toBe(true);
 
             // Model enum should be correct
-            expect(model).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(model).toBe('gemini-2.5-flash-lite');
         });
 
         it('should have chart tools available and properly configured', () => {
@@ -44,7 +44,7 @@ describe('GEMINI_2_5_FLASH_LITE Chart Function Calling', () => {
                 parentThreadItemId: 'test-parent',
                 prompt: 'Create a chart',
                 messages: [],
-                mode: 'gemini-2.5-flash-lite-preview-06-17',
+                mode: 'gemini-2.5-flash-lite',
                 webSearch: false,
                 mathCalculator: false,
                 charts: true, // This should now be accepted
