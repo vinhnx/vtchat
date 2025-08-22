@@ -19,7 +19,7 @@ test.describe('Web Search Authentication', () => {
                             parentThreadItemId: `test-parent-${Date.now()}`,
                             prompt: 'test query with web search',
                             messages: [{ role: 'user', content: 'test query with web search' }],
-                            mode: 'gemini-2.5-flash-lite-preview-06-17',
+                            mode: 'gemini-2.5-flash-lite',
                             webSearch: true,
                             mathCalculator: false,
                             charts: false,
@@ -51,7 +51,7 @@ test.describe('Web Search Authentication', () => {
             // Test various modes with web search
             const testCases = [
                 {
-                    mode: 'gemini-2.5-flash-lite-preview-06-17',
+                    mode: 'gemini-2.5-flash-lite',
                     expectAuth: true,
                 },
                 {

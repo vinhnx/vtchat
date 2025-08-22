@@ -137,7 +137,7 @@ async function testSearchCapabilityDifferentiation() {
 
     try {
         // Test that the gemini-web-search task can differentiate between modes
-        const basicMode = 'gemini-2.5-flash-lite-preview-06-17';
+        const basicMode = 'gemini-2.5-flash-lite';
         const proMode = 'pro';
 
         console.log(`  - Basic mode: ${basicMode}`);

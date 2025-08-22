@@ -14,7 +14,7 @@ async function testWebSearchFlow() {
     log.info('\n📋 Testing web search flow with curl-like request');
 
     const requestBody = {
-        mode: 'gemini-2.5-flash-lite-preview-06-17',
+        mode: 'gemini-2.5-flash-lite',
         prompt: 'who is vinhnx',
         threadId: 'test-thread-id',
         messages: [
@@ -131,7 +131,7 @@ async function testWebSearchFlowWithApiKey() {
     log.info('\n📋 Testing web search flow with user API key');
 
     const requestBody = {
-        mode: 'gemini-2.5-flash-lite-preview-06-17',
+        mode: 'gemini-2.5-flash-lite',
         prompt: 'who is vinhnx',
         threadId: 'test-thread-id-2',
         messages: [

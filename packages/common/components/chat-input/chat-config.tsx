@@ -215,7 +215,7 @@ export const modelOptionsByProvider = {
 
     Google: [
         {
-            label: 'Gemini 2.5 Flash Lite Preview',
+            label: 'Gemini 2.5 Flash Lite',
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
             icon: <Gift className='text-green-500' size={16} />,

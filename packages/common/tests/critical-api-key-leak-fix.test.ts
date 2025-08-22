@@ -16,7 +16,7 @@ describe('CRITICAL API Key Leak Fix', () => {
 
     it('CRITICAL: should remove ALL provider API keys for server-funded Gemini models', () => {
         // Test the exact scenario from the bug report
-        const mode = ChatMode.GEMINI_2_5_FLASH_LITE; // "gemini-2.5-flash-lite-preview-06-17"
+        const mode = ChatMode.GEMINI_2_5_FLASH_LITE; // "gemini-2.5-flash-lite"
         const isServerFunded = true; // VT+ user with server-funded model
 
         const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerFunded);

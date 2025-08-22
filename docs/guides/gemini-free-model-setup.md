@@ -1,6 +1,6 @@
-# Gemini 2.5 Flash Lite Preview - Free Model Setup
+# Gemini 2.5 Flash Lite - Free Model Setup
 
-This guide covers the implementation of the free Gemini 2.5 Flash Lite Preview model with rate limiting for registered users.
+This guide covers the implementation of the free Gemini 2.5 Flash Lite model with rate limiting for registered users.
 
 ## Overview
 
@@ -228,5 +228,5 @@ Use the rate limit status API for debugging:
 
 ```bash
 curl -H "Authorization: Bearer <token>" \
-  "https://your-app.fly.dev/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17"
+  "https://your-app.fly.dev/api/rate-limit/status?model=gemini-2.5-flash-lite"
 ```
