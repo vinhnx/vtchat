@@ -28,7 +28,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         // Google models
         'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
         'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
-        'Gemini 2.5 Flash Lite Preview': ChatMode.GEMINI_2_5_FLASH_LITE,
+        'Gemini 2.5 Flash Lite': ChatMode.GEMINI_2_5_FLASH_LITE,
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,

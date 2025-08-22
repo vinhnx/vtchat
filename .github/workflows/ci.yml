@@ -1,55 +1,55 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  build_lint_test:
-    name: Build, Lint, Format, Test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    build_lint_test:
+        name: Build, Lint, Format, Test
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.1.19'
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: "1.1.19"
 
-      - name: Install dependencies
-        run: bun install
+            - name: Install dependencies
+              run: bun install
 
-      - name: Format check (code)
-        run: bun run fmt:check
+            - name: Format check (code)
+              run: bun run fmt:check
 
-      - name: Format check (Markdown)
-        run: bun run format:check
+            - name: Format check (Markdown)
+              run: bun run format:check
 
-      - name: Lint
-        run: bun run lint
+            - name: Lint
+              run: bun run lint
 
-      - name: Lint URLs (no hard-coded)
-        run: bun run lint:urls
+            - name: Lint URLs (no hard-coded)
+              run: bun run lint:urls
 
-      - name: Build
-        run: bun run build
+            - name: Build
+              run: bun run build
 
-      - name: Test (coverage)
-        env:
-          NODE_ENV: test
-        run: bun run test:coverage
+            - name: Test (coverage)
+              env:
+                  NODE_ENV: test
+              run: bun run test:coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          flags: unit
-          fail_ci_if_error: false
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v4
+              with:
+                  flags: unit
+                  fail_ci_if_error: false

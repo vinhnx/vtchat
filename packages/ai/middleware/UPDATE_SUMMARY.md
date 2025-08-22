@@ -24,19 +24,24 @@ We've updated the middleware documentation to align with AI SDK v4 and VT Chat's
 ## Technical Details
 
 ### Interface Alignment
+
 - **AI SDK v4**: Uses `LanguageModelV1Middleware` for `wrapLanguageModel`
 - **VT Chat Implementation**: Uses `LanguageModelV2Middleware` for actual middleware implementations
 - **Compatibility**: Both interfaces are compatible and work together correctly
 
 ### Updated Examples
+
 All examples in the new guide have been updated to:
+
 - Use correct type imports from `@ai-sdk/provider`
 - Show proper implementation patterns for AI SDK v4
 - Include VT Chat's enhanced configuration system
 - Demonstrate combining multiple middleware sources
 
 ### Configuration System
+
 The guide now documents VT Chat's advanced middleware configuration:
+
 - Flexible enable/disable system
 - Presets for common use cases (DEVELOPMENT, PRODUCTION, PERFORMANCE, PRIVACY)
 - Support for custom middleware combinations
@@ -44,6 +49,7 @@ The guide now documents VT Chat's advanced middleware configuration:
 ## Verification
 
 All existing tests continue to pass, confirming that:
+
 - Middleware implementations work correctly
 - Integration with `wrapLanguageModel` functions properly
 - Configuration system operates as expected

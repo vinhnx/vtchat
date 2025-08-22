@@ -2,7 +2,10 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, vi } from 'vitest';
 
-// Mock pdfjs-dist at the global level to prevent import issues
+// Mock Next.js Image component completely
+vi.mock('next/image', () => ({
+    default: () => null, // Return null to avoid rendering issues
+})); // Mock pdfjs-dist at the global level to prevent import issues
 vi.mock('pdfjs-dist', () => ({
     getDocument: vi.fn().mockImplementation(() => ({
         promise: Promise.resolve({

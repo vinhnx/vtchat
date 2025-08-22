@@ -134,8 +134,7 @@ export class ErrorMessageService {
         if (originalError?.includes('unauthorized') || originalError?.includes('401')) {
             return {
                 title: `${providerName} Authentication Failed`,
-                message:
-                    `Your ${providerName} API key is invalid or has expired.`,
+                message: `Your ${providerName} API key is invalid or has expired.`,
                 action:
                     `1. Check your ${providerName} account is active and has billing set up\n2. Verify your API key hasn't expired\n3. Generate a new API key if needed\n4. Update it in Settings → API Keys → ${providerName}`,
                 helpUrl: setupUrl,
