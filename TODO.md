@@ -2,6 +2,10 @@
 
 --
 
+check deep research. pro search. web search 
+
+--
+
 ✅ **COMPLETED: AI SDK v5 Migration & Gemini 2.5 Models Update**
 
 **🎯 Final Status: PRODUCTION READY**
