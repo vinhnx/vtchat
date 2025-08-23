@@ -9,7 +9,7 @@ VTChat uses a lightweight tooling stack for performance and code quality.
 ### Code Quality Tools
 
 - **dprint**: Fast code formatter
-- **oxlint**: Comprehensive linting
+- **oxlint**: Type-aware linting
 - **Bun**: Package manager and JavaScript runtime
 - **TypeScript**: Strict type checking
 
@@ -52,8 +52,8 @@ bun add -D dprint
 ### 2. oxlint Setup
 
 ```bash
-# Install oxlint
-bun add -D oxlint
+# Install oxlint with type awareness
+bun add -D oxlint oxlint-tsgolint
 ```
 
 `.oxlintrc.json`:
@@ -73,6 +73,8 @@ bun add -D oxlint
 }
 ```
 
+Run `bun run lint:type-aware` to enable type-aware linting.
+
 ### 3. Package Scripts
 
 ```json
@@ -81,6 +83,7 @@ bun add -D oxlint
         "fmt": "dprint fmt",
         "fmt:check": "dprint check",
         "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware",
         "format": "prettier --write \"**/*.md\"",
         "format:check": "prettier --check \"**/*.md\"",
         "check": "bun run fmt:check && bun run lint"
@@ -112,7 +115,7 @@ bun lint
 ## Benefits
 
 - **dprint**: Rust-based, extremely fast formatting
-- **oxlint**: Rust-based linting
+- **oxlint**: Rust-based type-aware linting
 - **Bun**: Fast package management and script execution
 
 ## VS Code Integration

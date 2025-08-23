@@ -16,6 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - PascalCase components, camelCase hooks/utils, kebab-case files
 - Named exports preferred over default exports
 - Use oxlint for fast comprehensive linting (run `bun run lint`)
+- Optional type-aware lint: `bun run lint:type-aware`
 - Use Prettier for markdown files only (run `bun run format`)
 - Large prebuilt assets (e.g., PDF.js worker) must be loaded from a CDN rather than committed.
 
@@ -36,7 +37,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **REQUIRED**: Consult Oracle before implementing any task (see Oracle Consultation Workflow below)
 - **REQUIRED**: Run `bun run fmt` to auto-fix formatting issues
 - **NEVER commit changes yourself** - DO NOT execute `git commit` unless you have my approval
-- Run `bun run lint` (oxlint) for comprehensive error checking
+- Run `bun run lint:type-aware` for type-aware error checking
 - Run `bun run build` to verify compilation before major changes
 - Test core functionality after significant changes
 
@@ -277,6 +278,7 @@ For more information, read the Bun API docs in `node_modules/bun-types/docs/**.m
 - `bun run start` - Start production server
 - `bun run test` - Run tests
 - `bun run lint` - Lint with oxlint
+- `bun run lint:type-aware` - Lint with oxlint --type-aware
 - `bun run fmt:check` - Check code formatting with dprint
 
 ## Database

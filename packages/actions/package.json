@@ -6,7 +6,8 @@
     "author": "Vinh Nguyen",
     "license": "MIT",
     "scripts": {
-        "lint": "oxlint"
+        "lint": "oxlint",
+        "lint:type-aware": "oxlint --type-aware"
     },
     "exports": {
         ".": "./index.ts"

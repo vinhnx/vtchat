@@ -12,6 +12,7 @@
 - Start dev server: `bun dev`
 - Build all apps/packages: `bun run build`
 - Lint codebase: `bun run lint`
+- Type-aware lint: `bun run lint:type-aware`
 - Format Markdown: `bun run format`
 - Code format (dprint): `bun run fmt`
 - Run tests: `bun test`

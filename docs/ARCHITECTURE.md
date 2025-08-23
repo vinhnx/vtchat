@@ -233,7 +233,7 @@ graph LR
 
 - **TypeScript**: Strict configuration with zero errors
 - **Testing**: Vitest with Testing Library and comprehensive coverage
-- **Linting**: oxlint for fast, modern linting
+- **Linting**: oxlint with optional type-aware checks
 - **Formatting**: Prettier with Tailwind CSS plugin
 - **Type Safety**: End-to-end type safety from database to UI
 
