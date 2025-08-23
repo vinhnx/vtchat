@@ -50,6 +50,11 @@ export class ChunkBuffer {
     }
 
     add(chunk: string): void {
+        // Guard against undefined or null chunks
+        if (chunk === undefined || chunk === null) {
+            return;
+        }
+        
         this.fullText += chunk;
         this.buffer += chunk;
 
@@ -418,8 +423,11 @@ export const generateTextWithGeminiSearch = async ({
                 }
 
                 if (chunk.type === 'text-delta') {
-                    fullText += chunk.textDelta;
-                    onChunk?.(chunk.textDelta, fullText);
+                    fullText += chunk.text;
+                    // Only call onChunk if text is defined and not empty
+                    if (chunk.text !== undefined && chunk.text !== null) {
+                        onChunk?.(chunk.text, fullText);
+                    }
                 }
             }
         } catch (error: any) {
@@ -856,12 +864,15 @@ export const generateText = async ({
                     }
 
                     if (chunk.type === 'text-delta') {
-                        fullText += chunk.textDelta;
-                        onChunk?.(chunk.textDelta, fullText);
+                        fullText += chunk.text;
+                        // Only call onChunk if text is defined and not empty
+                        if (chunk.text !== undefined && chunk.text !== null) {
+                            onChunk?.(chunk.text, fullText);
+                        }
                     }
-                    if (chunk.type === 'reasoning') {
-                        reasoning += chunk.textDelta;
-                        onReasoning?.(chunk.textDelta, reasoning);
+                    if (chunk.type === 'reasoning-delta') {
+                        reasoning += chunk.text;
+                        onReasoning?.(chunk.text, reasoning);
                     }
                     if (chunk.type === 'tool-call') {
                         onToolCall?.(chunk);

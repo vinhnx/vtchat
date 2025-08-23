@@ -71,6 +71,7 @@ export function CobeGlobe({ className }: CobeGlobeProps) {
             markerColor,
             glowColor: glow,
             markers: [
+                { location: [10.709360, 105.121986], size: 0.1 },
                 { location: [37.7595, -122.4367], size: 0.03 },
                 { location: [40.7128, -74.006], size: 0.1 },
             ],

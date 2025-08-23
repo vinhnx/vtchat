@@ -327,7 +327,11 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                         chunkPreview: chunk?.substring(0, 50) + '...',
                         threadItemId: context?.get('threadItemId'),
                     });
-                    chunkBuffer.add(chunk);
+                    
+                    // Only add to buffer if chunk is defined and not empty
+                    if (chunk !== undefined && chunk !== null && chunk !== '') {
+                        chunkBuffer.add(chunk);
+                    }
                 },
                 onToolCall: (toolCall) => {
                     log.info({ toolName: toolCall.toolName, args: toolCall.args }, 'Tool call');
