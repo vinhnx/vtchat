@@ -1,6 +1,7 @@
 'use client';
 
 import { AiToolsBadge } from './aitools-badge';
+import { FirstoBadges } from './firsto-badges';
 import { GoodFirmsBadge } from './goodfirms-badge';
 
 interface BadgesSectionProps {
@@ -22,6 +23,11 @@ export function BadgesSection({ className }: BadgesSectionProps) {
                 {/* GoodFirms Badge */}
                 <div className='badge-item flex-shrink-0'>
                     <GoodFirmsBadge className='transition-transform duration-200 hover:scale-105 focus:scale-105' />
+                </div>
+
+                {/* Firsto Badges */}
+                <div className='badge-item flex-shrink-0'>
+                    <FirstoBadges />
                 </div>
             </div>
 
