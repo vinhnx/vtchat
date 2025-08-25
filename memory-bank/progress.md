@@ -2,6 +2,16 @@
 
 ## Latest Session - August 2025
 
+### ✅ Gemini Search Utils Refactor
+
+**Date**: August 25, 2025
+**Status**: Completed
+
+- Refactored `packages/ai/workflow/utils.ts` with helper functions and enums
+- Maintained public API and ensured tests pass
+
+---
+
 ### ✅ Oxlint Type-Aware Integration
 
 **Date**: August 22, 2025
