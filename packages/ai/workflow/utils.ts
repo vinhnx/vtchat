@@ -30,6 +30,13 @@ import type {
 import type { WorkflowEventSchema } from './flow';
 import { generateErrorMessage } from './tasks/utils';
 
+enum BreakPattern {
+    DOUBLE_NEWLINE = '\\n\\n',
+    PERIOD = '.',
+    EXCLAMATION = '!',
+    QUESTION = '?',
+}
+
 export type ChunkBufferOptions = {
     threshold?: number;
     breakOn?: string[];
@@ -37,30 +44,30 @@ export type ChunkBufferOptions = {
 };
 
 export class ChunkBuffer {
-    private buffer = '';
-    private fullText = '';
-    private threshold?: number;
-    private breakPatterns: string[];
-    private onFlush: (chunk: string, fullText: string) => void;
+    private chunkBuffer = '';
+    private accumulatedText = '';
+    private readonly threshold?: number;
+    private readonly flushDelimiters: string[];
+    private readonly onFlush: (chunk: string, fullText: string) => void;
 
     constructor(options: ChunkBufferOptions) {
         this.threshold = options.threshold;
-        this.breakPatterns = options.breakOn || ['\n\n', '.', '!', '?'];
+        this.flushDelimiters = options.breakOn ?? Object.values(BreakPattern);
         this.onFlush = options.onFlush;
     }
 
     add(chunk: string): void {
-        // Guard against undefined or null chunks
         if (chunk === undefined || chunk === null) {
             return;
         }
-        
-        this.fullText += chunk;
-        this.buffer += chunk;
 
-        const shouldFlush = (this.threshold && this.buffer.length >= this.threshold)
-            || this.breakPatterns.some(
-                (pattern) => chunk.includes(pattern) || chunk.endsWith(pattern),
+        this.accumulatedText += chunk;
+        this.chunkBuffer += chunk;
+
+        const shouldFlush = (this.threshold !== undefined
+            && this.chunkBuffer.length >= this.threshold)
+            || this.flushDelimiters.some(
+                (delimiter) => chunk.includes(delimiter) || chunk.endsWith(delimiter),
             );
 
         if (shouldFlush) {
@@ -69,17 +76,108 @@ export class ChunkBuffer {
     }
 
     flush(): void {
-        if (this.buffer.length > 0) {
-            this.onFlush(this.buffer, this.fullText);
-            this.buffer = '';
+        if (this.chunkBuffer.length > 0) {
+            this.onFlush(this.chunkBuffer, this.accumulatedText);
+            this.chunkBuffer = '';
         }
     }
 
     end(): void {
         this.flush();
-        this.fullText = '';
+        this.accumulatedText = '';
     }
 }
+
+enum GeminiSearchErrorMessage {
+    NO_API_KEY = 'Gemini API key is required for web search functionality',
+    FREE_MODEL_REQUIRES_KEY =
+        'Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
+    SYSTEM_KEY_UNAVAILABLE =
+        'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.',
+}
+
+type GeminiKeyUsage = {
+    userKeyAvailable: boolean;
+    systemKeyAvailable: boolean;
+    useSystemKey: boolean;
+    flashLiteModel: boolean;
+    vtPlusSubscriber: boolean;
+};
+
+const evaluateGeminiKeyUsage = (
+    model: ModelEnum,
+    byokKeys?: Record<string, string>,
+    userTier?: UserTierType,
+): GeminiKeyUsage => {
+    const userKeyAvailable = Boolean(byokKeys?.GEMINI_API_KEY?.trim());
+    const browserKeyAvailable = typeof window !== 'undefined'
+        && Boolean((window as any).AI_API_KEYS?.google);
+    const systemKeyAvailable = browserKeyAvailable
+        || Boolean(typeof process !== 'undefined' && process.env?.GEMINI_API_KEY);
+    const flashLiteModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+    const vtPlusSubscriber = userTier === UserTier.PLUS;
+
+    if (!userKeyAvailable && !systemKeyAvailable) {
+        log.warn(
+            {
+                isFreeGeminiModel: flashLiteModel,
+                isVtPlusUser: vtPlusSubscriber,
+                hasUserGeminiKey: userKeyAvailable,
+                hasSystemGeminiKey: systemKeyAvailable,
+                environment: process.env.NODE_ENV,
+            },
+            'Web search failed: No API key available',
+        );
+        if (flashLiteModel && !vtPlusSubscriber) {
+            throw new Error(GeminiSearchErrorMessage.FREE_MODEL_REQUIRES_KEY);
+        }
+        if (vtPlusSubscriber) {
+            throw new Error(GeminiSearchErrorMessage.SYSTEM_KEY_UNAVAILABLE);
+        }
+        throw new Error(GeminiSearchErrorMessage.NO_API_KEY);
+    }
+
+    const useSystemKey = !userKeyAvailable
+        && systemKeyAvailable
+        && (flashLiteModel || vtPlusSubscriber);
+
+    return {
+        userKeyAvailable,
+        systemKeyAvailable,
+        useSystemKey,
+        flashLiteModel,
+        vtPlusSubscriber,
+    };
+};
+
+const filterMessagesByContent = (messages: CoreMessage[]): CoreMessage[] => {
+    const filtered = messages.filter((message) => {
+        const { content } = message;
+        const hasContent = content
+            && (typeof content === 'string'
+                ? content.trim() !== ''
+                : Array.isArray(content)
+                ? content.length > 0
+                : true);
+
+        if (!hasContent) {
+            log.warn('Filtering out message with empty content in GeminiSearch:', {
+                role: message.role,
+                contentType: typeof content,
+            });
+        }
+
+        return hasContent;
+    });
+
+    log.info('GeminiSearch message filtering:', {
+        originalCount: messages.length,
+        filteredCount: filtered.length,
+        removedCount: messages.length - filtered.length,
+    });
+
+    return filtered;
+};
 
 export const generateTextWithGeminiSearch = async ({
     prompt,
@@ -114,84 +212,26 @@ export const generateTextWithGeminiSearch = async ({
             byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         },
         'generateTextWithGeminiSearch parameters',
-    ); // Declare variables outside try block so they're available in catch block
-    let hasUserGeminiKey = false;
-    let hasSystemGeminiKey = false;
-    let isFreeGeminiModel = false;
-    let isVtPlusUser = false;
+    );
 
     try {
         if (signal?.aborted) {
             throw new Error('Operation aborted');
         }
 
-        // Check if we have a valid API key for Google models
-        let windowApiKey = false;
-        try {
-            windowApiKey = typeof window !== 'undefined' && !!(window as any).AI_API_KEYS?.google;
-        } catch {
-            // window is not available in this environment
-            windowApiKey = false;
-        }
-
-        hasUserGeminiKey = !!(
-            byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0
-        );
-        hasSystemGeminiKey = !!(
-            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY)
-            || windowApiKey
-        );
-
-        // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
-        isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
-        isVtPlusUser = userTier === UserTier.PLUS;
-
-        // Handle different scenarios for API key requirements
-        if (!hasUserGeminiKey && !hasSystemGeminiKey) {
-            log.warn(
-                {
-                    isFreeGeminiModel,
-                    isVtPlusUser,
-                    hasUserGeminiKey,
-                    hasSystemGeminiKey,
-                    environment: process.env.NODE_ENV,
-                },
-                'Web search failed: No API key available',
-            );
-
-            if (isFreeGeminiModel && !isVtPlusUser) {
-                // Free tier user with free model - require BYOK for web search
-                throw new Error(
-                    'Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
-                );
-            }
-            if (isVtPlusUser) {
-                throw new Error(
-                    'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.',
-                );
-            }
-            throw new Error('Gemini API key is required for web search functionality');
-        }
-
-        // If user has BYOK, use their key (unlimited usage)
-        // If user doesn't have BYOK but system key is available:
-        //   - For VT+ users: use system key (unlimited usage for VT+ users)
-        //   - For free users with free model: use system key only if available (counted usage)
-        const useSystemKey = !hasUserGeminiKey && hasSystemGeminiKey
-            && (isFreeGeminiModel || isVtPlusUser);
+        const keyUsage = evaluateGeminiKeyUsage(model, byokKeys, userTier);
 
         log.info('API key usage decision:', {
-            hasUserKey: hasUserGeminiKey,
-            hasSystemKey: hasSystemGeminiKey,
-            isFreeModel: isFreeGeminiModel,
-            isVtPlusUser,
-            useSystemKey,
+            hasUserKey: keyUsage.userKeyAvailable,
+            hasSystemKey: keyUsage.systemKeyAvailable,
+            isFreeModel: keyUsage.flashLiteModel,
+            isVtPlusUser: keyUsage.vtPlusSubscriber,
+            useSystemKey: keyUsage.useSystemKey,
         });
 
         log.info('Getting language model for:', { data: model });
 
-        // Use system key for free model users without BYOK
-        const effectiveByokKeys = useSystemKey ? undefined : byokKeys;
+        const effectiveByokKeys = keyUsage.useSystemKey ? undefined : byokKeys;
         const selectedModel = getLanguageModel(
             model,
             undefined,
@@ -199,7 +239,7 @@ export const generateTextWithGeminiSearch = async ({
             true,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
-            isVtPlusUser,
+            keyUsage.vtPlusSubscriber,
         );
         log.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
@@ -223,33 +263,7 @@ export const generateTextWithGeminiSearch = async ({
             promptLength: prompt?.length,
         });
 
-        // Filter out messages with empty content to prevent Gemini API errors
-        let filteredMessages = messages;
-        if (messages?.length) {
-            filteredMessages = messages.filter((message) => {
-                const hasContent = message.content
-                    && (typeof message.content === 'string'
-                        ? message.content.trim() !== ''
-                        : Array.isArray(message.content)
-                        ? message.content.length > 0
-                        : true);
-
-                if (!hasContent) {
-                    log.warn('Filtering out message with empty content in GeminiSearch:', {
-                        role: message.role,
-                        contentType: typeof message.content,
-                    });
-                }
-
-                return hasContent;
-            });
-
-            log.info('GeminiSearch message filtering:', {
-                originalCount: messages.length,
-                filteredCount: filteredMessages.length,
-                removedCount: messages.length - filteredMessages.length,
-            });
-        }
+        const filteredMessages = messages?.length ? filterMessagesByContent(messages) : messages;
 
         let streamResult;
 
