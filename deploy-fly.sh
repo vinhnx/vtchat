@@ -217,7 +217,8 @@ generate_changelog() {
             # Check if the changelog has meaningful content (not just version info)
             if grep -q "Features\|Bug Fixes\|Performance" "$temp_changelog"; then
                 print_info "Changelog preview:"
-                head -20 "$temp_changelog"
+                # Redirect preview to stderr so function callers can safely capture stdout
+                head -20 "$temp_changelog" >&2
                 print_status "Changelog generated successfully (preview above)"
             else
                 print_info "No significant changes to include in changelog"
