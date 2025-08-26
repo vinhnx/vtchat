@@ -1,4 +1,5 @@
 import { EnvironmentType } from '../types/environment';
+import { log } from '@repo/shared/lib/logger';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -62,51 +63,59 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 export const isProduction = process.env.NODE_ENV === 'production';
 
 /**
- * Development-only console logging utility
+ * Development-only logging utility using Pino
  */
 export const devLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(args.length === 1 ? args[0] : { data: args }, 'Dev log');
         }
     },
     warn: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.warn(args.length === 1 ? args[0] : { data: args }, 'Dev warning');
         }
     },
     error: (...args: any[]) => {
         // Always log errors, even in production
-        console.error(...args);
+        log.error(args.length === 1 ? args[0] : { data: args }, 'Dev error');
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(args.length === 1 ? args[0] : { data: args }, 'Dev info');
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug(args.length === 1 ? args[0] : { data: args }, 'Dev debug');
         }
     },
 };
 
 /**
- * Production-safe console logging that only shows errors and warnings
+ * Production-safe logging using Pino that shows errors and warnings
  */
 export const prodSafeLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(args.length === 1 ? args[0] : { data: args }, 'Prod-safe log');
         }
     },
     warn: (...args: any[]) => {
+        log.warn(args.length === 1 ? args[0] : { data: args }, 'Prod-safe warning');
     },
     error: (...args: any[]) => {
         // Always log errors even in production
-        console.error(...args);
+        log.error(args.length === 1 ? args[0] : { data: args }, 'Prod-safe error');
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(args.length === 1 ? args[0] : { data: args }, 'Prod-safe info');
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug(args.length === 1 ? args[0] : { data: args }, 'Prod-safe debug');
         }
     },
 };
