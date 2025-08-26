@@ -10,10 +10,6 @@ Research and rename "VT" to better and memorable name
 
 --
 
-use ruler
-
---
-
 explore ai gateway.
 
 --
