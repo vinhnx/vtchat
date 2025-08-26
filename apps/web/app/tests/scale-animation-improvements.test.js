@@ -83,5 +83,3 @@ export const scaleAnimationConfig = {
     exit: { opacity: 0, scale: 0.93 },
     transition: { duration: 0.125, ease: 'easeOut' },
 };
-
-console.log('Scale Animation Test: ✅ All improvements verified');

@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: '**'
 ---
 
 # AGENT.md - Development Guidelines
@@ -58,11 +58,11 @@ applyTo: "**"
 - This applies to ALL deployment commands and scripts
 
 - **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
-  - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
-  - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
-  - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
-  - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
-  - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
+    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
 ### Git Hooks
 
@@ -324,13 +324,3 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
-
-to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
-
-To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.
-
-You can access this data through an API.
-
-curl https://models.dev/api.json
-
-Use the Model ID field to do a lookup on any model; it's the identifier used by AI SDK.

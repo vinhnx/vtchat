@@ -44,9 +44,9 @@ test.describe('Tailwind v4 Upgrade Verification', () => {
         // Verify that border-radius is applied
         expect(borderRadius).not.toBe('0px');
 
-        console.log('✅ Tailwind v4 utilities are working correctly!');
-        console.log(`   Box Shadow: ${boxShadow}`);
-        console.log(`   Border Radius: ${borderRadius}`);
+        
+        
+        
     });
 
     test('should verify that deprecated utilities have been updated in components', async ({ page }) => {
@@ -93,10 +93,10 @@ test.describe('Tailwind v4 Upgrade Verification', () => {
         });
 
         if (foundDeprecated) {
-            console.warn('⚠️  Found deprecated utilities in DOM:');
-            foundIssues.forEach((issue) => console.warn(`   ${issue}`));
+            
+            foundIssues.forEach((issue) => );
         } else {
-            console.log('✅ No deprecated utilities found in DOM - upgrade successful!');
+            
         }
 
         // This test should pass even if deprecated utilities are found,

@@ -123,19 +123,19 @@ test.describe('Tailwind v4 Breaking Changes Detection', () => {
         });
 
         // Log all results for analysis
-        console.log('=== BREAKING CHANGES ANALYSIS ===');
-        console.log('Shadow utilities:');
-        console.log('  shadow-sm:', shadowSmStyles);
-        console.log('  shadow:', shadowStyles);
-        console.log('Rounded utilities:');
-        console.log('  rounded-sm:', roundedSmStyles);
-        console.log('  rounded:', roundedStyles);
-        console.log('Outline utility:');
-        console.log('  outline-none:', outlineStyles);
-        console.log('Ring utility:');
-        console.log('  ring:', ringStyles);
-        console.log('Border utility:');
-        console.log('  border:', borderStyles);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         // Verify utilities are being applied (even if deprecated)
         expect(shadowSmStyles.boxShadow).not.toBe('none');
@@ -145,10 +145,10 @@ test.describe('Tailwind v4 Breaking Changes Detection', () => {
         expect(borderStyles.borderWidth).not.toBe('0px');
 
         // Check if ring utility is working (might be different in v4)
-        console.log('Ring box-shadow:', ringStyles.boxShadow);
+        
 
         // Check if border uses currentColor (v4 behavior)
-        console.log('Border color (should be currentColor in v4):', borderStyles.borderColor);
+        :', borderStyles.borderColor);
     });
 
     test('should test CSS custom properties accessibility', async ({ page }) => {
@@ -184,8 +184,8 @@ test.describe('Tailwind v4 Breaking Changes Detection', () => {
             return variables;
         });
 
-        console.log('=== CSS CUSTOM PROPERTIES ===');
-        console.log(cssVariables);
+        
+        
 
         // Verify key variables are defined
         expect(cssVariables['--color-primary']).toBeTruthy();
@@ -235,9 +235,9 @@ test.describe('Tailwind v4 Breaking Changes Detection', () => {
             };
         });
 
-        console.log('=== SPACE-BETWEEN UTILITIES ===');
-        console.log('First child margins:', firstChildStyles);
-        console.log('Second child margins:', secondChildStyles);
+        
+        
+        
 
         // In v4, space-y should use margin-bottom on :not(:last-child)
         // So first child should have margin-bottom, second should have margin-bottom too (except last)
@@ -282,9 +282,9 @@ test.describe('Tailwind v4 Breaking Changes Detection', () => {
             };
         });
 
-        console.log('=== GRADIENT VARIANTS ===');
-        console.log('Initial gradient:', initialStyles.backgroundImage);
-        console.log('Hover gradient:', hoverStyles.backgroundImage);
+        
+        
+        
 
         // Both should have gradients
         expect(initialStyles.backgroundImage).toContain('gradient');

@@ -20,8 +20,6 @@ test.describe('Tailwind v4 Verification', () => {
         // Tailwind should apply some background color from our CSS variables
         expect(backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
         expect(backgroundColor).not.toBe('transparent');
-
-        console.log('Body background color:', backgroundColor);
     });
 
     test('should have CSS custom properties defined', async ({ page }) => {
@@ -43,8 +41,6 @@ test.describe('Tailwind v4 Verification', () => {
         expect(customProperties.foreground).toBeTruthy();
         expect(customProperties.primary).toBeTruthy();
         expect(customProperties.border).toBeTruthy();
-
-        console.log('CSS Custom Properties:', customProperties);
     });
 
     test('should apply Tailwind utility classes', async ({ page }) => {
@@ -78,7 +74,5 @@ test.describe('Tailwind v4 Verification', () => {
         expect(styles.padding).not.toBe('0px');
         expect(styles.borderRadius).not.toBe('0px');
         expect(styles.boxShadow).not.toBe('none');
-
-        console.log('Applied Tailwind styles:', styles);
     });
 });

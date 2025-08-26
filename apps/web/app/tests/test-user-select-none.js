@@ -23,7 +23,6 @@ test('Interactive elements should not allow text selection', async ({ page }) =>
 
             // If the button contains only non-selectable elements, selection should be empty
             // This test would pass if our select-none implementation is working
-            console.log(`Button selection result: "${selection}"`);
         }
     }
 
@@ -47,17 +46,9 @@ test('Interactive elements should not allow text selection', async ({ page }) =>
                 });
 
                 const selection = await page.evaluate(() => window.getSelection().toString());
-                console.log(`${selector} selection result: "${selection}"`);
             }
         }
     }
 });
 
 // Simple manual test instructions
-console.log(`
-Manual Test Instructions:
-1. Open http://localhost:3000 in your browser
-2. Try to select text within buttons, badges, tabs, toggles, checkboxes, etc.
-3. The text within these interactive elements should not be selectable
-4. You should see the cursor change but no text highlighting should occur
-`);

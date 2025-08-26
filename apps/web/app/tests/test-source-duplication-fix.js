@@ -96,27 +96,27 @@ function processWebSearchSources(toolResult, existingSources = []) {
 }
 
 async function testSourceDuplicationFix() {
-    console.log('🧪 Testing Source Duplication Fix\n');
+    
 
-    console.log('📋 Input Data:');
-    console.log('- Mock tool result sources:', mockToolResult.result.sources.length);
-    console.log('- Existing sources:', mockContext.sources.length);
-    console.log();
+    
+    
+    
+    
 
     // Process the sources
     const updatedSources = processWebSearchSources(mockToolResult, mockContext.sources);
 
-    console.log('📊 Results:');
-    console.log('- Total sources after processing:', updatedSources.length);
-    console.log('- Expected: 3 (1 existing + 2 new unique sources)');
-    console.log();
+    
+    
+    ');
+    
 
-    console.log('📝 Detailed Results:');
+    
     updatedSources.forEach((source, index) => {
-        console.log(`${index + 1}. ${source.title}`);
-        console.log(`   URL: ${source.link}`);
-        console.log(`   Snippet: ${source.snippet.substring(0, 80)}...`);
-        console.log();
+        
+        
+        }...`);
+        
     });
 
     // Verify the results
@@ -127,20 +127,18 @@ async function testSourceDuplicationFix() {
     const uniqueUrls = new Set(updatedSources.map((source) => source.link));
     const hasDuplicates = uniqueUrls.size !== updatedSources.length;
 
-    console.log('✅ Test Results:');
-    console.log(`- Source count correct: ${actualCount === expectedCount ? 'PASS' : 'FAIL'}`);
-    console.log(`- No duplicate URLs: ${!hasDuplicates ? 'PASS' : 'FAIL'}`);
-    console.log(
-        `- Sources properly indexed: ${
-            updatedSources.every((source, i) => source.index === i + 1) ? 'PASS' : 'FAIL'
+    
+    
+    
+    => source.index === i + 1) ? 'PASS' : 'FAIL'
         }`,
     );
 
     if (actualCount === expectedCount && !hasDuplicates) {
-        console.log('\n🎉 ALL TESTS PASSED! Source duplication fix is working correctly.');
+        
         return true;
     } else {
-        console.log('\n❌ TESTS FAILED! Source duplication fix needs investigation.');
+        
         return false;
     }
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-console.log('Testing Gemini Source Duplication Fix');
+
 
 // Mock existing sources (what's already in context)
 const existingSources = [
@@ -33,13 +33,11 @@ const mockGeminiResult = {
     ],
 };
 
-console.log('\n📋 Input Data:');
-console.log(`- Mock Gemini result sources: ${mockGeminiResult.sources.length}`);
-console.log(`- Existing sources: ${existingSources.length}`);
 
-console.log('\nProcessing Gemini web search sources from result', {
-    sourcesCount: mockGeminiResult.sources.length,
-    sources: mockGeminiResult.sources.map((s) => ({
+
+
+
+=> ({
         title: s.title,
         url: s.url,
         snippet: s.description ? s.description.substring(0, 50) + '......' : '',
@@ -73,11 +71,7 @@ function updateSourcesWithDeduplication(current, result) {
         index: index + (existingSources?.length || 0) + 1,
     }));
 
-    console.log('Updated sources from Gemini web search with deduplication', {
-        existingCount: existingSources.length,
-        originalNewCount: result.sources?.length || 0,
-        filteredNewCount: newSources?.length || 0,
-        totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+    + (newSources?.length || 0),
     });
 
     return [...existingSources, ...newSources];
@@ -86,16 +80,16 @@ function updateSourcesWithDeduplication(current, result) {
 // Test the deduplication
 const finalSources = updateSourcesWithDeduplication(existingSources, mockGeminiResult);
 
-console.log('\n📊 Results:');
-console.log(`- Total sources after processing: ${finalSources.length}`);
-console.log('- Expected: 3 (1 existing + 2 new unique sources)');
 
-console.log('\n📝 Detailed Results:');
+
+');
+
+
 finalSources.forEach((source, index) => {
-    console.log(index + 1 + '. ' + source.title);
-    console.log('   URL: ' + source.link);
-    console.log('   Snippet: ' + source.snippet);
-    console.log(' ');
+    
+    
+    
+    
 });
 
 // Validate results
@@ -104,14 +98,14 @@ const actualCount = finalSources.length;
 const hasNoDuplicateUrls = new Set(finalSources.map((s) => s.link)).size === finalSources.length;
 const hasProperIndexing = finalSources.every((source, index) => source.index === index + 1);
 
-console.log('✅ Test Results:');
-console.log(`- Source count correct: ${actualCount === expectedCount ? 'PASS' : 'FAIL'}`);
-console.log(`- No duplicate URLs: ${hasNoDuplicateUrls ? 'PASS' : 'FAIL'}`);
-console.log(`- Sources properly indexed: ${hasProperIndexing ? 'PASS' : 'FAIL'}`);
+
+
+
+
 
 if (actualCount === expectedCount && hasNoDuplicateUrls && hasProperIndexing) {
-    console.log('\n🎉 ALL TESTS PASSED! Gemini source deduplication fix is working correctly.');
+    
 } else {
-    console.log('\n❌ TESTS FAILED! Issues found with Gemini source deduplication.');
+    
     process.exit(1);
 }

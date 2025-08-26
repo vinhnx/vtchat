@@ -63,8 +63,6 @@ test.describe('Shadcn/UI Components with Tailwind v4', () => {
         expect(buttonStyles.fontSize).toBe('14px'); // text-sm
         expect(buttonStyles.height).toBe('40px'); // h-10
 
-        console.log('Button styles:', buttonStyles);
-
         // Test card styles
         const card = page.locator('#shadcn-card-test');
         await expect(card).toBeVisible();
@@ -84,8 +82,6 @@ test.describe('Shadcn/UI Components with Tailwind v4', () => {
         expect(cardStyles.border).not.toBe('0px none rgb(0, 0, 0)');
         expect(cardStyles.boxShadow).not.toBe('none');
         expect(cardStyles.padding).toBe('24px'); // p-6
-
-        console.log('Card styles:', cardStyles);
 
         // Test input styles
         const input = page.locator('#shadcn-input-test');
@@ -110,8 +106,6 @@ test.describe('Shadcn/UI Components with Tailwind v4', () => {
         expect(inputStyles.borderRadius).not.toBe('0px');
         expect(inputStyles.border).not.toBe('0px none rgb(0, 0, 0)');
         expect(inputStyles.fontSize).toBe('14px'); // text-sm
-
-        console.log('Input styles:', inputStyles);
     });
 
     test('should handle hover and focus states', async ({ page }) => {
@@ -144,9 +138,6 @@ test.describe('Shadcn/UI Components with Tailwind v4', () => {
         const hoverBg = await button.evaluate((el) => {
             return window.getComputedStyle(el).backgroundColor;
         });
-
-        console.log('Initial background:', initialBg);
-        console.log('Hover background:', hoverBg);
 
         // The colors might be the same if CSS variables aren't fully loaded,
         // but the important thing is that the classes are being applied

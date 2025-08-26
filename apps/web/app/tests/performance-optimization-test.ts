@@ -20,8 +20,8 @@ class PerformanceTestRunner {
     private baseUrl = 'http://localhost:3000';
 
     async runTests() {
-        console.log('🚀 Running Performance Optimization Tests');
-        console.log('=========================================');
+        
+        
 
         await this.testSSRRendering();
         await this.testProgressiveLoading();
@@ -30,7 +30,7 @@ class PerformanceTestRunner {
     }
 
     private async testSSRRendering() {
-        console.log('\n📊 Testing SSR Rendering Performance...');
+        
 
         const start = performance.now();
 
@@ -49,18 +49,17 @@ class PerformanceTestRunner {
                 html.includes('bg-tertiary') ? 'SSR working' : 'Client-side only',
             );
 
-            console.log(`   ✓ Response time: ${responseTime.toFixed(2)}ms`);
-            console.log(
-                `   ✓ SSR status: ${html.includes('bg-tertiary') ? 'Enabled' : 'Disabled'}`,
+            }ms`);
+            ? 'Enabled' : 'Disabled'}`,
             );
         } catch (error) {
-            console.log(`   ✗ Error testing SSR: ${error}`);
+            
             this.recordMetric('SSR Response Time', -1, 'ms', 'Error');
         }
     }
 
     private async testProgressiveLoading() {
-        console.log('\n⏳ Testing Progressive Loading Stages...');
+        
 
         // Simulate the progressive loading stages we implemented
         const stages = [
@@ -87,16 +86,13 @@ class PerformanceTestRunner {
             );
 
             const status = actualTime < stage.target ? '✓' : '⚠';
-            console.log(
-                `   ${status} ${stage.name}: ${
-                    actualTime.toFixed(2)
-                }ms (target: ${stage.target}ms)`,
+            }ms (target: ${stage.target}ms)`,
             );
         }
     }
 
     private async testLazySidebar() {
-        console.log('\n🔄 Testing Lazy Sidebar Implementation...');
+        
 
         // Test if lazy sidebar components are properly loaded
         const components = ['LayoutSkeleton', 'LazySidebar', 'ProgressiveAuthProvider'];
@@ -119,11 +115,9 @@ class PerformanceTestRunner {
                 );
 
                 const status = componentExists ? '✓' : '✗';
-                console.log(
-                    `   ${status} ${component}: ${componentExists ? 'Available' : 'Missing'}`,
-                );
+                
             } catch (error) {
-                console.log(`   ✗ Error checking ${component}: ${error}`);
+                
             }
         }
     }
@@ -145,8 +139,8 @@ class PerformanceTestRunner {
     }
 
     private async generateReport() {
-        console.log('\n📈 Performance Report');
-        console.log('====================');
+        
+        
 
         const report = {
             timestamp: new Date().toISOString(),
@@ -155,25 +149,22 @@ class PerformanceTestRunner {
             summary: this.calculateSummary(),
         };
 
-        console.log('\\n📊 Summary:');
-        console.log(`   • Total metrics recorded: ${report.totalMetrics}`);
-        console.log(
-            `   • Average response time: ${report.summary.averageResponseTime.toFixed(2)}ms`,
+        
+        
+        }ms`,
         );
-        console.log(
-            `   • Performance target status: ${report.summary.targetsMet}/${report.summary.totalTargets} met`,
-        );
+        
 
-        console.log('\\n🎯 Key Improvements:');
-        console.log('   • SSR enabled: Layout renders server-side');
-        console.log('   • Lazy sidebar: Non-blocking background loading');
-        console.log('   • Progressive auth: Staged authentication loading');
-        console.log('   • Performance monitoring: Real-time metrics tracking');
+        
+        
+        
+        
+        
 
         // Save detailed report
         const reportPath = './performance-test-report.json';
         await Bun.write(reportPath, JSON.stringify(report, null, 2));
-        console.log(`\\n💾 Detailed report saved to: ${reportPath}`);
+        
     }
 
     private calculateSummary() {
