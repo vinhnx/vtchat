@@ -85,3 +85,4 @@ export * from './virtualized-chat-container';
 export * from './vtplus-usage-meter';
 export * from './with-client-only';
 export * from './z-rotation-loader';
+export * from './ai-elements/response';
