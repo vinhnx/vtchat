@@ -148,7 +148,7 @@
     --animate-slide-up: slide-up 0.3s ease-out;
 }
 
-/* Performance optimizations for animations */
+/* Performance optimizations - Remove hover transitions for snappier UI */
 @media (prefers-reduced-motion: no-preference) {
     /* Hardware acceleration utilities */
     .transform-gpu {
@@ -167,12 +167,17 @@
         will-change: auto;
     }
 
+    /* Global hover transition removal for snappy UI */
+    *:not([data-framer-motion]):not([data-framer-motion] *) {
+        transition-duration: 0.01ms !important;
+    }
+
     /* Mobile-specific optimizations */
     @media (max-width: 768px) {
         /* Reduce animation complexity on mobile - but don't override Framer Motion */
         *:not([data-framer-motion]):not([data-framer-motion] *) {
             animation-duration: 0.2s !important;
-            transition-duration: 0.2s !important;
+            transition-duration: 0.01ms !important;
         }
 
         /* Optimize transforms for mobile */
@@ -221,7 +226,7 @@
     @media (max-width: 480px) {
         *:not([data-framer-motion]):not([data-framer-motion] *) {
             animation-duration: 0.15s !important;
-            transition-duration: 0.15s !important;
+            transition-duration: 0.01ms !important;
         }
     }
 

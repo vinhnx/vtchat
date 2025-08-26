@@ -209,7 +209,7 @@ export function AnimatedToast({
 
             {/* PRINCIPLE 8: SECONDARY ACTION - Close button with hover effect */}
             <motion.button
-                className='flex-shrink-0 rounded-md p-1 hover:bg-white/20 transition-colors'
+                className='flex-shrink-0 rounded-md p-1 hover:bg-white/20'
                 onClick={onClose}
                 variants={{
                     hidden: { opacity: 0, scale: 0.8 },
