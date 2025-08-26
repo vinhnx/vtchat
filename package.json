@@ -123,7 +123,7 @@
         "date-fns": "3.6.0",
         "drizzle-orm": "^0.44.4",
         "fumadocs-core": "^15.6.11",
-        "fumadocs-mdx": "^11.7.5",
+        "fumadocs-mdx": "^11.8.0",
         "fumadocs-ui": "^15.6.11",
         "husky": "^9.1.7",
         "isbot": "^5.1.29",
