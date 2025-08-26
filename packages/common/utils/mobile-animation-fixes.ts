@@ -1,6 +1,7 @@
 'use client';
 
 import type { Transition, Variants } from 'framer-motion';
+import { log } from '@repo/shared/lib/logger';
 
 /**
  * Mobile-optimized animation utilities to prevent flashing and improve performance
@@ -281,10 +282,12 @@ export const preventLayoutShift = (element: HTMLElement | null) => {
 // Debug utility to log animation performance
 export const debugMobileAnimation = (componentName: string, animationType: string) => {
     if (process.env.NODE_ENV === 'development' && isMobileDevice()) {
-        console.debug(`[MobileAnimation] ${componentName} - ${animationType}`, {
+        log.debug({
+            component: componentName,
+            animationType,
             reducedMotion: prefersReducedMotion(),
             userAgent: navigator.userAgent,
             viewport: { width: window.innerWidth, height: window.innerHeight },
-        });
+        }, `[MobileAnimation] ${componentName} - ${animationType}`);
     }
 };

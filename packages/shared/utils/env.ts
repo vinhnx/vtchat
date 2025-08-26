@@ -1,4 +1,5 @@
 import { EnvironmentType } from '../types/environment';
+import { log } from '../src/lib/logger';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -67,22 +68,26 @@ export const isProduction = process.env.NODE_ENV === 'production';
 export const devLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(...args);
         }
     },
     warn: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.warn(...args);
         }
     },
     error: (...args: any[]) => {
         // Always log errors, even in production
-        console.error(...args);
+        log.error(...args);
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(...args);
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug(...args);
         }
     },
 };
@@ -93,20 +98,24 @@ export const devLog = {
 export const prodSafeLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(...args);
         }
     },
     warn: (...args: any[]) => {
+        log.warn(...args);
     },
     error: (...args: any[]) => {
         // Always log errors even in production
-        console.error(...args);
+        log.error(...args);
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info(...args);
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug(...args);
         }
     },
 };

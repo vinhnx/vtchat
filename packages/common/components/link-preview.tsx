@@ -6,6 +6,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger, LinkFavicon } from '@rep
 import { ExternalLink } from 'lucide-react';
 import type React from 'react';
 import { memo, useEffect, useState } from 'react';
+import { log } from '@repo/shared/lib/logger';
 
 interface OGData {
     title?: string;
@@ -145,9 +146,11 @@ export const LinkPreview = memo(({ source }: { source: Source; }) => {
                 ogCacheTimestamps.set(cacheKey, Date.now());
                 setOgResult(data);
             } else {
+                log.warn({ url, status: res.status, statusText: res.statusText }, 'OG data fetch failed with non-OK response');
                 setOgResult(null);
             }
-        } catch {
+        } catch (error) {
+            log.error({ error, url: source.link, cacheKey: generateCacheKey(source) }, 'Failed to fetch OG data');
             setOgResult(null);
         } finally {
             setIsLoading(false);

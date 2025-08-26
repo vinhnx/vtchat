@@ -5,6 +5,7 @@ import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useToast } from '@repo/ui';
 import { type ChangeEvent, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { log } from '@repo/shared/lib/logger';
 
 export const useDocumentAttachment = () => {
     const documentAttachment = useChatStore((state) => state.documentAttachment);
@@ -138,7 +139,7 @@ export const useDocumentAttachment = () => {
     const handleFileRead = useCallback(
         (file: File) => {
             handleFileReadWithRetry(file).catch((error) => {
-                console.error('File upload failed:', error);
+                log.error({ error, fileName: file.name }, 'File upload failed');
             });
         },
         [handleFileReadWithRetry],
