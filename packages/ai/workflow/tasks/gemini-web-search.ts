@@ -2,9 +2,9 @@ import { createTask } from '@repo/orchestrator';
 import { UserTier } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/lib/logger';
 import { getModelFromChatMode, ModelEnum } from '../../models';
+import { extractUrlsFromText, generateWithUrlContext } from '../../services/google-url-context';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
-import { extractUrlsFromText, generateWithUrlContext } from '../../services/google-url-context';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'gemini-web-search',

@@ -3,7 +3,7 @@ import { ModelEnum } from '../models';
 
 type GoogleGenerateContentResponse = {
     candidates?: Array<{
-        content?: { parts?: Array<{ text?: string }> };
+        content?: { parts?: Array<{ text?: string; }>; };
         groundingMetadata?: any;
         url_context_metadata?: {
             url_metadata?: Array<{
@@ -69,7 +69,7 @@ export async function generateWithUrlContext({
     signal?: AbortSignal;
 }): Promise<{
     text: string;
-    sources: Array<{ title: string; url: string; description?: string; index: number }>;
+    sources: Array<{ title: string; url: string; description?: string; index: number; }>;
     groundingMetadata: any;
     urlContextMetadata: any;
 }> {
@@ -93,9 +93,11 @@ export async function generateWithUrlContext({
         tools: [{ url_context: {} }, { google_search: {} }],
     } as const;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-        modelId,
-    )}:generateContent`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${
+        encodeURIComponent(
+            modelId,
+        )
+    }:generateContent`;
 
     log.info('Calling Google generateContent with URL Context', {
         model: modelId,
@@ -137,4 +139,3 @@ export function extractUrlsFromText(input: string): string[] {
     const unique = Array.from(new Set(matches));
     return unique.slice(0, 20);
 }
-
