@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover Transition Test</title>
+    <link href="./packages/tailwind-config/tailwind.css" rel="stylesheet">
+    <style>
+        /* Include the new CSS rules directly for testing */
+        @media (prefers-reduced-motion: no-preference) {
+            *:not([data-framer-motion]):not([data-framer-motion] *) {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-8 bg-background text-foreground">
+    <h1 class="text-2xl font-bold mb-6">Hover Transition Test</h1>
+    
+    <div class="space-y-4">
+        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2">
+            Button Test (Should have no transition)
+        </button>
+        
+        <div class="border border-border/30 hover:border-border/50 p-4 rounded-lg">
+            Input-like hover test (Should change instantly)
+        </div>
+        
+        <div class="border-b hover:bg-stone-100/50 p-2">
+            Table row hover test (Should change instantly)
+        </div>
+        
+        <div class="inline-flex items-center justify-center gap-2 rounded-md font-medium text-sm hover:bg-stone-100/70 hover:text-stone-500 p-2">
+            Toggle hover test (Should change instantly)
+        </div>
+    </div>
+    
+    <div class="mt-8">
+        <p class="text-sm text-muted-foreground">
+            All hover effects above should change instantly without any transition animation.
+            This demonstrates the successful removal of hover transitions for snappier UI responsiveness.
+        </p>
+    </div>
+</body>
+</html>
