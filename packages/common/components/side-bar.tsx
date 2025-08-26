@@ -6,7 +6,7 @@ import { useAppStore, useChatStore } from '@repo/common/store';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import type { Thread } from '@repo/shared/types';
 import {
     getCompareDesc,
@@ -98,7 +98,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
 
                 return getCompareDesc(dateA, dateB);
             } catch (error) {
-                console.error('Error sorting threads:', error);
+                log.error({ error }, 'Error sorting threads');
                 return 0;
             }
         });
@@ -158,7 +158,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
             }
         } catch (error) {
             // Skip threads that cause errors during date processing
-            console.error('Error processing thread date:', error);
+            log.error({ error, threadId: thread?.id }, 'Error processing thread date');
         }
     });
 
