@@ -2,9 +2,9 @@
 
 import { CodeBlock } from '@repo/common/components';
 import { cn } from '@repo/ui';
+import type { ComponentProps, ReactNode } from 'react';
 import remarkGfm from 'remark-gfm';
 import { Streamdown } from 'streamdown';
-import type { ComponentProps, ReactNode } from 'react';
 
 type ResponseProps = {
     children: string;
@@ -44,7 +44,9 @@ const defaultComponents: NonNullable<ComponentProps<typeof Streamdown>['componen
             href={href as string}
             className='text-brand font-medium underline decoration-[0.08em] underline-offset-2 transition-colors hover:no-underline'
             target={typeof href === 'string' && href.startsWith('http') ? '_blank' : undefined}
-            rel={typeof href === 'string' && href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            rel={typeof href === 'string' && href.startsWith('http')
+                ? 'noopener noreferrer'
+                : undefined}
         >
             {children}
         </a>
@@ -145,4 +147,3 @@ export function Response({
 }
 
 export default Response;
-

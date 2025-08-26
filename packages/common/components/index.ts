@@ -76,6 +76,8 @@ export * from './thread';
 export * from './thread-loading-indicator';
 export * from './thread/components/attachment-display';
 
+export * from './ai-elements/response';
+export * from './ai-elements/tool';
 export * from './tools-menu';
 export * from './tools-panel';
 export * from './usage-credits-settings';
@@ -85,4 +87,3 @@ export * from './virtualized-chat-container';
 export * from './vtplus-usage-meter';
 export * from './with-client-only';
 export * from './z-rotation-loader';
-export * from './ai-elements/response';

@@ -358,8 +358,8 @@ export const ApiKeySettings = () => {
                                 <div className='text-muted-foreground text-xs md:text-sm'>
                                     <strong>Pro tip:</strong>{' '}
                                     With your own API key, you'll have access to Gemini 2.5 Pro,
-                                    Gemini 2.5 Flash, Gemini 2.5 Flash Lite and other
-                                    premium models without restrictions
+                                    Gemini 2.5 Flash, Gemini 2.5 Flash Lite and other premium models
+                                    without restrictions
                                     {isVtPlus
                                         ? ', plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+'
                                         : ''}

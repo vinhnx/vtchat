@@ -42,6 +42,29 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
         return toolCall.toolName;
     };
 
+    const reasonBadges: string[] = [];
+    const r = (toolCall.reasoning || '').toLowerCase();
+    if (r.includes('search') || r.includes('web') || r.includes('cite') || r.includes('ground')) {
+        reasonBadges.push('Grounding');
+    }
+    if (
+        r.includes('math') || r.includes('calculate') || r.includes('numeric')
+        || r.includes('compute')
+    ) {
+        reasonBadges.push('Computation');
+    }
+    if (r.includes('chart') || r.includes('visual')) {
+        reasonBadges.push('Visualization');
+    }
+    if (
+        r.includes('document') || r.includes('pdf') || r.includes('extract') || r.includes('parse')
+    ) {
+        reasonBadges.push('Document');
+    }
+    const showBadges = typeof process !== 'undefined'
+        ? process.env.NEXT_PUBLIC_TOOL_REASONING_BADGES !== '0'
+        : true;
+
     return (
         <Card className='border-muted/50 bg-muted/30 hover:bg-muted/40 w-full transition-all duration-200'>
             <motion.div
@@ -66,6 +89,19 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                             {getToolLabel()}
                         </Badge>
                         <span className='text-muted-foreground text-xs'>Tool execution</span>
+                        {showBadges && reasonBadges.length > 0 && (
+                            <div className='mt-1 flex flex-wrap gap-1'>
+                                {reasonBadges.map((b) => (
+                                    <Badge
+                                        key={b}
+                                        variant='outline'
+                                        className='border-border/40 bg-background/60 text-[10px]'
+                                    >
+                                        {b}
+                                    </Badge>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
                 <motion.div
@@ -86,6 +122,7 @@ export const ToolCallStep = memo(({ toolCall }: ToolCallProps) => {
                         transition={{ duration: 0.2 }}
                     >
                         <div className='border-muted/50 border-t p-3 pt-3'>
+                            {/* Reasoning UI removed */}
                             <div className='mb-2 flex items-center gap-2'>
                                 <Settings className='text-muted-foreground' size={14} />
                                 <span className='text-muted-foreground text-xs font-medium'>

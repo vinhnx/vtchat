@@ -67,12 +67,10 @@ export const isProduction = process.env.NODE_ENV === 'production';
 export const devLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.log(...args);
         }
     },
     warn: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.warn(...args);
         }
     },
     error: (...args: any[]) => {
@@ -81,12 +79,10 @@ export const devLog = {
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.info(...args);
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.debug(...args);
         }
     },
 };
@@ -97,11 +93,9 @@ export const devLog = {
 export const prodSafeLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.log(...args);
         }
     },
     warn: (...args: any[]) => {
-        console.warn(...args);
     },
     error: (...args: any[]) => {
         // Always log errors even in production
@@ -109,12 +103,10 @@ export const prodSafeLog = {
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.info(...args);
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
-            console.debug(...args);
         }
     },
 };

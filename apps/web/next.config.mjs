@@ -60,6 +60,16 @@ const nextConfig = {
         serverMinification: true,
     },
 
+    // Turbopack-specific aliases to work around upstream package exports.
+    // htmlparser2@8 imports `entities/lib/decode.js`, which is not exported by entities@6
+    // Map it to the public subpath that exists in v6.
+    turbopack: {
+        resolveAlias: {
+            'entities/lib/decode.js': 'entities/decode.js',
+            'entities/lib/decode': 'entities/decode.js',
+        },
+    },
+
     // Temporarily remove outputFileTracingRoot for Turbopack compatibility
     // Next.js 15+ - moved from experimental to root level
     // outputFileTracingRoot: path.join(__dirname, "../../"),
@@ -240,6 +250,14 @@ const nextConfig = {
                     };
                 }
             }
+
+            // Alias for webpack builds as well (prod or when Turbopack is disabled)
+            config.resolve = config.resolve || {};
+            config.resolve.alias = {
+                ...(config.resolve.alias || {}),
+                'entities/lib/decode.js': 'entities/decode.js',
+                'entities/lib/decode': 'entities/decode.js',
+            };
 
             return config;
         },

@@ -110,7 +110,6 @@ export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {
             <TableErrorBoundary
                 onError={(error) => {
                     // Silent error handling for table rendering issues
-                    console.warn('Table rendering error in MDX:', error.message);
                 }}
                 fallback={
                     <div className='border-warning bg-warning/10 text-warning my-4 rounded-md border p-4'>

@@ -1,7 +1,9 @@
 # Summary
+
 Briefly describe the problem and the solution. Mention scope and rationale.
 
 ## Type of change
+
 - [ ] feat
 - [ ] fix
 - [ ] chore
@@ -11,19 +13,24 @@ Briefly describe the problem and the solution. Mention scope and rationale.
 - [ ] ci
 
 ## Changes
-- 
+
+-
 
 ## Screenshots / Recordings
+
 Attach before/after for UI changes.
 
 ## How to Test
-1. 
-2. 
+
+1.
+2.
 
 ## Affected Areas
+
 List impacted apps/packages (e.g., `apps/web`, `@repo/shared`).
 
 ## Checklist
+
 - [ ] Conventional Commit message (e.g., `feat(web): add chat sidebar`)
 - [ ] Lint passes: `bun run lint`
 - [ ] Code formatted: `bun run fmt` (code), `bun run format` (Markdown)
@@ -34,4 +41,3 @@ List impacted apps/packages (e.g., `apps/web`, `@repo/shared`).
 - [ ] Docs updated as needed (README/AGENTS.md/CONTRIBUTING.md)
 - [ ] No secrets committed; env vars documented
 - [ ] Did not run `./deploy-fly.sh`
-

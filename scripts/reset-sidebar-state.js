@@ -5,7 +5,6 @@ if (typeof localStorage !== 'undefined') {
             'sidebar-state',
             JSON.stringify({ isOpen: false, animationDisabled: false }),
         );
-        console.log('Sidebar state reset to closed');
     } catch (error) {
         console.error('Failed to reset sidebar state:', error);
     }

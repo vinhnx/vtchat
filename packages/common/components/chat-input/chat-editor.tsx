@@ -37,7 +37,6 @@ export const ChatEditor: FC<TChatEditor> = ({
             // Debounce rapid Enter key presses
             const now = Date.now();
             if (now - lastEnterTime.current < 500) {
-                console.log('🚫 Rapid Enter key press detected, ignoring');
                 return;
             }
             lastEnterTime.current = now;

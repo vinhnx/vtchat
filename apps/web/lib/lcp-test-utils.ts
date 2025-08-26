@@ -4,8 +4,6 @@ export async function testPreloadDirectives() {
     const links = document.querySelectorAll('link[rel="preload"]');
     const preloadHrefs = Array.from(links).map(link => link.getAttribute('href'));
 
-    console.log('Preloaded resources:', preloadHrefs);
-
     // Check for critical resources
     const hasVTLogo = preloadHrefs.includes('/icon-192x192.png');
     const hasPeerlistBadge = preloadHrefs.includes('/icons/peerlist_badge.svg');

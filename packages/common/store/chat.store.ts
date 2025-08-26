@@ -263,7 +263,7 @@ type Actions = {
     clearStructuredData: () => void;
     setIsGenerating: (isGenerating: boolean) => void;
     setShowTimeoutIndicator: (show: boolean) => void;
-    stopGeneration: () => void;
+    stopGeneration: (reason?: 'cleanup' | 'user') => void;
     setAbortController: (abortController: AbortController) => void;
     createThread: (optimisticId: string, thread?: Pick<Thread, 'title'>) => Promise<Thread>;
     setChatMode: (chatMode: ChatMode) => void;
@@ -1287,13 +1287,13 @@ export const useChatStore = create(
             });
         },
 
-        stopGeneration: () => {
+        stopGeneration: (reason = 'cleanup') => {
             set((state) => {
                 state.isGenerating = false;
                 state.generationStartTime = null;
                 state.showTimeoutIndicator = false;
-                // Use "cleanup" reason to distinguish from user-initiated aborts
-                state.abortController?.abort('cleanup');
+                // Pass through the reason so downstream can distinguish user vs cleanup
+                state.abortController?.abort(reason);
             });
         },
 

@@ -1,13 +1,32 @@
-import { MarkdownContent, SearchResultsList, StepStatus } from '@repo/common/components';
-import type { Step } from '@repo/shared/types';
+import {
+    MarkdownContent,
+    SearchResultsList,
+    StepStatus,
+    Tool,
+    ToolContent,
+    ToolHeader,
+    ToolInput,
+    ToolOutput,
+} from '@repo/common/components';
+import type {
+    Step,
+    ToolCall as ToolCallType,
+    ToolResult as ToolResultType,
+} from '@repo/shared/types';
 import { Badge, Label } from '@repo/ui';
 import { Search } from 'lucide-react';
 
 export type StepRendererType = {
     step: Step;
+    // Optional tool data to render within the timeline (usually only for the last step)
+    toolCalls?: Record<string, ToolCallType>;
+    toolResults?: Record<string, ToolResultType>;
+    showTools?: boolean;
 };
 
-export const StepRenderer = ({ step }: StepRendererType) => {
+export const StepRenderer = (
+    { step, toolCalls, toolResults, showTools = false }: StepRendererType,
+) => {
     const isCompleted = step.status === 'COMPLETED';
 
     const renderTextStep = () => {
@@ -76,32 +95,7 @@ export const StepRenderer = ({ step }: StepRendererType) => {
         return null;
     };
 
-    const renderReasoningStep = () => {
-        if (step?.steps && 'reasoning' in step.steps) {
-            const reasoningData = typeof step.steps?.reasoning?.data === 'string'
-                ? step.steps.reasoning.data
-                : '';
-
-            return (
-                <div className='flex flex-col gap-3'>
-                    <div className='w-fit'>
-                        <Label className='text-muted-foreground/80 text-xs font-medium'>
-                            Analyzing
-                        </Label>
-                    </div>
-                    <div className='text-muted-foreground text-sm leading-relaxed'>
-                        <MarkdownContent
-                            content={reasoningData}
-                            isCompleted={isCompleted}
-                            isLast={false}
-                            shouldAnimate={!isCompleted}
-                        />
-                    </div>
-                </div>
-            );
-        }
-        return null;
-    };
+    // Reasoning UI removed
 
     const renderWrapupStep = () => {
         if (step?.steps && 'wrapup' in step.steps) {
@@ -124,6 +118,51 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             );
         }
         return null;
+    };
+
+    const renderTools = () => {
+        if (!showTools) return null;
+        const calls = Object.entries(toolCalls || {});
+        if (calls.length === 0) return null;
+
+        return (
+            <div className='mt-1 space-y-3'>
+                {calls.map(([key, call]) => {
+                    const result = toolResults?.[key];
+                    const hasError = !!(
+                        result
+                        && typeof result.result === 'object'
+                        && result.result
+                        && 'error' in (result.result as Record<string, unknown>)
+                    );
+                    const state = hasError
+                        ? 'output-error'
+                        : result
+                        ? 'output-available'
+                        : 'input-available';
+
+                    return (
+                        <Tool
+                            key={key}
+                            defaultOpen={state === 'output-available' || state === 'output-error'}
+                        >
+                            <ToolHeader type={`tool-${call.toolName}`} state={state as any} />
+                            <ToolContent>
+                                <div className='space-y-3'>
+                                    <ToolInput input={call.args} />
+                                    <ToolOutput
+                                        output={result?.result ?? 'Waiting for result...'}
+                                        errorText={hasError
+                                            ? String((result as any)?.result?.error)
+                                            : undefined}
+                                    />
+                                </div>
+                            </ToolContent>
+                        </Tool>
+                    );
+                })}
+            </div>
+        );
     };
 
     return (
@@ -149,9 +188,9 @@ export const StepRenderer = ({ step }: StepRendererType) => {
             <div className='flex w-full flex-1 flex-col gap-5 overflow-hidden pb-3 pr-2'>
                 {renderWrapupStep()}
                 {renderTextStep()}
-                {renderReasoningStep()}
                 {renderSearchStep()}
                 {renderReadStep()}
+                {renderTools()}
             </div>
         </div>
     );

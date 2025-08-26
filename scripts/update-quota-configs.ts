@@ -10,8 +10,6 @@ import { db } from '../apps/web/lib/database/index';
 
 async function updateQuotaConfigs() {
     try {
-        console.log('🔄 Updating quota configurations...');
-
         // Update Deep Research quotas
         await db.execute(`
             UPDATE quota_configs
@@ -38,8 +36,6 @@ async function updateQuotaConfigs() {
             WHERE feature = 'PS' AND plan = 'vt_base'
         `);
 
-        console.log('✅ Quota configurations updated successfully!');
-
         // Verify the updates
         const result = await db.execute(`
             SELECT feature, plan, quota_limit, quota_window, updated_at
@@ -47,7 +43,6 @@ async function updateQuotaConfigs() {
             ORDER BY feature, plan
         `);
 
-        console.log('\n📊 Current quota configurations:');
         console.table(result.rows);
 
         log.info('Quota configurations updated via script');
@@ -61,7 +56,6 @@ async function updateQuotaConfigs() {
 // Run the script
 updateQuotaConfigs()
     .then(() => {
-        console.log('\n🎉 Script completed successfully!');
         process.exit(0);
     })
     .catch((error) => {

@@ -64,7 +64,6 @@ export function GoodFirmsBadge({ className }: GoodFirmsBadgeProps) {
                         objectFit: 'contain',
                     }}
                     onError={() => {
-                        console.warn('GoodFirms badge failed to load, using fallback');
                         setHasError(true);
                     }}
                     onLoad={() => setIsLoading(false)}

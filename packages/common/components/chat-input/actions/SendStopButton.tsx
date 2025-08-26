@@ -96,7 +96,6 @@ export function SendStopButton({
                                         ? 'hover:bg-destructive/90'
                                         : 'hover:bg-muted-foreground/10',
                                 )}
-                                disabled={isGenerating && showTimeoutIndicator}
                                 animationType='squash'
                             >
                                 {/* Use ZRotationLoader for the stop button animation */}

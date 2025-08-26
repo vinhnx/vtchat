@@ -1,5 +1,5 @@
-import type { LanguageModelV1Middleware } from 'ai';
 import { log } from '@repo/shared/logger';
+import type { LanguageModelV1Middleware } from 'ai';
 
 /**
  * Simple caching middleware that caches generated text based on parameters.

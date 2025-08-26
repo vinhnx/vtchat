@@ -268,7 +268,7 @@ function makeRequest(endpoint, type = 'hourly') {
                     if (res.statusCode === 200 && response.success) {
                         log.info(`✅ ${type} maintenance completed successfully`);
                         log.info(
-                            `📊 Health: ${response.health.healthy ? 'Good' : 'Issues detected'}`,
+                            `📊 Health: ${result.health?.healthy ? 'Good' : 'Issues detected'}`,
                         );
                         if (response.health.issues.length > 0) {
                             log.warn(`⚠️  Issues: ${response.health.issues.join(', ')}`);
@@ -304,8 +304,6 @@ function makeRequest(endpoint, type = 'hourly') {
 }
 
 async function runHourlyMaintenance() {
-    console.log('🚀 Starting hourly maintenance process...');
-
     try {
         // Perform health check before maintenance
         await performHealthCheck();
@@ -313,11 +311,8 @@ async function runHourlyMaintenance() {
 
         const result = await makeRequestWithRetry('/api/cron/database-maintenance', 'hourly');
 
-        console.log('🎉 Hourly database maintenance completed successfully');
-        console.log(`📊 Health: ${result.health?.healthy ? 'Good' : 'Issues detected'}`);
-
         if (result.health?.issues?.length > 0) {
-            console.log(`⚠️  Issues found: ${result.health.issues.join(', ')}`);
+            log.warn(`⚠️  Issues found: ${result.health.issues.join(', ')}`);
         }
 
         // Cleanup HTTPS agent
@@ -336,12 +331,9 @@ async function runHourlyMaintenance() {
 }
 
 async function runWeeklyMaintenance() {
-    console.log('🚀 Starting weekly maintenance process...');
-
     try {
         // Perform health check before maintenance
         await performHealthCheck();
-        console.log('✅ Health check passed');
 
         const result = await makeRequestWithRetry('/api/cron/weekly-maintenance', 'weekly');
 

@@ -105,7 +105,6 @@ export const useDocumentAttachment = () => {
 
                     // Retry logic for transient failures
                     if (retryCount < maxRetries) {
-                        console.log(`Retrying file read (attempt ${retryCount + 1}/${maxRetries})`);
                         setTimeout(() => {
                             handleFileReadWithRetry(file, retryCount + 1)
                                 .then(resolve)

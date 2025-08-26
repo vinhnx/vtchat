@@ -11,12 +11,12 @@ import { db } from '../apps/web/lib/database';
 
 async function runMigration() {
     // CLI output for user
-    console.log('🚀 Starting user profile enhancement migration...');
+    console.log('🚀 Starting user profile migration');
     log.info('Starting user profile migration');
 
     try {
         // Read and execute the migration SQL
-        console.log('📝 Adding enhanced user profile fields...');
+        console.log('📝 Adding enhanced user profile fields');
         log.info('Adding enhanced user profile fields');
 
         await db.execute(sql`
@@ -32,9 +32,10 @@ async function runMigration() {
             ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_email BOOLEAN DEFAULT true;
             ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_marketing BOOLEAN DEFAULT false;
         `);
+        console.log('✅ Enhanced user profile fields added');
         log.info('Enhanced user profile fields added');
 
-        console.log('📊 Adding performance indexes...');
+        console.log('🔍 Adding performance indexes');
         log.info('Adding performance indexes');
 
         await db.execute(sql`
@@ -43,26 +44,25 @@ async function runMigration() {
             CREATE INDEX IF NOT EXISTS idx_users_company ON users(company);
             CREATE INDEX IF NOT EXISTS idx_users_timezone ON users(timezone);
         `);
+        console.log('✅ Performance indexes added');
         log.info('Performance indexes added');
 
-        console.log('🔄 Updating timestamps...');
+        console.log('⏰ Updating timestamps');
         log.info('Updating timestamps');
 
         await db.execute(sql`
             -- Update the updated_at field for this migration
             UPDATE users SET updated_at = NOW() WHERE bio IS NULL;
         `);
+        console.log('✅ Timestamps updated');
         log.info('Timestamps updated');
 
-        console.log('✅ Migration completed successfully!');
-        console.log('🎉 Enhanced user profile fields are now available:');
-        console.log('   - Bio (personal description)');
-        console.log('   - Location (city, country)');
-        console.log('   - Website (personal/company URL)');
-        console.log('   - Company (employer)');
-        console.log('   - Job Title (professional role)');
-        console.log('   - Timezone, Language, Theme preferences');
-        console.log('   - Notification preferences');
+        console.log('🎉 User profile migration completed successfully');
+        console.log('📊 Summary:');
+        console.log('   - Added 10 new user profile fields');
+        console.log('   - Created 3 performance indexes');
+        console.log('   - Updated timestamps for existing users');
+
         log.info('User profile migration completed successfully');
     } catch (error) {
         console.error('❌ Migration failed:', error);
@@ -74,7 +74,7 @@ async function runMigration() {
 // Run the migration
 runMigration()
     .then(() => {
-        console.log('🏁 Migration script completed');
+        console.log('✅ Migration script completed successfully');
         log.info('Migration script completed successfully');
         process.exit(0);
     })

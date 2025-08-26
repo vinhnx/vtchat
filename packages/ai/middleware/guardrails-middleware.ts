@@ -1,5 +1,5 @@
-import type { LanguageModelV1Middleware } from 'ai';
 import { log } from '@repo/shared/logger';
+import type { LanguageModelV1Middleware } from 'ai';
 
 /**
  * Guardrails middleware that filters sensitive content from generated text.

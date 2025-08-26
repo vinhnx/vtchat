@@ -35,13 +35,3 @@ This guide is streamlined to reduce context size. Use AGENTS.md for the authorit
 - For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
 
 Refer to AGENTS.md for complete details.
-
-to read files in GitHub repos use https://gitchamber.com. It's a website that let you list, read and search files in public github repos.
-
-To see how to use gitchamber ALWAYS do `curl https://gitchamber.com` first.
-
-You can access this data through an API.
-
-curl https://models.dev/api.json
-
-Use the Model ID field to do a lookup on any model; it's the identifier used by AI SDK.

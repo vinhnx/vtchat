@@ -136,12 +136,13 @@ function compareBundles(current, previous) {
 
 function generateReport(stats, comparison) {
     // CLI output for user - keeping console for readability
-    console.log('\n📦 Bundle Size Report\n');
-    console.log(`🕐 Timestamp: ${stats.timestamp}`);
-    console.log(`📝 Commit: ${stats.commit.substring(0, 8)}`);
-    console.log(`📁 Total Files: ${stats.fileCount}`);
+    console.log('\n📊 Bundle Size Report');
+    console.log('====================');
+    console.log(`📦 Total Size: ${formatBytes(stats.totalSize)}`);
+    console.log(`📁 File Count: ${stats.fileCount}`);
     console.log(`📄 Pages: ${stats.pages}`);
-    console.log(`💾 Total Bundle Size: ${formatBytes(stats.totalSize)}`);
+    console.log(`🕒 Timestamp: ${stats.timestamp}`);
+    console.log(`🔗 Commit: ${stats.commit.substring(0, 8)}`);
 
     // Internal logging
     log.info(
@@ -163,12 +164,11 @@ function generateReport(stats, comparison) {
             : '🔴';
 
         console.log(
-            `\n${emoji} Size Change: ${comparison.sizeDiffFormatted} (${
+            `${emoji} Change: ${comparison.sizeDiffFormatted} (${
                 comparison.totalSizeChangePercent.toFixed(2)
             }%)`,
         );
-        console.log(`   Previous: ${comparison.previousSize}`);
-        console.log(`   Current:  ${comparison.currentSize}`);
+        console.log(`🔄 Previous: ${comparison.previousSize} → Current: ${comparison.currentSize}`);
 
         log.info(
             {
@@ -181,14 +181,14 @@ function generateReport(stats, comparison) {
         );
     }
 
-    console.log('\n📊 Breakdown:');
+    console.log('\n📈 Size Breakdown:');
     console.log(`   Static: ${formatBytes(stats.breakdown.static)}`);
     console.log(`   Chunks: ${formatBytes(stats.breakdown.chunks)}`);
-    console.log(`   Pages:  ${formatBytes(stats.breakdown.pages)}`);
+    console.log(`   Pages: ${formatBytes(stats.breakdown.pages)}`);
 
-    console.log('\n🔍 Largest Files:');
-    stats.largestFiles.forEach(({ file, size }, _i) => {
-        console.log(`   ${_i + 1}. ${file} - ${size}`);
+    console.log('\n🔝 Largest Files:');
+    stats.largestFiles.forEach(({ file, size }, i) => {
+        console.log(`   ${i + 1}. ${file} (${size})`);
     });
 }
 
@@ -198,7 +198,7 @@ function main() {
     try {
         switch (command) {
             case 'track': {
-                console.log('📊 Analyzing current bundle...');
+                console.log('🔍 Analyzing bundle size...');
                 log.info('Starting bundle size analysis');
                 const stats = getBundleStats();
                 const history = loadBundleHistory();
@@ -219,7 +219,7 @@ function main() {
 
                 // Exit with error code if bundle size increased significantly
                 if (comparison.totalSizeChangePercent > 5) {
-                    console.log('\n❌ Bundle size increased by more than 5%!');
+                    console.error('❌ Bundle size increased significantly!');
                     log.error(
                         { sizeIncrease: comparison.totalSizeChangePercent },
                         'Bundle size increased significantly',
@@ -232,15 +232,15 @@ function main() {
             case 'history': {
                 const savedHistory = loadBundleHistory();
                 if (savedHistory.length === 0) {
-                    console.log('No bundle history found. Run `track` first.');
+                    console.log('No bundle history found.');
                     return;
                 }
 
-                console.log('\n📈 Bundle Size History\n');
+                console.log('Bundle Size History:');
                 log.info({ historyCount: savedHistory.length }, 'Displaying bundle history');
-                savedHistory.slice(-10).forEach((entry, _i) => {
+                savedHistory.slice(-10).forEach((entry, i) => {
                     console.log(
-                        `${entry.timestamp} | ${entry.commit.substring(0, 8)} | ${
+                        `${i + 1}. ${entry.timestamp.split('T')[0]} | ${
                             formatBytes(entry.totalSize)
                         }`,
                     );
@@ -251,23 +251,14 @@ function main() {
             case 'clean':
                 if (fs.existsSync(BUNDLE_HISTORY_FILE)) {
                     fs.unlinkSync(BUNDLE_HISTORY_FILE);
-                    console.log('✅ Bundle history cleared.');
+                    console.log('Bundle history cleared.');
                 } else {
-                    console.log('ℹ️  No bundle history to clear.');
+                    console.log('No bundle history file found.');
                 }
                 break;
 
             default:
-                console.log(`
-Bundle Size Tracker
-
-Usage:
-  node scripts/track-bundle-size.js track     # Track current bundle size
-  node scripts/track-bundle-size.js history   # Show bundle size history
-  node scripts/track-bundle-size.js clean     # Clear bundle history
-
-Make sure to run 'bun run build' first.
-                `);
+                console.log('Usage: node track-bundle-size.js [track|history|clean]');
         }
     } catch (error) {
         console.error('❌ Error:', error.message);
