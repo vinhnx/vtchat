@@ -35,3 +35,12 @@ This guide is streamlined to reduce context size. Use AGENTS.md for the authorit
 - For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
 
 Refer to AGENTS.md for complete details.
+
+## URL Context + Grounding (Gemini)
+
+When your prompt contains one or more URLs, the Gemini web search task automatically enables Google’s URL Context tool alongside Google Search grounding. The model retrieves content from those URLs (if supported and safe) and uses it to enhance the answer. Retrieved URLs are surfaced in the Sources stack when available.
+
+Notes
+- Works with Gemini 2.5 family used for web search (Flash, Pro, Flash Lite).
+- Up to 20 URLs per request; unsupported/paywalled URLs are skipped by Google.
+- Retrieved content counts toward input tokens per Google pricing/limits.

@@ -4,6 +4,7 @@ import { log } from '@repo/shared/lib/logger';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
+import { extractUrlsFromText, generateWithUrlContext } from '../../services/google-url-context';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'gemini-web-search',
@@ -96,16 +97,26 @@ Please include:
                 isVtPlusUser,
                 hasUserApiKey: !!userApiKeys.GEMINI_API_KEY,
             });
+            // If the user's question includes URLs, prefer URL Context tool + Google Search
+            const urlsInQuestion = extractUrlsFromText(question || '');
+            const shouldUseUrlContext = urlsInQuestion.length > 0;
 
-            const result = await generateTextWithGeminiSearch({
-                model,
-                prompt,
-                byokKeys: userApiKeys,
-                signal,
-                thinkingMode: context?.get('thinkingMode'),
-                userTier,
-                userId: context?.get('userId'),
-            });
+            const result = shouldUseUrlContext
+                ? await generateWithUrlContext({
+                    model,
+                    prompt,
+                    byokKeys: userApiKeys,
+                    signal,
+                })
+                : await generateTextWithGeminiSearch({
+                    model,
+                    prompt,
+                    byokKeys: userApiKeys,
+                    signal,
+                    thinkingMode: context?.get('thinkingMode'),
+                    userTier,
+                    userId: context?.get('userId'),
+                });
 
             log.info('generateTextWithGeminiSearch result:', {
                 hasResult: !!result,
@@ -176,6 +187,7 @@ Please include:
                 summary: result.text,
                 sources: result.sources,
                 groundingMetadata: result.groundingMetadata,
+                urlContextMetadata: (result as any).urlContextMetadata,
             };
         } catch (error: any) {
             // Get context values for error handling

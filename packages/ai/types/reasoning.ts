@@ -37,6 +37,7 @@ export interface GenerateTextWithReasoningResult {
     text: string;
     sources?: any[];
     groundingMetadata?: any;
+    urlContextMetadata?: any;
     reasoning?: string;
     reasoningDetails?: ReasoningDetail[];
 }

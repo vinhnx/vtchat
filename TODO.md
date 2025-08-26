@@ -19,280 +19,7 @@ https://ai.google.dev/gemini-api/docs/url-context#url-types
 maybe use url context for all metadata understanding.
 instead of current document image.
 
-Supported and unsupported content types
-
-The tool can extract content from URLs with the following content types:
-
-    Text (text/html, application/json, text/plain, text/xml, text/css, text/javascript , text/csv, text/rtf)
-    Image (image/png, image/jpeg, image/bmp, image/webp)
-    PDF (application/pdf)
-
 --
-
-https://ai.google.dev/gemini-api/docs/url-context
-The URL context tool lets you provide additional context to the models in the form of URLs. By including URLs in your request, the model will access the content from those pages (as long as it's not a URL type listed in the [limitations section](#limitations)) to inform and enhance its response.
-
-The URL context tool is useful for tasks like the following:
-
-- **Extract Data**: Pull specific info like prices, names, or key findings from multiple URLs.
-- **Compare Documents**: Analyze multiple reports, articles, or PDFs to identify differences and track trends.
-- **Synthesize & Create Content**: Combine information from several source URLs to generate accurate summaries, blog posts, or reports.
-- **Analyze Code & Docs**: Point to a GitHub repository or technical documentation to explain code, generate setup instructions, or answer questions.
-
-The following example shows how to compare two recipes from different websites.
-
-### Python
-
-```
-from google import genai
-from google.genai.types import Tool, GenerateContentConfig
-
-client = genai.Client()
-model_id = "gemini-2.5-flash"
-
-tools = [
-  {"url_context": {}},
-]
-
-url1 = "https://www.foodnetwork.com/recipes/ina-garten/perfect-roast-chicken-recipe-1940592"
-url2 = "https://www.allrecipes.com/recipe/21151/simple-whole-roast-chicken/"
-
-response = client.models.generate_content(
-    model=model_id,
-    contents=f"Compare the ingredients and cooking times from the recipes at {url1} and {url2}",
-    config=GenerateContentConfig(
-        tools=tools,
-    )
-)
-
-for each in response.candidates[0].content.parts:
-    print(each.text)
-
-# For verification, you can inspect the metadata to see which URLs the model retrieved
-print(response.candidates[0].url_context_metadata)
-```
-
-### Javascript
-
-```
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({});
-
-async function main() {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: [
-        "Compare the ingredients and cooking times from the recipes at https://www.foodnetwork.com/recipes/ina-garten/perfect-roast-chicken-recipe-1940592 and https://www.allrecipes.com/recipe/21151/simple-whole-roast-chicken/",
-    ],
-    config: {
-      tools: [{urlContext: {}}],
-    },
-  });
-  console.log(response.text);
-
-  // For verification, you can inspect the metadata to see which URLs the model retrieved
-  console.log(response.candidates[0].urlContextMetadata)
-}
-
-await main();
-```
-
-### REST
-
-```
-curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-      "contents": [
-          {
-              "parts": [
-                  {"text": "Compare the ingredients and cooking times from the recipes at https://www.foodnetwork.com/recipes/ina-garten/perfect-roast-chicken-recipe-1940592 and https://www.allrecipes.com/recipe/21151/simple-whole-roast-chicken/"}
-              ]
-          }
-      ],
-      "tools": [
-          {
-              "url_context": {}
-          }
-      ]
-  }' > result.json
-
-cat result.json
-```
-
-## How it works
-
-The URL Context tool uses a two-step retrieval process to balance speed, cost, and access to fresh data. When you provide a URL, the tool first attempts to fetch the content from an internal index cache. This acts as a highly optimized cache. If a URL is not available in the index (for example, if it's a very new page), the tool automatically falls back to do a live fetch. This directly accesses the URL to retrieve its content in real-time.
-
-You can combine the URL context tool with other tools to create more powerful workflows.
-
-When both URL context and [Grounding with Google Search](/gemini-api/docs/grounding) are enabled, the model can use its search capabilities to find relevant information online and then use the URL context tool to get a more in-depth understanding of the pages it finds. This approach is powerful for prompts that require both broad searching and deep analysis of specific pages.
-
-### Python
-
-```
-from google import genai
-from google.genai.types import Tool, GenerateContentConfig, GoogleSearch, UrlContext
-
-client = genai.Client()
-model_id = "gemini-2.5-flash"
-
-tools = [
-      {"url_context": {}},
-      {"google_search": {}}
-  ]
-
-response = client.models.generate_content(
-    model=model_id,
-    contents="Give me three day events schedule based on YOUR_URL. Also let me know what needs to taken care of considering weather and commute.",
-    config=GenerateContentConfig(
-        tools=tools,
-    )
-)
-
-for each in response.candidates[0].content.parts:
-    print(each.text)
-# get URLs retrieved for context
-print(response.candidates[0].url_context_metadata)
-```
-
-### Javascript
-
-```
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({});
-
-async function main() {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: [
-        "Give me three day events schedule based on YOUR_URL. Also let me know what needs to taken care of considering weather and commute.",
-    ],
-    config: {
-      tools: [
-        {urlContext: {}},
-        {googleSearch: {}}
-        ],
-    },
-  });
-  console.log(response.text);
-  // To get URLs retrieved for context
-  console.log(response.candidates[0].urlContextMetadata)
-}
-
-await main();
-```
-
-### REST
-
-```
-curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-      "contents": [
-          {
-              "parts": [
-                  {"text": "Give me three day events schedule based on YOUR_URL. Also let me know what needs to taken care of considering weather and commute."}
-              ]
-          }
-      ],
-      "tools": [
-          {
-              "url_context": {}
-          },
-          {
-              "google_search": {}
-          }
-      ]
-  }' > result.json
-
-cat result.json
-```
-
-## Understanding the response
-
-When the model uses the URL context tool, the response includes a `url_context_metadata` object. This object lists the URLs the model retrieved content from and the status of each retrieval attempt, which is useful for verification and debugging.
-
-The following is an example of that part of the response (parts of the response have been omitted for brevity):
-
-```
-{
-  "candidates": [
-    {
-      "content": {
-        "parts": [
-          {
-            "text": "... \n"
-          }
-        ],
-        "role": "model"
-      },
-      ...
-      "url_context_metadata": {
-        "url_metadata": [
-          {
-            "retrieved_url": "https://www.foodnetwork.com/recipes/ina-garten/perfect-roast-chicken-recipe-1940592",
-            "url_retrieval_status": "URL_RETRIEVAL_STATUS_SUCCESS"
-          },
-          {
-            "retrieved_url": "https://www.allrecipes.com/recipe/21151/simple-whole-roast-chicken/",
-            "url_retrieval_status": "URL_RETRIEVAL_STATUS_SUCCESS"
-          }
-        ]
-      }
-    }
-}
-```
-
-For complete detail about this object, see the [`UrlContextMetadata` API reference](/api/generate-content#UrlContextMetadata).
-
-### Safety checks
-
-The system performs a content moderation check on the URL to confirm they meet safety standards. If the URL you provided fails this check, you will get an `url_retrieval_status` of `URL_RETRIEVAL_STATUS_UNSAFE`.
-
-### Token count
-
-The content retrieved from the URLs you specify in your prompt is counted as part of the input tokens. You can see the token count for your prompt and tools usage in the [`usage_metadata`](/api/generate-content#UsageMetadata) object of the model output. The following is an example output:
-
-```
-'usage_metadata': {
-  'candidates_token_count': 45,
-  'prompt_token_count': 27,
-  'prompt_tokens_details': [{'modality': <MediaModality.TEXT: 'TEXT'>,
-    'token_count': 27}],
-  'thoughts_token_count': 31,
-  'tool_use_prompt_token_count': 10309,
-  'tool_use_prompt_tokens_details': [{'modality': <MediaModality.TEXT: 'TEXT'>,
-    'token_count': 10309}],
-  'total_token_count': 10412
-  }
-```
-
-Price per token depends on the model used, see the [pricing](/gemini-api/docs/pricing) page for details.
-
-## Supported models
-
-- [gemini-2.5-pro](/gemini-api/docs/models#gemini-2.5-pro)
-- [gemini-2.5-flash](/gemini-api/docs/models#gemini-2.5-flash)
-- [gemini-2.5-flash-lite](/gemini-api/docs/models#gemini-2.5-flash-lite)
-- [gemini-live-2.5-flash-preview](/gemini-api/docs/models#live-api)
-- [gemini-2.0-flash-live-001](/gemini-api/docs/models#live-api-2.0)
-
-## Best Practices
-
-- **Provide specific URLs**: For the best results, provide direct URLs to the content you want the model to analyze. The model will only retrieve content from the URLs you provide, not any content from nested links.
-- **Check for accessibility**: Verify that the URLs you provide don't lead to pages that require a login or are behind a paywall.
-- **Use the complete URL**: Provide the full URL, including the protocol (e.g., https://www.google.com instead of just google.com).
-
-## Limitations
-
-- **Pricing**: Content retrieved from URLs counts as input tokens. Rate limit and pricing is the based on the model used. See the [rate limits](/gemini-api/docs/rate-limits) and [pricing](/gemini-api/docs/pricing) pages for details.
-- **Request limit**: The tool can process up to 20 URLs per request.
-- **URL content size**: The maximum size for content retrieved from a single URL is 34MB.
 
 ### Supported and unsupported content types
 
@@ -309,14 +36,6 @@ The following content types are **not** supported:
 - Google workspace files like Google docs or spreadsheets
 - Video and audio files
 
-## What's next
-
-- Explore the [URL context cookbook](https://colab.sandbox.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb#url-context) for more examples.
-
-Except as otherwise noted, the content of this page is licensed under the [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/), and code samples are licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0). For details, see the [Google Developers Site Policies](https://developers.google.com/site-policies). Java is a registered trademark of Oracle and/or its affiliates.
-
-Last updated 2025-08-21 UTC.
-
 --
 
 explore ai gateway.
@@ -327,3 +46,1309 @@ migrate business logic and unified ai gateway. to simplified logic and models su
 
 https://vercel.com/blog/ai-gateway-is-now-generally-available
 https://vercel.com/ai-gateway/models
+
+--
+
+https://zod.dev/codecs
+
+--
+
+https://zod.dev/v4
+Initial parse returned very little content, trying again
+💎 Zod 4 is now stable! [Read the announcement.](/v4)
+
+After a year of active development: Zod 4 is now stable! It's faster, slimmer, more `tsc` -efficient, and implements some long-requested features.
+
+## Versioning
+
+To upgrade:
+
+```
+npm install zod@^4.0.0
+```
+
+For a complete list of breaking changes, refer to the [Migration guide](/v4/changelog). This post focuses on new features & enhancements.
+
+## Why a new major version?
+
+Zod v3.0 was released in May 2021 (!). Back then Zod had 2700 stars on GitHub and 600k weekly downloads. Today it has 37.8k stars and 31M weekly downloads (up from 23M when the beta came out 6 weeks ago!). After 24 minor versions, the Zod 3 codebase had hit a ceiling; the most commonly requested features and improvements require breaking changes.
+
+Zod 4 fixes a number of long-standing design limitations of Zod 3 in one fell swoop, paving the way for several long-requested features and a huge leap in performance. It closes 9 of Zod's [10 most upvoted open issues](https://github.com/colinhacks/zod/issues?q=is%3Aissue%20state%3Aopen%20sort%3Areactions-%2B1-desc). With luck, it will serve as the new foundation for many more years to come.
+
+For a scannable breakdown of what's new, see the table of contents. Click on any item to jump to that section.
+
+## Benchmarks
+
+You can run these benchmarks yourself in the Zod repo:
+
+```
+$ git clone [email protected]:colinhacks/zod.git
+
+$ cd zod
+
+$ git switch v4
+
+$ pnpm install
+```
+
+Then to run a particular benchmark:
+
+```
+$ pnpm bench <name>
+```
+
+### 14x faster string parsing
+
+```
+$ pnpm bench string
+
+runtime: node v22.13.0 (arm64-darwin)
+
+
+
+benchmark      time (avg)             (min … max)       p75       p99      p999
+
+------------------------------------------------- -----------------------------
+
+• z.string().parse
+
+------------------------------------------------- -----------------------------
+
+zod3          363 µs/iter       (338 µs … 683 µs)    351 µs    467 µs    572 µs
+
+zod4       24'674 ns/iter    (21'083 ns … 235 µs) 24'209 ns 76'125 ns    120 µs
+
+
+
+summary for z.string().parse
+
+  zod4
+
+   14.71x faster than zod3
+```
+
+### 7x faster array parsing
+
+```
+$ pnpm bench array
+
+runtime: node v22.13.0 (arm64-darwin)
+
+
+
+benchmark      time (avg)             (min … max)       p75       p99      p999
+
+------------------------------------------------- -----------------------------
+
+• z.array() parsing
+
+------------------------------------------------- -----------------------------
+
+zod3          147 µs/iter       (137 µs … 767 µs)    140 µs    246 µs    520 µs
+
+zod4       19'817 ns/iter    (18'125 ns … 436 µs) 19'125 ns 44'500 ns    137 µs
+
+
+
+summary for z.array() parsing
+
+  zod4
+
+   7.43x faster than zod3
+```
+
+### 6.5x faster object parsing
+
+This runs the [Moltar validation library benchmark](https://moltar.github.io/typescript-runtime-type-benchmarks/).
+
+```
+$ pnpm bench object-moltar
+
+benchmark      time (avg)             (min … max)       p75       p99      p999
+
+------------------------------------------------- -----------------------------
+
+• z.object() safeParse
+
+------------------------------------------------- -----------------------------
+
+zod3          805 µs/iter     (771 µs … 2'802 µs)    804 µs    928 µs  2'802 µs
+
+zod4          124 µs/iter     (118 µs … 1'236 µs)    119 µs    231 µs    329 µs
+
+
+
+summary for z.object() safeParse
+
+  zod4
+
+   6.5x faster than zod3
+```
+
+## 100x reduction in tsc instantiations
+
+Consider the following simple file:
+
+```
+import * as z from "zod";
+
+
+
+export const A = z.object({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+  d: z.string(),
+
+  e: z.string(),
+
+});
+
+
+
+export const B = A.extend({
+
+  f: z.string(),
+
+  g: z.string(),
+
+  h: z.string(),
+
+});
+```
+
+Compiling this file with `tsc --extendedDiagnostics` using `"zod/v3"` results in >25000 type instantiations. With `"zod/v4"` it only results in ~175.
+
+The Zod repo contains a `tsc` benchmarking playground. Try this for yourself using the compiler benchmarks in `packages/tsc`. The exact numbers may change as the implementation evolves.
+
+```
+$ cd packages/tsc
+
+$ pnpm bench object-with-extend
+```
+
+More importantly, Zod 4 has redesigned and simplified the generics of `ZodObject` and other schema classes to avoid some pernicious "instantiation explosions". For instance, chaining `.extend()` and `.omit()` repeatedly—something that previously caused compiler issues:
+
+```
+import * as z from "zod";
+
+
+
+export const a = z.object({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const b = a.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const c = b.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const d = c.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const e = d.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const f = e.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const g = f.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const h = g.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const i = h.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const j = i.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const k = j.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const l = k.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const m = l.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const n = m.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const o = n.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+
+
+
+export const p = o.omit({
+
+  a: true,
+
+  b: true,
+
+  c: true,
+
+});
+
+
+
+export const q = p.extend({
+
+  a: z.string(),
+
+  b: z.string(),
+
+  c: z.string(),
+
+});
+```
+
+In Zod 3, this took `4000ms` to compile; and adding additional calls to `.extend()` would trigger a "Possibly infinite" error. In Zod 4, this compiles in `400ms`, `10x` faster.
+
+## 2x reduction in core bundle size
+
+Consider the following simple script.
+
+```
+import * as z from "zod";
+
+
+
+const schema = z.boolean();
+
+
+
+schema.parse(true);
+```
+
+It's about as simple as it gets when it comes to validation. That's intentional; it's a good way to measure the _core bundle size_ —the code that will end up in the bundle even in simple cases. We'll bundle this with `rollup` using both Zod 3 and Zod 4 and compare the final bundles.
+
+| Package | Bundle (gzip) |
+| ------- | ------------- |
+| Zod 3   | `12.47kb`     |
+| Zod 4   | `5.36kb`      |
+
+The core bundle is ~57% smaller in Zod 4 (2.3x). That's good! But we can do a lot better.
+
+## Introducing Zod Mini
+
+Zod's method-heavy API is fundamentally difficult to tree-shake. Even our simple `z.boolean()` script pulls in the implementations of a bunch of methods we didn't use, like `.optional()`, `.array()`, etc. Writing slimmer implementations can only get you so far. That's where Zod Mini comes in.
+
+```
+npm install zod@^3.25.0
+```
+
+It's a Zod variant with a functional, tree-shakable API that corresponds one-to-one with `zod`. Where Zod uses methods, Zod Mini generally uses wrapper functions:
+
+```
+import * as z from "zod/mini";
+
+
+
+z.optional(z.string());
+
+
+
+z.union([z.string(), z.number()]);
+
+
+
+z.extend(z.object({ /* ... */ }), { age: z.number() });
+```
+
+Not all methods are gone! The parsing methods are identical in Zod and Zod Mini:
+
+```
+import * as z from "zod/mini";
+
+
+
+z.string().parse("asdf");
+
+z.string().safeParse("asdf");
+
+await z.string().parseAsync("asdf");
+
+await z.string().safeParseAsync("asdf");
+```
+
+There's also a general-purpose `.check()` method used to add refinements.
+
+```
+import * as z from "zod/mini";
+
+
+
+z.array(z.number()).check(
+
+  z.minLength(5),
+
+  z.maxLength(10),
+
+  z.refine(arr => arr.includes(5))
+
+);
+```
+
+The following top-level refinements are available in Zod Mini. It should be fairly self-explanatory which Zod methods they correspond to.
+
+```
+import * as z from "zod/mini";
+
+
+
+// custom checks
+
+z.refine();
+
+
+
+// first-class checks
+
+z.lt(value);
+
+z.lte(value); // alias: z.maximum()
+
+z.gt(value);
+
+z.gte(value); // alias: z.minimum()
+
+z.positive();
+
+z.negative();
+
+z.nonpositive();
+
+z.nonnegative();
+
+z.multipleOf(value);
+
+z.maxSize(value);
+
+z.minSize(value);
+
+z.size(value);
+
+z.maxLength(value);
+
+z.minLength(value);
+
+z.length(value);
+
+z.regex(regex);
+
+z.lowercase();
+
+z.uppercase();
+
+z.includes(value);
+
+z.startsWith(value);
+
+z.endsWith(value);
+
+z.property(key, schema); // for object schemas; check \`input[key]\` against \`schema\`
+
+z.mime(value); // for file schemas (see below)
+
+
+
+// overwrites (these *do not* change the inferred type!)
+
+z.overwrite(value => newValue);
+
+z.normalize();
+
+z.trim();
+
+z.toLowerCase();
+
+z.toUpperCase();
+```
+
+This more functional API makes it easier for bundlers to tree-shake the APIs you don't use. While regular Zod is still recommended for the majority of use cases, any projects with uncommonly strict bundle size constraints should consider Zod Mini.
+
+### 6.6x reduction in core bundle size
+
+Here's the script from above, updated to use `"zod/mini"` instead of `"zod"`.
+
+```
+import * as z from "zod/mini";
+
+
+
+const schema = z.boolean();
+
+schema.parse(false);
+```
+
+When we build this with `rollup`, the gzipped bundle size is `1.88kb`. That's an 85% (6.6x) reduction in core bundle size compared to `zod@3`.
+
+| Package         | Bundle (gzip) |
+| --------------- | ------------- |
+| Zod 3           | `12.47kb`     |
+| Zod 4 (regular) | `5.36kb`      |
+| Zod 4 (mini)    | `1.88kb`      |
+
+Learn more on the dedicated [`zod/mini`](/packages/mini) docs page. Complete API details are mixed into existing documentation pages; code blocks contain separate tabs for `"Zod"` and `"Zod Mini"` wherever their APIs diverge.
+
+## Metadata
+
+Zod 4 introduces a new system for adding strongly-typed metadata to your schemas. Metadata isn't stored inside the schema itself; instead it's stored in a "schema registry" that associates a schema with some typed metadata. To create a registry with `z.registry()`:
+
+```
+import * as z from "zod";
+
+
+
+const myRegistry = z.registry<{ title: string; description: string }>();
+```
+
+To add schemas to your registry:
+
+```
+const emailSchema = z.string().email();
+
+
+
+myRegistry.add(emailSchema, { title: "Email address", description: "..." });
+
+myRegistry.get(emailSchema);
+
+// => { title: "Email address", ... }
+```
+
+Alternatively, you can use the `.register()` method on a schema for convenience:
+
+### The global registry
+
+Zod also exports a global registry `z.globalRegistry` that accepts some common JSON Schema-compatible metadata:
+
+```
+z.globalRegistry.add(z.string(), {
+
+  id: "email_address",
+
+  title: "Email address",
+
+  description: "Provide your email",
+
+  examples: ["[email protected]"],
+
+  extraKey: "Additional properties are also allowed"
+
+});
+```
+
+### .meta()
+
+To conveniently add a schema to `z.globalRegistry`, use the `.meta()` method.
+
+```
+z.string().meta({
+
+  id: "email_address",
+
+  title: "Email address",
+
+  description: "Provide your email",
+
+  examples: ["[email protected]"],
+
+  // ...
+
+});
+```
+
+## JSON Schema conversion
+
+Zod 4 introduces first-party JSON Schema conversion via `z.toJSONSchema()`.
+
+```
+import * as z from "zod";
+
+
+
+const mySchema = z.object({name: z.string(), points: z.number()});
+
+
+
+z.toJSONSchema(mySchema);
+
+// => {
+
+//   type: "object",
+
+//   properties: {
+
+//     name: {type: "string"},
+
+//     points: {type: "number"},
+
+//   },
+
+//   required: ["name", "points"],
+
+// }
+```
+
+Any metadata in `z.globalRegistry` is automatically included in the JSON Schema output.
+
+```
+const mySchema = z.object({
+
+  firstName: z.string().describe("Your first name"),
+
+  lastName: z.string().meta({ title: "last_name" }),
+
+  age: z.number().meta({ examples: [12, 99] }),
+
+});
+
+
+
+z.toJSONSchema(mySchema);
+
+// => {
+
+//   type: 'object',
+
+//   properties: {
+
+//     firstName: { type: 'string', description: 'Your first name' },
+
+//     lastName: { type: 'string', title: 'last_name' },
+
+//     age: { type: 'number', examples: [ 12, 99 ] }
+
+//   },
+
+//   required: [ 'firstName', 'lastName', 'age' ]
+
+// }
+```
+
+Refer to the [JSON Schema docs](/json-schema) for information on customizing the generated JSON Schema.
+
+## Recursive objects
+
+This was an unexpected one. After years of trying to crack this problem, I finally [found a way](https://x.com/colinhacks/status/1919286275133378670) to properly infer recursive object types in Zod. To define a recursive type:
+
+```
+const Category = z.object({
+
+  name: z.string(),
+
+  get subcategories(){
+
+    return z.array(Category)
+
+  }
+
+});
+
+
+
+type Category = z.infer<typeof Category>;
+
+// { name: string; subcategories: Category[] }
+```
+
+You can also represent _mutually recursive types_:
+
+```
+const User = z.object({
+
+  email: z.email(),
+
+  get posts(){
+
+    return z.array(Post)
+
+  }
+
+});
+
+
+
+const Post = z.object({
+
+  title: z.string(),
+
+  get author(){
+
+    return User
+
+  }
+
+});
+```
+
+Unlike the Zod 3 pattern for recursive types, there's no type casting required. The resulting schemas are plain `ZodObject` instances and have the full set of methods available.
+
+```
+Post.pick({ title: true })
+
+Post.partial();
+
+Post.extend({ publishDate: z.date() });
+```
+
+## File schemas
+
+To validate `File` instances:
+
+```
+const fileSchema = z.file();
+
+
+
+fileSchema.min(10_000); // minimum .size (bytes)
+
+fileSchema.max(1_000_000); // maximum .size (bytes)
+
+fileSchema.mime(["image/png"]); // MIME type
+```
+
+## Internationalization
+
+Zod 4 introduces a new `locales` API for globally translating error messages into different languages.
+
+```
+import * as z from "zod";
+
+
+
+// configure English locale (default)
+
+z.config(z.locales.en());
+```
+
+At the time of this writing only the English locale is available; There will be a call for pull request from the community shortly; this section will be updated with a list of supported languages as they become available.
+
+## Error pretty-printing
+
+The popularity of the [`zod-validation-error`](https://www.npmjs.com/package/zod-validation-error) package demonstrates that there's significant demand for an official API for pretty-printing errors. If you are using that package currently, by all means continue using it.
+
+Zod now implements a top-level `z.prettifyError` function for converting a `ZodError` to a user-friendly formatted string.
+
+```
+const myError = new z.ZodError([
+
+  {
+
+    code: 'unrecognized_keys',
+
+    keys: [ 'extraField' ],
+
+    path: [],
+
+    message: 'Unrecognized key: "extraField"'
+
+  },
+
+  {
+
+    expected: 'string',
+
+    code: 'invalid_type',
+
+    path: [ 'username' ],
+
+    message: 'Invalid input: expected string, received number'
+
+  },
+
+  {
+
+    origin: 'number',
+
+    code: 'too_small',
+
+    minimum: 0,
+
+    inclusive: true,
+
+    path: [ 'favoriteNumbers', 1 ],
+
+    message: 'Too small: expected number to be >=0'
+
+  }
+
+]);
+
+
+
+z.prettifyError(myError);
+```
+
+This returns the following pretty-printable multi-line string:
+
+```
+✖ Unrecognized key: "extraField"
+
+✖ Invalid input: expected string, received number
+
+  → at username
+
+✖ Invalid input: expected number, received string
+
+  → at favoriteNumbers[1]
+```
+
+Currently the formatting isn't configurable; this may change in the future.
+
+## Top-level string formats
+
+All "string formats" (email, etc.) have been promoted to top-level functions on the `z` module. This is both more concise and more tree-shakable. The method equivalents (`z.string().email()`, etc.) are still available but have been deprecated. They'll be removed in the next major version.
+
+```
+z.email();
+
+z.uuidv4();
+
+z.uuidv7();
+
+z.uuidv8();
+
+z.ipv4();
+
+z.ipv6();
+
+z.cidrv4();
+
+z.cidrv6();
+
+z.url();
+
+z.e164();
+
+z.base64();
+
+z.base64url();
+
+z.jwt();
+
+z.lowercase();
+
+z.iso.date();
+
+z.iso.datetime();
+
+z.iso.duration();
+
+z.iso.time();
+```
+
+### Custom email regex
+
+The `z.email()` API now supports a custom regular expression. There is no one canonical email regex; different applications may choose to be more or less strict. For convenience Zod exports some common ones.
+
+```
+// Zod's default email regex (Gmail rules)
+
+// see colinhacks.com/essays/reasonable-email-regex
+
+z.email(); // z.regexes.email
+
+
+
+// the regex used by browsers to validate input[type=email] fields
+
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email
+
+z.email({ pattern: z.regexes.html5Email });
+
+
+
+// the classic emailregex.com regex (RFC 5322)
+
+z.email({ pattern: z.regexes.rfc5322Email });
+
+
+
+// a loose regex that allows Unicode (good for intl emails)
+
+z.email({ pattern: z.regexes.unicodeEmail });
+```
+
+## Template literal types
+
+Zod 4 implements `z.templateLiteral()`. Template literal types are perhaps the biggest feature of TypeScript's type system that wasn't previously representable.
+
+```
+const hello = z.templateLiteral(["hello, ", z.string()]);
+
+// \`hello, ${string}\`
+
+
+
+const cssUnits = z.enum(["px", "em", "rem", "%"]);
+
+const css = z.templateLiteral([z.number(), cssUnits]);
+
+// \`${number}px\` | \`${number}em\` | \`${number}rem\` | \`${number}%\`
+
+
+
+const email = z.templateLiteral([
+
+  z.string().min(1),
+
+  "@",
+
+  z.string().max(64),
+
+]);
+
+// \`${string}@${string}\` (the min/max refinements are enforced!)
+```
+
+Every Zod schema type that can be stringified stores an internal regex: strings, string formats like `z.email()`, numbers, boolean, bigint, enums, literals, undefined/optional, null/nullable, and other template literals. The `z.templateLiteral` constructor concatenates these into a super-regex, so things like string formats (`z.email()`) are properly enforced (but custom refinements are not!).
+
+Read the [template literal docs](/api#template-literals) for more info.
+
+## Number formats
+
+New numeric "formats" have been added for representing fixed-width integer and float types. These return a `ZodNumber` instance with proper minimum/maximum constraints already added.
+
+```
+z.int();      // [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
+
+z.float32();  // [-3.4028234663852886e38, 3.4028234663852886e38]
+
+z.float64();  // [-1.7976931348623157e308, 1.7976931348623157e308]
+
+z.int32();    // [-2147483648, 2147483647]
+
+z.uint32();   // [0, 4294967295]
+```
+
+Similarly the following `bigint` numeric formats have also been added. These integer types exceed what can be safely represented by a `number` in JavaScript, so these return a `ZodBigInt` instance with the proper minimum/maximum constraints already added.
+
+```
+z.int64();    // [-9223372036854775808n, 9223372036854775807n]
+
+z.uint64();   // [0n, 18446744073709551615n]
+```
+
+## Stringbool
+
+The existing `z.coerce.boolean()` API is very simple: falsy values (`false`, `undefined`, `null`, `0`, `""`, `NaN` etc) become `false`, truthy values become `true`.
+
+This is still a good API, and its behavior aligns with the other `z.coerce` APIs. But some users requested a more sophisticated "env-style" boolean coercion. To support this, Zod 4 introduces `z.stringbool()`:
+
+```
+const strbool = z.stringbool();
+
+
+
+strbool.parse("true")         // => true
+
+strbool.parse("1")            // => true
+
+strbool.parse("yes")          // => true
+
+strbool.parse("on")           // => true
+
+strbool.parse("y")            // => true
+
+strbool.parse("enabled")      // => true
+
+
+
+strbool.parse("false");       // => false
+
+strbool.parse("0");           // => false
+
+strbool.parse("no");          // => false
+
+strbool.parse("off");         // => false
+
+strbool.parse("n");           // => false
+
+strbool.parse("disabled");    // => false
+
+
+
+strbool.parse(/* anything else */); // ZodError<[{ code: "invalid_value" }]>
+```
+
+To customize the truthy and falsy values:
+
+```
+z.stringbool({
+
+  truthy: ["yes", "true"],
+
+  falsy: ["no", "false"]
+
+})
+```
+
+Refer to the [`z.stringbool()` docs](/api#stringbools) for more information.
+
+## Simplified error customization
+
+The majority of breaking changes in Zod 4 involve the _error customization_ APIs. They were a bit of a mess in Zod 3; Zod 4 makes things significantly more elegant, to the point where I think it's worth highlighting here.
+
+Long story short, there is now a single, unified `error` parameter for customizing errors, replacing the following APIs:
+
+Replace `message` with `error`. (The `message` parameter is still supported but deprecated.)
+
+```
+- z.string().min(5, { message: "Too short." });
+
++ z.string().min(5, { error: "Too short." });
+```
+
+Replace `invalid_type_error` and `required_error` with `error` (function syntax):
+
+```
+// Zod 3
+
+- z.string({
+
+-   required_error: "This field is required"
+
+-   invalid_type_error: "Not a string",
+
+- });
+
+
+
+// Zod 4
+
++ z.string({ error: (issue) => issue.input === undefined ?
+
++  "This field is required" :
+
++  "Not a string"
+
++ });
+```
+
+Replace `errorMap` with `error` (function syntax):
+
+```
+// Zod 3
+
+- z.string({
+
+-   errorMap: (issue, ctx) => {
+
+-     if (issue.code === "too_small") {
+
+-       return { message: \`Value must be >${issue.minimum}\` };
+
+-     }
+
+-     return { message: ctx.defaultError };
+
+-   },
+
+- });
+
+
+
+// Zod 4
+
++ z.string({
+
++   error: (issue) => {
+
++     if (issue.code === "too_small") {
+
++       return \`Value must be >${issue.minimum}\`
+
++     }
+
++   },
+
++ });
+```
+
+## Upgraded z.discriminatedUnion()
+
+Discriminated unions now support a number of schema types not previously supported, including unions and pipes:
+
+```
+const MyResult = z.discriminatedUnion("status", [
+
+  // simple literal
+
+  z.object({ status: z.literal("aaa"), data: z.string() }),
+
+  // union discriminator
+
+  z.object({ status: z.union([z.literal("bbb"), z.literal("ccc")]) }),
+
+  // pipe discriminator
+
+  z.object({ status: z.literal("fail").transform(val => val.toUpperCase()) }),
+
+]);
+```
+
+Perhaps most importantly, discriminated unions now _compose_ —you can use one discriminated union as a member of another.
+
+```
+const BaseError = z.object({ status: z.literal("failed"), message: z.string() });
+
+
+
+const MyResult = z.discriminatedUnion("status", [
+
+  z.object({ status: z.literal("success"), data: z.string() }),
+
+  z.discriminatedUnion("code", [
+
+    BaseError.extend({ code: z.literal(400) }),
+
+    BaseError.extend({ code: z.literal(401) }),
+
+    BaseError.extend({ code: z.literal(500) })
+
+  ])
+
+]);
+```
+
+## Multiple values in z.literal()
+
+The `z.literal()` API now optionally supports multiple values.
+
+```
+const httpCodes = z.literal([ 200, 201, 202, 204, 206, 207, 208, 226 ]);
+
+
+
+// previously in Zod 3:
+
+const httpCodes = z.union([
+
+  z.literal(200),
+
+  z.literal(201),
+
+  z.literal(202),
+
+  z.literal(204),
+
+  z.literal(206),
+
+  z.literal(207),
+
+  z.literal(208),
+
+  z.literal(226)
+
+]);
+```
+
+## Refinements live inside schemas
+
+In Zod 3, they were stored in a `ZodEffects` class that wrapped the original schema. This was inconvenient, as it meant you couldn't interleave `.refine()` with other schema methods like `.min()`.
+
+```
+z.string()
+
+  .refine(val => val.includes("@"))
+
+  .min(5);
+
+// ^ ❌ Property 'min' does not exist on type ZodEffects<ZodString, string, string>
+```
+
+In Zod 4, refinements are stored inside the schemas themselves, so the code above works as expected.
+
+```
+z.string()
+
+  .refine(val => val.includes("@"))
+
+  .min(5); // ✅
+```
+
+### .overwrite()
+
+The `.transform()` method is extremely useful, but it has one major downside: the output type is no longer _introspectable_ at runtime. The transform function is a black box that can return anything. This means (among other things) there's no sound way to convert the schema to JSON Schema.
+
+```
+const Squared = z.number().transform(val => val ** 2);
+
+// => ZodPipe<ZodNumber, ZodTransform>
+```
+
+Zod 4 introduces a new `.overwrite()` method for representing transforms that _don't change the inferred type_. Unlike `.transform()`, this method returns an instance of the original class. The overwrite function is stored as a refinement, so it doesn't (and can't) modify the inferred type.
+
+```
+z.number().overwrite(val => val ** 2).max(100);
+
+// => ZodNumber
+```
+
+## An extensible foundation: zod/v4/core
+
+While this will not be relevant to the majority of Zod users, it's worth highlighting. The addition of Zod Mini necessitated the creation of a shared sub-package `zod/v4/core` which contains the core functionality shared between Zod and Zod Mini.
+
+I was resistant to this at first, but now I see it as one of Zod 4's most important features. It lets Zod level up from a simple library to a fast validation "substrate" that can be sprinkled into other libraries.
+
+If you're building a schema library, refer to the implementations of Zod and Zod Mini to see how to build on top of the foundation `zod/v4/core` provides. Don't hesitate to get in touch in GitHub discussions or via [X](https://x.com/colinhacks) / [Bluesky](https://bsky.app/profile/colinhacks.com) for help or feedback.
+
+## Wrapping up
+
+I'm planning to write up a series of additional posts explaining the design process behind some major features like Zod Mini. I'll update this section as those get posted.
+
+For library authors, there is now a dedicated guide that describes the best practices for building on top of Zod. It answers common questions about how to support Zod 3 & Zod 4 (including Mini) simultaneously.
+
+```
+pnpm upgrade zod@latest
+```
+
+Happy parsing!
+— Colin McDonnell [@colinhacks](https://x.com/colinhacks) [Migration guide](/v4/changelog)
+
+[
+
+Complete changelog and migration guide for upgrading from Zod 3 to Zod 4
+
+](/v4/changelog)
