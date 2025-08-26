@@ -435,7 +435,7 @@ export const ChatInput = ({
                                                 hasTextInput={hasTextInput}
                                                 isGenerating={isGenerating}
                                                 sendMessage={sendMessage}
-                                                stopGeneration={stopGeneration}
+                                                stopGeneration={() => stopGeneration('user')}
                                             />
                                         </Flex>
                                     </Flex>
