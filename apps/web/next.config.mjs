@@ -83,10 +83,10 @@ const nextConfig = {
 
     // Performance optimizations
     compiler: {
-        // Remove console.logs in production
+        // Remove console.logs in production - only keep errors for compatibility
         removeConsole: process.env.NODE_ENV === 'production'
             ? {
-                exclude: ['error', 'warn'],
+                exclude: ['error'],
             }
             : false,
         // Enable SWC minification

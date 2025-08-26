@@ -15,7 +15,16 @@ export async function runMigrations() {
         });
         log.info({}, '✅ Database migrations completed successfully!');
     } catch (error) {
-        log.error({ error }, '❌ Database migration failed');
+        log.error(
+            { 
+                error, 
+                migrationsFolder: './lib/database/migrations',
+                operation: 'database_migration',
+                nodeEnv: process.env.NODE_ENV,
+                databaseUrl: process.env.DATABASE_URL ? 'configured' : 'missing'
+            }, 
+            '❌ Database migration failed'
+        );
         throw error;
     }
 }
@@ -23,6 +32,19 @@ export async function runMigrations() {
 // Run migrations if this file is executed directly
 if (require.main === module) {
     runMigrations()
-        .then(() => process.exit(0))
-        .catch(() => process.exit(1));
+        .then(() => {
+            log.info({}, 'Migration process completed successfully, exiting');
+            process.exit(0);
+        })
+        .catch((error) => {
+            log.error(
+                { 
+                    error, 
+                    operation: 'migration_process_exit',
+                    nodeEnv: process.env.NODE_ENV
+                }, 
+                'Migration process failed, exiting with error code'
+            );
+            process.exit(1);
+        });
 }

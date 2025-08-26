@@ -1,4 +1,5 @@
 import type { ErrorContext, ErrorMessage } from '@repo/ai/services/error-messages';
+import { log } from '@repo/shared/logger';
 import { useToast } from '@repo/ui';
 import { useCallback } from 'react';
 
@@ -43,7 +44,17 @@ export function useErrorHandler() {
                 }
 
                 return structuredError;
-            } catch (_serviceError) {
+            } catch (serviceError) {
+                log.warn(
+                    {
+                        error: serviceError,
+                        originalError: error,
+                        context,
+                        operation: 'error_message_service_fallback'
+                    },
+                    'Error message service failed, using fallback error handling'
+                );
+                
                 // Fallback error handling if the service fails
                 const fallbackMessage = typeof error === 'string' ? error : error.message;
 

@@ -131,7 +131,16 @@ export async function GET(request: NextRequest) {
 
             session = await Promise.race([sessionPromise, timeoutPromise]);
         } catch (error) {
-            log.warn({ error }, '[Subscription Status API] Session check failed or timed out');
+            log.warn(
+                { 
+                    error, 
+                    requestUrl: request.url,
+                    userAgent: request.headers.get('user-agent'),
+                    referer: request.headers.get('referer'),
+                    operation: 'session_check'
+                }, 
+                '[Subscription Status API] Session check failed or timed out'
+            );
             // For session failures, treat as anonymous user
             session = null;
         }
@@ -239,7 +248,17 @@ export async function GET(request: NextRequest) {
             lastRefreshTrigger: cachedResult.lastRefreshTrigger,
         });
     } catch (error) {
-        log.error('[Subscription Status API] Error:', { error });
+        log.error(
+            { 
+                error, 
+                requestUrl: request.url,
+                userAgent: request.headers.get('user-agent'),
+                referer: request.headers.get('referer'),
+                operation: 'subscription_status_fetch',
+                userId: (session as any)?.user?.id || 'anonymous'
+            }, 
+            '[Subscription Status API] Unexpected error occurred'
+        );
         return NextResponse.json(
             {
                 error: 'Internal server error',
