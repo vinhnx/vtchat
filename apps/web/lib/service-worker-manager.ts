@@ -1,6 +1,7 @@
 /**
  * Service Worker Manager - Client-side utilities for SW interaction
  */
+import { log } from '@repo/shared/lib/logger';
 
 export type CacheStats = {
     [cacheName: string]: {
@@ -33,7 +34,7 @@ export class ServiceWorkerManager {
      */
     async register(): Promise<ServiceWorkerRegistration | null> {
         if (!this.isSupported) {
-            console.warn('Service Worker not supported');
+            log.warn('Service Worker not supported');
             return null;
         }
 
@@ -43,7 +44,15 @@ export class ServiceWorkerManager {
                 updateViaCache: 'none', // Always check for updates
             });
 
-            console.log('Service Worker registered:', this.registration);
+            log.info(
+                {
+                    scope: this.registration.scope,
+                    active: !!this.registration.active,
+                    waiting: !!this.registration.waiting,
+                    installing: !!this.registration.installing,
+                },
+                'Service Worker registered successfully',
+            );
 
             // Handle updates
             this.registration.addEventListener('updatefound', () => {
@@ -65,7 +74,14 @@ export class ServiceWorkerManager {
 
             return this.registration;
         } catch (error) {
-            console.error('Service Worker registration failed:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                    isSupported: this.isSupported,
+                    userAgent: navigator.userAgent,
+                },
+                'Service Worker registration failed',
+            );
             return null;
         }
     }
@@ -217,7 +233,13 @@ export class ServiceWorkerManager {
             this.registration = null;
             return result;
         } catch (error) {
-            console.error('Failed to unregister service worker:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                    registrationScope: this.registration?.scope,
+                },
+                'Failed to unregister service worker',
+            );
             return false;
         }
     }

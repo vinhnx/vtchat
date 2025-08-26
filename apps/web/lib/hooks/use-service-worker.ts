@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { type CacheStats, swManager } from '../service-worker-manager';
+import { log } from '@repo/shared/lib/logger';
 
 export interface ServiceWorkerHook {
     isSupported: boolean;
@@ -54,7 +55,14 @@ export function useServiceWorker(): ServiceWorkerHook {
                 const stats = await swManager.getCacheStats();
                 setCacheStats(stats);
             } catch (error) {
-                console.error('Service worker initialization failed:', error);
+                log.error(
+                    {
+                        err: error instanceof Error ? error : new Error(String(error)),
+                        isSupported,
+                        nodeEnv: process.env.NODE_ENV,
+                    },
+                    'Service worker initialization failed',
+                );
             } finally {
                 setIsLoading(false);
             }
@@ -83,7 +91,13 @@ export function useServiceWorker(): ServiceWorkerHook {
             await swManager.update();
             setHasUpdate(false);
         } catch (error) {
-            console.error('Service worker update failed:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                    hasUpdate,
+                },
+                'Service worker update failed',
+            );
         }
     }, []);
 
@@ -96,7 +110,13 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error('Cache clear failed:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                    cacheName: cacheName || 'all',
+                },
+                'Cache clear failed',
+            );
         }
     }, []);
 
@@ -106,7 +126,12 @@ export function useServiceWorker(): ServiceWorkerHook {
         try {
             await swManager.forceSync();
         } catch (error) {
-            console.error('Force sync failed:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                },
+                'Force sync failed',
+            );
         }
     }, []);
 
@@ -117,7 +142,12 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error('Cache stats refresh failed:', error);
+            log.error(
+                {
+                    err: error instanceof Error ? error : new Error(String(error)),
+                },
+                'Cache stats refresh failed',
+            );
         }
     }, []);
 
