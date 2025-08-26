@@ -8,13 +8,13 @@ Regular errors are thrown and can be handled using the `try/catch` block.
 import { generateText } from 'ai';
 
 try {
-  const { text } = await generateText({
-    model: yourModel,
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { text } = await generateText({
+        model: yourModel,
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 } catch (error) {
-  // handle error
-  console.error('Error generating text:', error);
+    // handle error
+    console.error('Error generating text:', error);
 }
 ```
 
@@ -30,17 +30,17 @@ You can handle these errors using the `try/catch` block.
 import { streamText } from 'ai';
 
 try {
-  const { textStream } = streamText({
-    model: yourModel,
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { textStream } = streamText({
+        model: yourModel,
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 
-  for await (const textPart of textStream) {
-    process.stdout.write(textPart);
-  }
+    for await (const textPart of textStream) {
+        process.stdout.write(textPart);
+    }
 } catch (error) {
-  // handle streaming error
-  console.error('Error in text stream:', error);
+    // handle streaming error
+    console.error('Error in text stream:', error);
 }
 ```
 
@@ -55,35 +55,35 @@ happen outside of the streaming.
 import { streamText } from 'ai';
 
 try {
-  const { fullStream } = streamText({
-    model: yourModel,
-    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  });
+    const { fullStream } = streamText({
+        model: yourModel,
+        prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    });
 
-  for await (const part of fullStream) {
-    switch (part.type) {
-      case 'text-delta': {
-        process.stdout.write(part.textDelta);
-        break;
-      }
+    for await (const part of fullStream) {
+        switch (part.type) {
+            case 'text-delta': {
+                process.stdout.write(part.textDelta);
+                break;
+            }
 
-      case 'error': {
-        const error = part.error;
-        // handle error specifically
-        console.error('Stream error:', error);
-        break;
-      }
-      
-      case 'abort': {
-        // handle stream abort
-        console.log('Stream was aborted');
-        break;
-      }
+            case 'error': {
+                const error = part.error;
+                // handle error specifically
+                console.error('Stream error:', error);
+                break;
+            }
+
+            case 'abort': {
+                // handle stream abort
+                console.log('Stream was aborted');
+                break;
+            }
+        }
     }
-  }
 } catch (error) {
-  // handle error
-  console.error('Error in full stream:', error);
+    // handle error
+    console.error('Error in full stream:', error);
 }
 ```
 
@@ -95,20 +95,20 @@ When streams are aborted (e.g., via a stop button), you can handle this with the
 import { streamText } from 'ai';
 
 const { textStream } = streamText({
-  model: yourModel,
-  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  onAbort: ({ steps }) => {
-    // Update stored messages or perform cleanup
-    console.log('Stream aborted after', steps.length, 'steps');
-  },
-  onFinish: ({ steps, totalUsage }) => {
-    // This is called on normal completion
-    console.log('Stream completed normally');
-  },
+    model: yourModel,
+    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    onAbort: ({ steps }) => {
+        // Update stored messages or perform cleanup
+        console.log('Stream aborted after', steps.length, 'steps');
+    },
+    onFinish: ({ steps, totalUsage }) => {
+        // This is called on normal completion
+        console.log('Stream completed normally');
+    },
 });
 
 for await (const textPart of textStream) {
-  process.stdout.write(textPart);
+    process.stdout.write(textPart);
 }
 ```
 
@@ -118,19 +118,19 @@ You can also handle abort events directly in the stream:
 import { streamText } from 'ai';
 
 const { fullStream } = streamText({
-  model: yourModel,
-  prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+    model: yourModel,
+    prompt: 'Write a vegetarian lasagna recipe for 4 people.',
 });
 
 for await (const chunk of fullStream) {
-  switch (chunk.type) {
-    case 'abort': {
-      // Handle abort directly in stream
-      console.log('Stream was aborted');
-      break;
+    switch (chunk.type) {
+        case 'abort': {
+            // Handle abort directly in stream
+            console.log('Stream was aborted');
+            break;
+        }
+            // ... handle other part types
     }
-    // ... handle other part types
-  }
 }
 ```
 
@@ -149,34 +149,33 @@ The AgentProvider in VT Chat handles streaming errors with:
 
 ```typescript
 try {
-  // Streaming implementation
-  const response = await fetch('/api/completion', {
-    method: 'POST',
-    // ... other options
-  });
-  
-  const reader = response.body?.getReader();
-  // ... streaming logic
-  
-} catch (streamError: any) {
-  // Handle abort errors specifically
-  if (streamError.name === 'AbortError' || abortController.signal.aborted) {
-    log.info('Stream was aborted by user');
-    // Update UI state
-    return;
-  }
-  
-  // Extract meaningful error message
-  const errorResult = ProviderErrorExtractor.extractError(streamError);
-  
-  if (errorResult.success && errorResult.error) {
-    // Show user-friendly error message
-    toast({
-      title: `${errorResult.error.provider} Error`,
-      description: errorResult.error.userMessage,
-      variant: 'destructive',
+    // Streaming implementation
+    const response = await fetch('/api/completion', {
+        method: 'POST',
+        // ... other options
     });
-  }
+
+    const reader = response.body?.getReader();
+    // ... streaming logic
+} catch (streamError: any) {
+    // Handle abort errors specifically
+    if (streamError.name === 'AbortError' || abortController.signal.aborted) {
+        log.info('Stream was aborted by user');
+        // Update UI state
+        return;
+    }
+
+    // Extract meaningful error message
+    const errorResult = ProviderErrorExtractor.extractError(streamError);
+
+    if (errorResult.success && errorResult.error) {
+        // Show user-friendly error message
+        toast({
+            title: `${errorResult.error.provider} Error`,
+            description: errorResult.error.userMessage,
+            variant: 'destructive',
+        });
+    }
 }
 ```
 
@@ -191,33 +190,33 @@ Backend API routes handle errors through:
 
 ```typescript
 try {
-  // AI model processing
-  const result = await streamText({
-    model: selectedModel,
-    // ... other options
-  });
-  
-  // Send stream response
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  });
+    // AI model processing
+    const result = await streamText({
+        model: selectedModel,
+        // ... other options
+    });
+
+    // Send stream response
+    return new Response(stream, {
+        headers: {
+            'Content-Type': 'text/plain; charset=utf-8',
+        },
+    });
 } catch (error) {
-  // Log detailed error information
-  log.error({ error }, 'AI processing error');
-  
-  // Return user-friendly error response
-  return new Response(
-    JSON.stringify({
-      error: 'Something went wrong',
-      message: 'Please try again later',
-    }),
-    { 
-      status: 500, 
-      headers: { 'Content-Type': 'application/json' 
-    }
-  });
+    // Log detailed error information
+    log.error({ error }, 'AI processing error');
+
+    // Return user-friendly error response
+    return new Response(
+        JSON.stringify({
+            error: 'Something went wrong',
+            message: 'Please try again later',
+        }),
+        {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        },
+    );
 }
 ```
 
@@ -232,30 +231,30 @@ Workflow tasks use error handling utilities to:
 
 ```typescript
 try {
-  // Workflow task execution
-  const result = await executeTask(taskData);
-  
-  // Send success event
-  sendEvent({ type: 'success', data: result });
+    // Workflow task execution
+    const result = await executeTask(taskData);
+
+    // Send success event
+    sendEvent({ type: 'success', data: result });
 } catch (error) {
-  // Handle specific error types
-  if (error instanceof QuotaExceededError) {
-    sendEvent({ 
-      type: 'error', 
-      status: 'quota_exceeded',
-      message: 'VT+ quota exceeded'
-    });
-  } else {
-    // Handle general errors
-    sendEvent({ 
-      type: 'error', 
-      status: 'error',
-      message: 'Something went wrong'
-    });
-  }
-  
-  // Log for debugging
-  log.error({ error }, 'Workflow task error');
+    // Handle specific error types
+    if (error instanceof QuotaExceededError) {
+        sendEvent({
+            type: 'error',
+            status: 'quota_exceeded',
+            message: 'VT+ quota exceeded',
+        });
+    } else {
+        // Handle general errors
+        sendEvent({
+            type: 'error',
+            status: 'error',
+            message: 'Something went wrong',
+        });
+    }
+
+    // Log for debugging
+    log.error({ error }, 'Workflow task error');
 }
 ```
 

@@ -59,6 +59,7 @@ The guide documents VT Chat's advanced error handling system:
 ### Error Categorization
 
 VT Chat implements a sophisticated error categorization system:
+
 - Quota Exceeded Errors
 - Rate Limit Errors
 - Authentication Errors

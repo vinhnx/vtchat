@@ -330,7 +330,19 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     chunkBuffer.add(chunk);
                 },
                 onToolCall: (toolCall) => {
-                    log.info({ toolName: toolCall.toolName, args: toolCall.args }, 'Tool call');
+                    const reasoningHint = (toolCall as any)?.reasoning
+                        || (toolCall as any)?.why
+                        || (toolCall as any)?.input?.reasoning
+                        || (toolCall as any)?.input?.why
+                        || undefined;
+                    log.info(
+                        {
+                            toolName: toolCall.toolName,
+                            args: toolCall.args,
+                            reasoning: reasoningHint,
+                        },
+                        'Tool call',
+                    );
                     // Send tool call event to UI
                     events?.update('steps', (prev) => ({
                         ...prev,
@@ -344,6 +356,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                                     data: {
                                         toolName: toolCall.toolName,
                                         args: toolCall.args,
+                                        reasoning: reasoningHint,
                                         type: charts
                                                 && Object.keys(chartTools()).includes(
                                                     toolCall.toolName,
@@ -366,6 +379,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             toolCallId: toolCall.toolCallId,
                             toolName: toolCall.toolName,
                             args: toolCall.args,
+                            reasoning: reasoningHint,
+                            state: (toolCall as any)?.state,
+                            timestamp: Date.now(),
                         },
                     ]);
                 },
@@ -477,6 +493,9 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                             toolCallId: toolResult.toolCallId,
                             toolName: toolResult.toolName || 'unknown',
                             result: toolResult.result,
+                            state: (toolResult as any)?.state ?? 'result',
+                            executionTime: (toolResult as any)?.executionTime,
+                            timestamp: Date.now(),
                         },
                     ]);
                 },

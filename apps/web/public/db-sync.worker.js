@@ -16,7 +16,6 @@ const IS_PRODUCTION = self.location.search.includes('prod=true');
 const workerLog = {
     info: (message, data) => {
         if (IS_PRODUCTION) return;
-        console.log(`[SharedWorker] ${message}`, data || '');
     },
     error: (message, data) => {
         // Always log errors even in production
@@ -24,11 +23,9 @@ const workerLog = {
     },
     warn: (message, data) => {
         // Always log warnings even in production
-        console.warn(`[SharedWorker] ${message}`, data || '');
     },
     debug: (message, data) => {
         if (IS_PRODUCTION) return;
-        console.debug(`[SharedWorker] ${message}`, data || '');
     },
 };
 

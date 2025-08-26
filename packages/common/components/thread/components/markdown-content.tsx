@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorBoundary, ErrorPlaceholder, mdxComponents, CodeBlock } from '@repo/common/components';
+import { CodeBlock, ErrorBoundary, ErrorPlaceholder, mdxComponents } from '@repo/common/components';
 import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
@@ -214,7 +214,7 @@ function parseCitationsWithSourceTags(markdown: string): string {
         return result;
     } catch (error) {
         // If any error occurs during parsing, return original markdown
-        console.warn('Error parsing citations:', error);
+
         return markdown;
     }
 }

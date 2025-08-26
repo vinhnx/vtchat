@@ -39,8 +39,8 @@ export const datetimeStringToDate = z
  *   lastLogin: "2023-01-01T10:00:00Z"
  * });
  *
- * console.log(result.birthDate instanceof Date); // true
- * console.log(result.lastLogin instanceof Date); // true
+ *  // true
+ *  // true
  */
 
 /**

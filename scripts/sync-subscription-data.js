@@ -28,7 +28,6 @@ const client = postgres(connectionString);
 const db = drizzle(client);
 
 async function syncSubscriptionData() {
-    console.log('🔄 Starting subscription data sync...');
     log.info('Starting subscription data sync');
 
     try {
@@ -45,20 +44,15 @@ async function syncSubscriptionData() {
             .where(and(eq(users.planSlug, PlanSlug.VT_PLUS), isNull(userSubscriptions.id)));
 
         if (usersWithoutSubscriptions.length === 0) {
-            console.log('✅ All users with vt_plus plan_slug already have subscription records');
             log.info('All users with vt_plus plan already have subscription records');
             return;
         }
 
-        console.log(
-            `📋 Found ${usersWithoutSubscriptions.length} users that need subscription records:`,
-        );
         log.info(
             { userCount: usersWithoutSubscriptions.length },
             'Found users needing subscription records',
         );
         usersWithoutSubscriptions.forEach((user) => {
-            console.log(`   - User ID: ${user.id}`);
         });
 
         // Create subscription records for these users
@@ -78,13 +72,10 @@ async function syncSubscriptionData() {
             };
 
             await db.insert(userSubscriptions).values(subscriptionData);
-            console.log(`✅ Created subscription record for user ${user.id}`);
+
             log.info({ userId: user.id }, 'Created subscription record for user');
         }
 
-        console.log(
-            `🎉 Successfully synced ${usersWithoutSubscriptions.length} subscription records`,
-        );
         log.info(
             { count: usersWithoutSubscriptions.length },
             'Successfully synced subscription records',

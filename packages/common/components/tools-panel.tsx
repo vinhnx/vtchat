@@ -1,6 +1,6 @@
 'use client';
 
-import { ToolInvocationStep } from '@repo/common/components';
+import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';
 import { Badge, Card, Separator } from '@repo/ui';
@@ -71,22 +71,52 @@ export const ToolsPanel = memo(({ threadItem }: ToolsPanelProps) => {
 
                 {/* Tools List */}
                 <div className='space-y-3'>
-                    {toolsData.map((tool, index) => (
-                        <motion.div
-                            animate={{ opacity: 1, y: 0 }}
-                            className='space-y-2'
-                            initial={{ opacity: 0, y: 10 }}
-                            key={tool.id}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            {/* Use the enhanced ToolInvocationStep that handles both calls and results */}
-                            <ToolInvocationStep
-                                toolCall={tool.toolCall}
-                                toolResult={tool.toolResult}
-                            />
-                            {index < toolsData.length - 1 && <Separator className='my-3' />}
-                        </motion.div>
-                    ))}
+                    {toolsData.map((tool, index) => {
+                        const hasError = !!(
+                            tool.toolResult
+                            && typeof tool.toolResult.result === 'object'
+                            && tool.toolResult.result
+                            && 'error' in (tool.toolResult.result as Record<string, unknown>)
+                        );
+                        const state = hasError
+                            ? 'output-error'
+                            : tool.toolResult
+                            ? 'output-available'
+                            : 'input-available';
+
+                        return (
+                            <motion.div
+                                animate={{ opacity: 1, y: 0 }}
+                                className='space-y-2'
+                                initial={{ opacity: 0, y: 10 }}
+                                key={tool.id}
+                                transition={{ delay: index * 0.05 }}
+                            >
+                                <Tool defaultOpen={state !== 'input-available'}>
+                                    <ToolHeader
+                                        type={`tool-${tool.toolCall.toolName}`}
+                                        state={state as any}
+                                    />
+                                    <ToolContent>
+                                        <div className='space-y-3'>
+                                            {/* Reasoning UI removed */}
+                                            <ToolInput input={tool.toolCall.args} />
+                                            <ToolOutput
+                                                output={tool.toolResult?.result
+                                                    ?? 'Waiting for result...'}
+                                                errorText={hasError
+                                                    ? String(
+                                                        (tool.toolResult as any)?.result?.error,
+                                                    )
+                                                    : undefined}
+                                            />
+                                        </div>
+                                    </ToolContent>
+                                </Tool>
+                                {index < toolsData.length - 1 && <Separator className='my-3' />}
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         ),

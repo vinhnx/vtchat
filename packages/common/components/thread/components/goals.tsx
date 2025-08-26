@@ -9,7 +9,7 @@ import {
 } from '@repo/common/components';
 import { useAppStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
-import type { Step, ThreadItem, ToolCall, ToolResult } from '@repo/shared/types';
+import type { Step, ThreadItem } from '@repo/shared/types';
 import { Badge, Card, cn } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
@@ -48,27 +48,7 @@ const getNote = (threadItem: ThreadItem) => {
     return '';
 };
 
-type ToolStepProps = {
-    toolCall?: ToolCall;
-    toolResult?: ToolResult;
-};
-
-const ToolStep = memo(({ toolCall, toolResult }: ToolStepProps) => (
-    <div className='flex w-full flex-row items-stretch justify-start gap-2'>
-        <div className='flex min-h-full flex-col items-center justify-start px-2'>
-            <div className='bg-border/50 h-1.5 shrink-0' />
-            <div className='bg-background z-10'>
-                <StepStatus status='COMPLETED' />
-            </div>
-            <div className='bg-border/50 min-h-full w-[1px] flex-1' />
-        </div>
-        <div className='flex w-full flex-1 flex-col gap-2 overflow-hidden pb-2'>
-            <p className='text-sm'>Using the following tool</p>
-            {toolCall && <ToolCallStep toolCall={toolCall} />}
-            {toolResult && <ToolResultStep toolResult={toolResult} />}
-        </div>
-    </div>
-));
+// Render tool steps after the step list to preserve full trace
 
 export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: ThreadItem; }) => {
     const openSideDrawer = useAppStore((state) => state.openSideDrawer);
@@ -112,20 +92,24 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
             updateSideDrawer({
                 renderContent: () => (
                     <div className='flex w-full flex-1 flex-col px-2 py-4'>
-                        {steps.map((step, index) => (
-                            <StepRenderer
-                                key={index}
-                                step={step}
-                                toolCalls={threadItem?.toolCalls}
-                                toolResults={threadItem?.toolResults}
-                            />
-                        ))}
+                        {steps.map((step, index) => <StepRenderer key={index} step={step} />)}
                         {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
-                            <ToolStep
-                                key={`tool-${index}`}
-                                toolCall={toolCall}
-                                toolResult={toolResult}
-                            />
+                            <div className='mt-2' key={`tool-${index}`}>
+                                <div className='flex w-full flex-row items-stretch justify-start gap-2'>
+                                    <div className='flex min-h-full flex-col items-center justify-start px-2'>
+                                        <div className='bg-border/50 h-1.5 shrink-0' />
+                                        <div className='bg-background z-10'>
+                                            <StepStatus status='COMPLETED' />
+                                        </div>
+                                        <div className='bg-border/50 min-h-full w-[1px] flex-1' />
+                                    </div>
+                                    <div className='flex w-full flex-1 flex-col gap-2 overflow-hidden pb-2'>
+                                        <p className='text-sm'>Using the following tool</p>
+                                        {toolCall && <ToolCallStep toolCall={toolCall} />}
+                                        {toolResult && <ToolResultStep toolResult={toolResult} />}
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 ),
@@ -143,20 +127,24 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
             title: `${getTitle(threadItem)} - Steps`,
             renderContent: () => (
                 <div className='flex w-full flex-1 flex-col px-2 py-4'>
-                    {steps.map((step, index) => (
-                        <StepRenderer
-                            key={index}
-                            step={step}
-                            toolCalls={threadItem?.toolCalls}
-                            toolResults={threadItem?.toolResults}
-                        />
-                    ))}
+                    {steps.map((step, index) => <StepRenderer key={index} step={step} />)}
                     {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
-                        <ToolStep
-                            key={`tool-${index}`}
-                            toolCall={toolCall}
-                            toolResult={toolResult}
-                        />
+                        <div className='mt-2' key={`tool-${index}`}>
+                            <div className='flex w-full flex-row items-stretch justify-start gap-2'>
+                                <div className='flex min-h-full flex-col items-center justify-start px-2'>
+                                    <div className='bg-border/50 h-1.5 shrink-0' />
+                                    <div className='bg-background z-10'>
+                                        <StepStatus status='COMPLETED' />
+                                    </div>
+                                    <div className='bg-border/50 min-h-full w-[1px] flex-1' />
+                                </div>
+                                <div className='flex w-full flex-1 flex-col gap-2 overflow-hidden pb-2'>
+                                    <p className='text-sm'>Using the following tool</p>
+                                    {toolCall && <ToolCallStep toolCall={toolCall} />}
+                                    {toolResult && <ToolResultStep toolResult={toolResult} />}
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             ),

@@ -12,8 +12,6 @@ export const SourceGrid = ({ sources }: SourceGridProps) => {
     const openSideDrawer = useAppStore((state) => state.openSideDrawer);
 
     const validSources = useMemo(() => {
-        console.log('SourceGrid received sources:', sources);
-
         if (!(sources && Array.isArray(sources)) || sources?.length === 0) {
             return [];
         }

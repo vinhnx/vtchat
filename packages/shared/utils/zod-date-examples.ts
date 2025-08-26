@@ -1,1 +1,82 @@
-import { z } from 'zod';\nimport { dateStringToDate, datetimeStringToDate } from '@repo/shared/utils/zod-date-utils';\n\n/**\n * Example schemas demonstrating best practices for date handling with Zod\n * These can be used as references when creating new schemas\n */\n\n/**\n * Event schema with both date and datetime fields\n */\nexport const EventSchema = z.object({\n  id: z.string().describe('Unique identifier for the event'),\n  title: z.string().describe('Event title'),\n  description: z.string().optional().describe('Event description'),\n  startDate: dateStringToDate.describe('Event start date'),\n  endDate: dateStringToDate.describe('Event end date'),\n  createdAt: datetimeStringToDate.describe('When the event was created'),\n  updatedAt: datetimeStringToDate.describe('When the event was last updated'),\n});\n\n/**\n * User profile schema with date of birth\n */\nexport const UserProfileSchema = z.object({\n  id: z.string().describe('Unique identifier for the user'),\n  name: z.string().describe('User\\'s full name'),\n  email: z.string().email().describe('User\\'s email address'),\n  dateOfBirth: dateStringToDate.describe('User\\'s date of birth'),\n  createdAt: datetimeStringToDate.describe('When the user profile was created'),\n  lastLoginAt: datetimeStringToDate.nullable().describe('When the user last logged in'),\n});\n\n/**\n * API response schema with date fields\n */\nexport const ApiResponseSchema = z.object({\n  success: z.boolean().describe('Whether the API call was successful'),\n  data: z.object({\n    id: z.string(),\n    name: z.string(),\n    createdAt: datetimeStringToDate,\n    updatedAt: datetimeStringToDate,\n  }).nullable().describe('The response data, if successful'),\n  error: z.string().nullable().describe('Error message, if unsuccessful'),\n  timestamp: datetimeStringToDate.describe('When the response was generated'),\n});\n\n/**\n * Example usage:\n * \n * // Parsing data from an API response\n * const eventData = {\n *   id: \"123\",\n *   title: \"Team Meeting\",\n *   startDate: \"2023-06-15\",\n *   endDate: \"2023-06-15\",\n *   createdAt: \"2023-06-01T09:00:00Z\",\n *   updatedAt: \"2023-06-01T09:00:00Z\"\n * };\n * \n * const parsedEvent = EventSchema.parse(eventData);\n * console.log(parsedEvent.startDate instanceof Date); // true\n * \n * // Preparing data for an API request\n * const newEvent = {\n *   title: \"Project Launch\",\n *   startDate: new Date(\"2023-07-01\"),\n *   endDate: new Date(\"2023-07-01\"),\n *   createdAt: new Date(),\n *   updatedAt: new Date(),\n * };\n * \n * // When sending to API, convert dates back to strings\n * const apiPayload = {\n *   ...newEvent,\n *   startDate: newEvent.startDate.toISOString().split('T')[0],\n *   endDate: newEvent.endDate.toISOString().split('T')[0],\n *   createdAt: newEvent.createdAt.toISOString(),\n *   updatedAt: newEvent.updatedAt.toISOString(),\n * };\n */
+import { dateStringToDate, datetimeStringToDate } from '@repo/shared/utils/zod-date-utils';
+import { z } from 'zod';
+
+/**
+ * Example schemas demonstrating best practices for date handling with Zod
+ * These can be used as references when creating new schemas
+ */
+
+/**
+ * Event schema with both date and datetime fields
+ */
+export const EventSchema = z.object({
+    id: z.string().describe('Unique identifier for the event'),
+    title: z.string().describe('Event title'),
+    description: z.string().optional().describe('Event description'),
+    startDate: dateStringToDate.describe('Event start date'),
+    endDate: dateStringToDate.describe('Event end date'),
+    createdAt: datetimeStringToDate.describe('When the event was created'),
+    updatedAt: datetimeStringToDate.describe('When the event was last updated'),
+});
+
+/**
+ * User profile schema with date of birth
+ */
+export const UserProfileSchema = z.object({
+    id: z.string().describe('Unique identifier for the user'),
+    name: z.string().describe("User's full name"),
+    email: z.string().email().describe("User's email address"),
+    dateOfBirth: dateStringToDate.describe("User's date of birth"),
+    createdAt: datetimeStringToDate.describe('When the user profile was created'),
+    lastLoginAt: datetimeStringToDate.nullable().describe('When the user last logged in'),
+});
+
+/**
+ * API response schema with date fields
+ */
+export const ApiResponseSchema = z.object({
+    success: z.boolean().describe('Whether the API call was successful'),
+    data: z.object({
+        id: z.string(),
+        name: z.string(),
+        createdAt: datetimeStringToDate,
+        updatedAt: datetimeStringToDate,
+    }).nullable().describe('The response data, if successful'),
+    error: z.string().nullable().describe('Error message, if unsuccessful'),
+    timestamp: datetimeStringToDate.describe('When the response was generated'),
+});
+
+/**
+ * Example usage:
+ *
+ * // Parsing data from an API response
+ * const eventData = {
+ *   id: "123",
+ *   title: "Team Meeting",
+ *   startDate: "2023-06-15",
+ *   endDate: "2023-06-15",
+ *   createdAt: "2023-06-01T09:00:00Z",
+ *   updatedAt: "2023-06-01T09:00:00Z"
+ * };
+ *
+ * const parsedEvent = EventSchema.parse(eventData);
+ *  // true
+ *
+ * // Preparing data for an API request
+ * const newEvent = {
+ *   title: "Project Launch",
+ *   startDate: new Date("2023-07-01"),
+ *   endDate: new Date("2023-07-01"),
+ *   createdAt: new Date(),
+ *   updatedAt: new Date(),
+ * };
+ *
+ * // When sending to API, convert dates back to strings
+ * const apiPayload = {
+ *   ...newEvent,
+ *   startDate: newEvent.startDate.toISOString().split('T')[0],
+ *   endDate: newEvent.endDate.toISOString().split('T')[0],
+ *   createdAt: newEvent.createdAt.toISOString(),
+ *   updatedAt: newEvent.updatedAt.toISOString(),
+ * };
+ */

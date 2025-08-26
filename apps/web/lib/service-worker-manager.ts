@@ -33,7 +33,6 @@ export class ServiceWorkerManager {
      */
     async register(): Promise<ServiceWorkerRegistration | null> {
         if (!this.isSupported) {
-            console.warn('Service Worker not supported');
             return null;
         }
 
@@ -42,8 +41,6 @@ export class ServiceWorkerManager {
                 scope: '/',
                 updateViaCache: 'none', // Always check for updates
             });
-
-            console.log('Service Worker registered:', this.registration);
 
             // Handle updates
             this.registration.addEventListener('updatefound', () => {

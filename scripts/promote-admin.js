@@ -20,7 +20,6 @@ async function promoteUserToAdmin(email) {
 
     try {
         await client.connect();
-        console.log('Connected to database');
 
         const _db = drizzle(client);
 
@@ -31,15 +30,10 @@ async function promoteUserToAdmin(email) {
         );
 
         if (result.rows.length === 0) {
-            console.log(`❌ No user found with email: ${email}`);
             return false;
         }
 
         const user = result.rows[0];
-        console.log('✅ Successfully promoted user to admin:');
-        console.log(`   ID: ${user.id}`);
-        console.log(`   Email: ${user.email}`);
-        console.log(`   Role: ${user.role}`);
 
         return true;
     } catch (error) {
@@ -47,7 +41,6 @@ async function promoteUserToAdmin(email) {
         return false;
     } finally {
         await client.end();
-        console.log('Database connection closed');
     }
 }
 
@@ -55,8 +48,6 @@ async function promoteUserToAdmin(email) {
 const email = process.argv[2];
 
 if (!email) {
-    console.log('❌ Please provide an email address');
-    console.log('Usage: bun run scripts/promote-admin.js <email>');
     process.exit(1);
 }
 

@@ -206,7 +206,6 @@ class ProductionVerifier {
     }
 
     async verifyAll() {
-        console.log('🔍 Verifying Production Configuration...\n');
         log.info('Starting production configuration verification');
 
         // Check environment variables
@@ -221,7 +220,7 @@ class ProductionVerifier {
         log.info('Environment variables checked');
 
         // Check external connections
-        console.log('🔌 Testing External Connections...\n');
+
         log.info('Testing external connections');
 
         this.results.database = await this.checkDatabaseConnection();
@@ -263,20 +262,9 @@ class ProductionVerifier {
     }
 
     printReport(report) {
-        console.log('# 🚀 Production Configuration Verification Report\n');
-        console.log(`**Generated:** ${report.timestamp}`);
-        console.log(`**Environment:** ${report.environment}`);
-        console.log(`**Status:** ${report.status === 'ready' ? '✅ READY' : '❌ NOT READY'}\n`);
-
-        console.log('## Summary\n');
-        console.log(`- **Errors:** ${report.summary.errors}`);
-        console.log(`- **Warnings:** ${report.summary.warnings}`);
-        console.log(`- **Total Checks:** ${report.summary.total_checks}\n`);
-
         // Environment Variables
         for (const [category, result] of Object.entries(this.results)) {
             if (result.checks) {
-                console.log(`## ${result.name}\n`);
                 for (const check of result.checks) {
                     const icon = check.status === 'success'
                         ? '✅'
@@ -284,9 +272,7 @@ class ProductionVerifier {
                         ? '❌'
                         : '⚠️';
                     const req = check.required ? '(Required)' : '(Optional)';
-                    console.log(`${icon} **${check.name}** ${req}: ${check.message}`);
                 }
-                console.log('');
             } else {
                 // External connections
                 const icon = result.status === 'success'
@@ -295,32 +281,30 @@ class ProductionVerifier {
                     ? '❌'
                     : '⚠️';
                 console.log(
-                    `## ${category.charAt(0).toUpperCase() + category.slice(1)} Connection\n`,
+                    `${icon} ${category.charAt(0).toUpperCase() + category.slice(1)} Connection`,
                 );
-                console.log(`${icon} **Status**: ${result.message}\n`);
             }
         }
 
         if (report.errors.length > 0) {
-            console.log('## ❌ Critical Issues\n');
-            report.errors.forEach((error) => console.log(`- ${error}`));
-            console.log('');
+            report.errors.forEach((error) => console.error(`❌ ${error}`));
         }
 
         if (report.warnings.length > 0) {
-            console.log('## ⚠️ Warnings\n');
-            report.warnings.forEach((warning) => console.log(`- ${warning}`));
-            console.log('');
+            report.warnings.forEach((warning) => console.warn(`⚠️ ${warning}`));
         }
 
-        console.log('## Next Steps\n');
         if (report.status === 'ready') {
-            console.log('✅ Configuration is ready for production deployment!');
+            console.log(
+                '\
+[SUCCESS] Production configuration is ready!',
+            );
         } else {
-            console.log('❌ Fix critical issues before deploying to production.');
-            console.log('- Set all required environment variables');
-            console.log('- Verify database connectivity');
-            console.log('- Test external API connections');
+            console.log(
+                '\
+[ERROR] Production configuration issues detected',
+            );
+            console.log('Please review the errors above and fix them before deploying.');
         }
     }
 }

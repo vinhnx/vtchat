@@ -1,6 +1,6 @@
-import type { LanguageModelV1Middleware } from 'ai';
 import type { LanguageModelV1StreamPart } from '@ai-sdk/provider';
 import { log } from '@repo/shared/logger';
+import type { LanguageModelV1Middleware } from 'ai';
 
 /**
  * Logging middleware that logs parameters and generated text of language model calls.
