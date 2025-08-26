@@ -12,6 +12,8 @@ export type CacheStats = {
     };
 };
 
+import { log } from '@repo/shared/lib/logger';
+
 export class ServiceWorkerManager {
     private static instance: ServiceWorkerManager;
     private registration: ServiceWorkerRegistration | null = null;
@@ -62,7 +64,7 @@ export class ServiceWorkerManager {
 
             return this.registration;
         } catch (error) {
-            console.error('Service Worker registration failed:', error);
+            log.error({ error }, 'Service Worker registration failed');
             return null;
         }
     }
@@ -214,7 +216,7 @@ export class ServiceWorkerManager {
             this.registration = null;
             return result;
         } catch (error) {
-            console.error('Failed to unregister service worker:', error);
+            log.error({ error }, 'Failed to unregister service worker');
             return false;
         }
     }

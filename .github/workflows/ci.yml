@@ -40,6 +40,14 @@ jobs:
             - name: Lint URLs (no hard-coded)
               run: bun run lint:urls
 
+            - name: Generate Next route types
+              working-directory: apps/web
+              run: bun run typegen
+
+            - name: Type check (apps/web)
+              working-directory: apps/web
+              run: bun run type-check
+
             - name: Build
               run: bun run build
 

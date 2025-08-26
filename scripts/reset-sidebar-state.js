@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Reset sidebar state in localStorage
 if (typeof localStorage !== 'undefined') {
     try {

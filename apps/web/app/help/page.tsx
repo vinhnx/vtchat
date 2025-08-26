@@ -11,13 +11,9 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-    Button,
-    InternalLinks,
     TypographyH1,
 } from '@repo/ui';
-import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Help Center - VT',
@@ -41,20 +37,6 @@ export const metadata: Metadata = {
 export const dynamic = 'force-static';
 
 export default function HelpCenterPage() {
-    const internalLinks = [
-        { href: '/', label: 'Home' },
-        { href: '/terms', label: 'Terms' },
-        { href: '/privacy', label: 'Privacy' },
-        { href: '/pricing', label: 'VT+' },
-        { href: '/hello', label: 'Hello' },
-        { href: '/help', label: 'Help' },
-        { href: '/feedback', label: 'Feedback' },
-        { href: '/about', label: 'About' },
-        { href: '/faq', label: 'FAQ' },
-        { href: '/ai-glossary', label: 'AI Glossary' },
-        { href: '/ai-resources', label: 'AI Resources' },
-    ];
-
     return (
         <div className='bg-background min-h-screen'>
             {/* Header */}

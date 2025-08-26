@@ -9,11 +9,12 @@ interface GlobalErrorProps {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
     useEffect(() => {
-        // Simple console error logging to avoid import issues during build
-        console.error('Global error encountered:', {
-            error: error.message,
-            digest: error.digest,
-            stack: error.stack,
+        // Use shared logger to avoid console usage
+        void import('@repo/shared/lib/logger').then(({ log }) => {
+            log.error(
+                { error: error.message, digest: error.digest, stack: error.stack },
+                'Global error encountered',
+            );
         });
     }, [error]);
 

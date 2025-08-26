@@ -16,6 +16,8 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true'
     : (config) => config;
 
 const nextConfig = {
+    // Now stable in Next 15.5
+    typedRoutes: true,
     transpilePackages: [
         'next-mdx-remote',
         '@repo/shared',
@@ -54,6 +56,7 @@ const nextConfig = {
         typedEnv: true,
         inlineCss: true,
         optimizeCss: true,
+        // typedRoutes moved to top-level in Next 15.5
 
         // Additional memory optimizations
         optimizePackageImports: ['@repo/shared', '@repo/common', '@repo/ui'],
@@ -154,6 +157,8 @@ const nextConfig = {
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         formats: ['image/webp', 'image/avif'],
+        // Prepare for Next 16: explicitly allow the qualities used in code
+        qualities: [75, 80, 90],
         minimumCacheTTL: 86400, // 1 day (reduced from 31 days for better cache invalidation)
         dangerouslyAllowSVG: true, // Allow SVG for icons and avatars
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -253,8 +258,9 @@ const nextConfig = {
 
             // Alias for webpack builds as well (prod or when Turbopack is disabled)
             config.resolve = config.resolve || {};
+            config.resolve.alias = config.resolve.alias || {};
             config.resolve.alias = {
-                ...(config.resolve.alias || {}),
+                ...config.resolve.alias,
                 'entities/lib/decode.js': 'entities/decode.js',
                 'entities/lib/decode': 'entities/decode.js',
             };

@@ -79,7 +79,8 @@ export async function POST(req: NextRequest) {
             },
         });
     } catch (error) {
-        console.error('Error generating speech:', error);
+        const { log } = await import('@repo/shared/lib/logger');
+        log.error({ error }, 'Error generating speech');
         if (error instanceof Error && error.message.includes('API key')) {
             return NextResponse.json(
                 { error: 'Invalid OpenAI API key. Please check your key in settings.' },

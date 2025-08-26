@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 /**
  * Bundle Size Tracker
@@ -276,4 +277,3 @@ module.exports = {
     formatBytes,
     compareBundles,
 };
-/* eslint-disable no-console */

@@ -1324,3 +1324,450 @@ Happy parsing!
 Complete changelog and migration guide for upgrading from Zod 3 to Zod 4
 
 ](/v4/changelog)
+
+--
+
+https://nextjs.org/blog/next-15-5
+
+Next.js 15.5 includes Turbopack builds in beta, stable Node.js middleware, TypeScript improvements, `next lint` deprecation, and deprecation warnings for Next.js 16. Highlights for this release include:
+
+- [**Turbopack Builds (beta)**](/blog/next-15-5#turbopack-builds-beta): Production turbopack builds (`next build --turbopack`) now in beta
+- [**Node.js Middleware (stable)**](/blog/next-15-5#nodejs-middleware-stable): Node.js runtime support for middleware is now stable
+- [**TypeScript Improvements**](/blog/next-15-5#typescript-improvements): Typed routes, route export validation, and route types helpers
+- [**`next lint`**](/blog/next-15-5#next-lint-deprecation): Deprecation of `next lint` command
+- [**Next.js 16**](/blog/next-15-5#deprecation-warnings-for-nextjs-16): Deprecation warnings for Next.js 16
+
+Upgrade today, or get started with:
+
+terminal
+
+```
+# Use the automated upgrade CLI
+
+npx @next/codemod@canary upgrade latest
+
+
+
+# ...or upgrade manually
+
+npm install next@latest react@latest react-dom@latest
+
+
+
+# ...or start a new project
+
+npx create-next-app@latest
+```
+
+## Turbopack Builds (beta)
+
+We're excited to announce `next build --turbopack` in beta. Turbopack now powers Vercel websites including [vercel.com](http://vercel.com), [v0.app](http://v0.app), and [nextjs.org](http://nextjs.org), accelerating iteration velocity through faster preview and production deployment builds.
+
+These applications powered by Turbopack have been battle tested serving over **1.2 billion** requests since the rollout.
+
+### Performance & Production Results
+
+One of the original design goals for Turbopack was to be able to help developers scale build performance as their applications and codebases grow. To achieve this, Turbopack was designed from the ground up to take advantage of multiple CPU cores throughout all phases of the build.
+
+We've deployed builds with Turbopack across many Vercel products and saw consistent improvements in compilation time:
+
+- **Customer site**: 2x faster on a 4 core machine
+- **Customer site**: 2.2x faster on a 14 core machine
+- **Small site (10K modules)**: 4x faster on a 30 core machine
+- **Medium site (40K modules)**: 2.5x faster on a 30 core machine
+- **Large site (70K modules)**: 5x faster on a 30 core machine
+
+As we rolled out Turbopack to our major web applications, we closely monitored for production performance regressions and breakages.
+
+When compared with Webpack, our production metrics monitoring shows that sites built with Turbopack serve similar or smaller amounts of JavaScript and CSS across fewer requests, leading to comparable or better FCP, LCP and TTFB metrics.
+
+For teams that have adopted Turbopack in development, we now recommend trying Turbopack for builds.
+
+### Known Differences
+
+**Smaller projects**: On smaller machines or smaller projects, we measured marginal or neutral improvements to the build times due to Webpack's built-in persistent cache. We are currently working on a [Persistent Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackPersistentCaching) solution for Turbopack to deliver on our design goal of making all builds incremental and fast.
+
+**Bundle optimization**: In some edge cases, we measured that webpack produced more optimized bundles. We are tracking those scenarios and are working on closing the gap before the stable release. See the [documentation on bundle sizes](https://nextjs.org/docs/app/api-reference/turbopack#bundle-sizes) for more information.
+
+**CSS ordering**: Due to different heuristics about side-effects handling in Turbopack, CSS files can be concatenated in a different order than webpack, leading to potential visual differences. See [the documentation](https://nextjs.org/docs/app/api-reference/turbopack#css-module-ordering) for a more detailed explanation and suggested solutions.
+
+> **Note**: These differences are documented and we're actively working on improvements. For detailed information and workarounds, see our [Turbopack documentation](https://nextjs.org/docs/app/api-reference/turbopack#known-gaps-with-webpack).
+
+As we iterate towards the stable release, please report any issues on [GitHub](https://github.com/vercel/next.js/discussions/77721).
+
+## Node.js Middleware (stable)
+
+After introducing experimental support for the Node.js runtime in our [15.2 release](/blog/next-15-2) and testing extensively on our production applications, we're excited to announce stable support for Node.js middleware runtime.
+
+Previously, Next.js middleware only supported the Edge Runtime, which provided better performance and isolation but had limitations when integrating with Node.js-specific libraries and APIs.
+
+This change enables middleware to handle more complex use cases while maintaining the same developer experience.
+
+Although Node.js runtime won't be the default in Next.js 16, we are exploring making it the default starting with Next.js 17 based on community feedback and usage patterns.
+
+## TypeScript Improvements
+
+Next.js 15.5 brings major TypeScript improvements to the App Router, with full Turbopack compatibility and comprehensive type safety for routing.
+
+### Typed Routes (stable)
+
+Typed routes provide compile-time type safety for your application's routes, catching invalid links before they reach production. This feature automatically generates types based on your file structure, ensuring that every `<Link>` component points to a valid route.
+
+This feature is available behind the `typedRoutes` flag, which was previously experimental and is now stable. Statically typed routes now work with Turbopack through a new implementation that provides type safety across both Webpack and Turbopack builds:
+
+next.config.ts
+
+```
+const nextConfig = {
+
+  typedRoutes: true, // Now stable!
+
+};
+
+
+
+export default nextConfig;
+```
+
+```
+import Link from 'next/link'
+
+
+
+// Full type safety for route paths
+
+<Link href="/blog/example-slug?ui=dark">Read Post</Link>
+
+
+
+// TypeScript catches invalid routes at compile time
+
+<Link href="/invalid-route">Broken Link</Link> // ← Type error
+```
+
+### Route Export Validation (Turbopack)
+
+Route export validation also works on Turbopack through a new system that generates a type guard file, validating pages, layouts, and route handlers using TypeScript's `satisfies` operator.
+
+This catches invalid exports like incorrect `dynamic` values during compilation when running `next build`, replacing the old Webpack plugin with a more performant solution that works across both build systems.
+
+### Route Props Helpers
+
+Next.js automatically generates globally available `PageProps`, `LayoutProps`, and `RouteContext` types with full parameter typing and no imports required:
+
+**Before: Manual typing and imports**
+
+```
+import { Metadata } from 'next';
+
+
+
+interface Props {
+
+  params: Promise<{ slug: string }>;
+
+  children: React.ReactNode;
+
+  analytics: React.ReactNode; // Manual parallel route typing
+
+  team: React.ReactNode; // Manual parallel route typing
+
+}
+
+
+
+export default function DashboardLayout(props: Props) {
+
+  return (
+
+    <div>
+
+      {props.children}
+
+      {props.analytics} {/* No type safety for parallel routes */}
+
+      {props.team} {/* No type safety for parallel routes */}
+
+    </div>
+
+  );
+
+}
+```
+
+**After: Automatic typing with parallel route support**
+
+```
+// No need to import LayoutProps - globally available
+
+export default function DashboardLayout(props: LayoutProps<'/dashboard'>) {
+
+  return (
+
+    <div>
+
+      {props.children}
+
+      {props.analytics} {/* Fully typed parallel route slot */}
+
+      {props.team} {/* Fully typed parallel route slot */}
+
+    </div>
+
+  );
+
+}
+```
+
+The system automatically discovers routes from your file structure, supporting dynamic routes, parallel routes, and custom routes from `next.config.js`. Type generation runs in both development and build modes, immediately regenerating types when your file structure changes in development, and scales efficiently to large projects by generating only a few optimized files instead of the many individual files used in the previous implementation.
+
+We've added a `next typegen` command for manual type generation without running `next dev` or `next build`. This is particularly useful for external type validation scenarios.
+
+terminal
+
+```
+next typegen [directory]
+```
+
+Previously, route types were only generated during `next dev` or `next build`, which meant running `tsc --noEmit` directly wouldn't validate your route types. Now you can generate types independently and validate them externally:
+
+terminal
+
+```
+# Generate route types first, then validate with TypeScript
+
+next typegen && tsc --noEmit
+
+
+
+# Or in CI workflows for type checking without building
+
+next typegen && npm run type-check
+```
+
+Starting with Next.js 15.5, the `next lint` command shows a deprecation warning and will be removed in Next.js 16. This modernizes the linting experience by transitioning to explicit ESLint configurations and introducing Biome as a fast alternative.
+
+When creating a new Next.js project, you can now choose between ESLint (comprehensive rules), Biome (fast with fewer rules), or no linter. ESLint projects now generate explicit `eslint.config.mjs` files instead of relying on the `next lint` command wrapper, providing complete transparency into your linting rules.
+
+Biome projects receive optimized configurations with Next.js and React rules plus built-in formatting capabilities. Generated `package.json` scripts now call linters directly:
+
+```
+{
+
+  "scripts": {
+
+    // ESLint projects
+
+    "lint": "eslint", // Instead of "next lint"
+
+    "lint:fix": "eslint --fix",
+
+
+
+    // For Biome projects
+
+    "lint": "biome check",
+
+    "format": "biome format --write"
+
+  }
+
+}
+```
+
+For existing projects, a new codemod automates the migration from `next lint` to ESLint CLI:
+
+terminal
+
+```
+npx @next/codemod@latest next-lint-to-eslint-cli .
+```
+
+The codemod intelligently transforms `package.json` scripts while preserving functionality, mapping Next.js-specific flags like `--strict` to `--max-warnings 0`, and automatically installing required dependencies.
+
+This transition gives developers direct control over their linting setup with better ecosystem compatibility.
+
+> **Note**: `next build` will still run a linting validation step if an ESLint config is present. This automatic linting during builds will also be removed in Next.js 16, giving you complete control over when and how linting runs.
+
+## Deprecation Warnings for Next.js 16
+
+Next.js 15.5 introduces deprecation warnings to help you prepare for the upcoming Next.js 16 release. These warnings appear in development and build logs, giving you time to migrate before these features are removed.
+
+### legacyBehavior for next/link
+
+The `legacyBehavior` prop for `next/link` will be removed in Next.js 16. This prop was introduced as a temporary compatibility layer during the Next.js 12 to 13 transition.
+
+```
+// ❌ Will be removed in Next.js 16
+
+<Link href="/about" legacyBehavior>
+
+  <a>About</a>
+
+</Link>
+
+
+
+// ✅ Modern approach (no changes needed)
+
+<Link href="/about">About</Link>
+```
+
+**Migration**: Remove the `legacyBehavior` prop and any child `<a>` elements. The `Link` component now handles styling and accessibility automatically.
+
+### AMP Support
+
+Next.js AMP support will be removed in Next.js 16. AMP adoption has declined significantly, and maintaining this feature adds complexity to the framework. All AMP-related APIs and configurations will be removed.
+
+pages/amp-page.js
+
+```
+// ❌ Will be removed in Next.js 16
+
+import { useAmp } from 'next/amp';
+
+
+
+export const config = { amp: true };
+
+
+
+export default function AmpPage() {
+
+  const isAmp = useAmp();
+
+  return <div>AMP Page: {isAmp ? 'AMP' : 'HTML'}</div>;
+
+}
+```
+
+next.config.ts
+
+```
+const nextConfig = {
+
+  amp: {
+
+    // ❌ Will be removed in Next.js 16
+
+    canonicalBase: 'https://example.com',
+
+  },
+
+};
+
+
+
+export default nextConfig;
+```
+
+**Migration**: Remove all AMP-related code including:
+
+- `export const config = { amp: true }` from pages
+- `amp` configuration from your `next.config.ts`
+- `next/amp` hook imports and usage (`useAmp`)
+- Any other AMP-specific APIs
+
+Evaluate if AMP is still necessary for your use case. Most performance benefits can now be achieved through Next.js's built-in optimizations and modern web standards.
+
+### next/image Quality Settings
+
+Starting in Next.js 16, the `quality` prop will be restricted to only `75` by default. Currently in Next.js 15, you can use any integer from 1 to 100, but Next.js 16 will require explicit configuration for qualities other than 75.
+
+```
+// ⚠️ Will show deprecation warning in Next.js 15.5
+
+// when images.qualities is undefined and quality !== 75
+
+<Image src="/photo.jpg" quality={100} alt="Photo" />
+
+
+
+// ✅ Explicit configuration required for Next.js 16
+```
+
+next.config.ts
+
+```
+const nextConfig = {
+
+  images: {
+
+    qualities: [75, 100], // Explicitly allow quality={100}
+
+  },
+
+};
+
+
+
+export default nextConfig;
+```
+
+**Migration**: If you use `quality` props other than 75, explicitly configure `images.qualities` in your `next.config.ts` to include the quality values you need for Next.js 16.
+
+### next/image Local Patterns
+
+Starting in Next.js 16, using query strings with local image `src` paths will require explicit configuration in `images.localPatterns`. This affects images with query parameters like cache-busting or versioning.
+
+```
+// ⚠️ Will show deprecation warning in Next.js 15.5
+
+// when images.localPatterns is not configured
+
+<Image src="/photo.jpg?v=1" alt="Test" />
+
+
+
+// ✅ Explicit configuration required for Next.js 16
+```
+
+next.config.ts
+
+```
+const nextConfig = {
+
+  images: {
+
+    localPatterns: [
+
+      {
+
+        pathname: '/photo.jpg', // allow exact path
+
+        // omitting "search" will allow all query parameters
+
+      },
+
+      {
+
+        pathname: '/photo.jpg', // allow exact path
+
+        search: '?v=1', // allow exact query parameters
+
+      },
+
+      {
+
+        pathname: '/assets/**', // allow wildcard path
+
+        search: '', // empty search will block all query parameters
+
+      },
+
+    ],
+
+  },
+
+};
+
+
+
+export default nextConfig;
+```
+
+**Migration**: Configure `images.localPatterns` in your `next.config.ts` to explicitly allow query strings in your image paths. This provides better security and performance optimization.
+
+### Timeline
+
+These deprecation warnings will appear starting with Next.js 15.5. The features will be completely removed in Next.js 16. We recommend migrating as soon as possible to avoid issues during the upgrade.

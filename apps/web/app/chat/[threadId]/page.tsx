@@ -76,7 +76,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => 
                         // Clear the flag so we don't rely on it for future navigations
                         sessionStorage.removeItem('handling_thread_id');
                     }
-                } catch (error) {
+                } catch {
                     // Ignore sessionStorage errors
                 }
 

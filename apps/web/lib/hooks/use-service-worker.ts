@@ -2,6 +2,7 @@
  * React hook for Service Worker management
  */
 
+import { log } from '@repo/shared/lib/logger';
 import { useCallback, useEffect, useState } from 'react';
 import { type CacheStats, swManager } from '../service-worker-manager';
 
@@ -54,7 +55,7 @@ export function useServiceWorker(): ServiceWorkerHook {
                 const stats = await swManager.getCacheStats();
                 setCacheStats(stats);
             } catch (error) {
-                console.error('Service worker initialization failed:', error);
+                log.error({ error }, 'Service worker initialization failed');
             } finally {
                 setIsLoading(false);
             }
@@ -83,7 +84,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             await swManager.update();
             setHasUpdate(false);
         } catch (error) {
-            console.error('Service worker update failed:', error);
+            log.error({ error }, 'Service worker update failed');
         }
     }, []);
 
@@ -96,7 +97,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error('Cache clear failed:', error);
+            log.error({ error }, 'Cache clear failed');
         }
     }, []);
 
@@ -106,7 +107,7 @@ export function useServiceWorker(): ServiceWorkerHook {
         try {
             await swManager.forceSync();
         } catch (error) {
-            console.error('Force sync failed:', error);
+            log.error({ error }, 'Force sync failed');
         }
     }, []);
 
@@ -117,7 +118,7 @@ export function useServiceWorker(): ServiceWorkerHook {
             const stats = await swManager.getCacheStats();
             setCacheStats(stats);
         } catch (error) {
-            console.error('Cache stats refresh failed:', error);
+            log.error({ error }, 'Cache stats refresh failed');
         }
     }, []);
 

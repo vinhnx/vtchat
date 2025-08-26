@@ -13,18 +13,19 @@ let dbInstance = null;
 // Check for production flag via URL query param since process.env is not available in browser workers
 const IS_PRODUCTION = self.location.search.includes('prod=true');
 
+/* eslint-disable no-unused-vars, no-console */
 const workerLog = {
-    info: (message, data) => {
+    info: (_message, _data) => {
         if (IS_PRODUCTION) return;
     },
     error: (message, data) => {
         // Always log errors even in production
         console.error(`[SharedWorker] ${message}`, data || '');
     },
-    warn: (message, data) => {
+    warn: (_message, _data) => {
         // Always log warnings even in production
     },
-    debug: (message, data) => {
+    debug: (_message, _data) => {
         if (IS_PRODUCTION) return;
     },
 };

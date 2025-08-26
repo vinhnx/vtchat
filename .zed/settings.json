@@ -1,26 +1,26 @@
 {
-  "context_servers": {
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ],
-      "type": "stdio"
-    },
-    "flymcp": {
-      "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
-      "args": [],
-      "env": {},
-      "type": "stdio"
-    },
-    "fetch": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "env": {},
-      "type": "stdio"
+    "context_servers": {
+        "context7": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@upstash/context7-mcp@latest"
+            ],
+            "type": "stdio"
+        },
+        "flymcp": {
+            "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
+            "args": [],
+            "env": {},
+            "type": "stdio"
+        },
+        "fetch": {
+            "command": "uvx",
+            "args": [
+                "mcp-server-fetch"
+            ],
+            "env": {},
+            "type": "stdio"
+        }
     }
-  }
 }
