@@ -145,21 +145,12 @@ check_git_status() {
         git status --porcelain >&2
         echo "" >&2
 
-        # If in auto mode, ask for confirmation before committing
+        # If in auto mode, automatically commit changes
         if [ "$auto_mode" = "--auto" ]; then
-            print_info "In auto mode, but there are uncommitted changes."
-            echo -n "Do you want to commit these changes? (y/N): " >&2
-            read -r answer
-            
-            if [[ "$answer" =~ ^[Yy]$ ]]; then
-                print_info "Committing changes..."
-                git add -A
-                git commit -m "Auto-commit before deployment"
-                print_status "Changes committed successfully"
-            else
-                print_error "Deployment cancelled by user."
-                exit 1
-            fi
+            print_info "In auto mode - automatically committing changes..."
+            git add -A
+            git commit -m "Auto-commit before deployment"
+            print_status "Changes committed successfully"
         else
             # In interactive mode, always ask
             echo -n "Do you want to commit these changes before deployment? (y/N): " >&2
@@ -220,11 +211,14 @@ generate_changelog() {
         
         # Generate changelog in dry-run mode to see what would be generated
         # We redirect stderr to stdout to capture all output, then filter out the URL line
-        if npx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > /tmp/changelog.md; then
+        # Use a temporary file in the system temp directory to avoid any permission issues
+        local temp_changelog=$(mktemp)
+        if npx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > "$temp_changelog"; then
             # Check if the changelog has meaningful content (not just version info)
-            if grep -q "Features\|Bug Fixes\|Performance" /tmp/changelog.md; then
+            if grep -q "Features\|Bug Fixes\|Performance" "$temp_changelog"; then
                 print_info "Changelog preview:"
-                head -20 /tmp/changelog.md
+                # Redirect preview to stderr so function callers can safely capture stdout
+                head -20 "$temp_changelog" >&2
                 print_status "Changelog generated successfully (preview above)"
             else
                 print_info "No significant changes to include in changelog"
@@ -232,6 +226,9 @@ generate_changelog() {
         else
             print_warning "Failed to generate changelog with changelogithub"
         fi
+        
+        # Clean up temp file
+        rm -f "$temp_changelog"
     else
         print_warning "npx not found, skipping changelog generation"
     fi
@@ -262,11 +259,14 @@ create_version_tag() {
     generate_changelog "$tag_name" "$previous_tag"
 
     # Create tag
+    # Sanitize the tag message to avoid any special characters that might cause issues
+    local current_branch=$(git branch --show-current)
+    local commit_hash=$(git rev-parse --short HEAD)
     local tag_message="Release $tag_name
 
 Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-Branch: $(git branch --show-current)
-Commit: $(git rev-parse --short HEAD)
+Branch: ${current_branch}
+Commit: ${commit_hash}
 Fly.io App: vtchat"
 
     print_info "Creating tag $tag_name..."
@@ -284,9 +284,27 @@ push_to_remote() {
 
     print_step "Pushing to remote repository..."
 
+    # Get current branch name and ensure it's clean
+    local current_branch=$(git branch --show-current)
+    
+    # Validate branch name
+    if [ -z "$current_branch" ]; then
+        print_error "Could not determine current branch"
+        exit 1
+    fi
+
     # Push commits and tags
-    git push origin $(git branch --show-current)
-    git push origin "$tag_name"
+    print_info "Pushing branch: $current_branch"
+    if ! git push origin "$current_branch"; then
+        print_error "Failed to push branch $current_branch"
+        exit 1
+    fi
+    
+    print_info "Pushing tag: $tag_name"
+    if ! git push origin "$tag_name"; then
+        print_error "Failed to push tag $tag_name"
+        exit 1
+    fi
 
     print_status "Pushed to remote repository"
 }
