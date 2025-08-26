@@ -1,4 +1,4 @@
-import type { LanguageModelV2Middleware } from '@ai-sdk/provider';
+import type { LanguageModelV1Middleware } from 'ai';
 import { ModelEnum } from '../models';
 import { cachingMiddleware, guardrailsMiddleware, loggingMiddleware } from './index';
 
@@ -10,7 +10,7 @@ export interface MiddlewareConfig {
     enableLogging?: boolean;
     enableCaching?: boolean;
     enableGuardrails?: boolean;
-    customMiddleware?: LanguageModelV2Middleware[];
+    customMiddleware?: LanguageModelV1Middleware[];
 }
 
 /**
@@ -19,8 +19,8 @@ export interface MiddlewareConfig {
 export function getMiddlewareForContext(
     model: ModelEnum,
     config: MiddlewareConfig = {},
-): LanguageModelV2Middleware[] {
-    const middleware: LanguageModelV2Middleware[] = [];
+): LanguageModelV1Middleware[] {
+    const middleware: LanguageModelV1Middleware[] = [];
 
     // Add custom middleware first if provided
     if (config.customMiddleware?.length) {

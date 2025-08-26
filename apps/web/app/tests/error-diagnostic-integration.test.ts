@@ -16,7 +16,7 @@ describe('Error Diagnostic Integration', () => {
                 { message: 'Network timeout occurred', code: 'NETWORK_ERROR' },
 
                 // Model error
-                'Model gemini-2.5-flash-lite-preview-06-17 is not available',
+                'Model gemini-2.5-flash-lite is not available',
 
                 // Generic object error
                 { status: 500, error: 'Internal server error' },

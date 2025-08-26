@@ -14,7 +14,7 @@ export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowConte
         const { updateStep } = sendEvents(events);
 
         // Get mode first before using it
-        const mode = context?.get('mode') || 'gemini-2.5-flash-lite-preview-06-17';
+        const mode = context?.get('mode') || 'gemini-2.5-flash-lite';
 
         // Determine if this is Pro Search mode for enhanced capabilities
         const isProSearch = mode === 'pro';

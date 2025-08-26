@@ -25,7 +25,7 @@ vi.mock('@/lib/services/rate-limit', () => mockRateLimit);
 // Mock the model functions
 vi.mock('@repo/ai/models', () => ({
     ModelEnum: {
-        GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
+        GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
         GPT_4o: 'gpt-4o',
     },
     getModelFromChatMode: vi.fn(),

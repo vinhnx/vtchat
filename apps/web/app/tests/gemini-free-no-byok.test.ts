@@ -48,7 +48,7 @@ describe('Gemini 2.5 Flash Lite Free Model', () => {
         const modelEnum = getModelFromChatMode(ChatMode.GEMINI_2_5_FLASH_LITE);
         const model = models.find((m) => m.id === modelEnum);
         expect(model).toMatchObject({
-            name: 'Gemini 2.5 Flash Lite Preview 06-17',
+            name: 'Gemini 2.5 Flash Lite',
             provider: 'google',
             isFree: true,
             maxTokens: 65_536,

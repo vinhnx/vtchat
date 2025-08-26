@@ -15,6 +15,7 @@ import type { ModelEnum } from '../models';
 export type GoogleModelCacheableId =
     | 'models/gemini-2.5-pro'
     | 'models/gemini-2.5-flash'
+    | 'models/gemini-2.5-flash-lite'
     | 'models/gemini-1.5-flash-001'
     | 'models/gemini-1.5-pro-001';
 

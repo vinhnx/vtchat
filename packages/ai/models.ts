@@ -7,7 +7,7 @@ export const ModelEnum = {
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
+    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     GPT_4o_Mini: 'gpt-4o-mini',
@@ -158,7 +158,7 @@ export const models: Model[] = [
     },
     {
         id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite Preview 06-17',
+        name: 'Gemini 2.5 Flash Lite',
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,

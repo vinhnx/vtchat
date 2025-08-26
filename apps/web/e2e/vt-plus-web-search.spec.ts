@@ -42,7 +42,7 @@ test.describe('VT+ Web Search Functionality', () => {
                         parentThreadItemId: `vt-plus-parent-${Date.now()}`,
                         prompt: 'test VT+ web search functionality',
                         messages: [{ role: 'user', content: 'test VT+ web search functionality' }],
-                        mode: 'gemini-2.5-flash-lite-preview-06-17',
+                        mode: 'gemini-2.5-flash-lite',
                         webSearch: true,
                         mathCalculator: false,
                         charts: false,
@@ -89,7 +89,7 @@ test.describe('VT+ Web Search Functionality', () => {
         const rateLimitResponse = await page.evaluate(async () => {
             try {
                 const res = await fetch(
-                    '/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17',
+                    '/api/rate-limit/status?model=gemini-2.5-flash-lite',
                     {
                         method: 'POST',
                     },

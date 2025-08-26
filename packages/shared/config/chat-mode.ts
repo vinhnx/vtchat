@@ -18,7 +18,7 @@ export const ChatMode = {
     GPT_4o_Mini: 'gpt-4o-mini',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite-preview-06-17',
+    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
 
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
@@ -459,7 +459,7 @@ export const getChatModeName = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_FLASH:
             return 'Google Gemini 2.5 Flash';
         case ChatMode.GEMINI_2_5_FLASH_LITE:
-            return 'Google Gemini 2.5 Flash Lite Preview';
+            return 'Google Gemini 2.5 Flash Lite';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:
