@@ -25,7 +25,7 @@ interface SchemaField {
 }
 
 interface CustomSchemaBuilderProps {
-    onSchemaCreate: (schema: { schema: z.ZodSchema; type: string; }) => void;
+    onSchemaCreate: (schema: { schema: z.ZodTypeAny; type: string; }) => void;
     onClose: () => void;
 }
 

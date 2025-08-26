@@ -25,7 +25,7 @@ export const EventSchema = z.object({
 export const UserProfileSchema = z.object({
     id: z.string().describe('Unique identifier for the user'),
     name: z.string().describe("User's full name"),
-    email: z.string().email().describe("User's email address"),
+    email: z.email().describe("User's email address"),
     dateOfBirth: dateStringToDate.describe("User's date of birth"),
     createdAt: datetimeStringToDate.describe('When the user profile was created'),
     lastLoginAt: datetimeStringToDate.nullable().describe('When the user last logged in'),

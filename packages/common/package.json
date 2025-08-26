@@ -54,6 +54,7 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
+        "zod": "^4.0.0",
         "@mdx-js/mdx": "^3.1.0",
         "@repo/ai": "*",
         "@repo/shared": "*",

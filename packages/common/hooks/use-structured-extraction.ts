@@ -176,7 +176,7 @@ export const createCustomSchema = (
 
 // Enhanced document type detection with confidence scoring
 function getSchemaForDocument(text: string): {
-    schema: z.ZodSchema;
+    schema: z.ZodTypeAny;
     type: string;
     confidence: number;
 } {
@@ -184,7 +184,7 @@ function getSchemaForDocument(text: string): {
     const documentTypes = [
         {
             type: 'invoice',
-            schema: InvoiceSchema as z.ZodSchema,
+            schema: InvoiceSchema as z.ZodTypeAny,
             keywords: [
                 'invoice',
                 'bill',
@@ -199,7 +199,7 @@ function getSchemaForDocument(text: string): {
         },
         {
             type: 'resume',
-            schema: ResumeSchema as z.ZodSchema,
+            schema: ResumeSchema as z.ZodTypeAny,
             keywords: [
                 'resume',
                 'cv',
@@ -214,7 +214,7 @@ function getSchemaForDocument(text: string): {
         },
         {
             type: 'contract',
-            schema: ContractSchema as z.ZodSchema,
+            schema: ContractSchema as z.ZodTypeAny,
             keywords: [
                 'contract',
                 'agreement',
@@ -231,7 +231,7 @@ function getSchemaForDocument(text: string): {
 
     let bestMatch = {
         type: 'document',
-        schema: GenericDocumentSchema as z.ZodSchema,
+        schema: GenericDocumentSchema as z.ZodTypeAny,
         confidence: 0,
     };
 
@@ -300,7 +300,7 @@ export const useStructuredExtraction = () => {
     };
 
     const extractStructuredOutput = useCallback(
-        async (customSchema?: z.ZodSchema) => {
+        async (customSchema?: z.ZodTypeAny) => {
             if (!isGeminiModel(chatMode)) {
                 toast({
                     title: 'Not Available',
@@ -373,7 +373,7 @@ export const useStructuredExtraction = () => {
                 }
 
                 // Use custom schema if provided, otherwise detect document type
-                let schema: z.ZodSchema;
+                let schema: z.ZodTypeAny;
                 let type: string;
                 let confidence: number;
 

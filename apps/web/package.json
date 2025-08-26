@@ -75,7 +75,7 @@
         "url": "^0.11.4",
         "use-stick-to-bottom": "^1.1.1",
         "util": "^0.12.5",
-        "zod": "^3.25.76",
+        "zod": "^4.0.0",
         "zustand": "^5.0.7"
     },
     "devDependencies": {

@@ -51,7 +51,7 @@
         "together-ai": "^0.16.0",
         "uuid": "^11.1.0",
         "braintrust": "^0.0.206",
-        "zod": "^3.25.76",
+        "zod": "^4.0.0",
         "zod-to-json-schema": "^3.24.5"
     },
     "devDependencies": {

@@ -37,7 +37,7 @@ const StructuredOutputButton = () => {
     const getDocumentType = (
         content: string,
         fileName: string,
-    ): { type: string; schema: z.ZodSchema; } => {
+    ): { type: string; schema: z.ZodTypeAny; } => {
         const lowercaseContent = content.toLowerCase();
         const fileExtension = fileName.split('.').pop()?.toLowerCase();
 

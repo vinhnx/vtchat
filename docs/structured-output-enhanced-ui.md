@@ -167,7 +167,7 @@ export const StructuredOutputButton = () => {
 
 Updated `useStructuredExtraction` to support:
 
-- Custom schema parameter: `extractStructuredOutput(customSchema?: z.ZodSchema)`
+- Custom schema parameter: `extractStructuredOutput(customSchema?: z.ZodTypeAny)`
 - Predefined prompt integration
 - Enhanced error handling
 

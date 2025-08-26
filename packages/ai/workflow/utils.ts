@@ -14,7 +14,7 @@ import {
     streamText,
     type ToolSet,
 } from 'ai';
-import type { ZodSchema } from 'zod';
+import type { ZodTypeAny } from 'zod';
 import { CLAUDE_4_CONFIG, ReasoningType } from '../constants/reasoning';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
@@ -929,7 +929,7 @@ export const generateObject = async ({
 }: {
     prompt: string;
     model: ModelEnum;
-    schema: ZodSchema;
+    schema: ZodTypeAny;
     messages?: CoreMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;

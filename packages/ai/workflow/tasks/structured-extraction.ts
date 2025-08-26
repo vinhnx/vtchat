@@ -112,7 +112,7 @@ export const GenericDocumentSchema = z.object({
 
 // Helper to detect document type and select appropriate schema
 export function getSchemaForDocument(text: string): {
-    schema: z.ZodSchema;
+    schema: z.ZodTypeAny;
     type: string;
 } {
     const lowerText = text.toLowerCase();
@@ -170,7 +170,7 @@ export async function extractStructuredData(documentText: string, model = 'gemin
             success: true,
             data: result.object,
             type,
-            schema: schema._def,
+            schema: (schema as any)._def,
         };
     } catch (error) {
         log.error('Structured extraction failed:', { data: error });

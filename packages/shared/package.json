@@ -58,6 +58,7 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
+        "zod": "^4.0.0",
         "@hotjar/browser": "^1.0.9",
         "@langchain/core": "^0.3.59",
         "@tiptap/core": "^3.0.1",

@@ -23,17 +23,33 @@ export const chartTools = (config?: {
             description:
                 'Create a bar chart with data points. Useful for comparing categorical data or showing distributions.',
             parameters: z.object({
-                title: z.string().describe('Chart title'),
-                data: z.array(chartDataSchema).describe('Array of data points with name and value'),
-                xAxisLabel: z.string().nullable().describe('X-axis label'),
-                yAxisLabel: z.string().nullable().describe('Y-axis label'),
-                color: z.string().nullable().describe('Chart color theme (blue, red, green, etc.)'),
+                title: z.string().optional().describe('Chart title'),
+                data: z
+                    .array(chartDataSchema)
+                    .optional()
+                    .describe('Array of data points with name and value'),
+                xAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('X-axis label'),
+                yAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Y-axis label'),
+                color: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Chart color theme (blue, red, green, etc.)'),
             }),
             execute: async ({ title, data, xAxisLabel, yAxisLabel, color = 'blue' }) => {
+                const safeData = data && data.length > 0 ? data : generateSampleData.sales();
                 return {
                     type: 'barChart',
-                    title,
-                    data,
+                    title: title || 'Bar Chart',
+                    data: safeData,
                     xAxisLabel,
                     yAxisLabel,
                     color,
@@ -45,15 +61,36 @@ export const chartTools = (config?: {
             description:
                 'Create a line chart to show trends over time or continuous data. Perfect for time series data.',
             parameters: z.object({
-                title: z.string().describe('Chart title'),
+                title: z.string().optional().describe('Chart title'),
                 data: z
                     .array(multiSeriesDataSchema)
+                    .optional()
                     .describe('Array of data points with name and values'),
-                xAxisLabel: z.string().nullable().describe('X-axis label'),
-                yAxisLabel: z.string().nullable().describe('Y-axis label'),
-                series1Name: z.string().nullable().describe('Name for first data series'),
-                series2Name: z.string().nullable().describe('Name for second data series'),
-                series3Name: z.string().nullable().describe('Name for third data series'),
+                xAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('X-axis label'),
+                yAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Y-axis label'),
+                series1Name: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Name for first data series'),
+                series2Name: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Name for second data series'),
+                series3Name: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Name for third data series'),
             }),
             execute: async ({
                 title,
@@ -64,10 +101,13 @@ export const chartTools = (config?: {
                 series2Name,
                 series3Name,
             }) => {
+                const safeData = data && data.length > 0
+                    ? data
+                    : generateSampleData.multiSeries();
                 return {
                     type: 'lineChart',
-                    title,
-                    data,
+                    title: title || 'Line Chart',
+                    data: safeData,
                     xAxisLabel,
                     yAxisLabel,
                     series1Name,
@@ -81,15 +121,36 @@ export const chartTools = (config?: {
             description:
                 'Create an area chart to show cumulative totals over time or to emphasize the magnitude of change.',
             parameters: z.object({
-                title: z.string().describe('Chart title'),
+                title: z.string().optional().describe('Chart title'),
                 data: z
                     .array(multiSeriesDataSchema)
+                    .optional()
                     .describe('Array of data points with name and values'),
-                xAxisLabel: z.string().nullable().describe('X-axis label'),
-                yAxisLabel: z.string().nullable().describe('Y-axis label'),
-                series1Name: z.string().nullable().describe('Name for first data series'),
-                series2Name: z.string().nullable().describe('Name for second data series'),
-                stacked: z.boolean().nullable().describe('Whether to stack the areas'),
+                xAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('X-axis label'),
+                yAxisLabel: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Y-axis label'),
+                series1Name: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Name for first data series'),
+                series2Name: z
+                    .string()
+                    .nullable()
+                    .optional()
+                    .describe('Name for second data series'),
+                stacked: z
+                    .boolean()
+                    .nullable()
+                    .optional()
+                    .describe('Whether to stack the areas'),
             }),
             execute: async ({
                 title,
@@ -100,10 +161,13 @@ export const chartTools = (config?: {
                 series2Name,
                 stacked = false,
             }) => {
+                const safeData = data && data.length > 0
+                    ? data
+                    : generateSampleData.multiSeries();
                 return {
                     type: 'areaChart',
-                    title,
-                    data,
+                    title: title || 'Area Chart',
+                    data: safeData,
                     xAxisLabel,
                     yAxisLabel,
                     series1Name,
@@ -117,16 +181,30 @@ export const chartTools = (config?: {
             description:
                 'Create a pie chart to show proportions and percentages of a whole. Great for showing distribution of categories.',
             parameters: z.object({
-                title: z.string().describe('Chart title'),
-                data: z.array(chartDataSchema).describe('Array of data points with name and value'),
-                showLabels: z.boolean().nullable().describe('Whether to show data labels'),
-                showLegend: z.boolean().nullable().describe('Whether to show legend'),
+                title: z.string().optional().describe('Chart title'),
+                data: z
+                    .array(chartDataSchema)
+                    .optional()
+                    .describe('Array of data points with name and value'),
+                showLabels: z
+                    .boolean()
+                    .nullable()
+                    .optional()
+                    .describe('Whether to show data labels'),
+                showLegend: z
+                    .boolean()
+                    .nullable()
+                    .optional()
+                    .describe('Whether to show legend'),
             }),
             execute: async ({ title, data, showLabels = true, showLegend = true }) => {
+                const safeData = data && data.length > 0
+                    ? data
+                    : generateSampleData.distribution();
                 return {
                     type: 'pieChart',
-                    title,
-                    data,
+                    title: title || 'Pie Chart',
+                    data: safeData,
                     showLabels,
                     showLegend,
                 };
@@ -137,7 +215,7 @@ export const chartTools = (config?: {
             description:
                 'Create a radar/spider chart to show multivariate data. Perfect for comparing multiple categories or metrics.',
             parameters: z.object({
-                title: z.string().describe('Chart title'),
+                title: z.string().optional().describe('Chart title'),
                 data: z
                     .array(
                         z.object({
@@ -146,17 +224,26 @@ export const chartTools = (config?: {
                             fullMark: z
                                 .number()
                                 .nullable()
+                                .optional()
                                 .describe('Maximum possible value for this category'),
                         }),
                     )
+                    .optional()
                     .describe('Array of categories with their values'),
-                maxValue: z.number().nullable().describe('Maximum value for scaling'),
+                maxValue: z
+                    .number()
+                    .nullable()
+                    .optional()
+                    .describe('Maximum value for scaling'),
             }),
             execute: async ({ title, data, maxValue }) => {
+                const safeData = data && data.length > 0
+                    ? data
+                    : generateSampleData.performance();
                 return {
                     type: 'radarChart',
-                    title,
-                    data,
+                    title: title || 'Radar Chart',
+                    data: safeData,
                     maxValue,
                 };
             },
