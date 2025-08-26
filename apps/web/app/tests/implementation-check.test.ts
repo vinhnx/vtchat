@@ -30,12 +30,12 @@ describe('Gemini 2.5 Flash Lite - Implementation Verification', () => {
         const { ModelEnum, models } = await import('@repo/ai/models');
 
         // Check Gemini 2.5 Flash Lite is configured
-        expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+        expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite');
 
         // Find the model in the models array
         const geminiLiteModel = models.find((m) => m.id === ModelEnum.GEMINI_2_5_FLASH_LITE);
         expect(geminiLiteModel).toBeDefined();
-        expect(geminiLiteModel?.name).toBe('Gemini 2.5 Flash Lite Preview 06-17');
+        expect(geminiLiteModel?.name).toBe('Gemini 2.5 Flash Lite');
         expect(geminiLiteModel?.provider).toBe('google');
         expect(geminiLiteModel?.isFree).toBe(true);
     });
@@ -44,7 +44,7 @@ describe('Gemini 2.5 Flash Lite - Implementation Verification', () => {
         const { ChatMode, ChatModeConfig } = await import('@repo/shared/config');
 
         // Check chat mode exists
-        expect(ChatMode.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+        expect(ChatMode.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite');
 
         // Check configuration
         const config = ChatModeConfig[ChatMode.GEMINI_2_5_FLASH_LITE];

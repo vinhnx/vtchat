@@ -38,7 +38,7 @@ export const GEMINI_PRICES = {
     FLASH_LITE: 0.005, // 0.5 cents per request - minimum to ensure non-zero cost tracking
     FLASH: 0.01, // 1 cent per request
     PRO: 0.015, // 1.5 cents per request
-    'gemini-2.5-flash-lite-preview-06-17': 0.005, // Same as FLASH_LITE
+    'gemini-2.5-flash-lite': 0.005, // Same as FLASH_LITE
 } as const;
 
 /**

@@ -18,7 +18,7 @@ describe('Gemini 2.5 Flash Lite - Basic Validation', () => {
             const { ModelEnum } = await import('@repo/ai/models');
 
             // Verify the model enum exists
-            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite');
         });
 
         it('should identify free models correctly', async () => {

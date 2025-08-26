@@ -1,11 +1,12 @@
-import type { LanguageModelV2Middleware, LanguageModelV2StreamPart } from '@ai-sdk/provider';
+import type { LanguageModelV1Middleware } from 'ai';
+import type { LanguageModelV1StreamPart } from '@ai-sdk/provider';
 import { log } from '@repo/shared/logger';
 
 /**
  * Logging middleware that logs parameters and generated text of language model calls.
  * Useful for debugging and monitoring AI interactions.
  */
-export const loggingMiddleware: LanguageModelV2Middleware = {
+export const loggingMiddleware: LanguageModelV1Middleware = {
     wrapGenerate: async ({ doGenerate, params }) => {
         log.info('Language Model Generate Called', {
             params: JSON.stringify(params, null, 2),
@@ -33,25 +34,20 @@ export const loggingMiddleware: LanguageModelV2Middleware = {
         const textBlocks = new Map<string, string>();
 
         const transformStream = new TransformStream<
-            LanguageModelV2StreamPart,
-            LanguageModelV2StreamPart
+            LanguageModelV1StreamPart,
+            LanguageModelV1StreamPart
         >({
             transform(chunk, controller) {
                 switch (chunk.type) {
-                    case 'text-start': {
-                        textBlocks.set(chunk.id, '');
-                        break;
-                    }
                     case 'text-delta': {
-                        const existing = textBlocks.get(chunk.id) || '';
-                        textBlocks.set(chunk.id, existing + chunk.delta);
-                        generatedText += chunk.delta;
+                        const existing = textBlocks.get('default') || '';
+                        const delta = (chunk as any).textDelta ?? (chunk as any).delta ?? '';
+                        textBlocks.set('default', existing + delta);
+                        generatedText += delta;
                         break;
                     }
-                    case 'text-end': {
-                        log.info(`Text block ${chunk.id} completed:`, {
-                            text: textBlocks.get(chunk.id),
-                        });
+                    default: {
+                        // pass through other chunk types unchanged
                         break;
                     }
                 }

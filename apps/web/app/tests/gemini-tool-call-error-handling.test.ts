@@ -11,7 +11,7 @@ describe('Gemini Tool Call Error Handling', () => {
             // 1. if user is using free model (GEMINI_2_5_FLASH_LITE) AND doesn't have GEMINI API KEY
             //    -> use free gemini model API key for them and count as 1 daily free gemini model usage
 
-            expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(testModel).toBe('gemini-2.5-flash-lite');
 
             // This should be allowed (use system key, count usage)
             const shouldUseSystemKey = !userHasApiKey
@@ -27,7 +27,7 @@ describe('Gemini Tool Call Error Handling', () => {
             // 2. if user is using free model (GEMINI_2_5_FLASH_LITE) AND has GEMINI API KEY
             //    -> use their gemini api key and DON't count -> remember has BYOK -> unlimited usage
 
-            expect(testModel).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(testModel).toBe('gemini-2.5-flash-lite');
 
             // This should use user's key (unlimited usage)
             const shouldUseSystemKey = !userHasApiKey
@@ -74,7 +74,7 @@ describe('Gemini Tool Call Error Handling', () => {
 
         it('should validate model enum consistency', () => {
             // Ensure the model enum value matches what we expect
-            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite-preview-06-17');
+            expect(ModelEnum.GEMINI_2_5_FLASH_LITE).toBe('gemini-2.5-flash-lite');
         });
     });
 

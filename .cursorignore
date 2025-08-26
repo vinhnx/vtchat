@@ -1,0 +1,215 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build artifacts and temporary files
+.next/
+**/.next/
+.turbo/
+**/.turbo/
+tsconfig.tsbuildinfo
+**/tsconfig.tsbuildinfo
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+
+# Generated files and reports
+playwright-report/
+**/playwright-report/
+test-results/
+**/test-results/
+coverage/
+**/coverage/
+*.log
+dev.log
+**/dev.log
+
+# Database and storage
+qdrant_storage/
+**/qdrant_storage/
+drizzle/migrations/
+**/drizzle/migrations/
+
+# Development and IDE files
+.vscode/
+**/.vscode/
+.idea/
+**/.idea/
+*.DS_Store
+**/.DS_Store
+.husky/
+**/.husky/
+.cursor/
+**/.cursor/
+.kilocode/
+**/.kilocode/
+.kilocodemodes
+.kiro/
+**/.kiro/
+.openhands/
+**/.openhands/
+.qoder/
+**/.qoder/
+.claude/
+**/.claude/
+
+# Lock files and package management
+bun.lock
+**/bun.lock
+package-lock.json
+**/package-lock.json
+yarn.lock
+**/yarn.lock
+pnpm-lock.yaml
+**/pnpm-lock.yaml
+
+# Environment and configuration files
+.env
+**/.env
+.env.local
+**/.env.local
+.env.*.local
+**/.env.*.local
+
+# Test files (optional - uncomment if you want to exclude tests)
+# **/*.test.ts
+# **/*.test.tsx
+# **/*.spec.ts
+# **/*.spec.tsx
+# **/__tests__/
+# tests/
+# **/tests/
+# e2e/
+# **/e2e/
+
+# Large binary files and assets
+public/bg/
+**/public/bg/
+public/fonts/
+**/public/fonts/
+public/icons/
+**/public/icons/
+public/juicelife/
+**/public/juicelife/
+public/screenshots/
+**/public/screenshots/
+public/uploads/
+**/public/uploads/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.avif
+*.woff
+*.woff2
+*.ttf
+*.otf
+
+# Documentation (keeping essential guides, excluding verbose docs)
+docs/examples/
+**/docs/examples/
+docs/fixes/
+**/docs/fixes/
+docs/improvements/
+**/docs/improvements/
+docs/production-fixes/
+**/docs/production-fixes/
+docs/scopes/
+**/docs/scopes/
+docs/security/
+**/docs/security/
+docs/testing/
+**/docs/testing/
+memory-bank/
+**/memory-bank/
+
+# Temporary and backup files
+*.backup
+**/*.backup
+*.tmp
+**/*.tmp
+*.temp
+**/*.temp
+test-*.ts
+**/test-*.ts
+test-*.js
+**/test-*.js
+test-*.tsx
+**/test-*.tsx
+
+# Source maps and development files
+*.map
+**/*.map
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Git and version control
+.git/
+**/.git/
+
+# Docker and deployment
+Dockerfile
+**/Dockerfile
+.dockerignore
+**/.dockerignore
+fly.toml
+**/fly.toml
+
+# Scripts and utilities (keeping essential ones)
+scripts/
+**/scripts/
+deploy-fly.sh
+start.sh
+**/start.sh
+
+# Configuration files that don't need context
+*.config.js
+**/*.config.js
+*.config.ts
+**/*.config.ts
+*.config.mjs
+**/*.config.mjs
+*.config.json
+**/*.config.json
+tailwind.config.*
+**/tailwind.config.*
+postcss.config.*
+**/postcss.config.*
+next.config.*
+**/next.config.*
+playwright.config.*
+**/playwright.config.*
+drizzle.config.*
+**/drizzle.config.*
+turbo.json
+**/turbo.json
+tsconfig.json
+**/tsconfig.json
+components.json
+**/components.json
+package.json
+**/package.json
+
+# Non-essential markdown files
+*.md
+**/*.md
+!README.md
+!CONTRIBUTING.md
+!CODE_OF_CONDUCT.md
+!LICENSE
+!AGENT.md
+!AGENTS.md
+!CLAUDE.md
+!TODO.md
+
+# Exclude specific large or non-essential files
+llms-full.txt
+cookies.txt
+dbsetup.js
+custom-server.js
+
