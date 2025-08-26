@@ -1,11 +1,11 @@
-import type { LanguageModelV2Middleware } from '@ai-sdk/provider';
+import type { LanguageModelV1Middleware } from 'ai';
 import { log } from '@repo/shared/logger';
 
 /**
  * Guardrails middleware that filters sensitive content from generated text.
  * Useful for ensuring safe and appropriate responses.
  */
-export const guardrailsMiddleware: LanguageModelV2Middleware = {
+export const guardrailsMiddleware: LanguageModelV1Middleware = {
     wrapGenerate: async ({ doGenerate }) => {
         const result = await doGenerate();
 

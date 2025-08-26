@@ -1,11 +1,11 @@
-import type { LanguageModelV2Middleware } from '@ai-sdk/provider';
+import type { LanguageModelV1Middleware } from 'ai';
 import { log } from '@repo/shared/logger';
 
 /**
  * Simple caching middleware that caches generated text based on parameters.
  * Useful for reducing API costs and improving response times for repeated queries.
  */
-export const cachingMiddleware: LanguageModelV2Middleware = {
+export const cachingMiddleware: LanguageModelV1Middleware = {
     wrapGenerate: async ({ doGenerate, params }) => {
         // Create a cache key from the parameters
         const cacheKey = JSON.stringify({
