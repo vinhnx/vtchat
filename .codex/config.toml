@@ -1,0 +1,12 @@
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+
+[mcp_servers.flymcp]
+command = "/Users/vinh.nguyenxuan/flymcp/flymcp"
+args = []
+
+[mcp_servers.fetch]
+command = "uvx"
+args = ["mcp-server-fetch"]

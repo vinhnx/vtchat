@@ -14,30 +14,6 @@ use ruler
 
 --
 
-https://ai.google.dev/gemini-api/docs/url-context#url-types
-
-maybe use url context for all metadata understanding.
-instead of current document image.
-
---
-
-### Supported and unsupported content types
-
-The tool can extract content from URLs with the following content types:
-
-- Text (text/html, application/json, text/plain, text/xml, text/css, text/javascript, text/csv, text/rtf)
-- Image (image/png, image/jpeg, image/bmp, image/webp)
-- PDF (application/pdf)
-
-The following content types are **not** supported:
-
-- Paywalled content
-- YouTube videos (See [video understanding](/gemini-api/docs/video-understanding#youtube) to learn how to process YouTube URLs)
-- Google workspace files like Google docs or spreadsheets
-- Video and audio files
-
---
-
 explore ai gateway.
 
 --
