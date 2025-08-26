@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { log } from '@repo/shared/lib/logger';
 
 interface GoodFirmsBadgeProps {
     className?: string;
@@ -64,7 +65,14 @@ export function GoodFirmsBadge({ className }: GoodFirmsBadgeProps) {
                         objectFit: 'contain',
                     }}
                     onError={() => {
-                        console.warn('GoodFirms badge failed to load, using fallback');
+                        log.warn(
+                            {
+                                component: 'GoodFirmsBadge',
+                                imagePath: '/goodfirms_badge.svg',
+                                fallbackUsed: true,
+                            },
+                            'GoodFirms badge failed to load, using fallback',
+                        );
                         setHasError(true);
                     }}
                     onLoad={() => setIsLoading(false)}

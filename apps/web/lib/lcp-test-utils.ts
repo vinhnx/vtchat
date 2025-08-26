@@ -1,10 +1,18 @@
+import { log } from '@repo/shared/lib/logger';
+
 // Simple test to verify preload directives
 export async function testPreloadDirectives() {
     // This would typically run in a browser environment
     const links = document.querySelectorAll('link[rel="preload"]');
     const preloadHrefs = Array.from(links).map(link => link.getAttribute('href'));
 
-    console.log('Preloaded resources:', preloadHrefs);
+    log.info(
+        {
+            preloadCount: preloadHrefs.length,
+            resources: preloadHrefs.filter(Boolean),
+        },
+        'Preloaded resources detected',
+    );
 
     // Check for critical resources
     const hasVTLogo = preloadHrefs.includes('/icon-192x192.png');

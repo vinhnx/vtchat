@@ -5,6 +5,7 @@ import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useToast } from '@repo/ui';
 import { type ChangeEvent, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { log } from '@repo/shared/lib/logger';
 
 export const useDocumentAttachment = () => {
     const documentAttachment = useChatStore((state) => state.documentAttachment);
@@ -105,7 +106,16 @@ export const useDocumentAttachment = () => {
 
                     // Retry logic for transient failures
                     if (retryCount < maxRetries) {
-                        console.log(`Retrying file read (attempt ${retryCount + 1}/${maxRetries})`);
+                        log.info(
+                            {
+                                fileName: file.name,
+                                fileSize: file.size,
+                                fileType: file.type,
+                                retryCount: retryCount + 1,
+                                maxRetries,
+                            },
+                            'Retrying file read due to transient failure',
+                        );
                         setTimeout(() => {
                             handleFileReadWithRetry(file, retryCount + 1)
                                 .then(resolve)
@@ -139,7 +149,15 @@ export const useDocumentAttachment = () => {
     const handleFileRead = useCallback(
         (file: File) => {
             handleFileReadWithRetry(file).catch((error) => {
-                console.error('File upload failed:', error);
+                log.error(
+                    {
+                        err: error instanceof Error ? error : new Error(String(error)),
+                        fileName: file.name,
+                        fileSize: file.size,
+                        fileType: file.type,
+                    },
+                    'File upload failed',
+                );
             });
         },
         [handleFileReadWithRetry],

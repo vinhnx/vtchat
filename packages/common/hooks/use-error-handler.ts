@@ -1,6 +1,7 @@
 import type { ErrorContext, ErrorMessage } from '@repo/ai/services/error-messages';
 import { useToast } from '@repo/ui';
 import { useCallback } from 'react';
+import { log } from '@repo/shared/lib/logger';
 
 /**
  * Custom hook for consistent error handling across React components
@@ -27,6 +28,16 @@ export function useErrorHandler() {
 
                 const structuredError = generateErrorMessage(error, context);
 
+                // Log the error with structured context
+                log.error(
+                    {
+                        err: error instanceof Error ? error : new Error(String(error)),
+                        context,
+                        structuredError,
+                    },
+                    'Error handled by useErrorHandler',
+                );
+
                 // Call custom error handler if provided
                 if (onError) {
                     onError(structuredError);
@@ -45,6 +56,15 @@ export function useErrorHandler() {
                 return structuredError;
             } catch (_serviceError) {
                 // Fallback error handling if the service fails
+                log.error(
+                    {
+                        originalError: error instanceof Error ? error : new Error(String(error)),
+                        context,
+                        serviceError: _serviceError instanceof Error ? _serviceError : new Error(String(_serviceError)),
+                    },
+                    'Error message service failed, using fallback',
+                );
+                
                 const fallbackMessage = typeof error === 'string' ? error : error.message;
 
                 if (showToast) {

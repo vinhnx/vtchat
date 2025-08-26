@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { log } from '@repo/shared/lib/logger';
 
 interface GlobalErrorProps {
     error: Error & { digest?: string; };
@@ -9,12 +10,16 @@ interface GlobalErrorProps {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
     useEffect(() => {
-        // Simple console error logging to avoid import issues during build
-        console.error('Global error encountered:', {
-            error: error.message,
-            digest: error.digest,
-            stack: error.stack,
-        });
+        // Log global error with proper context and error object
+        log.error(
+            {
+                err: error,
+                digest: error.digest,
+                userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+                url: typeof window !== 'undefined' ? window.location.href : undefined,
+            },
+            'Global error encountered',
+        );
     }, [error]);
 
     const handleHomeNavigation = () => {
