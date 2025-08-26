@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorBoundary, ErrorPlaceholder, mdxComponents } from '@repo/common/components';
+import { ErrorBoundary, ErrorPlaceholder, mdxComponents, CodeBlock } from '@repo/common/components';
 import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes';
 import { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import './markdown-content.css';
+import { Streamdown } from 'streamdown';
 
 export const markdownStyles = {
     // Base prose styling with animation and theme support
@@ -652,28 +653,129 @@ const ProgressiveMarkdownRenderer = memo(
                 ref={contentRef}
                 className='progressive-markdown-renderer'
                 style={{
-                    // Prevent layout shifts during streaming
                     minHeight: '1.5em',
                     contain: 'layout style',
                     transition: 'opacity 0.1s ease-out',
                 }}
-                key={`content-v${contentVersion}`} // Force re-render on version change
+                key={`content-v${contentVersion}`}
             >
-                {blocks.map((block, index) => (
-                    <MemoizedMarkdownBlock
-                        key={`v${contentVersion}-block-${index}-${
-                            block.trim().substring(0, 10).replace(/\s+/g, '-')
-                        }`}
-                        content={block.trim()}
-                    />
-                ))}
+                <Streamdown
+                    className='min-w-full'
+                    // Preserve our typography via container classes already applied above
+                    remarkPlugins={[remarkGfm]}
+                    // Keep our existing component look-and-feel where possible
+                    components={{
+                        // These map cleanly to react-markdown/streamdown component API
+                        p: ({ children }) => (
+                            <div className='markdown-text mb-6 text-base leading-loose'>
+                                {children}
+                            </div>
+                        ),
+                        h1: ({ children }) => (
+                            <h1 className='border-border markdown-text mb-6 mt-12 border-b pb-2 text-2xl font-bold tracking-tight'>
+                                {children}
+                            </h1>
+                        ),
+                        h2: ({ children }) => (
+                            <h2 className='border-border/60 markdown-text mb-5 mt-10 border-b pb-1 text-xl font-semibold tracking-tight'>
+                                {children}
+                            </h2>
+                        ),
+                        h3: ({ children }) => (
+                            <h3 className='markdown-text mb-4 mt-9 text-lg font-medium'>{children}</h3>
+                        ),
+                        h4: ({ children }) => (
+                            <h4 className='markdown-text mb-4 mt-8 text-base font-medium opacity-90'>
+                                {children}
+                            </h4>
+                        ),
+                        a: ({ href, children }) => (
+                            <a
+                                href={href as string}
+                                className='text-brand font-medium underline decoration-[0.08em] underline-offset-2 transition-colors hover:no-underline'
+                                target={typeof href === 'string' && href.startsWith('http')
+                                    ? '_blank'
+                                    : undefined}
+                                rel={typeof href === 'string' && href.startsWith('http')
+                                    ? 'noopener noreferrer'
+                                    : undefined}
+                            >
+                                {children}
+                            </a>
+                        ),
+                        ul: ({ children }) => <ul className='my-4 space-y-2 pl-6'>{children}</ul>,
+                        ol: ({ children }) => (
+                            <ol className='my-4 list-decimal space-y-2 pl-6'>{children}</ol>
+                        ),
+                        li: ({ children }) => (
+                            <li className='markdown-text my-2 pl-1 text-base leading-relaxed'>
+                                {children}
+                            </li>
+                        ),
+                        blockquote: ({ children }) => (
+                            <blockquote className='border-border text-muted-foreground bg-secondary/20 my-6 rounded-r-md border-l-4 py-1 pl-4 italic'>
+                                {children}
+                            </blockquote>
+                        ),
+                        hr: () => <hr className='border-border my-8' />,
+                        img: ({ src, alt, ...props }) => (
+                            // @ts-expect-error streamdown/react-markdown image typing
+                            <img
+                                src={src as string}
+                                alt={(alt as string) || 'Image'}
+                                className='mx-auto my-6 h-auto max-w-full rounded-md shadow-sm'
+                                loading='lazy'
+                                {...props}
+                            />
+                        ),
+                        table: ({ children }) => (
+                            <div className='border-border my-6 overflow-x-auto rounded-lg border'>
+                                <table className='bg-background w-full border-collapse'>
+                                    {children}
+                                </table>
+                            </div>
+                        ),
+                        th: ({ children }) => (
+                            <th className='bg-tertiary border-border markdown-text border-b border-r px-4 py-2.5 text-left text-sm font-semibold last:border-r-0'>
+                                {children}
+                            </th>
+                        ),
+                        td: ({ children }) => (
+                            <td className='border-border markdown-text border-b border-r px-4 py-3 align-top last:border-r-0'>
+                                {children}
+                            </td>
+                        ),
+                        code: ({ inline, className, children }) => {
+                            const content = String(children).replace(/<FadeEffect \/>$/, '');
+                            if (!className && inline) {
+                                return (
+                                    <code className='bg-muted/70 text-foreground border-border/40 whitespace-nowrap rounded-md border px-2 py-1 font-mono text-sm font-medium shadow-sm'>
+                                        {content}
+                                    </code>
+                                );
+                            }
+                            const lang = (className || '').replace('language-', '');
+                            return <CodeBlock code={content} lang={lang} />;
+                        },
+                        pre: ({ children }) => {
+                            // react-markdown nests <code> inside <pre>
+                            // Let our code renderer handle via code component when possible
+                            return <pre className='prose-pre:bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4'>{children}</pre>;
+                        },
+                        strong: ({ children }) => (
+                            <strong className='markdown-text font-semibold'>{children}</strong>
+                        ),
+                        em: ({ children }) => (
+                            <em className='markdown-text italic'>{children}</em>
+                        ),
+                    }}
+                >
+                    {content}
+                </Streamdown>
                 {isStreaming && (
                     <span
                         className='streaming-cursor ml-0.5 inline-block h-5 w-0.5 bg-current'
-                        style={{
-                            // Ensure cursor doesn't cause layout shifts
-                            flexShrink: 0,
-                        }}
+                        style={{ flexShrink: 0 }}
                     />
                 )}
             </div>

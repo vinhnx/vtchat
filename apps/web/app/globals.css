@@ -1,6 +1,8 @@
 @import "@repo/tailwind-config/tailwind.css";
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+/* Include Streamdown styles for Tailwind (path relative to this file) */
+@source "../node_modules/streamdown/dist/index.js";
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {
