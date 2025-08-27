@@ -8,7 +8,7 @@ import type { ChatMode } from '@repo/shared/config';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import type { Geo } from '@vercel/functions';
-import type { CoreMessage } from 'ai';
+import type { ModelMessage } from 'ai';
 import {
     analysisTask,
     completionTask,
@@ -69,7 +69,7 @@ export type WorkflowEventSchema = {
 export type WorkflowContextSchema = {
     question: string;
     search_queries: string[];
-    messages: CoreMessage[];
+    messages: ModelMessage[];
     mode: ChatMode;
     goals: {
         id: number;
@@ -138,7 +138,7 @@ export const runWorkflow = ({
     question: string;
     threadId: string;
     threadItemId: string;
-    messages: CoreMessage[];
+    messages: ModelMessage[];
     config?: WorkflowConfig;
     signal?: AbortSignal;
     webSearch?: boolean;

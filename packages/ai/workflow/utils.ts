@@ -8,9 +8,9 @@ import {
     isEligibleForQuotaConsumption,
 } from '@repo/shared/utils/access-control';
 import {
-    type CoreMessage,
     extractReasoningMiddleware,
     generateObject as generateObjectAi,
+    type ModelMessage,
     streamText,
     type ToolSet,
 } from 'ai';
@@ -50,6 +50,11 @@ export class ChunkBuffer {
     }
 
     add(chunk: string): void {
+        // Handle undefined or null chunks
+        if (!chunk || typeof chunk !== 'string') {
+            return;
+        }
+
         this.fullText += chunk;
         this.buffer += chunk;
 
@@ -90,13 +95,13 @@ export const generateTextWithGeminiSearch = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
     userTier?: UserTierType;
     userId?: string;
-}): Promise<GenerateTextWithReasoningResult> => {
+}, retryAttempted?: boolean): Promise<GenerateTextWithReasoningResult> => {
     // Add comprehensive runtime logging
     log.info('=== generateTextWithGeminiSearch START ===');
     log.info(
@@ -222,7 +227,8 @@ export const generateTextWithGeminiSearch = async ({
         let filteredMessages = messages;
         if (messages?.length) {
             filteredMessages = messages.filter((message) => {
-                const hasContent = message.content
+                const hasContentProperty = message.hasOwnProperty('content');
+                const hasContent = hasContentProperty && message.content
                     && (typeof message.content === 'string'
                         ? message.content.trim() !== ''
                         : Array.isArray(message.content)
@@ -230,9 +236,11 @@ export const generateTextWithGeminiSearch = async ({
                         : true);
 
                 if (!hasContent) {
-                    log.warn('Filtering out message with empty content in GeminiSearch:', {
+                    log.warn('Filtering out message with invalid/missing content:', {
                         role: message.role,
+                        hasContentProperty,
                         contentType: typeof message.content,
+                        contentValue: message.content,
                     });
                 }
 
@@ -285,25 +293,29 @@ export const generateTextWithGeminiSearch = async ({
                 }
             }
 
-            const streamTextConfig = filteredMessages?.length
-                ? {
-                    model: selectedModel,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: prompt,
-                        },
-                        ...filteredMessages,
-                    ],
-                    abortSignal: signal,
-                    ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                }
-                : {
-                    prompt,
-                    model: selectedModel,
-                    abortSignal: signal,
-                    ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                };
+            // Choose between messages (for chat) or prompt (for single interactions) - AI SDK 5.0 compatibility
+            const streamTextConfig: any = {
+                model: selectedModel,
+                abortSignal: signal,
+                ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+            };
+
+            // Prioritize messages for chat-style interactions, fallback to prompt
+            if (filteredMessages && filteredMessages.length > 0) {
+                // Ensure system message has valid content for AI SDK v5
+                const systemMessage = prompt && prompt.trim()
+                    ? {
+                        role: 'system' as const,
+                        content: prompt,
+                    }
+                    : null;
+
+                streamTextConfig.messages = systemMessage
+                    ? [systemMessage, ...filteredMessages]
+                    : filteredMessages;
+            } else {
+                streamTextConfig.prompt = prompt;
+            }
 
             log.info('StreamText config:', {
                 configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
@@ -418,8 +430,8 @@ export const generateTextWithGeminiSearch = async ({
                 }
 
                 if (chunk.type === 'text-delta') {
-                    fullText += chunk.textDelta;
-                    onChunk?.(chunk.textDelta, fullText);
+                    fullText += chunk.delta;
+                    onChunk?.(chunk.delta, fullText);
                 }
             }
         } catch (error: any) {
@@ -494,13 +506,74 @@ export const generateTextWithGeminiSearch = async ({
             log.warn('Failed to resolve reasoningDetails:', { data: error });
         }
 
-        const result = {
+        let result = {
             text: fullText,
             sources: resolvedSources,
             groundingMetadata,
             reasoning,
             reasoningDetails,
         };
+
+        // Log detailed information about Gemini search grounding results
+        log.info('Gemini search grounding analysis:', {
+            sourcesCount: resolvedSources.length,
+            hasGroundingMetadata: !!groundingMetadata,
+            groundingMetadataKeys: groundingMetadata ? Object.keys(groundingMetadata) : null,
+            promptLength: prompt.length,
+            promptPreview: prompt.slice(0, 100),
+        });
+
+        // If Gemini search grounding returned empty sources, try alternative approaches
+        if (resolvedSources.length === 0) {
+            log.info(
+                'Gemini search grounding returned no sources, attempting alternative approaches...',
+            );
+            log.info('Gemini search grounding failure analysis:', {
+                modelUsed: model,
+                isGeminiModel: model.toString().toLowerCase().includes('gemini'),
+                isFlashLite: model === ModelEnum.GEMINI_2_5_FLASH_LITE,
+                apiKeyPresent: !!process.env.GEMINI_API_KEY,
+                sourcesCount: resolvedSources.length,
+                hasGroundingMetadata: !!groundingMetadata,
+                possibleReasons: [
+                    'gemini-2.5-flash-lite may not support search grounding',
+                    'Google Cloud project not configured for search grounding',
+                    'Regional restrictions on search grounding API',
+                    'API key lacks search grounding permissions',
+                    'Search grounding temporarily unavailable',
+                ],
+            });
+
+            // Try different Gemini model if current one is flash-lite
+            if (model === ModelEnum.GEMINI_2_5_FLASH_LITE && !retryAttempted) {
+                log.info('Attempting retry with gemini-2.5-flash model...');
+                try {
+                    const alternativeResult = await generateTextWithGeminiSearch({
+                        prompt,
+                        model: ModelEnum.GEMINI_2_5_FLASH,
+                        onChunk,
+                        messages,
+                        signal,
+                        byokKeys,
+                        thinkingMode,
+                        userTier,
+                        userId,
+                    }, true); // retryAttempted = true
+
+                    if (alternativeResult.sources && alternativeResult.sources.length > 0) {
+                        log.info('Alternative Gemini model successful:', {
+                            newSourcesCount: alternativeResult.sources.length,
+                        });
+                        result.sources = alternativeResult.sources;
+                        result.groundingMetadata = alternativeResult.groundingMetadata;
+                    }
+                } catch (error) {
+                    log.warn('Alternative Gemini model failed:', { error: error.message });
+                }
+            }
+
+            // JINA fallback removed - using only Gemini web search
+        }
 
         log.info('=== generateTextWithGeminiSearch END ===');
         log.info('Returning result:', {
@@ -558,7 +631,7 @@ export const generateText = async ({
     onToolResult,
     signal,
     toolChoice = 'auto',
-    maxSteps = 2,
+    stopWhen,
     byokKeys,
     useSearchGrounding = false,
     thinkingMode,
@@ -569,7 +642,7 @@ export const generateText = async ({
     prompt: string;
     model: ModelEnum;
     onChunk?: (chunk: string, fullText: string) => void;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     onReasoning?: (chunk: string, fullText: string) => void;
     onReasoningDetails?: (details: ReasoningDetail[]) => void;
     tools?: ToolSet;
@@ -577,7 +650,7 @@ export const generateText = async ({
     onToolResult?: (toolResult: any) => void;
     signal?: AbortSignal;
     toolChoice?: 'auto' | 'none' | 'required';
-    maxSteps?: number;
+    stopWhen?: any;
     byokKeys?: Record<string, string>;
     useSearchGrounding?: boolean;
     thinkingMode?: ThinkingModeConfig;
@@ -589,7 +662,7 @@ export const generateText = async ({
         // Create a cache key from the parameters
         const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${
             JSON.stringify(tools || {})
-        }:${toolChoice}:${maxSteps}`;
+        }:${toolChoice}:${JSON.stringify(stopWhen)}`;
 
         // Check cache first
         const cachedResult = textGenerationCache.get(cacheKey);
@@ -734,33 +807,38 @@ export const generateText = async ({
                     }
                 }
 
-                const streamConfig = filteredMessages?.length
-                    ? {
-                        model: selectedModel,
-                        messages: [
-                            {
-                                role: 'system',
-                                content: prompt,
-                            },
-                            ...filteredMessages,
-                        ],
-                        tools,
-                        maxSteps,
-                        toolChoice: toolChoice as any,
-                        abortSignal: signal,
-                        temperature: 0, // Use temperature 0 for deterministic tool calling
-                        ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                    }
-                    : {
-                        prompt,
-                        model: selectedModel,
-                        tools,
-                        maxSteps,
-                        toolChoice: toolChoice as any,
-                        abortSignal: signal,
-                        temperature: 0, // Use temperature 0 for deterministic tool calling
-                        ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                    };
+                // Choose between messages (for chat) or prompt (for single interactions) - AI SDK 5.0 compatibility
+                const streamConfig: any = {
+                    model: selectedModel,
+                    tools,
+                    ...(stopWhen && { stopWhen }),
+                    toolChoice: toolChoice as any,
+                    abortSignal: signal,
+                    temperature: 0, // Use temperature 0 for deterministic tool calling
+                    ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                };
+
+                // Prioritize messages for chat-style interactions, fallback to prompt
+                if (filteredMessages && filteredMessages.length > 0) {
+                    // Filter out messages without content property
+                    const validFilteredMessages = filteredMessages.filter(msg =>
+                        msg && msg.hasOwnProperty('content') && msg.content
+                    );
+
+                    // Ensure system message has valid content for AI SDK v5
+                    const systemMessage = prompt && prompt.trim()
+                        ? {
+                            role: 'system' as const,
+                            content: prompt,
+                        }
+                        : null;
+
+                    streamConfig.messages = systemMessage
+                        ? [systemMessage, ...validFilteredMessages]
+                        : validFilteredMessages;
+                } else {
+                    streamConfig.prompt = prompt;
+                }
 
                 // Use quota-enforced streamText for VT+ users with correct feature based on mode
                 let streamResult;
@@ -856,12 +934,12 @@ export const generateText = async ({
                     }
 
                     if (chunk.type === 'text-delta') {
-                        fullText += chunk.textDelta;
-                        onChunk?.(chunk.textDelta, fullText);
+                        fullText += chunk.delta;
+                        onChunk?.(chunk.delta, fullText);
                     }
-                    if (chunk.type === 'reasoning') {
-                        reasoning += chunk.textDelta;
-                        onReasoning?.(chunk.textDelta, reasoning);
+                    if (chunk.type === 'reasoning-delta') {
+                        reasoning += chunk.delta;
+                        onReasoning?.(chunk.delta, reasoning);
                     }
                     if (chunk.type === 'tool-call') {
                         onToolCall?.(chunk);
@@ -930,7 +1008,7 @@ export const generateObject = async ({
     prompt: string;
     model: ModelEnum;
     schema: ZodTypeAny;
-    messages?: CoreMessage[];
+    messages?: ModelMessage[];
     signal?: AbortSignal;
     byokKeys?: Record<string, string>;
     thinkingMode?: ThinkingModeConfig;
@@ -1079,13 +1157,24 @@ export const generateObject = async ({
             ? {
                 model: selectedModel,
                 schema,
-                messages: [
-                    {
-                        role: 'system',
-                        content: prompt,
-                    },
-                    ...filteredMessages,
-                ],
+                messages: (() => {
+                    // Filter out messages without content property
+                    const validFilteredMessages = filteredMessages.filter(msg =>
+                        msg && msg.hasOwnProperty('content') && msg.content
+                    );
+
+                    // Ensure system message has valid content for AI SDK v5
+                    const systemMessage = prompt && prompt.trim()
+                        ? {
+                            role: 'system' as const,
+                            content: prompt,
+                        }
+                        : null;
+
+                    return systemMessage
+                        ? [systemMessage, ...validFilteredMessages]
+                        : validFilteredMessages;
+                })(),
                 abortSignal: signal,
                 temperature: 0, // Use temperature 0 for deterministic structured extraction
                 ...(Object.keys(providerOptions).length > 0 && { providerOptions }),

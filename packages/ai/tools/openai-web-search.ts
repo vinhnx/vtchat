@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { log } from '@repo/shared/lib/logger';
-import { generateText, tool } from 'ai';
+import { generateText, stepCountIs, tool } from 'ai';
 import { z } from 'zod';
 
 // Cache for web search results to prevent multiple identical requests
@@ -29,7 +29,7 @@ export const openaiWebSearchTool = () =>
     tool({
         description:
             'Search the web for current information and return relevant results with sources',
-        parameters: z.object({
+        inputSchema: z.object({
             query: z.string().describe('The search query to find information about'),
         }),
         execute: async ({ query }) => {
@@ -165,7 +165,7 @@ export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
     tool({
         description:
             `Search the web using OpenAI's ${modelId} model with built-in web search capabilities`,
-        parameters: z.object({
+        inputSchema: z.object({
             query: z.string().describe('The search query to find information about'),
             maxResults: z
                 .number()
@@ -216,7 +216,7 @@ export const openaiWebSearchWithModel = (modelId = 'gpt-4o-mini') =>
                             tools: {
                                 web_search_preview: openai.tools.webSearchPreview(),
                             },
-                            maxSteps: 5, // Allow multiple search steps if needed
+                            stopWhen: stepCountIs(5), // Allow multiple search steps if needed
                             temperature: 0, // Use temperature 0 for deterministic tool calling
                         });
 

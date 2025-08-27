@@ -1,5 +1,5 @@
 import { ChatMode } from '@repo/shared/config';
-import type { CoreMessage } from 'ai';
+import type { ModelMessage } from 'ai';
 import { ReasoningTagName, ReasoningType } from './constants/reasoning';
 import type { ProviderEnumType } from './providers';
 
@@ -413,7 +413,7 @@ export const estimateTokensByWordCount = (text: string): number => {
     return estimatedTokens;
 };
 
-export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
+export const estimateTokensForMessages = (messages: ModelMessage[]): number => {
     let totalTokens = 0;
 
     for (const message of messages) {
@@ -457,7 +457,7 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     return openaiWebSearchModels.includes(model);
 };
 
-export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: ChatMode) => {
+export const trimMessageHistoryEstimated = (messages: ModelMessage[], chatMode: ChatMode) => {
     const maxTokens = getChatModeMaxTokens(chatMode);
     let trimmedMessages = [...messages];
 

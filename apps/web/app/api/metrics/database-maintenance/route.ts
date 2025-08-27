@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 // Metrics schema for validation
 const MetricsSchema = z.object({
-    timestamp: z.iso.datetime(),
+    timestamp: z.string().datetime(),
     maintenance_type: z.enum(['hourly', 'weekly']),
     status: z.enum(['success', 'error', 'fatal_error', 'unhandled_rejection']),
     duration_ms: z.number().min(0),

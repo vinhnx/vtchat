@@ -10,7 +10,7 @@ import { z } from 'zod';
  * Zod schema for date strings that transforms to JavaScript Date objects
  * Use this for date fields in your schemas when you need actual Date objects
  */
-export const dateStringToDate = z.iso
+export const dateStringToDate = z.string()
     .date()
     .transform((value) => new Date(value));
 
@@ -18,7 +18,7 @@ export const dateStringToDate = z.iso
  * Zod schema for datetime strings that transforms to JavaScript Date objects
  * Use this for datetime fields in your schemas when you need actual Date objects
  */
-export const datetimeStringToDate = z.iso
+export const datetimeStringToDate = z.string()
     .datetime()
     .transform((value) => new Date(value));
 

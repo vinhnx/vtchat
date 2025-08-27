@@ -81,10 +81,9 @@ ${getFormattingInstructions('analysis')}
             : getModelFromChatMode(mode);
         const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
-        const text = await generateText({
-            prompt,
+        // Choose between messages (for chat) or prompt (for single interactions) - AI SDK 5.0 compatibility
+        const generateTextParams: any = {
             model,
-            messages: messages as any,
             signal,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
@@ -106,7 +105,39 @@ ${getFormattingInstructions('analysis')}
                     },
                 });
             },
-        });
+        };
+
+        // Prioritize messages for chat-style interactions, fallback to prompt
+        if (messages && messages.length > 0) {
+            // Ensure messages are properly formatted for AI SDK v5
+            const validMessages = messages.filter(msg =>
+                msg
+                && msg.role
+                && msg.hasOwnProperty('content') // Ensure content property exists
+                && (msg.content || (Array.isArray(msg.content) && msg.content.length > 0))
+            );
+
+            if (validMessages.length > 0) {
+                // Add system message if prompt exists and is not empty
+                const systemMessage = prompt && prompt.trim()
+                    ? {
+                        role: 'system' as const,
+                        content: prompt,
+                    }
+                    : null;
+
+                generateTextParams.messages = systemMessage
+                    ? [systemMessage, ...validMessages]
+                    : validMessages;
+            } else {
+                // No valid messages, use prompt instead
+                generateTextParams.prompt = prompt;
+            }
+        } else {
+            generateTextParams.prompt = prompt;
+        }
+
+        const text = await generateText(generateTextParams);
 
         chunkBuffer.flush();
 

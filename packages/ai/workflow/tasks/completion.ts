@@ -1,5 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { log } from '@repo/shared/logger';
+import { stepCountIs, streamText } from 'ai';
 import { chartTools } from '../../../../apps/web/lib/tools/charts';
 import { calculatorTools } from '../../../../apps/web/lib/tools/math';
 import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from '../../models';
@@ -286,221 +287,88 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
         let response: string;
 
         try {
-            response = await generateText({
+            // Use AI SDK v5 streamText for proper streaming response
+            // Choose between messages (for chat) or prompt (for single interactions)
+            const streamTextParams: any = {
                 model,
-                messages,
-                prompt,
-                signal,
+                abortSignal: signal,
                 toolChoice: 'auto',
                 // Allow enough steps for: tool call(s) + final answer synthesis
-                maxSteps: 4,
+                stopWhen: stepCountIs(4),
                 tools: finalTools,
-                byokKeys: context?.get('apiKeys'),
-                thinkingMode: context?.get('thinkingMode'),
-                userTier: context?.get('userTier'),
-                userId: context?.get('userId'),
-                mode: context?.get('mode'),
-                onReasoning: (chunk, _fullText) => {
-                    reasoningBuffer.add(chunk);
+            };
+
+            // Prioritize messages for chat-style interactions, fallback to prompt
+            if (messages && messages.length > 0) {
+                streamTextParams.messages = messages;
+            } else {
+                streamTextParams.prompt = prompt;
+            }
+
+            const result = streamText(streamTextParams);
+
+            // Create streaming response with proper headers for AI SDK v5
+            const streamingResponse = result.toUIMessageStreamResponse({
+                headers: {
+                    'Content-Encoding': 'none', // Required for proxy compatibility
+                    'Transfer-Encoding': 'chunked',
+                    'Connection': 'keep-alive',
                 },
-                onReasoningDetails: (details) => {
-                    events?.update('steps', (prev) => ({
-                        ...prev,
-                        0: {
-                            ...prev?.[0],
-                            id: 0,
-                            status: 'COMPLETED',
-                            steps: {
-                                ...prev?.[0]?.steps,
-                                reasoningDetails: {
-                                    data: details,
-                                    status: 'COMPLETED',
-                                },
-                            },
-                        },
-                    }));
-                },
-                onChunk: (chunk, fullText) => {
-                    log.debug('📝 onChunk called', {
-                        chunkLength: chunk?.length || 0,
-                        fullTextLength: fullText?.length || 0,
-                        chunkPreview: chunk?.substring(0, 50) + '...',
-                        threadItemId: context?.get('threadItemId'),
-                    });
-                    chunkBuffer.add(chunk);
-                },
-                onToolCall: (toolCall) => {
-                    const reasoningHint = (toolCall as any)?.reasoning
-                        || (toolCall as any)?.why
-                        || (toolCall as any)?.input?.reasoning
-                        || (toolCall as any)?.input?.why
-                        || undefined;
-                    log.info(
-                        {
-                            toolName: toolCall.toolName,
-                            args: toolCall.args,
-                            reasoning: reasoningHint,
-                        },
-                        'Tool call',
-                    );
-                    // Send tool call event to UI
-                    events?.update('steps', (prev) => ({
-                        ...prev,
-                        0: {
-                            ...prev?.[0],
-                            id: 0,
-                            status: 'COMPLETED',
-                            steps: {
-                                ...prev?.[0]?.steps,
-                                toolCall: {
-                                    data: {
-                                        toolName: toolCall.toolName,
-                                        args: toolCall.args,
-                                        reasoning: reasoningHint,
-                                        type: charts
-                                                && Object.keys(chartTools()).includes(
-                                                    toolCall.toolName,
-                                                )
-                                            ? 'charts'
-                                            : mathCalculator
-                                            ? 'math_calculator'
-                                            : 'unknown',
-                                    },
-                                    status: 'COMPLETED',
-                                },
-                            },
-                        },
-                    }));
-
-                    // Also update toolCalls for threadItem
-                    events?.update('toolCalls', (prev) => [
-                        ...(prev || []),
-                        {
-                            toolCallId: toolCall.toolCallId,
-                            toolName: toolCall.toolName,
-                            args: toolCall.args,
-                            reasoning: reasoningHint,
-                            state: (toolCall as any)?.state,
-                            timestamp: Date.now(),
-                        },
-                    ]);
-                },
-                onToolResult: (toolResult) => {
-                    log.info(
-                        { toolName: toolResult.toolName, result: toolResult.result },
-                        'Tool result for',
-                    );
-
-                    // Handle web search tool results - extract and add sources
-                    if (toolResult.toolName === 'web_search' && toolResult.result?.sources) {
-                        log.info(
-                            {
-                                toolName: toolResult.toolName,
-                                sourcesCount: toolResult.result.sources.length,
-                                sources: toolResult.result.sources.map((source: any) => ({
-                                    title: source.title,
-                                    url: source.url,
-                                    snippet: source.snippet?.substring(0, 100) + '...',
-                                })),
-                            },
-                            'Processing web search sources from tool result',
-                        );
-
-                        // Add sources to context with proper deduplication
-                        context?.update('sources', (current) => {
-                            const existingSources = current ?? [];
-
-                            // Filter out duplicates within the new sources first
-                            const uniqueNewSources = [];
-                            const seenUrls = new Set(existingSources.map((source) => source.link));
-
-                            for (const source of toolResult.result.sources) {
-                                if (source?.url && !seenUrls.has(source.url)) {
-                                    seenUrls.add(source.url);
-                                    uniqueNewSources.push(source);
-                                }
-                            }
-
-                            const newSources = uniqueNewSources.map(
-                                (source: any, index: number) => ({
-                                    title: source.title || 'Untitled',
-                                    link: source.url,
-                                    snippet: source.snippet || source.description || '',
-                                    index: index + (existingSources.length || 0) + 1,
-                                }),
-                            );
-
-                            log.info(
-                                {
-                                    existingCount: existingSources.length,
-                                    originalNewCount: toolResult.result.sources.length,
-                                    filteredNewCount: newSources?.length || 0,
-                                    totalCount: (existingSources.length || 0)
-                                        + (newSources?.length || 0),
-                                },
-                                'Updated sources from web search tool with deduplication',
-                            );
-
-                            return [...existingSources, ...(newSources || [])];
-                        });
-                    }
-
-                    // Track math tool results for potential fallback post-processing
-                    if (
-                        (mathCalculator
-                            && Object.keys(calculatorTools()).includes(toolResult.toolName || ''))
-                        || toolResult.toolName === 'evaluateExpression'
-                    ) {
-                        lastMathResult = {
-                            toolName: toolResult.toolName,
-                            result: toolResult.result,
-                        };
-                    }
-
-                    // Send tool result event to UI
-                    events?.update('steps', (prev) => ({
-                        ...prev,
-                        0: {
-                            ...prev?.[0],
-                            id: 0,
-                            status: 'COMPLETED',
-                            steps: {
-                                ...prev?.[0]?.steps,
-                                toolResult: {
-                                    data: {
-                                        result: toolResult.result,
-                                        type: charts
-                                                && Object.keys(chartTools()).includes(
-                                                    toolResult.toolName || '',
-                                                )
-                                            ? 'charts'
-                                            : mathCalculator
-                                            ? 'math_calculator'
-                                            : toolResult.toolName === 'web_search'
-                                            ? 'web_search'
-                                            : 'unknown',
-                                    },
-                                    status: 'COMPLETED',
-                                },
-                            },
-                        },
-                    }));
-
-                    // Also update toolResults for threadItem
-                    events?.update('toolResults', (prev) => [
-                        ...(prev || []),
-                        {
-                            toolCallId: toolResult.toolCallId,
-                            toolName: toolResult.toolName || 'unknown',
-                            result: toolResult.result,
-                            state: (toolResult as any)?.state ?? 'result',
-                            executionTime: (toolResult as any)?.executionTime,
-                            timestamp: Date.now(),
-                        },
-                    ]);
+                onError: (error) => {
+                    log.error({ error: error.message }, 'Streaming response error');
+                    return `An error occurred while processing your request: ${error.message}`;
                 },
             });
-        } catch (error) {
+
+            // Handle streaming chunks for backward compatibility with existing workflow
+            let fullText = '';
+            let _reasoning = ''; // For future use with reasoning streaming
+
+            for await (const chunk of result.textStream) {
+                fullText += chunk;
+                chunkBuffer.add(chunk);
+
+                // Send incremental updates through existing events system
+                events?.update('answer', (current) => ({
+                    ...current,
+                    text: chunk,
+                    status: 'PENDING' as const,
+                }));
+            }
+
+            // Handle tool calls and reasoning
+            for await (const part of result.fullStream) {
+                switch (part.type) {
+                    case 'reasoning':
+                        _reasoning += part.textDelta || '';
+                        reasoningBuffer.add(part.textDelta || '');
+                        break;
+                    case 'tool-call':
+                        // Handle tool calls through existing system
+                        const toolCall = {
+                            toolCallId: part.toolCallId,
+                            toolName: part.toolName,
+                            input: part.args,
+                        };
+                        // Trigger existing tool call handling
+                        events?.update('tool-call', (_prev) => toolCall);
+                        break;
+                    case 'tool-result':
+                        const toolResult = {
+                            toolCallId: part.toolCallId,
+                            toolName: part.toolName,
+                            output: part.result,
+                        };
+                        events?.update('tool-result', (_prev) => toolResult);
+                        break;
+                }
+            }
+
+            response = fullText;
+
+            // Return the streaming response
+            return streamingResponse;
+
             // Handle PDF-specific errors with enhanced messaging
             if (hasPDFAttachment) {
                 const pdfError = handlePDFProcessingError(error);
@@ -575,10 +443,10 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
             // For non-PDF errors, re-throw to use existing error handling
             throw error;
+        } finally {
+            reasoningBuffer.end();
+            chunkBuffer.end();
         }
-
-        reasoningBuffer.end();
-        chunkBuffer.end();
 
         let finalResponse = response;
 
@@ -605,7 +473,7 @@ Tool output JSON:\n\n${
                     prompt: fallbackPrompt,
                     signal,
                     toolChoice: 'none',
-                    maxSteps: 1,
+                    stopWhen: stepCountIs(1),
                     byokKeys: context?.get('apiKeys'),
                     thinkingMode: context?.get('thinkingMode'),
                     userTier: context?.get('userTier'),

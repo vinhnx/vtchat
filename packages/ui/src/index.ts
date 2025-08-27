@@ -5,4 +5,19 @@ export * from './lib/utils';
 
 // 12 Principles of Animation utilities
 export * from './lib/animation-constants';
-export * from './lib/animation-utils';
+// Export animation utilities with specific named exports to avoid conflicts
+export {
+    ANIMATION_MOTION_VARIANTS,
+    createAnimationSequence,
+    createAnticipation,
+    createAppeal,
+    createExaggeration,
+    createFollowThrough,
+    createListAnimation,
+    createSecondaryAction,
+    createSmoothPath,
+    createSquashStretch,
+    createStaging,
+    getAccessibleVariants,
+    getTimingForContext,
+} from './lib/animation-utils';

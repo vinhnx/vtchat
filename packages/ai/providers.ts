@@ -246,6 +246,11 @@ export const getProviderInstance = (
             }
             return createGoogleGenerativeAI({
                 apiKey,
+                baseURL: 'https://generativelanguage.googleapis.com/v1beta',
+                // Force v2 specification for Gemini 2.5 models
+                headers: {
+                    'x-goog-api-key': apiKey,
+                },
             });
         case 'fireworks':
             validateApiKey(Providers.FIREWORKS);
@@ -359,12 +364,22 @@ export const getLanguageModel = (
                     id: string,
                     options?: Record<string, unknown>,
                 ) => LanguageModelV1;
+
+                log.info('Creating Gemini model with options:', {
+                    modelId,
+                    modelOptions,
+                    optionsKeys: Object.keys(modelOptions),
+                    useSearchGrounding,
+                    hasCachedContent: !!cachedContent,
+                });
+
                 const selectedModel = createModel(modelId, modelOptions);
                 log.info('Gemini model created with options:', {
                     hasModel: !!selectedModel,
                     modelType: typeof selectedModel,
                     useSearchGrounding,
                     hasCachedContent: !!cachedContent,
+                    modelProperties: selectedModel ? Object.keys(selectedModel) : null,
                 });
 
                 // Combine provided middleware with our configured middleware

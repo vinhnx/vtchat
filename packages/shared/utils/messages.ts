@@ -1,4 +1,5 @@
 import type { Attachment, DocumentAttachment, ThreadItem } from '@repo/shared/types';
+import type { ModelMessage } from 'ai';
 
 type MessageContent =
     | { type: 'text'; text: string; }
@@ -7,7 +8,7 @@ type MessageContent =
     // Use file part for documents (e.g., PDFs) with proper data URI and media type
     | { type: 'file'; data: string; mediaType: string; };
 
-export const buildCoreMessagesFromThreadItems = ({
+export const buildModelMessagesFromThreadItems = ({
     messages,
     query,
     imageAttachment,
@@ -19,7 +20,7 @@ export const buildCoreMessagesFromThreadItems = ({
     imageAttachment?: string;
     documentAttachment?: DocumentAttachment;
     attachments?: Attachment[];
-}) => {
+}): ModelMessage[] => {
     const threadMessages = (messages || []).flatMap((item) => {
         const content: MessageContent[] = [{ type: 'text', text: item.query || '' }];
 

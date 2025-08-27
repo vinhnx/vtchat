@@ -48,7 +48,9 @@
         "./hooks": "./hooks/index.ts",
         "./hooks/use-mobile": "./hooks/use-mobile.ts",
         "./lib/thread-id": "./lib/thread-id.ts",
-        "./lib/migrate-thread-ids": "./lib/migrate-thread-ids.ts"
+        "./lib/migrate-thread-ids": "./lib/migrate-thread-ids.ts",
+        "./utils/zod-date-utils": "./utils/zod-date-utils.ts",
+        "./utils/zod-date-examples": "./utils/zod-date-examples.ts"
     },
     "scripts": {
         "lint": "oxlint",

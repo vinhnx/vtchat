@@ -187,7 +187,46 @@ export async function executeStream({
             userId,
         });
 
+        let answerEventReceived = false;
+        let answerEventPayload: any = null;
+
         workflow.onAll((event, payload) => {
+            // Debug logging for key events
+            if (event === 'answer') {
+                answerEventReceived = true;
+                answerEventPayload = payload;
+                log.info('🎯 Answer event received:', {
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    hasFinalText: !!payload.finalText,
+                    finalTextLength: payload.finalText?.length || 0,
+                    status: payload.status,
+                    textPreview: payload.finalText?.substring(0, 100) + '...',
+                });
+            } else if (event === 'suggestions') {
+                log.info('💡 Suggestions event received:', {
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    suggestionsCount: payload?.length || 0,
+                });
+            } else if (event === 'status' && payload === 'COMPLETED') {
+                log.info('🏁 Workflow status COMPLETED:', {
+                    threadId: data.threadId,
+                    threadItemId: data.threadItemId,
+                    answerReceived: answerEventReceived,
+                    answerHasContent: answerEventPayload?.finalText?.length > 0,
+                });
+
+                // Warn if workflow completed without sending answer
+                if (!answerEventReceived) {
+                    log.error('❌ CRITICAL: Workflow completed without sending answer event!', {
+                        threadId: data.threadId,
+                        threadItemId: data.threadItemId,
+                        webSearch: data.webSearch,
+                    });
+                }
+            }
+
             // Handle error events specifically
             if (event === 'error') {
                 sendMessage(controller, encoder, {
@@ -225,6 +264,17 @@ export async function executeStream({
                 return;
             }
 
+            // Debug: Log all events being sent
+            log.debug('📤 Sending event to client:', {
+                type: event,
+                threadId: data.threadId,
+                threadItemId: data.threadItemId,
+                eventKeys: Object.keys(payload || {}),
+                hasAnswer: event === 'answer',
+                answerStatus: payload?.status,
+                finalTextLength: payload?.finalText?.length || 0,
+            });
+
             sendMessage(controller, encoder, {
                 type: event,
                 threadId: data.threadId,
@@ -244,6 +294,12 @@ export async function executeStream({
 
         await workflow.start('router', {
             question: data.prompt,
+        });
+
+        log.info('🎉 Workflow execution finished:', {
+            threadId: data.threadId,
+            threadItemId: data.threadItemId,
+            webSearch: data.webSearch,
         });
 
         if (getCurrentEnvironment() === EnvironmentType.DEVELOPMENT) {

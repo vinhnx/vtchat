@@ -30,12 +30,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Set the API key for the OpenAI client
-        // Note: The @ai-sdk/openai client might have a specific way to set the API key.
-        // You might need to configure the openai instance with the key.
-        // For example: openai.apiKey = apiKey;
-        // Or, the generateSpeech function might take an options object with the provider.
-        // This part depends on the exact usage of the ai-sdk.
+        // For now, we'll use a simple approach - in production you'd want to configure
+        // the OpenAI client with the user's API key dynamically
+        // This is a placeholder until proper BYOK integration for speech is implemented
 
         const { audio } = await generateSpeech({
             model: openai.speech('tts-1'), // Using tts-1 as requested
@@ -48,7 +45,7 @@ export async function POST(req: NextRequest) {
         // We need to convert it to a format suitable for NextResponse.
         // For now, let's assume it's a Uint8Array or can be converted to one.
         // If it's a ReadableStream, we might need to buffer it first.
-        // The Vercel AI SDK documentation for `experimental_generateSpeech`
+        // The Vercel AI SDK documentation for `generateSpeech`
         // should specify the exact type of `audio`.
         // Let's assume for now it returns an ArrayBuffer or Uint8Array.
 

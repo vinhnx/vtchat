@@ -1,5 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
+import { log } from '@repo/shared/logger';
 import { formatDate } from '@repo/shared/utils';
 import { getFormattingInstructions } from '../../config/formatting-guidelines';
 import { getModelFromChatMode, ModelEnum } from '../../models';
@@ -16,6 +17,15 @@ export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>
         const summaries = context?.get('summaries') || [];
         const messages = context?.get('messages') || [];
         const { updateStep, nextStepId, updateAnswer, updateStatus } = sendEvents(events);
+
+        log.info('📋 Writer task data:', {
+            threadId: context?.get('threadId'),
+            threadItemId: context?.get('threadItemId'),
+            question,
+            summariesCount: summaries?.length || 0,
+            summariesPreview: summaries?.slice(0, 2).map(s => s?.substring(0, 50) + '...') || [],
+            analysisLength: analysis?.length || 0,
+        });
         const stepId = nextStepId();
 
         const currentDate = new Date();
@@ -30,7 +40,13 @@ Your goal is to create a comprehensive report based on the research information 
 First, carefully read and analyze the following research information:
 
 <research_findings>
-${summaries.map((summary) => `<finding>${summary}</finding>`).join('\n')}
+${
+            summaries && summaries.length > 0
+                ? summaries.map((summary) =>
+                    `<finding>${summary || 'No content available'}</finding>`
+                ).join('\n')
+                : '<finding>No search results available</finding>'
+        }
 </research_findings>
 
 <analysis>
@@ -117,10 +133,9 @@ ${getFormattingInstructions('writer')}
             : getModelFromChatMode(mode);
         const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 
-        const answer = await generateText({
-            prompt,
+        // Choose between messages (for chat) or prompt (for single interactions) - AI SDK 5.0 compatibility
+        const generateTextParams: any = {
             model,
-            messages,
             signal,
             byokKeys: context?.get('apiKeys'),
             thinkingMode: context?.get('thinkingMode'),
@@ -130,16 +145,46 @@ ${getFormattingInstructions('writer')}
             onChunk: (chunk, _fullText) => {
                 chunkBuffer.add(chunk);
             },
-        });
+        };
+
+        // Prioritize messages for chat-style interactions, fallback to prompt
+        if (messages && messages.length > 0) {
+            generateTextParams.messages = messages;
+        } else {
+            generateTextParams.prompt = prompt;
+        }
+
+        const answer = await generateText(generateTextParams);
 
         // Make sure to flush any remaining content
         chunkBuffer.flush();
 
+        log.info('📝 Writer task completed:', {
+            threadId: context?.get('threadId'),
+            threadItemId: context?.get('threadItemId'),
+            answerLength: answer?.length || 0,
+            answerPreview: answer?.substring(0, 100) + '...' || 'empty',
+            hasAnswer: !!answer,
+        });
+
+        // Update context with answer BEFORE routing decision
+        context?.update('answer', (_) => answer);
+
+        // Emit answer event BEFORE status update
         updateAnswer({
             text: '',
             finalText: answer,
             status: 'COMPLETED',
         });
+
+        log.info('✅ updateAnswer called with finalText:', {
+            finalTextLength: answer?.length || 0,
+            status: 'COMPLETED',
+        });
+
+        // CRITICAL: Wait for the answer event to be processed
+        // This ensures the answer reaches the client before workflow ends
+        await new Promise(resolve => setTimeout(resolve, 200));
 
         context?.get('onFinish')?.({
             answer,
@@ -147,9 +192,10 @@ ${getFormattingInstructions('writer')}
             threadItemId: context?.get('threadItemId'),
         });
 
-        updateStatus('COMPLETED');
+        // Small delay to ensure answer event is processed before status update
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        context?.update('answer', (_) => answer);
+        updateStatus('COMPLETED');
 
         return answer;
     },

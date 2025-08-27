@@ -11,7 +11,7 @@ import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
-import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
+import { buildModelMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { useToast } from '@repo/ui/src/components/use-sonner-toast';
 import ky from 'ky';
 import { useParams, useRouter } from 'next/navigation';
@@ -931,7 +931,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             setCurrentSources([]);
 
             // Build core messages array
-            const coreMessages = buildCoreMessagesFromThreadItems({
+            const coreMessages = buildModelMessagesFromThreadItems({
                 messages: messages || [],
                 query,
                 imageAttachment,

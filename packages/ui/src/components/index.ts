@@ -5,7 +5,7 @@ export * from './announcement';
 export * from './avatar';
 export * from './badge';
 export * from './beta-tag';
-export * from './breadcrumb';
+// Keep the enhanced breadcrumb-nav version, remove basic breadcrumb
 export * from './breadcrumb-nav/breadcrumb-nav';
 export * from './button';
 export * from './button-premium';

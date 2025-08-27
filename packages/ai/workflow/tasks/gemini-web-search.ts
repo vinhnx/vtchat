@@ -169,7 +169,20 @@ Please include:
                 });
             }
 
-            context?.update('summaries', (current) => [...(current ?? []), result.text]);
+            context?.update('summaries', (currentSummaries) => {
+                const newSummaries = [...(currentSummaries ?? []), result.text];
+
+                log.info('📝 Summaries updated:', {
+                    threadId: context?.get('threadId'),
+                    threadItemId: context?.get('threadItemId'),
+                    currentCount: currentSummaries?.length || 0,
+                    newSummaryLength: result.text?.length || 0,
+                    newSummaryPreview: result.text?.substring(0, 100) + '...' || 'empty',
+                    totalCount: newSummaries.length,
+                });
+
+                return newSummaries;
+            });
 
             // Mark step as completed
             if (stepId !== undefined) {
