@@ -10,6 +10,10 @@ Research and rename "VT" to better and memorable name
 
 --
 
+@https://github.com/oraios/serena can you explore how can apply serena to the project
+
+--
+
 check aisdk5-278 branch, we getting there
 
 Task failed {
