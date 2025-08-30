@@ -41,7 +41,7 @@ const CreemWebhookEventSchema = z.object({
     id: z.string(),
     eventType: z.string(), // Accept any string, validate known types later
     created_at: z.number(),
-    object: z.record(z.any()),
+    object: z.record(z.string(), z.any()),
 });
 
 const CreemCheckoutEventSchema = z.object({
@@ -72,7 +72,7 @@ const CreemCheckoutEventSchema = z.object({
                 status: z.string(),
             })
             .optional(),
-        metadata: z.record(z.string()).optional(),
+        metadata: z.record(z.string(), z.string()).optional(),
     }),
 });
 
@@ -109,7 +109,7 @@ const CreemSubscriptionEventSchema = z.object({
         }),
         current_period_start_date: z.string(),
         current_period_end_date: z.string(),
-        metadata: z.record(z.string()).optional(),
+        metadata: z.record(z.string(), z.string()).optional(),
         canceled_at: z.string().nullable().optional(),
     }),
 });

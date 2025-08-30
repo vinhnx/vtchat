@@ -93,7 +93,7 @@ export const CustomSchemaBuilder = ({ onSchemaCreate, onClose }: CustomSchemaBui
                     zodType = z.array(z.string());
                     break;
                 case 'object':
-                    zodType = z.record(z.any());
+                    zodType = z.record(z.string(), z.any());
                     break;
                 default:
                     zodType = z.string();

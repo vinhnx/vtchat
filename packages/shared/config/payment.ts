@@ -186,22 +186,96 @@ export class PaymentService {
 
             log.info({ successUrl }, '[PaymentService] Using success URL');
 
-            const result = await PaymentService.client.createCheckout({
-                xApiKey: PaymentService.API_KEY,
-                createCheckoutRequest: {
-                    productId: PaymentService.PRODUCT_ID || '',
-                    units: request.quantity || 1,
-                    successUrl,
-                    customer: request.customerEmail ? { email: request.customerEmail } : undefined,
-                    metadata: {
-                        packageId: request.productId || '',
+            // Try SDK first, fallback to direct API call if SDK fails with Zod error
+            let result;
+            try {
+                result = await PaymentService.client.createCheckout({
+                    xApiKey: PaymentService.API_KEY,
+                    createCheckoutRequest: {
+                        productId: PaymentService.PRODUCT_ID || '',
+                        units: request.quantity || 1,
                         successUrl,
-                        isSubscription: isSubscription ? 'true' : 'false',
-                        source: 'vtchat-app',
-                        timestamp: new Date().toISOString(),
+                        customer: request.customerEmail
+                            ? { email: request.customerEmail }
+                            : undefined,
+                        metadata: {
+                            packageId: request.productId || '',
+                            successUrl,
+                            isSubscription: isSubscription ? 'true' : 'false',
+                            source: 'vtchat-app',
+                            timestamp: new Date().toISOString(),
+                        },
                     },
-                },
-            });
+                });
+            } catch (sdkError: any) {
+                // Check if this is the Zod validation error
+                if (
+                    sdkError.message?.includes('_zod')
+                    || sdkError.message?.includes('Input validation failed')
+                ) {
+                    log.warn(
+                        '[PaymentService] SDK Zod error detected, falling back to direct API call',
+                        {
+                            error: sdkError.message,
+                        },
+                    );
+
+                    // Fallback to direct API call
+                    const apiEndpoint = isProductionEnvironment()
+                        ? 'https://api.creem.io/v1/checkouts'
+                        : 'https://test-api.creem.io/v1/checkouts';
+
+                    const requestBody = {
+                        product_id: PaymentService.PRODUCT_ID || '',
+                        units: request.quantity || 1,
+                        success_url: successUrl,
+                        customer: request.customerEmail
+                            ? { email: request.customerEmail }
+                            : undefined,
+                        metadata: {
+                            package_id: request.productId || '',
+                            success_url: successUrl,
+                            is_subscription: isSubscription ? 'true' : 'false',
+                            source: 'vtchat-app',
+                            timestamp: new Date().toISOString(),
+                        },
+                    };
+
+                    log.info('[PaymentService] Making direct API call to Creem', {
+                        endpoint: apiEndpoint,
+                        productId: PaymentService.PRODUCT_ID,
+                    });
+
+                    const response = await fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': PaymentService.API_KEY!,
+                        },
+                        body: JSON.stringify(requestBody),
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(
+                            `Creem API error: ${response.status} ${response.statusText} - ${errorText}`,
+                        );
+                    }
+
+                    result = await response.json();
+
+                    // Transform the response to match SDK format
+                    if (result && typeof result === 'object') {
+                        result = {
+                            id: result.id || result.checkout_id,
+                            checkoutUrl: result.checkout_url || result.url,
+                        };
+                    }
+                } else {
+                    // Re-throw non-Zod errors
+                    throw sdkError;
+                }
+            }
 
             log.info(
                 {

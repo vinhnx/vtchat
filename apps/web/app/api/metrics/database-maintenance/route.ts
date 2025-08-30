@@ -11,7 +11,7 @@ const MetricsSchema = z.object({
     attempt: z.number().min(1),
     error: z.string().nullable(),
     environment: z.string(),
-    metadata: z.record(z.any()).optional(),
+    metadata: z.record(z.string(), z.any()).optional(),
 });
 
 type MaintenanceMetrics = z.infer<typeof MetricsSchema>;
