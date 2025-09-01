@@ -505,11 +505,21 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             if (hasPDFAttachment) {
                 const pdfError = handlePDFProcessingError(error);
 
-                log.error('PDF processing error', {
-                    type: pdfError.type,
-                    message: pdfError.message,
-                    userMessage: pdfError.userMessage,
-                });
+                log.error(
+                    {
+                        error,
+                        type: pdfError.type,
+                        message: pdfError.message,
+                        userMessage: pdfError.userMessage,
+                        threadId: context?.get('threadId'),
+                        threadItemId: context?.get('threadItemId'),
+                        userId: context?.get('userId'),
+                        model,
+                        modelName,
+                        operation: 'pdf_processing'
+                    },
+                    'PDF processing error occurred during completion task'
+                );
 
                 // Send error event with enhanced error information
                 events?.update('error', (_prev) => ({
@@ -540,6 +550,22 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     const modelInfo = models.find((m) => m.id === model);
                     if (modelInfo) {
                         const providerName = modelInfo.provider;
+                        
+                        log.error(
+                            {
+                                error,
+                                model,
+                                modelName,
+                                provider: providerName,
+                                threadId: context?.get('threadId'),
+                                threadItemId: context?.get('threadItemId'),
+                                userId: context?.get('userId'),
+                                operation: 'api_key_validation',
+                                errorType: 'unauthorized'
+                            },
+                            'API key authentication failed during completion task'
+                        );
+                        
                         events?.update('error', (_prev) => ({
                             error:
                                 `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
@@ -566,6 +592,21 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
 
                 // Handle tool errors specifically
                 if (errorMessage.includes('tool')) {
+                    log.error(
+                        {
+                            error,
+                            model,
+                            modelName,
+                            threadId: context?.get('threadId'),
+                            threadItemId: context?.get('threadItemId'),
+                            userId: context?.get('userId'),
+                            operation: 'tool_execution',
+                            errorType: 'tool_error',
+                            tools: finalTools ? Object.keys(finalTools) : 'none'
+                        },
+                        'Tool execution failed during completion task'
+                    );
+                    
                     events?.update('tool-error', (_prev) => ({
                         error: error.message,
                         status: 'ERROR',
@@ -628,11 +669,17 @@ Tool output JSON:\n\n${
             } catch (fallbackError) {
                 log.warn(
                     {
-                        error: fallbackError instanceof Error
-                            ? fallbackError.message
-                            : fallbackError,
+                        error: fallbackError,
+                        model,
+                        modelName,
+                        threadId: context?.get('threadId'),
+                        threadItemId: context?.get('threadItemId'),
+                        userId: context?.get('userId'),
+                        operation: 'fallback_math_processing',
+                        lastMathResult: lastMathResult?.toolName,
+                        originalError: error instanceof Error ? error.message : 'unknown'
                     },
-                    'Math fallback post-processing failed',
+                    'Math fallback post-processing failed during completion task',
                 );
             }
         }

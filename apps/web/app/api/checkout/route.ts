@@ -144,9 +144,16 @@ export async function POST(request: NextRequest) {
                     `[Checkout API] No active VT+ subscription found (${verification.verificationSource}), proceeding with checkout...`,
                 );
             } catch (dbError) {
-                log.error('[Checkout API] Error checking existing subscription:', {
-                    data: dbError,
-                });
+                log.error(
+                    {
+                        error: dbError,
+                        userId,
+                        userEmail,
+                        packageType,
+                        operation: 'subscription_verification_check'
+                    },
+                    '[Checkout API] Error checking existing subscription'
+                );
                 // Don't block checkout on DB errors, but log for monitoring
             }
         }
@@ -171,7 +178,18 @@ export async function POST(request: NextRequest) {
                 );
             }
         } catch (error: any) {
-            log.error('Creem checkout error:', { data: error, stack: error.stack });
+            log.error(
+                {
+                    error,
+                    userId,
+                    userEmail,
+                    packageType,
+                    validatedData,
+                    operation: 'creem_checkout_session_creation',
+                    stack: error?.stack
+                },
+                'Creem checkout session creation failed'
+            );
             return NextResponse.json(
                 {
                     error: 'Failed to create checkout session',
@@ -188,7 +206,17 @@ export async function POST(request: NextRequest) {
             success: checkout.success,
         });
     } catch (error) {
-        log.error('Checkout error:', { error });
+        log.error(
+            {
+                error,
+                userId: session?.user?.id,
+                userEmail: session?.user?.email,
+                requestBody: body,
+                userAgent: request.headers.get('user-agent'),
+                operation: 'checkout_process'
+            },
+            'Checkout process failed with unexpected error'
+        );
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(

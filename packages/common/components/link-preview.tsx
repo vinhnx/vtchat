@@ -2,6 +2,7 @@
 
 import type { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
+import { log } from '@repo/shared/src/lib/logger';
 import { HoverCard, HoverCardContent, HoverCardTrigger, LinkFavicon } from '@repo/ui';
 import { ExternalLink } from 'lucide-react';
 import type React from 'react';
@@ -62,7 +63,7 @@ export const clearOGCache = () => {
     ogCache.clear();
     ogCacheTimestamps.clear();
     if (process.env.NODE_ENV === 'development') {
-        // Only log in development
+        log.debug({ cacheSize: 0 }, 'OG cache cleared for debugging');
     }
 };
 
@@ -70,7 +71,10 @@ export const clearOGCache = () => {
 export const inspectOGCache = () => {
     const entries = Array.from(ogCache.entries());
     if (process.env.NODE_ENV === 'development') {
-        // Only log in development - removed console.log statements
+        log.debug({ 
+            cacheSize: entries.length,
+            cacheKeys: entries.map(([key]) => key.substring(0, 100) + '...') 
+        }, 'OG cache inspection');
     }
     return entries;
 };

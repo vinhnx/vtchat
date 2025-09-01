@@ -9,53 +9,46 @@ const path = require('node:path');
 // Try to use the proper logger, fall back to console if not available in standalone build
 let log;
 try {
-    const { log: pinoLog } = require('@repo/shared/lib/logger');
+    const { log: pinoLog } = require('@repo/shared/src/lib/logger');
     log = pinoLog;
 } catch {
     // Fallback logger for standalone build
     const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+    // Fallback logger that mimics Pino's structured logging interface
     log = {
-        info: (msg, obj) => {
+        info: (obj, msg) => {
             if (IS_PRODUCTION) return;
             const timestamp = new Date().toISOString();
-            if (typeof msg === 'object') {
+            if (typeof obj === 'object' && obj !== null) {
                 // eslint-disable-next-line no-console
-                console.log(`[${timestamp}] INFO:`, JSON.stringify(msg));
-            } else if (obj) {
-                // eslint-disable-next-line no-console
-                console.log(`[${timestamp}] INFO: ${msg}`, JSON.stringify(obj));
+                console.log(`[${timestamp}] INFO: ${msg || 'Info'}`, JSON.stringify(obj, null, 2));
             } else {
+                // If first param is string, treat as message
                 // eslint-disable-next-line no-console
-                console.log(`[${timestamp}] INFO: ${msg}`);
+                console.log(`[${timestamp}] INFO: ${obj}`);
             }
         },
-        error: (msg, obj) => {
+        error: (obj, msg) => {
             // Always log errors even in production
             const timestamp = new Date().toISOString();
-            if (typeof msg === 'object') {
+            if (typeof obj === 'object' && obj !== null) {
                 // eslint-disable-next-line no-console
-                console.error(`[${timestamp}] ERROR:`, JSON.stringify(msg));
-            } else if (obj) {
-                // eslint-disable-next-line no-console
-                console.error(`[${timestamp}] ERROR: ${msg}`, JSON.stringify(obj));
+                console.error(`[${timestamp}] ERROR: ${msg || 'Error'}`, JSON.stringify(obj, null, 2));
             } else {
                 // eslint-disable-next-line no-console
-                console.error(`[${timestamp}] ERROR: ${msg}`);
+                console.error(`[${timestamp}] ERROR: ${obj}`);
             }
         },
-        warn: (msg, obj) => {
+        warn: (obj, msg) => {
             // Always log warnings even in production
             const timestamp = new Date().toISOString();
-            if (typeof msg === 'object') {
+            if (typeof obj === 'object' && obj !== null) {
                 // eslint-disable-next-line no-console
-                console.warn(`[${timestamp}] WARN:`, JSON.stringify(msg));
-            } else if (obj) {
-                // eslint-disable-next-line no-console
-                console.warn(`[${timestamp}] WARN: ${msg}`, JSON.stringify(obj));
+                console.warn(`[${timestamp}] WARN: ${msg || 'Warning'}`, JSON.stringify(obj, null, 2));
             } else {
                 // eslint-disable-next-line no-console
-                console.warn(`[${timestamp}] WARN: ${msg}`);
+                console.warn(`[${timestamp}] WARN: ${obj}`);
             }
         },
     };

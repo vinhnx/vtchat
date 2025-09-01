@@ -161,9 +161,16 @@ export async function verifyExistingCreemSubscription(
             message: `No active ${targetPlan} subscription found`,
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error during verification:', {
-            data: error,
-        });
+        log.error(
+            {
+                error,
+                userId,
+                targetPlan,
+                operation: 'subscription_verification',
+                errorType: 'database_error'
+            },
+            '[Subscription Verification] Error during subscription verification'
+        );
 
         // In case of database errors, we should be conservative and assume no subscription
         // to prevent blocking legitimate purchases
@@ -225,9 +232,15 @@ export async function getCreemCustomerInfo(
             source: 'none',
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error getting Creem customer info:', {
-            data: error,
-        });
+        log.error(
+            {
+                error,
+                userId,
+                operation: 'get_creem_customer_info',
+                errorType: 'database_error'
+            },
+            '[Subscription Verification] Error getting Creem customer info'
+        );
         return {
             customerId: null,
             source: 'none',
@@ -274,9 +287,15 @@ export async function validateSubscriptionConsistency(
             recommendations,
         };
     } catch (error) {
-        log.error('[Subscription Verification] Error during consistency check:', {
-            data: error,
-        });
+        log.error(
+            {
+                error,
+                userId,
+                operation: 'validate_subscription_consistency',
+                errorType: 'database_error'
+            },
+            '[Subscription Verification] Error during consistency check'
+        );
         return {
             isConsistent: false,
             issues: ['Database error during consistency check'],

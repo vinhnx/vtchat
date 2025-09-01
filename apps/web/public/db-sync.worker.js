@@ -8,25 +8,48 @@ const broadcastChannel = new BroadcastChannel('chat-sync-channel');
 let isInitialized = false;
 let dbInstance = null;
 
-// Simple logger for SharedWorker context (can't use pino directly in web workers)
-// Only logs in development mode
+// Structured logger for SharedWorker context (can't use pino directly in web workers)
+// Mimics Pino's structured logging interface for consistency
 // Check for production flag via URL query param since process.env is not available in browser workers
 const IS_PRODUCTION = self.location.search.includes('prod=true');
 
-/* eslint-disable no-unused-vars, no-console */
+/* eslint-disable no-console */
 const workerLog = {
-    info: (_message, _data) => {
+    info: (obj, message) => {
         if (IS_PRODUCTION) return;
+        const timestamp = new Date().toISOString();
+        if (typeof obj === 'object' && obj !== null) {
+            console.log(`[${timestamp}] [SharedWorker] INFO: ${message || 'Info'}`, JSON.stringify(obj, null, 2));
+        } else {
+            console.log(`[${timestamp}] [SharedWorker] INFO: ${obj}`);
+        }
     },
-    error: (message, data) => {
+    error: (obj, message) => {
         // Always log errors even in production
-        console.error(`[SharedWorker] ${message}`, data || '');
+        const timestamp = new Date().toISOString();
+        if (typeof obj === 'object' && obj !== null) {
+            console.error(`[${timestamp}] [SharedWorker] ERROR: ${message || 'Error'}`, JSON.stringify(obj, null, 2));
+        } else {
+            console.error(`[${timestamp}] [SharedWorker] ERROR: ${obj}`);
+        }
     },
-    warn: (_message, _data) => {
+    warn: (obj, message) => {
         // Always log warnings even in production
+        const timestamp = new Date().toISOString();
+        if (typeof obj === 'object' && obj !== null) {
+            console.warn(`[${timestamp}] [SharedWorker] WARN: ${message || 'Warning'}`, JSON.stringify(obj, null, 2));
+        } else {
+            console.warn(`[${timestamp}] [SharedWorker] WARN: ${obj}`);
+        }
     },
-    debug: (_message, _data) => {
+    debug: (obj, message) => {
         if (IS_PRODUCTION) return;
+        const timestamp = new Date().toISOString();
+        if (typeof obj === 'object' && obj !== null) {
+            console.debug(`[${timestamp}] [SharedWorker] DEBUG: ${message || 'Debug'}`, JSON.stringify(obj, null, 2));
+        } else {
+            console.debug(`[${timestamp}] [SharedWorker] DEBUG: ${obj}`);
+        }
     },
 };
 
@@ -39,14 +62,14 @@ async function initializeDatabase() {
             const request = indexedDB.open('ThreadDatabase', 1);
 
             request.onerror = () => {
-                workerLog.error('Database connection failed', request.error);
+                workerLog.error({ error: request.error }, 'Database connection failed');
                 reject(request.error);
             };
 
             request.onsuccess = () => {
                 dbInstance = request.result;
                 isInitialized = true;
-                workerLog.info('Database initialized successfully');
+                workerLog.info({}, 'Database initialized successfully');
                 resolve(dbInstance);
             };
 
@@ -74,7 +97,7 @@ async function initializeDatabase() {
             };
         });
     } catch (error) {
-        workerLog.error('Failed to initialize database', error);
+        workerLog.error({ error: error.message || error }, 'Failed to initialize database');
         throw error;
     }
 }
@@ -134,7 +157,7 @@ async function performDatabaseOperation(operation, data) {
             transaction.onerror = () => reject(transaction.error);
         });
     } catch (error) {
-        workerLog.error('Database operation failed', error);
+        workerLog.error({ error: error.message || error }, 'Database operation failed');
         throw error;
     }
 }
@@ -166,7 +189,7 @@ broadcastChannel.onmessage = (event) => {
         try {
             port.postMessage(event.data);
         } catch (error) {
-            workerLog.error('Failed to post message to port', error);
+            workerLog.error({ error: error.message || error }, 'Failed to post message to port');
             connections.delete(port); // Remove failed connections
         }
     }
@@ -177,7 +200,7 @@ async function handleMessage(message, sourcePort) {
     try {
         // Log the action for debugging
         if (message.type) {
-            workerLog.info(`Received ${message.type} event`);
+            workerLog.info({ messageType: message.type }, 'Received event');
         }
 
         // Handle database operations directly in the worker
@@ -206,13 +229,13 @@ async function handleMessage(message, sourcePort) {
                         try {
                             port.postMessage(broadcastMessage);
                         } catch (error) {
-                            workerLog.error('Failed to broadcast to port', error);
+                            workerLog.error({ error: error.message || error }, 'Failed to broadcast to port');
                             connections.delete(port);
                         }
                     }
                 }
             } catch (error) {
-                workerLog.error('Database operation failed', error);
+                workerLog.error({ error: error.message || error }, 'Database operation failed');
                 sourcePort.postMessage({
                     type: 'db-operation-result',
                     requestId: message.requestId,
@@ -236,7 +259,7 @@ async function handleMessage(message, sourcePort) {
                 try {
                     port.postMessage(broadcastMessage);
                 } catch (error) {
-                    workerLog.error('Failed to broadcast message', error);
+                    workerLog.error({ error: error.message || error }, 'Failed to broadcast message');
                     connections.delete(port); // Remove failed connections
                 }
             }
@@ -246,10 +269,10 @@ async function handleMessage(message, sourcePort) {
         try {
             broadcastChannel.postMessage(broadcastMessage);
         } catch (error) {
-            workerLog.error('Failed to broadcast via BroadcastChannel', error);
+            workerLog.error({ error: error.message || error }, 'Failed to broadcast via BroadcastChannel');
         }
     } catch (error) {
-        workerLog.error('Error handling message', error);
+        workerLog.error({ error: error.message || error, messageType: message.type }, 'Error handling message');
 
         // Send error back to source
         try {
@@ -259,7 +282,7 @@ async function handleMessage(message, sourcePort) {
                 originalMessage: message,
             });
         } catch (postError) {
-            workerLog.error('Failed to send error message', postError);
+            workerLog.error({ error: postError.message || postError }, 'Failed to send error message');
         }
     }
 }

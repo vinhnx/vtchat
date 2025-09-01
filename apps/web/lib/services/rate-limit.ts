@@ -96,6 +96,16 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
                 && 'constraint' in error
                 && (error as { constraint?: string; }).constraint === 'unique_user_model'
             ) {
+                log.debug(
+                    { 
+                        userId, 
+                        modelId, 
+                        errorCode: (error as { code?: string; }).code,
+                        constraint: (error as { constraint?: string; }).constraint 
+                    }, 
+                    'Race condition detected during rate limit creation, fetching existing record'
+                );
+                
                 // Fetch the existing record
                 const existingRecord = await db
                     .select()
@@ -108,10 +118,22 @@ async function getOrCreateRateRecord(userId: string, modelId: ModelEnum) {
 
                 if (existingRecord) {
                     rateLimitRecord = existingRecord;
+                    log.debug(
+                        { userId, modelId, recordId: existingRecord.id }, 
+                        'Successfully retrieved existing rate limit record after race condition'
+                    );
                 } else {
+                    log.error(
+                        { error, userId, modelId }, 
+                        'Unique constraint violation but no existing record found - database inconsistency'
+                    );
                     throw error; // Re-throw if not a race condition
                 }
             } else {
+                log.error(
+                    { error, userId, modelId, operation: 'safeInsertRateLimit' }, 
+                    'Failed to insert rate limit record with unexpected error'
+                );
                 throw error; // Re-throw if not a unique constraint violation
             }
         }
@@ -178,8 +200,11 @@ async function incrementRateRecord(
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     // Use VT+ feature identifier if provided, otherwise use the model ID
     const recordingModelId = vtPlusFeature || modelId;
-    recordProviderUsage(userId, recordingModelId, 'gemini').catch((_error) => {
-        // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
+    recordProviderUsage(userId, recordingModelId, 'gemini').catch((error) => {
+        log.warn(
+            { error, userId, modelId: recordingModelId, provider: 'gemini', operation: 'incrementRateRecord' },
+            'Failed to record provider usage during rate limit increment - usage may be under-reported'
+        );
     });
 }
 
@@ -564,8 +589,11 @@ async function updateExistingRateLimitRecord(
     // Also record for budget tracking (async, don't await to avoid slowing down the request)
     // Use VT+ feature identifier if provided, otherwise use the model ID
     const recordingModelId = vtPlusFeature || modelId;
-    recordProviderUsage(userId, recordingModelId, 'gemini').catch((_error) => {
-        // Error already logged in recordProviderUsage, just ensure it doesn't bubble up
+    recordProviderUsage(userId, recordingModelId, 'gemini').catch((error) => {
+        log.warn(
+            { error, userId, modelId: recordingModelId, provider: 'gemini', operation: 'incrementRateRecord' },
+            'Failed to record provider usage during rate limit increment - usage may be under-reported'
+        );
     });
 }
 
@@ -628,6 +656,7 @@ export async function recordRequest(
                 createdAt: now,
                 updatedAt: now,
             });
+            log.debug({ userId, modelId }, 'Created new rate limit record for user');
             return;
         } catch (error: unknown) {
             if (
@@ -638,6 +667,16 @@ export async function recordRequest(
                 && 'constraint' in error
                 && (error as { constraint?: string; }).constraint === 'unique_user_model'
             ) {
+                log.debug(
+                    { 
+                        userId, 
+                        modelId, 
+                        errorCode: (error as { code?: string; }).code,
+                        constraint: (error as { constraint?: string; }).constraint 
+                    }, 
+                    'Race condition detected during rate limit record creation'
+                );
+                
                 const existingRecord = await db
                     .select()
                     .from(userRateLimits)
@@ -649,6 +688,10 @@ export async function recordRequest(
 
                 if (existingRecord) {
                     // Update existing record - proceed with normal update logic
+                    log.debug(
+                        { userId, modelId, recordId: existingRecord.id }, 
+                        'Found existing record after race condition, proceeding with update'
+                    );
                     await updateExistingRateLimitRecord(
                         existingRecord,
                         now,
@@ -657,7 +700,17 @@ export async function recordRequest(
                         vtPlusFeature,
                     );
                     return;
+                } else {
+                    log.error(
+                        { error, userId, modelId }, 
+                        'Race condition with unique constraint but no existing record found'
+                    );
                 }
+            } else {
+                log.error(
+                    { error, userId, modelId, operation: 'recordRequest_insert' },
+                    'Failed to insert rate limit record during request recording'
+                );
             }
             // Re-throw other errors
             throw error;

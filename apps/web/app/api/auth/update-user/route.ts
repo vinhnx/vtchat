@@ -61,7 +61,16 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        log.error('Error updating user:', { error });
+        log.error(
+            { 
+                error, 
+                userId: session?.user?.id,
+                requestBody: { name: body?.name?.length, email: body?.email?.length },
+                userAgent: request.headers.get('user-agent'),
+                operation: 'update_user_profile'
+            }, 
+            'Error updating user profile'
+        );
 
         // Return user-friendly error message
         const message = error instanceof Error ? error.message : 'Internal server error';

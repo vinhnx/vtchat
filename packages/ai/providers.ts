@@ -177,13 +177,8 @@ export const getProviderInstance = (
                 isVtPlus,
             });
 
-            // Preserve QuotaExceededError type for proper frontend handling
-            if (error.name === 'QuotaExceededError') {
-                const quotaError = new Error(errorMsg.message);
-                quotaError.name = 'QuotaExceededError';
-                quotaError.cause = error;
-                throw quotaError;
-            }
+            // Throw a generic API key error since no error was caught
+            // This was likely a bug from error handling refactoring
 
             throw new Error(errorMsg.message);
         }
@@ -384,14 +379,20 @@ export const getLanguageModel = (
                 }
                 return selectedModel as LanguageModelV1;
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : String(error);
-                const errorStack = error instanceof Error ? error.stack : undefined;
-                log.error('Error creating Gemini model with special options:', {
-                    data: errorMessage,
-                });
-                if (errorStack) {
-                    log.error('Error stack:', { data: errorStack });
-                }
+                log.error(
+                    {
+                        error,
+                        modelId,
+                        originalModelId,
+                        useSearchGrounding,
+                        hasCachedContent: !!cachedContent,
+                        provider: model?.provider,
+                        byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+                        isVtPlus,
+                        operation: 'gemini_model_creation_with_options'
+                    },
+                    'Error creating Gemini model with special options'
+                );
                 throw error;
             }
         }
@@ -441,21 +442,37 @@ export const getLanguageModel = (
             log.info('=== getLanguageModel END ===');
             return selectedModel as LanguageModelV1;
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            const errorStack = error instanceof Error ? error.stack : undefined;
-            log.error('Error creating standard model:', { data: errorMessage });
-            if (errorStack) {
-                log.error('Error stack:', { data: errorStack });
-            }
+            log.error(
+                {
+                    error,
+                    modelId,
+                    originalModelId,
+                    provider: model?.provider,
+                    byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+                    isVtPlus,
+                    modelName: model?.name,
+                    operation: 'standard_model_creation'
+                },
+                'Error creating standard model'
+            );
             throw error;
         }
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        const errorStack = error instanceof Error ? error.stack : undefined;
-        log.error('Error in getLanguageModel:', { data: errorMessage });
-        if (errorStack) {
-            log.error('Error stack:', { data: errorStack });
-        }
+        log.error(
+            {
+                error,
+                modelEnum: m,
+                modelName: model?.name,
+                modelProvider: model?.provider,
+                byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
+                useSearchGrounding,
+                hasCachedContent: !!cachedContent,
+                claude4InterleavedThinking,
+                isVtPlus,
+                operation: 'getLanguageModel'
+            },
+            'Error in getLanguageModel - failed to create language model instance'
+        );
 
         // Re-throw the original error without modification to preserve
         // the clear, actionable error messages from getProviderInstance
