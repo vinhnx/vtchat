@@ -32,7 +32,15 @@ const nextConfig = {
     // Note: analyticsId is not a valid Next.js config option
 
     // Server-side optimizations - exclude only external packages from bundling
-    serverExternalPackages: [],
+    serverExternalPackages: [
+        'shiki',
+        '@shikijs/core',
+        '@shikijs/engine-javascript',
+        '@shikijs/engine-oniguruma',
+        '@shikijs/langs',
+        '@shikijs/themes',
+        '@shikijs/types',
+    ],
 
     // Enable automatic bundling for Pages Router (includes undici, better-auth)
     bundlePagesRouterDependencies: true, // Next.js 15.4 experimental features
