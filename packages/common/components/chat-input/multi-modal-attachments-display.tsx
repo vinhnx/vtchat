@@ -89,17 +89,17 @@ export const MultiModalAttachmentsDisplay = memo(
                         </div>
                     ))}
                 </div>
-            <AttachmentPreviewModal
-                open={open}
-                onClose={() => setPreviewIndex(null)}
-                attachments={attachments}
-                index={previewIndex ?? 0}
-                setIndex={(i) => {
-                    if (i < 0) i = 0;
-                    if (i > attachments.length - 1) i = attachments.length - 1;
-                    setPreviewIndex(i);
-                }}
-            />
+                <AttachmentPreviewModal
+                    open={open}
+                    onClose={() => setPreviewIndex(null)}
+                    attachments={attachments}
+                    index={previewIndex ?? 0}
+                    setIndex={(i) => {
+                        if (i < 0) i = 0;
+                        if (i > attachments.length - 1) i = attachments.length - 1;
+                        setPreviewIndex(i);
+                    }}
+                />
             </>
         );
     },
@@ -138,13 +138,16 @@ export function AttachmentPreviewModal({
         <Dialog open={open} onOpenChange={(v) => (!v ? onClose() : null)}>
             <DialogContent className='max-w-[95vw]'>
                 <div className='flex items-center justify-between gap-2'>
-                    <DialogTitle className='truncate'>{attachment.name || 'Attachment'}</DialogTitle>
+                    <DialogTitle className='truncate'>
+                        {attachment.name || 'Attachment'}
+                    </DialogTitle>
                     <div className='text-muted-foreground text-xs'>
                         {index + 1}/{attachments.length}
                     </div>
                 </div>
                 <DialogDescription>
-                    Type: {attachment.contentType || 'Unknown'} • Size: {formatSize(attachment.size)}
+                    Type: {attachment.contentType || 'Unknown'} • Size:{' '}
+                    {formatSize(attachment.size)}
                 </DialogDescription>
                 <div className='mt-2 flex max-h-[75vh] w-full items-center justify-center'>
                     {isImage && attachment.url

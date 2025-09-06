@@ -11,9 +11,10 @@ import {
 } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
-import { cn } from '@repo/ui';
+import { Button, cn } from '@repo/ui';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useAgentStream } from '../../hooks/agent-provider';
 import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
 import { ChartComponent } from '../charts/chart-components';
 import { DocumentSidePanel } from '../document-side-panel';
@@ -55,6 +56,7 @@ export const ThreadItem = memo(
         const setCurrentSources = useChatStore((state) => state.setCurrentSources);
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
+        const { handleSubmit } = useAgentStream();
 
         // Debounced status to prevent flashing during rapid status changes
         const debouncedStatus = useDebounced(threadItem.status, 50);
@@ -352,6 +354,50 @@ export const ThreadItem = memo(
                                                                 priority={false}
                                                                 className='object-contain'
                                                             />
+                                                            <div className='pointer-events-none absolute inset-0 flex items-start justify-end p-2'>
+                                                                <Button
+                                                                    className='pointer-events-auto h-6 px-2 text-[11px]'
+                                                                    size='sm'
+                                                                    variant='secondary'
+                                                                    onClick={async () => {
+                                                                        const attachment = {
+                                                                            url: dataUrl || url
+                                                                                || '',
+                                                                            name: img.name
+                                                                                || `image-${
+                                                                                    idx + 1
+                                                                                }`,
+                                                                            contentType: mediaType
+                                                                                || 'image/png',
+                                                                        };
+                                                                        const formData =
+                                                                            new FormData();
+                                                                        formData.append(
+                                                                            'multiModalAttachments',
+                                                                            JSON.stringify([
+                                                                                attachment,
+                                                                            ]),
+                                                                        );
+                                                                        formData.append(
+                                                                            'query',
+                                                                            'Describe this image based on the conversation context. Include key subjects, actions, setting, and any notable details. Avoid hallucinations.',
+                                                                        );
+                                                                        const threadItems =
+                                                                            await useChatStore
+                                                                                .getState()
+                                                                                .getThreadItems(
+                                                                                    threadItem
+                                                                                        .threadId,
+                                                                                );
+                                                                        handleSubmit({
+                                                                            formData,
+                                                                            messages: threadItems,
+                                                                        });
+                                                                    }}
+                                                                >
+                                                                    Describe
+                                                                </Button>
+                                                            </div>
                                                         </div>
                                                         {(img as any).aspectRatio && (
                                                             <div className='text-muted-foreground/70 px-2 py-1 text-[11px]'>

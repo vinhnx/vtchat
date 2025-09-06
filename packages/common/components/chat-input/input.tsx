@@ -872,8 +872,8 @@ export const ChatInput = ({
             const fileTypes = ['image/jpeg', 'image/png', 'image/gif'];
             const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
 
-            const newItems: { url: string; name: string; contentType: string; size?: number; }[]
-                = [];
+            const newItems: { url: string; name: string; contentType: string; size?: number; }[] =
+                [];
             let firstDataUrl: string | null = null;
             for (const f of acceptedFiles) {
                 if (!fileTypes.includes(f.type)) {
