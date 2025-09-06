@@ -1,4 +1,4 @@
-import { MarkdownContent, markdownStyles } from '@repo/common/components';
+import { markdownStyles, Response } from '@repo/common/components';
 import { useCopyText } from '@repo/common/hooks';
 import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
@@ -14,7 +14,10 @@ interface PremiumAIResponseProps {
 }
 
 export const PremiumAIResponse = memo(
-    ({ content, threadItem, isGenerating = false, isLast = false }: PremiumAIResponseProps) => {
+    (
+        { content, threadItem, isGenerating = false, isLast: _isLast = false }:
+            PremiumAIResponseProps,
+    ) => {
         const [_isExpanded, _setIsExpanded] = useState(false);
         const [showActions, setShowActions] = useState(false);
         const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
@@ -144,12 +147,9 @@ export const PremiumAIResponse = memo(
                             )}
                             ref={contentRef}
                         >
-                            <MarkdownContent
-                                content={content}
-                                isCompleted={threadItem.status === 'COMPLETED'}
-                                isLast={isLast}
-                                shouldAnimate={threadItem.status !== 'COMPLETED'}
-                            />
+                            <Response>
+                                {content}
+                            </Response>
                         </div>
                     </motion.div>
 

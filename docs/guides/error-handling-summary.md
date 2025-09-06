@@ -7,46 +7,46 @@ This document summarizes the improvements made to error handling in the VT Chat 
 ### 1. Created New Files
 
 1. **packages/ai/tools/streaming-error-utils.ts**
-    - Added a new utility class `StreamingErrorHandler` for handling different types of streaming errors
-    - Provides methods for handling regular errors, tool errors, and stream aborts
-    - Follows the AI SDK error handling patterns with proper event emission
+   - Added a new utility class `StreamingErrorHandler` for handling different types of streaming errors
+   - Provides methods for handling regular errors, tool errors, and stream aborts
+   - Follows the AI SDK error handling patterns with proper event emission
 
 2. **docs/guides/error-handling.md**
-    - Created comprehensive documentation on error handling in VT Chat
-    - Explains regular error handling, streaming error handling, and stream abort handling
-    - Provides examples following AI SDK patterns
+   - Created comprehensive documentation on error handling in VT Chat
+   - Explains regular error handling, streaming error handling, and stream abort handling
+   - Provides examples following AI SDK patterns
 
 ### 2. Modified Existing Files
 
 1. **packages/ai/package.json**
-    - Added export for the new streaming-error-utils module
+   - Added export for the new streaming-error-utils module
 
 2. **packages/ai/tools/streaming-utils.ts**
-    - Enhanced the `executeToolWithStreaming` method to emit tool-error events
-    - Added proper error handling with detailed error information
-    - Ensured tool errors are properly categorized and reported
+   - Enhanced the `executeToolWithStreaming` method to emit tool-error events
+   - Added proper error handling with detailed error information
+   - Ensured tool errors are properly categorized and reported
 
 3. **packages/ai/workflow/tasks/completion.ts**
-    - Added handling for tool errors in the error handling section
-    - Enhanced error categorization for better user feedback
+   - Added handling for tool errors in the error handling section
+   - Enhanced error categorization for better user feedback
 
 4. **packages/ai/workflow/tasks/gemini-web-search.ts**
-    - Added error event emission for better error tracking
-    - Enhanced error messages with more context
+   - Added error event emission for better error tracking
+   - Enhanced error messages with more context
 
 5. **packages/ai/workflow/utils.ts**
-    - Minor updates to maintain consistency with error handling patterns
+   - Minor updates to maintain consistency with error handling patterns
 
 6. **apps/web/app/api/completion/stream-handlers.ts**
-    - Added import for the new StreamingErrorHandler utility
-    - Enhanced executeStream function to handle error, tool-error, and abort events
-    - Improved stream abort handling with the new utility
+   - Added import for the new StreamingErrorHandler utility
+   - Enhanced executeStream function to handle error, tool-error, and abort events
+   - Improved stream abort handling with the new utility
 
 7. **packages/common/hooks/agent-provider.tsx**
-    - Enhanced error handling in the stream reading section
-    - Added specific handling for error, tool-error, and abort events from the stream
-    - Improved abort handling with clearer user feedback
-    - Enhanced general error handling with better categorization
+   - Enhanced error handling in the stream reading section
+   - Added specific handling for error, tool-error, and abort events from the stream
+   - Improved abort handling with clearer user feedback
+   - Enhanced general error handling with better categorization
 
 ## Key Improvements
 

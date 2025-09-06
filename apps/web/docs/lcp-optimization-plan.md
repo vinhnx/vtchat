@@ -18,27 +18,27 @@ export function PerformanceOptimizations() {
     return (
         <>
             {/* DNS prefetch for external domains */}
-            <link href="//www.google.com" rel="dns-prefetch" />
+            <link href='//www.google.com' rel='dns-prefetch' />
 
             {/* Preload critical assets for LCP */}
-            <link href="/icon-192x192.png" rel="preload" as="image" />
-            <link href="/icons/peerlist_badge.svg" rel="preload" as="image" />
-            <link href="/api/health" rel="prefetch" />
-            <link href="/favicon.ico" rel="preload" as="image" />
+            <link href='/icon-192x192.png' rel='preload' as='image' />
+            <link href='/icons/peerlist_badge.svg' rel='preload' as='image' />
+            <link href='/api/health' rel='prefetch' />
+            <link href='/favicon.ico' rel='preload' as='image' />
 
             {/* Preload critical fonts */}
             <link
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-                rel="preload"
-                as="style"
+                href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+                rel='preload'
+                as='style'
             />
 
             {/* Optimize viewport for mobile */}
-            <meta content="#000000" name="theme-color" />
-            <meta content="dark light" name="color-scheme" />
+            <meta content='#000000' name='theme-color' />
+            <meta content='dark light' name='color-scheme' />
 
             {/* Performance optimization meta tags */}
-            <meta content="on" httpEquiv="x-dns-prefetch-control" />
+            <meta content='on' httpEquiv='x-dns-prefetch-control' />
         </>
     );
 }
@@ -67,13 +67,13 @@ export function Thread() {
 
     if (isInitialLoad) {
         return (
-            <div className="flex min-w-full flex-col gap-6 px-2 py-4 pt-6">
+            <div className='flex min-w-full flex-col gap-6 px-2 py-4 pt-6'>
                 {/* Skeleton for first message */}
-                <div className="flex animate-pulse space-x-4">
-                    <div className="bg-muted-foreground/20 h-10 w-10 rounded-full" />
-                    <div className="flex-1 space-y-2">
-                        <div className="bg-muted-foreground/20 h-4 w-3/4 rounded" />
-                        <div className="bg-muted-foreground/20 h-4 rounded" />
+                <div className='flex animate-pulse space-x-4'>
+                    <div className='bg-muted-foreground/20 h-10 w-10 rounded-full' />
+                    <div className='flex-1 space-y-2'>
+                        <div className='bg-muted-foreground/20 h-4 w-3/4 rounded' />
+                        <div className='bg-muted-foreground/20 h-4 rounded' />
                     </div>
                 </div>
             </div>
@@ -91,14 +91,14 @@ In the ThreadItem component, add priority loading for key images:
 ```tsx
 // In packages/common/components/thread/thread-item.tsx
 <img
-    src="/icon-192x192.png"
-    alt="VT"
+    src='/icon-192x192.png'
+    alt='VT'
     width={20}
     height={20}
-    className="object-contain"
-    fetchPriority="high" // Add this for LCP optimization
-    decoding="async"
-/>
+    className='object-contain'
+    fetchPriority='high' // Add this for LCP optimization
+    decoding='async'
+/>;
 ```
 
 ### 4. Add Resource Hints to Next Config
@@ -145,31 +145,31 @@ const ThreadWithSuspense = NextDynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="flex h-full items-center justify-center">
-                <div className="animate-pulse">Loading chat...</div>
+            <div className='flex h-full items-center justify-center'>
+                <div className='animate-pulse'>Loading chat...</div>
             </div>
         ),
         // Add this to prioritize loading
         options: { suspense: true },
-    }
+    },
 );
 ```
 
 ## Implementation Priority
 
 1. **High Priority** (Immediate):
-    - Add preload directives for critical images
-    - Optimize image loading attributes
-    - Implement skeleton loading for Thread component
+   - Add preload directives for critical images
+   - Optimize image loading attributes
+   - Implement skeleton loading for Thread component
 
 2. **Medium Priority** (Next release):
-    - Add resource hints to Next config
-    - Optimize CSS loading
-    - Reduce initial bundle size
+   - Add resource hints to Next config
+   - Optimize CSS loading
+   - Reduce initial bundle size
 
 3. **Low Priority** (Future optimization):
-    - Implement advanced code splitting
-    - Add service worker caching for critical assets
+   - Implement advanced code splitting
+   - Add service worker caching for critical assets
 
 ## Expected Impact
 

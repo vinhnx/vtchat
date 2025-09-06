@@ -36,26 +36,26 @@ VTChat implements the IETF AI Preferences standard to control how automated syst
 **Protected Routes:**
 
 - **API Endpoints** (`/api/:path*`)
-    - `Content-Usage: tdm=n, search=n, inference=n`
-    - `X-Robots-Tag: noindex, nofollow`
-    - `Cache-Control: private, no-store`
+  - `Content-Usage: tdm=n, search=n, inference=n`
+  - `X-Robots-Tag: noindex, nofollow`
+  - `Cache-Control: private, no-store`
 
 - **Chat Routes** (`/chat`, `/chat/:path*`)
-    - `Content-Usage: tdm=n, search=n, inference=n`
-    - `X-Robots-Tag: noindex, nofollow`
-    - `Cache-Control: private, no-store`
+  - `Content-Usage: tdm=n, search=n, inference=n`
+  - `X-Robots-Tag: noindex, nofollow`
+  - `Cache-Control: private, no-store`
 
 - **Profile** (`/profile/:path*`)
-    - `Content-Usage: tdm=n, search=n, inference=n`
-    - `X-Robots-Tag: noindex, nofollow`
+  - `Content-Usage: tdm=n, search=n, inference=n`
+  - `X-Robots-Tag: noindex, nofollow`
 
 **Public Routes:**
 
 - **Informational Pages** (`/about`, `/faq`, `/privacy`, `/terms`)
-    - `Content-Usage: tdm=y` (Allow AI training)
+  - `Content-Usage: tdm=y` (Allow AI training)
 
 - **Default Routes**
-    - `Content-Usage: tdm=n, search=y, inference=y`
+  - `Content-Usage: tdm=n, search=y, inference=y`
 
 ## Security Measures
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { MarkdownContent, markdownStyles } from '@repo/common/components';
+import { markdownStyles, Response } from '@repo/common/components';
 import { getModelDisplayName } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
@@ -26,8 +26,8 @@ export const AIMessage = memo(
         content,
         threadItem,
         isGenerating = false,
-        isLast = false,
-        isCompleted = false,
+        isLast: _isLast = false,
+        isCompleted: _isCompleted = false,
     }: AIMessageProps) => {
         const contentRef = useRef<HTMLDivElement>(null);
 
@@ -129,10 +129,7 @@ export const AIMessage = memo(
                                 minHeight: isGenerating ? '2rem' : 'auto',
                             }}
                         >
-                            <MarkdownContent
-                                content={content}
-                                isCompleted={isCompleted}
-                                isLast={isLast}
+                            <Response
                                 className={cn(
                                     'prose-sm max-w-none',
                                     'prose-headings:text-foreground prose-p:text-foreground',
@@ -141,7 +138,9 @@ export const AIMessage = memo(
                                     'min-h-[1.5em] w-full',
                                     markdownStyles,
                                 )}
-                            />
+                            >
+                                {content}
+                            </Response>
                         </div>
                     </div>
                 </div>

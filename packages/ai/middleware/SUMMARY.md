@@ -79,7 +79,7 @@ const model = getLanguageModel(
     undefined,
     undefined,
     isVtPlus,
-    MiddlewarePresets.DEVELOPMENT
+    MiddlewarePresets.DEVELOPMENT,
 );
 ```
 
@@ -100,7 +100,7 @@ const model = getLanguageModel(
         enableLogging: true,
         enableCaching: true,
         enableGuardrails: false,
-    }
+    },
 );
 ```
 

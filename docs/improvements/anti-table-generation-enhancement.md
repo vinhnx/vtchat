@@ -106,34 +106,34 @@ class ContentMonitor {
 
 1. **Bullet Points with Data:**
 
-    ```markdown
-    • Revenue increased **42%** to $2.1B
-    • Market share grew from **15%** to **23%**
-    • Customer satisfaction: **4.8/5.0** (up from 4.2)
-    ```
+   ```markdown
+   • Revenue increased **42%** to $2.1B
+   • Market share grew from **15%** to **23%**
+   • Customer satisfaction: **4.8/5.0** (up from 4.2)
+   ```
 
 2. **Inline Comparisons:**
 
-    ```markdown
-    Company A achieved **15% growth** while Company B saw **8% decline**,
-    demonstrating the impact of strategic positioning.
-    ```
+   ```markdown
+   Company A achieved **15% growth** while Company B saw **8% decline**,
+   demonstrating the impact of strategic positioning.
+   ```
 
 3. **Structured Lists:**
 
-    ```markdown
-    **Q4 Performance Metrics:**
+   ```markdown
+   **Q4 Performance Metrics:**
 
-    - **Revenue**: $2.1B (+42% YoY)
-    - **Profit Margin**: 18.5% (+3.2pp)
-    - **Customer Growth**: 125K new users
-    ```
+   - **Revenue**: $2.1B (+42% YoY)
+   - **Profit Margin**: 18.5% (+3.2pp)
+   - **Customer Growth**: 125K new users
+   ```
 
 4. **Blockquotes for Key Data:**
-    ```markdown
-    > **Key Finding**: The study revealed a **67% improvement** in user
-    > engagement when implementing the new interface design.
-    ```
+   ```markdown
+   > **Key Finding**: The study revealed a **67% improvement** in user
+   > engagement when implementing the new interface design.
+   ```
 
 ### Monitoring Integration
 

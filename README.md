@@ -163,55 +163,55 @@ vtchat/
 
 1. **Clone the repository**:
 
-    ```bash
-    git clone https://github.com/vinhnx/vtchat.git
-    cd vtchat
-    ```
+   ```bash
+   git clone https://github.com/vinhnx/vtchat.git
+   cd vtchat
+   ```
 
 2. **Install dependencies**:
 
-    ```bash
-    bun install
-    ```
+   ```bash
+   bun install
+   ```
 
 3. **Set up environment variables**:
 
-    ```bash
-    cp apps/web/.env.example apps/web/.env.local
-    ```
+   ```bash
+   cp apps/web/.env.example apps/web/.env.local
+   ```
 
-    Configure the following required variables in `apps/web/.env.local`:
+   Configure the following required variables in `apps/web/.env.local`:
 
-    **Essential Services:**
-    - `DATABASE_URL` - Neon PostgreSQL connection string
-    - `BETTER_AUTH_SECRET` - Authentication secret key
-    - `BETTER_AUTH_URL` - Authentication URL (process.env.NEXT_PUBLIC_BASE_URL for development)
+   **Essential Services:**
+   - `DATABASE_URL` - Neon PostgreSQL connection string
+   - `BETTER_AUTH_SECRET` - Authentication secret key
+   - `BETTER_AUTH_URL` - Authentication URL (process.env.NEXT_PUBLIC_BASE_URL for development)
 
-    **AI Provider Keys (choose one or more):**
-    - `OPENAI_API_KEY` - OpenAI API access
-    - `ANTHROPIC_API_KEY` - Anthropic Claude API access
-    - `GOOGLE_API_KEY` - Google Gemini API access
+   **AI Provider Keys (choose one or more):**
+   - `OPENAI_API_KEY` - OpenAI API access
+   - `ANTHROPIC_API_KEY` - Anthropic Claude API access
+   - `GOOGLE_API_KEY` - Google Gemini API access
 
-    **Payment & Subscription:**
-    - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
-    - `CREEM_API_KEY` - Creem.io API access
-    - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
+   **Payment & Subscription:**
+   - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
+   - `CREEM_API_KEY` - Creem.io API access
+   - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
 
-    **Security:**
-    - `NEXT_PUBLIC_BASE_URL` - Application base URL
+   **Security:**
+   - `NEXT_PUBLIC_BASE_URL` - Application base URL
 
 4. **Set up the database**:
 
-    ```bash
-    cd apps/web
-    bun run generate  # Generate database schema
-    ```
+   ```bash
+   cd apps/web
+   bun run generate  # Generate database schema
+   ```
 
 5. **Start the development server**:
 
-    ```bash
-    bun dev
-    ```
+   ```bash
+   bun dev
+   ```
 
 6. **Open the application**:
    Navigate to `process.env.NEXT_PUBLIC_BASE_URL` in your browser.

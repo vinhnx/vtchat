@@ -1,5 +1,5 @@
 import {
-    MarkdownContent,
+    Response,
     SearchResultsList,
     StepStatus,
     Tool,
@@ -33,12 +33,7 @@ export const StepRenderer = (
         if (step?.text) {
             return (
                 <div className='text-muted-foreground text-sm leading-relaxed'>
-                    <MarkdownContent
-                        content={step.text}
-                        isCompleted={isCompleted}
-                        isLast={false}
-                        shouldAnimate={!isCompleted}
-                    />
+                    <Response>{step.text}</Response>
                 </div>
             );
         }
@@ -107,12 +102,7 @@ export const StepRenderer = (
                         </Label>
                     </div>
                     <div className='text-muted-foreground text-sm leading-relaxed'>
-                        <MarkdownContent
-                            content={step.steps?.wrapup?.data || ''}
-                            isCompleted={isCompleted}
-                            isLast={false}
-                            shouldAnimate={!isCompleted}
-                        />
+                        <Response>{step.steps?.wrapup?.data || ''}</Response>
                     </div>
                 </div>
             );

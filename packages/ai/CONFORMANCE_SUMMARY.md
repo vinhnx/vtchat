@@ -41,21 +41,21 @@ This document summarizes the changes made to ensure the VT Chat codebase conform
 Several fixes were made to the error handling system to ensure conformance with the updated documentation:
 
 1. **Missing Providers in Constants**
-    - Added LMSTUDIO and OLLAMA to `PROVIDER_SETUP_URLS` and `PROVIDER_DISPLAY_NAMES`
+   - Added LMSTUDIO and OLLAMA to `PROVIDER_SETUP_URLS` and `PROVIDER_DISPLAY_NAMES`
 
 2. **Special Handling for Local Providers**
-    - Implemented special error messages for LM Studio and Ollama that reflect their nature as local services
-    - Added specific guidance for setting up local servers
+   - Implemented special error messages for LM Studio and Ollama that reflect their nature as local services
+   - Added specific guidance for setting up local servers
 
 3. **Network Error Handling**
-    - Added special handling for LM Studio connection refused errors
-    - Updated error messages to be more descriptive and user-friendly
+   - Added special handling for LM Studio connection refused errors
+   - Updated error messages to be more descriptive and user-friendly
 
 4. **Quota Error Messages**
-    - Updated VT+ quota exceeded message from "Daily Quota" to "Monthly Quota" to match documentation
+   - Updated VT+ quota exceeded message from "Daily Quota" to "Monthly Quota" to match documentation
 
 5. **Authentication Error Messages**
-    - Updated error messages to match test expectations while maintaining clarity
+   - Updated error messages to match test expectations while maintaining clarity
 
 ### Test Status
 

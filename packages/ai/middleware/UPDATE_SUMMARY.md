@@ -7,19 +7,19 @@ We've updated the middleware documentation to align with AI SDK v4 and VT Chat's
 ## Key Changes Made
 
 1. **Created a new comprehensive guide** (`GUIDE.md`) that documents:
-    - Proper usage of `wrapLanguageModel` function
-    - Correct middleware interface types for AI SDK v4
-    - Updated examples using `LanguageModelV2Middleware`
-    - Detailed implementation patterns for different middleware types
+   - Proper usage of `wrapLanguageModel` function
+   - Correct middleware interface types for AI SDK v4
+   - Updated examples using `LanguageModelV2Middleware`
+   - Detailed implementation patterns for different middleware types
 
 2. **Updated existing documentation** to reference the new guide:
-    - Modified `README.md` to link to the comprehensive guide
-    - Updated `SUMMARY.md` and `FINAL_SUMMARY.md` to include the new guide file
+   - Modified `README.md` to link to the comprehensive guide
+   - Updated `SUMMARY.md` and `FINAL_SUMMARY.md` to include the new guide file
 
 3. **Maintained compatibility** with existing implementation:
-    - Kept the existing middleware implementations using `LanguageModelV2Middleware`
-    - Preserved the AI SDK v4 `wrapLanguageModel` integration using `LanguageModelV1Middleware`
-    - Verified that all tests continue to pass
+   - Kept the existing middleware implementations using `LanguageModelV2Middleware`
+   - Preserved the AI SDK v4 `wrapLanguageModel` integration using `LanguageModelV1Middleware`
+   - Verified that all tests continue to pass
 
 ## Technical Details
 

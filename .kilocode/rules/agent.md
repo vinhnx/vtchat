@@ -11,14 +11,14 @@ VTChat is an AI-powered chat application built with Next.js, TypeScript, and Tai
 - **Root Workspace**: `apps/` and `packages/` directories
 - **Web Application**: `apps/web/` - Main Next.js application
 - **Shared Libraries**: `packages/` for reusable code:
-    - `@repo/shared`: Types, utils, logger (`@repo/shared/lib/logger`)
-    - `@repo/common`: Reusable hooks, components, store
-    - `@repo/ui`: Base UI components (shadcn/ui based)
-    - `@repo/ai`: AI models, providers, tools, workflow logic
-    - `@repo/actions`: Server actions
-    - `@repo/orchestrator`: Task orchestration logic
-    - `@repo/tailwind-config`: Shared Tailwind CSS configuration
-    - `@repo/typescript-config`: Shared TypeScript configurations
+  - `@repo/shared`: Types, utils, logger (`@repo/shared/lib/logger`)
+  - `@repo/common`: Reusable hooks, components, store
+  - `@repo/ui`: Base UI components (shadcn/ui based)
+  - `@repo/ai`: AI models, providers, tools, workflow logic
+  - `@repo/actions`: Server actions
+  - `@repo/orchestrator`: Task orchestration logic
+  - `@repo/tailwind-config`: Shared Tailwind CSS configuration
+  - `@repo/typescript-config`: Shared TypeScript configurations
 
 ### Package Management
 
@@ -86,9 +86,9 @@ bun run test:coverage
 - **Quotes**: Single quotes
 - **Line Length**: 100 characters maximum
 - **Naming Conventions**:
-    - Components: PascalCase
-    - Hooks and Utils: camelCase
-    - File Names: kebab-case
+  - Components: PascalCase
+  - Hooks and Utils: camelCase
+  - File Names: kebab-case
 - **Exports**: Prefer named exports over default exports
 - **Constants**: Centralize in enums, avoid hard-coded strings
 

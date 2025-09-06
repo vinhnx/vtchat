@@ -55,10 +55,10 @@ setPageCount(data.pagination?.totalPages || 0);
 
 ```tsx
 <ErrorBoundary>
-    <motion.div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <motion.div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {/* Statistics Cards */}
     </motion.div>
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
 ### **Files Modified**

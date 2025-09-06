@@ -3,8 +3,8 @@
 ## Summary
 
 - Increased daily quotas for VT+ exclusive features:
-    - Pro Search: 50 requests/day (was 20)
-    - Deep Research: 25 requests/day (was 10)
+  - Pro Search: 50 requests/day (was 20)
+  - Deep Research: 25 requests/day (was 10)
 - Updated all public docs and pages to reflect new limits.
 - Synchronized default configuration and tests with new quotas.
 

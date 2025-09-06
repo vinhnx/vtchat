@@ -6,9 +6,9 @@ Summary:
 
 - Upgraded Zod to v4 across the monorepo (apps/web, packages/ai). Added explicit zod dependency to packages/common and packages/shared.
 - Replaced deprecated string format usages:
-    - `.string().date()` → `z.iso.date()`
-    - `.string().datetime()` → `z.iso.datetime()`
-    - `.string().email()` → `z.email()`
+  - `.string().date()` → `z.iso.date()`
+  - `.string().datetime()` → `z.iso.datetime()`
+  - `.string().email()` → `z.email()`
 - Replaced broad `ZodSchema` type annotations with `ZodTypeAny` where schemas are passed around dynamically.
 
 Files changed (high-level):

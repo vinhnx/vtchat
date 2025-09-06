@@ -607,8 +607,16 @@ html.dark .prose th {
 }
 
 /* Ensure proper spacing for thread content */
+/* Use a CSS variable so layouts can tune spacing without code changes */
+:root {
+    --thread-vertical-space: 3.5rem; /* default vertical spacing for chat thread */
+}
+
 #thread-container {
-    padding-bottom: 2rem; /* Add bottom padding to thread container */
+    padding-top: var(--thread-vertical-space, 2rem);
+    padding-bottom: calc(
+        var(--thread-vertical-space, 2rem) + env(safe-area-inset-bottom, 0px)
+    );
 }
 
 /* Shimmer animation for loading states */

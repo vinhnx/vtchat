@@ -64,11 +64,11 @@
 
 1. **Updated FEATURES.md** - Added multi-provider OAuth and account linking details
 2. **Created OAUTH_SETUP.md** - Comprehensive OAuth setup guide covering:
-    - All three providers (GitHub, Google, Twitter/X)
-    - Setup instructions for Twitter Developer Portal
-    - Security features and account linking
-    - Troubleshooting guide
-    - Implementation status overview
+   - All three providers (GitHub, Google, Twitter/X)
+   - Setup instructions for Twitter Developer Portal
+   - Security features and account linking
+   - Troubleshooting guide
+   - Implementation status overview
 
 **Implementation Status**:
 
@@ -125,12 +125,12 @@
 #### 🔍 Files Modified
 
 - `/apps/web/app/globals.css`
-    - Updated with complete Shadcn UI variable set for light and dark themes
-    - Added legacy variable mappings for backward compatibility
-    - Enhanced border variable support
+  - Updated with complete Shadcn UI variable set for light and dark themes
+  - Added legacy variable mappings for backward compatibility
+  - Enhanced border variable support
 - `/packages/ui/src/styles.css`
-    - Synchronized with same Shadcn UI variable structure
-    - Maintained consistent theming across package boundaries
+  - Synchronized with same Shadcn UI variable structure
+  - Maintained consistent theming across package boundaries
 
 #### ✅ Verification
 
@@ -178,15 +178,15 @@
 #### 🔍 Files Modified
 
 - `/packages/ui/src/components/button.tsx`
-    - Refactored to use Shadcn Button as base
-    - Integrated Shadcn Tooltip for tooltip prop
-    - Preserved all custom functionality
+  - Refactored to use Shadcn Button as base
+  - Integrated Shadcn Tooltip for tooltip prop
+  - Preserved all custom functionality
 - `/packages/ui/src/components/tooltip.tsx`
-    - Official Shadcn Tooltip component
+  - Official Shadcn Tooltip component
 - `/packages/ui/src/components/index.ts` & `/packages/ui/src/index.ts`
-    - Added exports for Tooltip and Button
+  - Added exports for Tooltip and Button
 - `/apps/web/app/layout.tsx` & `/apps/web/app/layout-working.tsx`
-    - Wrapped app in `<TooltipProvider>` for global tooltip support
+  - Wrapped app in `<TooltipProvider>` for global tooltip support
 
 #### ✅ Verification
 
@@ -255,12 +255,12 @@ The application now uses official Shadcn UI components with:
 #### 🔍 Files Modified
 
 - `packages/common/components/thinking-log.tsx`
-    - Enhanced bold text styling with amber color (#D99A4E) and semibold weight
-    - Applied styling to all three MarkdownContent instances
-    - Removed unused `useMemo` import
+  - Enhanced bold text styling with amber color (#D99A4E) and semibold weight
+  - Applied styling to all three MarkdownContent instances
+  - Removed unused `useMemo` import
 - `packages/common/components/thread/thread-item.tsx`
-    - Updated reasoning data check condition to match ThinkingLog logic
-    - Supports all reasoning formats properly
+  - Updated reasoning data check condition to match ThinkingLog logic
+  - Supports all reasoning formats properly
 
 #### ✅ Verification
 
@@ -295,23 +295,23 @@ The application now uses official Shadcn UI components with:
 #### 📋 Technical Implementation
 
 - **Next.js Configuration**: Updated `next.config.mjs` with performance optimizations
-    - Enabled Turbopack for faster development builds
-    - Added filesystem caching for development
-    - Optimized bundle splitting and chunk generation
-    - Added server external packages for reduced bundle size
-    - Configured compiler settings to remove console.logs in production
+  - Enabled Turbopack for faster development builds
+  - Added filesystem caching for development
+  - Optimized bundle splitting and chunk generation
+  - Added server external packages for reduced bundle size
+  - Configured compiler settings to remove console.logs in production
 
 - **Turbo Configuration**: Enhanced `turbo.json` for better build caching
-    - Added environment variable handling
-    - Enabled remote caching capabilities
-    - Optimized cache settings for lint and test tasks
+  - Added environment variable handling
+  - Enabled remote caching capabilities
+  - Optimized cache settings for lint and test tasks
 
 - **Logging Improvements**: Made all debug/info logs development-only
-    - `auth-client.ts` - Auth error logging only in development
-    - `performance-monitor.ts` - Performance tracking logs only in development
-    - `request-deduplication.ts` - Request deduplication logs only in development
-    - `subscription-verification.ts` - Subscription verification logs only in development
-    - `env.ts` - Added `devLog` and `prodSafeLog` utilities for consistent logging
+  - `auth-client.ts` - Auth error logging only in development
+  - `performance-monitor.ts` - Performance tracking logs only in development
+  - `request-deduplication.ts` - Request deduplication logs only in development
+  - `subscription-verification.ts` - Subscription verification logs only in development
+  - `env.ts` - Added `devLog` and `prodSafeLog` utilities for consistent logging
 
 #### 🔍 Files Modified
 
@@ -366,10 +366,10 @@ The application now uses official Shadcn UI components with:
 #### 🔍 Files Modified
 
 - `packages/common/components/chat-input/chat-actions.tsx` - Complete dropdown refactor
-    - Added `getChatModeFromModel()` function for model-to-ChatMode mapping
-    - Added `getApiKeyForProvider()` for provider-specific API key mapping
-    - Added `generateModelOptionsForProvider()` for dynamic option generation
-    - Updated all provider sections to use ModelEnum approach
+  - Added `getChatModeFromModel()` function for model-to-ChatMode mapping
+  - Added `getApiKeyForProvider()` for provider-specific API key mapping
+  - Added `generateModelOptionsForProvider()` for dynamic option generation
+  - Updated all provider sections to use ModelEnum approach
 
 #### ✅ Verification
 
@@ -718,36 +718,36 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **MAJOR ACHIEVEMENTS**:
 
 1. **GEMINI_2_5_FLASH_LITE Model Integration** ✅:
-    - **UI Addition**: Added to Google provider section in chat-actions.tsx
-    - **Visual Indicator**: Gift icon displays for free model identification
-    - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
-    - **Web Search Support**: Native web search capabilities enabled
+   - **UI Addition**: Added to Google provider section in chat-actions.tsx
+   - **Visual Indicator**: Gift icon displays for free model identification
+   - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
+   - **Web Search Support**: Native web search capabilities enabled
 
 2. **Free Models Visual Enhancement** ✅:
-    - **Gift Icons Added**: All free Gemini models now show 🎁 icon
-        - GEMINI_2_5_FLASH_LITE ✅ (newly added)
-        - GEMINI_2_5_FLASH_PREVIEW ✅
-        - GEMINI_2_5_PRO_PREVIEW ✅
-    - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
-    - **Consistent UX**: Unified free model identification across providers
+   - **Gift Icons Added**: All free Gemini models now show 🎁 icon
+     - GEMINI_2_5_FLASH_LITE ✅ (newly added)
+     - GEMINI_2_5_FLASH_PREVIEW ✅
+     - GEMINI_2_5_PRO_PREVIEW ✅
+   - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
+   - **Consistent UX**: Unified free model identification across providers
 
 3. **Subscription Benefits Update** ✅:
-    - **Enhanced Description**: Updated "Access to Free Models" benefit
-    - **Complete Model List**: Includes all Gemini + OpenRouter free models
-    - **Mathematical Tools**: Detailed description of calculator capabilities
-    - **Perfect for Getting Started**: Clear value proposition for free tier
+   - **Enhanced Description**: Updated "Access to Free Models" benefit
+   - **Complete Model List**: Includes all Gemini + OpenRouter free models
+   - **Mathematical Tools**: Detailed description of calculator capabilities
+   - **Perfect for Getting Started**: Clear value proposition for free tier
 
 4. **Technical Configuration** ✅:
-    - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
-    - **Web Search Support**: Updated supportsNativeWebSearch function
-    - **Fallback Mechanism**: Proper model selection with available API keys
-    - **Type Safety**: All TypeScript types properly configured
+   - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
+   - **Web Search Support**: Updated supportsNativeWebSearch function
+   - **Fallback Mechanism**: Proper model selection with available API keys
+   - **Type Safety**: All TypeScript types properly configured
 
 5. **Documentation Excellence** ✅:
-    - **README Update**: Added comprehensive free models section
-    - **Implementation Guide**: Complete technical documentation
-    - **User Benefits**: Clear explanation of free tier capabilities
-    - **Verification Steps**: Testing instructions for quality assurance
+   - **README Update**: Added comprehensive free models section
+   - **Implementation Guide**: Complete technical documentation
+   - **User Benefits**: Clear explanation of free tier capabilities
+   - **Verification Steps**: Testing instructions for quality assurance
 
 ### 🆓 Free Tier Now Includes
 
@@ -847,47 +847,47 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 **Major Optimizations Implemented**:
 
 1. **Middleware Performance** (`apps/web/middleware.ts`) ✅:
-    - **Static File Exclusion**: Skip auth checks for static files, API routes, Next.js internals
-    - **5-Second Timeout**: Prevent hanging auth checks
-    - **Graceful Error Handling**: Fallback to login redirect on failures
-    - **Optimized Path Matching**: Reduced unnecessary middleware processing
+   - **Static File Exclusion**: Skip auth checks for static files, API routes, Next.js internals
+   - **5-Second Timeout**: Prevent hanging auth checks
+   - **Graceful Error Handling**: Fallback to login redirect on failures
+   - **Optimized Path Matching**: Reduced unnecessary middleware processing
 
 2. **Better Auth Configuration** (`apps/web/lib/auth.ts`) ✅:
-    - **Session Cookie Cache**: 5-minute TTL for session caching
-    - **Increased Rate Limits**: 100 → 200 requests per window
-    - **10-Second Timeouts**: All auth operations timeout protection
-    - **Performance Optimizations**: Faster ID generation and secure cookies
+   - **Session Cookie Cache**: 5-minute TTL for session caching
+   - **Increased Rate Limits**: 100 → 200 requests per window
+   - **10-Second Timeouts**: All auth operations timeout protection
+   - **Performance Optimizations**: Faster ID generation and secure cookies
 
 3. **Subscription Provider Optimization** (`packages/common/providers/subscription-provider.tsx`) ✅:
-    - **8-Second Request Timeout**: AbortController implementation
-    - **Request Deduplication**: Prevent multiple identical subscription fetches
-    - **Enhanced Error Handling**: Graceful timeout and error recovery
-    - **Cache Control Headers**: Prevent stale subscription data
+   - **8-Second Request Timeout**: AbortController implementation
+   - **Request Deduplication**: Prevent multiple identical subscription fetches
+   - **Enhanced Error Handling**: Graceful timeout and error recovery
+   - **Cache Control Headers**: Prevent stale subscription data
 
 4. **Client-Side Auth Optimization** (`packages/shared/lib/auth-client.ts`) ✅:
-    - **10-Second Client Timeout**: Prevent hanging client requests
-    - **Non-Throwing Error Handler**: Prevent app crashes on auth failures
-    - **Improved URL Resolution**: Better baseURL detection logic
+   - **10-Second Client Timeout**: Prevent hanging client requests
+   - **Non-Throwing Error Handler**: Prevent app crashes on auth failures
+   - **Improved URL Resolution**: Better baseURL detection logic
 
 5. **New Performance Monitoring** (`packages/shared/utils/performance-monitor.ts`) ✅:
-    - **Operation Timing**: Track auth operation durations
-    - **Slow Operation Detection**: Log operations >2 seconds
-    - **Auth-Specific Monitors**: Dedicated session check and subscription monitoring
+   - **Operation Timing**: Track auth operation durations
+   - **Slow Operation Detection**: Log operations >2 seconds
+   - **Auth-Specific Monitors**: Dedicated session check and subscription monitoring
 
 6. **Request Deduplication System** (`packages/shared/utils/request-deduplication.ts`) ✅:
-    - **Duplicate Prevention**: Deduplicate identical API calls
-    - **Automatic Cleanup**: Remove expired pending requests
-    - **Performance Logging**: Track deduplication effectiveness
+   - **Duplicate Prevention**: Deduplicate identical API calls
+   - **Automatic Cleanup**: Remove expired pending requests
+   - **Performance Logging**: Track deduplication effectiveness
 
 7. **Session Caching Layer** (`packages/shared/utils/session-cache.ts`) ✅:
-    - **In-Memory Cache**: Reduce repetitive auth checks
-    - **TTL Management**: Configurable cache expiration
-    - **Auto Cleanup**: Background cache maintenance
+   - **In-Memory Cache**: Reduce repetitive auth checks
+   - **TTL Management**: Configurable cache expiration
+   - **Auto Cleanup**: Background cache maintenance
 
 8. **Enhanced Error Boundaries** (`apps/web/components/auth-error-boundary.tsx`) ✅:
-    - **Auth-Specific Error Recovery**: Dedicated auth error handling
-    - **User-Friendly Fallbacks**: Clean error states with recovery options
-    - **Refresh Functionality**: Allow users to recover from auth errors
+   - **Auth-Specific Error Recovery**: Dedicated auth error handling
+   - **User-Friendly Fallbacks**: Clean error states with recovery options
+   - **Refresh Functionality**: Allow users to recover from auth errors
 
 **Expected Performance Improvements**:
 

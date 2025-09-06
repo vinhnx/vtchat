@@ -47,7 +47,7 @@ const model = getLanguageModel(
     undefined, // middleware
     undefined, // byokKeys
     false, // useSearchGrounding
-    cachedContentName // cachedContent
+    cachedContentName, // cachedContent
 );
 
 const { text } = await generateText({

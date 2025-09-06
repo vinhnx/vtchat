@@ -95,11 +95,11 @@ JOIN posts p ON u.id = p.user_id;
 ## Files Modified
 
 1. `packages/common/components/code-block/code-block.tsx`
-    - Added 50+ new Prism.js language imports
-    - Enhanced error handling with try-catch
-    - Added language aliases mapping
-    - Improved icon system
-    - Better language detection
+   - Added 50+ new Prism.js language imports
+   - Enhanced error handling with try-catch
+   - Added language aliases mapping
+   - Improved icon system
+   - Better language detection
 
 ## Next Steps
 
@@ -158,15 +158,15 @@ Added sophisticated hover effects for table rows in markdown content with smooth
 ## Files Modified
 
 1. **`packages/common/components/mdx/mdx-components.tsx`**
-    - Added CSS import for table hover effects
-    - Enhanced table, tr, th, td components with new CSS classes
-    - Improved className structure for better styling control
+   - Added CSS import for table hover effects
+   - Enhanced table, tr, th, td components with new CSS classes
+   - Improved className structure for better styling control
 
 2. **`packages/common/components/mdx/table-hover-effects.css`** (New)
-    - Comprehensive CSS for sophisticated hover effects
-    - Shimmer animations with CSS-only implementation
-    - Responsive design considerations
-    - Accessibility features for reduced motion
+   - Comprehensive CSS for sophisticated hover effects
+   - Shimmer animations with CSS-only implementation
+   - Responsive design considerations
+   - Accessibility features for reduced motion
 
 ## Visual Effects
 

@@ -98,16 +98,16 @@ if (isTimeout) {
 ## Testing
 
 1. **Manual Testing Required**:
-    - Navigate to a thread page (`/chat/[threadId]`)
-    - Wait 5+ minutes (to ensure cookie cache expires)
-    - Perform page refresh (F5)
-    - Verify user stays on thread page (no redirect to login)
+   - Navigate to a thread page (`/chat/[threadId]`)
+   - Wait 5+ minutes (to ensure cookie cache expires)
+   - Perform page refresh (F5)
+   - Verify user stays on thread page (no redirect to login)
 
 2. **Edge Cases to Test**:
-    - Page refresh immediately after login
-    - Page refresh after extended idle time
-    - Page refresh with slow network connection
-    - Page refresh with database latency
+   - Page refresh immediately after login
+   - Page refresh after extended idle time
+   - Page refresh with slow network connection
+   - Page refresh with database latency
 
 ## Files Modified
 

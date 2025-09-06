@@ -16,10 +16,10 @@ We've updated all AI calls to use `temperature: 0` for deterministic and consist
 
 - More consistent outputs for the same inputs
 - Particularly important for tools that require deterministic behavior:
-    - Mathematical calculations
-    - Structured data extraction
-    - Chart generation
-    - Web search operations
+  - Mathematical calculations
+  - Structured data extraction
+  - Chart generation
+  - Web search operations
 
 ## 2. Parameter Schema Improvements
 

@@ -61,7 +61,6 @@ const nextConfig = {
         // Additional memory optimizations
         optimizePackageImports: ['@repo/shared', '@repo/common', '@repo/ui'],
         serverMinification: true,
-
     },
 
     // Turbopack-specific aliases to work around upstream package exports.

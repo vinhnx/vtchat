@@ -5,9 +5,9 @@
 ### 1. Performance Optimizations Component
 
 - Added preload directives for critical images:
-    - `/icon-192x192.png` (VT logo)
-    - `/icons/peerlist_badge.svg` (LCP element identified in Lighthouse)
-    - `/favicon.ico` (site favicon)
+  - `/icon-192x192.png` (VT logo)
+  - `/icons/peerlist_badge.svg` (LCP element identified in Lighthouse)
+  - `/favicon.ico` (site favicon)
 - Added font preloading for Google Fonts
 
 ### 2. Thread Component Optimization

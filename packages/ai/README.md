@@ -11,41 +11,41 @@ A flexible and powerful system for building AI agent workflows using a graph-bas
 
 - Graph-based workflow management
 - Multiple specialized node types:
-    - Executor Node: For task execution
-    - Router Node: For intelligent routing
-    - Memory Node: For state management
-    - Observer Node: For monitoring and analysis
+  - Executor Node: For task execution
+  - Router Node: For intelligent routing
+  - Memory Node: For state management
+  - Observer Node: For monitoring and analysis
 - Event-driven architecture
 - Support for multiple LLM providers:
-    - OpenAI
-    - Anthropic
-    - Google (Gemini)
-    - Together AI
-    - Fireworks
-    - xAI
+  - OpenAI
+  - Anthropic
+  - Google (Gemini)
+  - Together AI
+  - Fireworks
+  - xAI
 - Specialized research workflows:
-    - Deep Research: Comprehensive analysis using Gemini 2.5 Flash
-    - Pro Search: Fast web search using Gemini 2.5 Flash
+  - Deep Research: Comprehensive analysis using Gemini 2.5 Flash
+  - Pro Search: Fast web search using Gemini 2.5 Flash
 
 ## Getting Started
 
 1. Install dependencies:
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 2. Set up environment variables:
-    - Copy `.env.example` to `.env.local`:
-        ```bash
-        cp .env.example .env.local
-        ```
-    - Fill in your API keys and preferences in `.env.local`
+   - Copy `.env.example` to `.env.local`:
+     ```bash
+     cp .env.example .env.local
+     ```
+   - Fill in your API keys and preferences in `.env.local`
 
 3. Run the customer support example:
-    ```bash
-    ts-node examples/customer-support-workflow.ts
-    ```
+   ```bash
+   ts-node examples/customer-support-workflow.ts
+   ```
 
 ## Example Usage
 

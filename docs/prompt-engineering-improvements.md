@@ -30,11 +30,11 @@ We've updated our Zod schemas to use `.nullable()` instead of `.optional()` for 
 #### Chart Tools (`apps/web/lib/tools/charts.ts`)
 
 - Updated optional parameters in all chart tools to use `.nullable()`:
-    - `xAxisLabel`, `yAxisLabel`, `color` in `barChart`
-    - `xAxisLabel`, `yAxisLabel`, `series1Name`, `series2Name`, `series3Name` in `lineChart`
-    - `xAxisLabel`, `yAxisLabel`, `series1Name`, `series2Name`, `stacked` in `areaChart`
-    - `showLabels`, `showLegend` in `pieChart`
-    - `fullMark` and `maxValue` in `radarChart`
+  - `xAxisLabel`, `yAxisLabel`, `color` in `barChart`
+  - `xAxisLabel`, `yAxisLabel`, `series1Name`, `series2Name`, `series3Name` in `lineChart`
+  - `xAxisLabel`, `yAxisLabel`, `series1Name`, `series2Name`, `stacked` in `areaChart`
+  - `showLabels`, `showLegend` in `pieChart`
+  - `fullMark` and `maxValue` in `radarChart`
 
 #### Web Search Tools (`packages/ai/tools/openai-web-search.ts`)
 

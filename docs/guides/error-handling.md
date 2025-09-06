@@ -133,7 +133,7 @@ for await (const chunk of fullStream) {
             console.log('Stream was aborted');
             break;
         }
-        // ... handle other part types
+            // ... handle other part types
     }
 }
 ```

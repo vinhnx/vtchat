@@ -7,22 +7,22 @@ We've updated the error handling documentation to align with AI SDK v4 and VT Ch
 ## Key Changes Made
 
 1. **Created a new comprehensive error handling guide** (`GUIDE.md`) that documents:
-    - Proper usage of try/catch for regular errors
-    - Streaming error handling patterns for simple streams
-    - Full stream error handling with error part support
-    - Stream abort handling with onAbort callbacks
-    - VT Chat specific error handling patterns
+   - Proper usage of try/catch for regular errors
+   - Streaming error handling patterns for simple streams
+   - Full stream error handling with error part support
+   - Stream abort handling with onAbort callbacks
+   - VT Chat specific error handling patterns
 
 2. **Documented VT Chat's enhanced error handling**:
-    - Frontend error handling in AgentProvider
-    - Backend error handling in API routes
-    - Workflow task error handling
-    - Error categorization system
+   - Frontend error handling in AgentProvider
+   - Backend error handling in API routes
+   - Workflow task error handling
+   - Error categorization system
 
 3. **Included best practices**:
-    - Comprehensive list of error handling best practices
-    - Error categorization patterns
-    - User-friendly error messaging guidelines
+   - Comprehensive list of error handling best practices
+   - Error categorization patterns
+   - User-friendly error messaging guidelines
 
 ## Technical Details
 
@@ -40,21 +40,21 @@ The guide now accurately documents AI SDK v4 error handling patterns:
 The guide documents VT Chat's advanced error handling system:
 
 1. **Frontend (AgentProvider)**:
-    - Comprehensive stream error handling
-    - Abort signal management
-    - User-friendly error messaging with toast notifications
-    - Provider-specific error extraction
+   - Comprehensive stream error handling
+   - Abort signal management
+   - User-friendly error messaging with toast notifications
+   - Provider-specific error extraction
 
 2. **Backend (API Routes)**:
-    - Stream error categorization
-    - Proper error response formatting
-    - Enhanced error event sending
-    - Graceful degradation strategies
+   - Stream error categorization
+   - Proper error response formatting
+   - Enhanced error event sending
+   - Graceful degradation strategies
 
 3. **Workflow Tasks**:
-    - Error event handling
-    - Specific error type management
-    - Resource cleanup on errors
+   - Error event handling
+   - Specific error type management
+   - Resource cleanup on errors
 
 ### Error Categorization
 

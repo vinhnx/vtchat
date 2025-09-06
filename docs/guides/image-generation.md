@@ -17,20 +17,20 @@ This guide documents VT’s image generation experience and developer hooks, inc
 ## UI Components
 
 - `packages/common/components/chat-input/actions/ImageGenButton.tsx:1`
-    - Triggers generation, creates optimistic thread item, and updates results on completion.
+  - Triggers generation, creates optimistic thread item, and updates results on completion.
 - `packages/common/components/chat-input/actions/ImageGenButton.tsx:220`
-    - `StyleModeSelector`: inserts structured prompt templates (Photorealistic, Sticker, Product, Minimalist, Comic).
+  - `StyleModeSelector`: inserts structured prompt templates (Photorealistic, Sticker, Product, Minimalist, Comic).
 - `packages/common/components/chat-input/actions/ImageGenButton.tsx:268`
-    - `AspectRatioSelector`: applies an aspect ratio hint with replace-over-append behavior.
+  - `AspectRatioSelector`: applies an aspect ratio hint with replace-over-append behavior.
 
 ## Aspect Ratio Behavior
 
 - Centralized util: `@repo/common/utils/aspect-ratio` → `mergeAspectRatioHint(text, ratio)`.
 - Purpose: If a prompt already contains an aspect ratio hint, replace it instead of appending duplicates.
 - Examples:
-    - Source: `"A cat photo [16:9]"` + `1:1` → `"A cat photo [1:1]"` (replaced)
-    - Source: `"Product shot in 4:3 aspect ratio"` + `16:9` → `"Product shot in 16:9 aspect ratio"` (replaced)
-    - Source: `"Minimalist poster"` + `21:9` → no change (caller appends `in 21:9 aspect ratio`)
+  - Source: `"A cat photo [16:9]"` + `1:1` → `"A cat photo [1:1]"` (replaced)
+  - Source: `"Product shot in 4:3 aspect ratio"` + `16:9` → `"Product shot in 16:9 aspect ratio"` (replaced)
+  - Source: `"Minimalist poster"` + `21:9` → no change (caller appends `in 21:9 aspect ratio`)
 
 Developer reference:
 

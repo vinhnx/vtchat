@@ -35,9 +35,9 @@ This guide shows you how to integrate LM Studio with VTChat for **free, private,
 
 1. **Open LM Studio** → Click the "Search" tab
 2. **Find Models** → Search for popular models:
-    - `qwen3` → Download "qwen3:1.7b" (1GB, fast)
-    - `llama3.2` → Download "llama3.2:3b" (2GB, good quality)
-    - `gemma-2` → Download "gemma-2:2b" (1.6GB, efficient)
+   - `qwen3` → Download "qwen3:1.7b" (1GB, fast)
+   - `llama3.2` → Download "llama3.2:3b" (2GB, good quality)
+   - `gemma-2` → Download "gemma-2:2b" (1.6GB, efficient)
 3. **Load Model** → Go to "Chat" tab → Select your downloaded model
 4. **Test Chat** → Try asking "Hello!" to make sure it works
 

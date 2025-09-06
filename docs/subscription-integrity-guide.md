@@ -106,22 +106,22 @@ If subscription tier bugs are detected:
 
 1. **Immediate**: Check health endpoint
 
-    ```bash
-    curl -H "Authorization: Bearer admin-token" \
-      https://vtchat.io.vn/api/admin/subscription-health
-    ```
+   ```bash
+   curl -H "Authorization: Bearer admin-token" \
+     https://vtchat.io.vn/api/admin/subscription-health
+   ```
 
 2. **Auto-fix**: Run automated repair
 
-    ```bash
-    curl -X POST -H "Authorization: Bearer admin-token" \
-      https://vtchat.io.vn/api/admin/subscription-health
-    ```
+   ```bash
+   curl -X POST -H "Authorization: Bearer admin-token" \
+     https://vtchat.io.vn/api/admin/subscription-health
+   ```
 
 3. **Manual fix**: For individual users
-    ```javascript
-    await SubscriptionService.fixUserSubscriptions(userId);
-    ```
+   ```javascript
+   await SubscriptionService.fixUserSubscriptions(userId);
+   ```
 
 ### Monitoring Dashboard
 
@@ -198,19 +198,19 @@ Each layer assumes others may fail:
 ### Common Issues
 
 1. **User shows base tier despite valid subscription**
-    - Check: `GET /api/admin/subscription-health`
-    - Fix: `POST /api/admin/subscription-health`
-    - Verify: Clear user's cache and refresh
+   - Check: `GET /api/admin/subscription-health`
+   - Fix: `POST /api/admin/subscription-health`
+   - Verify: Clear user's cache and refresh
 
 2. **Multiple active subscriptions detected**
-    - Auto-fix will keep the most recent one
-    - Others are marked as canceled
-    - Cache is automatically invalidated
+   - Auto-fix will keep the most recent one
+   - Others are marked as canceled
+   - Cache is automatically invalidated
 
 3. **Plan slug mismatch**
-    - Auto-fix synchronizes users.plan_slug with subscription
-    - Validates subscription is still active
-    - Logs changes for audit trail
+   - Auto-fix synchronizes users.plan_slug with subscription
+   - Validates subscription is still active
+   - Logs changes for audit trail
 
 ### Debug Commands
 

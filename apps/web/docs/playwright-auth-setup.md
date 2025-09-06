@@ -53,12 +53,12 @@ This setup follows the [official Playwright best practices](https://playwright.d
 This file contains the main authentication logic:
 
 - **Google OAuth Flow**: Handles the complete OAuth flow including:
-    - Navigation to login page
-    - Clicking Google OAuth button
-    - Entering credentials
-    - Handling account selection
-    - Managing 2FA prompts
-    - Saving authentication state
+  - Navigation to login page
+  - Clicking Google OAuth button
+  - Entering credentials
+  - Handling account selection
+  - Managing 2FA prompts
+  - Saving authentication state
 
 - **API Fallback**: Alternative authentication method using API calls when OAuth isn't available
 
@@ -134,16 +134,16 @@ apps/web/
 ## Authentication Flow
 
 1. **Setup Phase**:
-    - `playwright-auth.setup.ts` runs first
-    - Navigates to `/login`
-    - Clicks Google OAuth button
-    - Handles Google OAuth flow
-    - Saves authentication state to `./playwright/.auth/user.json`
+   - `playwright-auth.setup.ts` runs first
+   - Navigates to `/login`
+   - Clicks Google OAuth button
+   - Handles Google OAuth flow
+   - Saves authentication state to `./playwright/.auth/user.json`
 
 2. **Test Phase**:
-    - Authenticated tests load saved state
-    - Tests run with user session active
-    - No need to re-authenticate for each test
+   - Authenticated tests load saved state
+   - Tests run with user session active
+   - No need to re-authenticate for each test
 
 ## OAuth Flow Details
 

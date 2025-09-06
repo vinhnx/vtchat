@@ -54,9 +54,9 @@ Implemented comprehensive security improvements for API key handling in VT Chat'
 **Changes Made:**
 
 - **packages/shared/utils/key-rotation.ts**: Comprehensive key rotation utilities including:
-    - `rotateApiKey()`: Core rotation function with validation
-    - `generateKeyRotationNotification()`: User notification system
-    - `validateKeyRotation()`: Security validation for rotation requests
+  - `rotateApiKey()`: Core rotation function with validation
+  - `generateKeyRotationNotification()`: User notification system
+  - `validateKeyRotation()`: Security validation for rotation requests
 - **packages/shared/package.json**: Added exports for new security modules
 
 **Security Impact:** Provides framework for regular API key rotation to minimize long-term exposure risks

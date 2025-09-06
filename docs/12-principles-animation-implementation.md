@@ -162,17 +162,17 @@ animate: {
 ### Enhanced Button
 
 ```tsx
-<Button animationType="squash" anticipation={true} onClick={handleClick}>
+<Button animationType='squash' anticipation={true} onClick={handleClick}>
     Click me
-</Button>
+</Button>;
 ```
 
 ### Staged Modal
 
 ```tsx
-<StagedModal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Example Modal" size="lg">
+<StagedModal isOpen={isOpen} onClose={() => setIsOpen(false)} title='Example Modal' size='lg'>
     <p>Content appears with proper staging</p>
-</StagedModal>
+</StagedModal>;
 ```
 
 ### Animated Toast
