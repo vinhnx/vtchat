@@ -6,8 +6,7 @@ import { mergeAspectRatioHint } from '@repo/common/utils/aspect-ratio';
 import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
-import type { Attachment } from '@repo/shared/types';
-import type { ThreadItem } from '@repo/shared/types';
+import type { Attachment, ThreadItem } from '@repo/shared/types';
 import {
     Button,
     ContextMenu,
@@ -244,17 +243,8 @@ export const StyleModeSelector = () => {
                     <DropdownMenuItem
                         key={m.label}
                         onClick={() => {
-                            const current = (editor?.getText() || '').toLowerCase();
-                            const alreadyHasStyle =
-                                /photorealistic|sticker|studio-lit|minimalist|comic/.test(
-                                    current,
-                                );
                             if (!editor) return;
-                            if (!current || current.trim().length === 0) {
-                                editor.commands.insertContent(m.text);
-                            } else if (!alreadyHasStyle) {
-                                editor.commands.insertContent(`\n\n[Style: ${m.label}]`);
-                            }
+                            editor.commands.insertContent(m.text);
                         }}
                     >
                         {m.label}

@@ -7,5 +7,6 @@
 - Attempted `bun run build`; Next.js build failed in sandbox with "The service was stopped" (environment-related). Recommend verifying locally.
 
 Next steps
+
 - Run `bun run build` locally to validate.
 - On approval, deploy with `./deploy-fly.sh --auto --version patch`.

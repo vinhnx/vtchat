@@ -30,14 +30,12 @@ import { PersonalizedGreeting } from '../personalized-greeting';
 import { StructuredDataDisplay } from '../structured-data-display';
 import { UserTierBadge } from '../user-tier-badge';
 import {
-    AspectRatioSelector,
     ChartsButton,
     ChatModeButton,
     GeneratingStatus,
     ImageGenButton,
     MathCalculatorButton,
     SendStopButton,
-    StyleModeSelector,
     WebSearchButton,
 } from './chat-actions';
 import { ChatEditor } from './chat-editor';
@@ -533,8 +531,6 @@ export const ChatInput = ({
                                                             onAfterGenerate={() =>
                                                                 setShowImageTips(true)}
                                                         />
-                                                        <StyleModeSelector />
-                                                        <AspectRatioSelector />
                                                     </div>
                                                     {/* Row 2: Secondary tools - horizontally scrollable */}
                                                     <div className='scrollbar-hide flex items-center gap-2 overflow-x-auto'>
@@ -647,7 +643,7 @@ export const ChatInput = ({
                                                             editor?.commands.insertContent(
                                                                 chip.text,
                                                             )}
-                                                        className='border-border bg-background hover:bg-muted text-muted-foreground rounded-full border px-2.5 py-1 text-[11px] transition-colors'
+                                                        className='vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] rounded-full px-2.5 py-1 text-[11px] transition-colors hover:bg-[#D99A4E]/10'
                                                     >
                                                         {chip.label}
                                                     </button>
