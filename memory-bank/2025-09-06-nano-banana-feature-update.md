@@ -16,7 +16,7 @@ Successfully updated VTChat's pricing card and documentation to highlight the un
 
 - Updated "Multi-Modal Chat" to "Multi-Modal Chat + Gemini Nano Banana" with detailed description
 - Enhanced "All Chat Input Tools" to highlight the Nano Banana conversational image editor
-- **Added new feature highlight**: "🍌 Gemini Nano Banana - Conversational Image Editing (Unique to VT)" with detailed explanation of conversational editing capabilities
+- **Added new feature highlight**: "🍌 Gemini Nano Banana - Conversational Image Editing (New to VT)" with detailed explanation of conversational editing capabilities
 
 **VT+ Features Enhanced:**
 
@@ -49,8 +49,8 @@ Successfully updated VTChat's pricing card and documentation to highlight the un
 
 ### Unique Value Proposition
 
-- **"World's first conversational image editor"** - Emphasizes VT's innovation leadership
-- **"Unique to VT"** - Highlights platform exclusivity
+- **"Conversational image editor"** - Emphasizes VT's innovation leadership
+- **"New to VT"** - Highlights platform exclusivity
 - **Natural conversation interface** - Differentiates from technical image editors
 
 ### Feature Benefits

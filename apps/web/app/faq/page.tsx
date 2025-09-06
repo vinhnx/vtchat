@@ -16,7 +16,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
     title: 'FAQ - Nano Banana Conversational Image Editing & AI Platform Questions | VT',
     description:
-        "Frequently asked questions about VT's advanced AI platform featuring the world's first conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), large language models (LLMs), and machine learning capabilities. Learn about our revolutionary AI systems.",
+        "Frequently asked questions about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), large language models (LLMs), and machine learning capabilities. Learn about our revolutionary AI systems.",
     keywords: [
         'ai faq',
         'nano banana faq',

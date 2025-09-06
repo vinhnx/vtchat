@@ -1,6 +1,6 @@
 # Gemini Nano Banana - Conversational Image Editing
 
-**Unique to VT Chat** - The world's first conversational image editor powered by Gemini 2.5 Flash Image Preview.
+**New to VT Chat** - The Conversational image editor powered by Gemini 2.5 Flash Image Preview.
 
 ## Overview
 
@@ -176,4 +176,4 @@ Nano Banana: [Final product shot with all elements]
 
 ---
 
-**Nano Banana** represents the future of image editing - where creativity flows as naturally as conversation. Experience the world's first conversational image editor, exclusively in VT Chat.
+**Nano Banana** represents the future of image editing - where creativity flows as naturally as conversation. Experience the Conversational image editor, exclusively in VT Chat.

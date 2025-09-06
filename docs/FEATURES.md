@@ -118,7 +118,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ### Image Generation & Nano Banana 🍌
 
-- **🌟 Nano Banana Conversational Editor**: World's first conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history in chat.
+- **🌟 Nano Banana Conversational Editor**: Conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history in chat.
 - **Generate Button**: One-click image generation from the chat input.
 - **Style Templates**: Photorealistic, Sticker, Product, Minimalist, Comic prompt scaffolds.
 - **Aspect Ratio Selector**: Replace-over-append logic to avoid duplicate AR hints.

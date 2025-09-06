@@ -21,7 +21,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
     title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
     description:
-        "Learn about VT's advanced AI platform featuring the world's first conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with revolutionary image editing.",
+        "Learn about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with revolutionary image editing.",
     keywords: [
         'about ai platform',
         'conversational image editing',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
         description:
-            "Learn about VT's advanced AI platform featuring the world's first conversational image editor (Nano Banana), generative AI, deep learning, and large language models. Privacy-first AI systems.",
+            "Learn about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, and large language models. Privacy-first AI systems.",
         type: 'website',
     },
     robots: {
@@ -99,9 +99,9 @@ function AboutContent() {
                     </h2>
                     <p className='text-muted-foreground mx-auto max-w-2xl text-lg'>
                         VT is a production-ready, privacy-first AI chat application featuring the
-                        world's first conversational image editor (Nano Banana), advanced AI
-                        capabilities, offering all premium models for free with BYOK and exclusive
-                        research features for professionals.
+                        Conversational image editor (Nano Banana), advanced AI capabilities,
+                        offering all premium models for free with BYOK and exclusive research
+                        features for professionals.
                     </p>
                 </div>
 
@@ -172,12 +172,12 @@ function AboutContent() {
                             <ul className='text-muted-foreground list-inside list-disc space-y-2'>
                                 <li>
                                     <strong>
-                                        🍌 Nano Banana Conversational Image Editor (Unique to VT):
+                                        🍌 Nano Banana Conversational Image Editor (New to VT):
                                     </strong>{' '}
-                                    World's first conversational image editor! Generate an image,
-                                    then iteratively edit through natural conversation: "make the
-                                    cat bigger", "change background to sunset", "add a party hat" -
-                                    all while preserving edit history
+                                    Conversational image editor! Generate an image, then iteratively
+                                    edit through natural conversation: "make the cat bigger",
+                                    "change background to sunset", "add a party hat" - all while
+                                    preserving edit history
                                 </li>
                                 <li>
                                     <strong>Multi-Provider Support:</strong>{' '}

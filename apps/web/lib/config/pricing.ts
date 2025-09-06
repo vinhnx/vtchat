@@ -33,7 +33,7 @@ export const PRICING_CONFIG = {
                         'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and the exclusive Gemini Nano Banana conversational image editor - create and modify images through natural language conversation',
                 },
                 {
-                    name: '🍌 Gemini Nano Banana - Conversational Image Editing (Unique to VT)',
+                    name: '🍌 Gemini Nano Banana - Conversational Image Editing (New to VT)',
                     description:
                         'World\'s first conversational image editor! Generate an image, then iteratively edit it through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving your edits in chat history',
                 },

@@ -34,8 +34,8 @@ export function SEOContent({ showOnHomepage = false, className = '' }: SEOConten
                     <ol>
                         <li>
                             <strong>Conversational Image Editing (Nano Banana):</strong>{' '}
-                            World's first conversational image editor allowing iterative image
-                            modification through natural language
+                            Conversational image editor allowing iterative image modification
+                            through natural language
                         </li>
                         <li>
                             <strong>Generative AI:</strong>{' '}

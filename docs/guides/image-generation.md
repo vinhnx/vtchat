@@ -2,7 +2,7 @@
 
 This guide documents VT's image generation experience including the revolutionary **Nano Banana conversational image editor** - the world's first AI-powered conversational image editing system.
 
-## 🌟 Nano Banana - Conversational Image Editing (Unique to VT)
+## 🌟 Nano Banana - Conversational Image Editing (New to VT)
 
 VT introduces **Nano Banana**, a breakthrough conversational image editor that transforms image creation and editing into natural conversation. Generate an image, then iteratively refine it through chat: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving your edit history.
 
