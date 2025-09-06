@@ -15,8 +15,8 @@ Successfully replaced Biome tooling with a lightweight dprint-based solution for
 - **Removed:** Biome dependencies and configuration
 - **Added:** dprint as formatting tool
 - **Updated:** Package scripts to use dprint commands:
-  - `bun run fmt` - Format code with dprint
-  - `bun run fmt:check` - Check formatting with dprint
+    - `bun run fmt` - Format code with dprint
+    - `bun run fmt:check` - Check formatting with dprint
 
 ### 2. dprint Configuration
 

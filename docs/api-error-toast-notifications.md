@@ -19,12 +19,12 @@ The system automatically categorizes errors and shows appropriate toast titles w
 | Error Type         | Toast Title               | Triggers                                            |
 | ------------------ | ------------------------- | --------------------------------------------------- |
 | Credit Balance     | 💳 Credit Balance Too Low | "credit balance", "too low"                         |
-| Rate Limiting      | ⏱️ Rate Limit Exceeded     | "rate limit", "quota"                               |
+| Rate Limiting      | ⏱️ Rate Limit Exceeded    | "rate limit", "quota"                               |
 | Network Issues     | 🌐 Network Error          | "network", "connection", "networkerror"             |
 | Authentication     | 🔑 Authentication Error   | "unauthorized", "invalid api key", "authentication" |
 | Billing            | 💸 Billing Issue          | "billing", "payment", "plans & billing"             |
 | Service Issues     | 🔧 Service Unavailable    | "503", "service unavailable", "502"                 |
-| Cancelled Requests | ⏹️ Request Cancelled       | "aborted", "stopped", "cancelled"                   |
+| Cancelled Requests | ⏹️ Request Cancelled      | "aborted", "stopped", "cancelled"                   |
 | Generic Errors     | API Call Failed           | Any other error                                     |
 
 ### Features

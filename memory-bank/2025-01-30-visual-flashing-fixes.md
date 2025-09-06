@@ -370,40 +370,40 @@ Users should now experience:
 
 1. **ChatInput Optimistic Creation** (`packages/common/components/chat-input/input.tsx`):
 
-   ```typescript
-   // IMPROVED FLOW: Proper sequencing to prevent race conditions
+    ```typescript
+    // IMPROVED FLOW: Proper sequencing to prevent race conditions
 
-   // Step 1: Create optimistic thread item structure
-   const optimisticThreadItemId = await generateThreadId();
-   const optimisticUserThreadItem = {
-       id: optimisticThreadItemId,
-       status: 'QUEUED',
-       threadId: optimisticId,
-       query: editor.getText(), // User's message
-       // ... other fields
-   };
+    // Step 1: Create optimistic thread item structure
+    const optimisticThreadItemId = await generateThreadId();
+    const optimisticUserThreadItem = {
+        id: optimisticThreadItemId,
+        status: 'QUEUED',
+        threadId: optimisticId,
+        query: editor.getText(), // User's message
+        // ... other fields
+    };
 
-   // Step 2: Create thread (sets currentThreadId, clears threadItems)
-   await createThread(optimisticId, { title: editor.getText() });
+    // Step 2: Create thread (sets currentThreadId, clears threadItems)
+    await createThread(optimisticId, { title: editor.getText() });
 
-   // Step 3: Add optimistic item immediately after thread creation
-   await createThreadItem(optimisticUserThreadItem);
+    // Step 3: Add optimistic item immediately after thread creation
+    await createThreadItem(optimisticUserThreadItem);
 
-   // Step 4: Navigate - user message now visible immediately
-   setIsGenerating(true);
-   router.push(`/chat/${optimisticId}`);
-   ```
+    // Step 4: Navigate - user message now visible immediately
+    setIsGenerating(true);
+    router.push(`/chat/${optimisticId}`);
+    ```
 
 2. **Fixed Race Condition Issues**:
-   - **Eliminated `switchThread` call**: Unnecessary for new threads, was causing threadItems to be cleared
-   - **Fixed async/await sequencing**: Ensured `createThread` completes before `createThreadItem`
-   - **Corrected type signature**: Fixed `switchThread` return type from `void` to `Promise<void>`
-   - **Thread Page Protection**: Added conditional loading to prevent database overwrites of optimistic items
+    - **Eliminated `switchThread` call**: Unnecessary for new threads, was causing threadItems to be cleared
+    - **Fixed async/await sequencing**: Ensured `createThread` completes before `createThreadItem`
+    - **Corrected type signature**: Fixed `switchThread` return type from `void` to `Promise<void>`
+    - **Thread Page Protection**: Added conditional loading to prevent database overwrites of optimistic items
 
 3. **Agent Provider Integration**:
-   - Pass `existingThreadItemId` to `handleSubmit`
-   - Agent provider updates existing thread item instead of creating new one
-   - Seamless transition from optimistic user message to AI response
+    - Pass `existingThreadItemId` to `handleSubmit`
+    - Agent provider updates existing thread item instead of creating new one
+    - Seamless transition from optimistic user message to AI response
 
 ### Technical Flow
 
@@ -429,8 +429,8 @@ Users should now experience:
 - **Timing Problem**: Database queries happen before optimistic items are persisted
 - **Data Loss**: Optimistic items replaced with empty database results
 - **Solution**:
-  1. Eliminate unnecessary `switchThread()` call for new threads
-  2. Check for existing thread items before calling `loadThreadItems()`
+    1. Eliminate unnecessary `switchThread()` call for new threads
+    2. Check for existing thread items before calling `loadThreadItems()`
 
 ### Performance Impact
 

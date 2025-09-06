@@ -92,10 +92,10 @@ Different caching strategies based on content type:
 #### Size Constraints
 
 - Reduced maximum chunk sizes for better loading:
-  - UI libs: 100KB (was 200KB)
-  - Utils: 100KB (was 150KB)
-  - Vendors: 100KB (was 150KB)
-  - Common: 150KB (was 200KB)
+    - UI libs: 100KB (was 200KB)
+    - Utils: 100KB (was 150KB)
+    - Vendors: 100KB (was 150KB)
+    - Common: 150KB (was 200KB)
 
 ### 4. Development Optimizations
 
@@ -191,9 +191,9 @@ Key achievements:
 #### Next.js Configuration Updates
 
 - **Added Remote Patterns**: Extended `images.remotePatterns` to support:
-  - Avatar services: Google, GitHub, Discord, Facebook, Twitter
-  - CDN services: jsDelivr, unpkg, Unsplash, placeholder services
-  - User-uploaded content: Cloudinary, Imgur
+    - Avatar services: Google, GitHub, Discord, Facebook, Twitter
+    - CDN services: jsDelivr, unpkg, Unsplash, placeholder services
+    - User-uploaded content: Cloudinary, Imgur
 - **SVG Support**: Enabled `dangerouslyAllowSVG: true` for icon and avatar support
 - **Cache Headers**: Added optimized headers for `/_next/image` endpoint
 
@@ -209,9 +209,9 @@ Key achievements:
 
 - **Static Asset Caching**: Added `/offline.html` to STATIC_ASSETS for immediate availability
 - **Fallback Strategy**: Updated `createOfflineResponse()` to:
-  1. First try cached `/offline.html`
-  2. Attempt to fetch `/offline.html` if not cached
-  3. Fall back to inline HTML if all else fails
+    1. First try cached `/offline.html`
+    2. Attempt to fetch `/offline.html` if not cached
+    3. Fall back to inline HTML if all else fails
 - **Cache Headers**: Added specific headers for offline.html with 1-day cache
 
 #### Service Worker Improvements

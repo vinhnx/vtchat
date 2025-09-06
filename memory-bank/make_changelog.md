@@ -126,11 +126,11 @@ When you want to generate a changelog:
 
 1. Copy the prompt template above
 2. Fill in the input information section with:
-   - Current version number
-   - Release date
-   - Recent git commits (use `git log --oneline --since="2 weeks ago"`)
-   - Merged pull requests
-   - Any manual changes not captured in commits
+    - Current version number
+    - Release date
+    - Recent git commits (use `git log --oneline --since="2 weeks ago"`)
+    - Merged pull requests
+    - Any manual changes not captured in commits
 3. Submit to AI assistant
 4. Review and edit the generated changelog
 5. Add to project CHANGELOG.md file

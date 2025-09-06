@@ -62,7 +62,7 @@ export type UnifiedAvatarProps = {
 import { AvatarLegacy as Avatar } from '@repo/ui';
 <Avatar
     name={user?.name || user?.email || 'User'}
-    size='sm'
+    size="sm"
     src={getSessionCacheBustedAvatarUrl(user?.image) || undefined}
 />;
 ```
@@ -73,7 +73,7 @@ import { AvatarLegacy as Avatar } from '@repo/ui';
 import { UnifiedAvatar } from '@repo/ui';
 <UnifiedAvatar
     name={user?.name || user?.email || 'User'}
-    size='sm'
+    size="sm"
     src={getSessionCacheBustedAvatarUrl(user?.image) || undefined}
     onImageError={() => {
         log.warn('Avatar failed to load in sidebar, using fallback initials');
@@ -88,12 +88,12 @@ import { UnifiedAvatar } from '@repo/ui';
 **Before**:
 
 ```tsx
-<Avatar className='h-6 w-6'>
+<Avatar className="h-6 w-6">
     <AvatarImage src={getSessionCacheBustedAvatarUrl(user.image)} alt={user.name || 'User'} />
-    <AvatarFallback className='text-xs'>
+    <AvatarFallback className="text-xs">
         {(user.name || user.email)?.[0]?.toUpperCase() ?? 'U'}
     </AvatarFallback>
-</Avatar>;
+</Avatar>
 ```
 
 **After**:
@@ -102,9 +102,9 @@ import { UnifiedAvatar } from '@repo/ui';
 <UnifiedAvatar
     name={user.name || user.email || 'User'}
     src={getSessionCacheBustedAvatarUrl(user.image)}
-    size='xs'
-    className='h-6 w-6'
-/>;
+    size="xs"
+    className="h-6 w-6"
+/>
 ```
 
 #### ✅ User Profile Settings
@@ -119,18 +119,18 @@ import { UnifiedAvatar } from '@repo/ui';
 <UnifiedAvatar
     name={session.user.name || session.user.email || 'User'}
     src={getSessionCacheBustedAvatarUrl(session.user.image)}
-    size='lg'
-    className='border-border/20 border-2'
+    size="lg"
+    className="border-border/20 border-2"
     onImageError={() => {
         log.warn(
             {
                 avatarUrl: session.user.image,
                 userEmail: session.user.email,
             },
-            'Avatar failed to load in profile settings, using fallback initials',
+            'Avatar failed to load in profile settings, using fallback initials'
         );
     }}
-/>;
+/>
 ```
 
 #### ✅ Navigation User Component
@@ -140,15 +140,15 @@ import { UnifiedAvatar } from '@repo/ui';
 **Before**:
 
 ```tsx
-<Avatar className='h-8 w-8 rounded-lg grayscale'>
+<Avatar className="h-8 w-8 rounded-lg grayscale">
     <AvatarImage src={getSessionCacheBustedAvatarUrl(user.avatar) || user.avatar} alt={user.name} />
-    <AvatarFallback className='rounded-lg'>
+    <AvatarFallback className="rounded-lg">
         {user.name
             .split(' ')
             .map(n => n[0])
             .join('')}
     </AvatarFallback>
-</Avatar>;
+</Avatar>
 ```
 
 **After**:
@@ -157,9 +157,9 @@ import { UnifiedAvatar } from '@repo/ui';
 <UnifiedAvatar
     name={user.name}
     src={getSessionCacheBustedAvatarUrl(user.avatar) || user.avatar}
-    size='md'
-    className='h-8 w-8 rounded-lg grayscale'
-/>;
+    size="md"
+    className="h-8 w-8 rounded-lg grayscale"
+/>
 ```
 
 ## Technical Benefits
@@ -239,29 +239,29 @@ const getInitials = (name: string): string => {
 ### Basic Usage
 
 ```tsx
-<UnifiedAvatar name='John Doe' src='https://example.com/avatar.jpg' size='md' />;
+<UnifiedAvatar name="John Doe" src="https://example.com/avatar.jpg" size="md" />
 ```
 
 ### With Error Handling
 
 ```tsx
 <UnifiedAvatar
-    name='Jane Smith'
+    name="Jane Smith"
     src={getSessionCacheBustedAvatarUrl(user.image)}
-    size='lg'
+    size="lg"
     onImageError={() => log.warn('Avatar failed to load')}
-/>;
+/>
 ```
 
 ### Custom Styling
 
 ```tsx
 <UnifiedAvatar
-    name='User Name'
+    name="User Name"
     src={avatarUrl}
-    size='sm'
-    className='border-2 border-blue-500 grayscale'
-/>;
+    size="sm"
+    className="border-2 border-blue-500 grayscale"
+/>
 ```
 
 ## Future Improvements

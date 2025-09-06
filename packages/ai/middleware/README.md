@@ -38,7 +38,7 @@ const model = getLanguageModel(
     useSearchGrounding,
     cachedContent,
     claude4InterleavedThinking,
-    isVtPlus,
+    isVtPlus
 );
 ```
 
@@ -57,7 +57,7 @@ const model = getLanguageModel(
     useSearchGrounding,
     cachedContent,
     claude4InterleavedThinking,
-    isVtPlus,
+    isVtPlus
 );
 ```
 
@@ -77,7 +77,7 @@ const model = getLanguageModel(
     cachedContent,
     claude4InterleavedThinking,
     isVtPlus,
-    MiddlewarePresets.DEVELOPMENT, // Use a preset
+    MiddlewarePresets.DEVELOPMENT // Use a preset
 );
 ```
 
@@ -100,7 +100,7 @@ const model = getLanguageModel(
         enableLogging: true,
         enableCaching: true,
         enableGuardrails: false,
-    },
+    }
 );
 ```
 

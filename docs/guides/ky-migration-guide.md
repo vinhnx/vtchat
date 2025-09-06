@@ -207,9 +207,9 @@ const [analyticsData, infrastructureData, securityData] = await Promise.all([
 1. **Start with high-priority files** - maximum impact
 2. **Update one file at a time** - easier to test and debug
 3. **Remove old dependencies** - once migration is complete:
-   ```bash
-   bun remove node-fetch undici
-   ```
+    ```bash
+    bun remove node-fetch undici
+    ```
 4. **Consider react-query** - for additional API state management benefits
 
 ## Estimated Impact

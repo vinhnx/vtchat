@@ -133,8 +133,8 @@ Once your local AI is running:
 1. **Open VTChat** → Go to the chat interface
 2. **Click Model Selector** → The dropdown at the top
 3. **Find Local Models**:
-   - **"Ollama (Beta)"** - If using Ollama
-   - **"LM Studio (Beta)"** - If using LM Studio
+    - **"Ollama (Beta)"** - If using Ollama
+    - **"LM Studio (Beta)"** - If using LM Studio
 4. **Choose Your Model** → Pick the model you downloaded
 5. **Start Chatting** → Your conversations are completely private!
 

@@ -14,22 +14,22 @@ The VT+ rate limiting system provides quota-based access control for three premi
 ### Core Components
 
 1. **Configuration** (`packages/common/src/config/vtPlusLimits.ts`)
-   - Feature definitions and default limits
-   - Environment variable overrides
-   - QuotaExceededError class
+    - Feature definitions and default limits
+    - Environment variable overrides
+    - QuotaExceededError class
 
 2. **Rate Limiter** (`packages/common/src/lib/vtplusRateLimiter.ts`)
-   - Atomic quota consumption using PostgreSQL UPSERT
-   - Usage tracking and retrieval
-   - Race condition prevention
+    - Atomic quota consumption using PostgreSQL UPSERT
+    - Usage tracking and retrieval
+    - Race condition prevention
 
 3. **Quota Wrappers** (`packages/common/src/lib/geminiWithQuota.ts`)
-   - AI SDK call interceptors for server-funded models
-   - Automatic quota enforcement for VT+ users
+    - AI SDK call interceptors for server-funded models
+    - Automatic quota enforcement for VT+ users
 
 4. **Database Schema** (`apps/web/lib/database/migrations/0009_vtplus_usage.sql`)
-   - `vtplus_usage` table with atomic constraints
-   - Unique constraint on (user_id, feature, period_start)
+    - `vtplus_usage` table with atomic constraints
+    - Unique constraint on (user_id, feature, period_start)
 
 ## Features and Limits
 
@@ -66,14 +66,14 @@ VTPLUS_LIMIT_PS=800          # Legacy: Pro Search monthly limit
 **Updated Counting Logic:**
 
 - **Deep Research**: 1 quota unit per user request (regardless of internal API calls)
-  - Daily limit: 25 requests per day
-  - Resets every day at 00:00 UTC
-  - Each research request consumes 1 unit from daily quota
+    - Daily limit: 25 requests per day
+    - Resets every day at 00:00 UTC
+    - Each research request consumes 1 unit from daily quota
 
 - **Pro Search**: 1 quota unit per user request
-  - Daily limit: 50 requests per day
-  - Resets every day at 00:00 UTC
-  - Each search request consumes 1 unit from daily quota
+    - Daily limit: 50 requests per day
+    - Resets every day at 00:00 UTC
+    - Each search request consumes 1 unit from daily quota
 
 **Note:** The quota system now counts user requests for Deep Research and Pro Search rather than individual AI model API calls, making limits more predictable and user-friendly.
 
@@ -142,11 +142,12 @@ Tasks automatically consume quota by passing feature parameters:
 // In workflow tasks (planner.ts, analysis.ts, etc.)
 import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 
-const vtplusFeature = mode === ChatMode.Deep
-    ? VtPlusFeature.DEEP_RESEARCH
-    : mode === ChatMode.Pro
-    ? VtPlusFeature.PRO_SEARCH
-    : VtPlusFeature.DEEP_RESEARCH;
+const vtplusFeature =
+    mode === ChatMode.Deep
+        ? VtPlusFeature.DEEP_RESEARCH
+        : mode === ChatMode.Pro
+          ? VtPlusFeature.PRO_SEARCH
+          : VtPlusFeature.DEEP_RESEARCH;
 
 await generateObject({
     // ... other parameters
@@ -178,7 +179,7 @@ try {
                 limit: error.limit,
                 used: error.used,
             }),
-            { status: 429 },
+            { status: 429 }
         );
     }
     throw error;
@@ -247,22 +248,22 @@ The existing `vtplus_usage` table already supports daily/monthly tracking with:
 
 1. Update environment variables:
 
-   ```bash
-   VTPLUS_DAILY_LIMIT_DR=5
-   VTPLUS_DAILY_LIMIT_PS=10
-   VTPLUS_MONTHLY_LIMIT_RAG=2000
-   ```
+    ```bash
+    VTPLUS_DAILY_LIMIT_DR=5
+    VTPLUS_DAILY_LIMIT_PS=10
+    VTPLUS_MONTHLY_LIMIT_RAG=2000
+    ```
 
 2. Deploy application:
 
-   ```bash
-   ./deploy-fly.sh --auto --version patch
-   ```
+    ```bash
+    ./deploy-fly.sh --auto --version patch
+    ```
 
 3. Verification:
-   - Monitor logs for quota consumption
-   - Test VT+ features in staging
-   - Verify usage tracking in UI
+    - Monitor logs for quota consumption
+    - Test VT+ features in staging
+    - Verify usage tracking in UI
 
 ### Data Cleanup
 
@@ -303,7 +304,7 @@ log.info(
         used,
         limit,
     },
-    'VT+ quota consumed',
+    'VT+ quota consumed'
 );
 ```
 
@@ -327,38 +328,38 @@ Set up alerts for:
 ### Future Enhancements
 
 1. **Redis Caching** (planned)
-   - Cache `getAllUsage` results for 30-60 seconds
-   - Invalidate on quota consumption
-   - Reduce database read load by >90%
+    - Cache `getAllUsage` results for 30-60 seconds
+    - Invalidate on quota consumption
+    - Reduce database read load by >90%
 
 2. **Admin Tooling** (planned)
-   - CLI for quota adjustments
-   - Web UI for usage monitoring
-   - Custom limit overrides
+    - CLI for quota adjustments
+    - Web UI for usage monitoring
+    - Custom limit overrides
 
 3. **Advanced Analytics**
-   - Usage trending and forecasting
-   - Cost optimization recommendations
-   - User behavior insights
+    - Usage trending and forecasting
+    - Cost optimization recommendations
+    - User behavior insights
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Quota not consuming**
-   - Check user tier: must be VT+
-   - Verify BYOK status: should be false for quota consumption
-   - Confirm feature mapping in workflow tasks
+    - Check user tier: must be VT+
+    - Verify BYOK status: should be false for quota consumption
+    - Confirm feature mapping in workflow tasks
 
 2. **Race condition concerns**
-   - Monitor for duplicate rows in `vtplus_usage`
-   - Check UNIQUE constraint enforcement
-   - Review concurrent test results
+    - Monitor for duplicate rows in `vtplus_usage`
+    - Check UNIQUE constraint enforcement
+    - Review concurrent test results
 
 3. **Performance issues**
-   - Monitor database connection pool usage
-   - Check query execution plans
-   - Consider implementing Redis cache
+    - Monitor database connection pool usage
+    - Check query execution plans
+    - Consider implementing Redis cache
 
 ### Debugging
 

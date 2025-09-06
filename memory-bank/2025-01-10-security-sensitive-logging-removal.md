@@ -11,32 +11,32 @@ January 10, 2025
 - **File**: `packages/common/store/chat.store.ts`
 - **Issue**: Log statement was exposing `chatMode` and `configKey` which could contain sensitive subscription information
 - **Before**:
-  ```typescript
-  log.info(
-      { context: 'ChatStore', chatMode, configKey: CONFIG_KEY },
-      'Successfully persisted chat mode',
-  );
-  ```
+    ```typescript
+    log.info(
+        { context: 'ChatStore', chatMode, configKey: CONFIG_KEY },
+        'Successfully persisted chat mode'
+    );
+    ```
 - **After**:
-  ```typescript
-  log.info({ context: 'ChatStore' }, 'Successfully persisted chat mode');
-  ```
+    ```typescript
+    log.info({ context: 'ChatStore' }, 'Successfully persisted chat mode');
+    ```
 
 ### 2. Removed Sensitive Logging in setModel Function
 
 - **File**: `packages/common/store/chat.store.ts`
 - **Issue**: Log statement was exposing `modelId` and `configKey` which could contain sensitive subscription information
 - **Before**:
-  ```typescript
-  log.info(
-      { context: 'ChatStore', modelId: model.id, configKey: CONFIG_KEY },
-      'Successfully persisted model',
-  );
-  ```
+    ```typescript
+    log.info(
+        { context: 'ChatStore', modelId: model.id, configKey: CONFIG_KEY },
+        'Successfully persisted model'
+    );
+    ```
 - **After**:
-  ```typescript
-  log.info({ context: 'ChatStore' }, 'Successfully persisted model');
-  ```
+    ```typescript
+    log.info({ context: 'ChatStore' }, 'Successfully persisted model');
+    ```
 
 ### 3. Code Formatting
 
@@ -46,9 +46,9 @@ January 10, 2025
 ## Security Impact
 
 - **High Priority**: Removed logging of potentially sensitive subscription data including:
-  - Chat mode selection (could reveal subscription tier)
-  - Model selection (could reveal access to premium models)
-  - Config keys (could reveal user-specific identifiers)
+    - Chat mode selection (could reveal subscription tier)
+    - Model selection (could reveal access to premium models)
+    - Config keys (could reveal user-specific identifiers)
 
 ## Verification
 

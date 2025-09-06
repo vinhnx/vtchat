@@ -14,14 +14,14 @@ Successfully created a dedicated "Usage" settings section with an improved, more
 ### 2. Updated Settings Modal (`packages/common/components/settings-modal.tsx`)
 
 - Added new "Usage" menu item to `settingMenu` array:
-  ```javascript
-  {
-      title: 'Usage',
-      description: 'Track your VT usage and explore upgrade options',
-      key: SETTING_TABS.USAGE,
-      component: <RateLimitUsageMeter userId={session?.user?.id} />,
-  }
-  ```
+    ```javascript
+    {
+        title: 'Usage',
+        description: 'Track your VT usage and explore upgrade options',
+        key: SETTING_TABS.USAGE,
+        component: <RateLimitUsageMeter userId={session?.user?.id} />,
+    }
+    ```
 - Removed the rate limit meter from the API Keys section to avoid duplication
 - Fixed unused variable issue
 
@@ -33,13 +33,13 @@ Successfully created a dedicated "Usage" settings section with an improved, more
 - **Title**: "Usage Overview" instead of "AI Model Usage"
 - **Subtitle**: "Track your VT usage and explore upgrade options"
 - **Status Badges**:
-  - "Active", "Popular", "Busy" instead of "Normal", "Warning", "Critical"
-  - "Available", "Active", "Busy" instead of "Low", "Moderate", "High"
+    - "Active", "Popular", "Busy" instead of "Normal", "Warning", "Critical"
+    - "Available", "Active", "Busy" instead of "Low", "Moderate", "High"
 - **Colors**: Uses positive blue/green gradients instead of warning red/orange
 - **VT+ Upgrade CTA**: Added prominent upgrade call-to-action when usage is high (≥60% daily or ≥50% per-minute)
-  - Features crown icon and benefits list
-  - Encouraging copy: "Loving VT? Upgrade to VT+ for More!"
-  - Lists benefits: "Higher daily limits", "Priority processing", "Advanced models"
+    - Features crown icon and benefits list
+    - Encouraging copy: "Loving VT? Upgrade to VT+ for More!"
+    - Lists benefits: "Higher daily limits", "Priority processing", "Advanced models"
 
 #### Technical Improvements:
 

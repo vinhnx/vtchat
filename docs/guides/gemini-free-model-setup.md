@@ -81,10 +81,10 @@ The main completion API (`/api/completion`) includes:
 #### Settings Page
 
 - `RateLimitMeter` component shows:
-  - Personal daily usage progress bar
-  - Personal remaining requests counter
-  - Reset time information
-  - Warning messages when user's limits are approached
+    - Personal daily usage progress bar
+    - Personal remaining requests counter
+    - Reset time information
+    - Warning messages when user's limits are approached
 
 ## Environment Setup
 

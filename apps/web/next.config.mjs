@@ -62,13 +62,6 @@ const nextConfig = {
         optimizePackageImports: ['@repo/shared', '@repo/common', '@repo/ui'],
         serverMinification: true,
 
-        // Ensure Turbopack picks up alias mappings too
-        turbopack: {
-            resolveAlias: {
-                'entities/lib/decode.js': 'entities/decode.js',
-                'entities/lib/decode': 'entities/decode.js',
-            },
-        },
     },
 
     // Turbopack-specific aliases to work around upstream package exports.

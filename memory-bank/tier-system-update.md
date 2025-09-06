@@ -61,16 +61,16 @@ Successfully updated VT's tier system to reflect the new feature distribution wh
 ## Key Changes Made
 
 1. **Feature Migration**: Moved advanced features from VT+ exclusive to free tier:
-   - Dark Mode
-   - Structured Output
-   - Thinking Mode
-   - Document Processing
-   - Chart Visualization
-   - Gemini Explicit Caching
+    - Dark Mode
+    - Structured Output
+    - Thinking Mode
+    - Document Processing
+    - Chart Visualization
+    - Gemini Explicit Caching
 
 2. **VT+ Focus**: Narrowed VT+ to only 3 exclusive features:
-   - PRO_SEARCH (Enhanced Web Search)
-   - DEEP_RESEARCH (Deep Research)
+    - PRO_SEARCH (Enhanced Web Search)
+    - DEEP_RESEARCH (Deep Research)
 
 3. **Pricing Update**: Updated pricing references from $10/month to $5.99/month
 

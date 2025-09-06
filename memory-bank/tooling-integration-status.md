@@ -19,9 +19,9 @@
 - **Status**: Complete
 - **Configuration**: `biome.json` with proper file size limits (10MB)
 - **Features**:
-  - Formatting with 4-space indentation, single quotes
-  - Linting with recommended rules
-  - JSON formatting support
+    - Formatting with 4-space indentation, single quotes
+    - Linting with recommended rules
+    - JSON formatting support
 - **Performance**: 35x faster than Prettier, 25x faster than ESLint
 
 #### oxlint Integration
@@ -29,9 +29,9 @@
 - **Status**: Complete
 - **Configuration**: `.oxlintrc.json` with comprehensive rules
 - **Features**:
-  - React hooks exhaustive dependencies checking
-  - Unused variables detection
-  - ES2021 environment support
+    - React hooks exhaustive dependencies checking
+    - Unused variables detection
+    - ES2021 environment support
 - **Performance**: Rust-based, extremely fast
 
 #### Bun Integration
@@ -39,9 +39,9 @@
 - **Status**: Complete
 - **Scripts**: Updated `package.json` with Biome and oxlint commands
 - **Commands**:
-  - `bun run biome:format` - Format code
-  - `bun run biome:check` - Check formatting and linting
-  - `bun lint` - Run oxlint
+    - `bun run biome:format` - Format code
+    - `bun run biome:check` - Check formatting and linting
+    - `bun lint` - Run oxlint
 
 ### 2. Footer Badge Implementation ✅
 

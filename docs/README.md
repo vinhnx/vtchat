@@ -66,6 +66,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[Reasoning Mode](reasoning-mode-implementation.md)** - AI reasoning capabilities
 - **[Document Upload](document-upload-feature.md)** - File processing features
 - **[Structured Output](structured-output-implementation-summary.md)** - JSON extraction capabilities
+- **[Image Generation](guides/image-generation.md)** - UI, AR behavior, and API flow
 
 ## 🧪 Testing & Quality
 

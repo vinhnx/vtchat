@@ -79,7 +79,7 @@ Also improved TypeScript type safety by:
 - Ensuring all content follows AI SDK schema
 
 ```typescript
-type MessageContent = { type: 'text'; text: string; } | { type: 'image'; image: string; };
+type MessageContent = { type: 'text'; text: string } | { type: 'image'; image: string };
 
 const content: MessageContent[] = [{ type: 'text', text: item.query || '' }];
 ```

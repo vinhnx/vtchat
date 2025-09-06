@@ -29,7 +29,7 @@ Successfully resolved critical "Failed to fetch RSC payload" errors affecting ad
  * POST request that returns raw Response for streaming endpoints.
  * Use this for endpoints that return streaming responses instead of JSON
  */
-postStream: ((url: string, options: SecureRequestOptions = {}): Promise<Response> => {
+postStream: (url: string, options: SecureRequestOptions = {}): Promise<Response> => {
     const { apiKeys = {}, body, ...kyOptions } = options;
     const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
 
@@ -40,7 +40,7 @@ postStream: ((url: string, options: SecureRequestOptions = {}): Promise<Response
 
     // Return the raw Response for streaming
     return client.post(url, requestOptions);
-});
+};
 ```
 
 ### 2. Updated Agent Provider (packages/common/hooks/agent-provider.tsx)
@@ -105,15 +105,15 @@ eventType as (typeof EVENT_TYPES)[number];
 ## Files Modified
 
 1. **packages/shared/lib/http-client.ts**
-   - Added `postStream` method for raw Response streaming
-   - Maintains security patterns with API key handling
+    - Added `postStream` method for raw Response streaming
+    - Maintains security patterns with API key handling
 
 2. **packages/common/hooks/agent-provider.tsx**
-   - Updated to use `postStream` for `/api/completion` endpoint
-   - Fixed TypeScript event type casting
+    - Updated to use `postStream` for `/api/completion` endpoint
+    - Fixed TypeScript event type casting
 
 3. **apps/web/lib/admin.ts**
-   - Enhanced error handling with structured logging
+    - Enhanced error handling with structured logging
 
 ## Next Steps
 

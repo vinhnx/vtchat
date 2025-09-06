@@ -6,13 +6,13 @@ This report documents the real-time testing of the VT Chat authentication system
 
 ## 📋 Test Summary
 
-| Test Case            | Result        | Details                                                 |
-| -------------------- | ------------- | ------------------------------------------------------- |
-| Login Page Access    | ✅ **PASS**   | Successfully loaded login page with all OAuth buttons   |
-| Google OAuth Flow    | ✅ **PASS**   | Redirected to Google OAuth with correct configuration   |
-| GitHub OAuth Flow    | ✅ **PASS**   | Redirected to GitHub OAuth with correct configuration   |
+| Test Case            | Result         | Details                                                 |
+| -------------------- | -------------- | ------------------------------------------------------- |
+| Login Page Access    | ✅ **PASS**    | Successfully loaded login page with all OAuth buttons   |
+| Google OAuth Flow    | ✅ **PASS**    | Redirected to Google OAuth with correct configuration   |
+| GitHub OAuth Flow    | ✅ **PASS**    | Redirected to GitHub OAuth with correct configuration   |
 | Twitter/X OAuth Flow | ⚠️ **PARTIAL** | Redirected to X.com but browser compatibility issue     |
-| Home Page Access     | ✅ **PASS**   | Successfully loaded home page for unauthenticated users |
+| Home Page Access     | ✅ **PASS**    | Successfully loaded home page for unauthenticated users |
 
 ## 🔍 Detailed Test Results
 
@@ -33,7 +33,7 @@ This report documents the real-time testing of the VT Chat authentication system
 
 ```yaml
 - heading "Welcome to VT!" [level=1]
-- paragraph: "Sign in to your account using your preferred method"
+- paragraph: 'Sign in to your account using your preferred method'
 - button "Google" [cursor=pointer]
 - button "GitHub" [cursor=pointer]
 - button "X (Twitter)" [cursor=pointer]

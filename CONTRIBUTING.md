@@ -28,11 +28,11 @@ Thank you for contributing! This repo uses Bun, a monorepo layout, and shared to
 ## API, Logging, and Errors
 
 - HTTP: use the centralized ky client only.
-  - `import { http } from '@repo/shared/lib/http-client'`
-  - GET: `await http.get('/api/endpoint')`
-  - POST: `await http.post('/api/endpoint', { body: data })`
-  - Streaming: `await http.postStream('/api/completion', { body, signal })`
-  - API keys: `http.get('/api/endpoint', { apiKeys: { openai: 'sk-...' } })`
+    - `import { http } from '@repo/shared/lib/http-client'`
+    - GET: `await http.get('/api/endpoint')`
+    - POST: `await http.post('/api/endpoint', { body: data })`
+    - Streaming: `await http.postStream('/api/completion', { body, signal })`
+    - API keys: `http.get('/api/endpoint', { apiKeys: { openai: 'sk-...' } })`
 - Logging: Pino via `import { log } from '@repo/shared/lib/logger'`; do not use `console.*`.
 
 ## Tests
@@ -44,7 +44,7 @@ Thank you for contributing! This repo uses Bun, a monorepo layout, and shared to
 ## Commits & Branches
 
 - Conventional Commits recommended: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci` with optional scope (`web`, `shared`, `ui`).
-  - Example: `feat(web): add chat sidebar`
+    - Example: `feat(web): add chat sidebar`
 - Keep commits small and descriptive.
 
 ## Pull Requests

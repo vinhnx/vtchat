@@ -73,7 +73,7 @@ const model = getLanguageModel(
     cachedContent,
     claude4InterleavedThinking,
     isVtPlus,
-    MiddlewarePresets.DEVELOPMENT,
+    MiddlewarePresets.DEVELOPMENT
 );
 ```
 
@@ -92,7 +92,7 @@ const model = getLanguageModel(
         enableLogging: true,
         enableCaching: true,
         enableGuardrails: false,
-    },
+    }
 );
 ```
 

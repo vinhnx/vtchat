@@ -47,7 +47,7 @@ const containerClass = cn(
     'relative flex flex-1 flex-row h-[calc(100dvh-4px)]',
     'border border-border/60 rounded-xl bg-background/95',
     'w-full overflow-hidden shadow-soft',
-    'backdrop-blur-sm',
+    'backdrop-blur-sm'
 );
 ```
 

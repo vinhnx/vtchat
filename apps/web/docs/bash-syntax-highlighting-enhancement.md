@@ -133,23 +133,23 @@ Added specialized styling for:
 ### Enhanced Files:
 
 1. **`packages/common/components/code-block/code-block.tsx`**
-   - Added shell variant aliases (fish, ksh, csh, tcsh)
-   - Extended icon detection for all shell types
+    - Added shell variant aliases (fish, ksh, csh, tcsh)
+    - Extended icon detection for all shell types
 
 2. **`packages/common/components/code-block/code-block.css`**
-   - Added bash-specific token styling
-   - Enhanced shebang, operator, and variable highlighting
-   - Both light and dark mode support
+    - Added bash-specific token styling
+    - Enhanced shebang, operator, and variable highlighting
+    - Both light and dark mode support
 
 ### Documentation Added:
 
 3. **`packages/common/components/code-block/bash-syntax-highlighting.md`**
-   - Comprehensive documentation with examples
-   - Color scheme reference
-   - Usage guidelines
+    - Comprehensive documentation with examples
+    - Color scheme reference
+    - Usage guidelines
 
 4. **`apps/web/docs/bash-syntax-highlighting-enhancement.md`**
-   - This summary document
+    - This summary document
 
 ## 🧪 Testing Results
 

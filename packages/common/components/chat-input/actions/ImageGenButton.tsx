@@ -2,6 +2,7 @@
 
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
+import { mergeAspectRatioHint } from '@repo/common/utils/aspect-ratio';
 import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
@@ -23,7 +24,6 @@ import {
 import { Image } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { mergeAspectRatioHint } from '@repo/common/utils/aspect-ratio';
 
 export const ImageGenButton = ({
     attachments = [],

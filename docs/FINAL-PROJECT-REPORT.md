@@ -180,8 +180,8 @@ Build:        Turborepo, Turbopack
 
 - All free tier features
 - 2 Research-Focused Exclusives:
-  - Enhanced Web Search (PRO_SEARCH)
-  - Deep Research (DEEP_RESEARCH)
+    - Enhanced Web Search (PRO_SEARCH)
+    - Deep Research (DEEP_RESEARCH)
 - Premium AI models access
 - Priority support
 

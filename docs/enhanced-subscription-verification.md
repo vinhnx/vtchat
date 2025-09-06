@@ -22,7 +22,7 @@ Created `packages/shared/utils/subscription-verification.ts` with comprehensive 
 export async function verifyExistingCreemSubscription(
     userId: string,
     deps: DatabaseDependencies,
-    targetPlan: PlanSlug = PlanSlug.VT_PLUS,
+    targetPlan: PlanSlug = PlanSlug.VT_PLUS
 ): Promise<SubscriptionVerificationResult>;
 ```
 
@@ -53,7 +53,7 @@ const existingSubscription = await db
 const verification = await verifyExistingCreemSubscription(
     userId,
     { db, userSubscriptions, users, eq },
-    PlanSlug.VT_PLUS,
+    PlanSlug.VT_PLUS
 );
 ```
 

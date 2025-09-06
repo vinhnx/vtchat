@@ -51,7 +51,7 @@ log.info(
         action: 'login',
         ip: '192.168.1.1', // Will be redacted automatically
     },
-    'User login attempt',
+    'User login attempt'
 );
 ```
 
@@ -145,7 +145,7 @@ log.info(
         },
         publicData: 'This is safe', // Will be visible
     },
-    'User data logged',
+    'User data logged'
 );
 
 // Output:
@@ -210,7 +210,7 @@ log.error(
         params: { limit: 50 },
         duration: 1234,
     },
-    'Database query failed',
+    'Database query failed'
 );
 ```
 
@@ -255,7 +255,7 @@ log.error(
         context: 'user-registration',
         userId: '12345',
     },
-    'User registration failed',
+    'User registration failed'
 );
 ```
 
@@ -336,7 +336,7 @@ export function loggingMiddleware(req: NextRequest) {
             userAgent: req.headers.get('user-agent'),
             ip: req.ip,
         },
-        'Request started',
+        'Request started'
     );
 
     return NextResponse.next();

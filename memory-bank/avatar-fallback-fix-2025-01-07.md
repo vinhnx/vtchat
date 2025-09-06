@@ -23,38 +23,38 @@
 
 ```tsx
 {
-    user.image
-        ? (
-            <Image
-                src={getSessionCacheBustedAvatarUrl(user.image) || user.image}
-                onError={e => {
-                    /* complex manual fallback */
-                }}
-            />
-        )
-        : <Avatar name={user.name || user.email} size='sm' />;
+    user.image ? (
+        <Image
+            src={getSessionCacheBustedAvatarUrl(user.image) || user.image}
+            onError={e => {
+                /* complex manual fallback */
+            }}
+        />
+    ) : (
+        <Avatar name={user.name || user.email} size="sm" />
+    );
 }
 ```
 
 **After**:
 
 ```tsx
-<Avatar className='h-6 w-6'>
+<Avatar className="h-6 w-6">
     <AvatarImage
         src={getSessionCacheBustedAvatarUrl(user.image) || user.image}
         alt={user.name || user.email || 'User'}
-        referrerPolicy='no-referrer-when-downgrade'
+        referrerPolicy="no-referrer-when-downgrade"
         onError={() => {
             log.warn(
                 { avatarUrl: user.image, userEmail: user.email },
-                'Avatar failed to load, using fallback initials',
+                'Avatar failed to load, using fallback initials'
             );
         }}
     />
-    <AvatarFallback className='text-xs font-medium'>
+    <AvatarFallback className="text-xs font-medium">
         {(user.name || user.email || 'U').charAt(0).toUpperCase()}
     </AvatarFallback>
-</Avatar>;
+</Avatar>
 ```
 
 ### 2. Benefits of Radix Avatar Pattern

@@ -103,20 +103,20 @@ Enhanced all Radix UI components to use Radix's automatic transform-origin calcu
 ### **Files Modified**
 
 1. `packages/ui/src/components/dropdown-menu.tsx`
-   - Added `origin-[--radix-dropdown-menu-content-transform-origin]` to content elements
+    - Added `origin-[--radix-dropdown-menu-content-transform-origin]` to content elements
 
 2. `packages/ui/src/components/tooltip.tsx`
-   - Added `origin-[--radix-tooltip-content-transform-origin]` to tooltip content
+    - Added `origin-[--radix-tooltip-content-transform-origin]` to tooltip content
 
 3. `packages/ui/src/components/navigation-menu.tsx`
-   - Replaced `origin-top-center` with `origin-[--radix-navigation-menu-viewport-transform-origin]`
+    - Replaced `origin-top-center` with `origin-[--radix-navigation-menu-viewport-transform-origin]`
 
 4. `packages/ui/src/components/select.tsx` (NEW)
-   - Complete Select component with built-in origin-aware animations
-   - All sub-components: Trigger, Content, Item, Value, Label, etc.
+    - Complete Select component with built-in origin-aware animations
+    - All sub-components: Trigger, Content, Item, Value, Label, etc.
 
 5. `packages/ui/src/components/index.ts`
-   - Added Select component to exports
+    - Added Select component to exports
 
 ### **Animation Flow Examples**
 

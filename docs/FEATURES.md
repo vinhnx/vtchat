@@ -116,6 +116,14 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Export Options**: Conversation export capabilities with multiple formats
 - **Performance Optimized**: 87% faster compilation and improved load times
 
+### Image Generation
+
+- **Generate Button**: One-click image generation from the chat input.
+- **Style Templates**: Photorealistic, Sticker, Product, Minimalist, Comic prompt scaffolds.
+- **Aspect Ratio Selector**: Replace-over-append logic to avoid duplicate AR hints.
+- **BYOK (Gemini)**: Requires a Google Gemini API key; helpful tooltips when missing.
+- **Robust UX**: Optimistic thread updates, structured logging, friendly toasts on errors.
+
 ## 💳 Subscription Management
 
 ### Sophisticated Subscription Tiers

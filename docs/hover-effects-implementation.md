@@ -75,7 +75,7 @@ This approach creates a more cohesive and modern look that adapts well to both l
 
 ```jsx
 // Premium button with shimmer effect
-<PremiumButton shimmer>Premium Feature</PremiumButton>;
+<PremiumButton shimmer>Premium Feature</PremiumButton>
 ```
 
 ### Custom Classes

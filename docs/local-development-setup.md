@@ -182,6 +182,8 @@ DATABASE_URL=postgresql://yourusername@localhost:5432/vtchat_dev
 2. Get an API key
 3. Copy the key starting with `AIza`
 
+Note: A Gemini API key is required for the Image Generation feature in chat. Without a key, the Generate button shows a helpful tooltip and stays in a limited state.
+
 **Fireworks AI API Key**
 
 1. Go to [app.fireworks.ai/settings/users/api-keys](https://app.fireworks.ai/settings/users/api-keys)

@@ -116,25 +116,25 @@ if (url.pathname.startsWith('/_next/image')) {
 
 1. **Restart Development Server**: Required for next.config.mjs changes
 
-   ```bash
-   # Kill existing server
-   pkill -f "next dev"
+    ```bash
+    # Kill existing server
+    pkill -f "next dev"
 
-   # Start fresh
-   bun dev
-   ```
+    # Start fresh
+    bun dev
+    ```
 
 2. **Clear Browser Cache**: Hard refresh (Ctrl+F5 / Cmd+Shift+R)
 
 3. **Check Network Tab**: Avatar requests should show:
-   - `/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com...` (200 OK)
-   - No "undefined Response" service worker errors
+    - `/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com...` (200 OK)
+    - No "undefined Response" service worker errors
 
 4. **Verify Display**: User avatars should appear in:
-   - Top-right user button
-   - Sidebar navigation (if using NavUser)
-   - Admin user tables
-   - Profile settings
+    - Top-right user button
+    - Sidebar navigation (if using NavUser)
+    - Admin user tables
+    - Profile settings
 
 ### **Debugging Guide**
 
@@ -158,10 +158,10 @@ Consider standardizing on Radix Avatar approach:
 Example standard avatar component:
 
 ```tsx
-<Avatar className='h-8 w-8 rounded-lg'>
+<Avatar className="h-8 w-8 rounded-lg">
     <AvatarImage src={getSessionCacheBustedAvatarUrl(user.image) || user.image} alt={user.name} />
     <AvatarFallback>{user.name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
-</Avatar>;
+</Avatar>
 ```
 
 The avatar rendering system should now work reliably across all components and auth providers.

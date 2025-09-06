@@ -70,12 +70,12 @@ User Subscribes → Webhook Updates user_subscriptions → API checks both sourc
 2. Check subscription status: `GET /api/subscription/status`
 3. Verify database consistency:
 
-   ```sql
-   SELECT u.email, u.plan_slug, us.plan, us.status, us.current_period_end
-   FROM users u
-   LEFT JOIN user_subscriptions us ON u.id = us.user_id
-   WHERE u.plan_slug = 'vt_plus';
-   ```
+    ```sql
+    SELECT u.email, u.plan_slug, us.plan, us.status, us.current_period_end
+    FROM users u
+    LEFT JOIN user_subscriptions us ON u.id = us.user_id
+    WHERE u.plan_slug = 'vt_plus';
+    ```
 
 ### Issue: Inconsistent data between tables
 

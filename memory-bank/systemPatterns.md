@@ -3,16 +3,16 @@
 ## System Architecture
 
 - **Monorepo Structure:** The project utilizes a monorepo (likely managed by Turborepo, given `turbo.json`) containing:
-  - `apps/web`: A Next.js web application.
-  - `packages/`: Shared libraries for common functionality:
-    - `packages/common`: UI components, hooks, store, context providers.
-    - `packages/shared`: Core types, configurations, utilities, logger.
-    - `packages/ai`: AI models, providers, tools, and workflow logic.
-    - `packages/actions`: Server actions (e.g., feedback).
-    - `packages/orchestrator`: Task orchestration logic.
-    - `packages/tailwind-config`: Shared Tailwind CSS configuration.
-    - `packages/typescript-config`: Shared TypeScript configurations.
-    - `packages/ui`: Base UI components (likely from a library like shadcn/ui).
+    - `apps/web`: A Next.js web application.
+    - `packages/`: Shared libraries for common functionality:
+        - `packages/common`: UI components, hooks, store, context providers.
+        - `packages/shared`: Core types, configurations, utilities, logger.
+        - `packages/ai`: AI models, providers, tools, and workflow logic.
+        - `packages/actions`: Server actions (e.g., feedback).
+        - `packages/orchestrator`: Task orchestration logic.
+        - `packages/tailwind-config`: Shared Tailwind CSS configuration.
+        - `packages/typescript-config`: Shared TypeScript configurations.
+        - `packages/ui`: Base UI components (likely from a library like shadcn/ui).
 
 - **Frontend:** Next.js (React) for the web application.
 - **Styling:** Tailwind CSS, with components potentially from shadcn/ui.
@@ -41,17 +41,17 @@
 
 - **Individual Selectors:** Always use individual selectors instead of object destructuring to avoid infinite re-renders:
 
-  ```tsx
-  // ✅ Correct: Individual selectors
-  const value1 = useStore(state => state.value1);
-  const value2 = useStore(state => state.value2);
+    ```tsx
+    // ✅ Correct: Individual selectors
+    const value1 = useStore(state => state.value1);
+    const value2 = useStore(state => state.value2);
 
-  // ❌ Incorrect: Object destructuring (causes infinite loops)
-  const { value1, value2 } = useStore(state => ({
-      value1: state.value1,
-      value2: state.value2,
-  }));
-  ```
+    // ❌ Incorrect: Object destructuring (causes infinite loops)
+    const { value1, value2 } = useStore(state => ({
+        value1: state.value1,
+        value2: state.value2,
+    }));
+    ```
 
 - **Selector Memoization:** Use callback memoization for complex selectors to prevent unnecessary re-renders.
 - **Settings Persistence:** All user settings use unified storage system (`SettingsStorage`) with type-safe operations, error handling, and user-specific isolation.

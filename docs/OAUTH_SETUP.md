@@ -80,46 +80,46 @@ All OAuth providers support secure account linking:
 ### Twitter/X OAuth Setup
 
 1. **Create Twitter App**
-   - Go to [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard)
-   - Create a new application
-   - Configure OAuth 2.0 settings
+    - Go to [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard)
+    - Create a new application
+    - Configure OAuth 2.0 settings
 
 2. **Configure Callback URLs**
-   - **Development**: `http://localhost:3000/api/auth/callback/twitter`
-   - **Production**: `https://vtchat.io.vn/api/auth/callback/twitter`
+    - **Development**: `http://localhost:3000/api/auth/callback/twitter`
+    - **Production**: `https://vtchat.io.vn/api/auth/callback/twitter`
 
 3. **Request Email Scope**
-   - Enable "Request email from users" in Twitter app settings
-   - This allows VTChat to retrieve user email addresses
+    - Enable "Request email from users" in Twitter app settings
+    - This allows VTChat to retrieve user email addresses
 
 4. **Set Environment Variables**
-   ```bash
-   TWITTER_CLIENT_ID=your_twitter_client_id
-   TWITTER_CLIENT_SECRET=your_twitter_client_secret
-   ```
+    ```bash
+    TWITTER_CLIENT_ID=your_twitter_client_id
+    TWITTER_CLIENT_SECRET=your_twitter_client_secret
+    ```
 
 ### GitHub OAuth Setup (Already Configured)
 
 1. **GitHub Developer Settings**
-   - Go to GitHub Settings > Developer settings > OAuth Apps
-   - Create new OAuth App
+    - Go to GitHub Settings > Developer settings > OAuth Apps
+    - Create new OAuth App
 
 2. **Configure Application**
-   - **Application name**: VTChat
-   - **Homepage URL**: `https://vtchat.io.vn`
-   - **Authorization callback URL**: `https://vtchat.io.vn/api/auth/callback/github`
+    - **Application name**: VTChat
+    - **Homepage URL**: `https://vtchat.io.vn`
+    - **Authorization callback URL**: `https://vtchat.io.vn/api/auth/callback/github`
 
 ### Google OAuth Setup (Already Configured)
 
 1. **Google Cloud Console**
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create/select project
-   - Enable Google+ API
+    - Go to [Google Cloud Console](https://console.cloud.google.com/)
+    - Create/select project
+    - Enable Google+ API
 
 2. **OAuth 2.0 Credentials**
-   - Create OAuth 2.0 client ID
-   - Add authorized redirect URIs
-   - Configure consent screen
+    - Create OAuth 2.0 client ID
+    - Add authorized redirect URIs
+    - Configure consent screen
 
 ## Security Features
 
@@ -148,9 +148,9 @@ All OAuth providers support secure account linking:
 1. Ensure environment variables are set
 2. Start development server: `bun run dev`
 3. Test each OAuth provider:
-   - Click social login buttons
-   - Verify successful authentication
-   - Check account linking functionality
+    - Click social login buttons
+    - Verify successful authentication
+    - Check account linking functionality
 
 ### Production Verification
 
@@ -164,16 +164,16 @@ All OAuth providers support secure account linking:
 ### Common Issues
 
 1. **Invalid Redirect URI**
-   - Ensure callback URLs match exactly in OAuth app settings
-   - Check both development and production URLs
+    - Ensure callback URLs match exactly in OAuth app settings
+    - Check both development and production URLs
 
 2. **Missing Email Permissions**
-   - Verify email scope is requested in OAuth configuration
-   - Check provider app settings for email permissions
+    - Verify email scope is requested in OAuth configuration
+    - Check provider app settings for email permissions
 
 3. **Environment Variables**
-   - Ensure all required environment variables are set
-   - Verify variable names match exactly
+    - Ensure all required environment variables are set
+    - Verify variable names match exactly
 
 ### Debug Steps
 

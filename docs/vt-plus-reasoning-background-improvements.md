@@ -57,19 +57,19 @@ Improved the background styling for VT+ reasoning mode cards in settings to use 
 ## Components Affected
 
 1. **VT+ Upgrade Card** (for free users)
-   - Header icon container
-   - Main card background
-   - Button styling (unchanged - maintains good contrast)
+    - Header icon container
+    - Main card background
+    - Button styling (unchanged - maintains good contrast)
 
 2. **Settings Cards** (for VT+ users)
-   - "Enable Reasoning Mode" card
-   - "Show Reasoning Details" card
-   - "Reasoning Budget" card
-   - Header icon container
+    - "Enable Reasoning Mode" card
+    - "Show Reasoning Details" card
+    - "Reasoning Budget" card
+    - Header icon container
 
 3. **Thinking Mode Indicator Badge**
-   - Chat input area indicator
-   - Hover effects maintained
+    - Chat input area indicator
+    - Hover effects maintained
 
 ## Testing
 

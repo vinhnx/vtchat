@@ -10,18 +10,18 @@ This project successfully implemented key prompt engineering best practices in t
 
 - **Implementation**: Set `temperature: 0` for all AI calls across the application
 - **Files Modified**:
-  - `packages/ai/workflow/utils.ts`
-  - `packages/ai/workflow/tasks/structured-extraction.ts`
-  - `packages/ai/tools/openai-web-search.ts`
+    - `packages/ai/workflow/utils.ts`
+    - `packages/ai/workflow/tasks/structured-extraction.ts`
+    - `packages/ai/tools/openai-web-search.ts`
 - **Impact**: Ensures consistent outputs for identical inputs, particularly important for mathematical calculations and structured data extraction
 
 ### 2. Improved Parameter Schema Design
 
 - **Implementation**: Updated Zod schemas to use `.nullable()` instead of `.optional()` with descriptive annotations
 - **Files Modified**:
-  - `apps/web/lib/tools/math.ts`
-  - `apps/web/lib/tools/charts.ts`
-  - `packages/ai/tools/openai-web-search.ts`
+    - `apps/web/lib/tools/math.ts`
+    - `apps/web/lib/tools/charts.ts`
+    - `packages/ai/tools/openai-web-search.ts`
 - **Impact**: Better compatibility with strict schema validation and clearer parameter documentation
 
 ### 3. Semantic Parameter Naming
@@ -33,25 +33,25 @@ This project successfully implemented key prompt engineering best practices in t
 
 - **Implementation**: Created reusable utilities for date transformations in Zod schemas
 - **Files Created**:
-  - `packages/shared/utils/zod-date-utils.ts`
-  - `packages/shared/utils/zod-date-examples.ts`
+    - `packages/shared/utils/zod-date-utils.ts`
+    - `packages/shared/utils/zod-date-examples.ts`
 - **Impact**: Proper mapping between string dates (model outputs) and JavaScript Date objects (application requirements)
 
 ### 5. Debugging and Monitoring Tools
 
 - **Implementation**: Developed utilities for inspecting AI SDK warnings and request bodies
 - **Files Created**:
-  - `packages/ai/utils/debug-utils.ts`
+    - `packages/ai/utils/debug-utils.ts`
 - **Impact**: Enhanced debugging capabilities for identifying unsupported features and inspecting raw requests
 
 ### 6. Comprehensive Documentation
 
 - **Implementation**: Created detailed documentation for all improvements
 - **Files Created**:
-  - `docs/prompt-engineering-improvements.md`
-  - `docs/prompt-engineering-summary.md`
-  - `docs/prompt-engineering-final-summary.md`
-  - `packages/shared/utils/README.md`
+    - `docs/prompt-engineering-improvements.md`
+    - `docs/prompt-engineering-summary.md`
+    - `docs/prompt-engineering-final-summary.md`
+    - `packages/shared/utils/README.md`
 
 ## Verification Results
 
@@ -113,7 +113,7 @@ const mathParameters = z.object({
 const dateStringToDate = z
     .string()
     .date()
-    .transform((value) => new Date(value));
+    .transform(value => new Date(value));
 ```
 
 ### Debug Utilities

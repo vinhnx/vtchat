@@ -50,7 +50,7 @@ interface EnhancedProviderInstance {
     createWithValidation(
         provider: ProviderEnumType,
         apiKeys: Record<string, string>,
-        options?: ProviderOptions,
+        options?: ProviderOptions
     ): Promise<ProviderInstance>;
 
     // Validate API key format and presence
@@ -141,43 +141,43 @@ interface ProviderValidationResult {
 ### Unit Tests
 
 1. **API Key Mapping Tests**
-   - Test frontend to provider key name mapping
-   - Test key validation for each provider
-   - Test error handling for missing/invalid keys
+    - Test frontend to provider key name mapping
+    - Test key validation for each provider
+    - Test error handling for missing/invalid keys
 
 2. **Provider Instance Tests**
-   - Test successful provider creation with valid keys
-   - Test error handling with invalid/missing keys
-   - Test logging output without exposing keys
+    - Test successful provider creation with valid keys
+    - Test error handling with invalid/missing keys
+    - Test logging output without exposing keys
 
 3. **OpenRouter Integration Tests**
-   - Test authentic API request sending
-   - Test error response handling
-   - Test API key validation
+    - Test authentic API request sending
+    - Test error response handling
+    - Test API key validation
 
 ### Integration Tests
 
 1. **End-to-End API Key Flow**
-   - Test complete flow from frontend to provider
-   - Test with valid BYOK keys for each provider
-   - Test error propagation through the stack
+    - Test complete flow from frontend to provider
+    - Test with valid BYOK keys for each provider
+    - Test error propagation through the stack
 
 2. **Provider Response Tests**
-   - Test actual model responses with valid keys
-   - Test error responses with invalid keys
-   - Test timeout and network error handling
+    - Test actual model responses with valid keys
+    - Test error responses with invalid keys
+    - Test timeout and network error handling
 
 ### Manual Testing
 
 1. **Provider Authentication**
-   - Test each provider with valid API keys
-   - Test each provider with invalid API keys
-   - Verify error messages are user-friendly
+    - Test each provider with valid API keys
+    - Test each provider with invalid API keys
+    - Verify error messages are user-friendly
 
 2. **OpenRouter Functionality**
-   - Test OpenRouter models with valid API key
-   - Verify authentic responses (not dummy data)
-   - Test error handling and fallback behavior
+    - Test OpenRouter models with valid API key
+    - Verify authentic responses (not dummy data)
+    - Test error handling and fallback behavior
 
 ## Implementation Notes
 

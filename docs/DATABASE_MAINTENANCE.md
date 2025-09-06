@@ -19,24 +19,24 @@ GitHub Actions (Scheduler) → VTChat App (Fly.io) → Neon Database
 ### Components
 
 1. **GitHub Actions Workflows** (`.github/workflows/database-maintenance.yml`)
-   - Runs scheduled maintenance tasks
-   - Triggers hourly and weekly maintenance
-   - Includes health checks and failure notifications
+    - Runs scheduled maintenance tasks
+    - Triggers hourly and weekly maintenance
+    - Includes health checks and failure notifications
 
 2. **API Endpoints** (`/api/cron/`)
-   - `/api/cron/database-maintenance` - Hourly tasks
-   - `/api/cron/weekly-maintenance` - Weekly tasks
-   - Protected with `CRON_SECRET_TOKEN`
+    - `/api/cron/database-maintenance` - Hourly tasks
+    - `/api/cron/weekly-maintenance` - Weekly tasks
+    - Protected with `CRON_SECRET_TOKEN`
 
 3. **Database Functions** (Applied via Neon MCP)
-   - `cleanup_expired_sessions()` - Remove expired sessions
-   - `refresh_subscription_summary()` - Update materialized view
-   - `get_database_health_stats()` - Health monitoring
+    - `cleanup_expired_sessions()` - Remove expired sessions
+    - `refresh_subscription_summary()` - Update materialized view
+    - `get_database_health_stats()` - Health monitoring
 
 4. **Node.js Script** (`scripts/cron-database-maintenance.js`)
-   - Calls maintenance endpoints
-   - Handles errors and logging
-   - Used by GitHub Actions
+    - Calls maintenance endpoints
+    - Handles errors and logging
+    - Used by GitHub Actions
 
 ## Setup Instructions
 
@@ -142,55 +142,55 @@ SELECT COUNT(*) FROM user_subscription_summary;
 
 1. **Session Cleanup**
 
-   ```sql
-   SELECT cleanup_expired_sessions();
-   ```
+    ```sql
+    SELECT cleanup_expired_sessions();
+    ```
 
-   - Removes expired sessions
-   - Returns count of deleted sessions
-   - Improves query performance
+    - Removes expired sessions
+    - Returns count of deleted sessions
+    - Improves query performance
 
 2. **Materialized View Refresh**
 
-   ```sql
-   SELECT refresh_subscription_summary();
-   ```
+    ```sql
+    SELECT refresh_subscription_summary();
+    ```
 
-   - Updates subscription data cache
-   - Enables 10x faster subscription checks
-   - Uses CONCURRENT refresh (non-blocking)
+    - Updates subscription data cache
+    - Enables 10x faster subscription checks
+    - Uses CONCURRENT refresh (non-blocking)
 
 3. **Table Statistics Update**
 
-   ```sql
-   ANALYZE users, user_subscriptions, sessions;
-   ```
+    ```sql
+    ANALYZE users, user_subscriptions, sessions;
+    ```
 
-   - Updates query planner statistics
-   - Improves query optimization
+    - Updates query planner statistics
+    - Improves query optimization
 
 ### Weekly Tasks
 
 1. **VACUUM ANALYZE**
 
-   ```sql
-   VACUUM ANALYZE users;
-   VACUUM ANALYZE user_subscriptions;
-   VACUUM ANALYZE sessions;
-   ```
+    ```sql
+    VACUUM ANALYZE users;
+    VACUUM ANALYZE user_subscriptions;
+    VACUUM ANALYZE sessions;
+    ```
 
-   - Reclaims dead tuple space
-   - Updates table statistics
-   - Reduces table bloat
+    - Reclaims dead tuple space
+    - Updates table statistics
+    - Reduces table bloat
 
 2. **Index Statistics**
-   - Monitors index usage
-   - Identifies unused indexes
-   - Reports on index health
+    - Monitors index usage
+    - Identifies unused indexes
+    - Reports on index health
 
 3. **Materialized View Refresh**
-   - Full concurrent refresh
-   - Ensures data consistency
+    - Full concurrent refresh
+    - Ensures data consistency
 
 ## Database Optimizations Applied
 
@@ -250,44 +250,44 @@ WHERE u.id IS NOT NULL;
 
 1. **Cron Jobs Not Running**
 
-   ```bash
-   # Check GitHub Actions status
-   gh workflow list
+    ```bash
+    # Check GitHub Actions status
+    gh workflow list
 
-   # View recent runs
-   gh run list --workflow=database-maintenance.yml
-   ```
+    # View recent runs
+    gh run list --workflow=database-maintenance.yml
+    ```
 
 2. **Authentication Errors**
 
-   ```bash
-   # Verify secrets are set
-   gh secret list
+    ```bash
+    # Verify secrets are set
+    gh secret list
 
-   # Check Fly.io secrets
-   fly secrets list --app vtchat
-   ```
+    # Check Fly.io secrets
+    fly secrets list --app vtchat
+    ```
 
 3. **Database Function Errors**
 
-   ```sql
-   -- Check if functions exist
-   \df cleanup_expired_sessions
-   \df refresh_subscription_summary
+    ```sql
+    -- Check if functions exist
+    \df cleanup_expired_sessions
+    \df refresh_subscription_summary
 
-   -- Test functions manually
-   SELECT cleanup_expired_sessions();
-   ```
+    -- Test functions manually
+    SELECT cleanup_expired_sessions();
+    ```
 
 4. **Materialized View Issues**
 
-   ```sql
-   -- Check view exists
-   SELECT schemaname, matviewname FROM pg_matviews;
+    ```sql
+    -- Check view exists
+    SELECT schemaname, matviewname FROM pg_matviews;
 
-   -- Manual refresh if needed
-   REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary;
-   ```
+    -- Manual refresh if needed
+    REFRESH MATERIALIZED VIEW CONCURRENTLY user_subscription_summary;
+    ```
 
 ### Error Recovery
 
@@ -295,24 +295,24 @@ If maintenance fails:
 
 1. **Check Application Logs**
 
-   ```bash
-   fly logs --app vtchat
-   ```
+    ```bash
+    fly logs --app vtchat
+    ```
 
 2. **Manual Cleanup**
 
-   ```sql
-   -- Manual session cleanup
-   DELETE FROM sessions WHERE expires_at <= NOW();
+    ```sql
+    -- Manual session cleanup
+    DELETE FROM sessions WHERE expires_at <= NOW();
 
-   -- Manual view refresh
-   REFRESH MATERIALIZED VIEW user_subscription_summary;
-   ```
+    -- Manual view refresh
+    REFRESH MATERIALIZED VIEW user_subscription_summary;
+    ```
 
 3. **Restart Maintenance**
-   ```bash
-   gh workflow run database-maintenance.yml -f maintenance_type=hourly
-   ```
+    ```bash
+    gh workflow run database-maintenance.yml -f maintenance_type=hourly
+    ```
 
 ## Security
 

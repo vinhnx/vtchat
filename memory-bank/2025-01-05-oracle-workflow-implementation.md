@@ -32,11 +32,11 @@ The agreed plan included:
 
 - Implementation meets all requirements
 - Minor polish suggestions provided (optional):
-  - Consider promoting to ## level heading
-  - Add memory-bank file naming template
-  - Include Oracle plan SHA in PR descriptions
-  - Define "sev-1" exceptions clearly
-  - Add escalation path for time-box exceeded
+    - Consider promoting to ## level heading
+    - Add memory-bank file naming template
+    - Include Oracle plan SHA in PR descriptions
+    - Define "sev-1" exceptions clearly
+    - Add escalation path for time-box exceeded
 
 ## Changes Made
 

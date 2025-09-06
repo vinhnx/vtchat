@@ -42,7 +42,7 @@ const cookieStore = await cookies();
 #### Before:
 
 ```typescript
-const ChatPage = ({ params }: { params: { threadId: string; }; }) => {
+const ChatPage = ({ params }: { params: { threadId: string } }) => {
     const { threadId } = params;
 };
 ```
@@ -50,7 +50,7 @@ const ChatPage = ({ params }: { params: { threadId: string; }; }) => {
 #### After:
 
 ```typescript
-const ChatPage = (props: { params: Promise<{ threadId: string; }>; }) => {
+const ChatPage = (props: { params: Promise<{ threadId: string }> }) => {
     const params = use(props.params);
     const { threadId } = params;
 };
