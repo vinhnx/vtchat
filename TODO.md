@@ -26,3 +26,19 @@ https://vercel.com/blog/ai-gateway-is-now-generally-available
 https://vercel.com/ai-gateway/models
 
 ---
+
+remember image gen prompt collapse/expand state on chat thread
+
+--
+
+https://github.com/google-gemini/nano-banana-hackathon-kit/blob/main/examples/javascript-getting-started.md#working-with-multiple-input-images
+
+--
+
+Kaggle Nano Banana Hackathon.. Good luck!
+
+www.kaggle.com/competitions/banana/
+
+--
+
+update Gemini Nano Banano Image Generation/Edit feature in /pricing card and docs and about this feature is very unique.

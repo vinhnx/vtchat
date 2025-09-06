@@ -102,10 +102,31 @@ export const ImageGenButton = ({
             const images: Array<
                 { base64?: string; url?: string; mediaType?: string; name?: string; }
             > = [];
-            if (imageBase64) images.push({ base64: imageBase64, mediaType: 'image/png' });
+            const seen = new Set<string>();
+            const pushUnique = (
+                img: { base64?: string; url?: string; mediaType?: string; name?: string; },
+            ) => {
+                const key = img.base64 ? `b64:${img.base64}` : `url:${img.url}`;
+                if (key && !seen.has(key)) {
+                    seen.add(key);
+                    images.push(img);
+                }
+            };
+            if (imageBase64) pushUnique({ base64: imageBase64, mediaType: 'image/png' });
             if (attachments?.length) {
                 for (const a of attachments) {
-                    images.push({ url: a.url, mediaType: a.contentType, name: a.name });
+                    if (a.url?.startsWith('data:')) {
+                        const match = a.url.match(/^data:(.+);base64,(.*)$/);
+                        if (match) {
+                            pushUnique({
+                                base64: match[2] || '',
+                                mediaType: match[1] || a.contentType,
+                                name: a.name,
+                            });
+                            continue;
+                        }
+                    }
+                    pushUnique({ url: a.url, mediaType: a.contentType, name: a.name });
                 }
             }
 
@@ -127,7 +148,10 @@ export const ImageGenButton = ({
                             // dataUrl format: data:<mime>;base64,<data>
                             const match = String(img.dataUrl).match(/^data:(.+);base64,(.*)$/);
                             if (match) {
-                                images.push({ base64: match[2] || '', mediaType: match[1] || 'image/png' });
+                                images.push({
+                                    base64: match[2] || '',
+                                    mediaType: match[1] || 'image/png',
+                                });
                             }
                         }
                     }

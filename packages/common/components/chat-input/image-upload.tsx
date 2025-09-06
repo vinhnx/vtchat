@@ -7,15 +7,8 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 import { Button, Tooltip } from '@repo/ui';
 import { Image } from 'lucide-react';
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 import { GatedFeatureAlert } from '../gated-feature-alert';
-import { LoginRequiredDialog } from '../login-required-dialog';
-
-// Create a wrapper component for Image to match expected icon prop type
-const ImageIcon: React.ComponentType<{ size?: number; className?: string; }> = ({
-    size,
-    className,
-}) => <Image className={className} size={size} />;
 
 export type TImageUpload = {
     id: string;
@@ -36,7 +29,6 @@ export const ImageUpload: FC<TImageUpload> = ({
     const imageAttachment = useChatStore((state) => state.imageAttachment);
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const { canAccess } = useSubscriptionAccess();
 
     // Check if an image is attached
@@ -47,11 +39,7 @@ export const ImageUpload: FC<TImageUpload> = ({
         || chatModeConfig?.requiredFeature;
 
     const handleFileSelect = () => {
-        if (!isSignedIn) {
-            setShowLoginPrompt(true);
-            return;
-        }
-
+        // Do not block selection for unauthenticated users; enforce auth on send
         // Check subscription requirements for current chat mode
         if (requiresVTPlusForImageUpload) {
             const requiredFeature = chatModeConfig?.requiredFeature;
@@ -82,6 +70,7 @@ export const ImageUpload: FC<TImageUpload> = ({
                 id={id}
                 onChange={handleImageUpload}
                 type='file'
+                accept='image/*'
                 aria-label={label}
             />
             <Tooltip
@@ -115,14 +104,7 @@ export const ImageUpload: FC<TImageUpload> = ({
                     )}
             </Tooltip>
 
-            {/* Login prompt dialog */}
-            <LoginRequiredDialog
-                description='Please log in to upload and attach files to your messages.'
-                icon={ImageIcon}
-                isOpen={showLoginPrompt}
-                onClose={() => setShowLoginPrompt(false)}
-                title='Login Required'
-            />
+            {/* Login prompt is handled on send; no immediate dialog here */}
         </>
     );
 

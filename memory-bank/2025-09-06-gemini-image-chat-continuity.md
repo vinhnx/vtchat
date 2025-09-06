@@ -25,4 +25,3 @@ Notes:
 - Keeps the existing AI SDK implementation and server API `/api/image` unchanged.
 - Continues to use `ModelEnum.GEMINI_2_5_FLASH_IMAGE_PREVIEW` under the hood.
 - Respects BYOK and VT+ gating rules via centralized `http` client and stores.
-

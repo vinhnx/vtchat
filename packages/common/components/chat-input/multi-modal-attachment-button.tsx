@@ -5,16 +5,13 @@ import { supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { Attachment } from '@repo/shared/types';
+import { resizeImageDataUrl } from '@repo/shared/utils';
 import { Button, Tooltip, useToast } from '@repo/ui';
 import { Image } from 'lucide-react';
 import { type FC, useCallback, useRef, useState } from 'react';
-import { LoginRequiredDialog } from '../login-required-dialog';
+// Login prompt removed for pre-login attachment support
 
-// Create a wrapper component for Paperclip to match expected icon prop type
-const PaperclipIcon: React.ComponentType<{
-    size?: number;
-    className?: string;
-}> = ({ size, className }) => <Image className={className} size={size} />;
+// Icon wrapper removed (no longer used)
 
 interface MultiModalAttachmentButtonProps {
     onAttachmentsChange: (attachments: Attachment[]) => void;
@@ -30,7 +27,6 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     const chatMode = useChatStore((state) => state.chatMode);
     const { data: session } = useSession();
     const isSignedIn = !!session;
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,41 +40,66 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 
             const maxFiles = 5;
             if (attachments.length + files.length > maxFiles) {
-                toast({
-                    title: `Maximum ${maxFiles} files allowed`,
-                    variant: 'destructive',
-                });
+                toast({ title: `Maximum ${maxFiles} files allowed`, variant: 'destructive' });
                 return;
             }
 
             setUploading(true);
 
+            const fileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+            const MAX_DIM = 768;
+
             try {
-                const formData = new FormData();
-                files.forEach((file) => formData.append('files', file));
+                const results: Attachment[] = [];
+                for (const f of files) {
+                    if (!fileTypes.includes(f.type)) {
+                        toast({
+                            title: 'Invalid format',
+                            description: 'Please select a valid image (JPEG, PNG, GIF).',
+                            variant: 'destructive',
+                        });
+                        continue;
+                    }
+                    if (f.size > MAX_FILE_SIZE) {
+                        toast({
+                            title: 'File too large',
+                            description: 'Image size should be less than 3MB.',
+                            variant: 'destructive',
+                        });
+                        continue;
+                    }
 
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
+                    const reader = new FileReader();
+                    const dataUrl: string = await new Promise((res, rej) => {
+                        reader.onload = () => {
+                            if (typeof reader.result === 'string') res(reader.result);
+                            else rej(new Error('Failed to read file'));
+                        };
+                        reader.onerror = () => rej(new Error('Failed to read file'));
+                        reader.readAsDataURL(f);
+                    });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Upload failed');
+                    const resized = await resizeImageDataUrl(dataUrl, f.type, MAX_DIM);
+                    results.push({
+                        url: resized,
+                        name: f.name || 'image',
+                        contentType: f.type || 'image/png',
+                        size: f.size,
+                    });
                 }
 
-                const data = await response.json();
-                const newAttachments = [...attachments, ...data.attachments];
-
-                onAttachmentsChange(newAttachments);
-                toast({
-                    title: data.message,
-                    variant: 'success',
-                });
+                if (results.length > 0) {
+                    const newAttachments = [...attachments, ...results];
+                    onAttachmentsChange(newAttachments);
+                    toast({
+                        title: `Attached ${results.length} image${results.length > 1 ? 's' : ''}`,
+                    });
+                }
             } catch (error) {
-                log.error({ data: error }, 'Upload error');
+                log.error({ data: error }, 'Local image attach error');
                 toast({
-                    title: error instanceof Error ? error.message : 'Upload failed',
+                    title: error instanceof Error ? error.message : 'Attach failed',
                     variant: 'destructive',
                 });
             } finally {
@@ -101,11 +122,6 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
     );
 
     const handleFileSelect = () => {
-        if (!isSignedIn) {
-            setShowLoginPrompt(true);
-            return;
-        }
-
         if (disabled || uploading) return;
 
         fileInputRef.current?.click();
@@ -151,14 +167,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
                 </Button>
             </Tooltip>
 
-            {/* Login prompt dialog */}
-            <LoginRequiredDialog
-                description='Please log in to upload and attach files to your messages.'
-                icon={PaperclipIcon}
-                isOpen={showLoginPrompt}
-                onClose={() => setShowLoginPrompt(false)}
-                title='Login Required'
-            />
+            {/* Login gating removed: selection allowed pre-login (auth enforced on send) */}
         </>
     );
 

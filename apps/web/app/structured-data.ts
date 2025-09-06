@@ -16,7 +16,7 @@ export const organizationSchema: WithContext<Organization> = {
         caption: 'VT AI Platform Logo',
     },
     description:
-        'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
+        'Minimal AI Chat Platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
     foundingDate: '2025',
     contactPoint: {
         '@type': 'ContactPoint',
@@ -42,7 +42,7 @@ export const websiteSchema: WithContext<WebSite> = {
     alternateName: 'VT AI Chat Platform',
     url: baseUrl,
     description:
-        'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
+        'Minimal AI Chat Platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
     inLanguage: 'en-US',
     isAccessibleForFree: true,
     keywords:
@@ -112,7 +112,7 @@ export const productSchema: WithContext<Product> = {
 export const softwareApplicationSchema: WithContext<SoftwareApplication> = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'VT - Advanced AI Chat Platform',
+    name: 'VT - Minimal AI Chat Platform',
     alternateName: 'VT AI',
     url: baseUrl,
     description:

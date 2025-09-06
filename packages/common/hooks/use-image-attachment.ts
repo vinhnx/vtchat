@@ -1,6 +1,7 @@
 'use client';
 
 import { useChatStore } from '@repo/common/store';
+import { resizeImageDataUrl } from '@repo/shared/utils';
 import { useToast } from '@repo/ui';
 import { type ChangeEvent, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -31,18 +32,13 @@ export const useImageAttachment = () => {
     const setImageAttachment = useChatStore((state) => state.setImageAttachment);
     const clearImageAttachment = useChatStore((state) => state.clearImageAttachment);
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-        const file = acceptedFiles?.[0];
-        readImageFile(file);
-    }, []);
-    const dropzonProps = useDropzone({ onDrop, multiple: false, noClick: true });
     const { toast } = useToast();
 
     const clearAttachment = () => {
         clearImageAttachment();
     };
 
-    const readImageFile = async (file?: File) => {
+    const readImageFile = useCallback(async (file?: File) => {
         const reader = new FileReader();
 
         const fileTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -65,11 +61,16 @@ export const useImageAttachment = () => {
             return;
         }
 
-        reader.onload = () => {
+        reader.onload = async () => {
             if (typeof reader.result !== 'string') return;
-            const base64String = reader?.result?.split(',')[1];
+            const originalDataUrl = reader.result;
+            const resizedDataUrl = await resizeImageDataUrl(
+                originalDataUrl,
+                file?.type || 'image/png',
+                768,
+            );
             setImageAttachment({
-                base64: `data:${file?.type};base64,${base64String}`,
+                base64: resizedDataUrl,
             });
         };
 
@@ -77,11 +78,18 @@ export const useImageAttachment = () => {
             setImageAttachment({
                 file,
             });
-            // const resizedFile = await resizeFile(file);
-
             reader.readAsDataURL(file);
         }
-    };
+    }, [setImageAttachment, toast]);
+
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            const file = acceptedFiles?.[0];
+            readImageFile(file);
+        },
+        [readImageFile],
+    );
+    const dropzonProps = useDropzone({ onDrop, multiple: false, noClick: true });
 
     const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

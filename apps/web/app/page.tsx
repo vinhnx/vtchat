@@ -77,7 +77,7 @@ export default function HomePage() {
         <div className='relative flex h-dvh w-full flex-col'>
             {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
             <h1 className='sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0'>
-                VT - Advanced AI Chat Platform with Generative AI & Deep Learning
+                VT - Minimal AI Chat Platform with Generative AI & Deep Learning
             </h1>
 
             {/* Hidden SEO Content Section - Only for search engines, completely invisible to users */}

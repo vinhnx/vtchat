@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'VT - Advanced AI Chat Platform with Generative AI & Deep Learning',
+        name: 'VT - Minimal AI Chat Platform with Generative AI & Deep Learning',
         short_name: 'VT AI',
         description:
-            'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence for everyone.',
+            'Minimal AI Chat Platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence for everyone.',
         start_url: '/',
         scope: '/',
         display: 'standalone',

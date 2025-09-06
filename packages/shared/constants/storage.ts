@@ -41,6 +41,17 @@ export const STORAGE_KEYS = {
      * Key for tracking if user has seen the intro dialog
      */
     HAS_SEEN_INTRO: 'hasSeenIntro',
+
+    /**
+     * Key for hiding image prompt tips globally
+     */
+    IMAGE_TIPS_DISMISSED: 'image_tips_dismissed',
+
+    /**
+     * Key for per-thread image tips collapse state mapping
+     * Value shape: { [threadId: string]: 'collapsed' | 'expanded' }
+     */
+    IMAGE_TIPS_STATE: 'image_tips_state',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

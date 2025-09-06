@@ -2,6 +2,7 @@
 
 import { useChatEditor } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
+import { STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Alert,
@@ -694,12 +695,12 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                                             if (next) {
                                                 // Re-enable banner globally: clear dismissal token
                                                 window.localStorage.removeItem(
-                                                    'image_tips_dismissed',
+                                                    STORAGE_KEYS.IMAGE_TIPS_DISMISSED,
                                                 );
                                             } else {
                                                 // Persist dismissal to keep it hidden
                                                 window.localStorage.setItem(
-                                                    'image_tips_dismissed',
+                                                    STORAGE_KEYS.IMAGE_TIPS_DISMISSED,
                                                     '1',
                                                 );
                                             }

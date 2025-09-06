@@ -1,10 +1,5 @@
 'use client';
-import {
-    BYOKValidationDialog,
-    ImageAttachment,
-    ImageDropzoneRoot,
-    InlineLoader,
-} from '@repo/common/components';
+import { BYOKValidationDialog, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore, useAppStore } from '@repo/common/store';
@@ -14,10 +9,12 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
+import { resizeImageDataUrl } from '@repo/shared/utils';
 import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
 import { cn, Flex, useToast } from '@repo/ui';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { useChatEditor } from '../../hooks/use-editor';
@@ -103,7 +100,7 @@ export const ChatInput = ({
 
     const stopGeneration = useChatStore((state) => state.stopGeneration);
     const hasTextInput = !!editor?.getText();
-    const { dropzonProps, handleImageUpload } = useImageAttachment();
+    const { handleImageUpload } = useImageAttachment();
     useDocumentAttachment();
     // const { push } = useRouter(); // router is already defined above
     const chatMode = useChatStore((state) => state.chatMode);
@@ -120,19 +117,57 @@ export const ChatInput = ({
     >([]);
 
     const removeMultiModalAttachment = (index: number) => {
+        const removed = multiModalAttachments[index];
         const newAttachments = multiModalAttachments.filter((_, i) => i !== index);
         setMultiModalAttachments(newAttachments);
+        // If removed the same as preview, clear preview
+        if (removed && removed.url === imageAttachment?.base64) {
+            clearImageAttachment();
+        }
     };
 
     // Image prompt tips banner state (dismissable)
     const globalShowImageTips = useAppStore((s) => s.showImageTips);
     const [showImageTips, setShowImageTips] = useState<boolean>(() => {
         if (typeof window === 'undefined') return globalShowImageTips;
-        const dismissed = window.localStorage.getItem('image_tips_dismissed');
+        const dismissed = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED);
         return globalShowImageTips && !dismissed;
     });
+    // Collapse/expand state for the image tips per-thread
+    const [isImageTipsCollapsed, setIsImageTipsCollapsed] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        try {
+            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
+            if (!raw) return false;
+            const map = JSON.parse(raw || '{}') as Record<string, 'collapsed' | 'expanded'>;
+            const key = String(
+                (typeof currentThreadId === 'string'
+                    ? currentThreadId
+                    : currentThreadId?.toString()) || 'home',
+            );
+            return map[key] === 'collapsed';
+        } catch {
+            return false;
+        }
+    });
+    const persistImageTipsState = (collapsed: boolean) => {
+        if (typeof window === 'undefined') return;
+        try {
+            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
+            const map = raw ? (JSON.parse(raw) as Record<string, 'collapsed' | 'expanded'>) : {};
+            const key = String(
+                (typeof currentThreadId === 'string'
+                    ? currentThreadId
+                    : currentThreadId?.toString()) || 'home',
+            );
+            map[key] = collapsed ? 'collapsed' : 'expanded';
+            window.localStorage.setItem(STORAGE_KEYS.IMAGE_TIPS_STATE, JSON.stringify(map));
+        } catch {}
+    };
     const dismissImageTips = () => {
-        if (typeof window !== 'undefined') window.localStorage.setItem('image_tips_dismissed', '1');
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED, '1');
+        }
         setShowImageTips(false);
     };
 
@@ -141,12 +176,28 @@ export const ChatInput = ({
         if (typeof window === 'undefined') return;
         if (globalShowImageTips) {
             // Clear dismissal and show banner again
-            window.localStorage.removeItem('image_tips_dismissed');
+            window.localStorage.removeItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED);
             setShowImageTips(true);
         } else {
             setShowImageTips(false);
         }
     }, [globalShowImageTips]);
+
+    // Keep collapse state synced when switching threads
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        try {
+            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
+            const map = raw ? (JSON.parse(raw) as Record<string, 'collapsed' | 'expanded'>) : {};
+            const key = String(
+                (typeof currentThreadId === 'string'
+                    ? currentThreadId
+                    : currentThreadId?.toString()) || 'home',
+            );
+            setIsImageTipsCollapsed(map[key] === 'collapsed');
+        } catch {}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentThreadId]);
 
     const handleApiKeySet = () => {
         // Clear the pending message and execute the original send
@@ -154,6 +205,18 @@ export const ChatInput = ({
         // Re-execute sendMessage after API key is set
         sendMessage();
     };
+
+    // Removed mirror effect: attachments are the single source of truth
+
+    // If attachments exist but preview is empty, use first image for preview
+    useEffect(() => {
+        if (imageAttachment?.base64) return;
+        const firstImage = multiModalAttachments.find((a) => a.contentType.startsWith('image/'));
+        if (firstImage?.url) {
+            useChatStore.getState().setImageAttachment({ base64: firstImage.url });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [multiModalAttachments.length]);
 
     const sendMessage = async () => {
         const messageText = editor?.getText();
@@ -230,12 +293,16 @@ export const ChatInput = ({
                         if (threadId) {
                             const items = await useChatStore.getState().getThreadItems(threadId);
                             const sorted = (items || []).sort(
-                                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                                (a, b) =>
+                                    new Date(a.createdAt).getTime()
+                                    - new Date(b.createdAt).getTime(),
                             );
                             const lastWithImages = [...sorted]
                                 .reverse()
                                 .find(
-                                    (it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0,
+                                    (it) =>
+                                        Array.isArray(it.imageOutputs)
+                                        && it.imageOutputs.length > 0,
                                 );
                             if (lastWithImages) parentId = lastWithImages.id;
                         }
@@ -256,12 +323,33 @@ export const ChatInput = ({
                     const images: Array<
                         { base64?: string; url?: string; mediaType?: string; name?: string; }
                     > = [];
+                    const seen = new Set<string>();
+                    const pushUnique = (
+                        img: { base64?: string; url?: string; mediaType?: string; name?: string; },
+                    ) => {
+                        const key = img.base64 ? `b64:${img.base64}` : `url:${img.url}`;
+                        if (key && !seen.has(key)) {
+                            seen.add(key);
+                            images.push(img);
+                        }
+                    };
                     if (imageAttachment?.base64) {
-                        images.push({ base64: imageAttachment.base64, mediaType: 'image/png' });
+                        pushUnique({ base64: imageAttachment.base64, mediaType: 'image/png' });
                     }
                     if (multiModalAttachments?.length) {
                         for (const a of multiModalAttachments) {
-                            images.push({ url: a.url, mediaType: a.contentType, name: a.name });
+                            if (a.url?.startsWith('data:')) {
+                                const match = a.url.match(/^data:(.+);base64,(.*)$/);
+                                if (match) {
+                                    pushUnique({
+                                        base64: match[2] || '',
+                                        mediaType: match[1] || a.contentType,
+                                        name: a.name,
+                                    });
+                                    continue;
+                                }
+                            }
+                            pushUnique({ url: a.url, mediaType: a.contentType, name: a.name });
                         }
                     }
 
@@ -270,12 +358,16 @@ export const ChatInput = ({
                         try {
                             const items = await useChatStore.getState().getThreadItems(threadId);
                             const sorted = (items || []).sort(
-                                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                                (a, b) =>
+                                    new Date(a.createdAt).getTime()
+                                    - new Date(b.createdAt).getTime(),
                             );
                             const lastWithImages = [...sorted]
                                 .reverse()
                                 .find(
-                                    (it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0,
+                                    (it) =>
+                                        Array.isArray(it.imageOutputs)
+                                        && it.imageOutputs.length > 0,
                                 );
                             const img = lastWithImages?.imageOutputs?.[0];
                             if (img) {
@@ -286,7 +378,9 @@ export const ChatInput = ({
                                         name: img.name,
                                     });
                                 } else if (img.dataUrl) {
-                                    const match = String(img.dataUrl).match(/^data:(.+);base64,(.*)$/);
+                                    const match = String(img.dataUrl).match(
+                                        /^data:(.+);base64,(.*)$/,
+                                    );
                                     if (match) {
                                         images.push({
                                             base64: match[2] || '',
@@ -352,7 +446,8 @@ export const ChatInput = ({
                     const last = items.sort(
                         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
                     ).at(-1);
-                    isImageFollowup = Array.isArray(last?.imageOutputs) && last!.imageOutputs!.length > 0;
+                    isImageFollowup = Array.isArray(last?.imageOutputs)
+                        && last!.imageOutputs!.length > 0;
                 } catch {}
             }
 
@@ -551,13 +646,12 @@ export const ChatInput = ({
                 )}
                 direction='col'
             >
-                <ImageDropzoneRoot dropzoneProps={dropzonProps}>
+                <ImageDropzoneRoot dropzoneProps={multiDropzone}>
                     <div className='flex w-full flex-shrink-0 overflow-hidden rounded-lg'>
                         {editor?.isEditable
                             ? (
                                 <div className='w-full'>
                                     <div className='flex flex-col gap-2'>
-                                        <ImageAttachment />
                                         <DocumentAttachment />
                                         <StructuredDataDisplay />
                                         {multiModalAttachments.length > 0 && (
@@ -635,82 +729,103 @@ export const ChatInput = ({
                                             />
                                         </Flex>
                                     </Flex>
-                                    {/* Promo banner removed (BYOK required) */}
-                                    {/* Image prompting tips (dismissable) */}
-                                    {showImageTips && (
-                                        <div className='border-border/40 bg-muted/30 mt-2 w-full rounded-md border px-4 py-3'>
-                                            <div className='mb-1 text-xs font-medium'>
-                                                Nano Banana - Image Prompting Tips
+                                    {/* Image prompting tips (dismissable) - homepage only */}
+                                    {!currentThreadId && showImageTips && (
+                                        <div className='border-border/40 bg-muted/30 mt-2 w-full rounded-md border px-3 py-2'>
+                                            <div className='mb-1 flex items-center justify-between'>
+                                                <div className='text-xs font-medium'>
+                                                    Nano Banana - Image Prompting Tips
+                                                </div>
+                                                <button
+                                                    type='button'
+                                                    className='text-muted-foreground text-[11px] underline underline-offset-2'
+                                                    onClick={() => {
+                                                        const next = !isImageTipsCollapsed;
+                                                        setIsImageTipsCollapsed(next);
+                                                        persistImageTipsState(next);
+                                                    }}
+                                                    aria-expanded={!isImageTipsCollapsed}
+                                                    aria-controls='image-tips-content'
+                                                >
+                                                    {isImageTipsCollapsed ? 'Expand' : 'Collapse'}
+                                                </button>
                                             </div>
-                                            <ul className='text-muted-foreground ml-4 list-disc space-y-1 text-[11px]'>
-                                                <li>
-                                                    Describe the scene in full sentences, not
-                                                    keywords.
-                                                </li>
-                                                <li>
-                                                    For photorealism: shot type, lens, lighting,
-                                                    mood, textures.
-                                                </li>
-                                                <li>
-                                                    For stickers/illustrations: style, palette,
-                                                    line/shading, transparent background.
-                                                </li>
-                                                <li>
-                                                    To edit an image: attach it and describe precise
-                                                    changes only.
-                                                </li>
-                                                <li>
-                                                    Use aspect hints like “16:9” or “square” if you
-                                                    care about layout.
-                                                </li>
-                                            </ul>
+                                            {!isImageTipsCollapsed && (
+                                                <ul
+                                                    id='image-tips-content'
+                                                    className='text-muted-foreground ml-4 list-disc space-y-1 text-[11px]'
+                                                >
+                                                    <li>
+                                                        Describe the scene in full sentences, not
+                                                        keywords.
+                                                    </li>
+                                                    <li>
+                                                        For photorealism: shot type, lens, lighting,
+                                                        mood, textures.
+                                                    </li>
+                                                    <li>
+                                                        For stickers/illustrations: style, palette,
+                                                        line/shading, transparent background.
+                                                    </li>
+                                                    <li>
+                                                        To edit an image: attach it and describe
+                                                        precise changes only.
+                                                    </li>
+                                                    <li>
+                                                        Use aspect hints like “16:9” or “square” if
+                                                        you care about layout.
+                                                    </li>
+                                                </ul>
+                                            )}
                                             {/* Template chips */}
-                                            <div className='mt-2 flex flex-wrap gap-1.5'>
-                                                {[
-                                                    {
-                                                        label: 'Photorealistic',
-                                                        text:
-                                                            'A photorealistic [shot type] of [subject], [expression], set in [environment]. Illuminated by [lighting] to create a [mood] atmosphere. Captured with a [camera/lens], emphasizing [key textures]. [16:9]',
-                                                    },
-                                                    {
-                                                        label: 'Sticker',
-                                                        text:
-                                                            'A [style] sticker of a [subject], featuring [key characteristics] and a [color palette]. [line style] lines, [shading style] shading. Background must be transparent.',
-                                                    },
-                                                    {
-                                                        label: 'Product',
-                                                        text:
-                                                            'A high-resolution, studio-lit product photograph of [product] on a [surface/background]. Lighting: [setup] to [purpose]. Camera angle: [angle] to showcase [feature]. Ultra-realistic, sharp focus on [detail]. [1:1]',
-                                                    },
-                                                    {
-                                                        label: 'Minimalist',
-                                                        text:
-                                                            'A minimalist composition featuring a single [subject] positioned at the [position] with a vast [color] negative space background. Soft, subtle lighting. [16:9]',
-                                                    },
-                                                    {
-                                                        label: 'Comic',
-                                                        text:
-                                                            'A single comic panel in [art style]. Foreground: [character] [action]. Background: [setting details]. Include a [dialogue/caption] box with the text "[Text]". Lighting creates a [mood] mood. [4:3]',
-                                                    },
-                                                    {
-                                                        label: 'Edits',
-                                                        text:
-                                                            'Using the provided image, change only the [specific element] to [new element/description]. Keep all other content exactly the same (style, lighting, composition).',
-                                                    },
-                                                ].map((chip) => (
-                                                    <button
-                                                        key={chip.label}
-                                                        type='button'
-                                                        onClick={() =>
-                                                            editor?.commands.insertContent(
-                                                                chip.text,
-                                                            )}
-                                                        className='vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] rounded-full px-2.5 py-1 text-[11px] transition-colors hover:bg-[#D99A4E]/10'
-                                                    >
-                                                        {chip.label}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                            {!isImageTipsCollapsed && (
+                                                <div className='mt-2 flex flex-wrap gap-1.5'>
+                                                    {[
+                                                        {
+                                                            label: 'Photorealistic',
+                                                            text:
+                                                                'A photorealistic [shot type] of [subject], [expression], set in [environment]. Illuminated by [lighting] to create a [mood] atmosphere. Captured with a [camera/lens], emphasizing [key textures]. [16:9]',
+                                                        },
+                                                        {
+                                                            label: 'Sticker',
+                                                            text:
+                                                                'A [style] sticker of a [subject], featuring [key characteristics] and a [color palette]. [line style] lines, [shading style] shading. Background must be transparent.',
+                                                        },
+                                                        {
+                                                            label: 'Product',
+                                                            text:
+                                                                'A high-resolution, studio-lit product photograph of [product] on a [surface/background]. Lighting: [setup] to [purpose]. Camera angle: [angle] to showcase [feature]. Ultra-realistic, sharp focus on [detail]. [1:1]',
+                                                        },
+                                                        {
+                                                            label: 'Minimalist',
+                                                            text:
+                                                                'A minimalist composition featuring a single [subject] positioned at the [position] with a vast [color] negative space background. Soft, subtle lighting. [16:9]',
+                                                        },
+                                                        {
+                                                            label: 'Comic',
+                                                            text:
+                                                                'A single comic panel in [art style]. Foreground: [character] [action]. Background: [setting details]. Include a [dialogue/caption] box with the text "[Text]". Lighting creates a [mood] mood. [4:3]',
+                                                        },
+                                                        {
+                                                            label: 'Edits',
+                                                            text:
+                                                                'Using the provided image, change only the [specific element] to [new element/description]. Keep all other content exactly the same (style, lighting, composition).',
+                                                        },
+                                                    ].map((chip) => (
+                                                        <button
+                                                            key={chip.label}
+                                                            type='button'
+                                                            onClick={() =>
+                                                                editor?.commands.insertContent(
+                                                                    chip.text,
+                                                                )}
+                                                            className='vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] rounded-full px-2.5 py-1 text-[11px] transition-colors hover:bg-[#D99A4E]/10'
+                                                        >
+                                                            {chip.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
                                             <div className='mt-2'>
                                                 <button
                                                     className='text-primary text-xs underline underline-offset-2'
@@ -747,6 +862,66 @@ export const ChatInput = ({
     useEffect(() => {
         editor?.commands.focus('end');
     }, [currentThreadId]);
+
+    // Multi-image drag & drop: add all dropped images to attachments and set first as preview
+    const multiDropzone = useDropzone({
+        multiple: true,
+        noClick: true,
+        onDrop: async (acceptedFiles: File[]) => {
+            if (!acceptedFiles || acceptedFiles.length === 0) return;
+            const fileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+
+            const newItems: { url: string; name: string; contentType: string; size?: number; }[]
+                = [];
+            let firstDataUrl: string | null = null;
+            for (const f of acceptedFiles) {
+                if (!fileTypes.includes(f.type)) {
+                    toast({
+                        title: 'Invalid format',
+                        description: 'Use JPEG, PNG or GIF images.',
+                        variant: 'destructive',
+                    });
+                    continue;
+                }
+                if (f.size > MAX_FILE_SIZE) {
+                    toast({
+                        title: 'File too large',
+                        description: 'Image must be under 3MB.',
+                        variant: 'destructive',
+                    });
+                    continue;
+                }
+                const dataUrl: string = await new Promise((res, rej) => {
+                    const reader = new FileReader();
+                    reader.onload = () => (typeof reader.result === 'string'
+                        ? res(reader.result)
+                        : rej(new Error('read error')));
+                    reader.onerror = () => rej(new Error('read error'));
+                    reader.readAsDataURL(f);
+                });
+                const resized = await resizeImageDataUrl(dataUrl, f.type, 768);
+                newItems.push({
+                    url: resized,
+                    name: f.name || 'image',
+                    contentType: f.type || 'image/png',
+                    size: f.size,
+                });
+                if (!firstDataUrl) firstDataUrl = resized;
+            }
+            if (newItems.length > 0) {
+                setMultiModalAttachments((prev) => {
+                    const seen = new Set(prev.map((a) => a.url));
+                    const deduped = newItems.filter((n) => !seen.has(n.url));
+                    return [...deduped, ...prev];
+                });
+            }
+            // Set preview to first image
+            if (firstDataUrl) {
+                useChatStore.getState().setImageAttachment({ base64: firstDataUrl });
+            }
+        },
+    });
 
     // Auto-focus input when user types anywhere on the page
     useEffect(() => {

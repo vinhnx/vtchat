@@ -74,7 +74,7 @@ export default function AboutPage() {
                 <div className='mx-auto max-w-7xl'>
                     {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
                     <h1 className='sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0'>
-                        About VT - Advanced AI Chat Platform with Privacy-First Architecture
+                        About VT - Minimal AI Chat Platform with Privacy-First Architecture
                     </h1>
                     <AboutContent />
                 </div>

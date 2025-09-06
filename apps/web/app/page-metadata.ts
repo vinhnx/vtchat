@@ -7,7 +7,7 @@ const baseUrl = process.env.NODE_ENV === 'production'
 export const defaultMetadata: Metadata = {
     metadataBase: new URL(baseUrl),
     title: {
-        default: 'VT - Advanced AI Chat Platform with Generative AI & Deep Learning',
+        default: 'VT - Minimal AI Chat Platform with Generative AI & Deep Learning',
         template: '%s | VT - AI Platform',
     },
     icons: {
@@ -30,7 +30,7 @@ export const defaultMetadata: Metadata = {
         ],
     },
     description:
-        'Advanced AI chat platform with generative AI, deep learning, and natural language processing (NLP). Experience artificial intelligence with large language models (LLMs), machine learning, and real-time AI processing. Privacy-first AI systems for specific tasks requiring human intelligence.',
+        'Minimal AI Chat Platform with generative AI, deep learning, and natural language processing (NLP). Experience artificial intelligence with large language models (LLMs), machine learning, and real-time AI processing. Privacy-first AI systems for specific tasks requiring human intelligence.',
     keywords: [
         'ai',
         'artificial intelligence',
@@ -108,7 +108,7 @@ export const defaultMetadata: Metadata = {
         locale: 'en_US',
         url: baseUrl,
         siteName: 'VT - Advanced AI Platform',
-        title: 'Advanced AI Chat Platform - Generative AI with Deep Learning',
+        title: 'Minimal AI Chat Platform - Generative AI with Deep Research',
         description:
             'Experience advanced artificial intelligence with generative AI, deep learning, and natural language processing. Privacy-first AI systems with large language models (LLMs) and machine learning capabilities.',
         images: [
@@ -116,14 +116,14 @@ export const defaultMetadata: Metadata = {
                 url: `${baseUrl}/og-image-v3.jpg?v=5`,
                 width: 1200,
                 height: 630,
-                alt: 'VT - Advanced AI Chat Platform with Generative AI and Deep Learning',
+                alt: 'VT - Minimal AI Chat Platform with Generative AI and Deep Learning',
                 type: 'image/jpeg',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Advanced AI Chat Platform - Generative AI with Deep Learning',
+        title: 'Minimal AI Chat Platform - Generative AI with Deep Research',
         description:
             'Experience advanced artificial intelligence with generative AI, deep learning, and natural language processing. Privacy-first AI systems with large language models (LLMs).',
         images: [`${baseUrl}/twitter-image-v3.jpg?v=5`],

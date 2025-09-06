@@ -8,7 +8,7 @@ export * from './charts/chart-message';
 export * from './charts/chart-popup';
 export * from './chat-input';
 export * from './chat-input/multi-modal-attachment-button';
-export * from './chat-input/multi-modal-attachments-display';
+// Do not re-export MultiModalAttachmentsDisplay here to avoid importing a Client Component into Server
 export * from './client-boundary';
 export * from './code-block/code-block';
 export * from './combined-subscription-settings';

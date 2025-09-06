@@ -58,7 +58,7 @@ export default function ParentLayout({
                                 height: 512,
                             },
                             description:
-                                'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
+                                'Minimal AI Chat Platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
                             foundingDate: '2025',
                             contactPoint: {
                                 '@type': 'ContactPoint',
@@ -80,7 +80,7 @@ export default function ParentLayout({
                             name: 'VT - Advanced AI Platform',
                             url: 'https://vtchat.io.vn',
                             description:
-                                'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
+                                'Minimal AI Chat Platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
                             potentialAction: {
                                 '@type': 'SearchAction',
                                 target: {
@@ -112,7 +112,7 @@ export default function ParentLayout({
                                         caption: 'VT AI Platform Logo',
                                     },
                                     description:
-                                        'Advanced AI chat platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
+                                        'Minimal AI Chat Platform with generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first artificial intelligence systems for real-time AI processing.',
                                     foundingDate: '2025',
                                     contactPoint: {
                                         '@type': 'ContactPoint',
@@ -135,7 +135,7 @@ export default function ParentLayout({
                                     url: 'https://vtchat.io.vn',
                                     name: 'VT - Advanced AI Platform',
                                     description:
-                                        'Advanced AI chat platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
+                                        'Minimal AI Chat Platform with generative AI, deep learning, and natural language processing capabilities. Experience artificial intelligence with large language models and machine learning.',
                                     publisher: { '@id': 'https://vtchat.io.vn/#organization' },
                                     inLanguage: 'en-US',
                                     potentialAction: {
@@ -150,7 +150,7 @@ export default function ParentLayout({
                                 },
                                 {
                                     '@type': 'SoftwareApplication',
-                                    name: 'VT - Advanced AI Chat Platform',
+                                    name: 'VT - Minimal AI Chat Platform',
                                     url: 'https://vtchat.io.vn',
                                     description:
                                         'Advanced artificial intelligence chat platform with generative AI, deep learning, and natural language processing. Features large language models (LLMs), machine learning capabilities, and real-time AI processing.',

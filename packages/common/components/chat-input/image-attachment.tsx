@@ -10,7 +10,7 @@ export const ImageAttachment = () => {
 
     return (
         <Flex className='pl-2 pr-2 pt-2 md:pl-3' gap='sm'>
-            <div className='relative h-[40px] w-[40px] rounded-lg border border-black/10 shadow-sm dark:border-white/10'>
+            <div className='relative h-[32px] w-[32px] rounded-lg border border-black/10 shadow-sm dark:border-white/10'>
                 <Image
                     alt='uploaded image'
                     className='h-full w-full overflow-hidden rounded-lg object-cover'
