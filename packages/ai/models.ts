@@ -10,6 +10,7 @@ export const ModelEnum = {
     GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
+    GEMINI_2_5_FLASH_IMAGE_PREVIEW: 'gemini-2.5-flash-image-preview',
     GPT_4o_Mini: 'gpt-4o-mini',
     GPT_4o: 'gpt-4o',
     GPT_4_1_Mini: 'gpt-4.1-mini',
@@ -170,6 +171,13 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
+    },
+    {
+        id: ModelEnum.GEMINI_2_5_FLASH_IMAGE_PREVIEW,
+        name: 'Gemini 2.5 Flash Image Preview',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 65_536,
     },
     {
         id: ModelEnum.GROK_3,

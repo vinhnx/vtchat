@@ -65,6 +65,14 @@ export type DocumentAttachment = {
     fileName: string;
 };
 
+export type ImageOutput = {
+    mediaType: string;
+    name?: string;
+    url?: string;
+    dataUrl?: string;
+    aspectRatio?: string; // e.g., '16:9'
+};
+
 export type Attachment = {
     url: string;
     name: string;
@@ -96,6 +104,8 @@ export type ThreadItem = {
     documentAttachment?: DocumentAttachment;
     // Multi-modal attachments (VT+ feature)
     attachments?: Attachment[];
+    // AI-generated image outputs (Gemini image generation)
+    imageOutputs?: ImageOutput[];
     // Thinking mode data (VT+ feature) - contains AI reasoning/thoughts
     reasoning?: string;
     // Structured reasoning details from AI SDK (includes text and redacted content)

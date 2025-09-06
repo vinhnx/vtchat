@@ -177,14 +177,7 @@ export const getProviderInstance = (
                 isVtPlus,
             });
 
-            // Preserve QuotaExceededError type for proper frontend handling
-            if (error.name === 'QuotaExceededError') {
-                const quotaError = new Error(errorMsg.message);
-                quotaError.name = 'QuotaExceededError';
-                quotaError.cause = error;
-                throw quotaError;
-            }
-
+            // No ambient error available here; just throw a clear message
             throw new Error(errorMsg.message);
         }
     };

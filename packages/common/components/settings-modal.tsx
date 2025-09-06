@@ -287,6 +287,8 @@ export const ApiKeySettings = () => {
         return '•'.repeat(16) + key.slice(-4);
     };
 
+    // Promo period reverted - require BYOK for Gemini image generation
+
     return (
         <div className='w-full space-y-4 md:space-y-6'>
             {/* Header */}
@@ -296,6 +298,14 @@ export const ApiKeySettings = () => {
                     Manage your AI provider API keys securely
                 </TypographyMuted>
             </div>
+
+            {/* BYOK Note */}
+            <Alert>
+                <AlertDescription>
+                    To use Gemini image generation, add your Google Gemini API key here. VT+ users
+                    may have enhanced access based on plan policy.
+                </AlertDescription>
+            </Alert>
 
             {/* Security Info Section */}
             <Card>
@@ -551,6 +561,8 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
     const setCustomInstructions = useAppStore((state) => state.setCustomInstructions);
     const showExamplePrompts = useAppStore((state) => state.showExamplePrompts);
     const setShowExamplePrompts = useAppStore((state) => state.setShowExamplePrompts);
+    const showImageTips = useAppStore((state) => state.showImageTips);
+    const setShowImageTips = useAppStore((state) => state.setShowImageTips);
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const setSidebarPlacement = useAppStore((state) => state.setSidebarPlacement);
 
@@ -657,6 +669,47 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                                 variant={showExamplePrompts ? 'default' : 'outline'}
                             >
                                 {showExamplePrompts ? 'On' : 'Off'}
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className='border-border/50 bg-muted/20 rounded-lg border p-4'>
+                        <div className='flex items-center justify-between'>
+                            <div className='space-y-1'>
+                                <div className='text-foreground text-sm font-medium'>
+                                    Image Prompt Tips Banner
+                                </div>
+                                <div className='text-muted-foreground text-xs'>
+                                    Permanently show or hide the image prompting tips below the chat
+                                    toolbar.
+                                </div>
+                            </div>
+                            <Button
+                                className='min-w-[60px]'
+                                onClick={() => {
+                                    const next = !showImageTips;
+                                    setShowImageTips(next);
+                                    try {
+                                        if (typeof window !== 'undefined') {
+                                            if (next) {
+                                                // Re-enable banner globally: clear dismissal token
+                                                window.localStorage.removeItem(
+                                                    'image_tips_dismissed',
+                                                );
+                                            } else {
+                                                // Persist dismissal to keep it hidden
+                                                window.localStorage.setItem(
+                                                    'image_tips_dismissed',
+                                                    '1',
+                                                );
+                                            }
+                                        }
+                                    } catch {}
+                                }}
+                                size='sm'
+                                variant={showImageTips ? 'default' : 'outline'}
+                            >
+                                {showImageTips ? 'On' : 'Off'}
                             </Button>
                         </div>
                     </div>

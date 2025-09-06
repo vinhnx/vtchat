@@ -21,6 +21,7 @@
         "./providers": "./providers/index.ts",
         "./providers/subscription-provider": "./providers/subscription-provider.tsx",
         "./utils": "./utils/index.ts",
+        "./utils/aspect-ratio": "./utils/aspect-ratio.ts",
         "./utils/avatar-cache": "./utils/avatar-cache.ts",
         "./constants/math-tools": "./constants/math-tools.ts",
         "./constants/chart-tools": "./constants/chart-tools.ts",

@@ -65,5 +65,3 @@ args = ["mcp-server-fetch"]
 env = {}
 disabled = false
 autoApprove = ["fetch"]
-
-

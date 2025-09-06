@@ -76,6 +76,7 @@ export * from './thread';
 export * from './thread-loading-indicator';
 export * from './thread/components/attachment-display';
 
+export * from './ai-elements/image';
 export * from './ai-elements/response';
 export * from './ai-elements/tool';
 export * from './tools-menu';

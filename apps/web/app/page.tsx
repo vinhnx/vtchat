@@ -21,7 +21,7 @@ const ThreadWithSuspense = NextDynamic(
         loading: () => (
             <div className='flex h-full items-center justify-center'>
                 <div className='animate-pulse'>
-                    <TypographySmall>Loading AI chat...</TypographySmall>
+                    <TypographySmall>Loading chat...</TypographySmall>
                 </div>
             </div>
         ),

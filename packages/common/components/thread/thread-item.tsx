@@ -1,5 +1,6 @@
 'use client';
 
+import { Image as AIImage } from '@repo/common/components';
 import { isChartTool } from '@repo/common/constants/chart-tools';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import {
@@ -115,6 +116,10 @@ export const ThreadItem = memo(
         const hasAnswer = useMemo(() => {
             return threadItem.answer?.text && threadItem.answer?.text.length > 0;
         }, [threadItem.answer]);
+
+        const hasGeneratedImages = useMemo(() => {
+            return Array.isArray(threadItem.imageOutputs) && threadItem.imageOutputs.length > 0;
+        }, [threadItem.imageOutputs]);
 
         const hasResponse = useMemo(() => {
             return (
@@ -288,13 +293,15 @@ export const ThreadItem = memo(
                             || threadItem.status === 'ERROR'
                             || (!isGenerating && hasAnswer)) && ( // Show for completed threads or non-generating threads with answers
                                 <>
-                                    <div className='mb-4 mt-2 flex flex-col gap-2'>
-                                        <MessageActions
-                                            isLast={isLast}
-                                            ref={messageRef}
-                                            threadItem={threadItem}
-                                        />
-                                    </div>
+                                    {!hasGeneratedImages && (
+                                        <div className='mb-4 mt-2 flex flex-col gap-2'>
+                                            <MessageActions
+                                                isLast={isLast}
+                                                ref={messageRef}
+                                                threadItem={threadItem}
+                                            />
+                                        </div>
+                                    )}
 
                                     {/* Render Chart Components */}
                                     {chartToolResults.length > 0 && (
@@ -305,6 +312,56 @@ export const ThreadItem = memo(
                                                     key={toolResult.toolCallId}
                                                 />
                                             ))}
+                                        </div>
+                                    )}
+
+                                    {/* Render AI-generated images, if any */}
+                                    {Array.isArray(threadItem.imageOutputs)
+                                        && threadItem.imageOutputs.length > 0 && (
+                                        <div className='mt-4 grid w-full grid-cols-1 gap-3 sm:grid-cols-2'>
+                                            {threadItem.imageOutputs.map((img, idx) => {
+                                                const dataUrl = img.dataUrl || undefined;
+                                                const url = img.url || undefined;
+                                                const mediaType = img.mediaType || undefined;
+                                                if (!dataUrl && !url) return null;
+                                                // Determine aspect ratio string for CSS, default to 16/9
+                                                const ratioStr = (img as any).aspectRatio || '16:9';
+                                                const [rw, rh] = ratioStr.split(/[:xX]/).map((n) =>
+                                                    parseInt(n.trim(), 10)
+                                                );
+                                                const cssRatio = rw && rh
+                                                    ? `${rw} / ${rh}`
+                                                    : '16 / 9';
+                                                return (
+                                                    <div
+                                                        className='border-border bg-muted overflow-hidden rounded-md border'
+                                                        key={`${threadItem.id}-img-${idx}`}
+                                                    >
+                                                        {/* Use object-contain inside dynamic Aspect Ratio to avoid distortion */}
+                                                        <div
+                                                            className='relative w-full'
+                                                            style={{ aspectRatio: cssRatio as any }}
+                                                        >
+                                                            <AIImage
+                                                                alt={img.name || `generated-${idx}`}
+                                                                dataUrl={dataUrl}
+                                                                url={url}
+                                                                mediaType={mediaType}
+                                                                fill
+                                                                sizes='(max-width: 768px) 100vw, 50vw'
+                                                                priority={false}
+                                                                className='object-contain'
+                                                            />
+                                                        </div>
+                                                        {(img as any).aspectRatio && (
+                                                            <div className='text-muted-foreground/70 px-2 py-1 text-[11px]'>
+                                                                Aspect ratio:{' '}
+                                                                {(img as any).aspectRatio}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
 

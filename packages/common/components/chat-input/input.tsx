@@ -7,10 +7,11 @@ import {
 } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { useApiKeysStore } from '@repo/common/store';
+import { useApiKeysStore, useAppStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
 import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
@@ -29,11 +30,14 @@ import { PersonalizedGreeting } from '../personalized-greeting';
 import { StructuredDataDisplay } from '../structured-data-display';
 import { UserTierBadge } from '../user-tier-badge';
 import {
+    AspectRatioSelector,
     ChartsButton,
     ChatModeButton,
     GeneratingStatus,
+    ImageGenButton,
     MathCalculatorButton,
     SendStopButton,
+    StyleModeSelector,
     WebSearchButton,
 } from './chat-actions';
 import { ChatEditor } from './chat-editor';
@@ -122,6 +126,30 @@ export const ChatInput = ({
         setMultiModalAttachments(newAttachments);
     };
 
+    // Image prompt tips banner state (dismissable)
+    const globalShowImageTips = useAppStore((s) => s.showImageTips);
+    const [showImageTips, setShowImageTips] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return globalShowImageTips;
+        const dismissed = window.localStorage.getItem('image_tips_dismissed');
+        return globalShowImageTips && !dismissed;
+    });
+    const dismissImageTips = () => {
+        if (typeof window !== 'undefined') window.localStorage.setItem('image_tips_dismissed', '1');
+        setShowImageTips(false);
+    };
+
+    // React to global settings changes: enabling should re-show (clear dismissal), disabling hides
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (globalShowImageTips) {
+            // Clear dismissal and show banner again
+            window.localStorage.removeItem('image_tips_dismissed');
+            setShowImageTips(true);
+        } else {
+            setShowImageTips(false);
+        }
+    }, [globalShowImageTips]);
+
     const handleApiKeySet = () => {
         // Clear the pending message and execute the original send
         setPendingMessage(null);
@@ -163,6 +191,113 @@ export const ChatInput = ({
 
             const messageText = editor?.getText();
             if (!messageText || !editor) {
+                return;
+            }
+
+            // Detect image intent and route to image generation flow
+            const isImagePrompt = (text: string) => {
+                const t = text.toLowerCase();
+                return (
+                    /(generate|create|make) (an |a )?(image|picture|photo|logo|sticker)/.test(t)
+                    || /(photorealistic|sticker|product photograph|aspect ratio|comic panel|minimalist composition)/
+                        .test(t)
+                );
+            };
+
+            const runImageFlow = async (prompt: string) => {
+                const { getAllKeys } = useApiKeysStore.getState();
+                const apiKeys = getAllKeys();
+                if (!isPlusTier && !apiKeys.GEMINI_API_KEY) {
+                    // Trigger BYOK modal if not configured
+                    setPendingMessage(() => sendMessage);
+                    setShowBYOKDialog(true);
+                    return;
+                }
+
+                // Use same flow as ImageGenButton
+                try {
+                    let threadId = currentThreadId?.toString();
+                    const threadItemId = await generateThreadId();
+                    const now = new Date();
+                    if (!threadId) {
+                        const optimisticThreadId = await generateThreadId();
+                        await createThread(optimisticThreadId, { title: prompt.slice(0, 60) });
+                        threadId = optimisticThreadId;
+                        router.push(`/chat/${optimisticThreadId}`);
+                    }
+
+                    await useChatStore.getState().createThreadItem({
+                        id: threadItemId,
+                        threadId: threadId!,
+                        parentId: undefined,
+                        createdAt: now,
+                        updatedAt: now,
+                        status: 'PENDING',
+                        query: prompt,
+                        mode: chatMode,
+                    } as any);
+
+                    setIsGenerating(true);
+                    const images: Array<
+                        { base64?: string; url?: string; mediaType?: string; name?: string; }
+                    > = [];
+                    if (imageAttachment?.base64) {
+                        images.push({ base64: imageAttachment.base64, mediaType: 'image/png' });
+                    }
+                    if (multiModalAttachments?.length) {
+                        for (const a of multiModalAttachments) {
+                            images.push({ url: a.url, mediaType: a.contentType, name: a.name });
+                        }
+                    }
+
+                    const result = await http.post<{ text: string; images: any[]; }>(
+                        '/api/image',
+                        { body: { prompt, images }, apiKeys, timeout: 120000 },
+                    );
+
+                    await useChatStore.getState().updateThreadItem(threadId!, {
+                        id: threadItemId,
+                        answer: { text: result.text || '' },
+                        imageOutputs: result.images || [],
+                        status: 'COMPLETED',
+                        persistToDB: true,
+                    });
+
+                    editor?.commands.clearContent();
+                    clearImageAttachment();
+                    setShowImageTips(true);
+                } catch (error: any) {
+                    let friendly = error?.message || 'Please try again later.';
+                    if (error?.response && typeof error.response.json === 'function') {
+                        try {
+                            const data = await error.response.json();
+                            if (data?.message) friendly = data.message;
+                        } catch {}
+                    }
+                    setIsGenerating(false);
+                    const threadId = currentThreadId?.toString()
+                        || useChatStore.getState().currentThreadId || '';
+                    const lastItem = useChatStore.getState().getCurrentThreadItem(threadId);
+                    if (threadId && lastItem) {
+                        await useChatStore.getState().updateThreadItem(threadId, {
+                            id: lastItem.id,
+                            status: 'ERROR',
+                            error: friendly,
+                            persistToDB: true,
+                        });
+                    }
+                    toast({
+                        title: 'Image generation failed',
+                        description: friendly,
+                        variant: 'destructive',
+                    });
+                } finally {
+                    setIsGenerating(false);
+                }
+            };
+
+            if (isImagePrompt(messageText)) {
+                await runImageFlow(messageText);
                 return;
             }
 
@@ -385,46 +520,49 @@ export const ChatInput = ({
                                         items='center'
                                         justify='between'
                                     >
-                                        {isGenerating && !isChatPage ? <GeneratingStatus /> : (
-                                            <Flex
-                                                className='scrollbar-hide flex-1 flex-nowrap overflow-x-auto md:flex-wrap'
-                                                gap='xs'
-                                                items='center'
-                                            >
-                                                <ChatModeButton />
-
-                                                {/* AI Enhancement Tools Group */}
-                                                <div className='bg-border/50 mx-1 h-4 w-px' />
-                                                <WebSearchButton />
-                                                <ChartsButton />
-                                                <MathCalculatorButton />
-
-                                                {/* File Upload Tools Group */}
-                                                <div className='bg-border/50 mx-1 h-4 w-px' />
-                                                <DocumentUploadButton />
-                                                {supportsMultiModal(chatMode)
-                                                    ? (
-                                                        <MultiModalAttachmentButton
+                                        {isGenerating && !isChatPage
+                                            ? <GeneratingStatus />
+                                            : (
+                                                <div className='flex w-full flex-1 flex-col gap-2'>
+                                                    {/* Row 1: Primary controls */}
+                                                    <div className='flex items-center gap-2'>
+                                                        <ChatModeButton />
+                                                        <ImageGenButton
                                                             attachments={multiModalAttachments}
-                                                            disabled={isGenerating}
-                                                            onAttachmentsChange={setMultiModalAttachments}
+                                                            imageBase64={imageAttachment?.base64}
+                                                            onAfterGenerate={() =>
+                                                                setShowImageTips(true)}
                                                         />
-                                                    )
-                                                    : (
-                                                        <ImageUpload
-                                                            handleImageUpload={handleImageUpload}
-                                                            id='image-attachment'
-                                                            label='Image'
-                                                            showIcon={true}
-                                                            tooltip='Image Attachment'
-                                                        />
-                                                    )}
-
-                                                {/* Data Processing Tools Group */}
-                                                <div className='bg-border/50 mx-1 h-4 w-px' />
-                                                <StructuredOutputButton />
-                                            </Flex>
-                                        )}
+                                                        <StyleModeSelector />
+                                                        <AspectRatioSelector />
+                                                    </div>
+                                                    {/* Row 2: Secondary tools - horizontally scrollable */}
+                                                    <div className='scrollbar-hide flex items-center gap-2 overflow-x-auto'>
+                                                        <WebSearchButton />
+                                                        <ChartsButton />
+                                                        <MathCalculatorButton />
+                                                        <DocumentUploadButton />
+                                                        {supportsMultiModal(chatMode)
+                                                            ? (
+                                                                <MultiModalAttachmentButton
+                                                                    attachments={multiModalAttachments}
+                                                                    disabled={isGenerating}
+                                                                    onAttachmentsChange={setMultiModalAttachments}
+                                                                />
+                                                            )
+                                                            : (
+                                                                <ImageUpload
+                                                                    handleImageUpload={handleImageUpload}
+                                                                    id='image-attachment'
+                                                                    label='Image'
+                                                                    showIcon={true}
+                                                                    tooltip='Image Attachment'
+                                                                />
+                                                            )}
+                                                        <StructuredOutputButton />
+                                                    </div>
+                                                </div>
+                                            )}
 
                                         <Flex
                                             className='ml-auto flex-shrink-0'
@@ -439,6 +577,93 @@ export const ChatInput = ({
                                             />
                                         </Flex>
                                     </Flex>
+                                    {/* Promo banner removed (BYOK required) */}
+                                    {/* Image prompting tips (dismissable) */}
+                                    {showImageTips && (
+                                        <div className='border-border/40 bg-muted/30 mt-2 w-full rounded-md border px-4 py-3'>
+                                            <div className='mb-1 text-xs font-medium'>
+                                                Nano Banana - Image Prompting Tips
+                                            </div>
+                                            <ul className='text-muted-foreground ml-4 list-disc space-y-1 text-[11px]'>
+                                                <li>
+                                                    Describe the scene in full sentences, not
+                                                    keywords.
+                                                </li>
+                                                <li>
+                                                    For photorealism: shot type, lens, lighting,
+                                                    mood, textures.
+                                                </li>
+                                                <li>
+                                                    For stickers/illustrations: style, palette,
+                                                    line/shading, transparent background.
+                                                </li>
+                                                <li>
+                                                    To edit an image: attach it and describe precise
+                                                    changes only.
+                                                </li>
+                                                <li>
+                                                    Use aspect hints like “16:9” or “square” if you
+                                                    care about layout.
+                                                </li>
+                                            </ul>
+                                            {/* Template chips */}
+                                            <div className='mt-2 flex flex-wrap gap-1.5'>
+                                                {[
+                                                    {
+                                                        label: 'Photorealistic',
+                                                        text:
+                                                            'A photorealistic [shot type] of [subject], [expression], set in [environment]. Illuminated by [lighting] to create a [mood] atmosphere. Captured with a [camera/lens], emphasizing [key textures]. [16:9]',
+                                                    },
+                                                    {
+                                                        label: 'Sticker',
+                                                        text:
+                                                            'A [style] sticker of a [subject], featuring [key characteristics] and a [color palette]. [line style] lines, [shading style] shading. Background must be transparent.',
+                                                    },
+                                                    {
+                                                        label: 'Product',
+                                                        text:
+                                                            'A high-resolution, studio-lit product photograph of [product] on a [surface/background]. Lighting: [setup] to [purpose]. Camera angle: [angle] to showcase [feature]. Ultra-realistic, sharp focus on [detail]. [1:1]',
+                                                    },
+                                                    {
+                                                        label: 'Minimalist',
+                                                        text:
+                                                            'A minimalist composition featuring a single [subject] positioned at the [position] with a vast [color] negative space background. Soft, subtle lighting. [16:9]',
+                                                    },
+                                                    {
+                                                        label: 'Comic',
+                                                        text:
+                                                            'A single comic panel in [art style]. Foreground: [character] [action]. Background: [setting details]. Include a [dialogue/caption] box with the text "[Text]". Lighting creates a [mood] mood. [4:3]',
+                                                    },
+                                                    {
+                                                        label: 'Edits',
+                                                        text:
+                                                            'Using the provided image, change only the [specific element] to [new element/description]. Keep all other content exactly the same (style, lighting, composition).',
+                                                    },
+                                                ].map((chip) => (
+                                                    <button
+                                                        key={chip.label}
+                                                        type='button'
+                                                        onClick={() =>
+                                                            editor?.commands.insertContent(
+                                                                chip.text,
+                                                            )}
+                                                        className='border-border bg-background hover:bg-muted text-muted-foreground rounded-full border px-2.5 py-1 text-[11px] transition-colors'
+                                                    >
+                                                        {chip.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <div className='mt-2'>
+                                                <button
+                                                    className='text-primary text-xs underline underline-offset-2'
+                                                    onClick={dismissImageTips}
+                                                    type='button'
+                                                >
+                                                    Dismiss
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )
                             : (

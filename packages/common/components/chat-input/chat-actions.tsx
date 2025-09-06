@@ -15,6 +15,7 @@ export { MathCalculatorButton } from './actions/MathCalculatorButton';
 export { NewLineIndicator } from './actions/NewLineIndicator';
 export { SendStopButton } from './actions/SendStopButton';
 // Feature Toggle Components
+export { AspectRatioSelector, ImageGenButton, StyleModeSelector } from './actions/ImageGenButton';
 export { WebSearchButton } from './actions/WebSearchButton';
 // Config (for advanced usage)
 export { COLOUR_CLASSES, ICON_SIZES } from './config/constants';

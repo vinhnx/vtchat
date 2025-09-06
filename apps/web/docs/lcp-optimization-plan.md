@@ -146,7 +146,7 @@ const ThreadWithSuspense = NextDynamic(
         ssr: false,
         loading: () => (
             <div className='flex h-full items-center justify-center'>
-                <div className='animate-pulse'>Loading AI chat...</div>
+                <div className='animate-pulse'>Loading chat...</div>
             </div>
         ),
         // Add this to prioritize loading
