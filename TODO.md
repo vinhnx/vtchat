@@ -26,3 +26,9 @@ https://vercel.com/blog/ai-gateway-is-now-generally-available
 https://vercel.com/ai-gateway/models
 
 --
+
+IMPORTANT: fix subscrip renew doesnt work
+
+--
+
+IMPORTANT: creem.io payment redirect to localhost:3000 after payment success

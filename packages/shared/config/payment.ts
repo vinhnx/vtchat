@@ -474,14 +474,16 @@ export class PaymentService {
     static async subscribeToVtPlus(customerEmail?: string) {
         log.info({}, 'Creating VT+ subscription checkout');
 
+        // Always use the proper base URL, prioritizing production URL
+        const baseUrl = PaymentService.getBaseUrl();
+        const successUrl = `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
+
+        log.info({ baseUrl, successUrl }, 'VT+ checkout using base URL');
+
         return PaymentService.createCheckout({
             productId: PlanSlug.VT_PLUS,
             customerEmail,
-            successUrl: `${
-                typeof window !== 'undefined'
-                    ? window.location.origin
-                    : process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn'
-            }/success?plan=${PlanSlug.VT_PLUS}`,
+            successUrl,
         });
     }
 

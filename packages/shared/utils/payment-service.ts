@@ -277,14 +277,16 @@ export class CreemService {
     static async subscribeToVtPlus(customerEmail?: string) {
         log.info('[CreemService] Creating VT+ subscription checkout');
 
+        // Always use the proper base URL, prioritizing production URL
+        const baseUrl = CreemService.getBaseUrl();
+        const successUrl = `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
+
+        log.info({ baseUrl, successUrl }, '[CreemService] VT+ checkout using base URL');
+
         return CreemService.createCheckout({
             productId: CreemService.PRODUCT_ID || '', // Use the actual Creem product ID, not our internal ID
             customerEmail,
-            successUrl: `${
-                typeof window !== 'undefined'
-                    ? window.location.origin
-                    : process.env.NEXT_PUBLIC_APP_URL || 'https://vtchat.io.vn'
-            }/success?plan=${PlanSlug.VT_PLUS}`, // Used PlanSlug
+            successUrl,
         });
     }
 

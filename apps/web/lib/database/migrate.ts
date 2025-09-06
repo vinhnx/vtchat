@@ -11,7 +11,7 @@ export async function runMigrations() {
 
     try {
         await migrate(db, {
-            migrationsFolder: './lib/database/migrations',
+            migrationsFolder: './drizzle/migrations',
         });
         log.info({}, '✅ Database migrations completed successfully!');
     } catch (error) {
