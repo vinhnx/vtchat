@@ -11,12 +11,14 @@ import {
 } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
-import { Button, cn } from '@repo/ui';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import type { Attachment } from '@repo/shared/types';
+import { AspectRatio, Button, cn } from '@repo/ui';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useAgentStream } from '../../hooks/agent-provider';
 import { getErrorDiagnosticMessage } from '../../utils/error-diagnostics';
 import { ChartComponent } from '../charts/chart-components';
+import { AttachmentPreviewModal } from '../chat-input/multi-modal-attachments-display';
 import { DocumentSidePanel } from '../document-side-panel';
 import { MathCalculatorIndicator } from '../math-calculator-indicator';
 import { MotionSkeleton } from '../motion-skeleton';
@@ -57,6 +59,9 @@ export const ThreadItem = memo(
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
         const { handleSubmit } = useAgentStream();
+        const [speaking, setSpeaking] = useState(false);
+        const [imageZoomOpen, setImageZoomOpen] = useState(false);
+        const [imageZoomIndex, setImageZoomIndex] = useState(0);
 
         // Debounced status to prevent flashing during rapid status changes
         const debouncedStatus = useDebounced(threadItem.status, 50);
@@ -331,18 +336,36 @@ export const ThreadItem = memo(
                                                 const [rw, rh] = ratioStr.split(/[:xX]/).map((n) =>
                                                     parseInt(n.trim(), 10)
                                                 );
-                                                const cssRatio = rw && rh
-                                                    ? `${rw} / ${rh}`
-                                                    : '16 / 9';
+                                                const ratioNum = rw && rh ? rw / rh : 16 / 9;
                                                 return (
                                                     <div
                                                         className='border-border bg-muted overflow-hidden rounded-md border'
                                                         key={`${threadItem.id}-img-${idx}`}
                                                     >
-                                                        {/* Use object-contain inside dynamic Aspect Ratio to avoid distortion */}
-                                                        <div
-                                                            className='relative w-full'
-                                                            style={{ aspectRatio: cssRatio as any }}
+                                                        {/* Use object-contain within AspectRatio to avoid distortion */}
+                                                        <AspectRatio
+                                                            className='cursor-zoom-in'
+                                                            ratio={ratioNum}
+                                                            role='button'
+                                                            tabIndex={0}
+                                                            onClick={(e) => {
+                                                                const target = e
+                                                                    .target as HTMLElement;
+                                                                if (
+                                                                    target.closest('button')
+                                                                ) return;
+                                                                setImageZoomIndex(idx);
+                                                                setImageZoomOpen(true);
+                                                            }}
+                                                            onKeyDown={(e) => {
+                                                                if (
+                                                                    e.key === 'Enter'
+                                                                    || e.key === ' '
+                                                                ) {
+                                                                    setImageZoomIndex(idx);
+                                                                    setImageZoomOpen(true);
+                                                                }
+                                                            }}
                                                         >
                                                             <AIImage
                                                                 alt={img.name || `generated-${idx}`}
@@ -398,7 +421,7 @@ export const ThreadItem = memo(
                                                                     Describe
                                                                 </Button>
                                                             </div>
-                                                        </div>
+                                                        </AspectRatio>
                                                         {(img as any).aspectRatio && (
                                                             <div className='text-muted-foreground/70 px-2 py-1 text-[11px]'>
                                                                 Aspect ratio:{' '}
@@ -409,6 +432,22 @@ export const ThreadItem = memo(
                                                 );
                                             })}
                                         </div>
+                                    )}
+
+                                    {/* Fullscreen image viewer using shared attachment modal */}
+                                    {Array.isArray(threadItem.imageOutputs)
+                                        && threadItem.imageOutputs.length > 0 && (
+                                        <AttachmentPreviewModal
+                                            open={imageZoomOpen}
+                                            onClose={() => setImageZoomOpen(false)}
+                                            attachments={threadItem.imageOutputs.map((im, i) => ({
+                                                url: im.dataUrl || im.url || '',
+                                                name: im.name || `image-${i + 1}`,
+                                                contentType: im.mediaType || 'image/png',
+                                            })) as Attachment[]}
+                                            index={imageZoomIndex}
+                                            setIndex={setImageZoomIndex}
+                                        />
                                     )}
 
                                     {threadItem.documentAttachment && (

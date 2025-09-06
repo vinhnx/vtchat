@@ -34,6 +34,7 @@
         "@anthropic-ai/sdk": "^0.56.0",
         "@google/generative-ai": "^0.24.1",
         "@neondatabase/serverless": "^1.0.1",
+        "@radix-ui/react-aspect-ratio": "^1.1.7",
         "@radix-ui/react-slot": "^1.2.3",
         "@react-spring/web": "^9.7.3",
         "@repo/ai": "*",
