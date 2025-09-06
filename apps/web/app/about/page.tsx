@@ -19,11 +19,13 @@ import Link from 'next/link';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'About VT - Advanced AI Platform with Generative AI & Deep Learning',
+    title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
     description:
-        "Learn about VT's advanced artificial intelligence platform featuring generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with machine learning capabilities.",
+        "Learn about VT's advanced AI platform featuring the world's first conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with revolutionary image editing.",
     keywords: [
         'about ai platform',
+        'conversational image editing',
+        'nano banana image editor',
         'artificial intelligence',
         'generative ai',
         'deep learning',
@@ -33,11 +35,12 @@ export const metadata: Metadata = {
         'ai systems',
         'computer vision',
         'privacy-first ai',
+        'iterative image editing',
     ],
     openGraph: {
-        title: 'About VT - Advanced AI Platform with Generative AI & Deep Learning',
+        title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
         description:
-            "Learn about VT's advanced artificial intelligence platform featuring generative AI, deep learning, natural language processing, and large language models. Privacy-first AI systems.",
+            "Learn about VT's advanced AI platform featuring the world's first conversational image editor (Nano Banana), generative AI, deep learning, and large language models. Privacy-first AI systems.",
         type: 'website',
     },
     robots: {
@@ -95,7 +98,8 @@ function AboutContent() {
                         VT
                     </h2>
                     <p className='text-muted-foreground mx-auto max-w-2xl text-lg'>
-                        VT is a production-ready, privacy-first AI chat application with advanced AI
+                        VT is a production-ready, privacy-first AI chat application featuring the
+                        world's first conversational image editor (Nano Banana), advanced AI
                         capabilities, offering all premium models for free with BYOK and exclusive
                         research features for professionals.
                     </p>
@@ -166,6 +170,15 @@ function AboutContent() {
                                 tiers.
                             </p>
                             <ul className='text-muted-foreground list-inside list-disc space-y-2'>
+                                <li>
+                                    <strong>
+                                        🍌 Nano Banana Conversational Image Editor (Unique to VT):
+                                    </strong>{' '}
+                                    World's first conversational image editor! Generate an image,
+                                    then iteratively edit through natural conversation: "make the
+                                    cat bigger", "change background to sunset", "add a party hat" -
+                                    all while preserving edit history
+                                </li>
                                 <li>
                                     <strong>Multi-Provider Support:</strong>{' '}
                                     OpenAI, Anthropic, Google, Fireworks, Together AI, xAI,

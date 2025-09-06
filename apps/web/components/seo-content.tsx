@@ -23,14 +23,20 @@ export function SEOContent({ showOnHomepage = false, className = '' }: SEOConten
                     <h2>Complete Guide to Artificial Intelligence (AI)</h2>
                     <p>
                         Artificial Intelligence (AI) represents one of the most transformative
-                        technologies of our time. Our comprehensive AI platform combines generative
-                        AI, deep learning, natural language processing (NLP), large language models
+                        technologies of our time. Our comprehensive AI platform features the world's
+                        first conversational image editor (Nano Banana) and combines generative AI,
+                        deep learning, natural language processing (NLP), large language models
                         (LLMs), and machine learning to deliver advanced artificial intelligence
                         capabilities that rival human intelligence in specific tasks.
                     </p>
 
                     <h3>Types of Artificial Intelligence Systems</h3>
                     <ol>
+                        <li>
+                            <strong>Conversational Image Editing (Nano Banana):</strong>{' '}
+                            World's first conversational image editor allowing iterative image
+                            modification through natural language
+                        </li>
                         <li>
                             <strong>Generative AI:</strong>{' '}
                             Creates new content, text, images, and solutions using advanced
@@ -70,6 +76,7 @@ export function SEOContent({ showOnHomepage = false, className = '' }: SEOConten
 
                     <h3>AI Applications in the Real World</h3>
                     <ol>
+                        <li>Conversational image creation and editing with Nano Banana</li>
                         <li>Business automation and process optimization</li>
                         <li>Content creation and creative writing</li>
                         <li>Data analysis and predictive modeling</li>

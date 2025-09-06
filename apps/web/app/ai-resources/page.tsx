@@ -14,11 +14,14 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'AI Resources - Learn Artificial Intelligence & Machine Learning | VT',
+    title:
+        'AI Resources - Learn Conversational Image Editing, Artificial Intelligence & Machine Learning | VT',
     description:
-        'Comprehensive AI resources covering artificial intelligence, generative AI, deep learning, natural language processing (NLP), large language models (LLMs), machine learning tutorials, and AI system guides.',
+        'Comprehensive AI resources covering conversational image editing (Nano Banana), artificial intelligence, generative AI, deep learning, natural language processing (NLP), large language models (LLMs), machine learning tutorials, and AI system guides.',
     keywords: [
         'ai resources',
+        'conversational image editing',
+        'nano banana image editor',
         'artificial intelligence learning',
         'ai tutorials',
         'generative ai guides',
@@ -29,11 +32,13 @@ export const metadata: Metadata = {
         'ai systems tutorials',
         'computer vision guides',
         'artificial general intelligence agi resources',
+        'iterative image editing',
     ],
     openGraph: {
-        title: 'AI Resources - Learn Artificial Intelligence & Machine Learning',
+        title:
+            'AI Resources - Learn Conversational Image Editing, Artificial Intelligence & Machine Learning',
         description:
-            'Comprehensive resources for learning artificial intelligence, including tutorials on generative AI, deep learning, natural language processing, and machine learning.',
+            'Comprehensive resources for learning artificial intelligence, including the revolutionary Nano Banana conversational image editor, generative AI, deep learning, natural language processing, and machine learning.',
         type: 'website',
     },
     robots: {

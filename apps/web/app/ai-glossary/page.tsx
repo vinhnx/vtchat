@@ -16,11 +16,13 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'AI Glossary - Artificial Intelligence Terms & Definitions | VT',
+    title: 'AI Glossary - Conversational Image Editing & Artificial Intelligence Terms | VT',
     description:
-        'Comprehensive AI glossary covering artificial intelligence, generative AI, deep learning, natural language processing (NLP), large language models (LLMs), machine learning, computer vision, and AI systems terminology.',
+        'Comprehensive AI glossary covering conversational image editing (Nano Banana), artificial intelligence, generative AI, deep learning, natural language processing (NLP), large language models (LLMs), machine learning, computer vision, and AI systems terminology.',
     keywords: [
         'ai glossary',
+        'conversational image editing terms',
+        'nano banana definitions',
         'artificial intelligence terms',
         'ai definitions',
         'generative ai glossary',
@@ -31,11 +33,12 @@ export const metadata: Metadata = {
         'ai systems terminology',
         'computer vision terms',
         'artificial general intelligence agi definitions',
+        'iterative image editing terms',
     ],
     openGraph: {
-        title: 'AI Glossary - Artificial Intelligence Terms & Definitions',
+        title: 'AI Glossary - Conversational Image Editing & Artificial Intelligence Terms',
         description:
-            'Complete glossary of artificial intelligence terms including generative AI, deep learning, natural language processing, and machine learning definitions.',
+            'Complete glossary of AI terms including conversational image editing (Nano Banana), generative AI, deep learning, natural language processing, and machine learning definitions.',
         type: 'website',
     },
     robots: {
