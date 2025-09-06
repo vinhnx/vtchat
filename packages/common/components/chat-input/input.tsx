@@ -224,10 +224,27 @@ export const ChatInput = ({
                         router.push(`/chat/${optimisticThreadId}`);
                     }
 
+                    // Determine parent for continuity (last item with image outputs)
+                    let parentId: string | undefined = undefined;
+                    try {
+                        if (threadId) {
+                            const items = await useChatStore.getState().getThreadItems(threadId);
+                            const sorted = (items || []).sort(
+                                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                            );
+                            const lastWithImages = [...sorted]
+                                .reverse()
+                                .find(
+                                    (it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0,
+                                );
+                            if (lastWithImages) parentId = lastWithImages.id;
+                        }
+                    } catch {}
+
                     await useChatStore.getState().createThreadItem({
                         id: threadItemId,
                         threadId: threadId!,
-                        parentId: undefined,
+                        parentId,
                         createdAt: now,
                         updatedAt: now,
                         status: 'PENDING',
@@ -246,6 +263,39 @@ export const ChatInput = ({
                         for (const a of multiModalAttachments) {
                             images.push({ url: a.url, mediaType: a.contentType, name: a.name });
                         }
+                    }
+
+                    // If no explicit images attached, try to use the last generated image for edit continuity
+                    if (images.length === 0 && threadId) {
+                        try {
+                            const items = await useChatStore.getState().getThreadItems(threadId);
+                            const sorted = (items || []).sort(
+                                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                            );
+                            const lastWithImages = [...sorted]
+                                .reverse()
+                                .find(
+                                    (it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0,
+                                );
+                            const img = lastWithImages?.imageOutputs?.[0];
+                            if (img) {
+                                if (img.url) {
+                                    images.push({
+                                        url: img.url,
+                                        mediaType: img.mediaType,
+                                        name: img.name,
+                                    });
+                                } else if (img.dataUrl) {
+                                    const match = String(img.dataUrl).match(/^data:(.+);base64,(.*)$/);
+                                    if (match) {
+                                        images.push({
+                                            base64: match[2] || '',
+                                            mediaType: match[1] || 'image/png',
+                                        });
+                                    }
+                                }
+                            }
+                        } catch {}
                     }
 
                     const result = await http.post<{ text: string; images: any[]; }>(
@@ -294,7 +344,19 @@ export const ChatInput = ({
                 }
             };
 
-            if (isImagePrompt(messageText)) {
+            // Decide if this message is an image generation/edit request
+            let isImageFollowup = false;
+            if (currentThreadId) {
+                try {
+                    const items = await getThreadItems(currentThreadId.toString());
+                    const last = items.sort(
+                        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                    ).at(-1);
+                    isImageFollowup = Array.isArray(last?.imageOutputs) && last!.imageOutputs!.length > 0;
+                } catch {}
+            }
+
+            if (isImagePrompt(messageText) || isImageFollowup) {
                 await runImageFlow(messageText);
                 return;
             }

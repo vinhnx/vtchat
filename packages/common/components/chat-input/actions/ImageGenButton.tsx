@@ -66,11 +66,26 @@ export const ImageGenButton = ({
                 router.push(`/chat/${optimisticThreadId}`);
             }
 
+            // Find last thread item with image outputs for continuity
+            let parentId: string | undefined = undefined;
+            try {
+                if (threadId) {
+                    const items = await useChatStore.getState().getThreadItems(threadId);
+                    const sorted = (items || []).sort(
+                        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                    );
+                    const lastWithImages = [...sorted]
+                        .reverse()
+                        .find((it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0);
+                    if (lastWithImages) parentId = lastWithImages.id;
+                }
+            } catch {}
+
             // Create optimistic thread item with user prompt
             const newItem: ThreadItem = {
                 id: threadItemId,
                 threadId: threadId!,
-                parentId: undefined,
+                parentId,
                 createdAt: now,
                 updatedAt: now,
                 status: 'PENDING',
@@ -92,6 +107,31 @@ export const ImageGenButton = ({
                 for (const a of attachments) {
                     images.push({ url: a.url, mediaType: a.contentType, name: a.name });
                 }
+            }
+
+            // If no explicit images attached, try to use the last generated image for edit continuity
+            if (images.length === 0 && threadId) {
+                try {
+                    const items = await useChatStore.getState().getThreadItems(threadId);
+                    const sorted = (items || []).sort(
+                        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                    );
+                    const lastWithImages = [...sorted]
+                        .reverse()
+                        .find((it) => Array.isArray(it.imageOutputs) && it.imageOutputs.length > 0);
+                    const img = lastWithImages?.imageOutputs?.[0];
+                    if (img) {
+                        if (img.url) {
+                            images.push({ url: img.url, mediaType: img.mediaType, name: img.name });
+                        } else if (img.dataUrl) {
+                            // dataUrl format: data:<mime>;base64,<data>
+                            const match = String(img.dataUrl).match(/^data:(.+);base64,(.*)$/);
+                            if (match) {
+                                images.push({ base64: match[2] || '', mediaType: match[1] || 'image/png' });
+                            }
+                        }
+                    }
+                } catch {}
             }
 
             const result = await http.post<{ text: string; images: any[]; }>(
