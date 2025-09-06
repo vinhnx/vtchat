@@ -23,14 +23,19 @@ export const PRICING_CONFIG = {
                         'Complete access to intelligent tool routing, chart visualization, web search, dark mode, thinking mode, structured output, document parsing, reasoning chain, and Gemini caching - all free for logged-in users',
                 },
                 {
-                    name: 'Multi-Modal Chat',
+                    name: 'Multi-Modal Chat + Gemini Nano Banana',
                     description:
-                        'Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini',
+                        'Upload and analyze images and PDF documents alongside text conversations using advanced AI models like GPT-4o, Claude, and Gemini. Plus unique Gemini Nano Banana conversational image editing - generate, edit, and refine images through natural conversation',
                 },
                 {
-                    name: 'All Chat Input Tools',
+                    name: 'All Chat Input Tools + Nano Banana Image Editor',
                     description:
-                        'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and all productivity tools included',
+                        'Intelligent tool routing, mathematical calculator, chart generation, image analysis, document processing, web search, and the exclusive Gemini Nano Banana conversational image editor - create and modify images through natural language conversation',
+                },
+                {
+                    name: '🍌 Gemini Nano Banana - Conversational Image Editing (Unique to VT)',
+                    description:
+                        'World\'s first conversational image editor! Generate an image, then iteratively edit it through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving your edits in chat history',
                 },
                 {
                     name: 'All Premium AI Models (Free with BYOK)',
@@ -55,9 +60,9 @@ export const PRICING_CONFIG = {
             interval: 'month',
             features: [
                 {
-                    name: 'Access to Gemini Models + Enhanced Tools',
+                    name: 'Access to Gemini Models + Enhanced Tools + Nano Banana',
                     description:
-                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite) plus enhanced tools (web search, math calculator, charts) without needing your own API keys.',
+                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite) plus enhanced tools (web search, math calculator, charts) and the exclusive Gemini Nano Banana conversational image editor without needing your own API keys.',
                 },
                 {
                     name: 'Everything in Free Plan (All Premium AI Models Included)',

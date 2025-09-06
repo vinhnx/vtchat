@@ -41,4 +41,8 @@ www.kaggle.com/competitions/banana/
 
 --
 
-update Gemini Nano Banano Image Generation/Edit feature in /pricing card and docs and about this feature is very unique.
+✅ update Gemini Nano Banano Image Generation/Edit feature in /pricing card and docs and about this feature is very unique.
+
+--
+
+https://jhak.im/blog/ai-sdk-migration-handling-previously-saved-messages

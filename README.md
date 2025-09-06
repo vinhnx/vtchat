@@ -21,6 +21,8 @@
 
 VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through an extremely generous free tier and a focused premium subscription. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
 
+**🌟 Featuring Nano Banana** - The world's first conversational image editor! Generate and iteratively edit images through natural conversation, exclusive to VT.
+
 Live at [https://vtchat.io.vn](https://vtchat.io.vn)
 
 ## Screenshots
@@ -54,6 +56,7 @@ _Advanced AI capabilities including document processing, web search, and structu
 
 ### Advanced AI Capabilities
 
+- **🍌 Nano Banana Conversational Image Editor (Unique to VT)**: World's first conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history
 - **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free Server Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API keys required
 - **Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs

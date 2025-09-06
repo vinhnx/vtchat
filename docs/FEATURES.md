@@ -116,13 +116,16 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Export Options**: Conversation export capabilities with multiple formats
 - **Performance Optimized**: 87% faster compilation and improved load times
 
-### Image Generation
+### Image Generation & Nano Banana 🍌
 
+- **🌟 Nano Banana Conversational Editor**: World's first conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history in chat.
 - **Generate Button**: One-click image generation from the chat input.
 - **Style Templates**: Photorealistic, Sticker, Product, Minimalist, Comic prompt scaffolds.
 - **Aspect Ratio Selector**: Replace-over-append logic to avoid duplicate AR hints.
 - **BYOK (Gemini)**: Requires a Google Gemini API key; helpful tooltips when missing.
 - **Robust UX**: Optimistic thread updates, structured logging, friendly toasts on errors.
+- **Conversational Context**: Maintains conversation history for iterative image refinement.
+- **Visual Timeline**: Track image evolution through chat conversation.
 
 ## 💳 Subscription Management
 
