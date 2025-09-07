@@ -91,6 +91,7 @@ export const ImageGenButton = ({
                 status: 'PENDING',
                 query: prompt,
                 mode: useChatStore.getState().chatMode,
+                isImageGeneration: true, // Flag to indicate this is an image generation request
             } as ThreadItem;
 
             await createThreadItem(newItem);

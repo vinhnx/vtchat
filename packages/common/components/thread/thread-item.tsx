@@ -45,7 +45,23 @@ export const ThreadItem = memo(
         isGenerating: boolean;
         isLast: boolean;
     }) => {
-        // Determine if this thread item should animate
+        const getChatStore = useChatStore((state) => state);
+
+        // Check if this is an image generation workflow by looking at thread context
+        const isImageGenerationWorkflow = useMemo(() => {
+            // Check if this thread item is explicitly marked as image generation
+            if (threadItem.isImageGeneration) {
+                return true;
+            }
+
+            // If threadItem has a parentId, check if any previous items in this thread had imageOutputs
+            if (threadItem.parentId) {
+                return true; // Likely an image edit/continuation
+            }
+
+            // Conservative fallback - only show for explicit image generation
+            return false;
+        }, [threadItem.isImageGeneration, threadItem.parentId]); // Determine if this thread item should animate
         // Only animate if it's the last item, currently generating, AND not already completed
         const shouldAnimate = isLast
             && isGenerating
@@ -287,11 +303,12 @@ export const ThreadItem = memo(
                             )}
                         </div>
 
-                        {/* Render skeleton placeholders for pending image generation */}
+                        {/* Render skeleton placeholders for pending image generation ONLY */}
                         {threadItem.status === 'PENDING'
                             && threadItem.query
                             && (!Array.isArray(threadItem.imageOutputs)
                                 || threadItem.imageOutputs.length === 0)
+                            && isImageGenerationWorkflow
                             && (
                                 <div className='mt-4 grid w-full grid-cols-1 gap-3 sm:grid-cols-2'>
                                     {/* Single skeleton placeholder */}

@@ -106,6 +106,8 @@ export type ThreadItem = {
     attachments?: Attachment[];
     // AI-generated image outputs (Gemini image generation)
     imageOutputs?: ImageOutput[];
+    // Flag to indicate this is an image generation request (used for skeleton display)
+    isImageGeneration?: boolean;
     // Thinking mode data (VT+ feature) - contains AI reasoning/thoughts
     reasoning?: string;
     // Structured reasoning details from AI SDK (includes text and redacted content)
