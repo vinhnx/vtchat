@@ -351,6 +351,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 const response = await http.postStream('/api/completion', {
                     body,
                     signal: abortController.signal,
+                    timeout: 120000, // 2 minutes for completion requests (especially vision tasks)
                 });
 
                 if (!response.ok) {

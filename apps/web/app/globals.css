@@ -1,4 +1,4 @@
-@import "@repo/tailwind-config/tailwind.css";
+@import '@repo/tailwind-config/tailwind.css';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 /* Include Streamdown styles for Tailwind (path relative to this file) */
@@ -298,8 +298,17 @@ body::-webkit-scrollbar-corner {
 body {
     @apply bg-background text-foreground;
     font-family:
-        "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        'SF Pro Display',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol';
 }
 
 strong {
@@ -528,7 +537,7 @@ html.dark .shiki span {
 }
 
 .vt-plus-glass::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -100%;
@@ -649,7 +658,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 0;
     bottom: 0;
@@ -662,7 +671,7 @@ mark.prompt-highlight {
 }
 
 .greeting-bubble::after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 1;
     bottom: 0;
@@ -880,7 +889,7 @@ h6:not([class]) {
 
 /* Ensure footer doesn't interfere with center content */
 .homepage-footer::before {
-    content: "";
+    content: '';
     position: absolute;
     top: -20px;
     left: 0;
@@ -940,6 +949,15 @@ h6:not([class]) {
     }
     100% {
         background-position: calc(200px + 100%) 0;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
     }
 }
 

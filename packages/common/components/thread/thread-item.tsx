@@ -10,9 +10,9 @@ import {
     useMathCalculator,
 } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
-import type { ThreadItem as ThreadItemType } from '@repo/shared/types';
-import type { Attachment } from '@repo/shared/types';
+import type { Attachment, ThreadItem as ThreadItemType } from '@repo/shared/types';
 import { AspectRatio, Button, cn } from '@repo/ui';
+import { ZoomIn } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useAgentStream } from '../../hooks/agent-provider';
@@ -286,6 +286,70 @@ export const ThreadItem = memo(
                                 </div>
                             )}
                         </div>
+
+                        {/* Render skeleton placeholders for pending image generation */}
+                        {threadItem.status === 'PENDING'
+                            && threadItem.query
+                            && (!Array.isArray(threadItem.imageOutputs)
+                                || threadItem.imageOutputs.length === 0)
+                            && (
+                                <div className='mt-4 grid w-full grid-cols-1 gap-3 sm:grid-cols-2'>
+                                    {/* Single skeleton placeholder */}
+                                    <div className='border-border bg-muted/30 overflow-hidden rounded-md border relative group'>
+                                        <AspectRatio ratio={1} className='relative'>
+                                            {/* Gradient background */}
+                                            <div className='absolute inset-0 bg-gradient-to-br from-muted/80 via-muted/40 to-muted/60' />
+
+                                            {/* Animated shimmer overlay */}
+                                            <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite] -translate-x-full' />
+
+                                            {/* Content */}
+                                            <div className='absolute inset-0 flex flex-col items-center justify-center z-10'>
+                                                {/* Icon with pulse */}
+                                                <div className='bg-muted-foreground/20 rounded-full p-4 mb-3 animate-pulse'>
+                                                    <svg
+                                                        className='h-8 w-8 text-muted-foreground'
+                                                        fill='none'
+                                                        viewBox='0 0 24 24'
+                                                        stroke='currentColor'
+                                                    >
+                                                        <path
+                                                            strokeLinecap='round'
+                                                            strokeLinejoin='round'
+                                                            strokeWidth={1.5}
+                                                            d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+                                                        />
+                                                    </svg>
+                                                </div>
+
+                                                {/* Status text with progressive prompt */}
+                                                <div className='text-center px-4'>
+                                                    <div className='text-sm font-medium text-muted-foreground mb-2'>
+                                                        Generating image...
+                                                    </div>
+                                                    {threadItem.query && (
+                                                        <div className='text-xs text-muted-foreground/80 mb-2 max-w-xs leading-relaxed'>
+                                                            "{threadItem.query.length > 60
+                                                                ? threadItem.query.slice(0, 60)
+                                                                    + '...'
+                                                                : threadItem.query}"
+                                                        </div>
+                                                    )}
+                                                    <div className='text-xs text-muted-foreground/70'>
+                                                        Using Gemini 2.5 Flash Image Preview
+                                                    </div>
+                                                </div>
+
+                                                {/* Progress indicator */}
+                                                <div className='mt-4 w-20 h-1 bg-muted-foreground/20 rounded-full overflow-hidden'>
+                                                    <div className='h-full bg-muted-foreground/40 rounded-full animate-pulse w-1/2' />
+                                                </div>
+                                            </div>
+                                        </AspectRatio>
+                                    </div>
+                                </div>
+                            )}
+
                         <QuestionPrompt threadItem={threadItem} />
                         {threadItem.error && (
                             <RateLimitErrorAlert
@@ -331,12 +395,26 @@ export const ThreadItem = memo(
                                                 const url = img.url || undefined;
                                                 const mediaType = img.mediaType || undefined;
                                                 if (!dataUrl && !url) return null;
-                                                // Determine aspect ratio string for CSS, default to 16/9
-                                                const ratioStr = (img as any).aspectRatio || '16:9';
-                                                const [rw, rh] = ratioStr.split(/[:xX]/).map((n) =>
-                                                    parseInt(n.trim(), 10)
-                                                );
-                                                const ratioNum = rw && rh ? rw / rh : 16 / 9;
+
+                                                // Better aspect ratio detection: check for actual dimensions first
+                                                let ratioNum = 1; // Default to square (1:1) for better image generation UX
+
+                                                if ((img as any).aspectRatio) {
+                                                    // Use provided aspect ratio if available
+                                                    const ratioStr = (img as any).aspectRatio;
+                                                    const [rw, rh] = ratioStr.split(/[:xX]/).map((
+                                                        n: string,
+                                                    ) => parseInt(n.trim(), 10));
+                                                    if (rw && rh) {
+                                                        ratioNum = rw / rh;
+                                                    }
+                                                } else if (
+                                                    (img as any).width && (img as any).height
+                                                ) {
+                                                    // Calculate from actual dimensions if available
+                                                    ratioNum = (img as any).width
+                                                        / (img as any).height;
+                                                }
                                                 return (
                                                     <div
                                                         className='border-border bg-muted overflow-hidden rounded-md border'
@@ -344,7 +422,7 @@ export const ThreadItem = memo(
                                                     >
                                                         {/* Use object-contain within AspectRatio to avoid distortion */}
                                                         <AspectRatio
-                                                            className='cursor-zoom-in'
+                                                            className='group cursor-zoom-in'
                                                             ratio={ratioNum}
                                                             role='button'
                                                             tabIndex={0}
@@ -377,57 +455,67 @@ export const ThreadItem = memo(
                                                                 priority={false}
                                                                 className='object-contain'
                                                             />
-                                                            <div className='pointer-events-none absolute inset-0 flex items-start justify-end p-2'>
-                                                                <Button
-                                                                    className='pointer-events-auto h-6 px-2 text-[11px]'
-                                                                    size='sm'
-                                                                    variant='secondary'
-                                                                    onClick={async () => {
-                                                                        const attachment = {
-                                                                            url: dataUrl || url
-                                                                                || '',
-                                                                            name: img.name
-                                                                                || `image-${
-                                                                                    idx + 1
-                                                                                }`,
-                                                                            contentType: mediaType
-                                                                                || 'image/png',
-                                                                        };
-                                                                        const formData =
-                                                                            new FormData();
-                                                                        formData.append(
-                                                                            'multiModalAttachments',
-                                                                            JSON.stringify([
-                                                                                attachment,
-                                                                            ]),
-                                                                        );
-                                                                        formData.append(
-                                                                            'query',
-                                                                            'Describe this image based on the conversation context. Include key subjects, actions, setting, and any notable details. Avoid hallucinations.',
-                                                                        );
-                                                                        const threadItems =
-                                                                            await useChatStore
-                                                                                .getState()
-                                                                                .getThreadItems(
-                                                                                    threadItem
-                                                                                        .threadId,
-                                                                                );
-                                                                        handleSubmit({
-                                                                            formData,
-                                                                            messages: threadItems,
-                                                                        });
-                                                                    }}
-                                                                >
-                                                                    Describe
-                                                                </Button>
+                                                            <div className='pointer-events-none absolute inset-0 flex items-start justify-end p-2 opacity-0 transition-opacity group-hover:opacity-100'>
+                                                                <div className='flex gap-1'>
+                                                                    <Button
+                                                                        className='pointer-events-auto h-6 px-2 text-[11px]'
+                                                                        size='sm'
+                                                                        variant='secondary'
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setImageZoomIndex(idx);
+                                                                            setImageZoomOpen(true);
+                                                                        }}
+                                                                    >
+                                                                        <ZoomIn className='h-3 w-3' />
+                                                                    </Button>
+                                                                    <Button
+                                                                        className='pointer-events-auto h-6 px-2 text-[11px]'
+                                                                        size='sm'
+                                                                        variant='secondary'
+                                                                        onClick={async () => {
+                                                                            const attachment = {
+                                                                                url: dataUrl || url
+                                                                                    || '',
+                                                                                name: img.name
+                                                                                    || `image-${
+                                                                                        idx + 1
+                                                                                    }`,
+                                                                                contentType:
+                                                                                    mediaType
+                                                                                    || 'image/png',
+                                                                            };
+                                                                            const formData =
+                                                                                new FormData();
+                                                                            formData.append(
+                                                                                'multiModalAttachments',
+                                                                                JSON.stringify([
+                                                                                    attachment,
+                                                                                ]),
+                                                                            );
+                                                                            formData.append(
+                                                                                'query',
+                                                                                'Describe this image based on the conversation context. Include key subjects, actions, setting, and any notable details. Avoid hallucinations.',
+                                                                            );
+                                                                            const threadItems =
+                                                                                await useChatStore
+                                                                                    .getState()
+                                                                                    .getThreadItems(
+                                                                                        threadItem
+                                                                                            .threadId,
+                                                                                    );
+                                                                            handleSubmit({
+                                                                                formData,
+                                                                                messages:
+                                                                                    threadItems,
+                                                                            });
+                                                                        }}
+                                                                    >
+                                                                        Describe
+                                                                    </Button>
+                                                                </div>
                                                             </div>
                                                         </AspectRatio>
-                                                        {(img as any).aspectRatio && (
-                                                            <div className='text-muted-foreground/70 px-2 py-1 text-[11px]'>
-                                                                Aspect ratio:{' '}
-                                                                {(img as any).aspectRatio}
-                                                            </div>
-                                                        )}
                                                     </div>
                                                 );
                                             })}
@@ -440,11 +528,66 @@ export const ThreadItem = memo(
                                         <AttachmentPreviewModal
                                             open={imageZoomOpen}
                                             onClose={() => setImageZoomOpen(false)}
-                                            attachments={threadItem.imageOutputs.map((im, i) => ({
-                                                url: im.dataUrl || im.url || '',
-                                                name: im.name || `image-${i + 1}`,
-                                                contentType: im.mediaType || 'image/png',
-                                            })) as Attachment[]}
+                                            attachments={threadItem.imageOutputs.map((im, i) => {
+                                                // Progressive image naming logic
+                                                let imageName = '';
+
+                                                if (im.name) {
+                                                    // Use provided name if available
+                                                    imageName = im.name;
+                                                } else if (threadItem.query) {
+                                                    // Use the generation prompt as the image name
+                                                    const prompt = threadItem.query.trim();
+                                                    const maxLength = 80; // Reasonable length for display
+
+                                                    if (prompt.length <= maxLength) {
+                                                        imageName = prompt;
+                                                    } else {
+                                                        // Smart truncation - try to break at word boundaries
+                                                        const truncated = prompt.substring(
+                                                            0,
+                                                            maxLength,
+                                                        );
+                                                        const lastSpaceIndex = truncated
+                                                            .lastIndexOf(' ');
+
+                                                        if (lastSpaceIndex > maxLength * 0.7) {
+                                                            // If we can find a good word boundary, use it
+                                                            imageName = truncated.substring(
+                                                                0,
+                                                                lastSpaceIndex,
+                                                            ) + '...';
+                                                        } else {
+                                                            // Otherwise, hard truncate with ellipsis
+                                                            imageName = truncated + '...';
+                                                        }
+                                                    }
+
+                                                    // Add image number if multiple images
+                                                    if (
+                                                        threadItem.imageOutputs
+                                                        && threadItem.imageOutputs.length > 1
+                                                    ) {
+                                                        imageName = `${imageName} (${
+                                                            i + 1
+                                                        }/${threadItem.imageOutputs.length})`;
+                                                    }
+                                                } else {
+                                                    // Fallback to generic name
+                                                    imageName = threadItem.imageOutputs
+                                                            && threadItem.imageOutputs.length > 1
+                                                        ? `Generated Image ${
+                                                            i + 1
+                                                        } of ${threadItem.imageOutputs.length}`
+                                                        : 'Generated Image';
+                                                }
+
+                                                return {
+                                                    url: im.dataUrl || im.url || '',
+                                                    name: imageName,
+                                                    contentType: im.mediaType || 'image/png',
+                                                };
+                                            }) as Attachment[]}
                                             index={imageZoomIndex}
                                             setIndex={setImageZoomIndex}
                                         />

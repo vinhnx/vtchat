@@ -428,7 +428,7 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => 
                     }}
                 >
                     <div
-                        className='pb-18 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full'
+                        className='pb-24 mx-auto w-[95%] max-w-3xl px-4 pt-2 md:w-full md:pb-32'
                         ref={contentRef}
                         style={{
                             // Remove containment to allow dynamic expansion during streaming

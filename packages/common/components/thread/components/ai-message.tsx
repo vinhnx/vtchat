@@ -6,8 +6,8 @@ import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { memo, useRef } from 'react';
-import './message-animations.css';
 import { modelOptions } from '../../chat-input/chat-config';
+import './message-animations.css';
 
 interface AIMessageProps {
     content: string;
@@ -69,7 +69,10 @@ export const AIMessage = memo(
                                             </div>
                                         )}
                                         <span className='text-muted-foreground text-xs font-medium'>
-                                            {getModelDisplayName(threadItem.mode)}
+                                            {Array.isArray(threadItem.imageOutputs)
+                                                    && threadItem.imageOutputs.length > 0
+                                                ? 'Gemini 2.5 Flash Image Preview'
+                                                : getModelDisplayName(threadItem.mode)}
                                         </span>
                                     </>
                                 );

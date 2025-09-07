@@ -136,48 +136,126 @@ export function AttachmentPreviewModal({
     const canNext = index < attachments.length - 1;
     return (
         <Dialog open={open} onOpenChange={(v) => (!v ? onClose() : null)}>
-            <DialogContent className='max-w-[95vw]'>
-                <div className='flex items-center justify-between gap-2'>
-                    <DialogTitle className='truncate'>
-                        {attachment.name || 'Attachment'}
-                    </DialogTitle>
-                    <div className='text-muted-foreground text-xs'>
-                        {index + 1}/{attachments.length}
-                    </div>
-                </div>
-                <DialogDescription>
-                    Type: {attachment.contentType || 'Unknown'} • Size:{' '}
-                    {formatSize(attachment.size)}
+            <DialogContent className='max-w-none max-h-none w-screen h-screen p-0 bg-black/95 border-none'>
+                {/* Hidden title and description for accessibility */}
+                <DialogTitle className='sr-only'>
+                    {attachment.name || 'Attachment'}
+                </DialogTitle>
+                <DialogDescription className='sr-only'>
+                    {attachment.contentType || 'Unknown'} attachment
                 </DialogDescription>
-                <div className='mt-2 flex max-h-[75vh] w-full items-center justify-center'>
+
+                {/* Full screen image container */}
+                <div className='relative w-full h-full flex items-center justify-center group'>
+                    {/* Hover overlay gradients for better UI visibility */}
+                    <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'>
+                        {/* Top gradient for close button */}
+                        <div className='absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/40 to-transparent' />
+                        {/* Bottom gradient for info overlay */}
+                        <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent' />
+                        {/* Left gradient for prev button */}
+                        {canPrev && (
+                            <div className='absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black/30 to-transparent' />
+                        )}
+                        {/* Right gradient for next button */}
+                        {canNext && (
+                            <div className='absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black/30 to-transparent' />
+                        )}
+                    </div>
+
                     {isImage && attachment.url
                         ? (
-                            <div className='relative flex w-full items-center justify-center'>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <div className='relative w-full h-full flex items-center justify-center'>
+                                {/* Centered fullscreen image */}
                                 <img
                                     alt={attachment.name || 'image'}
-                                    className='max-h-[70vh] w-auto max-w-full rounded-md object-contain'
+                                    className='max-w-full max-h-full object-contain'
                                     src={attachment.url}
                                 />
-                                <div className='absolute inset-y-0 left-0 flex items-center'>
+
+                                {/* Navigation buttons - enhanced with better backdrop */}
+                                {canPrev && (
                                     <button
                                         type='button'
-                                        disabled={!canPrev}
-                                        onClick={() => canPrev && setIndex(index - 1)}
-                                        className='bg-background/70 text-foreground/80 hover:text-foreground disabled:opacity-40 ml-2 rounded-md px-2 py-1 text-xs'
+                                        onClick={() => setIndex(index - 1)}
+                                        className='absolute left-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 shadow-lg border border-white/20'
                                     >
-                                        Prev
+                                        <svg
+                                            className='w-6 h-6'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                        >
+                                            <path
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                strokeWidth={2}
+                                                d='M15 19l-7-7 7-7'
+                                            />
+                                        </svg>
                                     </button>
-                                </div>
-                                <div className='absolute inset-y-0 right-0 flex items-center'>
+                                )}
+
+                                {canNext && (
                                     <button
                                         type='button'
-                                        disabled={!canNext}
-                                        onClick={() => canNext && setIndex(index + 1)}
-                                        className='bg-background/70 text-foreground/80 hover:text-foreground disabled:opacity-40 mr-2 rounded-md px-2 py-1 text-xs'
+                                        onClick={() => setIndex(index + 1)}
+                                        className='absolute right-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 shadow-lg border border-white/20'
                                     >
-                                        Next
+                                        <svg
+                                            className='w-6 h-6'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                        >
+                                            <path
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                strokeWidth={2}
+                                                d='M9 5l7 7-7 7'
+                                            />
+                                        </svg>
                                     </button>
+                                )}
+
+                                {/* Close button - enhanced with better backdrop */}
+                                <button
+                                    type='button'
+                                    onClick={onClose}
+                                    className='absolute top-6 right-6 bg-black/70 hover:bg-black/90 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 shadow-lg border border-white/20'
+                                >
+                                    <svg
+                                        className='w-5 h-5'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        stroke='currentColor'
+                                    >
+                                        <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            strokeWidth={2}
+                                            d='M6 18L18 6M6 6l12 12'
+                                        />
+                                    </svg>
+                                </button>
+
+                                {/* Bottom overlay with info - enhanced gradient */}
+                                <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-8 transition-all duration-300 opacity-0 group-hover:opacity-100 backdrop-blur-sm'>
+                                    <div className='text-white text-center max-w-4xl mx-auto'>
+                                        <h3 className='text-xl font-semibold mb-3 drop-shadow-lg leading-relaxed'>
+                                            {attachment.name || 'Generated Image'}
+                                        </h3>
+                                        <div className='text-sm text-white/90 flex items-center justify-center gap-4 drop-shadow-md'>
+                                            <span className='bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full'>
+                                                {attachment.contentType || 'Image'}
+                                            </span>
+                                            {attachments.length > 1 && (
+                                                <span className='bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full'>
+                                                    {index + 1} of {attachments.length}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )
