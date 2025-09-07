@@ -149,8 +149,6 @@ export function AttachmentPreviewModal({
                 <div className='relative w-full h-full flex items-center justify-center group'>
                     {/* Hover overlay gradients for better UI visibility */}
                     <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'>
-                        {/* Top gradient for close button */}
-                        <div className='absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/40 to-transparent' />
                         {/* Bottom gradient for info overlay */}
                         <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent' />
                         {/* Left gradient for prev button */}
@@ -217,27 +215,6 @@ export function AttachmentPreviewModal({
                                         </svg>
                                     </button>
                                 )}
-
-                                {/* Close button - enhanced with better backdrop */}
-                                <button
-                                    type='button'
-                                    onClick={onClose}
-                                    className='absolute top-6 right-6 bg-black/70 hover:bg-black/90 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 shadow-lg border border-white/20'
-                                >
-                                    <svg
-                                        className='w-5 h-5'
-                                        fill='none'
-                                        viewBox='0 0 24 24'
-                                        stroke='currentColor'
-                                    >
-                                        <path
-                                            strokeLinecap='round'
-                                            strokeLinejoin='round'
-                                            strokeWidth={2}
-                                            d='M6 18L18 6M6 6l12 12'
-                                        />
-                                    </svg>
-                                </button>
 
                                 {/* Bottom overlay with info - enhanced gradient */}
                                 <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-8 transition-all duration-300 opacity-0 group-hover:opacity-100 backdrop-blur-sm'>
