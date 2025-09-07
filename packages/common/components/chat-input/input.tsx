@@ -9,8 +9,11 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
-import { resizeImageDataUrl } from '@repo/shared/utils';
-import { hasImageAttachments, validateByokForImageAnalysis } from '@repo/shared/utils';
+import {
+    hasImageAttachments,
+    resizeImageDataUrl,
+    validateByokForImageAnalysis,
+} from '@repo/shared/utils';
 import { cn, Flex, useToast } from '@repo/ui';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -266,6 +269,17 @@ export const ChatInput = ({
             };
 
             const runImageFlow = async (prompt: string) => {
+                // Clean and validate the prompt
+                const cleanPrompt = prompt?.toString()?.trim() || '';
+                if (!cleanPrompt) {
+                    toast({
+                        title: 'Enter a prompt',
+                        description: 'Please type a description for your image.',
+                        variant: 'destructive',
+                    });
+                    return;
+                }
+
                 const { getAllKeys } = useApiKeysStore.getState();
                 const apiKeys = getAllKeys();
                 if (!isPlusTier && !apiKeys.GEMINI_API_KEY) {
@@ -282,7 +296,7 @@ export const ChatInput = ({
                     const now = new Date();
                     if (!threadId) {
                         const optimisticThreadId = await generateThreadId();
-                        await createThread(optimisticThreadId, { title: prompt.slice(0, 60) });
+                        await createThread(optimisticThreadId, { title: cleanPrompt.slice(0, 60) });
                         threadId = optimisticThreadId;
                         router.push(`/chat/${optimisticThreadId}`);
                     }
@@ -315,7 +329,7 @@ export const ChatInput = ({
                         createdAt: now,
                         updatedAt: now,
                         status: 'PENDING',
-                        query: prompt,
+                        query: cleanPrompt,
                         mode: chatMode,
                     } as any);
 
@@ -394,7 +408,7 @@ export const ChatInput = ({
 
                     const result = await http.post<{ text: string; images: any[]; }>(
                         '/api/image',
-                        { body: { prompt, images }, apiKeys, timeout: 120000 },
+                        { body: { prompt: cleanPrompt, images }, apiKeys, timeout: 120000 },
                     );
 
                     await useChatStore.getState().updateThreadItem(threadId!, {
