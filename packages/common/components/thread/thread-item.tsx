@@ -205,27 +205,6 @@ export const ThreadItem = memo(
             );
         }, [threadItem.sources, threadItem.steps]);
 
-        // Aggregated footer sources: dedupe and cap to max 5 for Deep Research & Pro Search
-        const aggregatedFooterSources = useMemo(() => {
-            const MAX = 5;
-            const dedupMap = new Map<string, { title: string; link: string; }>();
-            for (const s of validSources) {
-                try {
-                    const u = new URL(s.link);
-                    const key = `${u.hostname}${u.pathname}`;
-                    if (!dedupMap.has(key)) {
-                        dedupMap.set(key, { title: s.title, link: s.link });
-                    }
-                } catch {
-                    // fallback when invalid URL
-                    if (!dedupMap.has(s.link)) {
-                        dedupMap.set(s.link, { title: s.title, link: s.link });
-                    }
-                }
-                if (dedupMap.size >= MAX) break;
-            }
-            return Array.from(dedupMap.values()).slice(0, MAX);
-        }, [validSources]);
         return (
             <CitationProvider sources={validSources}>
                 <div className='w-full' id={`thread-item-${threadItem.id}`} ref={inViewRef}>
@@ -278,27 +257,6 @@ export const ThreadItem = memo(
                                             threadItem.status || '',
                                         )}
                                     />
-
-                                    {/* Inline compact sources preview under MDX content (above buttons) */}
-                                    {['deep', 'pro'].includes(
-                                        String(threadItem.mode || '').toLowerCase(),
-                                    )
-                                        && aggregatedFooterSources.length > 0 && (
-                                        <div className='mt-3 w-full'>
-                                            <p className='text-muted-foreground mb-1 text-xs font-medium'>
-                                                Sources
-                                            </p>
-                                            <SourceGrid
-                                                sources={aggregatedFooterSources.map(
-                                                    (s, i) => ({
-                                                        title: s.title || s.link,
-                                                        link: s.link,
-                                                        index: i,
-                                                    }),
-                                                )}
-                                            />
-                                        </div>
-                                    )}
                                 </div>
                             )}
                         </div>
