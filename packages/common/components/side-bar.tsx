@@ -98,7 +98,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
 
                 return getCompareDesc(dateA, dateB);
             } catch (error) {
-                console.error('Error sorting threads:', error);
+                log.error({ error, threadA: a.id, threadB: b.id }, 'Error sorting threads');
                 return 0;
             }
         });
@@ -158,7 +158,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
             }
         } catch (error) {
             // Skip threads that cause errors during date processing
-            console.error('Error processing thread date:', error);
+            log.error({ error, threadId: thread.id }, 'Error processing thread date');
         }
     });
 
