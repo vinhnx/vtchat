@@ -1,0 +1,47 @@
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"what is this project about","ts":1758164141}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"what is this project about","ts":1758164723}
+{"kind":"route","turn":3,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the the latest git commit and summarize","ts":1758164737}
+{"kind":"route","turn":7,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the commit","ts":1758164748}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the the latest git commit and summarize","ts":1758164822}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the latest git commit and summarize","ts":1758164907}
+{"kind":"route","turn":4,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"allow","ts":1758164909}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the latest git commit and summarize","ts":1758164957}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the latest git commit and summarize","ts":1758165251}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show the latest git commit and summarize","ts":1758165452}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"show latest commit","ts":1758165515}
+{"kind":"route","turn":4,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run ls -a","ts":1758165528}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run ls -a","ts":1758165689}
+{"kind":"route","turn":5,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758165710}
+{"kind":"route","turn":9,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758165719}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758165850}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758165995}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166103}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166188}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166230}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166304}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166354}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166511}
+{"kind":"route","turn":7,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758166531}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166701}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758166714}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758166982}
+{"kind":"route","turn":4,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758166992}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run ls -a","ts":1758167054}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758167534}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758167598}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758167642}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758167909}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758168006}
+{"kind":"route","turn":1,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"run pwd","ts":1758168114}
+{"kind":"route","turn":5,"selected_model":"gemini-2.5-flash-lite-preview-06-17","class":"simple","input_preview":"echo \"hello\"","ts":1758168245}
+{"kind":"route","turn":1,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"what is this project about","ts":1758192512}
+{"kind":"route","turn":5,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"show me the main subscription logic and flow","ts":1758192869}
+{"kind":"route","turn":15,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"show me the main subscription logic and flow","ts":1758192894}
+{"kind":"route","turn":1,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"show me the main subscription logic and flow","ts":1758193858}
+{"kind":"route","turn":1,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"show me the main subscription logic and flow","ts":1758194395}
+{"kind":"route","turn":1,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"what is this project about","ts":1758217718}
+{"kind":"route","turn":3,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"run ls -a","ts":1758217747}
+{"kind":"route","turn":6,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"run pwd","ts":1758217753}
+{"kind":"route","turn":1,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"hello","ts":1758217762}
+{"kind":"route","turn":3,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"run echo \"hello\"","ts":1758217769}
+{"kind":"route","turn":5,"selected_model":"gemini-2.0-flash-exp","class":"simple","input_preview":"yes","ts":1758217774}

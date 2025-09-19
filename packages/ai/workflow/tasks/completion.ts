@@ -321,6 +321,7 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
                     }));
                 },
                 onChunk: (chunk, fullText) => {
+                    "remove "
                     log.debug('📝 onChunk called', {
                         chunkLength: chunk?.length || 0,
                         fullTextLength: fullText?.length || 0,

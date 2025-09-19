@@ -1,4 +1,10 @@
-# TODO
+https://github.com/google-gemini/gemini-cli-security
+
+--
+
+https://github.com/openai/completions-responses-migration-pack
+
+Developer toolkit to migrate applications from the legacy OpenAI Completions/Chat Completions APIs to the unified Responses API, guided by the Codex CLI (local coding agent).
 
 --
 

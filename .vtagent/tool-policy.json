@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "available_tools": [
+    "grep_search",
+    "list_files",
+    "run_terminal_cmd",
+    "read_file",
+    "write_file",
+    "edit_file",
+    "ast_grep_search",
+    "simple_search",
+    "bash",
+    "apply_patch",
+    "srgn"
+  ],
+  "policies": {
+    "run_terminal_cmd": "allow",
+    "bash": "allow",
+    "grep_search": "prompt",
+    "list_files": "prompt",
+    "read_file": "prompt",
+    "write_file": "prompt",
+    "edit_file": "prompt",
+    "ast_grep_search": "prompt",
+    "simple_search": "prompt",
+    "apply_patch": "prompt",
+    "srgn": "prompt"
+  },
+  "constraints": {}
+}
