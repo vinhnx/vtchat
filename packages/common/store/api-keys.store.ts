@@ -200,9 +200,15 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 isSignedIn: boolean,
                 isVtPlus: boolean = false,
             ) => {
-                // Free models don't require authentication or API keys
+                const apiKeys = get().keys;
+
+                // Helper function to check if API key exists and is not empty
+                const isValidKey = (key: string | undefined): boolean => {
+                    return !!(key && key.trim() !== '');
+                };
+
                 if (chatMode === ChatMode.GEMINI_2_5_FLASH_LITE) {
-                    return true;
+                    return isValidKey(apiKeys.GEMINI_API_KEY);
                 }
 
                 // For non-local models, user must be signed in
@@ -211,19 +217,13 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 // VT+ users don't need API keys for Gemini models and research modes
                 if (
                     isVtPlus
+                    && chatMode !== ChatMode.GEMINI_2_5_FLASH_LITE
                     && (isGeminiModel(chatMode)
                         || chatMode === ChatMode.Deep
                         || chatMode === ChatMode.Pro)
                 ) {
                     return true; // VT+ users can use system API key
                 }
-
-                const apiKeys = get().keys;
-
-                // Helper function to check if API key exists and is not empty
-                const isValidKey = (key: string | undefined): boolean => {
-                    return !!(key && key.trim() !== '');
-                };
 
                 switch (chatMode) {
                     case ChatMode.GPT_5:
