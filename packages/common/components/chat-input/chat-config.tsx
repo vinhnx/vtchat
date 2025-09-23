@@ -4,7 +4,7 @@ import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain } from 'lucide-react';
+import { Brain, Gift } from 'lucide-react';
 
 export const chatOptions = [
     {
