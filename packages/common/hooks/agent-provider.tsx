@@ -1039,7 +1039,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 });
             } else {
                 // Show API key modal if user is signed in but missing required API key
-                // BUT NOT for free models or VT+ users with server-funded models which don't require user API keys
+                // BYOK is required for Gemini Flash Lite; VT+ managed models skip this path
                 if (isSignedIn && !shouldUseServerSideAPI) {
                     logExecutionPath('api-key-modal', mode);
                     setModalChatMode(mode);
@@ -1056,21 +1056,20 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 const serverApiKeys = getAllKeys();
 
                 // A request to /api/completion is always a server-side call → we must filter on EVERY path
-                const isServerFundedModel = [
-                    ChatMode.GEMINI_2_5_FLASH_LITE, // Free server model
-                    ...(hasVtPlusAccess
-                        ? [ChatMode.GEMINI_2_5_PRO, ChatMode.GEMINI_2_5_FLASH]
-                        : []), // VT+ server models
-                ].includes(mode);
+                const serverManagedModels: ChatMode[] = hasVtPlusAccess
+                    ? [ChatMode.GEMINI_2_5_PRO, ChatMode.GEMINI_2_5_FLASH]
+                    : [];
+
+                const isServerManagedModel = serverManagedModels.includes(mode);
 
                 const finalApiKeys = filterApiKeysForServerSide(
                     serverApiKeys,
                     mode,
-                    isServerFundedModel,
+                    isServerManagedModel,
                 );
 
-                if (isServerFundedModel) {
-                    log.info({ mode }, '🔐 Server-funded model: Removed ALL provider API keys');
+                if (isServerManagedModel) {
+                    log.info({ mode }, '🔐 Server-managed model: Removed ALL provider API keys');
                 } else {
                     log.info({ mode }, '🔑 BYOK model: Kept required provider API key only');
                 }

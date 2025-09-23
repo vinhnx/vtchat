@@ -77,7 +77,7 @@ export function isEligibleForQuotaConsumption(
 
 /**
  * Check if user should bypass API key requirements
- * (VT+ users get server-funded access)
+ * (VT+ users get managed access)
  */
 export function shouldBypassApiKeyRequirement(user: UserContext): boolean {
     return hasVTPlusAccess(user);

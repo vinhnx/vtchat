@@ -14,26 +14,16 @@ describe('CRITICAL API Key Leak Fix', () => {
         SERP_API_KEY: 'serp-test', // Non-provider key should remain
     };
 
-    it('CRITICAL: should remove ALL provider API keys for server-funded Gemini models', () => {
-        // Test the exact scenario from the bug report
-        const mode = ChatMode.GEMINI_2_5_FLASH_LITE; // "gemini-2.5-flash-lite"
-        const isServerFunded = true; // VT+ user with server-funded model
+    it('should keep Gemini API key for BYOK Flash Lite requests', () => {
+        const mode = ChatMode.GEMINI_2_5_FLASH_LITE;
+        const isServerManaged = false;
 
-        const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerFunded);
+        const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerManaged);
 
-        // Should ONLY contain non-provider keys
         expect(result).toEqual({
             SERP_API_KEY: 'serp-test',
+            GEMINI_API_KEY: 'sk-gemini-test',
         });
-
-        // Must NOT contain any provider keys
-        expect(result).not.toHaveProperty('OPENROUTER_API_KEY');
-        expect(result).not.toHaveProperty('OPENAI_API_KEY');
-        expect(result).not.toHaveProperty('ANTHROPIC_API_KEY');
-        expect(result).not.toHaveProperty('GEMINI_API_KEY');
-        expect(result).not.toHaveProperty('XAI_API_KEY');
-        expect(result).not.toHaveProperty('TOGETHER_API_KEY');
-        expect(result).not.toHaveProperty('FIREWORKS_API_KEY');
     });
 
     it('should remove ALL provider API keys for VT+ Gemini Pro models', () => {
@@ -106,7 +96,7 @@ describe('CRITICAL API Key Leak Fix', () => {
     });
 
     it('REGRESSION TEST: empty API keys should work without errors', () => {
-        const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, true);
+        const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, false);
         expect(result).toEqual({});
     });
 });

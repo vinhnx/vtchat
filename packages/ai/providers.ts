@@ -50,7 +50,7 @@ const getApiKey = (
     provider: ProviderEnumType,
     byokKeys?: Record<string, string>,
     isVtPlus?: boolean,
-    isFreeModel?: boolean,
+    _isFreeModel?: boolean,
 ): string => {
     // First check BYOK keys if provided
     if (byokKeys) {
@@ -75,30 +75,30 @@ const getApiKey = (
         }
     }
 
-    // Server-funded keys only for whitelisted providers (VT+ policy)
+    // Managed server keys only for whitelisted providers (VT+ policy)
     if (typeof process !== 'undefined' && process.env) {
         switch (provider) {
             case Providers.GOOGLE:
-                // Server-funded API key policy for Google/Gemini:
-                // 1. VT+ users can always use server-funded API key
-                // 2. Free model users can use server-funded API key (counted usage)
+                // Gemini policy:
+                // 1. VT+ users can use managed API keys for eligible tiers
+                // 2. Gemini 2.5 Flash Lite always requires BYOK
                 // 3. Other users must use BYOK
-                if (isVtPlus || isFreeModel) {
+                if (isVtPlus) {
                     // Set both environment variables for compatibility with new Google provider
                     const geminiKey = process.env.GEMINI_API_KEY || '';
                     if (geminiKey && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
                         process.env.GOOGLE_GENERATIVE_AI_API_KEY = geminiKey;
                     }
-                    log.info('getApiKey: Using server-funded Gemini key', {
+                    log.info('getApiKey: Using server-managed Gemini key', {
                         hasKey: !!geminiKey,
                         keyLength: geminiKey.length,
                     });
                     return geminiKey;
                 }
-                log.info('getApiKey: No server-funded key for Gemini (non-VT+ user)');
+                log.info('getApiKey: No managed key for Gemini (non-VT+ user)');
                 return '';
             default:
-                // All other providers MUST use BYOK - no server-funded keys
+                // All other providers MUST use BYOK - no managed keys
                 log.info('getApiKey: Provider requires BYOK', { provider });
                 return '';
         }

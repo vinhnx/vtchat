@@ -1,13 +1,11 @@
 import { ChatMode } from '@repo/shared/config';
 import { isGeminiModel } from '@repo/shared/utils';
 
-const FREE_SERVER_MODELS: ChatMode[] = [ChatMode.GEMINI_2_5_FLASH_LITE];
+const FREE_SERVER_MODELS: ChatMode[] = [];
 
 const PLUS_SERVER_MODELS: ChatMode[] = [
-    // Only Gemini models are server-funded for VT+ users
     ChatMode.GEMINI_2_5_PRO,
     ChatMode.GEMINI_2_5_FLASH,
-    ChatMode.GEMINI_2_5_FLASH_LITE,
     // All other models (Claude, OpenAI, xAI, etc.) require BYOK even for VT+ users
 ];
 
@@ -22,8 +20,8 @@ export type ServerSideAPIOpts = {
  * Returns true when the request **must** be routed to `/api/completion`
  *
  * Rules:
- * 1. Free tier server-funded models (always server-side)
- * 2. VT+ server-funded models (when user has VT+)
+ * 1. Models that must run server-side due to platform constraints
+ * 2. VT+ managed models (Gemini tiers that remain server-routed)
  */
 export function shouldUseServerSideAPI({
     mode,
@@ -31,7 +29,7 @@ export function shouldUseServerSideAPI({
     deepResearch = false,
     proSearch = false,
 }: ServerSideAPIOpts): boolean {
-    // 1. Free tier server-funded model?
+    // 1. Free tier models that must be server-side?
     if (FREE_SERVER_MODELS.includes(mode)) {
         return true;
     }
@@ -111,7 +109,7 @@ export function getProviderKeyToRemove(mode: ChatMode): string | null {
 
 /**
  * Filter API keys for server-side calls based on model type
- * - For server-funded models: Remove ALL provider keys to prevent mixing
+ * - For server-managed models: Remove ALL provider keys to prevent mixing
  * - For BYOK models: Keep only the required provider key for that model
  */
 export function filterApiKeysForServerSide(
@@ -128,7 +126,7 @@ export function filterApiKeysForServerSide(
         }
     }
 
-    // For server-funded models, don't include any provider keys
+    // For server-managed models, don't include any provider keys
     if (isServerFunded) {
         return filtered;
     }

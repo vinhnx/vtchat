@@ -40,7 +40,7 @@ describe('Gemini Quota Logic', () => {
                 return isEligibleForQuotaConsumption(user, isByokKey);
             };
 
-            // VT+ user with server-funded model should consume quota
+            // VT+ user with server-managed model should consume quota
             expect(shouldConsumeQuota(false, mockUser)).toBe(true);
 
             // BYOK user should not consume quota

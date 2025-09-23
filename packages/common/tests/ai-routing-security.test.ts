@@ -4,7 +4,7 @@ import { filterApiKeysForServerSide } from '../lib/ai-routing';
 
 describe('AI Routing Security Tests', () => {
     describe('filterApiKeysForServerSide - Security Fix', () => {
-        it('should remove ALL provider API keys for server-side calls', () => {
+        it('should keep Gemini key for BYOK Flash Lite server-side calls', () => {
             const apiKeys = {
                 ANTHROPIC_API_KEY: 'claude-key',
                 OPENAI_API_KEY: 'openai-key',
@@ -17,27 +17,17 @@ describe('AI Routing Security Tests', () => {
                 CUSTOM_API_KEY: 'custom-key',
             };
 
-            // Test server-funded model (should remove ALL provider keys)
             const result = filterApiKeysForServerSide(
                 apiKeys,
                 ChatMode.GEMINI_2_5_FLASH_LITE,
-                true,
+                false,
             );
 
-            // Should only keep non-provider API keys
             expect(result).toEqual({
                 SERP_API_KEY: 'serp-key',
                 CUSTOM_API_KEY: 'custom-key',
+                GEMINI_API_KEY: 'gemini-key',
             });
-
-            // Verify all provider keys are removed
-            expect(result).not.toHaveProperty('ANTHROPIC_API_KEY');
-            expect(result).not.toHaveProperty('OPENAI_API_KEY');
-            expect(result).not.toHaveProperty('GEMINI_API_KEY');
-            expect(result).not.toHaveProperty('XAI_API_KEY');
-
-            expect(result).not.toHaveProperty('DEEPSEEK_API_KEY');
-            expect(result).not.toHaveProperty('FIREWORKS_API_KEY');
         });
 
         it('should keep only required provider key for BYOK models', () => {
@@ -72,7 +62,7 @@ describe('AI Routing Security Tests', () => {
         });
 
         it('should handle empty API keys object', () => {
-            const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, true);
+            const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, false);
             expect(result).toEqual({});
         });
 
@@ -85,7 +75,7 @@ describe('AI Routing Security Tests', () => {
             const result = filterApiKeysForServerSide(
                 apiKeys,
                 ChatMode.GEMINI_2_5_FLASH_LITE,
-                true,
+                false,
             );
             expect(result).toEqual({});
         });
@@ -99,7 +89,7 @@ describe('AI Routing Security Tests', () => {
             const result = filterApiKeysForServerSide(
                 apiKeys,
                 ChatMode.GEMINI_2_5_FLASH_LITE,
-                true,
+                false,
             );
             expect(result).toEqual(apiKeys);
         });

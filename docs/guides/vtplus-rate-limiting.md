@@ -24,7 +24,7 @@ The VT+ rate limiting system provides quota-based access control for three premi
    - Race condition prevention
 
 3. **Quota Wrappers** (`packages/common/src/lib/geminiWithQuota.ts`)
-   - AI SDK call interceptors for server-funded models
+   - AI SDK call interceptors for VT-managed models
    - Automatic quota enforcement for VT+ users
 
 4. **Database Schema** (`apps/web/lib/database/migrations/0009_vtplus_usage.sql`)
@@ -80,7 +80,7 @@ VTPLUS_LIMIT_PS=800          # Legacy: Pro Search monthly limit
 ### Quota Consumption Logic
 
 ```typescript
-// Only consume quota for VT+ users using server-funded models
+// Only consume quota for VT+ users using managed models
 if (userId && userTier === 'PLUS' && !isByokKey) {
     await consumeQuota({
         userId,

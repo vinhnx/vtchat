@@ -191,9 +191,9 @@ function AboutContent() {
                                     users with their own API keys
                                 </li>
                                 <li>
-                                    <strong>Server-Funded Models:</strong>{' '}
-                                    Gemini models (2.5 Flash Lite: 20/day, 2.5 Flash: 10/day, 2.5
-                                    Pro: 5/day) + OpenRouter models - no API keys required
+                                    <strong>Gemini Access:</strong>{' '}
+                                    2.5 Flash Lite now requires your own Gemini API key (BYOK),
+                                    while VT+ manages usage for Flash and Pro tiers
                                 </li>
                                 <li>
                                     <strong>Free Local AI:</strong>{' '}

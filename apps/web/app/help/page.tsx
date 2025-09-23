@@ -653,8 +653,7 @@ function HelpCenterContent() {
                                 <p className='text-muted-foreground mt-4 text-sm'>
                                     <strong>Free users:</strong>{' '}
                                     Must provide their own Gemini API key for unlimited access. VT+
-                                    users get server-funded access with rate limits for cost
-                                    control.
+                                    users get managed access with rate limits for cost control.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -686,9 +685,9 @@ function HelpCenterContent() {
                                         Includes everything in the free tier, plus three exclusive
                                         research features: PRO_SEARCH for enhanced web searches,
                                         DEEP_RESEARCH for in-depth analysis. Additionally, VT+
-                                        provides server-funded access to all Gemini models (2.5
-                                        Flash Lite, 2.5 Flash, 2.5 Pro) with built-in rate limits
-                                        and budget protection.
+                                        provides managed access to Gemini 2.5 Flash and Pro with
+                                        built-in rate limits and budget protection, while Flash Lite
+                                        always uses your own Gemini API key (BYOK).
                                     </li>
                                     <li className='text-muted-foreground'>
                                         Both tiers are designed with privacy in mind, featuring

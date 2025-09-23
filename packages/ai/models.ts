@@ -163,7 +163,6 @@ export const models: Model[] = [
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,
-        isFree: true,
     },
     {
         id: ModelEnum.GEMINI_2_5_PRO,
