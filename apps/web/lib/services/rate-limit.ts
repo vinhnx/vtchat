@@ -402,7 +402,7 @@ export async function checkRateLimit(
         };
     }
 
-    // VT+ users have unlimited access to Flash Lite models
+    // VT+ users rely on BYOK for Flash Lite models (usage tracked only)
     if (isVTPlusUser && modelId === ModelEnum.GEMINI_2_5_FLASH_LITE) {
         return {
             allowed: true,
@@ -571,7 +571,7 @@ async function updateExistingRateLimitRecord(
 
 /**
  * Record a successful request for rate limiting and usage tracking
- * VT+ users get usage tracked for display purposes while maintaining unlimited access for Flash Lite models
+ * VT+ users get usage tracked for display purposes while Flash Lite remains BYOK-only
  * VT+ users using other Gemini models count against both model-specific AND Flash Lite quotas
  */
 export async function recordRequest(

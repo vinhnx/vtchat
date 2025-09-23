@@ -514,30 +514,26 @@ function HelpCenterContent() {
                                 </p>
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
-                                        <strong>Server-Funded Models:</strong>{' '}
-                                        Access to Gemini models (2.5 Flash Lite: 20/day, 2.5 Flash:
-                                        10/day, 2.5 Pro: 5/day) and OpenRouter models.
+                                        <strong>Gemini Access:</strong>{' '}
+                                        Gemini 2.5 Flash Lite now requires your own Gemini API key
+                                        (BYOK). VT+ continues to manage Gemini 2.5 Flash and Pro
+                                        usage with built-in quotas.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Free Users:</strong>{' '}
-                                        Enjoy daily limits for server-funded Gemini models: 20
-                                        requests for 2.5 Flash Lite, 10 for 2.5 Flash, and 5 for 2.5
-                                        Pro.
+                                        Add your Gemini API key in Settings → API Keys to use Flash
+                                        Lite without VT-imposed daily caps (your Google quota still
+                                        applies).
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>VT+ Users:</strong>{' '}
-                                        Benefit from enhanced limits, including 100 requests/day for
-                                        Gemini 2.5 Flash Lite, 50/day for Gemini 2.5 Flash, and
-                                        25/day for Gemini 2.5 Pro.
+                                        Benefit from enhanced managed limits for Gemini 2.5 Flash
+                                        and Pro, plus BYOK flexibility for Flash Lite.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Daily Reset:</strong>{' '}
-                                        All usage limits reset at 00:00 UTC each day.
-                                    </li>
-                                    <li className='text-muted-foreground'>
-                                        <strong>Server-Funded:</strong>{' '}
-                                        These models use VT's server-side API keys, so you don't
-                                        need to bring your own.
+                                        Managed usage metrics reset at 00:00 UTC each day to keep
+                                        VT+ quotas predictable.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Unlimited with BYOK:</strong>{' '}
@@ -594,7 +590,7 @@ function HelpCenterContent() {
                                 <p className='text-muted-foreground mt-4 text-sm'>
                                     <strong>Free users:</strong>{' '}
                                     Must provide their own Gemini API key for unlimited access. VT+
-                                    users get server-funded access with rate limits for cost
+                                    users get managed Gemini access with rate limits for cost
                                     control.
                                 </p>
                             </AccordionContent>
@@ -615,22 +611,21 @@ function HelpCenterContent() {
                                         <strong>Free Tier (for all logged-in users):</strong>{' '}
                                         Enjoy unlimited BYOK (Bring Your Own Key) access to all
                                         premium AI models, including Claude 4, GPT-4.1, O3, DeepSeek
-                                        R1, and Grok 3. You also get access to server-funded Gemini
-                                        models with daily limits (2.5 Flash Lite: 20/day, 2.5 Flash:
-                                        10/day, 2.5 Pro: 5/day) plus a wide range of advanced
-                                        features like the intelligent tool router, chart
-                                        visualization, web search, dark mode, thinking mode,
-                                        structured output, document parsing, reasoning chain, and
-                                        multi-modal chat.
+                                        R1, and Grok 3. You also get access to managed Gemini tiers
+                                        with daily limits (2.5 Flash: 10/day, 2.5 Pro: 5/day) plus a
+                                        wide range of advanced features like the intelligent tool
+                                        router, chart visualization, web search, dark mode, thinking
+                                        mode, structured output, document parsing, reasoning chain,
+                                        and multi-modal chat.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>VT+ ({VT_PLUS_PRICE_WITH_INTERVAL}):</strong>{' '}
                                         Includes everything in the free tier, plus two exclusive
                                         research features: PRO_SEARCH for enhanced web searches
                                         (20/day), DEEP_RESEARCH for in-depth analysis (10/day).
-                                        Additionally, VT+ provides enhanced server-funded access to
-                                        all Gemini models with higher rate limits and budget
-                                        protection.
+                                        Additionally, VT+ provides enhanced managed access to Gemini
+                                        2.5 Flash and Pro with higher rate limits and budget
+                                        protection, while Flash Lite remains BYOK-only.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         Both tiers are designed with privacy in mind, featuring

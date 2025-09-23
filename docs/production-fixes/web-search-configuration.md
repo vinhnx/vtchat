@@ -52,7 +52,7 @@ A properly configured system should return:
 
 - **Requires**: System `GEMINI_API_KEY` environment variable
 - **Fallback**: None - web search will fail without system key
-- **User Experience**: VT+ users get server-funded web search
+- **User Experience**: VT+ users get managed web search quotas (Flash Lite BYOK)
 
 ### Development Environment
 

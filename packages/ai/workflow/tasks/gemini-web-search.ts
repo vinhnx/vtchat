@@ -223,7 +223,7 @@ Please include:
             // Provide more user-friendly error messages based on model and API key status
             const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
             const hasUserApiKey = userApiKeys?.GEMINI_API_KEY;
-            const hasSystemApiKey = !!process.env.GEMINI_API_KEY;
+            const hasSystemApiKey = isFreeModel ? false : !!process.env.GEMINI_API_KEY;
             const isVtPlusUser = userTier === UserTier.PLUS;
 
             // Log detailed error information for debugging
@@ -244,7 +244,7 @@ Please include:
             if (error.message?.includes('Web search requires an API key')) {
                 // Free user needs to provide their own API key for web search
                 throw new Error(
-                    'Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
+                    'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                 );
             }
             if (error.message?.includes('API key')) {
@@ -255,7 +255,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        "Web search requires an API key. You can either:\n1. Add your own Gemini API key in settings for unlimited usage\n2. Try again later if you've reached the daily limit for free usage",
+                        'Gemini 2.5 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 throw new Error(
@@ -270,7 +270,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
+                        'Gemini 2.5 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 throw new Error('Invalid Gemini API key. Please check your API key in settings.');
@@ -286,7 +286,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Daily free web search limit reached. Add your own Gemini API key in settings for unlimited usage.',
+                        'Gemini 2.5 Flash Lite requests require your own Gemini API key. Add it in settings to continue.',
                     );
                 }
                 throw new Error(

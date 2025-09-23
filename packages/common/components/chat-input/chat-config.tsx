@@ -4,7 +4,7 @@ import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift } from 'lucide-react';
+import { Brain } from 'lucide-react';
 
 export const chatOptions = [
     {
@@ -218,10 +218,10 @@ export const modelOptionsByProvider = {
             label: 'Gemini 2.5 Flash Lite',
             value: ChatMode.GEMINI_2_5_FLASH_LITE,
             webSearch: true,
-            icon: <Gift className='text-green-500' size={16} />,
+            icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
-            description: 'Free model',
-            isFreeModel: true,
+            description: 'Bring your own Gemini API key',
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
             label: 'Gemini 2.5 Flash',

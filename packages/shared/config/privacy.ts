@@ -26,7 +26,7 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub and Twitter/X)
-- **Free Model Usage:** We track daily request counts and rate-limiting data for our server-funded AI models, which includes Gemini models (2.5 Flash Lite: 20/day, 2.5 Flash: 10/day, 2.5 Pro: 5/day) and OpenRouter models.
+- **Model Usage Metrics:** We track aggregated request counts and rate-limiting data for managed AI features (e.g., VT+ Gemini Flash and Pro tiers, OpenRouter community models). Gemini 2.5 Flash Lite requires your own Gemini API key (BYOK) and is only counted when routed through VT services—never the key itself.
 - **Premium Model Access:** Access to all premium AI models (Claude 4, GPT-4.1, O3, DeepSeek R1, Grok 3, etc.) with BYOK for all logged-in users
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
@@ -60,7 +60,7 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Free Model Management:** We monitor daily usage and enforce rate limits for our server-funded AI models to ensure fair access for all users.
+- **Usage Management:** We monitor usage and enforce rate limits for VT-managed AI features (Gemini Flash/Pro tiers, research tools) to ensure fair access for all users. Gemini 2.5 Flash Lite usage is governed by each user's BYOK configuration.
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
 - **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 50/day, DEEP_RESEARCH: 25/day) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn
@@ -97,7 +97,7 @@ VT is built with **privacy-first principles** at its core:
 ### 3.2 Server Storage (Our Systems)
 **We only store minimal data on our servers:**
 - **Account information** (email, name, subscription status) for registered users
-- **Server-funded model usage data** (daily request counts and timestamps for rate limiting with tiered limits based on subscription status - no conversation content)
+- **Managed model usage data** (daily request counts and timestamps for VT-managed tiers such as Gemini Flash/Pro and research tools – no conversation content or API keys)
 - **Payment records** (handled securely by Creem.io, not stored on our servers)
 - **Usage analytics** (anonymized and aggregated, no personal content)
 - **Error logs** (technical information only, no user content)

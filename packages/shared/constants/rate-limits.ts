@@ -2,8 +2,9 @@
  * Global rate-limit numbers used in UI copy and backend logic.
  * Single source of truth for all Gemini model rate limiting.
  *
- * NOTE: Only VT+ users get server-funded access. FREE limits are unused
- * for server-funded access (free users must use BYOK).
+ * NOTE: Gemini 2.5 Flash Lite is BYOK for every user. VT+ managed limits
+ * apply to higher tiers (Flash, Pro) while BYOK requests are governed by
+ * the user's own Google API key quotas.
  *
  * Updated limits based on current VT+ offering and usage patterns.
  */

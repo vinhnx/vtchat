@@ -35,9 +35,7 @@ export function isPremiumMode(mode: ChatMode): boolean {
     const isReasoningModel = reasoningModels.includes(mode);
 
     // Free models are NOT premium
-    const freeModels = [
-        ChatMode.GEMINI_2_5_FLASH_LITE, // Free model
-    ];
+    const freeModels: ChatMode[] = [];
 
     const isFreeModel = freeModels.includes(mode);
 

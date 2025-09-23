@@ -15,7 +15,7 @@ This guide helps you manually test the AI routing fix to ensure all models corre
 ### 1. Free Models (Should work without VT+)
 
 - **Model**: Gemini 2.5 Flash Lite Preview
-- **Expected**: Routes to `/api/completion` (server-funded)
+- **Expected**: Routes to `/api/completion` (managed VT+ flow)
 - **Test**: Send a simple message like "Hello, test free model"
 
 ### 2. VT+ Models (Require VT+ subscription)

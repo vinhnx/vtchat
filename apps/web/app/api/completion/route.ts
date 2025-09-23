@@ -303,7 +303,7 @@ export async function POST(request: NextRequest) {
                         },
                     );
                 }
-                // Require authentication for server-funded model access
+                // Require authentication for managed model access
                 if (!userId) {
                     // Special case: GEMINI_2_5_FLASH_LITE is free for all users, no auth required
                     if (data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE) {
@@ -334,7 +334,7 @@ export async function POST(request: NextRequest) {
                     !isFlashLite && data.mode !== ChatMode.GEMINI_2_5_FLASH_LITE
                     && !isDeepResearchOrProSearch
                 ) {
-                    // VT+ REQUIRED for server-funded Gemini access (except Flash Lite and Deep/Pro modes)
+                    // VT+ REQUIRED for managed Gemini access (Flash Lite always requires BYOK)
                     vtPlusAccess = await checkVTPlusAccess({ userId, ip });
                     if (!vtPlusAccess.hasAccess) {
                         const errorResponse = {

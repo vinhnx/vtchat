@@ -98,7 +98,7 @@ export class ErrorMessageService {
 
         // Enhanced messages for cloud providers
         const baseMessage = isVtPlus
-            ? `Your VT+ subscription includes server-funded usage, but you can add your own ${providerName} API key for unlimited access and faster responses.`
+            ? `Your VT+ subscription includes managed usage, but you can add your own ${providerName} API key for unlimited access and faster responses.`
             : `To use ${providerName} models, you need to provide your own API key. This is free to obtain and gives you direct access to ${providerName}'s latest models.`;
 
         return {

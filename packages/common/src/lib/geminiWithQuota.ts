@@ -16,7 +16,7 @@ export function isUsingByokKeys(byokKeys?: Record<string, string>): boolean {
 }
 
 /**
- * Wrapper for streamText that enforces VT+ quotas for server-funded models
+ * Wrapper for streamText that enforces VT+ quotas for VT-managed models
  */
 export async function streamTextWithQuota(
     params: Parameters<typeof streamText>[0],
@@ -46,7 +46,7 @@ export async function streamTextWithQuota(
 }
 
 /**
- * Wrapper for generateText that enforces VT+ quotas for server-funded models
+ * Wrapper for generateText that enforces VT+ quotas for VT-managed models
  */
 export async function generateTextWithQuota(
     params: Parameters<typeof generateText>[0],

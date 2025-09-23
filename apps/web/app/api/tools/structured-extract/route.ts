@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
                     {
                         error: 'Please add your Google Gemini API key',
                         message:
-                            'Document understanding requires your own Google Gemini API key. Please add your Gemini API key in Settings > API Keys, or upgrade to VT+ for server-funded access.',
+                            'Document understanding requires your own Google Gemini API key. Please add your Gemini API key in Settings > API Keys, or upgrade to VT+ for managed Gemini access.',
                         requiredApiKey: 'GEMINI_API_KEY',
                         providerName: 'Google Gemini',
                         settingsAction: 'open_api_keys_settings',

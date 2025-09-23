@@ -137,8 +137,10 @@ export const generateTextWithGeminiSearch = async ({
             || windowApiKey
         );
 
-        // For GEMINI_2_5_FLASH_LITE model, allow using system API key when user doesn't have BYOK
         isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        if (isFreeGeminiModel) {
+            hasSystemGeminiKey = false;
+        }
         isVtPlusUser = userTier === UserTier.PLUS;
 
         // Handle different scenarios for API key requirements
@@ -154,10 +156,9 @@ export const generateTextWithGeminiSearch = async ({
                 'Web search failed: No API key available',
             );
 
-            if (isFreeGeminiModel && !isVtPlusUser) {
-                // Free tier user with free model - require BYOK for web search
+            if (isFreeGeminiModel) {
                 throw new Error(
-                    'Web search requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
+                    'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                 );
             }
             if (isVtPlusUser) {
@@ -169,11 +170,8 @@ export const generateTextWithGeminiSearch = async ({
         }
 
         // If user has BYOK, use their key (unlimited usage)
-        // If user doesn't have BYOK but system key is available:
-        //   - For VT+ users: use system key (unlimited usage for VT+ users)
-        //   - For free users with free model: use system key only if available (counted usage)
-        const useSystemKey = !hasUserGeminiKey && hasSystemGeminiKey
-            && (isFreeGeminiModel || isVtPlusUser);
+        // If user doesn't have BYOK but system key is available, VT+ users can rely on managed access
+        const useSystemKey = !hasUserGeminiKey && hasSystemGeminiKey && isVtPlusUser;
 
         log.info('API key usage decision:', {
             hasUserKey: hasUserGeminiKey,
@@ -185,7 +183,7 @@ export const generateTextWithGeminiSearch = async ({
 
         log.info('Getting language model for:', { data: model });
 
-        // Use system key for free model users without BYOK
+        // Use managed system key for VT+ users when BYOK is missing
         const effectiveByokKeys = useSystemKey ? undefined : byokKeys;
         const selectedModel = getLanguageModel(
             model,
@@ -997,15 +995,18 @@ export const generateObject = async ({
         if (isGeminiModel) {
             const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY
                 && byokKeys.GEMINI_API_KEY.trim().length > 0;
-            const hasSystemGeminiKey = typeof process !== 'undefined'
+            let hasSystemGeminiKey = typeof process !== 'undefined'
                 && !!process.env?.GEMINI_API_KEY;
+
+            if (isFreeGeminiModel) {
+                hasSystemGeminiKey = false;
+            }
 
             // Handle different scenarios for API key requirements
             if (!hasUserGeminiKey && !hasSystemGeminiKey) {
-                if (isFreeGeminiModel && !isVtPlusUser) {
-                    // Free tier user with free model - require BYOK for planning
+                if (isFreeGeminiModel) {
                     throw new Error(
-                        'Planning requires an API key. Please add your own Gemini API key in settings for unlimited usage.',
+                        'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 if (isVtPlusUser) {
@@ -1099,7 +1100,7 @@ export const generateObject = async ({
                 ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
             };
 
-        // Consume quota for VT+ users if using server-funded models
+        // Consume quota for VT+ users if using VT-managed models
         if (userId && userTier === 'PLUS' && !byokKeys && feature) {
             const { consumeQuota } = await import('@repo/common/lib/vtplusRateLimiter');
             const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
@@ -1633,7 +1634,7 @@ export const selectAvailableModel = (
 
     // Fallback priority list - most reliable and cost-effective models first
     const fallbackModels = [
-        ModelEnum.GEMINI_2_5_FLASH_LITE, // Free Gemini model
+        ModelEnum.GEMINI_2_5_FLASH_LITE, // Gemini Flash Lite (requires BYOK)
         ModelEnum.GEMINI_2_5_FLASH, // Newer Gemini
         ModelEnum.GPT_5, // GPT-5 as top priority for OpenAI models
         ModelEnum.GPT_4o, // More expensive but reliable
@@ -1646,14 +1647,6 @@ export const selectAvailableModel = (
             log.info('Using fallback model:', { data: model });
             return model;
         }
-    }
-
-    // Check if we have server-funded keys available for free models
-    const hasServerFundedGeminiKey = typeof process !== 'undefined'
-        && !!process.env?.GEMINI_API_KEY;
-    if (hasServerFundedGeminiKey) {
-        log.info('Using server-funded Gemini model');
-        return ModelEnum.GEMINI_2_5_FLASH_LITE;
     }
 
     log.warn('No API key found for any model, will fail with clear error message');

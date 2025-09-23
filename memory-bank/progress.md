@@ -12,6 +12,18 @@
 
 ---
 
+### ✅ Gemini Flash Lite BYOK Transition
+
+**Date**: Current Session (September 2025)
+**Status**: Completed
+
+- Removed all server-funded fallbacks for `gemini-2.5-flash-lite` in workflows, providers, and routing
+- Updated UI (model picker, settings, BYOK prompts) to require user-supplied Gemini API keys
+- Refreshed marketing pages, help/faq, and policy docs to explain the BYOK requirement
+- Adjusted automated tests to reflect the BYOK-only logic for Flash Lite
+
+---
+
 ## Previous Session - January 2025
 
 ### ✅ useSession Runtime Error Fix

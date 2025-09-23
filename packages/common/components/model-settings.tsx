@@ -70,11 +70,16 @@ export const ModelSettings = () => {
         // Free models are always accessible
         if (model.isFree) return true;
 
-        // Google's Gemini 2.5 Flash Lite is free for all users
-        if (model.id === ModelEnum.GEMINI_2_5_FLASH_LITE) return true;
+        if (model.provider === 'google') {
+            if (model.id === ModelEnum.GEMINI_2_5_FLASH_LITE) {
+                return hasApiKeyForProvider('google');
+            }
 
-        // VT+ users get access to server-funded Gemini models
-        if (isVtPlus && model.provider === 'google') return true;
+            // VT+ users get access to managed Gemini usage for higher tier models
+            if (isVtPlus) return true;
+
+            return hasApiKeyForProvider('google');
+        }
 
         // For all other models, check if user has the appropriate API key
         return hasApiKeyForProvider(model.provider);
@@ -104,9 +109,9 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>Free Models</div>
                             <div className='text-muted-foreground text-sm'>
                                 <ul className='list-disc space-y-1 pl-5'>
-                                    <li>Gemini 2.5 Flash Lite (server-funded)</li>
-                                    <li>Qwen3 14B (via OpenRouter)</li>
+                                    <li>Qwen3 14B (via OpenRouter community tier)</li>
                                     <li>Local models via Ollama or LM Studio</li>
+                                    <li>Gemini 2.5 Flash Lite (BYOK required for all users)</li>
                                 </ul>
                             </div>
                         </div>
@@ -114,8 +119,10 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>VT+ Benefits</div>
                             <div className='text-muted-foreground text-sm'>
                                 <ul className='list-disc space-y-1 pl-5'>
-                                    <li>Enhanced Gemini model limits</li>
-                                    <li>Unlimited Gemini 2.5 Flash Lite</li>
+                                    <li>Enhanced Gemini model limits for managed server usage</li>
+                                    <li>
+                                        BYOK flexibility for Google models, including Flash Lite
+                                    </li>
                                     <li>Access to all premium research features</li>
                                 </ul>
                             </div>
@@ -132,15 +139,13 @@ export const ModelSettings = () => {
                             {providerNames[provider] || provider}
                             {!hasApiKeyForProvider(provider) && provider !== 'openrouter' && (
                                 <Badge variant='outline' className='text-xs font-normal'>
-                                    {provider === 'google'
-                                        ? 'Limited Free Access'
-                                        : 'API Key Required'}
+                                    {'API Key Required'}
                                 </Badge>
                             )}
                         </CardTitle>
                         <CardDescription>
                             {provider === 'google'
-                                && 'Includes server-funded models with generous free tier'}
+                                && 'Gemini models require your own API key for Flash Lite access'}
                             {provider === 'openai'
                                 && 'Advanced reasoning and function calling capabilities'}
                             {provider === 'anthropic' && 'Claude models with exceptional reasoning'}
@@ -222,13 +227,12 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>Free Models</div>
                             <div className='text-muted-foreground text-sm'>
                                 <p className='mb-2'>
-                                    Gemini 2.5 Flash Lite and select OpenRouter models are available
-                                    to all registered users without an API key.
+                                    Select OpenRouter models (like Qwen3 14B) remain available to
+                                    all registered users without an API key.
                                 </p>
                                 <p>
-                                    Free users have rate limits of {isVtPlus ? '20' : '5'}{' '}
-                                    requests per minute and {isVtPlus ? '100' : '20'}{' '}
-                                    requests per day for server-funded models.
+                                    Gemini 2.5 Flash Lite now requires your own Gemini API key for
+                                    every request, regardless of subscription tier.
                                 </p>
                             </div>
                         </div>
@@ -253,12 +257,13 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>VT+ Subscription</div>
                             <div className='text-muted-foreground text-sm'>
                                 <p className='mb-2'>
-                                    VT+ subscribers get enhanced access to server-funded Gemini
-                                    models with higher rate limits.
+                                    VT+ subscribers receive enhanced Gemini rate limits with
+                                    server-managed usage for premium tiers. Flash Lite still
+                                    respects your BYOK configuration to keep costs predictable.
                                 </p>
                                 <p>
-                                    VT+ also includes exclusive research features like Deep
-                                    Research, Pro Search.
+                                    VT+ also includes exclusive research features like Deep Research
+                                    and Pro Search.
                                 </p>
                             </div>
                         </div>

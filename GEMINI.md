@@ -45,3 +45,4 @@ Notes
 - Works with Gemini 2.5 family used for web search (Flash, Pro, Flash Lite).
 - Up to 20 URLs per request; unsupported/paywalled URLs are skipped by Google.
 - Retrieved content counts toward input tokens per Google pricing/limits.
+- Gemini 2.5 Flash Lite always requires a user-supplied Gemini API key (no server-managed key).
