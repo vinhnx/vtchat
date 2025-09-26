@@ -1,0 +1,26 @@
+# Development Dockerfile for VTChat
+FROM node:20-alpine
+
+# Install bun
+RUN npm install -g bun
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json bun.lock ./
+
+# Install dependencies
+RUN bun install
+
+# Copy source code
+COPY . .
+
+# Set working directory to apps/web
+WORKDIR /app/apps/web
+
+# Expose port
+EXPOSE 3000
+
+# Default command for development
+CMD ["bun", "dev", "--host", "0.0.0.0"]
