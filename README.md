@@ -22,7 +22,7 @@
 
 VT is a production-ready, privacy-focused AI chat application delivering cutting-edge AI capabilities through an extremely generous free tier and a focused premium subscription. Built with modern web technologies and a privacy-first architecture, VT offers advanced AI reasoning, document processing, web search integration, and comprehensive multi-AI provider support.
 
-**🌟 Featuring Nano Banana** - The Conversational image editor! Generate and iteratively edit images through natural conversation, exclusive to VT.
+**Featuring Nano Banana** - The Conversational image editor! Generate and iteratively edit images through natural conversation, exclusive to VT.
 
 Live at [https://vtchat.io.vn](https://vtchat.io.vn)
 
@@ -57,7 +57,7 @@ _Advanced AI capabilities including document processing, web search, and structu
 
 ### Advanced AI Capabilities
 
-- **🍌 Nano Banana Conversational Image Editor (New to VT)**: Conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history
+- **Nano Banana Conversational Image Editor (New to VT)**: Conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history
 - **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free Server Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API keys required
 - **Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs
@@ -159,310 +159,219 @@ vtchat/
 
 ### Prerequisites
 
-- **Bun** (JavaScript runtime and package manager) - v1.1.19 or higher
-- **Node.js** (for some Turborepo operations, though Bun is primary)
-- **Git** for version control
+- **Docker & Docker Compose**: For the easiest setup
+- **At least one AI API key**: OpenAI, Anthropic, or Google Gemini
 
-### Installation
+### Quick Start (Docker - Recommended)
 
-1. **Clone the repository**:
+The easiest way to get VT running locally is with Docker Compose:
 
-   ```bash
-   git clone https://github.com/vinhnx/vtchat.git
-   cd vtchat
-   ```
+### 1. Clone & Setup
 
-2. **Install dependencies**:
+```bash
+git clone https://github.com/vinhnx/vtchat.git
+cd vtchat
+cp apps/web/.env.example apps/web/.env.local
+```
 
-   ```bash
-   bun install
-   ```
+### 2. Configure Environment
 
-3. **Set up environment variables**:
+Edit `apps/web/.env.local` and add:
 
-   ```bash
-   cp apps/web/.env.example apps/web/.env.local
-   ```
+- `BETTER_AUTH_SECRET` (generate with: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+- At least one AI API key (e.g., `OPENAI_API_KEY=sk-your-key-here`)
 
-   Configure the following required variables in `apps/web/.env.local`:
+### 3. Run with Docker
 
-   **Essential Services:**
-   - `DATABASE_URL` - Neon PostgreSQL connection string
-   - `BETTER_AUTH_SECRET` - Authentication secret key
-   - `BETTER_AUTH_URL` - Authentication URL (process.env.NEXT_PUBLIC_BASE_URL for development)
+```bash
+# Validate setup (optional but recommended)
+./validate-setup.sh
 
-   **AI Provider Keys (choose one or more):**
-   - `OPENAI_API_KEY` - OpenAI API access
-   - `ANTHROPIC_API_KEY` - Anthropic Claude API access
-   - `GOOGLE_API_KEY` - Google Gemini API access
+# Start the application
+docker-compose up --build
+```
 
-   **Payment & Subscription:**
-   - `CREEM_WEBHOOK_SECRET` - Creem.io webhook validation
-   - `CREEM_API_KEY` - Creem.io API access
-   - `CREEM_PRODUCT_ID` - VT Plus subscription product ID
+### 4. Access VT
 
-   **Security:**
-   - `NEXT_PUBLIC_BASE_URL` - Application base URL
+- **App**: http://localhost:3000
+- **Health Check**: http://localhost:3000/api/health
 
-4. **Set up the database**:
+**That's it!** VT will be running with PostgreSQL, all dependencies, and hot reload enabled.
 
-   ```bash
-   cd apps/web
-   bun run generate  # Generate database schema
-   ```
+---
 
-5. **Start the development server**:
+## Manual Setup (Advanced)
 
-   ```bash
-   bun dev
-   ```
+If you prefer manual setup without Docker:
 
-6. **Open the application**:
-   Navigate to `process.env.NEXT_PUBLIC_BASE_URL` in your browser.
+### Prerequisites
 
-### Development Commands
+- **Bun** v1.1.19+ (JavaScript runtime & package manager)
+- **PostgreSQL** (local or cloud)
+- **Git**
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/vinhnx/vtchat.git
+cd vtchat
+bun install
+```
+
+### 2. Database Setup
+
+**Option A: Local PostgreSQL**
+
+```bash
+# macOS with Homebrew
+brew install postgresql@15
+brew services start postgresql@15
+createdb vtchat_dev
+```
+
+**Option B: Docker PostgreSQL**
+
+```bash
+docker run -d --name vtchat-postgres \
+  -e POSTGRES_DB=vtchat_dev \
+  -e POSTGRES_USER=vtchat \
+  -e POSTGRES_PASSWORD=vtchat_password \
+  -p 5432:5432 postgres:15-alpine
+```
+
+### 3. Environment Configuration
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
+
+Edit `apps/web/.env.local` with your values:
+
+**Required:**
+
+```bash
+DATABASE_URL=postgresql://vtchat:vtchat_password@localhost:5432/vtchat_dev
+BETTER_AUTH_SECRET=your-32-char-secret-here
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+OPENAI_API_KEY=sk-your-openai-key-here
+```
+
+### 4. Database Migration
+
+```bash
+cd apps/web
+bun run generate  # Generate database schema
+```
+
+### 5. Start Development Server
+
+```bash
+bun dev
+```
+
+---
+
+## Environment Variables
+
+### Required (Core Functionality)
+
+```bash
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/vtchat_dev
+
+# Authentication
+BETTER_AUTH_SECRET=your-32-char-secret-key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# AI Provider (choose at least one)
+OPENAI_API_KEY=sk-your-key-here
+# OR
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+# OR
+GEMINI_API_KEY=your-key-here
+```
+
+### Optional (Enhanced Features)
+
+```bash
+# Social Authentication
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# Payment (Creem.io - skip if not needed)
+CREEM_API_KEY=creem_test_your-key
+CREEM_WEBHOOK_SECRET=your-webhook-secret
+CREEM_PRODUCT_ID=your-product-id
+
+# Additional AI Providers
+FIREWORKS_API_KEY=fw-your-key-here
+```
+
+---
+
+## Development Commands
 
 ```bash
 # Development
-bun dev                 # Start development server with Turbopack
-bun build              # Build for production
-bun start              # Start production server
-bun test               # Run tests
-bun test:coverage      # Run tests with coverage
-
-# Code Quality
-bun lint               # Lint with oxlint
-bun run fmt:check    # Check code formatting with dprint
+bun dev                    # Start development server
+bun dev --turbopack        # With Turbopack (faster)
+bun build                  # Production build
+bun start                  # Production server
 
 # Database
 cd apps/web
-bun run generate       # Generate Drizzle schema
+bun run generate          # Generate Drizzle schema
+
+# Code Quality
+bun run lint              # Lint with oxlint
+bun run fmt               # Format with dprint
+bun run fmt:check         # Check formatting
+
+# Testing
+bun test                  # Run tests
+bun test:coverage         # Tests with coverage
 ```
 
-## Configuration
+---
 
-### Environment Setup
+## Troubleshooting
 
-The application requires several environment variables for full functionality. Refer to `apps/web/.env.example` for the complete list. Key configurations include:
+### Quick Fixes
 
-- **Database**: Neon PostgreSQL for user data and subscriptions
-- **Authentication**: Better Auth for secure session management
-- **AI Providers**: Support for multiple AI APIs
-- **Payment**: Creem.io for subscription management
-- **Security**: Bot detection and secure authentication
--
-
-## Deployment
-
-VT is production-ready and deployed on Fly.io:
-
-### **Production Deployment**
-
-- **Live Application**: [https://vtchat.io.vn](https://vtchat.io.vn)
-- **Infrastructure**: Fly.io with 2-region setup (Singapore primary, Virginia secondary)
-- **Performance**: 87% faster compilation (24s → 3s), optimized bundle size (456kB → 436kB)
-- **Security**: Privacy-focused security with bot detection and secure authentication
-- **Monitoring**: Comprehensive error tracking, performance monitoring, and health checks
-- **Auto-scaling**: Suspend/resume based on traffic with intelligent resource management
-
-### Deployment Configuration
-
-- **Memory**: 1GB RAM per instance
-- **CPU**: 1 shared CPU
-- **Regions**: Asia-Pacific (primary), USA East (secondary)
-- **Health Checks**: HTTP and TCP monitoring
-- **Auto-scaling**: Suspend/resume based on traffic
-
-### Changelog Generation
-
-VT uses [changelogithub](https://github.com/antfu/changelogithub) to automatically generate changelogs for each release. When you deploy using the `deploy-fly.sh` script, it will:
-
-1. Automatically generate a changelog based on conventional commits
-2. Create a Git tag with the new version
-3. Push the tag to GitHub
-
-The GitHub Actions workflow in `.github/workflows/release.yml` will then automatically create a GitHub release with the generated changelog.
-
-To enable full changelog generation with GitHub integration, set the `GITHUB_TOKEN` environment variable when running the deploy script:
+**Setup validation**:
 
 ```bash
-GITHUB_TOKEN=your_token_here ./deploy-fly.sh
+./validate-setup.sh
 ```
+
+**Reset Docker environment**:
+
+```bash
+docker-compose down -v && docker-compose up --build
+```
+
+**Clear caches**:
+
+```bash
+rm -rf node_modules apps/web/node_modules apps/web/.next
+bun install
+```
+
+### Common Issues
+
+- **Port conflicts**: Change ports in `docker-compose.yml`
+- **Database issues**: Check `docker-compose logs postgres`
+- **Build failures**: Run `docker system prune -f` then rebuild
+- **Auth problems**: Regenerate `BETTER_AUTH_SECRET`
+
+**[Complete Troubleshooting Guide](docs/guides/troubleshooting.md)**
 
 ## Documentation
 
-### **Core Documentation**
-
-- **[Project Status](docs/PROJECT-STATUS.md)**: Complete production readiness overview with live metrics
-- **[Features Guide](docs/FEATURES.md)**: Comprehensive feature documentation and capabilities
-- **[Architecture Overview](docs/ARCHITECTURE.md)**: System design, tech stack, and component architecture
-- **[Security Implementation](docs/SECURITY.md)**: Privacy-first architecture and security measures
-- **[Final Project Report](docs/FINAL-PROJECT-REPORT.md)**: Comprehensive technical and business analysis
-- **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: v1.0 production achievements and features
-
-### **Setup & Deployment**
-
-- **[Local Development Setup](docs/local-development-setup.md)**: Complete environment setup guide
-- **[Database Setup](docs/DATABASE_SETUP.md)**: PostgreSQL configuration and schema setup
-- **[OAuth Setup](docs/OAUTH_SETUP.md)**: Authentication provider configuration
-- **[Deployment Guide](docs/DEPLOYMENT.md)**: Production deployment instructions
-- **[Production Deployment Checklist](docs/production-deployment-checklist.md)**: Pre-deployment verification
-- **[Fly.io Deployment Guide](docs/fly-deployment-guide.md)**: Specific Fly.io deployment instructions
-- **[DNS Configuration Guide](docs/dns-configuration-guide.md)**: Domain setup and SSL configuration
-
-### **Development & Integration**
-
-- **[Development Guidelines](AGENT.md)**: Code standards, conventions, and best practices
-- **[Subscription System](docs/subscription-system.md)**: Plan management and Creem.io integration
-- **[Creem Webhook Setup](docs/CREEM_WEBHOOK_SETUP.md)**: Payment webhook configuration
-- **[Account Linking](docs/ACCOUNT_LINKING.md)**: Multi-provider authentication setup
-- **[Database Maintenance](docs/DATABASE_MAINTENANCE.md)**: Ongoing database management and cron jobs
-- **[Admin System](docs/admin-system.md)**: Comprehensive admin panel documentation
-- **[Unified Access Control](docs/unified-access-control-implementation.md)**: Feature gating and subscription management
-
-### **Local AI & Advanced Features**
-
-- **[Complete Local AI Guide](docs/guides/local-ai-setup.md)**: Choose between Ollama and LM Studio
-- **[Ollama Setup Guide](docs/guides/ollama-setup.md)**: Command-line local AI (5-minute setup)
-- **[LM Studio Setup Guide](docs/guides/lm-studio-setup.md)**: GUI local AI (10-minute setup)
-- **[Premium Components Guide](docs/guides/premium-components.md)**: VT+ exclusive features
-- **[Logging Best Practices](docs/guides/logging-best-practices.md)**: Structured logging implementation
-
-### **Monitoring & Performance**
-
-- **[Production Monitoring Setup](docs/production-monitoring-setup.md)**: Error tracking, performance monitoring, and alerting
-- **[Production Readiness Report](docs/production-readiness-report.md)**: Comprehensive readiness assessment
-- **[Production Verification Report](docs/production-verification-report.md)**: Live deployment validation
-- **[Performance Optimizations](docs/auth-performance-optimizations.md)**: Authentication and runtime optimizations
-- **[Caching Optimization Report](docs/caching-optimization-report.md)**: Performance improvements and metrics
-- **[Fly Cost Optimization](docs/fly-cost-optimization.md)**: Infrastructure cost management
-
-### **Feature Implementation**
-
-- **[Thinking Mode Implementation](docs/reasoning-mode-implementation.md)**: AI reasoning capabilities
-- **[Document Upload Feature](docs/document-upload-feature.md)**: File processing implementation
-- **[Structured Output Implementation](docs/structured-output-implementation-summary.md)**: JSON extraction features
-- **[Enhanced Tool System](docs/enhanced-tool-system-implementation.md)**: Advanced tool routing
-- **[Rate Limiting Improvements](docs/rate-limiting-improvements.md)**: Usage control and limits
-- **[Content Signals Implementation](docs/contentsignals-implementation.md)**: Advanced content analysis
-- **[VT+ Reasoning Background](docs/vt-plus-reasoning-background-improvements.md)**: Premium tier enhancements
-
-### **Security & Privacy**
-
-- **[Arcjet Security Guide](docs/guides/arcjet-security.md)**: Comprehensive security implementation
-- **[Privacy Monitoring](docs/privacy-monitoring.md)**: Privacy-safe analytics approach
-- **[Customer Support Policy](docs/customer-support-policy.md)**: Support guidelines and data handling
-- **[Enhanced Subscription Verification](docs/enhanced-subscription-verification.md)**: Secure tier validation
-- **[Thread Isolation Implementation](docs/thread-isolation-implementation.md)**: Per-user data separation
-
-### **Testing & Quality**
-
-- **[Vitest Testing Setup](docs/vitest-testing-setup.md)**: Testing framework configuration
-- **[Structured Output Testing](docs/structured-output-testing.md)**: Feature-specific test suites
-- **[Error Diagnostic Examples](docs/error-diagnostic-examples.md)**: Debugging and troubleshooting
-- **[React Scan Usage](docs/react-scan-usage.md)**: Performance monitoring tools
-
-### **Project Management**
-
-- **[UI Audit Report](docs/ui-audit-report.md)**: User interface assessment and improvements
-- **[Chat UI Improvements Status](docs/chat-ui-improvements-status.md)**: Interface enhancement tracking
-- **[Tooling Setup](docs/tooling-setup.md)**: Development environment configuration
-- **[Shadcn UI Migration Completion](docs/shadcn-ui-migration-completion.md)**: UI library migration status
-- **[UI Audit Report](docs/ui-audit-report.md)**: Interface quality assessment
-
-### **Release & Project Management**
-
-- **[Final Release Notes](docs/FINAL-RELEASE-NOTES.md)**: Complete feature summary and achievements
-- **[Customer Support Policy](docs/customer-support-policy.md)**: Support procedures and guidelines
-
-### **User Support & Help**
-
-- **[Help Center](docs/help-center/README.md)**: Complete user guides, FAQ, and troubleshooting
-- **[Usage Settings Implementation](docs/USAGE_SETTINGS_IMPLEMENTATION.md)**: User configuration and preferences
-
-### **Project Context & Evolution**
-
-The **[memory-bank/](memory-bank/)** directory contains contextual documents tracking project evolution, feature implementations, and development insights. These documents provide historical context and decision rationale for continuous improvement.
-
-Key memory bank documents:
-
-- Development session logs and feature implementation notes
-- Architectural decisions and evolution notes
-- Performance optimization discoveries and lessons learned
-- User feedback integration and feature prioritization insights
-
----
-
-> **Navigation Tip**: Start with [Project Status](docs/PROJECT-STATUS.md) for a complete overview, then explore specific areas using the categorized documentation links above.
-
-## Security
-
-VT implements comprehensive security measures:
-
-- **Privacy-First**: All conversations stored locally in IndexedDB
-- **Authentication**: Better Auth with secure session management
-- **Application Security**: Bot detection and secure authentication
-- **Rate Limiting**: Prevents abuse with intelligent rate limiting
-- **Data Protection**: No server-side storage of sensitive chat data
-- **Secure Communication**: HTTPS enforced, secure headers implemented
-
-## React Best Practices
-
-- For comprehensive `useEffect` best practices, examples, and anti-patterns, see [docs/react-effect.md](./docs/react-effect.md).
-
-## Testing
-
-VT includes comprehensive testing:
-
-```bash
-# Run all tests
-bun test
-
-# Run tests with UI
-bun test:ui
-
-# Run tests with coverage
-bun test:coverage
-
-# Run specific test suites
-bun test app/tests/rate-limit-simple.test.ts
-```
-
-Testing framework: Vitest with Testing Library for React components.
-
-## Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-1. **Fork the repository** and create a feature branch
-2. **Follow the coding standards** defined in [AGENTS.md](AGENTS.md)
-3. **Write tests** for new features
-4. **Update documentation** as needed
-5. **Submit a pull request** with a clear description
-
-### Development Standards
-
-- Use TypeScript with strict configuration
-- Follow the existing code style and patterns
-- Ensure all tests pass before submitting
-- Update AGENTS.md with any significant changes
-
-## Acknowledgements
-
-This project is based on [llmchat](https://github.com/trendy-design/llmchat). We acknowledge and appreciate the excellent work of the Trendy Design team. Our main contributions focus on privacy-first architecture, advanced AI capabilities, and comprehensive multi-AI provider support.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-**[Visit VT](https://vtchat.io.vn)** | **[View Documentation](docs/)** | **[Report Issues](https://github.com/vinhnx/vtchat/issues)**
-
----
-
-I'm @vinhnx.
-
-</div>
+- **[Self-Hosting Guide](docs/guides/self-hosting-complete-guide.md)** - Complete setup for self-hosters
+- **[Docker Setup Guide](DOCKER-README.md)** - Detailed Docker instructions
+- **[Local Development](docs/local-development-setup.md)** - Advanced setup options
+- **[Troubleshooting](docs/guides/troubleshooting.md)** - Common issues & solutions
+- **[Features](docs/FEATURES.md)** - Complete feature documentation
+- **[Architecture](docs/ARCHITECTURE.md)** - System design & tech stack
+- **[Security](docs/SECURITY.md)** - Privacy & security implementation

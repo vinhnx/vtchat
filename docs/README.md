@@ -1,10 +1,42 @@
 # VT (VTChat) Documentation
 
-## 📋 Overview
+## Quick Setup for Self-Hosters
+
+### Docker Setup (Recommended - 5 minutes)
+
+1. **Clone & Setup**:
+   ```bash
+   git clone https://github.com/vinhnx/vtchat.git
+   cd vtchat
+   cp apps/web/.env.example apps/web/.env.local
+   ```
+
+2. **Configure Environment**:
+   - Generate `BETTER_AUTH_SECRET`: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+   - Add your AI API key (OpenAI, Anthropic, or Gemini)
+   - Edit `apps/web/.env.local`
+
+3. **Run with Docker**:
+   ```bash
+   ./validate-setup.sh  # Optional: validate configuration
+   docker-compose up --build
+   ```
+
+4. **Access**: http://localhost:3000
+
+**That's it!** Full VT instance with PostgreSQL, hot reload, and all features.
+
+### Manual Setup (Advanced)
+
+See [Local Development Setup](local-development-setup.md) for manual installation.
+
+---
+
+## Overview
 
 VT is a production-ready, privacy-focused AI chat application with security and comprehensive AI capabilities. This documentation provides complete guides for deployment, development, and feature implementation.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### For Users
 
@@ -24,9 +56,9 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Production Checklist**: [production-deployment-checklist.md](production-deployment-checklist.md)
 - **Fly.io Guide**: [fly-deployment-guide.md](fly-deployment-guide.md)
 
-## 📚 Core Documentation
+## Core Documentation
 
-### 🎯 Production Ready
+### Production Ready
 
 - **[Features Overview](FEATURES.md)** - Complete feature list and capabilities
 - **[Architecture](ARCHITECTURE.md)** - System design and technology stack
@@ -34,26 +66,26 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[Deployment Guide](DEPLOYMENT.md)** - Production deployment instructions
 - **[Final Release Notes](FINAL-RELEASE-NOTES.md)** - v1.0 production achievements
 
-### 🔧 Development
+### Development
 
 - **[Database Setup](DATABASE_SETUP.md)** - Database configuration and migrations
 - **[Local Development](local-development-setup.md)** - Development environment setup
 - **[Testing Setup](vitest-testing-setup.md)** - Comprehensive testing framework
 - **[Performance Report](production-readiness-report.md)** - Production readiness metrics
 
-### 🛡️ Security & Privacy
+### Security & Privacy
 
 - **[Arcjet Security](guides/arcjet-security.md)** - Application security implementation
 - **[Logging Best Practices](guides/logging-best-practices.md)** - Structured logging with PII redaction
 - **[Privacy Monitoring](privacy-monitoring.md)** - Privacy-safe analytics approach
 
-### 💳 Subscription & Payment
+### Subscription & Payment
 
 - **[Subscription System](subscription-system.md)** - Plan management and feature gating
 - **[Creem.io Webhook Setup](CREEM_WEBHOOK_SETUP.md)** - Payment webhook configuration
 - **[OAuth Setup](OAUTH_SETUP.md)** - Authentication provider configuration
 
-## 🎨 UI & Experience
+## UI & Experience
 
 ### Design System
 
@@ -68,7 +100,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[Structured Output](structured-output-implementation-summary.md)** - JSON extraction capabilities
 - **[Image Generation](guides/image-generation.md)** - UI, AR behavior, and API flow
 
-## 🧪 Testing & Quality
+## Testing & Quality
 
 ### Testing Framework
 
@@ -82,9 +114,9 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Zero TypeScript Errors**: Full type safety maintained
 - **Performance Optimized**: 87% faster compilation, optimized bundle size
 
-## 🚀 Production Status
+## Production Status
 
-### ✅ Production Ready Features
+### Production Ready Features
 
 - **Complete AI Integration**: Multi-provider support with reasoning mode
 - **Security Hardened**: Arcjet protection with Better Auth integration
@@ -92,7 +124,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Performance Optimized**: 87% faster builds, optimized database queries
 - **Mobile Responsive**: Complete Shadcn UI integration
 
-### 📊 Performance Metrics
+### Performance Metrics
 
 | Metric            | Before   | After | Improvement   |
 | ----------------- | -------- | ----- | ------------- |
@@ -101,7 +133,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | Auth Performance  | Baseline | +87%  | 87% faster    |
 | Database Queries  | Baseline | +75%  | 70-80% faster |
 
-## 🎯 Key Features
+## Key Features
 
 ### Free Tier (VT_BASE)
 
@@ -120,7 +152,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Document Upload**: PDF/DOC/DOCX processing up to 10MB
 - **Structured Extraction**: AI-powered JSON data extraction
 
-## 🏗️ Architecture Highlights
+## Architecture Highlights
 
 ### Modern Tech Stack
 
@@ -138,7 +170,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **Thread Isolation**: Complete data separation between users
 - **GDPR Compliant**: Privacy-by-design architecture
 
-## 📖 Guides
+## Guides
 
 ### Implementation Guides
 
@@ -152,7 +184,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[DNS Configuration](dns-configuration-guide.md)** - Domain setup guide
 - **[Fly.io Optimization](fly-optimization-guide.md)** - Performance tuning
 
-## 🔗 External Resources
+## External Resources
 
 ### Development Tools
 
@@ -167,7 +199,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 - **[Creem.io](https://creem.io)** - Payment processing
 - **[Neon](https://neon.tech)** - Serverless PostgreSQL
 
-## 📞 Support
+## Support
 
 ### For Users
 
@@ -186,3 +218,11 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 **Status**: ✅ Production Ready | **Version**: v1.0 | **Last Updated**: June 30, 2025
 
 VT (VTChat) represents a complete, production-ready AI chat application that prioritizes user privacy while delivering cutting-edge AI capabilities through an intuitive, modern interface.
+
+## Self-Hosters & DIY Users
+
+- **[Self-Hosting Guide](guides/self-hosting-complete-guide.md)** - Complete Docker & manual setup
+- Quick Docker setup (above)
+- Manual installation guides
+- Configuration troubleshooting
+- Feature customization

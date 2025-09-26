@@ -1,441 +1,367 @@
 # Local Development Environment Setup
 
-## 🎯 Quick Start for Development
+This guide covers both **Docker setup** (recommended) and **manual setup** for VT development.
 
-This guide helps you set up VT for local development with all the necessary environment variables and services.
+## Docker Setup (Recommended - 5 minutes)
 
-## 📋 Prerequisites
+### Prerequisites
 
-- Node.js 18+ or Bun 1.0+
-- Git
-- PostgreSQL (local or cloud)
-- Fly CLI (optional, for deployment)
+- Docker & Docker Compose installed
+- At least one AI API key
 
-## 🚀 Environment Setup
+### Quick Start
 
-### 1. Clone and Install Dependencies
+1. **Clone repository**:
+   ```bash
+   git clone https://github.com/vinhnx/vtchat.git
+   cd vtchat
+   ```
+
+2. **Setup environment**:
+   ```bash
+   cp apps/web/.env.example apps/web/.env.local
+   ```
+
+3. **Configure required variables**:
+   ```bash
+   # Generate authentication secret
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   # Copy output to BETTER_AUTH_SECRET in .env.local
+
+   # Add your AI API key (choose one)
+   OPENAI_API_KEY=sk-your-key-here
+   # OR
+   ANTHROPIC_API_KEY=sk-ant-your-key-here
+   # OR
+   GEMINI_API_KEY=your-key-here
+   ```
+
+4. **Validate & run**:
+   ```bash
+   ./validate-setup.sh
+   docker-compose up --build
+   ```
+
+5. **Access VT**: http://localhost:3000
+
+### What Docker Setup Includes
+
+- PostgreSQL 15 database with automatic initialization
+- VT application with hot reload development
+- All dependencies pre-installed
+- Health checks and proper startup sequencing
+- Volume persistence for database data
+
+### Docker Commands
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+# Start services
+docker-compose up --build
+
+# Run in background
+docker-compose up -d --build
+
+# View logs
+docker-compose logs vtchat
+docker-compose logs postgres
+
+# Stop services
+docker-compose down
+
+# Reset everything (deletes database)
+docker-compose down -v
+```
+
+---
+
+## Manual Setup (Advanced)
+
+For developers who prefer manual control over their environment.
+
+### Prerequisites
+
+- **Bun** v1.1.19+ (primary runtime)
+- **Node.js** 18+ (for compatibility)
+- **PostgreSQL** 15+ (local or cloud)
+- **Git**
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/vinhnx/vtchat.git
 cd vtchat
-
-# Install dependencies with Bun (recommended)
 bun install
-
-# Or with npm/pnpm
-npm install
 ```
 
-### 2. Create Local Environment File
+### 2. Database Setup
+
+#### Option A: Local PostgreSQL (macOS)
 
 ```bash
-# Copy the environment template
-cp apps/web/.env.example apps/web/.env.local
-```
-
-### 3. Configure Environment Variables
-
-Edit `apps/web/.env.local` with your local development values:
-
-```bash
-# =================================================================
-# LOCAL DEVELOPMENT ENVIRONMENT VARIABLES
-# =================================================================
-
-# Better-Auth Configuration (Required)
-BETTER_AUTH_SECRET=your-32-character-secret-key-here
-BETTER_AUTH_URL=process.env.NEXT_PUBLIC_BASE_URL
-BETTER_AUTH_ENV=development
-BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
-
-# Next.js Public Variables
-NEXT_PUBLIC_COMMON_URL=process.env.NEXT_PUBLIC_BASE_URL
-NEXT_PUBLIC_BETTER_AUTH_URL=process.env.NEXT_PUBLIC_BASE_URL
-NEXT_PUBLIC_BASE_URL=process.env.NEXT_PUBLIC_BASE_URL
-NEXT_PUBLIC_APP_URL=process.env.NEXT_PUBLIC_BASE_URL
-
-# Database Configuration (Choose one option below)
-# Option 1: Local PostgreSQL
-DATABASE_URL=postgresql://username:password@localhost:5432/vtchat_dev
-
-# Option 2: Neon PostgreSQL (recommended for development)
-# DATABASE_URL=postgresql://postgres:password@host:port/database
-
-# Option 3: Neon PostgreSQL
-# DATABASE_URL=postgresql://username:password@hostname.neon.tech/dbname?sslmode=require
-
-# AI Service Configuration (BYOK - Bring Your Own Key)
-# Get these from respective providers:
-OPENAI_API_KEY=sk-your-openai-api-key-here
-ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
-GEMINI_API_KEY=your-gemini-api-key-here
-FIREWORKS_API_KEY=fw-your-fireworks-api-key-here
-
-# Social Authentication (Optional for development)
-# GitHub OAuth - https://github.com/settings/developers
-GITHUB_CLIENT_ID=your-github-client-id
-GITHUB_CLIENT_SECRET=your-github-client-secret
-
-# Google OAuth - https://console.cloud.google.com/
-GOOGLE_CLIENT_ID=your-google-client-id.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# Email Configuration (Optional)
-# For Better Auth email verification and notifications
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-
-# Redis Configuration - removed (no longer needed)
-
-# Payment Integration (Optional for development)
-# Creem.io for subscription management
-CREEM_API_KEY=creem_test_your-test-api-key
-CREEM_WEBHOOK_SECRET=your-webhook-secret
-CREEM_PRODUCT_ID=your-test-product-id
-CREEM_ENVIRONMENT=sandbox
-
-# Product Configuration
-PRODUCT_NAME=VT+
-PRODUCT_DESCRIPTION=For everyday productivity
-VT_PLUS_PRICE=5.99  # Monthly subscription price in USD
-PRICING_CURRENCY=USD
-PRICING_INTERVAL=monthly
-
-# Additional Services (Optional)
-RESEND_API_KEY=re_your-resend-api-key
-JINA_API_KEY=jina_your-jina-api-key
-
-# Development Configuration
-NODE_ENV=development
-LOG_LEVEL=debug
-
-# Neon Configuration (if using Neon)
-NEON_PROJECT_ID=your-neon-project-id
-NEON_API_KEY=your-neon-api-key
-```
-
-## 🔐 Getting API Keys and Secrets
-
-### Required for Core Functionality
-
-#### 1. Better Auth Secret
-
-```bash
-# Generate a secure 32-character secret
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-#### 2. Database Setup
-
-**Option A: Neon PostgreSQL (Recommended)**
-
-```bash
-# 1. Go to https://neon.tech and create account
-# 2. Create new project: vtchat-dev
-# 3. Copy database URL from dashboard
-# 4. Add to your .env.local file
-
-DATABASE_URL=postgresql://username:password@hostname.neon.tech/dbname?sslmode=require
-```
-
-**Option B: Local PostgreSQL**
-
-```bash
-# Install PostgreSQL (macOS with Homebrew)
-brew install postgresql@14
-brew services start postgresql@14
+# Install PostgreSQL
+brew install postgresql@15
+brew services start postgresql@15
 
 # Create database
 createdb vtchat_dev
 
-# Connection string
+# Connection string for .env.local
 DATABASE_URL=postgresql://yourusername@localhost:5432/vtchat_dev
 ```
 
-**Option C: Neon PostgreSQL**
-
-1. Go to [neon.tech](https://neon.tech)
-2. Create a new project
-3. Copy the connection string
-4. Use it as your `DATABASE_URL`
-
-#### 3. AI Service API Keys (BYOK Required)
-
-**OpenAI API Key**
-
-1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-2. Create a new API key
-3. Copy the key starting with `sk-`
-
-**Anthropic API Key**
-
-1. Go to [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
-2. Create a new API key
-3. Copy the key starting with `sk-ant-`
-
-**Google Gemini API Key**
-
-1. Go to [ai.google.dev/api](https://ai.google.dev/api)
-2. Get an API key
-3. Copy the key starting with `AIza`
-
-Note: A Gemini API key is required for the Image Generation feature in chat. Without a key, the Generate button shows a helpful tooltip and stays in a limited state.
-
-**Fireworks AI API Key**
-
-1. Go to [app.fireworks.ai/settings/users/api-keys](https://app.fireworks.ai/settings/users/api-keys)
-2. Create a new API key
-3. Copy the key starting with `fw-`
-
-### Optional for Enhanced Features
-
-#### Social Authentication
-
-**GitHub OAuth**
-
-1. Go to [github.com/settings/developers](https://github.com/settings/developers)
-2. Create a new OAuth App
-3. Authorization callback URL: `process.env.NEXT_PUBLIC_BASE_URL/api/auth/callback/github`
-4. Copy Client ID and Client Secret
-
-**Google OAuth**
-
-1. Go to [console.cloud.google.com](https://console.cloud.google.com)
-2. Create a new project or use existing
-3. Enable Google+ API
-4. Create OAuth 2.0 credentials
-5. Authorized redirect URIs: `process.env.NEXT_PUBLIC_BASE_URL/api/auth/callback/google`
-6. Copy Client ID and Client Secret
-
-## 🏃‍♂️ Running the Development Server
-
-### Start the Application
+#### Option B: Docker PostgreSQL
 
 ```bash
-# Start development server with Bun (recommended)
-bun dev
+# Run PostgreSQL in Docker
+docker run -d --name vtchat-postgres \
+  -e POSTGRES_DB=vtchat_dev \
+  -e POSTGRES_USER=vtchat \
+  -e POSTGRES_PASSWORD=vtchat_password \
+  -p 5432:5432 postgres:15-alpine
 
-# Or with npm/pnpm
-npm run dev
-pnpm dev
+# Connection string for .env.local
+DATABASE_URL=postgresql://vtchat:vtchat_password@localhost:5432/vtchat_dev
 ```
 
-### Access the Application
+#### Option C: Cloud PostgreSQL (Neon, Supabase, etc.)
 
-- **Main App**: [process.env.NEXT_PUBLIC_BASE_URL](process.env.NEXT_PUBLIC_BASE_URL)
-- **Chat Interface**: [process.env.NEXT_PUBLIC_BASE_URL/chat](process.env.NEXT_PUBLIC_BASE_URL/chat)
-- **Health Check**: [process.env.NEXT_PUBLIC_BASE_URL/api/health](process.env.NEXT_PUBLIC_BASE_URL/api/health)
+```bash
+# Use your cloud database URL
+DATABASE_URL=postgresql://user:pass@host:port/database
+```
 
-## 🧪 Testing Your Setup
+### 3. Environment Configuration
 
-### 1. Basic Application Test
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
 
-- [ ] App loads at `process.env.NEXT_PUBLIC_BASE_URL`
-- [ ] No console errors
-- [ ] Health check returns `{"status": "ok"}`
+**Required variables** (edit `apps/web/.env.local`):
 
-### 2. Authentication Test
+```bash
+# Database
+DATABASE_URL=postgresql://vtchat:vtchat_password@localhost:5432/vtchat_dev
 
-- [ ] Sign up/login forms work
-- [ ] Social authentication works (if configured)
-- [ ] User session persists
+# Authentication
+BETTER_AUTH_SECRET=your-32-character-secret-here
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
-### 3. Database Test
+# AI Provider (at least one required)
+OPENAI_API_KEY=sk-your-key-here
+# OR
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+# OR
+GEMINI_API_KEY=your-key-here
+```
 
-- [ ] User registration saves to database
-- [ ] Database connection is stable
-- [ ] No database errors in logs
+### 4. Database Migration
 
-### 4. AI Chat Test
+```bash
+cd apps/web
+bun run generate
+```
 
-- [ ] Chat interface loads
-- [ ] Model selection dropdown works
-- [ ] API key validation works
-- [ ] Chat responses generate (if API keys configured)
+### 5. Start Development
 
-## 🔧 Development Workflow
+```bash
+# From project root
+bun dev
+
+# Or from apps/web directory
+cd apps/web
+bun dev
+```
+
+---
+
+## Development Workflow
 
 ### Daily Development
 
 ```bash
-# Start development
+# Start development server
 bun dev
 
-# Make changes to code
-# Files auto-reload on save
+# Code changes auto-reload
+# Edit files → see changes instantly
+```
 
-# Run tests (if available)
+### Database Changes
+
+```bash
+# After schema changes
+cd apps/web
+bun run generate
+
+# Restart server if needed
+bun dev
+```
+
+### Code Quality
+
+```bash
+# Lint code
+bun run lint
+
+# Format code
+bun run fmt
+
+# Check formatting
+bun run fmt:check
+```
+
+### Testing
+
+```bash
+# Run all tests
 bun test
 
-# Build for production testing
-bun run build
+# Run with coverage
+bun test:coverage
 
-# Preview production build
-bun start
+# Watch mode
+bun test --watch
 ```
-
-### Database Migrations
-
-```bash
-# If you make database schema changes
-# Migration files are in: apps/web/migration_better_auth.sql
-# These run automatically on app start
-```
-
-### Package Management
-
-```bash
-# Add new dependencies
-bun add package-name
-
-# Add dev dependencies
-bun add -d package-name
-
-# Update dependencies
-bun update
-
-# Clean install
-rm -rf node_modules && bun install
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Database Connection Issues
-
-```bash
-# Check if database is running
-pg_isready -h localhost
-
-# Check connection string format
-# Should be: postgresql://user:password@host:port/database
-```
-
-#### Environment Variables Not Loading
-
-```bash
-# Ensure file is named correctly
-apps/web/.env.local
-
-# Check for syntax errors
-# No spaces around = sign
-# No quotes unless needed for special characters
-```
-
-#### API Key Issues
-
-```bash
-# Verify API keys are correct
-# Check for extra spaces or characters
-# Test keys directly with provider's API
-```
-
-#### Port Already in Use
-
-```bash
-# Kill process on port 3000
-lsof -ti:3000 | xargs kill -9
-
-# Or use different port
-PORT=3001 bun dev
-```
-
-### Debug Logs
-
-```bash
-# Enable debug logging
-LOG_LEVEL=debug bun dev
-
-# Check console for errors
-# Check browser dev tools
-# Check terminal output
-```
-
-## 📁 File Structure for Development
-
-```
-vtchat/
-├── apps/web/
-│   ├── .env.local              # ← Your local environment file
-│   ├── .env.example            # ← Template to copy from
-│   ├── app/                    # Next.js app directory
-│   └── ...
-├── packages/                   # Shared packages
-├── docs/                      # Documentation
-└── ...
-```
-
-## 🔄 Syncing with Production
-
-### Environment Parity
-
-Keep your local environment similar to production:
-
-```bash
-# Use similar Node.js version
-node --version  # Should match Fly.io (Node 20+)
-
-# Use same package manager
-bun --version   # Preferred for this project
-
-# Test production builds locally
-bun run build && bun start
-```
-
-### Database Syncing
-
-```bash
-# If using Neon database for development
-# Use Neon console or psql with connection string
-
-# If using local database, occasionally sync schema
-# with production migrations
-```
-
-## ✅ Development Checklist
-
-### Initial Setup
-
-- [ ] Repository cloned
-- [ ] Dependencies installed
-- [ ] Environment file created
-- [ ] Database connected
-- [ ] App runs locally
-
-### Feature Development
-
-- [ ] Authentication works
-- [ ] AI chat functionality works
-- [ ] Database operations work
-- [ ] All features tested locally
-
-### Before Committing
-
-- [ ] Code builds successfully
-- [ ] No console errors
-- [ ] Environment secrets not committed
-- [ ] Tests pass (if available)
 
 ---
 
-**🎉 Success!** Your local development environment is now set up and ready for VT development!
+## Getting API Keys
 
-**Next**: Start building features, test locally, then deploy to Fly.io following the deployment guide.
+### AI Providers
 
-## 🚀 Deployment
+#### OpenAI
 
-Once your local development is working:
+1. Visit [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+2. Create new API key
+3. Add to `.env.local`: `OPENAI_API_KEY=sk-...`
+
+#### Anthropic
+
+1. Visit [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys)
+2. Create new API key
+3. Add to `.env.local`: `ANTHROPIC_API_KEY=sk-ant-...`
+
+#### Google Gemini
+
+1. Visit [ai.google.dev/api](https://ai.google.dev/api)
+2. Get API key
+3. Add to `.env.local`: `GEMINI_API_KEY=...`
+
+### Social Authentication (Optional)
+
+#### GitHub OAuth
+
+1. Go to [github.com/settings/developers](https://github.com/settings/developers)
+2. Create OAuth App
+3. **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github`
+4. Add to `.env.local`:
+   ```bash
+   GITHUB_CLIENT_ID=your-client-id
+   GITHUB_CLIENT_SECRET=your-client-secret
+   ```
+
+#### Google OAuth
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Create OAuth 2.0 credentials
+3. **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
+4. Add to `.env.local`:
+   ```bash
+   GOOGLE_CLIENT_ID=your-client-id.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your-client-secret
+   ```
+
+---
+
+## Troubleshooting
+
+### Setup Validation
+
+Run the validation script first:
 
 ```bash
-# Deploy to development environment
-./deploy-fly.sh --dev
-
-# Deploy to production environment
-./deploy-fly.sh --prod
+./validate-setup.sh
 ```
 
-See [DEPLOYMENT.md](../DEPLOYMENT.md) for detailed deployment instructions.
+This checks for common configuration issues.
+
+### Docker Issues
+
+```bash
+# Check Docker status
+docker --version
+docker-compose --version
+
+# Clear Docker cache
+docker system prune -f
+
+# Rebuild without cache
+docker-compose build --no-cache
+
+# Check container logs
+docker-compose logs vtchat
+docker-compose logs postgres
+```
+
+### Build Issues
+
+```bash
+# Clear all caches
+rm -rf node_modules apps/web/node_modules apps/web/.next .next
+
+# Reinstall dependencies
+bun install
+
+# Clear Bun cache
+bun pm cache rm
+```
+
+### Database Issues
+
+```bash
+# Check PostgreSQL connection
+psql $DATABASE_URL -c "SELECT version();"
+
+# Reset Docker database
+docker-compose down -v
+docker-compose up --build
+```
+
+### Authentication Issues
+
+```bash
+# Generate new secret
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+# Clear browser data
+# Hard refresh: Cmd+Shift+R (macOS) or Ctrl+Shift+R (Linux/Windows)
+```
+
+### Port Conflicts
+
+If ports 3000 or 5432 are in use:
+
+```bash
+# Find process using port
+lsof -i :3000
+lsof -i :5432
+
+# Kill process
+kill -9 <PID>
+
+# Or change ports in docker-compose.yml
+# ports:
+#   - "3001:3000"  # Change VT port
+#   - "5433:5432"  # Change PostgreSQL port
+```
+
+---
+
+## Additional Resources
+
+- **[Main README](../README.md)** - Quick overview
+- **[Docker Guide](../DOCKER-README.md)** - Detailed Docker instructions
+- **[Architecture](ARCHITECTURE.md)** - System design
+- **[Features](FEATURES.md)** - Complete feature list
+- **[Security](SECURITY.md)** - Security implementation
