@@ -85,7 +85,7 @@ function shouldSkipWebSearch(question: string): boolean {
 export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'router',
     execute: async ({ events, context, redirectTo }) => {
-        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH_LITE;
+        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH;
         const { updateStatus } = sendEvents(events);
 
         // Debug logging to track what's happening with mode

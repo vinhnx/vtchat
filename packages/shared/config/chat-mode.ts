@@ -17,8 +17,8 @@ export const ChatMode = {
     GPT_4o: 'gpt-4o',
     GPT_4o_Mini: 'gpt-4o-mini',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
-    GEMINI_2_5_FLASH: 'gemini-2.5-flash',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
+    GEMINI_2_5_FLASH: 'gemini-flash-latest',
+    GEMINI_2_5_FLASH_LITE: 'gemini-flash-lite-latest',
 
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',

@@ -1,3 +1,5 @@
+import { ModelEnum } from '@repo/ai/models';
+
 /**
  * Global rate-limit numbers used in UI copy and backend logic.
  * Single source of truth for all Gemini model rate limiting.
@@ -39,7 +41,8 @@ export const GEMINI_PRICES = {
     FLASH_LITE: 0.005, // 0.5 cents per request - minimum to ensure non-zero cost tracking
     FLASH: 0.01, // 1 cent per request
     PRO: 0.015, // 1.5 cents per request
-    'gemini-2.5-flash-lite': 0.005, // Same as FLASH_LITE
+    [ModelEnum.GEMINI_2_5_FLASH_LITE]: 0.005, // Same as FLASH_LITE
+    [ModelEnum.GEMINI_2_5_FLASH]: 0.01, // Same as FLASH
 } as const;
 
 /**

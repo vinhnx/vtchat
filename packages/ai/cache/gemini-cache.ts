@@ -7,15 +7,16 @@
 
 import { GoogleAICacheManager } from '@google/generative-ai/server';
 import { log } from '@repo/shared/logger';
-import type { ModelEnum } from '../models';
+import { ModelEnum as ModelEnumValues } from '../models';
+import type { ModelEnum as ModelEnumType } from '../models';
 
 /**
  * Supported Gemini models for explicit caching
  */
 export type GoogleModelCacheableId =
     | 'models/gemini-2.5-pro'
-    | 'models/gemini-2.5-flash'
-    | 'models/gemini-2.5-flash-lite'
+    | 'models/gemini-flash-latest'
+    | 'models/gemini-flash-lite-latest'
     | 'models/gemini-1.5-flash-001'
     | 'models/gemini-1.5-pro-001';
 
@@ -115,7 +116,7 @@ export class GeminiCacheManager {
 export function isModelCacheable(modelId: string): modelId is GoogleModelCacheableId {
     const cacheableModels: GoogleModelCacheableId[] = [
         'models/gemini-2.5-pro',
-        'models/gemini-2.5-flash',
+        'models/gemini-flash-latest',
         'models/gemini-1.5-flash-001',
         'models/gemini-1.5-pro-001',
     ];
@@ -125,14 +126,14 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
 /**
  * Convert VTChat model enum to cacheable model ID
  */
-export function getGeminiCacheableModelId(modelEnum: ModelEnum): GoogleModelCacheableId | null {
+export function getGeminiCacheableModelId(modelEnum: ModelEnumType): GoogleModelCacheableId | null {
     switch (modelEnum) {
-        case 'gemini-2.5-pro':
+        case ModelEnumValues.GEMINI_2_5_PRO:
             return 'models/gemini-2.5-pro';
-        case 'gemini-2.5-flash':
-            return 'models/gemini-2.5-flash';
-        case 'gemini-2.5-flash-lite':
-            return 'models/gemini-2.5-flash-lite';
+        case ModelEnumValues.GEMINI_2_5_FLASH:
+            return 'models/gemini-flash-latest';
+        case ModelEnumValues.GEMINI_2_5_FLASH_LITE:
+            return 'models/gemini-flash-lite-latest';
         default:
             return null;
     }
