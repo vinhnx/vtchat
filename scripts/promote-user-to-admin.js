@@ -7,10 +7,28 @@
 
 const { eq } = require('drizzle-orm');
 
+// Simple logger for script output
+const log = {
+    info: (data, msg) => {
+        if (typeof data === 'string') {
+            console.log(data);
+        } else {
+            console.log(msg || 'Info:', JSON.stringify(data, null, 2));
+        }
+    },
+    error: (data, msg) => {
+        if (typeof data === 'string') {
+            console.error(data);
+        } else {
+            console.error(msg || 'Error:', JSON.stringify(data, null, 2));
+        }
+    },
+};
+
 async function promoteUserToAdmin(userId) {
     if (!userId) {
-        console.error('Error: User ID is required');
-        console.log('Usage: bun scripts/promote-user-to-admin.js <user_id>');
+        log.error('Error: User ID is required');
+        log.info('Usage: bun scripts/promote-user-to-admin.js <user_id>');
         process.exit(1);
     }
 
@@ -19,19 +37,23 @@ async function promoteUserToAdmin(userId) {
         const { db } = require('../apps/web/lib/database');
         const { users } = require('../apps/web/lib/database/schema');
 
-        console.log(`🔍 Looking for user with ID: ${userId}`);
+        log.info(`🔍 Looking for user with ID: ${userId}`);
 
         // Check if user exists
         const existingUser = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
         if (existingUser.length === 0) {
-            console.error(`Error: User with ID ${userId} not found`);
+            log.error(`Error: User with ID ${userId} not found`);
             process.exit(1);
         }
 
         const user = existingUser[0];
-        console.log(`✅ Found user: ${user.email || user.id}`);
-        console.log(`Current role: ${user.role}, Protected: ${user.protected}`);
+        log.info({ 
+            userEmail: user.email, 
+            userId: user.id,
+            currentRole: user.role,
+            protected: user.protected
+        }, '✅ Found user');
 
         // Update user to admin and protect them
         const result = await db
@@ -45,14 +67,17 @@ async function promoteUserToAdmin(userId) {
             .returning();
 
         if (result.length > 0) {
-            console.log(`✅ Successfully promoted user ${userId} to admin and protected them`);
-            console.log(`New role: ${result[0].role}, Protected: ${result[0].protected}`);
+            log.info({
+                userId,
+                newRole: result[0].role,
+                protected: result[0].protected
+            }, '✅ Successfully promoted user to admin');
         } else {
-            console.error('❌ Failed to update user');
+            log.error('❌ Failed to update user');
             process.exit(1);
         }
     } catch (error) {
-        console.error('❌ Error promoting user to admin:', error);
+        log.error({ error: error.message, userId }, '❌ Error promoting user to admin');
         process.exit(1);
     }
 }

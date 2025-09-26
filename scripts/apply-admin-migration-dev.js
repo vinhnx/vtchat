@@ -5,11 +5,11 @@
 
 import { readFileSync } from 'node:fs';
 import { Client } from 'pg';
+import { log } from '@repo/shared/lib/logger';
 
 async function applyAdminMigration() {
     if (!process.env.DATABASE_URL) {
-        console.error('❌ DATABASE_URL environment variable is required');
-        console.error('Please set it in your .env.local file');
+        log.error('❌ DATABASE_URL environment variable is required. Please set it in your .env.local file');
         process.exit(1);
     }
 
@@ -19,7 +19,7 @@ async function applyAdminMigration() {
 
     try {
         await client.connect();
-        console.log('✅ Connected to database');
+        log.info('✅ Connected to database');
 
         // Read the SQL migration file
         const migrationSql = readFileSync('./scripts/apply-admin-migration-dev.sql', 'utf8');
@@ -30,30 +30,30 @@ async function applyAdminMigration() {
             .map((stmt) => stmt.trim())
             .filter((stmt) => stmt && !stmt.startsWith('--'));
 
-        console.log(`Executing ${statements.length} SQL statements...`);
+        log.info({ statementCount: statements.length }, 'Executing SQL statements');
 
         for (const statement of statements) {
             if (statement) {
-                console.log(`Executing: ${statement.substring(0, 50)}...`);
+                log.debug({ statement: statement.substring(0, 50) }, 'Executing SQL statement');
                 await client.query(statement);
             }
         }
 
-        console.log('✅ Admin migration applied successfully');
+        log.info('✅ Admin migration applied successfully');
     } catch (error) {
-        console.error('❌ Error applying admin migration:', error.message);
+        log.error({ error: error.message }, '❌ Error applying admin migration');
         if (error.message.includes('already exists')) {
-            console.log('⚠️  Migration may have already been applied');
+            log.warn('⚠️  Migration may have already been applied');
         }
         process.exit(1);
     } finally {
         await client.end();
-        console.log('✅ Database connection closed');
+        log.info('✅ Database connection closed');
     }
 }
 
 // Run the migration
 applyAdminMigration().then(() => {
-    console.log('🎉 Migration completed successfully');
+    log.info('🎉 Migration completed successfully');
     process.exit(0);
 });

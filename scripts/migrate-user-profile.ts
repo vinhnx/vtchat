@@ -5,7 +5,7 @@
  * Run with: bun run scripts/migrate-user-profile.ts
  */
 
-import { log } from '@repo/shared/logger';
+import { log } from '@repo/shared/lib/logger';
 import { sql } from 'drizzle-orm';
 import { db } from '../apps/web/lib/database';
 
@@ -65,7 +65,7 @@ async function runMigration() {
 
         log.info('User profile migration completed successfully');
     } catch (error) {
-        console.error('❌ Migration failed:', error);
+        log.error({ error }, '❌ Migration failed');
         log.error({ error }, 'User profile migration failed');
         process.exit(1);
     }
@@ -79,7 +79,7 @@ runMigration()
         process.exit(0);
     })
     .catch((error) => {
-        console.error('💥 Migration script failed:', error);
+        log.error({ error }, '💥 Migration script failed');
         log.error({ error }, 'Migration script failed');
         process.exit(1);
     });
