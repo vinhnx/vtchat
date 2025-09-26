@@ -1,5 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { UserTier } from '@repo/shared/constants/user-tiers';
+import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/lib/logger';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { extractUrlsFromText, generateWithUrlContext } from '../../services/google-url-context';
@@ -15,10 +16,10 @@ export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowConte
         const { updateStep } = sendEvents(events);
 
         // Get mode first before using it
-        const mode = context?.get('mode') || 'gemini-2.5-flash-lite';
+        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH_LITE;
 
         // Determine if this is Pro Search mode for enhanced capabilities
-        const isProSearch = mode === 'pro';
+        const isProSearch = mode === ChatMode.Pro;
 
         const prompt = isProSearch
             ? `You are conducting a PRO SEARCH - an advanced, intelligent web search with enhanced grounding capabilities.

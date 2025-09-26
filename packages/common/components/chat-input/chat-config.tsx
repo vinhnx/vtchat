@@ -435,17 +435,18 @@ export const modelOptionsByProvider = {
     ],
 };
 
-// Create modelOptions with Gemini 2.5 Flash Lite as the first option
+// Create modelOptions with Gemini Flash as the first option
 const allModelOptions = Object.values(modelOptionsByProvider).flat();
-const geminiFlashLiteOption = allModelOptions.find(
-    (option) => option.value === ChatMode.GEMINI_2_5_FLASH_LITE,
+const defaultChatModelValue = ChatMode.GEMINI_2_5_FLASH;
+const defaultChatModelOption = allModelOptions.find(
+    (option) => option.value === defaultChatModelValue,
 );
 const otherOptions = allModelOptions.filter(
-    (option) => option.value !== ChatMode.GEMINI_2_5_FLASH_LITE,
+    (option) => option.value !== defaultChatModelValue,
 );
 
-export const modelOptions = geminiFlashLiteOption
-    ? [geminiFlashLiteOption, ...otherOptions]
+export const modelOptions = defaultChatModelOption
+    ? [defaultChatModelOption, ...otherOptions]
     : allModelOptions;
 
 /**

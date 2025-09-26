@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StructuredOutputButton } from '../structured-output-button';
+import { ChatMode } from '@repo/shared/config';
 
 // Mock dependencies
 vi.mock('@repo/ai/providers', () => ({
@@ -14,7 +15,7 @@ vi.mock('@repo/common/hooks/use-subscription-access', () => ({
 
 vi.mock('@repo/common/store', () => ({
     useChatStore: vi.fn((selector) => {
-        if (selector.toString().includes('chatMode')) return 'gemini-2.5-flash';
+        if (selector.toString().includes('chatMode')) return ChatMode.GEMINI_2_5_FLASH;
         if (selector.toString().includes('structuredData')) return null;
         if (selector.toString().includes('setStructuredData')) return vi.fn();
         return vi.fn();

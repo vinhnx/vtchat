@@ -434,6 +434,16 @@ The application now uses official Shadcn UI components with:
 
 ---
 
+### 2025-09-08
+
+#### ✅ Gemini Model Defaults Updated
+
+- Aligned Gemini Flash model IDs with Google naming updates (`gemini-flash-latest`, `gemini-flash-lite-latest`).
+- Set Gemini Flash as the default chat model selection and ensured dropdown ordering reflects the new default.
+- Adjusted caching, rate limit pricing, and provider fallbacks to respect the refreshed model identifiers.
+
+---
+
 **PROJECT**: Allow access to all Gemini models for free users while keeping thinking mode VT+ exclusive
 **STATUS**: ✅ **SUCCESSFULLY IMPLEMENTED**
 

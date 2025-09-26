@@ -324,8 +324,8 @@ export const getLanguageModel = (
         // Handle Gemini models with search grounding or caching
         if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
             log.info('Creating Gemini model with special options...');
-            const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
-            const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
+            const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
+            const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
             log.info('Using model ID:', {
                 data: modelId,
                 originalModelId,
@@ -390,9 +390,9 @@ export const getLanguageModel = (
         }
 
         log.info('Creating standard model...');
-        const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
+        const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
 
-        const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH_LITE;
+        const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
         log.info('Using model ID:', {
             data: modelId,
             originalModelId,

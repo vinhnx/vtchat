@@ -1,6 +1,6 @@
 'use client';
 
-import { type Model, models } from '@repo/ai/models';
+import { ModelEnum, type Model, models } from '@repo/ai/models';
 import { ChatMode } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
@@ -38,6 +38,11 @@ class ThreadDatabase extends Dexie {
 let db: ThreadDatabase | null = null;
 let CONFIG_KEY = 'chat-config';
 let currentUserId: string | null = null;
+
+const getDefaultModel = (): Model => {
+    const defaultModel = models.find((candidate) => candidate.id === ModelEnum.GEMINI_2_5_FLASH);
+    return defaultModel ?? models[0];
+};
 
 /**
  * Get the current database instance, ensuring it's initialized
@@ -92,24 +97,26 @@ const loadInitialData = async () => {
     const database = getDatabase();
     if (!database) {
         // Return default state for SSR or when db is not initialized
+        const defaultModel = getDefaultModel();
         return {
             threads: [],
             currentThreadId: null,
             config: {
                 customInstructions: undefined,
-                model: models[0].id,
+                model: defaultModel.id,
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
                 showSuggestions: true,
-                chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
+                chatMode: ChatMode.GEMINI_2_5_FLASH,
             },
             useWebSearch: false,
             useMathCalculator: false,
             useCharts: false,
-            chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
+            chatMode: ChatMode.GEMINI_2_5_FLASH,
             customInstructions: '',
             showSuggestions: false,
+            model: defaultModel,
         };
     }
 
@@ -119,7 +126,7 @@ const loadInitialData = async () => {
     const configStr = localStorage.getItem(CONFIG_KEY);
     const config = JSON.parse(configStr || '{}');
 
-    const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH_LITE;
+    const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH;
 
     // Get settings from app store
     const appStore = useAppStore.getState();
@@ -134,7 +141,7 @@ const loadInitialData = async () => {
     // Load and validate the persisted model
     const persistedModelId = config.model;
     const persistedModel = persistedModelId ? models.find((m) => m.id === persistedModelId) : null;
-    const model = persistedModel || models[0];
+    const model = persistedModel || getDefaultModel();
 
     const initialThreads = threads.length ? threads : [];
 
@@ -815,14 +822,14 @@ const debouncedNotify = debounce(notifyWorker, 300);
 
 export const useChatStore = create(
     immer<State & Actions>((set, get) => ({
-        model: models[0],
+        model: getDefaultModel(),
         isGenerating: false,
         generationStartTime: null,
         showTimeoutIndicator: false,
         editor: undefined,
         context: '',
         threads: [],
-        chatMode: ChatMode.GEMINI_2_5_FLASH_LITE,
+        chatMode: ChatMode.GEMINI_2_5_FLASH,
         threadItems: [],
         useWebSearch: false,
         useMathCalculator: false,
@@ -1630,7 +1637,7 @@ export const useChatStore = create(
                         id: threadItem.id,
                         threadId,
                         query: threadItem.query || '',
-                        mode: threadItem.mode || ChatMode.GEMINI_2_5_FLASH_LITE,
+                        mode: threadItem.mode || ChatMode.GEMINI_2_5_FLASH,
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         ...threadItem,
