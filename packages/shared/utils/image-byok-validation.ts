@@ -63,6 +63,7 @@ export const getRequiredApiKeyForChatMode = (chatMode: ChatMode): keyof ApiKeys 
 
         // Anthropic models
         [ChatMode.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',
+        [ChatMode.CLAUDE_SONNET_4_5]: 'ANTHROPIC_API_KEY',
         [ChatMode.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
 
         // Google models

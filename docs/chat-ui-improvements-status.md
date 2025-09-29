@@ -17,7 +17,7 @@ The "Generated with" label in thread messages already includes provider names. T
 
 - "Generated with OpenAI GPT 4o"
 - "Generated with OpenRouter DeepSeek V3 0324"
-- "Generated with Anthropic Claude 4 Sonnet"
+- "Generated with Anthropic Claude Sonnet 4.5"
 - "Generated with xAI Grok 3"
 
 ## 2. ✅ Gift Icon for Free Models

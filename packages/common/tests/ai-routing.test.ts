@@ -34,6 +34,12 @@ describe('shouldUseServerSideAPI', () => {
                     hasVtPlus: true,
                 }),
             ).toBe(true);
+            expect(
+                shouldUseServerSideAPI({
+                    mode: ChatMode.CLAUDE_SONNET_4_5,
+                    hasVtPlus: true,
+                }),
+            ).toBe(true);
 
             expect(
                 shouldUseServerSideAPI({
@@ -57,6 +63,12 @@ describe('shouldUseServerSideAPI', () => {
                     hasVtPlus: false,
                 }),
             ).toBe(false);
+            expect(
+                shouldUseServerSideAPI({
+                    mode: ChatMode.CLAUDE_SONNET_4_5,
+                    hasVtPlus: false,
+                }),
+            ).toBe(false);
 
             expect(
                 shouldUseServerSideAPI({
@@ -76,6 +88,13 @@ describe('shouldUseServerSideAPI', () => {
                     deepResearch: true,
                 }),
             ).toBe(true);
+            expect(
+                shouldUseServerSideAPI({
+                    mode: ChatMode.CLAUDE_SONNET_4_5,
+                    hasVtPlus: true,
+                    deepResearch: true,
+                }),
+            ).toBe(true);
 
             expect(
                 shouldUseServerSideAPI({
@@ -91,6 +110,13 @@ describe('shouldUseServerSideAPI', () => {
                 shouldUseServerSideAPI({
                     mode: ChatMode.CLAUDE_4_SONNET,
                     hasVtPlus: false,
+                    proSearch: true,
+                }),
+            ).toBe(true);
+            expect(
+                shouldUseServerSideAPI({
+                    mode: ChatMode.CLAUDE_SONNET_4_5,
+                    hasVtPlus: true,
                     proSearch: true,
                 }),
             ).toBe(true);
@@ -113,6 +139,12 @@ describe('shouldUseServerSideAPI', () => {
                     hasVtPlus: false,
                 }),
             ).toBe(false);
+            expect(
+                shouldUseServerSideAPI({
+                    mode: ChatMode.CLAUDE_SONNET_4_5,
+                    hasVtPlus: false,
+                }),
+            ).toBe(false);
 
             expect(
                 shouldUseServerSideAPI({
@@ -127,6 +159,7 @@ describe('shouldUseServerSideAPI', () => {
 describe('needsServerSideForPlus', () => {
     it('should identify VT+ server models correctly', () => {
         expect(needsServerSideForPlus(ChatMode.CLAUDE_4_SONNET)).toBe(true);
+        expect(needsServerSideForPlus(ChatMode.CLAUDE_SONNET_4_5)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe(false);
         expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
@@ -136,6 +169,7 @@ describe('needsServerSideForPlus', () => {
 describe('getProviderKeyToRemove', () => {
     it('should identify correct API key to remove', () => {
         expect(getProviderKeyToRemove(ChatMode.CLAUDE_4_SONNET)).toBe('ANTHROPIC_API_KEY');
+        expect(getProviderKeyToRemove(ChatMode.CLAUDE_SONNET_4_5)).toBe('ANTHROPIC_API_KEY');
         expect(getProviderKeyToRemove(ChatMode.GPT_4o)).toBe('OPENAI_API_KEY');
         expect(getProviderKeyToRemove(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe('GEMINI_API_KEY');
     });
@@ -152,6 +186,12 @@ describe('filterApiKeysForServerSide', () => {
 
         const claudeFiltered = filterApiKeysForServerSide(apiKeys, ChatMode.CLAUDE_4_SONNET);
         expect(claudeFiltered).toEqual({
+            OPENAI_API_KEY: 'sk-123',
+            GEMINI_API_KEY: 'AIza123',
+            OTHER_KEY: 'other',
+        });
+        const claude45Filtered = filterApiKeysForServerSide(apiKeys, ChatMode.CLAUDE_SONNET_4_5);
+        expect(claude45Filtered).toEqual({
             OPENAI_API_KEY: 'sk-123',
             GEMINI_API_KEY: 'AIza123',
             OTHER_KEY: 'other',

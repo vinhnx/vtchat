@@ -24,6 +24,7 @@ Test these models should all route to `/api/completion`:
 
 #### Anthropic Models
 
+- **Claude Sonnet 4.5** ✅
 - **Claude 4 Sonnet** ✅
 - **Claude 4 Opus** ✅
 

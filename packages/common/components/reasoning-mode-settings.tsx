@@ -36,6 +36,7 @@ export const ReasoningModeSettings = () => {
             ChatMode.DEEPSEEK_R1,
             // Anthropic reasoning models
             ChatMode.CLAUDE_4_SONNET,
+            ChatMode.CLAUDE_SONNET_4_5,
             ChatMode.CLAUDE_4_OPUS,
             // OpenAI o-series models
             ChatMode.O4_Mini,

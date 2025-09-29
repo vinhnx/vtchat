@@ -65,7 +65,7 @@
 
 ### Premium Models Confirmed Free:
 
-- Claude 4 Sonnet/Opus
+- Claude Sonnet 4.5 / Claude 4 Sonnet/Opus
 - GPT-4.1/4.1 Mini/4.1 Nano
 - O3/O3 Mini/O4 Mini
 - O1 Mini/O1 Preview

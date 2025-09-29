@@ -32,6 +32,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
+        'Claude Sonnet 4.5': ChatMode.CLAUDE_SONNET_4_5,
         'Claude 4 Opus': ChatMode.CLAUDE_4_OPUS,
         // OpenAI models
         'GPT-4o': ChatMode.GPT_4o,
@@ -55,6 +56,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     const modelIdToChatModeMap: Record<string, ChatMode> = {
         'deepseek/deepseek-chat-v3-0324': ChatMode.DEEPSEEK_V3_0324,
         'deepseek/deepseek-r1': ChatMode.DEEPSEEK_R1,
+        'claude-sonnet-4-5': ChatMode.CLAUDE_SONNET_4_5,
         'qwen/qwen3-235b-a22b': ChatMode.QWEN3_235B_A22B,
         'qwen/qwen3-32b': ChatMode.QWEN3_32B,
         'mistralai/mistral-nemo': ChatMode.MISTRAL_NEMO,
@@ -89,6 +91,7 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         // Anthropic reasoning models
         ChatMode.CLAUDE_4_1_OPUS,
         ChatMode.CLAUDE_4_SONNET,
+        ChatMode.CLAUDE_SONNET_4_5,
         ChatMode.CLAUDE_4_OPUS,
 
         // Gemini models with thinking support
@@ -190,6 +193,14 @@ export const modelOptionsByProvider = {
         {
             label: 'Claude 4.1 Opus',
             value: ChatMode.CLAUDE_4_1_OPUS,
+            webSearch: true,
+            icon: <Brain className='text-purple-500' size={16} />,
+            providerIcon: getProviderIcon('anthropic', 14),
+            requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Claude Sonnet 4.5',
+            value: ChatMode.CLAUDE_SONNET_4_5,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('anthropic', 14),

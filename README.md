@@ -58,7 +58,7 @@ _Advanced AI capabilities including document processing, web search, and structu
 ### Advanced AI Capabilities
 
 - **Nano Banana Conversational Image Editor (New to VT)**: Conversational image editor! Generate an image, then iteratively edit through natural conversation: "make the cat bigger", "change background to sunset", "add a party hat" - all while preserving edit history
-- **Premium AI Models (Free with BYOK)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
+- **Premium AI Models (Free with BYOK)**: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 - all available to logged-in users with their own API keys
 - **9 Free Server Models**: Gemini 2.0/2.5 Flash series + OpenRouter models (DeepSeek V3, Qwen3 14B) - no API keys required
 - **Free Local AI**: Run AI models on your own computer with **Ollama** and **LM Studio** - completely free, private, and no API costs
 - **Multi-AI Provider Support**: OpenAI, Anthropic, Google, Fireworks, Together AI, xAI, plus local providers (Ollama, LM Studio)
