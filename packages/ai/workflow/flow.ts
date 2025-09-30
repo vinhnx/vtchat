@@ -9,17 +9,16 @@ import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import type { Geo } from '@vercel/functions';
 import type { CoreMessage } from 'ai';
-import {
-    analysisTask,
-    completionTask,
-    geminiWebSearchTask,
-    modeRoutingTask,
-    plannerTask,
-    refineQueryTask,
-    reflectorTask,
-    suggestionsTask,
-    writerTask,
-} from './tasks';
+// Import tasks individually to avoid potential circular dependency issues during build
+import { analysisTask } from './tasks/analysis';
+import { completionTask } from './tasks/completion';
+import { geminiWebSearchTask } from './tasks/gemini-web-search';
+import { modeRoutingTask } from './tasks/chat-mode-router';
+import { plannerTask } from './tasks/planner';
+import { refineQueryTask } from './tasks/refine-query';
+import { reflectorTask } from './tasks/reflector';
+import { suggestionsTask } from './tasks/suggestion';
+import { writerTask } from './tasks/writer';
 
 type Status = 'PENDING' | 'COMPLETED' | 'ERROR' | 'HUMAN_REVIEW';
 
@@ -229,17 +228,17 @@ export const runWorkflow = ({
         signal,
     });
 
-    builder.addTasks([
-        plannerTask,
-        geminiWebSearchTask,
-        reflectorTask,
-        analysisTask,
-        writerTask,
-        refineQueryTask,
-        modeRoutingTask,
-        completionTask,
-        suggestionsTask,
-    ]);
+    // Add tasks one by one to avoid potential initialization issues during build
+    builder
+        .addTask(plannerTask)
+        .addTask(geminiWebSearchTask)
+        .addTask(reflectorTask)
+        .addTask(analysisTask)
+        .addTask(writerTask)
+        .addTask(refineQueryTask)
+        .addTask(modeRoutingTask)
+        .addTask(completionTask)
+        .addTask(suggestionsTask);
 
     return builder.build();
 };
