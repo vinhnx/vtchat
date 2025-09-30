@@ -41,6 +41,7 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     // Anthropic models
     [ChatMode.CLAUDE_4_1_OPUS]: 'ANTHROPIC_API_KEY',
     [ChatMode.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',
+    [ChatMode.CLAUDE_SONNET_4_5]: 'ANTHROPIC_API_KEY',
     [ChatMode.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
     // Fireworks models
     [ChatMode.DEEPSEEK_R1_FIREWORKS]: 'FIREWORKS_API_KEY',

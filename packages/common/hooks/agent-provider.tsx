@@ -964,7 +964,8 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 isFreeModel: mode === ChatMode.GEMINI_2_5_FLASH_LITE,
                 hasVtPlusAccess,
                 needsServerSide: (hasVtPlusAccess
-                    && [ChatMode.CLAUDE_4_SONNET, ChatMode.GPT_4o].includes(mode))
+                    && [ChatMode.CLAUDE_4_SONNET, ChatMode.CLAUDE_SONNET_4_5, ChatMode.GPT_4o]
+                        .includes(mode))
                     || isGeminiModel(mode),
                 shouldUseServerSideAPI,
                 hasApiKey: hasApiKeyForChatMode(mode, isSignedIn, hasVtPlusAccess),

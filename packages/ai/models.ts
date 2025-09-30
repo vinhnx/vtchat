@@ -6,6 +6,7 @@ import type { ProviderEnumType } from './providers';
 export const ModelEnum = {
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
+    CLAUDE_SONNET_4_5: 'claude-sonnet-4-5',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
     GEMINI_2_5_FLASH_LITE: 'gemini-flash-lite-latest',
     GEMINI_2_5_FLASH: 'gemini-flash-latest',
@@ -139,6 +140,13 @@ export const models: Model[] = [
     {
         id: ModelEnum.CLAUDE_4_SONNET,
         name: 'Claude 4 Sonnet',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
+    },
+    {
+        id: ModelEnum.CLAUDE_SONNET_4_5,
+        name: 'Claude Sonnet 4.5',
         provider: 'anthropic',
         maxTokens: 64_000,
         contextWindow: 200_000,
@@ -303,6 +311,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.CLAUDE_4_1_OPUS;
         case ChatMode.CLAUDE_4_SONNET:
             return ModelEnum.CLAUDE_4_SONNET;
+        case ChatMode.CLAUDE_SONNET_4_5:
+            return ModelEnum.CLAUDE_SONNET_4_5;
         case ChatMode.CLAUDE_4_OPUS:
             return ModelEnum.CLAUDE_4_OPUS;
         case ChatMode.GPT_4o_Mini:
@@ -366,6 +376,7 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.CLAUDE_4_1_OPUS:
         case ChatMode.CLAUDE_4_SONNET:
         case ChatMode.CLAUDE_4_OPUS:
+        case ChatMode.CLAUDE_SONNET_4_5:
             return 200_000;
         case ChatMode.O3:
         case ChatMode.O3_Mini:
@@ -529,6 +540,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     const anthropicReasoningModels = [
         ModelEnum.CLAUDE_4_1_OPUS, // claude-4.1-opus-20250805
         ModelEnum.CLAUDE_4_SONNET, // claude-4-sonnet-20250514
+        ModelEnum.CLAUDE_SONNET_4_5, // claude-sonnet-4-5
         ModelEnum.CLAUDE_4_OPUS, // claude-4-opus-20250514
     ];
 
@@ -577,6 +589,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     const anthropicToolModels = [
         ModelEnum.CLAUDE_4_1_OPUS,
         ModelEnum.CLAUDE_4_SONNET,
+        ModelEnum.CLAUDE_SONNET_4_5,
         ModelEnum.CLAUDE_4_OPUS,
     ];
 
@@ -651,6 +664,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     const anthropicReasoningModels = [
         ModelEnum.CLAUDE_4_1_OPUS,
         ModelEnum.CLAUDE_4_SONNET,
+        ModelEnum.CLAUDE_SONNET_4_5,
         ModelEnum.CLAUDE_4_OPUS,
     ];
 

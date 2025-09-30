@@ -1,7 +1,7 @@
 'use client';
 
 import { ModelEnum, type Model, models } from '@repo/ai/models';
-import { ChatMode } from '@repo/shared/config';
+import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import type { MessageGroup, Thread, ThreadItem } from '@repo/shared/types';
@@ -39,8 +39,10 @@ let db: ThreadDatabase | null = null;
 let CONFIG_KEY = 'chat-config';
 let currentUserId: string | null = null;
 
+const DEFAULT_MODEL_ID = ModelEnum.CLAUDE_SONNET_4_5;
+
 const getDefaultModel = (): Model => {
-    const defaultModel = models.find((candidate) => candidate.id === ModelEnum.GEMINI_2_5_FLASH);
+    const defaultModel = models.find((candidate) => candidate.id === DEFAULT_MODEL_ID);
     return defaultModel ?? models[0];
 };
 
@@ -108,12 +110,12 @@ const loadInitialData = async () => {
                 useMathCalculator: false,
                 useCharts: false,
                 showSuggestions: true,
-                chatMode: ChatMode.GEMINI_2_5_FLASH,
+                chatMode: DEFAULT_CHAT_MODE,
             },
             useWebSearch: false,
             useMathCalculator: false,
             useCharts: false,
-            chatMode: ChatMode.GEMINI_2_5_FLASH,
+            chatMode: DEFAULT_CHAT_MODE,
             customInstructions: '',
             showSuggestions: false,
             model: defaultModel,
@@ -126,7 +128,7 @@ const loadInitialData = async () => {
     const configStr = localStorage.getItem(CONFIG_KEY);
     const config = JSON.parse(configStr || '{}');
 
-    const chatMode = config.chatMode || ChatMode.GEMINI_2_5_FLASH;
+    const chatMode = config.chatMode || DEFAULT_CHAT_MODE;
 
     // Get settings from app store
     const appStore = useAppStore.getState();
@@ -829,7 +831,7 @@ export const useChatStore = create(
         editor: undefined,
         context: '',
         threads: [],
-        chatMode: ChatMode.GEMINI_2_5_FLASH,
+        chatMode: DEFAULT_CHAT_MODE,
         threadItems: [],
         useWebSearch: false,
         useMathCalculator: false,
@@ -1637,7 +1639,7 @@ export const useChatStore = create(
                         id: threadItem.id,
                         threadId,
                         query: threadItem.query || '',
-                        mode: threadItem.mode || ChatMode.GEMINI_2_5_FLASH,
+                        mode: threadItem.mode || DEFAULT_CHAT_MODE,
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         ...threadItem,

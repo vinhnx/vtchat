@@ -51,6 +51,16 @@ describe('AI Routing Security Tests', () => {
                 SERP_API_KEY: 'serp-key',
                 CUSTOM_API_KEY: 'custom-key',
             });
+            const claude45Result = filterApiKeysForServerSide(
+                apiKeys,
+                ChatMode.CLAUDE_SONNET_4_5,
+                false,
+            );
+            expect(claude45Result).toEqual({
+                ANTHROPIC_API_KEY: 'claude-key',
+                SERP_API_KEY: 'serp-key',
+                CUSTOM_API_KEY: 'custom-key',
+            });
 
             // Test BYOK OpenAI model (should keep only OPENAI_API_KEY)
             const openaiResult = filterApiKeysForServerSide(apiKeys, ChatMode.GPT_4o_Mini, false);

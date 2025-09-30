@@ -5,7 +5,7 @@ import {
     trimMessageHistoryEstimated,
 } from '@repo/ai/models';
 import { createTask } from '@repo/orchestrator';
-import { ChatMode } from '@repo/shared/config';
+import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { log } from '@repo/shared/lib/logger';
 import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
 import { handleError, sendEvents } from '../utils';
@@ -85,7 +85,7 @@ function shouldSkipWebSearch(question: string): boolean {
 export const modeRoutingTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({
     name: 'router',
     execute: async ({ events, context, redirectTo }) => {
-        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH;
+        const mode = context?.get('mode') || DEFAULT_CHAT_MODE;
         const { updateStatus } = sendEvents(events);
 
         // Debug logging to track what's happening with mode

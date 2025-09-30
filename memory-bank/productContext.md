@@ -16,6 +16,7 @@ This project aims to refactor and improve an existing web application to enhance
 - **Authentication Prompts:** Non-authenticated users attempting to use protected features (like chat input) should receive a clear prompt to log in.
 - **BYOK Security:** API key input and related functionalities (BYOK) should be strictly disabled for users who are not logged in.
 - **UI Clarity:** Components like `UserTierBadge` should present information (e.g., plan names) in a user-friendly and consistent manner. UI elements like shimmers should be replaced with simpler, standard components where appropriate.
+- **Default Model Experience:** Claude Sonnet 4.5 is the default chat selection to highlight premium reasoning.
 
 ## User Experience Goals
 
@@ -46,7 +47,7 @@ Available to all logged-in users:
 - Chart Visualization
 - Gemini Explicit Caching
 - Mathematical calculation tools
-- All AI models including ALL premium models: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 (free with BYOK)
+- All AI models including ALL premium models: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 (free with BYOK)
 - 9 free models with server API (5 Gemini + 4 OpenRouter)
 - Unlimited usage with BYOK
 

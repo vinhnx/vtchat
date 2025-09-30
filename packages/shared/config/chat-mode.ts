@@ -22,6 +22,7 @@ export const ChatMode = {
 
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
+    CLAUDE_SONNET_4_5: 'claude-sonnet-4-5',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
     DEEPSEEK_R1_FIREWORKS: 'deepseek-r1-fireworks',
     KIMI_K2_INSTRUCT_FIREWORKS: 'kimi-k2-instruct-fireworks',
@@ -41,6 +42,8 @@ export const ChatMode = {
 } as const;
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
+
+export const DEFAULT_CHAT_MODE: ChatMode = ChatMode.CLAUDE_SONNET_4_5;
 
 export const ChatModeConfig: Record<
     ChatMode,
@@ -157,6 +160,14 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         multiModal: true,
         retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.CLAUDE_SONNET_4_5]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
         isAuthRequired: true,
     },
     [ChatMode.CLAUDE_4_OPUS]: {
@@ -446,6 +457,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'Anthropic Claude 4.1 Opus';
         case ChatMode.CLAUDE_4_SONNET:
             return 'Anthropic Claude 4 Sonnet';
+        case ChatMode.CLAUDE_SONNET_4_5:
+            return 'Anthropic Claude Sonnet 4.5';
         case ChatMode.CLAUDE_4_OPUS:
             return 'Anthropic Claude 4 Opus';
         case ChatMode.O3:

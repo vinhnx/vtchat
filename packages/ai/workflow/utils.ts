@@ -1599,6 +1599,7 @@ export const selectAvailableModel = (
             // Anthropic models
             [ModelEnum.CLAUDE_4_1_OPUS]: 'ANTHROPIC_API_KEY',
             [ModelEnum.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',
+            [ModelEnum.CLAUDE_SONNET_4_5]: 'ANTHROPIC_API_KEY',
             [ModelEnum.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
             // Fireworks models
             [ModelEnum.DEEPSEEK_R1_FIREWORKS]: 'FIREWORKS_API_KEY',
@@ -1639,7 +1640,8 @@ export const selectAvailableModel = (
         ModelEnum.GPT_5, // GPT-5 as top priority for OpenAI models
         ModelEnum.GPT_4o, // More expensive but reliable
         ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model
-        ModelEnum.CLAUDE_4_SONNET, // Anthropic fallback
+        ModelEnum.CLAUDE_SONNET_4_5, // Anthropic fallback
+        ModelEnum.CLAUDE_4_SONNET, // Legacy Anthropic fallback
     ];
 
     for (const model of fallbackModels) {

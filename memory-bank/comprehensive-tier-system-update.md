@@ -32,7 +32,7 @@ VT offers free tier, and with VT+ focusing only on 2 exclusive research capabili
 
 - PRO_SEARCH (Enhanced Web Search)
 - DEEP_RESEARCH (Deep Research capabilities)
-- Premium AI Models: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- Premium AI Models: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 
 ## Files Updated
 

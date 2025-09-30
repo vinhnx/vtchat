@@ -15,7 +15,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ### Advanced AI Capabilities
 
-- **Premium AI Models (VT+ Exclusive)**: Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Premium AI Models (VT+ Exclusive)**: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
 - **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents with intelligent schema generation - available to all logged-in users
 - **Multi-Modal Processing (Free)**: Text, image, and document analysis with up to 10MB file support - available to all logged-in users
