@@ -10,142 +10,150 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Paragraph, Wrap},
 };
 
-const HEADER_HEIGHT: u16 = 6;
+const HEADER_HEIGHT: u16 = 11;
 const FOOTER_HEIGHT: u16 = 3;
 const INNER_MARGIN: u16 = 1;
-const LEFT_COLUMN_PERCENT: u16 = 60;
-const RIGHT_COLUMN_PERCENT: u16 = 40;
 const POLL_INTERVAL_MS: u64 = 250;
 
 #[derive(Clone, Copy)]
 enum CopyKey {
     Logo,
-    Tagline,
-    Summary,
-    HighlightsHeading,
-    ActionsHeading,
+    MetaLine,
     FooterLaunch,
     FooterQuit,
     Spacer,
     Divider,
-    Dash,
-    FeatureLocalTitle,
-    FeatureLocalDetail,
-    FeatureReusableTitle,
-    FeatureReusableDetail,
-    FeatureInstantTitle,
-    FeatureInstantDetail,
-    ActionDocsTitle,
-    ActionDocsDetail,
-    ActionSessionTitle,
-    ActionSessionDetail,
-    ActionConfigureTitle,
-    ActionConfigureDetail,
+    Bullet,
+    SectionProjectSummary,
+    SectionKeyGuidelines,
+    SectionUsageTips,
+    SectionNextActions,
+    ProjectVersion,
+    WorkspaceTrust,
+    ToolsPolicy,
+    WorkspaceLanguages,
+    HumanSafeguards,
+    McpEnabled,
+    GuidelineWorkspaceStructure,
+    GuidelineCoreModules,
+    TipDescribeGoal,
+    TipReferenceGuidelines,
+    TipTargetedReads,
+    ActionReviewGuidelines,
+    ActionRequestTour,
 }
 
 impl CopyKey {
     fn text(self) -> &'static str {
         match self {
             Self::Logo => "> VT Code",
-            Self::Tagline => "Minimal terminal workspace for focused AI creation",
-            Self::Summary => {
-                "Concise toolkit with essentials upfront so you can ship without friction."
-            }
-            Self::HighlightsHeading => "Focus Points",
-            Self::ActionsHeading => "Quick Actions",
+            Self::MetaLine => "x-ai/grok-4-fast:free · medium",
             Self::FooterLaunch => "enter to open",
             Self::FooterQuit => "q / esc to close",
             Self::Spacer => " ",
             Self::Divider => "•",
-            Self::Dash => "—",
-            Self::FeatureLocalTitle => "Local-first privacy",
-            Self::FeatureLocalDetail => "Offline-first, nothing leaves your machine.",
-            Self::FeatureReusableTitle => "Reusable workflows",
-            Self::FeatureReusableDetail => "Pin curated flows and prompts for reuse.",
-            Self::FeatureInstantTitle => "Instant project boot",
-            Self::FeatureInstantDetail => "Boot with sensible defaults already staged.",
-            Self::ActionDocsTitle => "Open docs",
-            Self::ActionDocsDetail => "Read keyboard map and integrations.",
-            Self::ActionSessionTitle => "Start session",
-            Self::ActionSessionDetail => "Resume workspace with pinned context.",
-            Self::ActionConfigureTitle => "Configure models",
-            Self::ActionConfigureDetail => "Choose AI providers before launching.",
+            Self::Bullet => "*",
+            Self::SectionProjectSummary => "Project context summary",
+            Self::SectionKeyGuidelines => "Key guidelines",
+            Self::SectionUsageTips => "Usage tips",
+            Self::SectionNextActions => "Suggested Next Actions",
+            Self::ProjectVersion => "Project: vtcode v0.15.9",
+            Self::WorkspaceTrust => "Workspace trust: full auto",
+            Self::ToolsPolicy => "Tools policy: Allow 6 · Prompt 12 · Deny 0 (.vtcode/tool-policy.json)",
+            Self::WorkspaceLanguages => "Workspace languages: JavaScript:4, Python:2, Rust:176",
+            Self::HumanSafeguards => "Human-in-the-loop safeguards: enabled",
+            Self::McpEnabled => {
+                "MCP (Model Context Protocol): enabled (time, context7, sequential-thinking)"
+            }
+            Self::GuidelineWorkspaceStructure => {
+                "Workspace Structure: vtcode-core/ (library) + src/ (binary) with modular tools system"
+            }
+            Self::GuidelineCoreModules => {
+                "Core Modules: llm/ (provider abstraction), tools/ (modular tool system), config/ (TOML-based settings)"
+            }
+            Self::TipDescribeGoal => {
+                "Describe your current coding goal or ask for a quick status overview."
+            }
+            Self::TipReferenceGuidelines => {
+                "Reference AGENTS.md guidelines when proposing changes."
+            }
+            Self::TipTargetedReads => {
+                "Prefer asking for targeted file reads or diffs before editing."
+            }
+            Self::ActionReviewGuidelines => {
+                "Review the highlighted guidelines and share the task you want to tackle."
+            }
+            Self::ActionRequestTour => "Ask for a workspace tour if you need more context.",
         }
     }
 }
 
 #[derive(Clone, Copy)]
-enum Feature {
-    LocalFirst,
-    ReusableFlows,
-    InstantSetup,
+enum SectionKey {
+    ProjectSummary,
+    KeyGuidelines,
+    UsageTips,
+    NextActions,
 }
 
-impl Feature {
-    fn title(self) -> &'static str {
+impl SectionKey {
+    fn title(self) -> CopyKey {
         match self {
-            Self::LocalFirst => CopyKey::FeatureLocalTitle.text(),
-            Self::ReusableFlows => CopyKey::FeatureReusableTitle.text(),
-            Self::InstantSetup => CopyKey::FeatureInstantTitle.text(),
+            Self::ProjectSummary => CopyKey::SectionProjectSummary,
+            Self::KeyGuidelines => CopyKey::SectionKeyGuidelines,
+            Self::UsageTips => CopyKey::SectionUsageTips,
+            Self::NextActions => CopyKey::SectionNextActions,
         }
     }
 
-    fn detail(self) -> &'static str {
+    fn items(self) -> &'static [CopyKey] {
         match self {
-            Self::LocalFirst => CopyKey::FeatureLocalDetail.text(),
-            Self::ReusableFlows => CopyKey::FeatureReusableDetail.text(),
-            Self::InstantSetup => CopyKey::FeatureInstantDetail.text(),
+            Self::ProjectSummary => &PROJECT_SUMMARY_ITEMS,
+            Self::KeyGuidelines => &KEY_GUIDELINES_ITEMS,
+            Self::UsageTips => &USAGE_TIPS_ITEMS,
+            Self::NextActions => &NEXT_ACTIONS_ITEMS,
         }
     }
 }
 
-const FEATURES: [Feature; 3] = [
-    Feature::LocalFirst,
-    Feature::ReusableFlows,
-    Feature::InstantSetup,
+const PROJECT_SUMMARY_ITEMS: [CopyKey; 1] = [CopyKey::ProjectVersion];
+const KEY_GUIDELINES_ITEMS: [CopyKey; 2] = [
+    CopyKey::GuidelineWorkspaceStructure,
+    CopyKey::GuidelineCoreModules,
+];
+const USAGE_TIPS_ITEMS: [CopyKey; 3] = [
+    CopyKey::TipDescribeGoal,
+    CopyKey::TipReferenceGuidelines,
+    CopyKey::TipTargetedReads,
+];
+const NEXT_ACTIONS_ITEMS: [CopyKey; 2] =
+    [CopyKey::ActionReviewGuidelines, CopyKey::ActionRequestTour];
+
+const CORE_FACTS: [CopyKey; 5] = [
+    CopyKey::WorkspaceTrust,
+    CopyKey::ToolsPolicy,
+    CopyKey::WorkspaceLanguages,
+    CopyKey::HumanSafeguards,
+    CopyKey::McpEnabled,
 ];
 
-#[derive(Clone, Copy)]
-enum QuickAction {
-    OpenDocs,
-    StartSession,
-    ConfigureModels,
-}
-
-impl QuickAction {
-    fn label(self) -> &'static str {
-        match self {
-            Self::OpenDocs => CopyKey::ActionDocsTitle.text(),
-            Self::StartSession => CopyKey::ActionSessionTitle.text(),
-            Self::ConfigureModels => CopyKey::ActionConfigureTitle.text(),
-        }
-    }
-
-    fn description(self) -> &'static str {
-        match self {
-            Self::OpenDocs => CopyKey::ActionDocsDetail.text(),
-            Self::StartSession => CopyKey::ActionSessionDetail.text(),
-            Self::ConfigureModels => CopyKey::ActionConfigureDetail.text(),
-        }
-    }
-}
-
-const ACTIONS: [QuickAction; 3] = [
-    QuickAction::OpenDocs,
-    QuickAction::StartSession,
-    QuickAction::ConfigureModels,
+const SECTIONS: [SectionKey; 4] = [
+    SectionKey::ProjectSummary,
+    SectionKey::KeyGuidelines,
+    SectionKey::UsageTips,
+    SectionKey::NextActions,
 ];
 
 struct App {
-    features: &'static [Feature],
-    actions: &'static [QuickAction],
+    core_facts: &'static [CopyKey],
+    sections: &'static [SectionKey],
 }
 
 impl App {
     fn new() -> Self {
         Self {
-            features: &FEATURES,
-            actions: &ACTIONS,
+            core_facts: &CORE_FACTS,
+            sections: &SECTIONS,
         }
     }
 }
@@ -213,26 +221,24 @@ fn render(frame: &mut Frame, app: &App) {
         .margin(INNER_MARGIN)
         .split(inner_area);
 
-    render_header(frame, sections[0]);
+    render_header(frame, sections[0], app.core_facts);
     render_body(frame, sections[1], app);
     render_footer(frame, sections[2]);
 }
 
-fn render_header(frame: &mut Frame, area: Rect) {
-    let header_lines = vec![
-        Line::from(Span::styled(
-            CopyKey::Logo.text(),
-            Style::default().add_modifier(Modifier::BOLD),
-        )),
-        Line::from(Span::styled(
-            CopyKey::Tagline.text(),
-            Style::default().fg(Color::Gray),
-        )),
-        Line::from(Span::styled(
-            CopyKey::Summary.text(),
-            Style::default().fg(Color::Gray),
-        )),
-    ];
+fn render_header(frame: &mut Frame, area: Rect, facts: &[CopyKey]) {
+    let mut header_lines = Vec::new();
+    header_lines.push(Line::from(Span::styled(
+        CopyKey::MetaLine.text(),
+        Style::default().fg(Color::Gray),
+    )));
+    header_lines.push(Line::from(Span::raw(CopyKey::Spacer.text())));
+    header_lines.push(Line::from(Span::styled(
+        CopyKey::Logo.text(),
+        Style::default().add_modifier(Modifier::BOLD),
+    )));
+    header_lines.push(Line::from(Span::raw(CopyKey::Spacer.text())));
+    header_lines.extend(render_fact_lines(facts));
 
     let header = Paragraph::new(header_lines)
         .wrap(Wrap { trim: true })
@@ -241,37 +247,47 @@ fn render_header(frame: &mut Frame, area: Rect) {
     frame.render_widget(header, area);
 }
 
+fn render_fact_lines(facts: &[CopyKey]) -> Vec<Line<'static>> {
+    let fact_style = Style::default().fg(Color::Gray);
+    facts
+        .iter()
+        .map(|fact| {
+            Line::from(vec![
+                Span::styled(
+                    CopyKey::Bullet.text(),
+                    Style::default().add_modifier(Modifier::BOLD),
+                ),
+                Span::raw(CopyKey::Spacer.text()),
+                Span::styled(fact.text(), fact_style),
+            ])
+        })
+        .collect()
+}
+
 fn render_body(frame: &mut Frame, area: Rect, app: &App) {
-    let columns = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints([
-            Constraint::Percentage(LEFT_COLUMN_PERCENT),
-            Constraint::Percentage(RIGHT_COLUMN_PERCENT),
-        ])
+    let constraints = vec![Constraint::Min(4); app.sections.len()];
+    let section_areas = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(constraints)
         .split(area);
 
-    render_features(frame, columns[0], app.features);
-    render_actions(frame, columns[1], app.actions);
+    for (index, section) in app.sections.iter().enumerate() {
+        render_section(frame, section_areas[index], *section);
+    }
 }
 
-fn render_features(frame: &mut Frame, area: Rect, features: &[Feature]) {
-    let bullet_style = Style::default().add_modifier(Modifier::BOLD);
-    let description_style = Style::default().fg(Color::Gray);
-
-    let items: Vec<ListItem> = features
+fn render_section(frame: &mut Frame, area: Rect, section: SectionKey) {
+    let items: Vec<ListItem> = section
+        .items()
         .iter()
-        .map(|feature| {
+        .map(|item| {
             let content = Line::from(vec![
-                Span::styled(CopyKey::Divider.text(), bullet_style),
-                Span::raw(CopyKey::Spacer.text()),
                 Span::styled(
-                    feature.title(),
+                    CopyKey::Bullet.text(),
                     Style::default().add_modifier(Modifier::BOLD),
                 ),
                 Span::raw(CopyKey::Spacer.text()),
-                Span::styled(CopyKey::Dash.text(), description_style),
-                Span::raw(CopyKey::Spacer.text()),
-                Span::styled(feature.detail(), description_style),
+                Span::styled(item.text(), Style::default().fg(Color::Gray)),
             ]);
 
             ListItem::new(content)
@@ -283,44 +299,7 @@ fn render_features(frame: &mut Frame, area: Rect, features: &[Feature]) {
             .borders(Borders::ALL)
             .border_style(Style::default().fg(Color::DarkGray))
             .title(Span::styled(
-                CopyKey::HighlightsHeading.text(),
-                Style::default().add_modifier(Modifier::BOLD),
-            )),
-    );
-
-    frame.render_widget(list, area);
-}
-
-fn render_actions(frame: &mut Frame, area: Rect, actions: &[QuickAction]) {
-    let bullet_style = Style::default().add_modifier(Modifier::BOLD);
-    let description_style = Style::default().fg(Color::Gray);
-
-    let items: Vec<ListItem> = actions
-        .iter()
-        .map(|action| {
-            let content = Line::from(vec![
-                Span::styled(CopyKey::Divider.text(), bullet_style),
-                Span::raw(CopyKey::Spacer.text()),
-                Span::styled(
-                    action.label(),
-                    Style::default().add_modifier(Modifier::BOLD),
-                ),
-                Span::raw(CopyKey::Spacer.text()),
-                Span::styled(CopyKey::Dash.text(), description_style),
-                Span::raw(CopyKey::Spacer.text()),
-                Span::styled(action.description(), description_style),
-            ]);
-
-            ListItem::new(content)
-        })
-        .collect();
-
-    let list = List::new(items).block(
-        Block::default()
-            .borders(Borders::ALL)
-            .border_style(Style::default().fg(Color::DarkGray))
-            .title(Span::styled(
-                CopyKey::ActionsHeading.text(),
+                section.title().text(),
                 Style::default().add_modifier(Modifier::BOLD),
             )),
     );
