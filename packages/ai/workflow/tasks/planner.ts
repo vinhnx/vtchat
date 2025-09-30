@@ -3,7 +3,7 @@ import { ChatMode } from '@repo/shared/config';
 import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
 import { z } from 'zod';
 import { getModelFromChatMode, ModelEnum } from '../../models';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import {
     generateObject,
     getHumanizedDate,

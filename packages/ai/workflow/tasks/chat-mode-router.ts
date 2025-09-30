@@ -7,7 +7,7 @@ import {
 import { createTask } from '@repo/orchestrator';
 import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { log } from '@repo/shared/lib/logger';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import { handleError, sendEvents } from '../utils';
 
 /**

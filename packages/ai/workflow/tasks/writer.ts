@@ -4,7 +4,7 @@ import { formatDate } from '@repo/shared/utils';
 import { getFormattingInstructions } from '../../config/formatting-guidelines';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { ContentMonitor } from '../../utils/content-monitor';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import { ChunkBuffer, generateText, handleError, selectAvailableModel, sendEvents } from '../utils';
 
 export const writerTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({

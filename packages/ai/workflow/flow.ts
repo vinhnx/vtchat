@@ -9,6 +9,7 @@ import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
 import type { Geo } from '@vercel/functions';
 import type { CoreMessage } from 'ai';
+import { WorkflowContextSchema, WorkflowEventSchema } from './types'; // Import types from the new dedicated file
 // Import tasks individually to avoid potential circular dependency issues during build
 import { analysisTask } from './tasks/analysis';
 import { completionTask } from './tasks/completion';
@@ -19,99 +20,6 @@ import { refineQueryTask } from './tasks/refine-query';
 import { reflectorTask } from './tasks/reflector';
 import { suggestionsTask } from './tasks/suggestion';
 import { writerTask } from './tasks/writer';
-
-type Status = 'PENDING' | 'COMPLETED' | 'ERROR' | 'HUMAN_REVIEW';
-
-// Define the workflow schema type
-export type WorkflowEventSchema = {
-    steps?: Record<
-        string,
-        {
-            id: number;
-            text?: string;
-            steps: Record<
-                string,
-                {
-                    data?: any;
-                    status: Status;
-                }
-            >;
-            status: Status;
-        }
-    >;
-    toolCalls?: any[];
-    toolResults?: any[];
-
-    answer: {
-        text?: string;
-        object?: any;
-        objectType?: string;
-        finalText?: string;
-        status: Status;
-    };
-    sources?: {
-        index: number;
-        title: string;
-        link: string;
-    }[];
-    object?: Record<string, any>;
-    error?: {
-        error: string;
-        status: Status;
-    };
-    status: Status;
-
-    suggestions?: string[];
-};
-
-// Define the context schema type
-export type WorkflowContextSchema = {
-    question: string;
-    search_queries: string[];
-    messages: CoreMessage[];
-    mode: ChatMode;
-    goals: {
-        id: number;
-        text: string;
-        final: boolean;
-        status: 'PENDING' | 'COMPLETED' | 'ERROR';
-    }[];
-    steps: {
-        type: string;
-        final: boolean;
-        goalId: number;
-        queries?: string[];
-        results?: {
-            title: string;
-            link: string;
-        }[];
-    }[];
-    webSearch: boolean;
-    mathCalculator: boolean;
-    charts: boolean;
-    queries: string[];
-    summaries: string[];
-    gl?: Geo;
-    sources: {
-        index: number;
-        title: string;
-        link: string;
-    }[];
-    answer: string | undefined;
-    threadId: string;
-    threadItemId: string;
-    showSuggestions: boolean;
-    customInstructions?: string;
-    onFinish: (data: any) => void;
-    apiKeys?: Record<string, string>;
-    thinkingMode?: {
-        enabled: boolean;
-        budget: number;
-        includeThoughts: boolean;
-    };
-    userTier?: UserTierType;
-    userId?: string;
-};
 
 export const runWorkflow = ({
     mode,

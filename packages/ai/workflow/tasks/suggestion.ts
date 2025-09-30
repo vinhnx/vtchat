@@ -1,6 +1,6 @@
 import { createTask } from '@repo/orchestrator';
 import { z } from 'zod';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import { handleError } from '../utils';
 
 const _MAX_ALLOWED_TOKENS = 1000;

@@ -2,7 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { getVTPlusFeatureFromChatMode } from '@repo/shared/utils/access-control';
 import { z } from 'zod';
 import { ModelEnum } from '../../models';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import {
     generateObject,
     getHumanizedDate,

@@ -6,7 +6,7 @@ import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } 
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
 import { handlePDFProcessingError } from '../../utils/pdf-error-handler';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import {
     ChunkBuffer,
     generateText,

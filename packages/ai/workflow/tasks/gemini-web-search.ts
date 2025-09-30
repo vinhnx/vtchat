@@ -4,7 +4,7 @@ import { ChatMode } from '@repo/shared/config';
 import { log } from '@repo/shared/lib/logger';
 import { getModelFromChatMode, ModelEnum } from '../../models';
 import { extractUrlsFromText, generateWithUrlContext } from '../../services/google-url-context';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import { generateTextWithGeminiSearch, getHumanizedDate, handleError, sendEvents } from '../utils';
 
 export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowContextSchema>({

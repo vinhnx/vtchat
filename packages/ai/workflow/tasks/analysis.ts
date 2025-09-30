@@ -2,7 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { ChatMode } from '@repo/shared/config';
 import { getFormattingInstructions } from '../../config/formatting-guidelines';
 import { getModelFromChatMode, ModelEnum } from '../../models';
-import type { WorkflowContextSchema, WorkflowEventSchema } from '../flow';
+import type { WorkflowContextSchema, WorkflowEventSchema } from '../types';
 import {
     ChunkBuffer,
     generateText,
