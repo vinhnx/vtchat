@@ -269,7 +269,9 @@ export async function executeStream({
             });
         } else {
             // Use comprehensive error handling for workflow execution errors
-            const { handleStreamError } = await import('./stream-error-handler');
+            // Import at build time to avoid initialization issues during build
+            const errorHandlerModule = await import('./stream-error-handler');
+            const { handleStreamError } = errorHandlerModule;
             await handleStreamError({
                 error,
                 controller,

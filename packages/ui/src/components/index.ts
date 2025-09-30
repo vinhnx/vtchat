@@ -7,7 +7,7 @@ export * from './avatar';
 export * from './badge';
 export * from './beta-tag';
 export * from './breadcrumb';
-export * from './breadcrumb-nav/breadcrumb-nav';
+// export * from './breadcrumb-nav/breadcrumb-nav'; // Commented out to avoid conflicting exports
 export * from './button';
 export * from './button-premium';
 export * from './button-with-icon';

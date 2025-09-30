@@ -146,12 +146,11 @@ export async function POST(request: NextRequest) {
                 const modelProvider = modelObject?.provider;
 
                 if (modelProvider && transformedApiKeys) {
-                    // Import validation functions
-                    const { validateProviderKey, getProviderKeyName: _getProviderKeyName } =
-                        await import('@repo/ai/services/api-key-mapper');
-                    const { generateErrorMessage } = await import(
-                        '@repo/ai/services/error-messages'
-                    );
+                    // Import validation functions at build time to avoid initialization issues during build
+                    const apiMapperModule = await import('@repo/ai/services/api-key-mapper');
+                    const errorModule = await import('@repo/ai/services/error-messages');
+                    const { validateProviderKey } = apiMapperModule;
+                    const { generateErrorMessage } = errorModule;
 
                     // Use the provider directly from model configuration
                     const providerName = modelProvider;
@@ -497,7 +496,9 @@ export async function POST(request: NextRequest) {
 
         const _encoder = new TextEncoder();
         const abortController = new AbortController();
-        const requestId = crypto.randomUUID();
+        const requestId = typeof crypto !== 'undefined' && crypto.randomUUID 
+            ? crypto.randomUUID() 
+            : `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
         // Register stream for memory leak prevention
         registerStream(requestId, abortController, {
@@ -538,7 +539,9 @@ export async function POST(request: NextRequest) {
         log.error({ error }, 'Error in POST handler');
 
         // Use centralized error message service for consistent error handling
-        const { generateErrorMessage } = await import('@repo/ai/services/error-messages');
+        // Import at build time to avoid initialization issues during build
+        const errorModule = await import('@repo/ai/services/error-messages');
+        const { generateErrorMessage } = errorModule;
 
         let errorMessage = 'Internal server error';
         let statusCode = 500;
