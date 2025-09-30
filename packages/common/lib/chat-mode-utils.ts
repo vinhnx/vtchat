@@ -23,6 +23,7 @@ export function isPremiumMode(mode: ChatMode): boolean {
         ChatMode.O3_Mini,
         ChatMode.O4_Mini,
         ChatMode.CLAUDE_4_SONNET,
+        ChatMode.CLAUDE_SONNET_4_5,
         ChatMode.CLAUDE_4_OPUS,
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,

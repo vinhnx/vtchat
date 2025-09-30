@@ -249,6 +249,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return true; // Free model, no API key required
                     case ChatMode.CLAUDE_4_1_OPUS:
                     case ChatMode.CLAUDE_4_SONNET:
+                    case ChatMode.CLAUDE_SONNET_4_5:
                     case ChatMode.CLAUDE_4_OPUS:
                         return isValidKey(apiKeys.ANTHROPIC_API_KEY);
                     case ChatMode.DEEPSEEK_R1_FIREWORKS:

@@ -77,6 +77,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.Deepseek_R1,
         ModelEnum.DEEPSEEK_R1,
         // Anthropic Claude 4
+        ModelEnum.CLAUDE_SONNET_4_5,
         ModelEnum.CLAUDE_4_SONNET,
         ModelEnum.CLAUDE_4_OPUS,
         // OpenAI o-series (future)

@@ -6,7 +6,7 @@ const FREE_SERVER_MODELS: ChatMode[] = [];
 const PLUS_SERVER_MODELS: ChatMode[] = [
     ChatMode.GEMINI_2_5_PRO,
     ChatMode.GEMINI_2_5_FLASH,
-    // All other models (Claude, OpenAI, xAI, etc.) require BYOK even for VT+ users
+    // Other premium models (OpenAI, xAI, etc.) require BYOK even for VT+ users
 ];
 
 export type ServerSideAPIOpts = {

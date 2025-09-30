@@ -18,6 +18,9 @@ describe('ChatMode and ModelEnum Synchronization', () => {
             // Test specific known mappings
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_1_OPUS)).toBe(ModelEnum.CLAUDE_4_1_OPUS);
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_SONNET)).toBe(ModelEnum.CLAUDE_4_SONNET);
+            expect(getModelFromChatMode(ChatMode.CLAUDE_SONNET_4_5)).toBe(
+                ModelEnum.CLAUDE_SONNET_4_5,
+            );
             expect(getModelFromChatMode(ChatMode.CLAUDE_4_OPUS)).toBe(ModelEnum.CLAUDE_4_OPUS);
             expect(getModelFromChatMode(ChatMode.O1_MINI)).toBe(ModelEnum.O1_MINI);
             expect(getModelFromChatMode(ChatMode.O1)).toBe(ModelEnum.O1);
@@ -54,6 +57,9 @@ describe('ChatMode and ModelEnum Synchronization', () => {
             // Test that the unified function works correctly
             expect(getModelDisplayName(ChatMode.CLAUDE_4_1_OPUS)).toBe('Anthropic Claude 4.1 Opus');
             expect(getModelDisplayName(ChatMode.CLAUDE_4_SONNET)).toBe('Anthropic Claude 4 Sonnet');
+            expect(getModelDisplayName(ChatMode.CLAUDE_SONNET_4_5)).toBe(
+                'Anthropic Claude Sonnet 4.5',
+            );
             expect(getModelDisplayName(ChatMode.O1_MINI)).toBe('OpenAI o1-mini');
             expect(getModelDisplayName(ChatMode.KIMI_K2)).toBe('OpenRouter Kimi K2');
             expect(getModelDisplayName(ChatMode.GPT_OSS_120B)).toBe(
@@ -89,6 +95,7 @@ describe('ChatMode and ModelEnum Synchronization', () => {
         it('should have correct Claude model IDs', () => {
             expect(ModelEnum.CLAUDE_4_1_OPUS).toBe('claude-opus-4-1-20250805');
             expect(ModelEnum.CLAUDE_4_SONNET).toBe('claude-sonnet-4-20250514');
+            expect(ModelEnum.CLAUDE_SONNET_4_5).toBe('claude-sonnet-4-5');
             expect(ModelEnum.CLAUDE_4_OPUS).toBe('claude-opus-4-20250514');
         });
 

@@ -43,7 +43,7 @@ The AI routing fix has been successfully implemented and deployed to production 
 #### ✅ Should Route to `/api/completion`:
 
 - **Free Models**: Gemini 2.5 Flash Lite Preview
-- **VT+ Models**: Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
+- **VT+ Models**: Claude Sonnet 4.5, Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
 - **VT+ Features**: Deep Research, Pro Search
 
 #### Expected Network Requests:
@@ -79,6 +79,7 @@ bun test packages/common/tests/ai-routing.test.ts
 
 - [ ] Login to vtchat.io.vn successfully
 - [ ] Open DevTools Network tab
+- [ ] Test Claude Sonnet 4.5 → verify `/api/completion` call
 - [ ] Test Claude 4 Sonnet → verify `/api/completion` call
 - [ ] Test Claude 4 Opus → verify `/api/completion` call
 - [ ] Test GPT 4o → verify `/api/completion` call
