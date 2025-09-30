@@ -16,6 +16,7 @@ This project aims to refactor and improve an existing web application to enhance
 - **Authentication Prompts:** Non-authenticated users attempting to use protected features (like chat input) should receive a clear prompt to log in.
 - **BYOK Security:** API key input and related functionalities (BYOK) should be strictly disabled for users who are not logged in.
 - **UI Clarity:** Components like `UserTierBadge` should present information (e.g., plan names) in a user-friendly and consistent manner. UI elements like shimmers should be replaced with simpler, standard components where appropriate.
+- **Default Model Experience:** Claude Sonnet 4.5 is the default chat selection to highlight premium reasoning.
 
 ## User Experience Goals
 

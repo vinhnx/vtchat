@@ -14,6 +14,9 @@ This guide helps you manually test the AI routing fix to ensure all models corre
 
 ### 1. Free Models (Should work without VT+)
 
+> **Note:** Claude Sonnet 4.5 is now the default selection. Switch to the free Gemini 2.5 Flash Lite
+> Preview model before running this scenario.
+
 - **Model**: Gemini 2.5 Flash Lite Preview
 - **Expected**: Routes to `/api/completion` (managed VT+ flow)
 - **Test**: Send a simple message like "Hello, test free model"

@@ -57,13 +57,13 @@ psql $DATABASE_URL -f apps/web/create-rate-limits-table.sql
 After running the migration, you should be able to:
 
 1. **Test the rate limit API**: Visit `/api/rate-limit/status?model=gemini-2.5-flash-lite-preview-06-17`
-2. **See the free model in the dropdown**: The Gemini 2.5 Flash Lite Preview should appear first in the Google models section
+2. **See the free model in the dropdown**: The Gemini 2.5 Flash Lite Preview should appear prominently in the Google models section
 3. **No BYOK dialog**: Selecting the free model should not trigger the "Bring Your Own Key" dialog
 
 ## What's Fixed
 
 ✅ **Database table created**: `user_rate_limits` table with proper schema
 ✅ **BYOK dialog fixed**: Free model doesn't require user API key\
-✅ **Default model**: Gemini 2.5 Flash Lite Preview is now the default
+✅ **Default model**: Claude Sonnet 4.5 is now the default selection
 ✅ **Model ordering**: Free model appears first in Google section
 ✅ **Rate limiting**: 10 requests/day per account, 1 request/minute per account

@@ -1,7 +1,7 @@
 import { Anthropic, Fireworks, Gemini, OpenAI, OpenRouter, XAI } from '@lobehub/icons';
 import { type Model, models } from '@repo/ai/models';
 import type { ApiKeys } from '@repo/common/store/api-keys.store';
-import { ChatMode, ChatModeConfig } from '@repo/shared/config';
+import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
 import { Brain, Gift } from 'lucide-react';
@@ -448,7 +448,7 @@ export const modelOptionsByProvider = {
 
 // Create modelOptions with Gemini Flash as the first option
 const allModelOptions = Object.values(modelOptionsByProvider).flat();
-const defaultChatModelValue = ChatMode.GEMINI_2_5_FLASH;
+const defaultChatModelValue = DEFAULT_CHAT_MODE;
 const defaultChatModelOption = allModelOptions.find(
     (option) => option.value === defaultChatModelValue,
 );

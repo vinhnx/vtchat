@@ -43,6 +43,8 @@ export const ChatMode = {
 
 export type ChatMode = (typeof ChatMode)[keyof typeof ChatMode];
 
+export const DEFAULT_CHAT_MODE: ChatMode = ChatMode.CLAUDE_SONNET_4_5;
+
 export const ChatModeConfig: Record<
     ChatMode,
     {

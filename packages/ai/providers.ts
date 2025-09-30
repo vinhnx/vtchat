@@ -6,7 +6,7 @@ import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { ChatMode } from '@repo/shared/config';
+import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
 import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { getMiddlewareForContext, type MiddlewareConfig } from './middleware/config';
@@ -324,8 +324,8 @@ export const getLanguageModel = (
         // Handle Gemini models with search grounding or caching
         if (model?.provider === 'google' && (useSearchGrounding || cachedContent)) {
             log.info('Creating Gemini model with special options...');
-            const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
-            const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
+            const modelId = model?.id || DEFAULT_CHAT_MODE;
+            const originalModelId = model?.id || DEFAULT_CHAT_MODE;
             log.info('Using model ID:', {
                 data: modelId,
                 originalModelId,
@@ -390,9 +390,9 @@ export const getLanguageModel = (
         }
 
         log.info('Creating standard model...');
-        const modelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
+        const modelId = model?.id || DEFAULT_CHAT_MODE;
 
-        const originalModelId = model?.id || ChatMode.GEMINI_2_5_FLASH;
+        const originalModelId = model?.id || DEFAULT_CHAT_MODE;
         log.info('Using model ID:', {
             data: modelId,
             originalModelId,
