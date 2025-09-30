@@ -191,16 +191,16 @@ export const generateModelOptionsForProvider = (provider: string, excludePreview
 export const modelOptionsByProvider = {
     Anthropic: [
         {
-            label: 'Claude 4.1 Opus',
-            value: ChatMode.CLAUDE_4_1_OPUS,
+            label: 'Anthropic Claude Sonnet 4.5',
+            value: ChatMode.CLAUDE_SONNET_4_5,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('anthropic', 14),
             requiredApiKey: 'ANTHROPIC_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Claude Sonnet 4.5',
-            value: ChatMode.CLAUDE_SONNET_4_5,
+            label: 'Claude 4.1 Opus',
+            value: ChatMode.CLAUDE_4_1_OPUS,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('anthropic', 14),
@@ -446,7 +446,7 @@ export const modelOptionsByProvider = {
     ],
 };
 
-// Create modelOptions with Gemini Flash as the first option
+// Create modelOptions with the default chat mode first (Anthropic Claude Sonnet 4.5)
 const allModelOptions = Object.values(modelOptionsByProvider).flat();
 const defaultChatModelValue = DEFAULT_CHAT_MODE;
 const defaultChatModelOption = allModelOptions.find(
