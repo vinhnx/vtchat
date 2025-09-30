@@ -2,6 +2,16 @@
 
 ## Latest Session - July 2025
 
+### ✅ Claude Sonnet 4.5 Default Picker Update
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Added Anthropic Claude Sonnet 4.5 to the chat modal provider list with provider branding
+- Promoted Anthropic Claude Sonnet 4.5 to the default chat model selection in the picker UI
+
+---
+
 ### ✅ Deep Research Model Update
 
 **Date**: Current Session (July 2025)
