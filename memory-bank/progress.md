@@ -22,6 +22,17 @@
 
 ---
 
+### ✅ Image Prompt Tips Removal
+
+**Date**: Current Session (July 2025)
+**Status**: Completed
+
+- Removed the Nano Banana image prompting tips banner from the chat input
+- Eliminated the related personalization toggle and persisted preferences
+- Pruned store state and storage keys that previously tracked banner visibility
+
+---
+
 ### ✅ Gemini Flash Lite BYOK Transition
 
 **Date**: Current Session (September 2025)
