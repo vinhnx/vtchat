@@ -71,7 +71,7 @@ Successfully updated VTChat's pricing card and documentation to highlight the un
 
 ### Model Integration
 
-- Powered by Gemini 2.5 Flash Image Preview
+- Powered by Gemini 2.5 Flash Image
 - Uses existing VT infrastructure
 - Supports both BYOK and VT+ server keys
 - Maintains conversation context automatically
