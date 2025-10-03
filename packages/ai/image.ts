@@ -1,6 +1,6 @@
 import { log } from '@repo/shared/logger';
 import { generateText as generateTextAi } from 'ai';
-import { ModelEnum } from './models';
+import { ModelEnum } from './model-enum';
 import { getLanguageModel } from './providers';
 
 export const GEMINI_FLASH_IMAGE_ASPECT_RATIOS = [
@@ -59,12 +59,92 @@ export type GenerateGeminiImageResult = {
     images: GeneratedImage[];
 };
 
+function calculateGcd(x: number, y: number): number {
+    let m = x;
+    let n = y;
+    while (n !== 0) {
+        const r = m % n;
+        m = n;
+        n = r;
+    }
+    return m;
+}
+
+function normalizeAspectRatio(
+    width: number,
+    height: number,
+): GeminiFlashImageAspectRatio | null {
+    if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
+    if (width <= 0 || height <= 0) return null;
+
+    let a = Math.round(Math.abs(width));
+    let b = Math.round(Math.abs(height));
+
+    const divisor = calculateGcd(a, b);
+    if (divisor > 0) {
+        a = Math.floor(a / divisor);
+        b = Math.floor(b / divisor);
+    }
+
+    const candidate = `${a}:${b}` as GeminiFlashImageAspectRatio;
+    return GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET.has(candidate)
+        ? candidate
+        : null;
+}
+
+function extractAspectRatio(
+    text: string,
+): GeminiFlashImageAspectRatio | null {
+    const ratioPattern = /\b(\d{1,4})\s*[:xX]\s*(\d{1,4})\b/g;
+    let numericMatch: RegExpExecArray | null;
+    while ((numericMatch = ratioPattern.exec(text)) !== null) {
+        const width = parseInt(numericMatch[1] ?? '', 10);
+        const height = parseInt(numericMatch[2] ?? '', 10);
+        const normalized = normalizeAspectRatio(width, height);
+        if (normalized) return normalized;
+    }
+
+    const keywordMatchers: Array<{
+        regex: RegExp;
+        ratio: GeminiFlashImageAspectRatio;
+    }> = [
+        { regex: /\bultra[\s-]?wide\b/i, ratio: '21:9' },
+        { regex: /\bcinematic\b/i, ratio: '21:9' },
+        { regex: /\blandscape\b/i, ratio: '16:9' },
+        { regex: /\bwidescreen\b/i, ratio: '16:9' },
+        { regex: /\bhorizontal\b/i, ratio: '16:9' },
+        { regex: /\bvertical\b/i, ratio: '9:16' },
+        { regex: /\bstory\b/i, ratio: '9:16' },
+        { regex: /\breel\b/i, ratio: '9:16' },
+        { regex: /\bportrait\b/i, ratio: '3:4' },
+        { regex: /\bsquare\b/i, ratio: '1:1' },
+    ];
+
+    for (const matcher of keywordMatchers) {
+        if (matcher.regex.test(text)) return matcher.ratio;
+    }
+
+    return null;
+}
+
+function convertBase64ToUint8Array(base64String: string): Uint8Array {
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(base64String, 'base64');
+    }
+    const binaryString = atob(base64String);
+    const length = binaryString.length;
+    const bytes = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+}
+
 export async function generateGeminiImage(
     params: GenerateGeminiImageParams,
 ): Promise<GenerateGeminiImageResult> {
     const { prompt, byokKeys, userId, userTier, images, config } = params;
 
-    // Use the dedicated image model
     const model = getLanguageModel(
         ModelEnum.GEMINI_2_5_FLASH_IMAGE,
         undefined,
@@ -74,75 +154,6 @@ export async function generateGeminiImage(
         false,
         userTier === 'PLUS',
     );
-
-    const normalizeAspectRatio = (
-        width: number,
-        height: number,
-    ): GeminiFlashImageAspectRatio | null => {
-        if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
-        if (width <= 0 || height <= 0) return null;
-
-        let a = Math.round(Math.abs(width));
-        let b = Math.round(Math.abs(height));
-
-        const gcd = (x: number, y: number): number => {
-            let m = x;
-            let n = y;
-            while (n !== 0) {
-                const r = m % n;
-                m = n;
-                n = r;
-            }
-            return m;
-        };
-
-        const divisor = gcd(a, b);
-        if (divisor > 0) {
-            a = Math.floor(a / divisor);
-            b = Math.floor(b / divisor);
-        }
-
-        const candidate = `${a}:${b}` as GeminiFlashImageAspectRatio;
-        return GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET.has(candidate)
-            ? candidate
-            : null;
-    };
-
-    // Extract aspect ratio hints from user prompt or size references
-    const extractAspectRatio = (
-        text: string,
-    ): GeminiFlashImageAspectRatio | null => {
-        const ratioPattern = /\b(\d{1,4})\s*[:xX]\s*(\d{1,4})\b/g;
-        let numericMatch: RegExpExecArray | null;
-        while ((numericMatch = ratioPattern.exec(text)) !== null) {
-            const width = parseInt(numericMatch[1] ?? '', 10);
-            const height = parseInt(numericMatch[2] ?? '', 10);
-            const normalized = normalizeAspectRatio(width, height);
-            if (normalized) return normalized;
-        }
-
-        const keywordMatchers: Array<{
-            regex: RegExp;
-            ratio: GeminiFlashImageAspectRatio;
-        }> = [
-            { regex: /\bultra[\s-]?wide\b/i, ratio: '21:9' },
-            { regex: /\bcinematic\b/i, ratio: '21:9' },
-            { regex: /\blandscape\b/i, ratio: '16:9' },
-            { regex: /\bwidescreen\b/i, ratio: '16:9' },
-            { regex: /\bhorizontal\b/i, ratio: '16:9' },
-            { regex: /\bvertical\b/i, ratio: '9:16' },
-            { regex: /\bstory\b/i, ratio: '9:16' },
-            { regex: /\breel\b/i, ratio: '9:16' },
-            { regex: /\bportrait\b/i, ratio: '3:4' },
-            { regex: /\bsquare\b/i, ratio: '1:1' },
-        ];
-
-        for (const matcher of keywordMatchers) {
-            if (matcher.regex.test(text)) return matcher.ratio;
-        }
-
-        return null;
-    };
 
     const promptAspectRatio = extractAspectRatio(prompt);
 
@@ -190,16 +201,6 @@ Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
         { type: 'text', text: effectivePrompt },
     ];
 
-    // Helper to convert base64 to Uint8Array
-    const b64ToUint8 = (b64: string): Uint8Array => {
-        if (typeof Buffer !== 'undefined') return Buffer.from(b64, 'base64');
-        const binary = atob(b64);
-        const len = binary.length;
-        const bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
-        return bytes;
-    };
-
     if (Array.isArray(images) && images.length > 0) {
         for (const img of images) {
             try {
@@ -216,7 +217,7 @@ Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
                     }
                     parts.push({
                         type: 'file',
-                        data: b64ToUint8(pure),
+                        data: convertBase64ToUint8Array(pure),
                         mimeType: mime,
                     });
                 } else if (img.url) {
@@ -257,29 +258,29 @@ Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
 
     // 1) AI SDK files output
     if (Array.isArray((result as any)?.files)) {
-        for (const f of (result as any).files as any[]) {
-            const mediaType: string | undefined = f?.mediaType || f?.mimeType;
+        for (const file of (result as any).files as any[]) {
+            const mediaType: string | undefined = file?.mediaType || file?.mimeType;
             if (!mediaType || !String(mediaType).startsWith('image/')) continue;
 
-            const name: string | undefined = f?.name;
+            const name: string | undefined = file?.name;
             let url: string | undefined;
             let dataUrl: string | undefined;
 
-            if (typeof f.url === 'string') {
-                url = f.url;
+            if (typeof file.url === 'string') {
+                url = file.url;
             }
 
             // AI SDK may expose base64 or uint8Array
-            if (!url && typeof f.base64 === 'string') {
-                dataUrl = `data:${mediaType};base64,${f.base64}`;
-            } else if (!url && f.uint8Array && typeof Buffer !== 'undefined') {
+            if (!url && typeof file.base64 === 'string') {
+                dataUrl = `data:${mediaType};base64,${file.base64}`;
+            } else if (!url && file.uint8Array && typeof Buffer !== 'undefined') {
                 try {
-                    const base64 = Buffer.from(f.uint8Array).toString('base64');
+                    const base64 = Buffer.from(file.uint8Array).toString('base64');
                     dataUrl = `data:${mediaType};base64,${base64}`;
                 } catch {}
-            } else if (!url && f.data && typeof Buffer !== 'undefined') {
+            } else if (!url && file.data && typeof Buffer !== 'undefined') {
                 try {
-                    const base64 = Buffer.from(f.data).toString('base64');
+                    const base64 = Buffer.from(file.data).toString('base64');
                     dataUrl = `data:${mediaType};base64,${base64}`;
                 } catch {}
             }
