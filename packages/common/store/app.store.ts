@@ -52,8 +52,6 @@ type State = {
     useMathCalculator: boolean;
     useCharts: boolean;
     showSuggestions: boolean;
-    // Image tips banner preference
-    showImageTips: boolean;
     thinkingMode: {
         enabled: boolean;
         budget: number;
@@ -155,7 +153,6 @@ export const useAppStore = create<State & Actions>()(
                 useMathCalculator: false,
                 useCharts: false,
                 showSuggestions: false,
-                showImageTips: true,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
                 profile: {
@@ -274,11 +271,6 @@ export const useAppStore = create<State & Actions>()(
 
                 setShowSuggestions: (show: boolean) => {
                     set({ showSuggestions: show });
-                },
-
-                // Image tips preference
-                setShowImageTips: (show: boolean) => {
-                    set({ showImageTips: show });
                 },
 
                 setThinkingMode: (mode: Partial<State['thinkingMode']>) => {
@@ -403,7 +395,6 @@ export const useAppStore = create<State & Actions>()(
                 useMathCalculator: state.useMathCalculator,
                 useCharts: state.useCharts,
                 showSuggestions: state.showSuggestions,
-                showImageTips: state.showImageTips,
                 thinkingMode: state.thinkingMode,
                 geminiCaching: state.geminiCaching,
                 profile: state.profile,

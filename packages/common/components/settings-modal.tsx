@@ -2,7 +2,6 @@
 
 import { useChatEditor } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { STORAGE_KEYS } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Alert,
@@ -562,8 +561,6 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
     const setCustomInstructions = useAppStore((state) => state.setCustomInstructions);
     const showExamplePrompts = useAppStore((state) => state.showExamplePrompts);
     const setShowExamplePrompts = useAppStore((state) => state.setShowExamplePrompts);
-    const showImageTips = useAppStore((state) => state.showImageTips);
-    const setShowImageTips = useAppStore((state) => state.setShowImageTips);
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
     const setSidebarPlacement = useAppStore((state) => state.setSidebarPlacement);
 
@@ -674,46 +671,6 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                         </div>
                     </div>
 
-                    <div className='border-border/50 bg-muted/20 rounded-lg border p-4'>
-                        <div className='flex items-center justify-between'>
-                            <div className='space-y-1'>
-                                <div className='text-foreground text-sm font-medium'>
-                                    Image Prompt Tips Banner
-                                </div>
-                                <div className='text-muted-foreground text-xs'>
-                                    Permanently show or hide the image prompting tips below the chat
-                                    toolbar.
-                                </div>
-                            </div>
-                            <Button
-                                className='min-w-[60px]'
-                                onClick={() => {
-                                    const next = !showImageTips;
-                                    setShowImageTips(next);
-                                    try {
-                                        if (typeof window !== 'undefined') {
-                                            if (next) {
-                                                // Re-enable banner globally: clear dismissal token
-                                                window.localStorage.removeItem(
-                                                    STORAGE_KEYS.IMAGE_TIPS_DISMISSED,
-                                                );
-                                            } else {
-                                                // Persist dismissal to keep it hidden
-                                                window.localStorage.setItem(
-                                                    STORAGE_KEYS.IMAGE_TIPS_DISMISSED,
-                                                    '1',
-                                                );
-                                            }
-                                        }
-                                    } catch {}
-                                }}
-                                size='sm'
-                                variant={showImageTips ? 'default' : 'outline'}
-                            >
-                                {showImageTips ? 'On' : 'Off'}
-                            </Button>
-                        </div>
-                    </div>
                 </CardContent>
             </Card>
 

@@ -2,7 +2,7 @@
 import { BYOKValidationDialog, ImageDropzoneRoot, InlineLoader } from '@repo/common/components';
 import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { useApiKeysStore, useAppStore } from '@repo/common/store';
+import { useApiKeysStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
 import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -128,79 +128,6 @@ export const ChatInput = ({
             clearImageAttachment();
         }
     };
-
-    // Image prompt tips banner state (dismissable)
-    const globalShowImageTips = useAppStore((s) => s.showImageTips);
-    const [showImageTips, setShowImageTips] = useState<boolean>(() => {
-        if (typeof window === 'undefined') return globalShowImageTips;
-        const dismissed = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED);
-        return globalShowImageTips && !dismissed;
-    });
-    // Collapse/expand state for the image tips per-thread
-    const [isImageTipsCollapsed, setIsImageTipsCollapsed] = useState<boolean>(() => {
-        if (typeof window === 'undefined') return false;
-        try {
-            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
-            if (!raw) return false;
-            const map = JSON.parse(raw || '{}') as Record<string, 'collapsed' | 'expanded'>;
-            const key = String(
-                (typeof currentThreadId === 'string'
-                    ? currentThreadId
-                    : currentThreadId?.toString()) || 'home',
-            );
-            return map[key] === 'collapsed';
-        } catch {
-            return false;
-        }
-    });
-    const persistImageTipsState = (collapsed: boolean) => {
-        if (typeof window === 'undefined') return;
-        try {
-            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
-            const map = raw ? (JSON.parse(raw) as Record<string, 'collapsed' | 'expanded'>) : {};
-            const key = String(
-                (typeof currentThreadId === 'string'
-                    ? currentThreadId
-                    : currentThreadId?.toString()) || 'home',
-            );
-            map[key] = collapsed ? 'collapsed' : 'expanded';
-            window.localStorage.setItem(STORAGE_KEYS.IMAGE_TIPS_STATE, JSON.stringify(map));
-        } catch {}
-    };
-    const dismissImageTips = () => {
-        if (typeof window !== 'undefined') {
-            window.localStorage.setItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED, '1');
-        }
-        setShowImageTips(false);
-    };
-
-    // React to global settings changes: enabling should re-show (clear dismissal), disabling hides
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        if (globalShowImageTips) {
-            // Clear dismissal and show banner again
-            window.localStorage.removeItem(STORAGE_KEYS.IMAGE_TIPS_DISMISSED);
-            setShowImageTips(true);
-        } else {
-            setShowImageTips(false);
-        }
-    }, [globalShowImageTips]);
-
-    // Keep collapse state synced when switching threads
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        try {
-            const raw = window.localStorage.getItem(STORAGE_KEYS.IMAGE_TIPS_STATE);
-            const map = raw ? (JSON.parse(raw) as Record<string, 'collapsed' | 'expanded'>) : {};
-            const key = String(
-                (typeof currentThreadId === 'string'
-                    ? currentThreadId
-                    : currentThreadId?.toString()) || 'home',
-            );
-            setIsImageTipsCollapsed(map[key] === 'collapsed');
-        } catch {}
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentThreadId]);
 
     const handleApiKeySet = () => {
         // Clear the pending message and execute the original send
@@ -421,7 +348,6 @@ export const ChatInput = ({
 
                     editor?.commands.clearContent();
                     clearImageAttachment();
-                    setShowImageTips(true);
                 } catch (error: any) {
                     let friendly = error?.message || 'Please try again later.';
                     if (error?.response && typeof error.response.json === 'function') {
@@ -698,8 +624,6 @@ export const ChatInput = ({
                                                         <ImageGenButton
                                                             attachments={multiModalAttachments}
                                                             imageBase64={imageAttachment?.base64}
-                                                            onAfterGenerate={() =>
-                                                                setShowImageTips(true)}
                                                         />
                                                     </div>
                                                     {/* Row 2: Secondary tools - horizontally scrollable */}
@@ -743,114 +667,6 @@ export const ChatInput = ({
                                             />
                                         </Flex>
                                     </Flex>
-                                    {/* Image prompting tips (dismissable) - homepage only */}
-                                    {!currentThreadId && showImageTips && (
-                                        <div className='border-border/40 bg-muted/30 mt-2 w-full rounded-md border px-3 py-2'>
-                                            <div className='mb-1 flex items-center justify-between'>
-                                                <div className='text-xs font-medium'>
-                                                    Nano Banana - Image Prompting Tips
-                                                </div>
-                                                <button
-                                                    type='button'
-                                                    className='text-muted-foreground text-[11px] underline underline-offset-2'
-                                                    onClick={() => {
-                                                        const next = !isImageTipsCollapsed;
-                                                        setIsImageTipsCollapsed(next);
-                                                        persistImageTipsState(next);
-                                                    }}
-                                                    aria-expanded={!isImageTipsCollapsed}
-                                                    aria-controls='image-tips-content'
-                                                >
-                                                    {isImageTipsCollapsed ? 'Expand' : 'Collapse'}
-                                                </button>
-                                            </div>
-                                            {!isImageTipsCollapsed && (
-                                                <ul
-                                                    id='image-tips-content'
-                                                    className='text-muted-foreground ml-4 list-disc space-y-1 text-[11px]'
-                                                >
-                                                    <li>
-                                                        Describe the scene in full sentences, not
-                                                        keywords.
-                                                    </li>
-                                                    <li>
-                                                        For photorealism: shot type, lens, lighting,
-                                                        mood, textures.
-                                                    </li>
-                                                    <li>
-                                                        For stickers/illustrations: style, palette,
-                                                        line/shading, transparent background.
-                                                    </li>
-                                                    <li>
-                                                        To edit an image: attach it and describe
-                                                        precise changes only.
-                                                    </li>
-                                                    <li>
-                                                        Use aspect hints like “16:9” or “square” if
-                                                        you care about layout.
-                                                    </li>
-                                                </ul>
-                                            )}
-                                            {/* Template chips */}
-                                            {!isImageTipsCollapsed && (
-                                                <div className='mt-2 flex flex-wrap gap-1.5'>
-                                                    {[
-                                                        {
-                                                            label: 'Photorealistic',
-                                                            text:
-                                                                'A photorealistic [shot type] of [subject], [expression], set in [environment]. Illuminated by [lighting] to create a [mood] atmosphere. Captured with a [camera/lens], emphasizing [key textures]. [16:9]',
-                                                        },
-                                                        {
-                                                            label: 'Sticker',
-                                                            text:
-                                                                'A [style] sticker of a [subject], featuring [key characteristics] and a [color palette]. [line style] lines, [shading style] shading. Background must be transparent.',
-                                                        },
-                                                        {
-                                                            label: 'Product',
-                                                            text:
-                                                                'A high-resolution, studio-lit product photograph of [product] on a [surface/background]. Lighting: [setup] to [purpose]. Camera angle: [angle] to showcase [feature]. Ultra-realistic, sharp focus on [detail]. [1:1]',
-                                                        },
-                                                        {
-                                                            label: 'Minimalist',
-                                                            text:
-                                                                'A minimalist composition featuring a single [subject] positioned at the [position] with a vast [color] negative space background. Soft, subtle lighting. [16:9]',
-                                                        },
-                                                        {
-                                                            label: 'Comic',
-                                                            text:
-                                                                'A single comic panel in [art style]. Foreground: [character] [action]. Background: [setting details]. Include a [dialogue/caption] box with the text "[Text]". Lighting creates a [mood] mood. [4:3]',
-                                                        },
-                                                        {
-                                                            label: 'Edits',
-                                                            text:
-                                                                'Using the provided image, change only the [specific element] to [new element/description]. Keep all other content exactly the same (style, lighting, composition).',
-                                                        },
-                                                    ].map((chip) => (
-                                                        <button
-                                                            key={chip.label}
-                                                            type='button'
-                                                            onClick={() =>
-                                                                editor?.commands.insertContent(
-                                                                    chip.text,
-                                                                )}
-                                                            className='vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E] rounded-full px-2.5 py-1 text-[11px] transition-colors hover:bg-[#D99A4E]/10'
-                                                        >
-                                                            {chip.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            <div className='mt-2'>
-                                                <button
-                                                    className='text-primary text-xs underline underline-offset-2'
-                                                    onClick={dismissImageTips}
-                                                    type='button'
-                                                >
-                                                    Dismiss
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             )
                             : (
