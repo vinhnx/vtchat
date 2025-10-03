@@ -1,3 +1,5 @@
+import { isIP } from 'node:net';
+
 import { auth } from '@/lib/auth-server';
 import { getSubscription } from '@/lib/subscription/subscription-access-simple';
 import { generateGeminiImage } from '@repo/ai/image';
@@ -58,6 +60,103 @@ const RESPONSE_HEADERS = {
     'Cache-Control': 'no-store',
 };
 
+type IpRange = {
+    end: number;
+    start: number;
+};
+
+const ipToInteger = (ip: string): number => {
+    return ip.split('.').reduce((accumulator, segment) => {
+        return (accumulator << 8) + Number(segment);
+    }, 0);
+};
+
+const PRIVATE_IPV4_RANGES: IpRange[] = [
+    { start: ipToInteger('0.0.0.0'), end: ipToInteger('0.255.255.255') },
+    { start: ipToInteger('10.0.0.0'), end: ipToInteger('10.255.255.255') },
+    { start: ipToInteger('100.64.0.0'), end: ipToInteger('100.127.255.255') },
+    { start: ipToInteger('127.0.0.0'), end: ipToInteger('127.255.255.255') },
+    { start: ipToInteger('169.254.0.0'), end: ipToInteger('169.254.255.255') },
+    { start: ipToInteger('172.16.0.0'), end: ipToInteger('172.31.255.255') },
+    { start: ipToInteger('192.0.0.0'), end: ipToInteger('192.0.0.255') },
+    { start: ipToInteger('192.0.2.0'), end: ipToInteger('192.0.2.255') },
+    { start: ipToInteger('192.168.0.0'), end: ipToInteger('192.168.255.255') },
+    { start: ipToInteger('198.18.0.0'), end: ipToInteger('198.19.255.255') },
+];
+
+const isPrivateIpv4 = (ip: string): boolean => {
+    const value = ipToInteger(ip);
+    return PRIVATE_IPV4_RANGES.some((range) => {
+        return value >= range.start && value <= range.end;
+    });
+};
+
+const isPrivateIpv6 = (ip: string): boolean => {
+    const normalized = ip.toLowerCase();
+
+    if (normalized === '::' || normalized === '::1') {
+        return true;
+    }
+
+    if (normalized.startsWith('fc') || normalized.startsWith('fd')) {
+        return true;
+    }
+
+    if (normalized.startsWith('fe8') || normalized.startsWith('fe9')) {
+        return true;
+    }
+
+    if (normalized.startsWith('fea') || normalized.startsWith('feb')) {
+        return true;
+    }
+
+    if (normalized.startsWith('::ffff:')) {
+        return true;
+    }
+
+    return false;
+};
+
+const isPrivateIpAddress = (hostname: string): boolean => {
+    const ipType = isIP(hostname);
+
+    if (ipType === 4) {
+        return isPrivateIpv4(hostname);
+    }
+
+    if (ipType === 6) {
+        return isPrivateIpv6(hostname);
+    }
+
+    return false;
+};
+
+const isAllowedRemoteImageUrl = (value: string): boolean => {
+    let url: URL;
+
+    try {
+        url = new URL(value);
+    } catch (error) {
+        return false;
+    }
+
+    if (url.protocol !== 'https:') {
+        return false;
+    }
+
+    const hostname = url.hostname.trim().toLowerCase();
+
+    if (!hostname || hostname === 'localhost' || hostname.endsWith('.local')) {
+        return false;
+    }
+
+    if (isPrivateIpAddress(hostname)) {
+        return false;
+    }
+
+    return true;
+};
+
 const sanitizeApiKeys = (
     source?: Record<string, string> | null,
 ): Record<string, string> => {
@@ -80,11 +179,26 @@ const sanitizeImages = (images?: RequestBody['images']): NormalizedImage[] => {
 
     return images
         .map((image) => {
+            const base64 = typeof image.base64 === 'string' ? image.base64.trim() : undefined;
+            const mediaType = typeof image.mediaType === 'string' ? image.mediaType.trim() : undefined;
+            const url = typeof image.url === 'string' ? image.url.trim() : undefined;
+            const name = typeof image.name === 'string' ? image.name.trim() : undefined;
+
+            if (url && !isAllowedRemoteImageUrl(url)) {
+                log.warn({ url }, 'Rejected remote image URL for Gemini image generation');
+                return {
+                    base64,
+                    mediaType,
+                    name,
+                    url: undefined,
+                } satisfies NormalizedImage;
+            }
+
             return {
-                base64: typeof image.base64 === 'string' ? image.base64 : undefined,
-                mediaType: typeof image.mediaType === 'string' ? image.mediaType : undefined,
-                url: typeof image.url === 'string' ? image.url : undefined,
-                name: typeof image.name === 'string' ? image.name : undefined,
+                base64,
+                mediaType,
+                url,
+                name,
             } satisfies NormalizedImage;
         })
         .filter((image) => Boolean(image.base64 || image.url));
