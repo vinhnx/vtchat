@@ -4,7 +4,7 @@ Date: 2025-09-06
 
 Summary:
 
-- Implemented conversational continuity for image generation/editing with Gemini 2.5 Flash Image Preview.
+- Implemented conversational continuity for image generation/editing with Gemini 2.5 Flash Image.
 - When generating an image without new attachments, the client now reuses the last generated image in the current thread as the base for edits.
 - Follow-up messages in a thread that previously produced images are automatically routed to the image flow.
 - New thread items created during image edits link to the previous image turn via `parentId`.
@@ -23,5 +23,5 @@ Changes:
 Notes:
 
 - Keeps the existing AI SDK implementation and server API `/api/image` unchanged.
-- Continues to use `ModelEnum.GEMINI_2_5_FLASH_IMAGE_PREVIEW` under the hood.
+- Continues to use `ModelEnum.GEMINI_2_5_FLASH_IMAGE` under the hood.
 - Respects BYOK and VT+ gating rules via centralized `http` client and stores.

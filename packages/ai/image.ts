@@ -3,6 +3,33 @@ import { generateText as generateTextAi } from 'ai';
 import { ModelEnum } from './models';
 import { getLanguageModel } from './providers';
 
+export const GEMINI_FLASH_IMAGE_ASPECT_RATIOS = [
+    '21:9',
+    '16:9',
+    '4:3',
+    '3:2',
+    '1:1',
+    '9:16',
+    '3:4',
+    '2:3',
+    '5:4',
+    '4:5',
+] as const;
+
+export type GeminiFlashImageAspectRatio =
+    (typeof GEMINI_FLASH_IMAGE_ASPECT_RATIOS)[number];
+
+const GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET = new Set<GeminiFlashImageAspectRatio>(
+    GEMINI_FLASH_IMAGE_ASPECT_RATIOS,
+);
+
+const GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST =
+    GEMINI_FLASH_IMAGE_ASPECT_RATIOS.join(', ');
+
+export type GeminiImageConfig = {
+    aspectRatio?: GeminiFlashImageAspectRatio;
+};
+
 type ByokKeys = Record<string, string> | undefined;
 
 export type GeneratedImage = {
@@ -10,6 +37,7 @@ export type GeneratedImage = {
     name?: string;
     dataUrl?: string;
     url?: string;
+    aspectRatio?: GeminiFlashImageAspectRatio;
 };
 
 export type GenerateGeminiImageParams = {
@@ -23,6 +51,7 @@ export type GenerateGeminiImageParams = {
         url?: string;
         name?: string;
     }>;
+    config?: GeminiImageConfig;
 };
 
 export type GenerateGeminiImageResult = {
@@ -33,13 +62,11 @@ export type GenerateGeminiImageResult = {
 export async function generateGeminiImage(
     params: GenerateGeminiImageParams,
 ): Promise<GenerateGeminiImageResult> {
-    const { prompt, byokKeys, userId, userTier, images } = params;
+    const { prompt, byokKeys, userId, userTier, images, config } = params;
 
-    log.info({ userId, userTier }, 'Generating image with Gemini image-preview');
-
-    // Use the dedicated image-preview model
+    // Use the dedicated image model
     const model = getLanguageModel(
-        ModelEnum.GEMINI_2_5_FLASH_IMAGE_PREVIEW,
+        ModelEnum.GEMINI_2_5_FLASH_IMAGE,
         undefined,
         byokKeys,
         false,
@@ -48,32 +75,115 @@ export async function generateGeminiImage(
         userTier === 'PLUS',
     );
 
-    // Extract aspect ratio hints from user prompt or size references
-    const extractAspectRatio = (text: string): string | null => {
-        const arMatch = text.match(/\b(\d{1,2})\s*[:xX]\s*(\d{1,2})\b/);
-        if (arMatch) {
-            const a = parseInt(arMatch[1]!, 10);
-            const b = parseInt(arMatch[2]!, 10);
-            if (a > 0 && b > 0) return `${a}:${b}`;
+    const normalizeAspectRatio = (
+        width: number,
+        height: number,
+    ): GeminiFlashImageAspectRatio | null => {
+        if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
+        if (width <= 0 || height <= 0) return null;
+
+        let a = Math.round(Math.abs(width));
+        let b = Math.round(Math.abs(height));
+
+        const gcd = (x: number, y: number): number => {
+            let m = x;
+            let n = y;
+            while (n !== 0) {
+                const r = m % n;
+                m = n;
+                n = r;
+            }
+            return m;
+        };
+
+        const divisor = gcd(a, b);
+        if (divisor > 0) {
+            a = Math.floor(a / divisor);
+            b = Math.floor(b / divisor);
         }
-        // Keywords
-        const lower = text.toLowerCase();
-        if (/(square|1\s*:\s*1)/.test(lower)) return '1:1';
-        if (/(portrait|3\s*:\s*4|4\s*:\s*5|2\s*:\s*3)/.test(lower)) return '3:4';
-        if (/(landscape|16\s*:\s*9|4\s*:\s*3|21\s*:\s*9)/.test(lower)) return '16:9';
+
+        const candidate = `${a}:${b}` as GeminiFlashImageAspectRatio;
+        return GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET.has(candidate)
+            ? candidate
+            : null;
+    };
+
+    // Extract aspect ratio hints from user prompt or size references
+    const extractAspectRatio = (
+        text: string,
+    ): GeminiFlashImageAspectRatio | null => {
+        const ratioPattern = /\b(\d{1,4})\s*[:xX]\s*(\d{1,4})\b/g;
+        let numericMatch: RegExpExecArray | null;
+        while ((numericMatch = ratioPattern.exec(text)) !== null) {
+            const width = parseInt(numericMatch[1] ?? '', 10);
+            const height = parseInt(numericMatch[2] ?? '', 10);
+            const normalized = normalizeAspectRatio(width, height);
+            if (normalized) return normalized;
+        }
+
+        const keywordMatchers: Array<{
+            regex: RegExp;
+            ratio: GeminiFlashImageAspectRatio;
+        }> = [
+            { regex: /\bultra[\s-]?wide\b/i, ratio: '21:9' },
+            { regex: /\bcinematic\b/i, ratio: '21:9' },
+            { regex: /\blandscape\b/i, ratio: '16:9' },
+            { regex: /\bwidescreen\b/i, ratio: '16:9' },
+            { regex: /\bhorizontal\b/i, ratio: '16:9' },
+            { regex: /\bvertical\b/i, ratio: '9:16' },
+            { regex: /\bstory\b/i, ratio: '9:16' },
+            { regex: /\breel\b/i, ratio: '9:16' },
+            { regex: /\bportrait\b/i, ratio: '3:4' },
+            { regex: /\bsquare\b/i, ratio: '1:1' },
+        ];
+
+        for (const matcher of keywordMatchers) {
+            if (matcher.regex.test(text)) return matcher.ratio;
+        }
+
         return null;
     };
 
-    const arHint = extractAspectRatio(prompt);
+    const promptAspectRatio = extractAspectRatio(prompt);
+
+    const configAspectRatio = config?.aspectRatio;
+    const manualAspectRatio =
+        configAspectRatio && GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET.has(configAspectRatio)
+            ? configAspectRatio
+            : undefined;
+
+    if (configAspectRatio && !manualAspectRatio) {
+        log.warn(
+            { userId, aspectRatio: configAspectRatio },
+            'Ignoring unsupported Gemini Flash Image aspect ratio override',
+        );
+    }
+
+    const selectedAspectRatio = manualAspectRatio ?? promptAspectRatio ?? undefined;
+
+    log.info(
+        {
+            userId,
+            userTier,
+            selectedAspectRatio,
+            manualAspectRatio: Boolean(manualAspectRatio),
+        },
+        'Generating image with Gemini 2.5 Flash Image',
+    );
+
+    const ratioDirective = selectedAspectRatio
+        ? `6) Use the ${selectedAspectRatio} aspect ratio for this request.`
+        : '6) Default to 16:9 when no aspect ratio is requested.';
 
     // Strengthen instruction to push image output
     const effectivePrompt = `You are Nano Banana (Gemini 2.5 Flash Image). Follow best practices:
 1) Prefer photoreal detail when asked; respect style requests.
-2) Compose clean, coherent subjects; avoid duplicated limbs/text.
-3) Use consistent lighting; balance foreground/background.
- 4) If edits were provided with images, keep all non-edited content unchanged.
- 5) If no specific aspect ratio is requested, default to a 16:9 composition.
- Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
+2) Compose clean, coherent subjects; avoid duplicated limbs or text.
+3) Use consistent lighting; balance foreground and background elements.
+4) Preserve existing details when editing reference images.
+5) Supported aspect ratios: ${GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST}.
+${ratioDirective}
+Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
 
     // Build message with optional inline image parts for editing
     const parts: any[] = [
@@ -122,10 +232,19 @@ export async function generateGeminiImage(
         }
     }
 
+    const googleOptions: {
+        responseModalities: Array<'IMAGE' | 'TEXT'>;
+        imageConfig?: { aspectRatio: GeminiFlashImageAspectRatio };
+    } = { responseModalities: ['IMAGE', 'TEXT'] };
+
+    if (selectedAspectRatio) {
+        googleOptions.imageConfig = { aspectRatio: selectedAspectRatio };
+    }
+
     const result = await generateTextAi({
         model,
         providerOptions: {
-            google: { responseModalities: ['IMAGE', 'TEXT'] },
+            google: googleOptions,
         },
         ...(parts.length > 1
             ? { messages: [{ role: 'user', content: parts }] }
@@ -170,7 +289,7 @@ export async function generateGeminiImage(
                 name,
                 url,
                 dataUrl,
-                ...(arHint ? { aspectRatio: arHint } : {}),
+                ...(selectedAspectRatio ? { aspectRatio: selectedAspectRatio } : {}),
             });
         }
     }
@@ -190,7 +309,9 @@ export async function generateGeminiImage(
                             outImages.push({
                                 mediaType: inline.mimeType,
                                 dataUrl: `data:${inline.mimeType};base64,${inline.data}`,
-                                ...(arHint ? { aspectRatio: arHint } : {}),
+                                ...(selectedAspectRatio
+                                    ? { aspectRatio: selectedAspectRatio }
+                                    : {}),
                             });
                         }
                         const fileData = part?.fileData || part?.file_data;
@@ -198,7 +319,9 @@ export async function generateGeminiImage(
                             outImages.push({
                                 mediaType: fileData.mimeType,
                                 url: fileData.fileUri,
-                                ...(arHint ? { aspectRatio: arHint } : {}),
+                                ...(selectedAspectRatio
+                                    ? { aspectRatio: selectedAspectRatio }
+                                    : {}),
                             });
                         }
                     }
