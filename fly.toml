@@ -1,57 +1,144 @@
-# Production fly.toml - US-focused deployment
+# Production fly.toml - Multi-region deployment
 app = 'vtchat'
+
 primary_region = 'sin'
 
-# US-focused 2-region setup
-# sin: Asia-Pacific (primary)
-# iad: USA (Ashburn, Virginia) - Target market
+# Multi-region setup:
+# - sin: Singapore (Asia-Pacific) - Primary region
+# - iad: Ashburn, Virginia (USA) - Secondary region
+# Machines are cloned with identical config, auto-scale based on traffic
+#
+# --- COST OPTIMIZATION ---
+# To keep costs under $5/month:
+# - Keep min_machines_running = 0 (machines suspend when idle)
+# - Use shared CPUs and 512MB RAM (lowest tier)
+# - Avoid running more than 2 machines at once
+# - Monitor usage in Fly.io dashboard
+# - Heavy traffic or always-on machines will increase cost
+# - For lowest cost, let machines auto-suspend and only wake on demand
 
-[build]
+fly status -a "$APP_NAME"[build]
 
-[env]
-# Disable detailed request logging
-# Only errors/warnings, not requests
-LOG_LEVEL = "warn"
-NODE_ENV = 'production'
-BASE_URL = 'https://vtchat.io.vn'
-BETTER_AUTH_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
+
+
+echo ""[env]
+
+echo "💡 Cost Interpretation:"# Disable detailed request logging
+
+echo ""# Only errors/warnings, not requests
+
+echo "Machine States:"LOG_LEVEL = "warn"
+
+echo "  • suspended = ✅ $0/hour (not running)"NODE_ENV = 'production'
+
+echo "  • started   = 💵 $0.0000015/second per 512MB machine"BASE_URL = 'https://vtchat.io.vn'
+
+echo "  • stopped   = ✅ $0/hour (manually stopped)"BETTER_AUTH_URL = 'https://vtchat.io.vn'
+
+echo ""NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'
+
 APP_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
-NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
-CREEM_ENVIRONMENT = 'production'
-BETTER_AUTH_ENV = 'production'
 
-# Node.js memory optimizations
-NODE_OPTIONS = '--max-old-space-size=512 --max-semi-space-size=64'
-# Disable Next.js telemetry to save memory
-NEXT_TELEMETRY_DISABLED = '1'
-# Reduce garbage collection frequency for better performance
-UV_THREADPOOL_SIZE = '4'
+# Calculate potential costsNEXT_PUBLIC_APP_URL = 'https://vtchat.io.vn'
 
-[http_service]
-internal_port = 3000
-force_https = true
-auto_stop_machines = 'suspend'
+echo "📊 Cost Estimates (512MB RAM per machine):"NEXT_PUBLIC_COMMON_URL = 'https://vtchat.io.vn'
+
+echo ""NEXT_PUBLIC_BETTER_AUTH_URL = 'https://vtchat.io.vn'
+
+echo "If machines run:"CREEM_ENVIRONMENT = 'production'
+
+echo "  • 1 hour/day   = ~$0.32/month per machine"BETTER_AUTH_ENV = 'production'
+
+echo "  • 2 hours/day  = ~$0.65/month per machine"
+
+echo "  • 4 hours/day  = ~$1.29/month per machine"# Node.js memory optimizations
+
+echo "  • 8 hours/day  = ~$2.58/month per machine"NODE_OPTIONS = '--max-old-space-size=512 --max-semi-space-size=64'
+
+echo "  • 12 hours/day = ~$3.87/month per machine"# Disable Next.js telemetry to save memory
+
+echo "  • 24/7         = ~$7.74/month per machine"NEXT_TELEMETRY_DISABLED = '1'
+
+echo ""# Reduce garbage collection frequency for better performance
+
+echo "With 2 machines:"UV_THREADPOOL_SIZE = '4'
+
+echo "  • Low traffic (2h/day):     ~$1.30/month ✅"
+
+echo "  • Medium traffic (8h/day):  ~$5.16/month ⚠️"[http_service]
+
+echo "  • High traffic (12h/day):   ~$7.74/month ⚠️"internal_port = 3000
+
+echo "  • Always on (24/7):         ~$15.48/month ❌"force_https = true
+
+echo ""auto_stop_machines = 'suspend'
+
 auto_start_machines = true
-min_machines_running = 0
-processes = ['app']
 
-[[http_service.checks]]
-grace_period = "15s"
-interval = "60s"
-method = "GET"
-timeout = "10s"
-path = "/api/health"
+echo "🎯 Target: <$5/month = 2 machines running <8 hours/day combined"min_machines_running = 0
 
-[[http_service.checks]]
-type = "tcp"
-grace_period = "5s"
-interval = "30s"
-timeout = "2s"
+echo ""processes = ['app']
 
-[[vm]]
-memory = '512mb'
-cpu_kind = 'shared'
+
+
+echo "📱 Quick Actions:"[[http_service.checks]]
+
+echo ""grace_period = "15s"
+
+echo "1. View detailed billing:"interval = "60s"
+
+echo "   open https://fly.io/dashboard/personal/billing"method = "GET"
+
+echo ""timeout = "10s"
+
+echo "2. View machine logs:"path = "/api/health"
+
+echo "   fly logs -a $APP_NAME"
+
+echo ""[[http_service.checks]]
+
+echo "3. Check machine uptime:"type = "tcp"
+
+echo "   fly machine status <machine-id> -a $APP_NAME"grace_period = "5s"
+
+echo ""interval = "30s"
+
+echo "4. If costs are too high:"timeout = "2s"
+
+echo "   • Reduce to single region: fly machines destroy <machine-id> -a $APP_NAME"
+
+echo "   • Reduce memory: Edit fly.toml, set memory = '256mb', run fly deploy"[[vm]]
+
+echo "   • Increase suspend time: Edit health check intervals in fly.toml"memory = '512mb'
+
+echo ""cpu_kind = 'shared'
+
 cpus = 1
+
+# Check if machines are currently running
+echo "🔍 Current Machine States:"
+MACHINES=$(fly machines list -a "$APP_NAME" -j 2>/dev/null || echo "[]")
+
+if [[ "$MACHINES" == "[]" ]]; then
+    echo "   ⚠️  Could not fetch machine status (flyctl may need authentication)"
+else
+    RUNNING_COUNT=$(echo "$MACHINES" | grep -c '"state": "started"' || echo "0")
+    SUSPENDED_COUNT=$(echo "$MACHINES" | grep -c '"state": "suspended"' || echo "0")
+
+    echo "   • Running: $RUNNING_COUNT machines = 💵 Actively costing money"
+    echo "   • Suspended: $SUSPENDED_COUNT machines = ✅ Not costing money"
+
+    if [[ $RUNNING_COUNT -eq 0 ]]; then
+        echo ""
+        echo "   ✅ All machines suspended - Excellent for cost savings!"
+    elif [[ $RUNNING_COUNT -eq 1 ]]; then
+        echo ""
+        echo "   💡 One machine active - Normal if you just accessed the app"
+    else
+        echo ""
+        echo "   ⚠️  Multiple machines running - May indicate active traffic"
+    fi
+fi
+
+echo ""
+echo "📅 Monitor costs for 7 days to get accurate usage patterns"
