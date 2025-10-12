@@ -271,11 +271,11 @@ const createVtchatServer = (): McpServer => {
         }),
     );
 
-    const inputSchema = {
+    const inputSchema = z.object({
         prompt: z.string().min(1).describe('Primary user question or task for VTChat'),
         context: z.string().optional().describe('Optional background details or source notes'),
         audience: z.string().optional().describe('Intended audience for tone and framing'),
-    } satisfies Record<string, unknown>;
+    });
 
     server.registerTool(
         'vtchat.analyze',
