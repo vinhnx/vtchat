@@ -14,7 +14,7 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'FAQ - Nano Banana Conversational Image Editing & AI Platform Questions | VT',
+    title: 'AI Platform FAQ | VT',
     description:
         "Frequently asked questions about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), large language models (LLMs), and machine learning capabilities. Learn about our revolutionary AI systems.",
     keywords: [
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
         'iterative image editing faq',
     ],
     openGraph: {
-        title: 'FAQ - Nano Banana Conversational Image Editing & AI Platform Questions',
+        title: 'AI Platform FAQ | VT',
         description:
             "Get answers to frequently asked questions about VT's revolutionary AI platform with Nano Banana conversational image editing, generative AI, deep learning, and natural language processing capabilities.",
         type: 'website',

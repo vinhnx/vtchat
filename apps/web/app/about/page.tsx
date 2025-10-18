@@ -19,7 +19,7 @@ import Link from 'next/link';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
+    title: 'About VT | VT AI Platform',
     description:
         "Learn about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, natural language processing (NLP), and large language models (LLMs). Privacy-first AI systems with revolutionary image editing.",
     keywords: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
         'iterative image editing',
     ],
     openGraph: {
-        title: 'About VT - Advanced AI Platform with Nano Banana Image Editing & Deep Learning',
+        title: 'About VT | VT AI Platform',
         description:
             "Learn about VT's advanced AI platform featuring the Conversational image editor (Nano Banana), generative AI, deep learning, and large language models. Privacy-first AI systems.",
         type: 'website',

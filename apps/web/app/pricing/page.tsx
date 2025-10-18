@@ -6,7 +6,7 @@ import { PricingClient } from './pricing-client';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'AI Platform Pricing - Advanced Artificial Intelligence Features | VT',
+    title: 'Pricing | VT AI Platform',
     description:
         'VT AI platform pricing: Most artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing (NLP). VT+ adds professional AI research tools with large language models (LLMs) and machine learning capabilities.',
     keywords: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         'priority access',
     ],
     openGraph: {
-        title: 'AI Platform Pricing - Advanced Artificial Intelligence Features',
+        title: 'Pricing | VT AI Platform',
         description:
             'Most powerful artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing. VT+ adds professional AI research capabilities with large language models.',
         type: 'website',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AI Platform Pricing - Advanced Artificial Intelligence Features',
+        title: 'Pricing | VT AI Platform',
         description:
             'Most powerful artificial intelligence features free with BYOK including generative AI, deep learning, and natural language processing. VT+ adds professional AI research capabilities.',
         images: ['https://vtchat.io.vn/twitter-image-v3.jpg'],

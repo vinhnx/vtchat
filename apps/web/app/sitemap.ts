@@ -35,12 +35,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/help/faq`,
-            lastModified: oneMonthAgo,
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
             url: `${baseUrl}/ai-resources`,
             lastModified: oneWeekAgo,
             changeFrequency: 'weekly',
