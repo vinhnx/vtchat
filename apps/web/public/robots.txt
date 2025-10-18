@@ -118,6 +118,7 @@ Disallow: *.ttf
 
 # --- Default rules for all other crawlers ------------------
 User-Agent: *
+Allow: /
 Allow: /about
 Allow: /help
 Allow: /privacy
@@ -127,7 +128,6 @@ Allow: /docs
 Allow: /ai-resources
 Allow: /ai-glossary
 Allow: /faq
-Allow: /
 Allow: /favicon.ico
 Allow: /icon-*.png
 Allow: /logo.svg
@@ -151,6 +151,8 @@ Disallow: /_next/
 Disallow: *.woff2
 Disallow: *.woff
 Disallow: *.ttf
+# Block URLs with special characters that shouldn't be indexed
+Disallow: /$
 
 # --- Sitemap location ---
 Sitemap: https://vtchat.io.vn/sitemap.xml

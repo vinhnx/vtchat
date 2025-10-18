@@ -12,6 +12,28 @@ export default async function middleware(request: NextRequest) {
         || 'local';
     log.info({ region: flyRegion, pathname }, '[Traffic] Request');
 
+    // Remove tracking parameters from home page to prevent duplicate content
+    // while preserving them for analytics in a non-indexable way
+    if (pathname === '/' || pathname === '') {
+        const trackingParams = ['ref', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'ref_src', 'source'];
+        let hasTrackingParams = false;
+        const newSearchParams = new URLSearchParams();
+        
+        request.nextUrl.searchParams.forEach((value, key) => {
+            if (trackingParams.includes(key)) {
+                hasTrackingParams = true;
+            } else {
+                newSearchParams.append(key, value);
+            }
+        });
+        
+        if (hasTrackingParams) {
+            const cleanUrl = new URL(request.url);
+            cleanUrl.search = newSearchParams.toString();
+            return NextResponse.rewrite(cleanUrl);
+        }
+    }
+
     // Redirect '/chat' to '/' (keep '/chat/{threadid}' intact)
     // Only redirect exact '/chat' path, not '/chat/' or '/chat/anything'
     if (pathname === '/chat') {

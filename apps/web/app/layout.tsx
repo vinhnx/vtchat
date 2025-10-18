@@ -8,6 +8,7 @@ import { TooltipProvider } from '@repo/ui';
 import { RootProvider as FumadocsRootProvider } from 'fumadocs-ui/provider';
 import type { Metadata, Viewport } from 'next';
 import { BetterAuthProvider } from '../components/better-auth-provider';
+import { CanonicalURLManager } from '../components/canonical-url-manager';
 import { OfflineIndicator } from '../components/offline-indicator';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 import { PWAManager } from '../components/pwa-manager';
@@ -225,6 +226,8 @@ export default function ParentLayout({
                                                         <PWAManager />
                                                         {/* Offline status indicator */}
                                                         <OfflineIndicator />
+                                                        {/* Canonical URL manager to prevent duplicate content */}
+                                                        <CanonicalURLManager />
                                                         {/* @ts-ignore - Type compatibility issue between React versions */}
                                                         <RootLayout>
                                                             <main className='flex flex-1 flex-col'>
