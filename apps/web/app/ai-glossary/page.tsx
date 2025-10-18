@@ -16,7 +16,7 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'AI Glossary - Conversational Image Editing & Artificial Intelligence Terms | VT',
+    title: 'AI Glossary | VT AI Platform',
     description:
         'Comprehensive AI glossary covering conversational image editing (Nano Banana), artificial intelligence, generative AI, deep learning, natural language processing (NLP), large language models (LLMs), machine learning, computer vision, and AI systems terminology.',
     keywords: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         'iterative image editing terms',
     ],
     openGraph: {
-        title: 'AI Glossary - Conversational Image Editing & Artificial Intelligence Terms',
+        title: 'AI Glossary | VT AI Platform',
         description:
             'Complete glossary of AI terms including conversational image editing (Nano Banana), generative AI, deep learning, natural language processing, and machine learning definitions.',
         type: 'website',

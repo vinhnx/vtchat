@@ -16,11 +16,11 @@ import {
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Help Center - VT - Nano Banana Image Editing & AI Chat Support',
+    title: 'Help Center | VT AI Platform',
     description:
         'Help center with questions about VT features including Nano Banana conversational image editing, thread isolation, account management, and privacy-focused AI chat capabilities.',
     openGraph: {
-        title: 'Help Center - VT - Nano Banana Image Editing & AI Chat Support',
+        title: 'Help Center | VT AI Platform',
         description:
             'Help center with questions about VT features including Nano Banana conversational image editing and privacy-focused AI chat capabilities.',
         type: 'website',
