@@ -1,0 +1,53 @@
+{
+    "schema_version": "2025-01-01",
+    "name": {
+        "value": "VTChat Research Copilot",
+        "locale": "en-US"
+    },
+    "description": {
+        "value": "Expose VTChat's research agent to ChatGPT through the Apps SDK MCP server.",
+        "locale": "en-US"
+    },
+    "instructions": [
+        "Enable vtchat.analyze for research, synthesis, and summarization requests inside ChatGPT.",
+        "Render ui://widget/vtchat-conversation.html whenever the tool runs to show the brief."
+    ],
+    "server": {
+        "mcp_endpoint": "https://YOUR_DEPLOYED_DOMAIN/mcp",
+        "health_check": "/mcp"
+    },
+    "capabilities": {
+        "tools": [
+            {
+                "name": "vtchat.analyze",
+                "description": "Creates VTChat briefs with summary, insights, and actions.",
+                "input_schema": {
+                    "prompt": {
+                        "type": "string",
+                        "description": "Primary task or question for VTChat."
+                    },
+                    "context": {
+                        "type": "string",
+                        "description": "Optional background notes or source material."
+                    },
+                    "audience": {
+                        "type": "string",
+                        "description": "Audience to shape tone and recommendations."
+                    }
+                },
+                "output_template": "ui://widget/vtchat-conversation.html"
+            }
+        ],
+        "resources": [
+            {
+                "uri": "ui://widget/vtchat-conversation.html",
+                "mime_type": "text/html+skybridge",
+                "description": "Renders VTChat research briefs inside ChatGPT."
+            }
+        ]
+    },
+    "metadata": {
+        "icon": "https://vtchat.io.vn/icon-512x512.png",
+        "contact": "support@vtchat.io.vn"
+    }
+}
