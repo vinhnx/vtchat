@@ -370,6 +370,7 @@ const handlePost = async (
     if (sessionId && sessions.has(sessionId)) {
         const context = sessions.get(sessionId);
         if (context) {
+            applyCors(req, res);
             await context.transport.handleRequest(req, res, body);
             return;
         }
@@ -411,6 +412,7 @@ const handlePost = async (
     };
 
     await server.connect(transport);
+    applyCors(req, res);
     await transport.handleRequest(req, res, body);
 };
 
@@ -447,6 +449,7 @@ const handleGetOrDelete = async (
         return;
     }
 
+    applyCors(req, res);
     await context.transport.handleRequest(req, res);
 };
 
