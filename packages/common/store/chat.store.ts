@@ -1,6 +1,6 @@
 'use client';
 
-import { ModelEnum, type Model, models } from '@repo/ai/models';
+import { type Model, ModelEnum, models } from '@repo/ai/models';
 import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
@@ -109,12 +109,14 @@ const loadInitialData = async () => {
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
+                useSandbox: false,
                 showSuggestions: true,
                 chatMode: DEFAULT_CHAT_MODE,
             },
             useWebSearch: false,
             useMathCalculator: false,
             useCharts: false,
+            useSandbox: false,
             chatMode: DEFAULT_CHAT_MODE,
             customInstructions: '',
             showSuggestions: false,
@@ -136,6 +138,7 @@ const loadInitialData = async () => {
     const useWebSearch = chatMode === ChatMode.Pro && isVtPlusUser() ? true : appStore.useWebSearch;
     const useMathCalculator = appStore.useMathCalculator;
     const useCharts = appStore.useCharts;
+    const useSandbox = config.useSandbox ?? appStore.useSandbox ?? false;
     const customInstructions = appStore.customInstructions;
     const thinkingMode = appStore.thinkingMode;
     const geminiCaching = appStore.geminiCaching;
@@ -179,6 +182,7 @@ const loadInitialData = async () => {
         thinkingMode,
         geminiCaching,
         showSuggestions: false, // Always disable suggestions
+        useSandbox,
     };
 };
 
@@ -192,6 +196,7 @@ type State = {
     useWebSearch: boolean;
     useMathCalculator: boolean;
     useCharts: boolean;
+    useSandbox: boolean;
     customInstructions: string;
     showSuggestions: boolean;
     editor: any;
@@ -299,6 +304,7 @@ type Actions = {
     setUseWebSearch: (useWebSearch: boolean) => void;
     setUseMathCalculator: (useMathCalculator: boolean) => void;
     setUseCharts: (useCharts: boolean) => void;
+    setUseSandbox: (useSandbox: boolean) => void;
     setShowSuggestions: (showSuggestions: boolean) => void;
     // Button selection management
     setActiveButton: (button: ActiveButtonType) => void;
@@ -836,6 +842,7 @@ export const useChatStore = create(
         useWebSearch: false,
         useMathCalculator: false,
         useCharts: false,
+        useSandbox: false,
         customInstructions: '',
         currentThreadId: null,
         activeThreadItemView: null,
@@ -1021,6 +1028,16 @@ export const useChatStore = create(
             localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useCharts }));
             set((state) => {
                 state.useCharts = useCharts;
+            });
+        },
+
+        setUseSandbox: (useSandbox: boolean) => {
+            useAppStore.getState().setUseSandbox(useSandbox);
+
+            const existingConfig = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+            localStorage.setItem(CONFIG_KEY, JSON.stringify({ ...existingConfig, useSandbox }));
+            set((state) => {
+                state.useSandbox = useSandbox;
             });
         },
 
@@ -1862,6 +1879,7 @@ export const useChatStore = create(
                         || null,
                     chatMode: newData.chatMode,
                     useWebSearch: newData.useWebSearch,
+                    useSandbox: newData.useSandbox,
                     showSuggestions: newData.showSuggestions,
                     customInstructions: newData.customInstructions,
                 });
@@ -1871,6 +1889,7 @@ export const useChatStore = create(
                     const configToSave = {
                         chatMode: newData.chatMode,
                         useWebSearch: newData.useWebSearch,
+                        useSandbox: newData.useSandbox,
                         showSuggestions: newData.showSuggestions,
                         customInstructions: newData.customInstructions,
                         currentThreadId: newData.currentThreadId,
