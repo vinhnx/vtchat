@@ -71,6 +71,7 @@ export type WorkflowContextSchema = {
     webSearch: boolean;
     mathCalculator: boolean;
     charts: boolean;
+    sandbox: boolean;
     queries: string[];
     summaries: string[];
     gl?: Geo;

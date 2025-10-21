@@ -56,6 +56,7 @@ export type AgentContextType = {
         useWebSearch?: boolean;
         useMathCalculator?: boolean;
         useCharts?: boolean;
+        useSandbox?: boolean;
         showSuggestions?: boolean;
     }) => Promise<void>;
     updateContext: (threadId: string, data: any) => void;
@@ -813,6 +814,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             useWebSearch,
             useMathCalculator,
             useCharts,
+            useSandbox,
             showSuggestions,
         }: {
             formData: FormData;
@@ -823,6 +825,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             useWebSearch?: boolean;
             useMathCalculator?: boolean;
             useCharts?: boolean;
+            useSandbox?: boolean;
             showSuggestions?: boolean;
         }) => {
             const query = formData.get('query') as string;
@@ -857,7 +860,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             lastSubmissionRef.current = now;
 
             log.info(
-                { useWebSearch, useMathCalculator, useCharts },
+                { useWebSearch, useMathCalculator, useCharts, useSandbox },
                 'Agent provider received flags',
             );
 
@@ -1013,6 +1016,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                         apiKeysConfigured: Object.keys(apiKeys).filter((key) =>
                             apiKeys[key]
                         ).length > 0,
+                        useSandbox,
                     },
                     '🚀 Starting workflow with API keys',
                 );
@@ -1033,6 +1037,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
+                    sandbox: useSandbox,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: apiKeys,
                     thinkingMode,
@@ -1091,6 +1096,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                     webSearch: useWebSearch,
                     mathCalculator: useMathCalculator,
                     charts: useCharts, // Charts now available to all users
+                    sandbox: useSandbox,
                     showSuggestions: showSuggestions ?? true,
                     apiKeys: finalApiKeys,
                     userTier: hasVtPlusAccess ? UserTier.PLUS : UserTier.FREE,

@@ -3,7 +3,22 @@
         "allow": [
             "WebFetch(domain:docs.anthropic.com)",
             "Bash(git config:*)"
+        ],
+        "deny": [
+            "Read(~/.ssh)",
+            "Read(~/.aws)",
+            "Read(~/.config)",
+            "Read(/etc/ssh)",
+            "Read(/etc/passwd)",
+            "Edit(.env)",
+            "Edit(config/production.json)"
         ]
+    },
+    "sandbox": {
+        "enabled": true,
+        "network": {
+            "allowLocalBinding": false
+        }
     },
     "outputStyle": "default"
 }

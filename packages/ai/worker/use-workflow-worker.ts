@@ -122,6 +122,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
         webSearch,
         mathCalculator,
         charts,
+        sandbox,
         showSuggestions,
         thinkingMode,
         userTier = UserTier.FREE,
@@ -139,6 +140,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
         webSearch?: boolean;
         mathCalculator?: boolean;
         charts?: boolean;
+        sandbox?: boolean;
         showSuggestions?: boolean;
         thinkingMode?: {
             enabled: boolean;
@@ -188,6 +190,7 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
                     webSearch,
                     mathCalculator,
                     charts,
+                    sandbox,
                     showSuggestions,
                     thinkingMode,
                     userTier,

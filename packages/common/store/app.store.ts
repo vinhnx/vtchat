@@ -51,6 +51,7 @@ type State = {
     useWebSearch: boolean;
     useMathCalculator: boolean;
     useCharts: boolean;
+    useSandbox: boolean;
     showSuggestions: boolean;
     thinkingMode: {
         enabled: boolean;
@@ -93,6 +94,7 @@ type Actions = {
     setUseWebSearch: (use: boolean) => void;
     setUseMathCalculator: (use: boolean) => void;
     setUseCharts: (use: boolean) => void;
+    setUseSandbox: (use: boolean) => void;
     setShowSuggestions: (show: boolean) => void;
     setThinkingMode: (mode: Partial<State['thinkingMode']>) => void;
     setGeminiCaching: (caching: Partial<State['geminiCaching']>) => void;
@@ -152,6 +154,7 @@ export const useAppStore = create<State & Actions>()(
                 useWebSearch: false,
                 useMathCalculator: false,
                 useCharts: false,
+                useSandbox: false,
                 showSuggestions: false,
                 thinkingMode: baseDefaults.thinkingMode,
                 geminiCaching: baseDefaults.geminiCaching,
@@ -269,6 +272,10 @@ export const useAppStore = create<State & Actions>()(
                     set({ useCharts: use });
                 },
 
+                setUseSandbox: (use: boolean) => {
+                    set({ useSandbox: use });
+                },
+
                 setShowSuggestions: (show: boolean) => {
                     set({ showSuggestions: show });
                 },
@@ -342,6 +349,7 @@ export const useAppStore = create<State & Actions>()(
                         state.useWebSearch = false;
                         state.useMathCalculator = false;
                         state.useCharts = false;
+                        state.useSandbox = false;
                         state.showSuggestions = false;
                         state.thinkingMode = baseDefaults.thinkingMode;
                         state.geminiCaching = baseDefaults.geminiCaching;

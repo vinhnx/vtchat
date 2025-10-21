@@ -92,6 +92,8 @@ export const ChatInput = ({
     const useWebSearch = useChatStore((state) => state.useWebSearch);
     const useMathCalculator = useChatStore((state) => state.useMathCalculator);
     const useCharts = useChatStore((state) => state.useCharts);
+    const useSandbox = useChatStore((state) => state.useSandbox);
+    const setUseSandboxPreference = useChatStore((state) => state.setUseSandbox);
 
     const isGenerating = useChatStore((state) => state.isGenerating);
     const setIsGenerating = useChatStore((state) => state.setIsGenerating);
@@ -150,13 +152,82 @@ export const ChatInput = ({
 
     const sendMessage = async () => {
         const messageText = editor?.getText();
+        const trimmedMessage = messageText?.trim() ?? '';
         log.info('📤 sendMessage called', {
             messageText: messageText?.substring(0, 50) + '...',
             isSignedIn,
             currentThreadId,
             timestamp: Date.now(),
             isSending,
+            useSandbox,
         });
+
+        if (trimmedMessage.startsWith('/sandbox')) {
+            const [, rawArg = 'on'] = trimmedMessage.split(/\s+/, 2);
+            const action = rawArg.trim().toLowerCase();
+            log.info('🛡️ Sandbox command received', { action, previous: useSandbox });
+
+            const clearCommandInput = () => {
+                editor?.commands.clearContent();
+                if (!isFollowUp) {
+                    window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);
+                }
+            };
+
+            if (action === '' || action === 'on') {
+                if (!useSandbox) {
+                    setUseSandboxPreference(true);
+                    toast({
+                        title: 'Sandbox enabled',
+                        description:
+                            'Bash tool executions will now run in an isolated sandbox with restricted file and network access.',
+                    });
+                } else {
+                    toast({
+                        title: 'Sandbox already enabled',
+                        description: 'Bash tool isolation is currently active.',
+                    });
+                }
+                clearCommandInput();
+                return;
+            }
+
+            if (action === 'off') {
+                if (useSandbox) {
+                    setUseSandboxPreference(false);
+                    toast({
+                        title: 'Sandbox disabled',
+                        description: 'Bash tool executions will run without sandbox isolation.',
+                    });
+                } else {
+                    toast({
+                        title: 'Sandbox already disabled',
+                        description: 'Sandbox isolation was not active.',
+                    });
+                }
+                clearCommandInput();
+                return;
+            }
+
+            if (action === 'status') {
+                toast({
+                    title: 'Sandbox status',
+                    description: useSandbox
+                        ? 'Sandboxed bash execution is enabled.'
+                        : 'Sandboxed bash execution is disabled.',
+                });
+                clearCommandInput();
+                return;
+            }
+
+            toast({
+                title: 'Unknown sandbox command',
+                description: "Use '/sandbox on', '/sandbox off', or '/sandbox status'.",
+                variant: 'destructive',
+            });
+            clearCommandInput();
+            return;
+        }
 
         // Prevent multiple rapid calls
         if (isSending) {
@@ -542,6 +613,7 @@ export const ChatInput = ({
                     useWebSearch,
                     useMathCalculator,
                     useCharts,
+                    useSandbox,
                 },
                 '🚀 Sending to handleSubmit with flags',
             );
@@ -559,6 +631,7 @@ export const ChatInput = ({
                 useWebSearch,
                 useMathCalculator,
                 useCharts,
+                useSandbox,
             });
 
             window.localStorage.removeItem(STORAGE_KEYS.DRAFT_MESSAGE);

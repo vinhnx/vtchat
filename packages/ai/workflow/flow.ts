@@ -40,6 +40,7 @@ export const runWorkflow = ({
     thinkingMode,
     userTier = UserTier.FREE,
     userId,
+    sandbox = false,
 }: {
     mode: ChatMode;
     question: string;
@@ -63,6 +64,7 @@ export const runWorkflow = ({
     };
     userTier?: UserTierType;
     userId?: string;
+    sandbox?: boolean;
 }) => {
     log.info('🔥 runWorkflow called with params:', {
         webSearch,
@@ -100,6 +102,7 @@ export const runWorkflow = ({
         webSearch,
         mathCalculator,
         charts,
+        sandbox,
     });
     const context = createContext<WorkflowContextSchema>({
         question,
@@ -107,6 +110,7 @@ export const runWorkflow = ({
         webSearch,
         mathCalculator,
         charts, // Charts now available to all users
+        sandbox,
         search_queries: [],
         messages: messages as any,
         goals: [],

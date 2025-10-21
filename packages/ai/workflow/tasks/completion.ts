@@ -2,6 +2,7 @@ import { createTask } from '@repo/orchestrator';
 import { log } from '@repo/shared/logger';
 import { chartTools } from '../../../../apps/web/lib/tools/charts';
 import { calculatorTools } from '../../../../apps/web/lib/tools/math';
+import { sandboxTools } from '../../../../apps/web/lib/tools/sandbox';
 import { getModelFromChatMode, models, supportsOpenAIWebSearch, supportsTools } from '../../models';
 import { MATH_CALCULATOR_PROMPT } from '../../prompts/math-calculator';
 import { getWebSearchTool } from '../../tools';
@@ -29,6 +30,7 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         const webSearch = context.get('webSearch');
         const mathCalculator = context.get('mathCalculator');
         const charts = context.get('charts');
+        const sandbox = context.get('sandbox');
 
         let messages = context
             .get('messages')
@@ -265,6 +267,11 @@ Remember: You are designed to be helpful, accurate, and comprehensive while leve
             if (webSearchTools) {
                 tools = { ...tools, ...webSearchTools };
             }
+        }
+
+        if (sandbox) {
+            const bashTools = sandboxTools();
+            tools = { ...tools, ...bashTools };
         }
 
         // Convert to undefined if no tools are enabled
