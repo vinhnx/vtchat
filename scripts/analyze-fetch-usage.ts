@@ -7,6 +7,7 @@
 
 import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
+import { log } from '@repo/shared/lib/logger';
 
 interface FetchUsage {
     file: string;
@@ -64,7 +65,7 @@ function analyzeFile(filePath: string): FetchUsage | null {
             estimatedSavings,
         };
     } catch (error) {
-        console.error(`Error analyzing file ${filePath}:`, (error as Error).message);
+        log.error({ error: error as Error, filePath }, `Error analyzing file ${filePath}`);
         return null;
     }
 }
@@ -94,7 +95,7 @@ function scanDirectory(dir: string, exclude: string[] = []): FetchUsage[] {
             }
         }
     } catch (error) {
-        console.error(`Error scanning directory ${dir}:`, (error as Error).message);
+        log.error({ error: error as Error, dir }, `Error scanning directory ${dir}`);
     }
 
     return results;
@@ -103,61 +104,54 @@ function scanDirectory(dir: string, exclude: string[] = []): FetchUsage[] {
 function generateMigrationPlan(usages: FetchUsage[]): void {
     const sorted = usages.sort((a, b) => b.estimatedSavings - a.estimatedSavings);
 
-    console.log('\n🚀 Fetch Migration Analysis Report');
-    console.log('================================');
+    log.info('🚀 Fetch Migration Analysis Report\n================================');
 
     const totalFetchCalls = usages.reduce((sum, u) => sum + u.fetchCalls, 0);
     const totalSavings = usages.reduce((sum, u) => sum + u.estimatedSavings, 0);
 
-    console.log(`\n📊 Summary:`);
-    console.log(`   • Total files with fetch usage: ${usages.length}`);
-    console.log(`   • Total fetch calls: ${totalFetchCalls}`);
-    console.log(`   • Estimated time savings: ${totalSavings} minutes`);
+    log.info({ 
+        totalFiles: usages.length,
+        totalFetchCalls,
+        estimatedSavings: totalSavings
+    }, '📊 Migration Summary');
 
     const high = sorted.filter(u => u.migrationPriority === 'high');
     const medium = sorted.filter(u => u.migrationPriority === 'medium');
     const low = sorted.filter(u => u.migrationPriority === 'low');
 
     if (high.length > 0) {
-        console.log(`\n🔴 High Priority Migrations (${high.length}):`);
+        log.info({ highPriorityCount: high.length }, '🔴 High Priority Migrations:');
         high.forEach(usage => {
-            console.log(
-                `   • ${
-                    usage.file.replace(process.cwd() + '/', '')
-                } (${usage.fetchCalls} fetch calls, ${usage.estimatedSavings} min savings)`,
-            );
+            log.info({
+                file: usage.file.replace(process.cwd() + '/', ''),
+                fetchCalls: usage.fetchCalls,
+                estimatedSavings: usage.estimatedSavings
+            }, 'High priority migration target');
         });
     }
 
     if (medium.length > 0) {
-        console.log(`\n🟡 Medium Priority Migrations (${medium.length}):`);
+        log.info({ mediumPriorityCount: medium.length }, '🟡 Medium Priority Migrations:');
         medium.slice(0, 5).forEach(usage => {
-            console.log(
-                `   • ${
-                    usage.file.replace(process.cwd() + '/', '')
-                } (${usage.fetchCalls} fetch calls, ${usage.estimatedSavings} min savings)`,
-            );
+            log.info({
+                file: usage.file.replace(process.cwd() + '/', ''),
+                fetchCalls: usage.fetchCalls,
+                estimatedSavings: usage.estimatedSavings
+            }, 'Medium priority migration target');
         });
 
         if (medium.length > 5) {
-            console.log(`   ... and ${medium.length - 5} more files`);
+            log.info({ additionalFiles: medium.length - 5 }, 'Additional medium priority files');
         }
     }
 
-    console.log('\n💡 Top Recommendations:');
-    console.log('   1. Start with high-priority files for maximum impact');
-    console.log('   2. Focus on files with complex fetch patterns first');
-    console.log('   3. Use the new API client for consistent error handling');
+    log.info('💡 Top Recommendations:\n   1. Start with high-priority files for maximum impact\n   2. Focus on files with complex fetch patterns first\n   3. Use the new API client for consistent error handling');
     high.slice(0, 3).forEach(usage => {
         const relativePath = usage.file.replace(process.cwd() + '/', '');
-        console.log(`      - ${relativePath}`);
+        log.info({ file: relativePath }, 'Complex fetch pattern file');
     });
 
-    console.log('\n🔧 Migration Strategy:');
-    console.log('   1. Replace basic fetch calls with apiClient.get/post/put/delete');
-    console.log('   2. Use apiClient.withRetry() for unreliable endpoints');
-    console.log('   3. Add apiClient.withTimeout() for time-sensitive requests');
-    console.log('   4. Leverage built-in response parsing and error handling');
+    log.info('🔧 Migration Strategy:\n   1. Replace basic fetch calls with apiClient.get/post/put/delete\n   2. Use apiClient.withRetry() for unreliable endpoints\n   3. Add apiClient.withTimeout() for time-sensitive requests\n   4. Leverage built-in response parsing and error handling');
 }
 
 // Main execution
@@ -173,12 +167,12 @@ const excludePatterns = [
     '.spec.',
 ];
 
-console.log('🔍 Analyzing fetch usage across the codebase...');
+log.info('🔍 Analyzing fetch usage across the codebase...');
 
 const usages = scanDirectory(projectRoot, excludePatterns);
 
 if (usages.length === 0) {
-    console.log('✅ No fetch usage found in the codebase. Great job!');
+    log.info('✅ No fetch usage found in the codebase. Great job!');
 } else {
     generateMigrationPlan(usages);
 }

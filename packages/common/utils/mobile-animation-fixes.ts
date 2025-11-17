@@ -281,10 +281,14 @@ export const preventLayoutShift = (element: HTMLElement | null) => {
 // Debug utility to log animation performance
 export const debugMobileAnimation = (componentName: string, animationType: string) => {
     if (process.env.NODE_ENV === 'development' && isMobileDevice()) {
-        console.debug(`[MobileAnimation] ${componentName} - ${animationType}`, {
-            reducedMotion: prefersReducedMotion(),
-            userAgent: navigator.userAgent,
-            viewport: { width: window.innerWidth, height: window.innerHeight },
+        import('@repo/shared/lib/logger').then(({ log }) => {
+            log.debug({
+                component: componentName,
+                animationType,
+                reducedMotion: prefersReducedMotion(),
+                userAgent: navigator.userAgent,
+                viewport: { width: window.innerWidth, height: window.innerHeight },
+            }, '[MobileAnimation] Animation debug info');
         });
     }
 };
