@@ -1,5 +1,5 @@
-// Simple logger implementation to replace console.log usage
-// This is a minimal implementation to ensure build compatibility
+// Development-only logger implementation to replace console.log usage
+// Logs are only output in development environment for debugging purposes
 /* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 
 type LogFunction = (...args: any[]) => void;
@@ -52,24 +52,31 @@ const logMessage = (
     consoleMethod(...args);
 };
 
-// Simple logger that wraps console methods
+// Development-only logger that wraps console methods  
 const createLogger = (): Logger => {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
     const info: LogFunction = (...args: any[]) => {
-        logMessage(console.log, 'Info:', ...args);
+        if (isDevelopment) {
+            logMessage(console.log, 'Info:', ...args);
+        }
     };
 
     const warn: LogFunction = (...args: any[]) => {
-        logMessage(console.warn, 'Warn:', ...args);
+        if (isDevelopment) {
+            logMessage(console.warn, 'Warn:', ...args);
+        }
     };
 
     const error: LogFunction = (...args: any[]) => {
+        // Always log errors, even in production (for debugging purposes)
         // In development, use console.warn to avoid triggering error overlay for non-critical errors
-        const logMethod = process.env.NODE_ENV === 'development' ? console.warn : console.error;
+        const logMethod = isDevelopment ? console.warn : console.error;
         logMessage(logMethod, 'Error:', ...args);
     };
 
     const debug: LogFunction = (...args: any[]) => {
-        if (process.env.NODE_ENV === 'development') {
+        if (isDevelopment) {
             logMessage(console.debug, 'Debug:', ...args);
         }
     };
