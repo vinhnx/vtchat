@@ -44,7 +44,7 @@ const baseClient = ky.create({
                 // Log request (without sensitive data)
                 log.info('HTTP request initiated', {
                     url: new URL(request.url).origin + new URL(request.url).pathname,
-                    method: request.method,
+                    method: String(request.method || 'GET'),
                 });
             },
         ],
