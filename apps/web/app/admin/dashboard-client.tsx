@@ -108,7 +108,8 @@ export function AdminDashboardClient({ initialStats, webSearchDebug }: Props) {
                     ))}
                 </div>
                 <div className='text-muted-foreground text-sm'>
-                    Unable to load admin analytics right now. Please retry or check API availability.
+                    Unable to load admin analytics right now. Please retry or check API
+                    availability.
                 </div>
             </div>
         );

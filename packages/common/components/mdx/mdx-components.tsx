@@ -1,7 +1,7 @@
 import { CitationProviderContext, CodeBlock, LinkPreviewPopover } from '@repo/common/components';
 import { isValidUrl } from '@repo/shared/utils';
 import type { MDXRemote } from 'next-mdx-remote/rsc';
-import { useContext, type ComponentProps, type ReactElement } from 'react';
+import { type ComponentProps, type ReactElement, useContext } from 'react';
 import { TableErrorBoundary } from '../thread/components/table-error-boundary';
 
 export const mdxComponents: ComponentProps<typeof MDXRemote>['components'] = {

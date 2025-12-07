@@ -1,7 +1,6 @@
 import { cookies, headers } from 'next/headers';
 
-const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
     || process.env.NEXT_PUBLIC_BETTER_AUTH_URL
     || 'http://localhost:3000';
 
@@ -11,7 +10,9 @@ export async function fetchWithAuth(path: string) {
     const cookie = cookieStore.toString();
     const forwardedProto = headerStore.get('x-forwarded-proto');
     const forwardedHost = headerStore.get('x-forwarded-host');
-    const origin = forwardedProto && forwardedHost ? `${forwardedProto}://${forwardedHost}` : baseUrl;
+    const origin = forwardedProto && forwardedHost
+        ? `${forwardedProto}://${forwardedHost}`
+        : baseUrl;
 
     const response = await fetch(`${origin}${path}`, {
         method: 'GET',

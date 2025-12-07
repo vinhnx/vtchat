@@ -14,7 +14,7 @@ import {
     resizeImageDataUrl,
     validateByokForImageAnalysis,
 } from '@repo/shared/utils';
-import { Flex, cn, useToast } from '@repo/ui';
+import { cn, Flex, useToast } from '@repo/ui';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';

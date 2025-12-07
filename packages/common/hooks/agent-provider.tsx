@@ -13,7 +13,6 @@ import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
 import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { useToast } from '@repo/ui/src/components/use-sonner-toast';
-import ky from 'ky';
 import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
@@ -622,13 +621,13 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                                             );
 
                                             if (isGemini) {
-                                                // Using ky for cleaner HTTP handling
-                                                ky.post(
+                                                http.post<Response>(
                                                     `/api/rate-limit/status?model=${
                                                         encodeURIComponent(modelId)
                                                     }`,
                                                     {
-                                                        credentials: 'include',
+                                                        parseAs: 'response',
+                                                        throwOnError: false,
                                                     },
                                                 ).catch(() => {
                                                     // Fail silently - server-side safety net will handle recording

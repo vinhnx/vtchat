@@ -1,21 +1,28 @@
 import { auth, authConfigured } from '@/lib/auth-server';
 import { log } from '@repo/shared/logger';
 import { toNextJsHandler } from 'better-auth/next-js';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // CORS headers for auth endpoints
-const corsHeaders = {
-    'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-    'Access-Control-Allow-Credentials': 'true',
+const getCorsHeaders = (request: Request) => {
+    const requestOrigin = request.headers.get('origin');
+    const allowedOrigin = requestOrigin
+        || process.env.NEXT_PUBLIC_BASE_URL
+        || 'https://vtchat.io.vn';
+
+    return {
+        'Access-Control-Allow-Origin': allowedOrigin,
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+        'Access-Control-Allow-Credentials': 'true',
+    };
 };
 
 // Handle preflight requests
-export async function OPTIONS(_request: Request) {
+export async function OPTIONS(request: Request) {
     return new NextResponse(null, {
         status: 200,
-        headers: corsHeaders,
+        headers: getCorsHeaders(request),
     });
 }
 
@@ -27,6 +34,7 @@ const originalPOST = handlers?.POST;
 // Wrap the handlers to add CORS headers and error handling
 export async function GET(request: Request) {
     const url = request.url || '';
+    const corsHeaders = getCorsHeaders(request);
 
     if (!authConfigured || !originalGET) {
         // Local/dev fallback to keep UX working without DATABASE_URL
@@ -93,6 +101,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: NextRequest) {
     const url = request.url || '';
+    const corsHeaders = getCorsHeaders(request);
 
     if (!authConfigured || !originalPOST) {
         // In local/dev without DATABASE_URL, allow sign-out to succeed so logout UX works

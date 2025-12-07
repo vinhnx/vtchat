@@ -27,6 +27,7 @@ export const ProtectedRoutes = {
     SETTINGS: '/settings',
     PRICING: '/pricing', // VT+ subscription page - requires login
     SUCCESS: '/success',
+    PROFILE: '/profile',
 } as const;
 
 export type ProtectedRoute = (typeof ProtectedRoutes)[keyof typeof ProtectedRoutes];
@@ -49,6 +50,10 @@ export type ApiRoute = (typeof ApiRoutes)[keyof typeof ApiRoutes];
  */
 export const PUBLIC_ROUTES_ARRAY = Object.values(PublicRoutes);
 
+const PUBLIC_ROUTES_EXCLUDING_HOME = PUBLIC_ROUTES_ARRAY.filter(
+    (route) => route !== PublicRoutes.HOME,
+);
+
 /**
  * Array of all protected routes for middleware usage
  */
@@ -66,7 +71,11 @@ export function isPublicRoute(pathname: string): boolean {
         return false;
     }
 
-    return PUBLIC_ROUTES_ARRAY.some((route) => pathname.startsWith(route));
+    if (pathname === PublicRoutes.HOME) {
+        return true;
+    }
+
+    return PUBLIC_ROUTES_EXCLUDING_HOME.some((route) => pathname.startsWith(route));
 }
 
 /**

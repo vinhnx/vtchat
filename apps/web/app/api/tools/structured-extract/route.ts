@@ -2,7 +2,7 @@ import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { isGeminiModel } from '@repo/common/utils';
 import { log } from '@repo/shared/logger';
 import { generateObject } from 'ai';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 // Move schemas to a shared location or keep them here

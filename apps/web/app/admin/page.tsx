@@ -63,7 +63,9 @@ export default async function AdminDashboard() {
         ]);
 
         const analyticsData = analytics.status === 'fulfilled' ? analytics.value : null;
-        const infrastructureData = infrastructure.status === 'fulfilled' ? infrastructure.value : null;
+        const infrastructureData = infrastructure.status === 'fulfilled'
+            ? infrastructure.value
+            : null;
         const securityData = security.status === 'fulfilled' ? security.value : null;
 
         if (analyticsData) {
@@ -72,7 +74,9 @@ export default async function AdminDashboard() {
             let bannedUsers = 0;
 
             if (infrastructureData?.infrastructure?.systemHealth) {
-                systemHealth = normalizeSystemHealth(infrastructureData.infrastructure.systemHealth);
+                systemHealth = normalizeSystemHealth(
+                    infrastructureData.infrastructure.systemHealth,
+                );
                 lastMaintenanceRun = infrastructureData.infrastructure.lastMaintenanceRun;
             }
 

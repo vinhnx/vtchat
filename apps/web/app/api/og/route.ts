@@ -1,5 +1,5 @@
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
-import ky from 'ky';
 import { type NextRequest, NextResponse } from 'next/server';
 
 interface OGData {
@@ -45,20 +45,14 @@ async function fetchOGData(url: string): Promise<OGData | null> {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-        // Using ky for cleaner HTTP requests with built-in error handling
-        // Don't throw HTTP errors so we can handle them manually
-        const response = await ky.get(url, {
+        const response = await http.get<Response>(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (compatible; VTChat/1.0; +https://vtchat.io.vn)',
             },
             signal: controller.signal,
             timeout: 10000,
-            throwHttpErrors: false,
-            retry: {
-                limit: 2,
-                methods: ['get'],
-                statusCodes: [408, 413, 429, 500, 502, 503, 504],
-            },
+            parseAs: 'response',
+            throwOnError: false,
         });
 
         clearTimeout(timeoutId);

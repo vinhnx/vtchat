@@ -16,20 +16,18 @@ if (process.env.DATABASE_URL) {
 
 export const authConfigured = Boolean(process.env.DATABASE_URL && dbInstance);
 
-const baseURL = process.env.NODE_ENV === 'production'
+const defaultBaseUrl = process.env.NODE_ENV === 'production'
     ? 'https://vtchat.io.vn'
-    : process.env.NEXT_PUBLIC_BETTER_AUTH_URL
-        || process.env.NEXT_PUBLIC_BASE_URL
-        || 'http://localhost:3000';
+    : 'http://localhost:3000';
+
+const baseURL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL
+    || process.env.NEXT_PUBLIC_BASE_URL
+    || defaultBaseUrl;
 
 // If the database is not configured (e.g., local dev without env), stub auth to avoid hard crashes.
 export const auth = authConfigured
     ? betterAuth({
-        baseURL: process.env.NODE_ENV === 'production'
-            ? 'https://vtchat.io.vn'
-            : process.env.NEXT_PUBLIC_BETTER_AUTH_URL
-                || process.env.NEXT_PUBLIC_BASE_URL
-                || 'http://localhost:3000',
+        baseURL,
         basePath: '/api/auth',
         database: drizzleAdapter(dbInstance, {
             provider: 'pg',
@@ -75,9 +73,7 @@ export const auth = authConfigured
             github: {
                 clientId: process.env.GITHUB_CLIENT_ID!,
                 clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-                redirectURI: process.env.NODE_ENV === 'production'
-                    ? 'https://vtchat.io.vn/api/auth/callback/github'
-                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/github`,
+                redirectURI: `${baseURL}/api/auth/callback/github`,
                 scope: ['read:user', 'user:email'],
                 mapProfileToUser: (profile) => {
                     return {
@@ -88,9 +84,7 @@ export const auth = authConfigured
             google: {
                 clientId: process.env.GOOGLE_CLIENT_ID!,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-                redirectURI: process.env.NODE_ENV === 'production'
-                    ? 'https://vtchat.io.vn/api/auth/callback/google'
-                    : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
+                redirectURI: `${baseURL}/api/auth/callback/google`,
                 scope: ['openid', 'email', 'profile'],
                 mapProfileToUser: (profile) => {
                     return {
@@ -103,9 +97,7 @@ export const auth = authConfigured
                     twitter: {
                         clientId: process.env.TWITTER_CLIENT_ID,
                         clientSecret: process.env.TWITTER_CLIENT_SECRET,
-                        redirectURI: process.env.NODE_ENV === 'production'
-                            ? 'https://vtchat.io.vn/api/auth/callback/twitter'
-                            : `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/twitter`,
+                        redirectURI: `${baseURL}/api/auth/callback/twitter`,
                     },
                 }
                 : {}),
@@ -124,7 +116,7 @@ export const auth = authConfigured
             max: 200, // Increased from 100 to handle more requests
         },
         trustedOrigins: [
-            process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',
+            baseURL,
             ...(process.env.NODE_ENV === 'development'
                 ? [process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000']
                 : []),

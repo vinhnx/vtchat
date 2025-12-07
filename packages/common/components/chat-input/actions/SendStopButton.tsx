@@ -2,11 +2,7 @@
 
 import { useChatStore } from '@repo/common/store';
 import { Button } from '@repo/ui';
-import {
-    ANIMATION_DURATION,
-    createAnticipation,
-    EASING,
-} from '@repo/ui/src/lib/animation-utils';
+import { ANIMATION_DURATION, createAnticipation, EASING } from '@repo/ui/src/lib/animation-utils';
 import { cn } from '@repo/ui/src/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, Clock, Square } from 'lucide-react';

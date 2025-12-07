@@ -3,14 +3,7 @@
 import { ErrorBoundary } from '@repo/common/components';
 import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
-import {
-    Badge,
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@repo/ui';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
 import type { PaginationState } from '@tanstack/react-table';
 import { motion } from 'framer-motion';
 import { Activity, CheckCircle, CreditCard, Users } from 'lucide-react';
@@ -138,7 +131,8 @@ export function AdminUsersClient({
             >
                 <h1 className='text-3xl font-bold tracking-tight'>User Management</h1>
                 <p className='text-muted-foreground'>
-                    Manage user accounts, roles, and subscriptions with advanced filtering and sorting
+                    Manage user accounts, roles, and subscriptions with advanced filtering and
+                    sorting
                 </p>
             </motion.div>
 
@@ -171,7 +165,9 @@ export function AdminUsersClient({
 
                         <Card>
                             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>VT+ Subscribers</CardTitle>
+                                <CardTitle className='text-sm font-medium'>
+                                    VT+ Subscribers
+                                </CardTitle>
                                 <CreditCard className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
@@ -205,7 +201,9 @@ export function AdminUsersClient({
 
                         <Card>
                             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>Email Verified</CardTitle>
+                                <CardTitle className='text-sm font-medium'>
+                                    Email Verified
+                                </CardTitle>
                                 <CheckCircle className='text-muted-foreground h-4 w-4' />
                             </CardHeader>
                             <CardContent>
@@ -231,26 +229,31 @@ export function AdminUsersClient({
             <Card>
                 <CardHeader>
                     <CardTitle>Users</CardTitle>
-                    <CardDescription>Manage user accounts and their subscription status</CardDescription>
+                    <CardDescription>
+                        Manage user accounts and their subscription status
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {isEmptyInitial && !loading ? (
-                        <div className='text-muted-foreground text-sm'>
-                            Unable to load users right now. Please retry filters or refresh later.
-                        </div>
-                    ) : (
-                        <DataTable
-                            columns={columns}
-                            data={users}
-                            loading={loading}
-                            onPaginationChange={handlePaginationChange}
-                            onPlanFilterChange={setPlanFilter}
-                            onSearchChange={setSearchTerm}
-                            onStatusFilterChange={setStatusFilter}
-                            pageCount={pageCount}
-                            pagination={pagination}
-                        />
-                    )}
+                    {isEmptyInitial && !loading
+                        ? (
+                            <div className='text-muted-foreground text-sm'>
+                                Unable to load users right now. Please retry filters or refresh
+                                later.
+                            </div>
+                        )
+                        : (
+                            <DataTable
+                                columns={columns}
+                                data={users}
+                                loading={loading}
+                                onPaginationChange={handlePaginationChange}
+                                onPlanFilterChange={setPlanFilter}
+                                onSearchChange={setSearchTerm}
+                                onStatusFilterChange={setStatusFilter}
+                                pageCount={pageCount}
+                                pagination={pagination}
+                            />
+                        )}
                 </CardContent>
             </Card>
         </div>

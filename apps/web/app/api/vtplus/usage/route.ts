@@ -1,7 +1,7 @@
 import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { log } from '@repo/shared/lib/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 

@@ -2,12 +2,12 @@
 
 import { ApiRoutes } from '@repo/shared/constants/routes';
 import { useSession } from '@repo/shared/lib/auth-client';
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import type { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
 import { useToast } from '@repo/ui';
-import ky from 'ky';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useGlobalSubscriptionStatus } from '../providers/subscription-provider';
@@ -54,12 +54,15 @@ export function useCreemSubscription() {
         try {
             log.info({}, '[useCreemSubscription] Requesting customer portal for user');
 
-            // Call the portal API endpoint using ky for cleaner HTTP handling
-            const result = await ky.post('/api/portal', {
-                json: {
-                    returnUrl: `${window.location.origin}/`, // Return to chat page
+            // Call the portal API endpoint using centralized HTTP client
+            const result = await http.post<{ success: boolean; url?: string; error?: string; }>(
+                '/api/portal',
+                {
+                    body: {
+                        returnUrl: `${window.location.origin}/`, // Return to chat page
+                    },
                 },
-            }).json<{ success: boolean; url?: string; error?: string; }>();
+            );
 
             if (result.success && result.url) {
                 log.info({}, '[useCreemSubscription] Opening portal in new tab');
@@ -159,12 +162,15 @@ export function useCreemSubscription() {
         setError(null);
 
         try {
-            // Call the checkout API endpoint using ky for cleaner HTTP handling
-            const result = await ky.post(ApiRoutes.CHECKOUT, {
-                json: {
-                    priceId: PlanSlug.VT_PLUS, // Using the PlanSlug.VT_PLUS value
+            // Call the checkout API endpoint using centralized HTTP client
+            const result = await http.post<{ success: boolean; url?: string; message?: string; }>(
+                ApiRoutes.CHECKOUT,
+                {
+                    body: {
+                        priceId: PlanSlug.VT_PLUS, // Using the PlanSlug.VT_PLUS value
+                    },
                 },
-            }).json<{ success: boolean; url?: string; message?: string; }>();
+            );
 
             if (result.success && result.url) {
                 // Refresh subscription status with payment trigger before redirecting

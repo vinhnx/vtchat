@@ -1,13 +1,13 @@
 'use client';
 
-import { ErrorBoundary, ErrorPlaceholder, Response, mdxComponents } from '@repo/common/components';
+import { ErrorBoundary, ErrorPlaceholder, mdxComponents, Response } from '@repo/common/components';
 import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
 import { serialize } from 'next-mdx-remote/serialize';
 import { useTheme } from 'next-themes';
-import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import './markdown-content.css';
 

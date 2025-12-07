@@ -18,6 +18,9 @@ export interface SecureRequestOptions {
     headers?: HeadersInit;
     signal?: AbortSignal;
     timeout?: number;
+    credentials?: RequestCredentials;
+    throwOnError?: boolean;
+    parseAs?: 'json' | 'text' | 'response';
 }
 
 /**
@@ -73,6 +76,57 @@ async function fetchWithTimeout(
     }
 }
 
+function shouldSendBody(method: string, body: unknown): boolean {
+    const hasBody = body !== undefined && body !== null;
+    return hasBody && method !== 'GET' && method !== 'DELETE';
+}
+
+async function request<T>(
+    method: string,
+    url: string,
+    options: SecureRequestOptions = {},
+): Promise<T> {
+    const {
+        apiKeys = {},
+        body,
+        headers: customHeaders,
+        timeout,
+        signal,
+        credentials,
+        throwOnError = true,
+        parseAs = 'json',
+    } = options;
+
+    const headers = createRequestHeaders(apiKeys, customHeaders);
+
+    if (shouldSendBody(method, body)) {
+        headers.set('Content-Type', 'application/json');
+    }
+
+    const response = await fetchWithTimeout(url, {
+        method,
+        headers,
+        body: shouldSendBody(method, body) ? JSON.stringify(body) : undefined,
+        timeout,
+        signal,
+        credentials,
+    });
+
+    if (throwOnError && !response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    if (parseAs === 'response') {
+        return response as unknown as T;
+    }
+
+    if (parseAs === 'text') {
+        return response.text() as unknown as T;
+    }
+
+    return response.json() as Promise<T>;
+}
+
 /**
  * Main HTTP client with automatic JSON handling and API key support
  */
@@ -81,94 +135,28 @@ export const http = {
      * GET request with optional API keys
      */
     get: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, headers: customHeaders, timeout, signal } = options;
-        const headers = createRequestHeaders(apiKeys, customHeaders);
-
-        const response = await fetchWithTimeout(url, {
-            method: 'GET',
-            headers,
-            timeout,
-            signal,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response.json();
+        return request<T>('GET', url, options);
     },
 
     /**
      * POST request with automatic JSON handling and API key support
      */
     post: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
-        const headers = createRequestHeaders(apiKeys, customHeaders);
-
-        if (body) {
-            headers.set('Content-Type', 'application/json');
-        }
-
-        const response = await fetchWithTimeout(url, {
-            method: 'POST',
-            headers,
-            body: body ? JSON.stringify(body) : undefined,
-            timeout,
-            signal,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response.json();
+        return request<T>('POST', url, options);
     },
 
     /**
      * PUT request with automatic JSON handling and API key support
      */
     put: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
-        const headers = createRequestHeaders(apiKeys, customHeaders);
-
-        if (body) {
-            headers.set('Content-Type', 'application/json');
-        }
-
-        const response = await fetchWithTimeout(url, {
-            method: 'PUT',
-            headers,
-            body: body ? JSON.stringify(body) : undefined,
-            timeout,
-            signal,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response.json();
+        return request<T>('PUT', url, options);
     },
 
     /**
      * DELETE request with optional API keys
      */
     delete: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, headers: customHeaders, timeout, signal } = options;
-        const headers = createRequestHeaders(apiKeys, customHeaders);
-
-        const response = await fetchWithTimeout(url, {
-            method: 'DELETE',
-            headers,
-            timeout,
-            signal,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response.json();
+        return request<T>('DELETE', url, options);
     },
 
     /**
@@ -176,26 +164,7 @@ export const http = {
      * Use this for endpoints that return streaming responses instead of JSON
      */
     postStream: async (url: string, options: SecureRequestOptions = {}): Promise<Response> => {
-        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
-        const headers = createRequestHeaders(apiKeys, customHeaders);
-
-        if (body) {
-            headers.set('Content-Type', 'application/json');
-        }
-
-        const response = await fetchWithTimeout(url, {
-            method: 'POST',
-            headers,
-            body: body ? JSON.stringify(body) : undefined,
-            timeout,
-            signal,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response;
+        return request<Response>('POST', url, { ...options, parseAs: 'response' });
     },
 };
 
