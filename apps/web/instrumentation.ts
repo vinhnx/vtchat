@@ -8,17 +8,21 @@ export async function register() {
     const originalFetch = globalThis.fetch;
 
     const patchedFetch: typeof fetch = (input, init) => {
-        if (init) {
-            const method = (init as { method?: unknown; }).method;
+        // Ensure init is an object
+        const safeInit = init || {};
+        const method = (safeInit as { method?: unknown; }).method;
 
-            if (method === undefined) {
-                init = { ...init, method: 'GET' };
-            } else if (typeof method !== 'string') {
-                init = { ...init, method: String(method) };
-            }
-        }
+        // Normalize method to always be a string
+        const normalizedInit = {
+            ...safeInit,
+            method: method === undefined || method === null
+                ? 'GET'
+                : typeof method === 'string'
+                    ? method
+                    : String(method),
+        };
 
-        return originalFetch(input as any, init as any);
+        return originalFetch(input as any, normalizedInit as any);
     };
 
     globalAny.__vtchatFetchPatched = true;
