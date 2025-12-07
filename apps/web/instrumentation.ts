@@ -18,8 +18,8 @@ export async function register() {
             method: method === undefined || method === null
                 ? 'GET'
                 : typeof method === 'string'
-                    ? method
-                    : String(method),
+                ? method
+                : String(method),
         };
 
         return originalFetch(input as any, normalizedInit as any);

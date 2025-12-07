@@ -117,7 +117,7 @@
     "@types/react-window": "^1.8.8",
     "@vercel/functions": "^2.2.13",
     "ai": "^4.3.19",
-    "better-auth": "^1.4.5",
+    "better-auth": "^1.4.6-beta.3",
     "better-auth-harmony": "^1.2.5",
     "cobe": "^0.6.5",
     "creem": "^0.3.37",
