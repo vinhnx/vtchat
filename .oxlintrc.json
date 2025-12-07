@@ -24,6 +24,11 @@
         "coverage",
         "*.min.js",
         "*.d.ts",
-        "scripts/**"
+        "scripts/**",
+        "**/scripts/**",
+        "./scripts/**",
+        "**/__tests__/**",
+        "**/*.test.ts",
+        "**/*.test.tsx"
     ]
 }

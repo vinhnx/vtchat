@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth-server';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 // Force dynamic rendering for this route

@@ -17,6 +17,8 @@
 
 import { subDays } from 'date-fns';
 
+import { log } from '@repo/shared/lib/logger';
+
 import { PlanSlug } from '../../../packages/shared/types/subscription';
 import { SubscriptionStatusEnum } from '../../../packages/shared/types/subscription-status';
 import { db } from '../../lib/database';
@@ -71,7 +73,7 @@ interface Report {
     }>;
 }
 
-function parseArgs(): { days: number } {
+function parseArgs(): { days: number; } {
     const idx = process.argv.indexOf('--days');
     if (idx !== -1 && process.argv[idx + 1]) {
         const n = Number.parseInt(process.argv[idx + 1], 10);
@@ -199,10 +201,10 @@ async function main() {
         missingPeriodEnd,
     };
 
-    console.log(JSON.stringify(report, null, 2));
+    log.info({ report }, 'Creem reconciliation report');
 }
 
 main().catch((error) => {
-    console.error('Reconciliation failed', error);
+    log.error({ error }, 'Reconciliation failed');
     process.exit(1);
 });

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 /**
  * Script to automatically fix common linting issues in the VT Chat codebase
  *

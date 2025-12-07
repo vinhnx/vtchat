@@ -111,22 +111,22 @@ public/uploads/
 *.otf
 
 # Documentation (keeping essential guides, excluding verbose docs)
-docs/examples/
-**/docs/examples/
-docs/fixes/
-**/docs/fixes/
-docs/improvements/
-**/docs/improvements/
-docs/production-fixes/
-**/docs/production-fixes/
-docs/scopes/
-**/docs/scopes/
-docs/security/
-**/docs/security/
-docs/testing/
-**/docs/testing/
-memory-bank/
-**/memory-bank/
+# docs/examples/
+# **/docs/examples/
+# docs/fixes/
+# **/docs/fixes/
+# docs/improvements/
+# **/docs/improvements/
+# docs/production-fixes/
+# **/docs/production-fixes/
+# docs/scopes/
+# **/docs/scopes/
+# docs/security/
+# **/docs/security/
+# docs/testing/
+# **/docs/testing/
+# memory-bank/
+# **/memory-bank/
 
 # Temporary and backup files
 *.backup
@@ -161,8 +161,8 @@ fly.toml
 **/fly.toml
 
 # Scripts and utilities (keeping essential ones)
-scripts/
-**/scripts/
+# scripts/
+# **/scripts/
 deploy-fly.sh
 start.sh
 **/start.sh

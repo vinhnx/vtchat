@@ -5,7 +5,6 @@ import { isChartTool } from '@repo/common/constants/chart-tools';
 import { isMathTool } from '@repo/common/constants/math-tools';
 import {
     useAnimatedText,
-    useDebounced,
     useErrorToast,
     useMathCalculator,
 } from '@repo/common/hooks';
@@ -45,8 +44,6 @@ export const ThreadItem = memo(
         isGenerating: boolean;
         isLast: boolean;
     }) => {
-        const getChatStore = useChatStore((state) => state);
-
         // Check if this is an image generation workflow by looking at thread context
         const isImageGenerationWorkflow = useMemo(() => {
             // Check if this thread item is explicitly marked as image generation
@@ -67,7 +64,7 @@ export const ThreadItem = memo(
             && isGenerating
             && !['COMPLETED', 'ERROR', 'ABORTED'].includes(threadItem.status || '');
 
-        const { isAnimationComplete, text: animatedText } = useAnimatedText(
+        const { text: animatedText } = useAnimatedText(
             threadItem.answer?.text || '',
             shouldAnimate,
         );
@@ -75,13 +72,8 @@ export const ThreadItem = memo(
         const messageRef = useRef<HTMLDivElement>(null);
         const { useMathCalculator: mathCalculatorEnabled } = useMathCalculator();
         const { handleSubmit } = useAgentStream();
-        const [speaking, setSpeaking] = useState(false);
         const [imageZoomOpen, setImageZoomOpen] = useState(false);
         const [imageZoomIndex, setImageZoomIndex] = useState(0);
-
-        // Debounced status to prevent flashing during rapid status changes
-        const debouncedStatus = useDebounced(threadItem.status, 50);
-        const debouncedError = useDebounced(threadItem.error, 50);
 
         // Handle error toasts with custom hook
         useErrorToast({

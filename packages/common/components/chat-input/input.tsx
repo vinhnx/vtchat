@@ -14,7 +14,7 @@ import {
     resizeImageDataUrl,
     validateByokForImageAnalysis,
 } from '@repo/shared/utils';
-import { cn, Flex, useToast } from '@repo/ui';
+import { Flex, cn, useToast } from '@repo/ui';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -518,13 +518,18 @@ export const ChatInput = ({
             // First submit the message
             const formData = new FormData();
             formData.append('query', editor?.getText() || '');
-            imageAttachment?.base64 && formData.append('imageAttachment', imageAttachment?.base64);
-            documentAttachment?.base64
-                && formData.append('documentAttachment', documentAttachment?.base64);
-            documentAttachment?.mimeType
-                && formData.append('documentMimeType', documentAttachment?.mimeType);
-            documentAttachment?.fileName
-                && formData.append('documentFileName', documentAttachment?.fileName);
+            if (imageAttachment?.base64) {
+                formData.append('imageAttachment', imageAttachment.base64);
+            }
+            if (documentAttachment?.base64) {
+                formData.append('documentAttachment', documentAttachment.base64);
+            }
+            if (documentAttachment?.mimeType) {
+                formData.append('documentMimeType', documentAttachment.mimeType);
+            }
+            if (documentAttachment?.fileName) {
+                formData.append('documentFileName', documentAttachment.fileName);
+            }
 
             // Add multi-modal attachments
             if (multiModalAttachments.length > 0) {
@@ -691,7 +696,7 @@ export const ChatInput = ({
 
     useEffect(() => {
         editor?.commands.focus('end');
-    }, [currentThreadId]);
+    }, [currentThreadId, editor]);
 
     // Multi-image drag & drop: add all dropped images to attachments and set first as preview
     const multiDropzone = useDropzone({

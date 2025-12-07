@@ -10,7 +10,7 @@ import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import crypto from 'node:crypto';
 import { z } from 'zod';
 
@@ -411,8 +411,8 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
     // If mapping is uncertain (base) but we already have VT+ recorded, keep VT+
     if (planSlug === PlanSlug.VT_BASE) {
         const hadVtPlusSubscription = existing.length > 0 && existing[0].plan === PlanSlug.VT_PLUS;
-        const hadVtPlusUserPlan =
-            userPlanRow.length > 0 && userPlanRow[0].planSlug === PlanSlug.VT_PLUS;
+        const hadVtPlusUserPlan = userPlanRow.length > 0
+            && userPlanRow[0].planSlug === PlanSlug.VT_PLUS;
 
         if (hadVtPlusSubscription || hadVtPlusUserPlan) {
             planSlug = PlanSlug.VT_PLUS;

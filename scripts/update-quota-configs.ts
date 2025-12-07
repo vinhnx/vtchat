@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 
+/* eslint-disable no-console */
+
 /**
  * Script to update quota configurations in the database
  * Usage: bun run scripts/update-quota-configs.ts

@@ -10,7 +10,7 @@ import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 // Schema for processing payment success
@@ -166,7 +166,9 @@ export async function POST(request: NextRequest) {
 
         // Touch sessions to force refresh
         try {
-            const userSessions = await db.select().from(sessions).where(eq(sessions.userId, userId));
+            const userSessions = await db.select().from(sessions).where(
+                eq(sessions.userId, userId),
+            );
             if (userSessions.length > 0) {
                 await db
                     .update(sessions)
@@ -203,8 +205,7 @@ export async function POST(request: NextRequest) {
                 .where(eq(users.id, userId))
                 .limit(1);
 
-            const isVtPlus =
-                (subRow.length > 0 && subRow[0].plan === PlanSlug.VT_PLUS)
+            const isVtPlus = (subRow.length > 0 && subRow[0].plan === PlanSlug.VT_PLUS)
                 || (userRow.length > 0 && userRow[0].planSlug === PlanSlug.VT_PLUS);
 
             if (!isVtPlus) {

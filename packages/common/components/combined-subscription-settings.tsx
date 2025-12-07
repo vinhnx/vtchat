@@ -50,11 +50,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
     const setThinkingMode = useAppStore((state) => state.setThinkingMode);
     const geminiCaching = useAppStore((state) => state.geminiCaching);
     const setGeminiCaching = useAppStore((state) => state.setGeminiCaching);
-    const embeddingModel = useAppStore((state) => state.embeddingModel);
-    const setEmbeddingModel = useAppStore((state) => state.setEmbeddingModel);
-    const ragChatModel = useAppStore((state) => state.ragChatModel);
-    const setRagChatModel = useAppStore((state) => state.setRagChatModel);
-    const profile = useAppStore((state) => state.profile);
+    useAppStore((state) => state.ragChatModel);
 
     const currentPlan = planSlug && PLANS[planSlug] ? PLANS[planSlug] : PLANS[PlanSlug.VT_BASE];
 

@@ -6,16 +6,9 @@ import { isGeminiModel } from '@repo/common/utils';
 import { DOCUMENT_UPLOAD_CONFIG } from '@repo/shared/constants/document-upload';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { Button, cn, useToast } from '@repo/ui';
-import { AlertCircle, CheckCircle, FileText, HelpCircle, Loader2, X } from 'lucide-react';
+import { AlertCircle, CheckCircle, FileText, Loader2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { LoginRequiredDialog } from '../login-required-dialog';
-import { PDFHelpDialog } from '../pdf-help-dialog';
-
-interface PDFProcessingStatus {
-    status: 'idle' | 'uploading' | 'processing' | 'success' | 'error';
-    error?: string;
-    suggestion?: string;
-}
 
 export const DocumentUploadButton = () => {
     const chatMode = useChatStore((state) => state.chatMode);

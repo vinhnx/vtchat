@@ -1,5 +1,4 @@
 import { markdownStyles, Response } from '@repo/common/components';
-import { useCopyText } from '@repo/common/hooks';
 import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -20,34 +19,7 @@ export const PremiumAIResponse = memo(
     ) => {
         const [_isExpanded, _setIsExpanded] = useState(false);
         const [showActions, setShowActions] = useState(false);
-        const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
-        const [isReading, setIsReading] = useState(false);
         const contentRef = useRef<HTMLDivElement>(null);
-        const { copyToClipboard, status } = useCopyText();
-
-        const handleCopy = () => {
-            if (contentRef.current) {
-                copyToClipboard(contentRef.current);
-            }
-        };
-
-        const handleFeedback = (type: 'up' | 'down') => {
-            setFeedback(type === feedback ? null : type);
-        };
-
-        const handleTextToSpeech = () => {
-            if (isReading) {
-                speechSynthesis.cancel();
-                setIsReading(false);
-            } else {
-                const utterance = new SpeechSynthesisUtterance(content);
-                utterance.rate = 0.8;
-                utterance.pitch = 1;
-                utterance.onend = () => setIsReading(false);
-                speechSynthesis.speak(utterance);
-                setIsReading(true);
-            }
-        };
 
         return (
             <motion.div

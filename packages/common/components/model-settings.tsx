@@ -2,7 +2,6 @@
 
 import { ModelEnum, models } from '@repo/ai/models';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
-import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Badge,
     Card,
@@ -40,7 +39,6 @@ const providerNames: Record<string, string> = {
 };
 
 export const ModelSettings = () => {
-    const { data: session } = useSession();
     const isVtPlus = useVtPlusAccess();
     const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const groupedModels = groupModelsByProvider();

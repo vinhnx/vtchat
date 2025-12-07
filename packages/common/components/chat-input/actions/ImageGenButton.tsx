@@ -211,6 +211,7 @@ export const ImageGenButton = ({
         } finally {
             setIsGenerating(false);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         editor,
         createThread,

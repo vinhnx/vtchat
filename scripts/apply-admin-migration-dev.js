@@ -3,6 +3,8 @@
  * Usage: bun run scripts/apply-admin-migration-dev.js
  */
 
+/* eslint-disable no-console */
+
 import { readFileSync } from 'node:fs';
 import { Client } from 'pg';
 

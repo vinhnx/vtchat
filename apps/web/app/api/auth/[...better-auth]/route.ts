@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth-server';
+import { auth, authConfigured } from '@/lib/auth-server';
 import { log } from '@repo/shared/logger';
 import { toNextJsHandler } from 'better-auth/next-js';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -20,10 +20,27 @@ export async function OPTIONS(_request: Request) {
 }
 
 // Use Better Auth's recommended Next.js handler
-const { GET: originalGET, POST: originalPOST } = toNextJsHandler(auth);
+const handlers = authConfigured ? toNextJsHandler(auth as any) : null;
+const originalGET = handlers?.GET;
+const originalPOST = handlers?.POST;
 
 // Wrap the handlers to add CORS headers and error handling
 export async function GET(request: Request) {
+    if (!authConfigured || !originalGET) {
+        return new NextResponse(
+            JSON.stringify({
+                error: 'Authentication not configured locally (missing DATABASE_URL)',
+            }),
+            {
+                status: 503,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...corsHeaders,
+                },
+            },
+        );
+    }
+
     try {
         const response = await originalGET(request);
 
@@ -46,6 +63,21 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
+    if (!authConfigured || !originalPOST) {
+        return new NextResponse(
+            JSON.stringify({
+                error: 'Authentication not configured locally (missing DATABASE_URL)',
+            }),
+            {
+                status: 503,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...corsHeaders,
+                },
+            },
+        );
+    }
+
     try {
         const response = await originalPOST(request);
 

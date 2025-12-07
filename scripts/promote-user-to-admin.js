@@ -5,6 +5,8 @@
  * Usage: bun scripts/promote-user-to-admin.js <user_id>
  */
 
+/* eslint-disable no-console */
+
 const { eq } = require('drizzle-orm');
 
 async function promoteUserToAdmin(userId) {

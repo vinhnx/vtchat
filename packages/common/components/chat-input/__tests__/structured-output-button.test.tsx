@@ -1,7 +1,7 @@
+import { DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StructuredOutputButton } from '../structured-output-button';
-import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 
 // Mock dependencies
 vi.mock('@repo/ai/providers', () => ({

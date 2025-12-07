@@ -10,7 +10,7 @@ import {
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/lib/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -137,6 +137,7 @@ const isAllowedRemoteImageUrl = (value: string): boolean => {
     try {
         url = new URL(value);
     } catch (error) {
+        log.warn({ error }, 'Invalid remote image URL');
         return false;
     }
 
@@ -180,7 +181,9 @@ const sanitizeImages = (images?: RequestBody['images']): NormalizedImage[] => {
     return images
         .map((image) => {
             const base64 = typeof image.base64 === 'string' ? image.base64.trim() : undefined;
-            const mediaType = typeof image.mediaType === 'string' ? image.mediaType.trim() : undefined;
+            const mediaType = typeof image.mediaType === 'string'
+                ? image.mediaType.trim()
+                : undefined;
             const url = typeof image.url === 'string' ? image.url.trim() : undefined;
             const name = typeof image.name === 'string' ? image.name.trim() : undefined;
 
@@ -268,10 +271,27 @@ export async function POST(request: NextRequest) {
     const bodyKeys = sanitizeApiKeys(body.apiKeys);
     const combinedKeys = { ...bodyKeys, ...headerKeys };
 
-    const hasGeminiKey = typeof combinedKeys.GEMINI_API_KEY === 'string'
-        && combinedKeys.GEMINI_API_KEY.length > 0;
+    const managedGeminiKey = (process.env.GEMINI_API_KEY
+        || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+        || '').trim();
 
-    if (!hasGeminiKey && userTier !== UserTier.PLUS) {
+    const resolvedKeys = {
+        ...combinedKeys,
+        ...(managedGeminiKey ? { GEMINI_API_KEY: managedGeminiKey } : {}),
+    };
+
+    const hasGeminiKey = typeof resolvedKeys.GEMINI_API_KEY === 'string'
+        && resolvedKeys.GEMINI_API_KEY.length > 0;
+
+    if (!hasGeminiKey) {
+        log.warn(
+            {
+                userId,
+                userTier,
+                hasManagedGeminiKey: Boolean(managedGeminiKey),
+            },
+            'Blocking image request without Gemini API key',
+        );
         return buildErrorResponse(ImageGenerationErrorCode.API_KEY_REQUIRED, HttpStatus.FORBIDDEN);
     }
 
@@ -293,7 +313,7 @@ export async function POST(request: NextRequest) {
     try {
         const result = await generateGeminiImage({
             prompt,
-            byokKeys: Object.keys(combinedKeys).length > 0 ? combinedKeys : undefined,
+            byokKeys: Object.keys(resolvedKeys).length > 0 ? resolvedKeys : undefined,
             userId,
             userTier,
             images: sanitizedImages,

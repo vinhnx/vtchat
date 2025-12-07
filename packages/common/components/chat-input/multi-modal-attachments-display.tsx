@@ -17,7 +17,6 @@ export const MultiModalAttachmentsDisplay = memo(
 
         const [previewIndex, setPreviewIndex] = useState<number | null>(null);
         const open = useMemo(() => previewIndex !== null, [previewIndex]);
-        const current = previewIndex !== null ? attachments[previewIndex] : undefined;
 
         const getAttachmentVisual = (attachment: Attachment) => {
             if (attachment.contentType.startsWith('image/') && attachment.url) {
@@ -106,15 +105,6 @@ export const MultiModalAttachmentsDisplay = memo(
 );
 
 MultiModalAttachmentsDisplay.displayName = 'MultiModalAttachmentsDisplay';
-
-function formatSize(bytes?: number) {
-    if (!bytes && bytes !== 0) return 'Unknown';
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${Number.parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
-}
 
 export function AttachmentPreviewModal({
     open,

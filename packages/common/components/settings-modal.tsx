@@ -670,7 +670,6 @@ export const PersonalizationSettings = ({ onClose }: PersonalizationSettingsProp
                             </Button>
                         </div>
                     </div>
-
                 </CardContent>
             </Card>
 

@@ -5,6 +5,8 @@
  * Run with: bun run scripts/migrate-user-profile.ts
  */
 
+/* eslint-disable no-console */
+
 import { log } from '@repo/shared/logger';
 import { sql } from 'drizzle-orm';
 import { db } from '../apps/web/lib/database';

@@ -33,7 +33,7 @@ export function ChatModeButton() {
         } | null
     >(null);
 
-    const { isGated } = useChatModeAccess(chatMode);
+    useChatModeAccess(chatMode);
 
     const selectedOption =
         [...chatOptions, ...modelOptions].find((option) => option.value === chatMode)

@@ -24,7 +24,6 @@ export function AuthRecoveryHandler({ children, preserveRoute = true }: AuthReco
     const maxRecoveryAttempts = 3;
 
     const {
-        isAuthenticated,
         isLoading,
         error,
         refreshSession,

@@ -1,15 +1,27 @@
-import { checkVTPlusAccess } from '@/app/api/subscription/access-control';
-import { auth } from '@/lib/auth-server';
-import { userRateLimits } from '@/lib/database/schema';
-import { getRateLimitStatus, recordRequest } from '@/lib/services/rate-limit';
 import type { ModelEnum } from '@repo/ai/models';
-import { db } from '@repo/shared/lib/database';
 import { log } from '@repo/shared/logger';
 import { and, eq } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 
+const ensureDb = async () => {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) return null;
+    const { db } = await import('@repo/shared/lib/database');
+    const { userRateLimits } = await import('@/lib/database/schema');
+    return { db, userRateLimits };
+};
+
 export async function GET(request: NextRequest) {
     try {
+        if (!process.env.DATABASE_URL) {
+            log.error('DATABASE_URL is not configured for rate-limit status');
+            return new Response(JSON.stringify({ error: 'Service unavailable' }), {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        const { auth } = await import('@/lib/auth-server');
         const session = await auth.api.getSession({
             headers: request.headers,
         });
@@ -28,11 +40,13 @@ export async function GET(request: NextRequest) {
         // Check VT+ status for proper limit calculation
         const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
             || 'unknown';
+        const { checkVTPlusAccess } = await import('@/app/api/subscription/access-control');
         const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
         const isVTPlusUser = vtPlusAccess.hasAccess;
 
         // If no model specified, return all Gemini models
         if (!modelId) {
+            const { getRateLimitStatus } = await import('@/lib/services/rate-limit');
             const { GEMINI_MODEL_ENUMS_ARRAY } = await import('@repo/shared/utils');
             const geminiModels = GEMINI_MODEL_ENUMS_ARRAY;
 
@@ -59,6 +73,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Single model request
+        const { getRateLimitStatus } = await import('@/lib/services/rate-limit');
         const status = await getRateLimitStatus(userId, modelId, isVTPlusUser);
 
         return new Response(JSON.stringify(status), {
@@ -79,6 +94,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
+        if (!process.env.DATABASE_URL) {
+            log.error('DATABASE_URL is not configured for rate-limit updates');
+            return new Response(JSON.stringify({ error: 'Service unavailable' }), {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        const { auth } = await import('@/lib/auth-server');
         const session = await auth.api.getSession({
             headers: request.headers,
         });
@@ -115,9 +139,11 @@ export async function POST(request: NextRequest) {
         // Check VT+ access
         const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
             || 'unknown';
+        const { checkVTPlusAccess } = await import('@/app/api/subscription/access-control');
         const vtPlusAccess = await checkVTPlusAccess({ userId, ip });
 
         // Record the successful request
+        const { recordRequest, getRateLimitStatus } = await import('@/lib/services/rate-limit');
         await recordRequest(userId, modelId, vtPlusAccess.hasAccess);
 
         // Return fresh status so UI can update instantly
@@ -143,6 +169,15 @@ export async function POST(request: NextRequest) {
 export const dynamic = 'force-dynamic';
 export async function GET_ZERO_RECORDS(request: NextRequest) {
     try {
+        const dbResources = await ensureDb();
+        if (!dbResources) {
+            log.error('DATABASE_URL is not configured for rate-limit zero-records');
+            return new Response(JSON.stringify({ error: 'Service unavailable' }), {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
         // Only allow admin or internal use (add your own access control as needed)
         const session = await auth.api.getSession({ headers: request.headers });
         if (!session?.user?.id /* || !isAdmin(session.user.id) */) {
@@ -152,13 +187,13 @@ export async function GET_ZERO_RECORDS(request: NextRequest) {
             });
         }
         // Query all user_rate_limits records with both counts zero
-        const zeroRecords = await db
+        const zeroRecords = await dbResources.db
             .select()
-            .from(userRateLimits)
+            .from(dbResources.userRateLimits)
             .where(
                 and(
-                    eq(userRateLimits.dailyRequestCount, '0'),
-                    eq(userRateLimits.minuteRequestCount, '0'),
+                    eq(dbResources.userRateLimits.dailyRequestCount, '0'),
+                    eq(dbResources.userRateLimits.minuteRequestCount, '0'),
                 ),
             )
             .limit(1000); // Limit for safety

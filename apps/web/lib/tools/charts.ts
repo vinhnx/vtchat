@@ -8,6 +8,60 @@ const chartDataSchema = z.object({
     value: z.number().describe('Data point value'),
 });
 
+const barChartObjectSchema = z.object({
+    data: z.object({
+        labels: z.array(z.string()).describe('Labels for each category'),
+        series: z
+            .array(
+                z.object({
+                    name: z.string().optional().describe('Series name'),
+                    values: z.array(z.number()).describe('Values per label in order'),
+                }),
+            )
+            .min(1)
+            .describe('At least one series with values'),
+    }),
+});
+
+const normalizeBarChartData = (
+    data?:
+        | Array<z.infer<typeof chartDataSchema>>
+        | z.infer<typeof barChartObjectSchema>['data'],
+): Array<z.infer<typeof chartDataSchema>> => {
+    if (!data) return generateSampleData.sales();
+
+    // Already in array form
+    if (Array.isArray(data)) {
+        const sanitized = data
+            .map((point) => ({
+                name: point.name,
+                value: Number.isFinite(Number(point.value)) ? Number(point.value) : 0,
+            }))
+            .filter((point) => point.name?.trim().length);
+
+        return sanitized.length > 0 ? sanitized : generateSampleData.sales();
+    }
+
+    // Object form: { labels: [...], series: [{ values: [...] }] }
+    const series = Array.isArray(data.series) ? data.series : [];
+    const selectedSeries = series.find((candidate) => Array.isArray(candidate.values));
+
+    if (!selectedSeries || !Array.isArray(data.labels)) {
+        return generateSampleData.sales();
+    }
+
+    const labels = data.labels;
+    const values = selectedSeries.values;
+
+    const normalized = labels.map((label, index) => ({
+        name: label,
+        value: Number.isFinite(Number(values[index])) ? Number(values[index]) : 0,
+    }));
+
+    const filtered = normalized.filter((point) => point.name?.trim().length);
+    return filtered.length > 0 ? filtered : generateSampleData.sales();
+};
+
 const multiSeriesDataSchema = z.object({
     name: z.string().describe('Data point label'),
     series1: z.number().describe('First series value'),
@@ -25,9 +79,11 @@ export const chartTools = (config?: {
             parameters: z.object({
                 title: z.string().optional().describe('Chart title'),
                 data: z
-                    .array(chartDataSchema)
+                    .union([z.array(chartDataSchema), barChartObjectSchema.shape.data])
                     .optional()
-                    .describe('Array of data points with name and value'),
+                    .describe(
+                        'Either an array of {name, value} points or an object with labels and series',
+                    ),
                 xAxisLabel: z
                     .string()
                     .nullable()
@@ -45,7 +101,7 @@ export const chartTools = (config?: {
                     .describe('Chart color theme (blue, red, green, etc.)'),
             }),
             execute: async ({ title, data, xAxisLabel, yAxisLabel, color = 'blue' }) => {
-                const safeData = data && data.length > 0 ? data : generateSampleData.sales();
+                const safeData = normalizeBarChartData(data);
                 return {
                     type: 'barChart',
                     title: title || 'Bar Chart',

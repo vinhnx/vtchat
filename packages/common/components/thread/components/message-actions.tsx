@@ -31,7 +31,7 @@ export const MessageActions = forwardRef<HTMLDivElement, MessageActionsProps>(
         const getThreadItems = useChatStore((state) => state.getThreadItems);
         const useWebSearch = useChatStore((state) => state.useWebSearch);
         const [chatMode, setChatMode] = useState<ChatMode>(threadItem.mode);
-        const { copyToClipboard, status, copyMarkdown, markdownCopyStatus } = useCopyText();
+        const { copyToClipboard, copyMarkdown } = useCopyText();
         const copyFeedback = useContextualFeedback({ successDuration: 1500 });
         const markdownCopyFeedback = useContextualFeedback({ successDuration: 1500 });
         const [gatedFeatureAlert, setGatedFeatureAlert] = useState<

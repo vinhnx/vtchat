@@ -16,15 +16,13 @@ export const GEMINI_FLASH_IMAGE_ASPECT_RATIOS = [
     '4:5',
 ] as const;
 
-export type GeminiFlashImageAspectRatio =
-    (typeof GEMINI_FLASH_IMAGE_ASPECT_RATIOS)[number];
+export type GeminiFlashImageAspectRatio = (typeof GEMINI_FLASH_IMAGE_ASPECT_RATIOS)[number];
 
 const GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET = new Set<GeminiFlashImageAspectRatio>(
     GEMINI_FLASH_IMAGE_ASPECT_RATIOS,
 );
 
-const GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST =
-    GEMINI_FLASH_IMAGE_ASPECT_RATIOS.join(', ');
+const GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST = GEMINI_FLASH_IMAGE_ASPECT_RATIOS.join(', ');
 
 export type GeminiImageConfig = {
     aspectRatio?: GeminiFlashImageAspectRatio;
@@ -235,7 +233,7 @@ Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
 
     const googleOptions: {
         responseModalities: Array<'IMAGE' | 'TEXT'>;
-        imageConfig?: { aspectRatio: GeminiFlashImageAspectRatio };
+        imageConfig?: { aspectRatio: GeminiFlashImageAspectRatio; };
     } = { responseModalities: ['IMAGE', 'TEXT'] };
 
     if (selectedAspectRatio) {

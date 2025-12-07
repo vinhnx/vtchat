@@ -12,9 +12,9 @@ import type { CoreMessage } from 'ai';
 import { WorkflowContextSchema, WorkflowEventSchema } from './types'; // Import types from the new dedicated file
 // Import tasks individually to avoid potential circular dependency issues during build
 import { analysisTask } from './tasks/analysis';
+import { modeRoutingTask } from './tasks/chat-mode-router';
 import { completionTask } from './tasks/completion';
 import { geminiWebSearchTask } from './tasks/gemini-web-search';
-import { modeRoutingTask } from './tasks/chat-mode-router';
 import { plannerTask } from './tasks/planner';
 import { refineQueryTask } from './tasks/refine-query';
 import { reflectorTask } from './tasks/reflector';

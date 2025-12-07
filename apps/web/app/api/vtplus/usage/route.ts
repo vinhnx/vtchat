@@ -1,16 +1,18 @@
-import { checkVTPlusAccess } from '@/app/api/subscription/access-control';
-import { auth } from '@/lib/auth-server';
-import { getUserWithSubscription } from '@/lib/database/queries';
-import { getAllUsage } from '@/lib/services/vtplus-quota.service';
 import { VtPlusFeature } from '@repo/common/config/vtPlusLimits';
 import { log } from '@repo/shared/lib/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
     try {
+        if (!process.env.DATABASE_URL) {
+            log.error('DATABASE_URL is not configured for VT+ usage route');
+            return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+        }
+
+        const { auth } = await import('@/lib/auth-server');
         const session = await auth.api.getSession({
             headers: request.headers,
         });
@@ -24,6 +26,7 @@ export async function GET(request: NextRequest) {
         // Check VT+ access before returning usage data
         const ip = request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for')
             ?? undefined;
+        const { checkVTPlusAccess } = await import('@/app/api/subscription/access-control');
         const vtPlusCheck = await checkVTPlusAccess({ userId, ip });
         if (!vtPlusCheck.hasAccess) {
             return NextResponse.json(
@@ -38,11 +41,13 @@ export async function GET(request: NextRequest) {
         }
 
         // Get user's subscription plan
+        const { getUserWithSubscription } = await import('@/lib/database/queries');
         const userWithSubscription = await getUserWithSubscription(userId);
         const userPlan = (userWithSubscription?.userSubscription?.plan as PlanSlug)
             || PlanSlug.VT_BASE;
 
         // Get usage for all VT+ features
+        const { getAllUsage } = await import('@/lib/services/vtplus-quota.service');
         const usage = await getAllUsage(userId, userPlan);
 
         // Calculate next reset dates based on window type

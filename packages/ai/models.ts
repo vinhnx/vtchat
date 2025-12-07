@@ -1,8 +1,8 @@
 import { ChatMode } from '@repo/shared/config';
 import type { CoreMessage } from 'ai';
 import { ReasoningTagName, ReasoningType } from './constants/reasoning';
-import type { ProviderEnumType } from './providers';
 import { ModelEnum } from './model-enum';
+import type { ProviderEnumType } from './providers';
 
 export { ModelEnum };
 export type { ModelEnum as ModelEnumType };

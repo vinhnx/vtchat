@@ -1,6 +1,6 @@
 'use client';
 
-import { ModelEnum, type Model, models } from '@repo/ai/models';
+import { type Model, ModelEnum, models } from '@repo/ai/models';
 import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
@@ -794,7 +794,9 @@ const _performWorkerDatabaseOperation = async (
 function withDatabase<T>(operation: (db: ThreadDatabase) => T): T | null {
     const database = getDatabase();
     if (!database) {
-        log.warn({ context: 'ThreadDB' }, 'Database not available, skipping operation');
+        if (typeof window !== 'undefined') {
+            log.warn({ context: 'ThreadDB' }, 'Database not available, skipping operation');
+        }
         return null;
     }
     return operation(database);
@@ -808,7 +810,9 @@ async function withDatabaseAsync<T>(
 ): Promise<T | null> {
     const database = getDatabase();
     if (!database) {
-        log.warn({ context: 'ThreadDB' }, 'Database not available, skipping async operation');
+        if (typeof window !== 'undefined') {
+            log.warn({ context: 'ThreadDB' }, 'Database not available, skipping async operation');
+        }
         return null;
     }
     try {

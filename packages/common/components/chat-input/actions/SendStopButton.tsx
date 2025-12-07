@@ -5,12 +5,11 @@ import { Button } from '@repo/ui';
 import {
     ANIMATION_DURATION,
     createAnticipation,
-    createSquashStretch,
     EASING,
 } from '@repo/ui/src/lib/animation-utils';
 import { cn } from '@repo/ui/src/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp, CircleStop, Clock, Square } from 'lucide-react';
+import { ArrowUp, Clock, Square } from 'lucide-react';
 import { ZRotationLoader } from '../../z-rotation-loader'; // Import ZRotationLoader
 import { ICON_SIZES } from '../config/constants';
 

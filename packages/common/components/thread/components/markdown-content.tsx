@@ -1,16 +1,15 @@
 'use client';
 
-import { CodeBlock, ErrorBoundary, ErrorPlaceholder, mdxComponents } from '@repo/common/components';
+import { ErrorBoundary, ErrorPlaceholder, Response, mdxComponents } from '@repo/common/components';
 import { log } from '@repo/shared/logger';
 import { cn } from '@repo/ui';
 import { MDXRemote } from 'next-mdx-remote';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote/rsc';
 import { serialize } from 'next-mdx-remote/serialize';
 import { useTheme } from 'next-themes';
-import { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import './markdown-content.css';
-import { Response } from '@repo/common/components';
 
 export const markdownStyles = {
     // Base prose styling with animation and theme support
@@ -199,6 +198,7 @@ function parseCitationsWithSourceTags(markdown: string): string {
                 // Create Source tags for each number
                 return numbers.map((num) => `<Source>${num}</Source>`).join(' ');
             } catch (error) {
+                log.warn({ error }, 'Failed to parse multi-citation');
                 // If parsing fails, return original match
                 return match;
             }
@@ -213,8 +213,7 @@ function parseCitationsWithSourceTags(markdown: string): string {
 
         return result;
     } catch (error) {
-        // If any error occurs during parsing, return original markdown
-
+        log.warn({ error }, 'Failed to parse citations, using original content');
         return markdown;
     }
 }
@@ -586,67 +585,6 @@ const ProgressiveMarkdownRenderer = memo(
                 return () => clearTimeout(debounceTimeout);
             }
         }, [content, lastContent]);
-
-        // Parse content into blocks for progressive rendering with debouncing
-        const blocks = useMemo(() => {
-            if (!content) return [];
-
-            // Split content into logical blocks (paragraphs, headers, code blocks, etc.)
-            const lines = content.split('\n');
-            const blocks: string[] = [];
-            let currentBlock = '';
-            let inCodeBlock = false;
-
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-
-                // Check for code block markers
-                if (line.trim().startsWith('```')) {
-                    if (inCodeBlock) {
-                        // End of code block
-                        currentBlock += line + '\n';
-                        blocks.push(currentBlock);
-                        currentBlock = '';
-                        inCodeBlock = false;
-                    } else {
-                        // Start of code block
-                        if (currentBlock.trim()) {
-                            blocks.push(currentBlock);
-                        }
-                        currentBlock = line + '\n';
-                        inCodeBlock = true;
-                    }
-                } else if (inCodeBlock) {
-                    // Inside code block, add line
-                    currentBlock += line + '\n';
-                } else if (line.trim() === '') {
-                    // Empty line - end current block
-                    if (currentBlock.trim()) {
-                        blocks.push(currentBlock);
-                        currentBlock = '';
-                    }
-                } else if (line.match(/^#{1,6}\s/)) {
-                    // Header - end current block and start new one
-                    if (currentBlock.trim()) {
-                        blocks.push(currentBlock);
-                    }
-                    currentBlock = line + '\n';
-                } else if (line.match(/^[-*+]\s/) || line.match(/^\d+\.\s/)) {
-                    // List item - continue current block or start new one
-                    currentBlock += line + '\n';
-                } else {
-                    // Regular line - add to current block
-                    currentBlock += line + '\n';
-                }
-            }
-
-            // Add remaining content as final block
-            if (currentBlock.trim()) {
-                blocks.push(currentBlock);
-            }
-
-            return blocks;
-        }, [content]);
 
         return (
             <div

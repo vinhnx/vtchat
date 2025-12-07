@@ -1,11 +1,9 @@
-import { auth } from '@/lib/auth-server';
 import { getProviderInstance, Providers } from '@repo/ai/providers';
 import { isGeminiModel } from '@repo/common/utils';
 import { log } from '@repo/shared/logger';
 import { generateObject } from 'ai';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
-import { checkSignedInFeatureAccess, checkVTPlusAccess } from '../../subscription/access-control';
 
 // Move schemas to a shared location or keep them here
 const getDocumentSchemas = () => ({
@@ -144,6 +142,16 @@ const getDocumentSchemas = () => ({
 
 export async function POST(request: NextRequest) {
     try {
+        if (!process.env.DATABASE_URL) {
+            log.error('DATABASE_URL is not configured for structured extract');
+            return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+        }
+
+        const { auth } = await import('@/lib/auth-server');
+        const { checkSignedInFeatureAccess, checkVTPlusAccess } = await import(
+            '../../subscription/access-control'
+        );
+
         // Parse request body
         const body = await request.json();
         const { textContent, documentType, fileName, chatMode, userApiKeys } = body;

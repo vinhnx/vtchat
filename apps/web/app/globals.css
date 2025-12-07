@@ -1,8 +1,19 @@
 @import '@repo/tailwind-config/tailwind.css';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+@import 'prosemirror-view/style/prosemirror.css';
 /* Include Streamdown styles for Tailwind (path relative to this file) */
 @source "../node_modules/streamdown/dist/index.js";
+
+/* Ensure ProseMirror applies expected white-space rules */
+.ProseMirror {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ProseMirror p {
+    margin: 0;
+}
 
 /* Safe area utilities for mobile devices */
 .pb-safe-area-inset-bottom {

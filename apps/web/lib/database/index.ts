@@ -3,20 +3,20 @@ import { log } from '@repo/shared/logger';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
 
-if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL environment variable is required');
-}
+const databaseUrl = process.env.DATABASE_URL;
 
-// Use Neon HTTP client instead of Pool for better Bun compatibility
-// This avoids the unref() function issues with connection pooling
-const sql = neon(process.env.DATABASE_URL);
+// Gracefully handle missing env in local/dev to avoid hard crashes
+const isDatabaseConfigured = Boolean(databaseUrl);
 
-// Create drizzle instance with Neon HTTP adapter (more compatible with Bun)
-export const db = drizzle(sql, {
-    schema,
-    // Disable drizzle's built-in logger to prevent connection object dumps
-    logger: false,
-});
+const sql = isDatabaseConfigured ? neon(databaseUrl!) : null;
+
+// Create drizzle instance only when configured; otherwise export null
+export const db = isDatabaseConfigured
+    ? drizzle(sql as ReturnType<typeof neon>, {
+        schema,
+        logger: false,
+    })
+    : null;
 
 // Simple connection test function
 export const testConnection = async () => {

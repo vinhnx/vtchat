@@ -15,10 +15,21 @@ export default async function middleware(request: NextRequest) {
     // Remove tracking parameters from home page to prevent duplicate content
     // while preserving them for analytics in a non-indexable way
     if (pathname === '/' || pathname === '') {
-        const trackingParams = ['ref', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'ref_src', 'source'];
+        const trackingParams = [
+            'ref',
+            'utm_source',
+            'utm_medium',
+            'utm_campaign',
+            'utm_term',
+            'utm_content',
+            'gclid',
+            'fbclid',
+            'ref_src',
+            'source',
+        ];
         let hasTrackingParams = false;
         const newSearchParams = new URLSearchParams();
-        
+
         request.nextUrl.searchParams.forEach((value, key) => {
             if (trackingParams.includes(key)) {
                 hasTrackingParams = true;
@@ -26,7 +37,7 @@ export default async function middleware(request: NextRequest) {
                 newSearchParams.append(key, value);
             }
         });
-        
+
         if (hasTrackingParams) {
             const cleanUrl = new URL(request.url);
             cleanUrl.search = newSearchParams.toString();

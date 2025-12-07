@@ -1,59 +1,59 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: vtchat-postgres
-    environment:
-      POSTGRES_DB: vtchat_dev
-      POSTGRES_USER: vtchat
-      POSTGRES_PASSWORD: vtchat_password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U vtchat -d vtchat_dev"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    postgres:
+        image: postgres:15-alpine
+        container_name: vtchat-postgres
+        environment:
+            POSTGRES_DB: vtchat_dev
+            POSTGRES_USER: vtchat
+            POSTGRES_PASSWORD: vtchat_password
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U vtchat -d vtchat_dev"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-  vtchat:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: vtchat-app
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./apps/web/.env.local
-    environment:
-      DATABASE_URL: postgresql://vtchat:vtchat_password@postgres:5432/vtchat_dev
-      BETTER_AUTH_URL: http://localhost:3000
-      BETTER_AUTH_ENV: development
-      BASE_URL: http://localhost:3000
-      NEXT_PUBLIC_COMMON_URL: http://localhost:3000
-      NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
-      NEXT_PUBLIC_BASE_URL: http://localhost:3000
-      NEXT_PUBLIC_APP_URL: http://localhost:3000
-      LOG_LEVEL: debug
-      NODE_ENV: development
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/apps/web/node_modules
-    working_dir: /app/apps/web
-    command: bun dev --host 0.0.0.0
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    vtchat:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: vtchat-app
+        ports:
+            - "3000:3000"
+        env_file:
+            - ./apps/web/.env.local
+        environment:
+            DATABASE_URL: postgresql://vtchat:vtchat_password@postgres:5432/vtchat_dev
+            BETTER_AUTH_URL: http://localhost:3000
+            BETTER_AUTH_ENV: development
+            BASE_URL: http://localhost:3000
+            NEXT_PUBLIC_COMMON_URL: http://localhost:3000
+            NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
+            NEXT_PUBLIC_BASE_URL: http://localhost:3000
+            NEXT_PUBLIC_APP_URL: http://localhost:3000
+            LOG_LEVEL: debug
+            NODE_ENV: development
+        depends_on:
+            postgres:
+                condition: service_healthy
+        volumes:
+            - .:/app
+            - /app/node_modules
+            - /app/apps/web/node_modules
+        working_dir: /app/apps/web
+        command: bun dev --host 0.0.0.0
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
 
 volumes:
-  postgres_data:
+    postgres_data:

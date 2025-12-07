@@ -2,6 +2,7 @@
 
 import { useApiKeysStore } from '@repo/common/store';
 import { http } from '@repo/shared/lib/http-client';
+import { log } from '@repo/shared/lib/logger';
 import { Button, cn } from '@repo/ui';
 import { useLegacyToast } from '@repo/ui/src/components/use-toast';
 import { Volume2, VolumeX } from 'lucide-react';
@@ -79,7 +80,7 @@ export const SpeechButton = ({ text, className }: SpeechButtonProps) => {
                 URL.revokeObjectURL(audioUrl); // Clean up the object URL
             };
         } catch (error: any) {
-            console.error('Error generating or playing speech:', error);
+            log.error({ error }, 'Error generating or playing speech');
             setIsSpeaking(false);
             // Toast for general errors (e.g., network issues, unexpected errors)
             // Specific API errors are handled above and show their own toasts before re-throwing.

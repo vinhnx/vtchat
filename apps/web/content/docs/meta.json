@@ -1,4 +1,10 @@
 {
     "title": "Documentation",
-    "description": "Learn how to use our AI chat platform effectively"
+    "description": "Learn how to use our AI chat platform effectively",
+    "groups": [
+        {
+            "name": "Overview",
+            "pages": ["index", "features", "faq"]
+        }
+    ]
 }

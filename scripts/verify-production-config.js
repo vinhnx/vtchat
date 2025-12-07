@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 
+/* eslint-disable no-console */
+
 /**
  * Production Configuration Verification Script
  * Verifies all critical production environment configurations for VT Chat

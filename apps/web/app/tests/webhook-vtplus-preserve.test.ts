@@ -5,7 +5,11 @@ import { PlanSlug } from '@repo/shared/types/subscription';
 // We will directly test the map + preservation behavior by calling the helper logic inline.
 // This keeps the test minimal without needing to spin up Next.js routing.
 
-function preserveVtPlus(planSlug: string, existingSubPlan: string | null, existingUserPlan: string | null) {
+function preserveVtPlus(
+    planSlug: string,
+    existingSubPlan: string | null,
+    existingUserPlan: string | null,
+) {
     let mapped = planSlug;
     if (mapped === PlanSlug.VT_BASE) {
         const hadVtPlusSubscription = existingSubPlan === PlanSlug.VT_PLUS;

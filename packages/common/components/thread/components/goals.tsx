@@ -13,7 +13,7 @@ import type { Step, ThreadItem } from '@repo/shared/types';
 import { Badge, Card, cn } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Atom, ChevronRight, ListChecks, Star } from 'lucide-react';
-import { memo, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 const getTitle = (threadItem: ThreadItem) => {
     if (threadItem.mode === ChatMode.Deep) {
@@ -63,18 +63,6 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
             || threadItem.status === 'ABORTED'
             || threadItem.status === 'ERROR');
 
-    useEffect(() => {
-        if (hasAnswer) {
-            dismissSideDrawer();
-        }
-    }, [hasAnswer]);
-
-    useEffect(() => {
-        if (steps[0]?.status === 'PENDING') {
-            handleClick();
-        }
-    }, [steps[0]]);
-
     const toolCallAndResults = useMemo(() => {
         return Object.entries(threadItem?.toolCalls || {}).map(([key, toolCall]) => {
             const toolResult = threadItem?.toolResults?.[key];
@@ -86,6 +74,68 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
     }, [threadItem?.toolCalls, threadItem?.toolResults]);
 
     const stepCounts = steps.length;
+
+    const renderTitle = useCallback((useNote = true) => {
+        return (
+            <div className='flex flex-row items-start gap-2'>
+                <div className='mt-0.5'>
+                    {isLoading ? <MotionSkeleton className='h-4 w-4 rounded' /> : (
+                        getIcon(threadItem)
+                    )}
+                </div>
+                <div className='flex flex-col'>
+                    <p className='text-sm font-medium'>{getTitle(threadItem)}</p>
+                    {useNote && !hasAnswer && (
+                        <p className='text-muted-foreground/70 text-xs'>{getNote(threadItem)}</p>
+                    )}
+                </div>
+            </div>
+        );
+    }, [hasAnswer, isLoading, threadItem]);
+
+    const handleClick = useCallback(() => {
+        dismissSideDrawer();
+
+        openSideDrawer({
+            badge: stepCounts,
+            title: `${getTitle(threadItem)} - Steps`,
+            renderContent: () => (
+                <div className='flex w-full flex-1 flex-col px-2 py-4'>
+                    {steps.map((step, index) => <StepRenderer key={index} step={step} />)}
+                    {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
+                        <div className='mt-2' key={`tool-${index}`}>
+                            <div className='flex w-full flex-row items-stretch justify-start gap-2'>
+                                <div className='flex min-h-full flex-col items-center justify-start px-2'>
+                                    <div className='bg-border/50 h-1.5 shrink-0' />
+                                    <div className='bg-background z-10'>
+                                        <StepStatus status='COMPLETED' />
+                                    </div>
+                                    <div className='bg-border/50 min-h-full w-[1px] flex-1' />
+                                </div>
+                                <div className='flex w-full flex-1 flex-col gap-2 overflow-hidden pb-2'>
+                                    <p className='text-sm'>Using the following tool</p>
+                                    {toolCall && <ToolCallStep toolCall={toolCall} />}
+                                    {toolResult && <ToolResultStep toolResult={toolResult} />}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ),
+        });
+    }, [dismissSideDrawer, openSideDrawer, stepCounts, steps, threadItem, toolCallAndResults]);
+
+    useEffect(() => {
+        if (hasAnswer) {
+            dismissSideDrawer();
+        }
+    }, [dismissSideDrawer, hasAnswer]);
+
+    useEffect(() => {
+        if (steps[0]?.status === 'PENDING') {
+            handleClick();
+        }
+    }, [handleClick, steps]);
 
     useEffect(() => {
         if (steps.length > 0) {
@@ -117,57 +167,7 @@ export const Steps = ({ steps, threadItem }: { steps: Step[]; threadItem: Thread
                 title: () => renderTitle(false),
             });
         }
-    }, [steps, threadItem?.status]);
-
-    const handleClick = () => {
-        dismissSideDrawer();
-
-        openSideDrawer({
-            badge: stepCounts,
-            title: `${getTitle(threadItem)} - Steps`,
-            renderContent: () => (
-                <div className='flex w-full flex-1 flex-col px-2 py-4'>
-                    {steps.map((step, index) => <StepRenderer key={index} step={step} />)}
-                    {toolCallAndResults.map(({ toolCall, toolResult }, index) => (
-                        <div className='mt-2' key={`tool-${index}`}>
-                            <div className='flex w-full flex-row items-stretch justify-start gap-2'>
-                                <div className='flex min-h-full flex-col items-center justify-start px-2'>
-                                    <div className='bg-border/50 h-1.5 shrink-0' />
-                                    <div className='bg-background z-10'>
-                                        <StepStatus status='COMPLETED' />
-                                    </div>
-                                    <div className='bg-border/50 min-h-full w-[1px] flex-1' />
-                                </div>
-                                <div className='flex w-full flex-1 flex-col gap-2 overflow-hidden pb-2'>
-                                    <p className='text-sm'>Using the following tool</p>
-                                    {toolCall && <ToolCallStep toolCall={toolCall} />}
-                                    {toolResult && <ToolResultStep toolResult={toolResult} />}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ),
-        });
-    };
-
-    const renderTitle = (useNote = true) => {
-        return (
-            <div className='flex flex-row items-start gap-2'>
-                <div className='mt-0.5'>
-                    {isLoading ? <MotionSkeleton className='h-4 w-4 rounded' /> : (
-                        getIcon(threadItem)
-                    )}
-                </div>
-                <div className='flex flex-col'>
-                    <p className='text-sm font-medium'>{getTitle(threadItem)}</p>
-                    {useNote && !hasAnswer && (
-                        <p className='text-muted-foreground/70 text-xs'>{getNote(threadItem)}</p>
-                    )}
-                </div>
-            </div>
-        );
-    };
+    }, [renderTitle, stepCounts, steps, toolCallAndResults, threadItem?.status, updateSideDrawer]);
 
     if (steps.length === 0 && !toolCallAndResults.length) {
         return null;

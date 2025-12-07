@@ -1,10 +1,9 @@
-import { Anthropic, Fireworks, Gemini, OpenAI, OpenRouter, XAI } from '@lobehub/icons';
 import { type Model, models } from '@repo/ai/models';
 import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift } from 'lucide-react';
+import { Brain, Gift, MoonStar, Network, Sparkles, Sunrise } from 'lucide-react';
 
 export const chatOptions = [
     {
@@ -126,17 +125,17 @@ export const getProviderIcon = (provider: string, size = 16) => {
 
     switch (provider.toLowerCase()) {
         case 'anthropic':
-            return <Anthropic {...iconProps} />;
+            return <Brain {...iconProps} />;
         case 'google':
-            return <Gemini {...iconProps} />;
+            return <Sunrise {...iconProps} />;
         case 'openai':
-            return <OpenAI {...iconProps} />;
+            return <Sparkles {...iconProps} />;
         case 'openrouter':
-            return <OpenRouter {...iconProps} />;
+            return <Network {...iconProps} />;
         case 'fireworks':
-            return <Fireworks {...iconProps} />;
+            return <Sparkles {...iconProps} />;
         case 'xai':
-            return <XAI {...iconProps} />;
+            return <MoonStar {...iconProps} />;
         default:
             return null;
     }
