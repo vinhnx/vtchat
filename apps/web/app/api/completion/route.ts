@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 import { HEARTBEAT_COMMENT, HEARTBEAT_INTERVAL_MS, HEARTBEAT_JITTER_MS } from './constants';
 import { executeStream, markControllerClosed } from './stream-handlers';
 import { registerStream, unregisterStream } from './stream-registry';
-import { completionRequestSchema, SSE_HEADERS } from './types';
+import { SSE_HEADERS, completionRequestSchema } from './types';
 import { getIp } from './utils';
 
 export const dynamic = 'force-dynamic';

@@ -1,4 +1,4 @@
-import { type Model, models } from '@repo/ai/models';
+import { models, type Model } from '@repo/ai/models';
 import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';

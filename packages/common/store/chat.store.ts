@@ -1,6 +1,6 @@
 'use client';
 
-import { type Model, ModelEnum, models } from '@repo/ai/models';
+import { ModelEnum, models, type Model } from '@repo/ai/models';
 import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { THINKING_MODE } from '@repo/shared/constants';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
