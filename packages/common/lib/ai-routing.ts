@@ -8,6 +8,8 @@ const PLUS_SERVER_MODELS: ChatMode[] = [
     ChatMode.GEMINI_2_5_FLASH,
     ChatMode.CLAUDE_4_SONNET,
     ChatMode.CLAUDE_SONNET_4_5,
+    ChatMode.GPT_4o,
+    ChatMode.DEEPSEEK_R1,
     // Other premium models (OpenAI, xAI, etc.) require BYOK even for VT+ users
 ];
 

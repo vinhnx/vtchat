@@ -11,18 +11,18 @@ import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
-import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
+import { GEMINI_MODEL_ENUMS_ARRAY, buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
 import { useToast } from '@repo/ui/src/components/use-sonner-toast';
 import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
-    type ReactNode,
     useCallback,
     useContext,
     useEffect,
     useMemo,
     useRef,
     useState,
+    type ReactNode,
 } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';
@@ -799,6 +799,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             isSignedIn,
             hasVtPlusAccess,
             threadItemMap,
+            toast,
         ],
     );
 
@@ -1016,11 +1017,6 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                     '🚀 Starting workflow with API keys',
                 );
 
-                // Clear active submission when workflow completes
-                const wrappedOnFinish = (data: any) => {
-                    activeSubmissionRef.current = null;
-                };
-
                 startWorkflow({
                     mode,
                     question: query,
@@ -1057,7 +1053,12 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
 
                 // A request to /api/completion is always a server-side call → we must filter on EVERY path
                 const serverManagedModels: ChatMode[] = hasVtPlusAccess
-                    ? [ChatMode.GEMINI_2_5_PRO, ChatMode.GEMINI_2_5_FLASH]
+                    ? [
+                        ChatMode.GEMINI_2_5_PRO,
+                        ChatMode.GEMINI_2_5_FLASH,
+                        ChatMode.GPT_4o,
+                        ChatMode.DEEPSEEK_R1,
+                    ]
                     : [];
 
                 const isServerManagedModel = serverManagedModels.includes(mode);
@@ -1073,11 +1074,6 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 } else {
                     log.info({ mode }, '🔑 BYOK model: Kept required provider API key only');
                 }
-
-                // Clear active submission when server API completes
-                const clearActiveSubmission = () => {
-                    activeSubmissionRef.current = null;
-                };
 
                 runAgent({
                     mode: newChatMode || chatMode,

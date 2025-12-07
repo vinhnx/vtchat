@@ -9,20 +9,20 @@ import {
 
 describe('shouldUseServerSideAPI', () => {
     describe('Free tier models', () => {
-        it('should route free models to server-side for all users', () => {
+        it('should keep free models client-side unless special features are on', () => {
             expect(
                 shouldUseServerSideAPI({
                     mode: ChatMode.GEMINI_2_5_FLASH_LITE,
                     hasVtPlus: false,
                 }),
-            ).toBe(true);
+            ).toBe(false);
 
             expect(
                 shouldUseServerSideAPI({
                     mode: ChatMode.GEMINI_2_5_FLASH_LITE,
                     hasVtPlus: true,
                 }),
-            ).toBe(true);
+            ).toBe(false);
         });
     });
 
@@ -53,7 +53,7 @@ describe('shouldUseServerSideAPI', () => {
                     mode: ChatMode.GEMINI_2_5_FLASH_LITE,
                     hasVtPlus: true,
                 }),
-            ).toBe(true);
+            ).toBe(false);
         });
 
         it('should not route VT+ models to server-side for free users', () => {
@@ -160,9 +160,9 @@ describe('needsServerSideForPlus', () => {
     it('should identify VT+ server models correctly', () => {
         expect(needsServerSideForPlus(ChatMode.CLAUDE_4_SONNET)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.CLAUDE_SONNET_4_5)).toBe(true);
-        expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
+            expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe(false);
-        expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
+            expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
     });
 });
 
@@ -186,21 +186,18 @@ describe('filterApiKeysForServerSide', () => {
 
         const claudeFiltered = filterApiKeysForServerSide(apiKeys, ChatMode.CLAUDE_4_SONNET);
         expect(claudeFiltered).toEqual({
-            OPENAI_API_KEY: 'sk-123',
-            GEMINI_API_KEY: 'AIza123',
+            ANTHROPIC_API_KEY: 'sk-ant-123',
             OTHER_KEY: 'other',
         });
         const claude45Filtered = filterApiKeysForServerSide(apiKeys, ChatMode.CLAUDE_SONNET_4_5);
         expect(claude45Filtered).toEqual({
-            OPENAI_API_KEY: 'sk-123',
-            GEMINI_API_KEY: 'AIza123',
+            ANTHROPIC_API_KEY: 'sk-ant-123',
             OTHER_KEY: 'other',
         });
 
         const gptFiltered = filterApiKeysForServerSide(apiKeys, ChatMode.GPT_4o);
         expect(gptFiltered).toEqual({
-            ANTHROPIC_API_KEY: 'sk-ant-123',
-            GEMINI_API_KEY: 'AIza123',
+            OPENAI_API_KEY: 'sk-123',
             OTHER_KEY: 'other',
         });
     });
