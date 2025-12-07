@@ -11,9 +11,14 @@
             "env": {},
             "type": "stdio"
         },
-        "Neon": {
-            "url": "https://mcp.neon.tech/mcp",
-            "headers": {}
+        "neon": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@neondatabase/mcp-server-neon",
+                "start",
+                "napi_dmpvy7933795mznidrkmgiadliagv3jin440tz3p3v7h4qss0zaq1v7e3ib9lkjb"
+            ]
         },
         "flymcp": {
             "command": "/Users/vinhnguyenxuan/flymcp/flymcp",
