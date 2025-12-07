@@ -5,10 +5,16 @@ import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin, multiSession } from 'better-auth/plugins';
 import { botDetection } from './bot-detection-plugin';
-import { db } from './database';
 import * as schema from './database/schema';
 
-export const authConfigured = Boolean(process.env.DATABASE_URL && db);
+// Defer database import so local dev without DATABASE_URL does not throw at module load
+let dbInstance: any = null;
+if (process.env.DATABASE_URL) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    dbInstance = require('./database').db;
+}
+
+export const authConfigured = Boolean(process.env.DATABASE_URL && dbInstance);
 
 const baseURL = process.env.NODE_ENV === 'production'
     ? 'https://vtchat.io.vn'
@@ -25,7 +31,7 @@ export const auth = authConfigured
                 || process.env.NEXT_PUBLIC_BASE_URL
                 || 'http://localhost:3000',
         basePath: '/api/auth',
-        database: drizzleAdapter(db, {
+        database: drizzleAdapter(dbInstance, {
             provider: 'pg',
             schema: {
                 user: schema.users,

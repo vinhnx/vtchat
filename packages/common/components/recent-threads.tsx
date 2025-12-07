@@ -6,16 +6,22 @@ import { getFormatDistanceToNow } from '@repo/shared/utils';
 import { Button } from '@repo/ui';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const RecentThreads = () => {
     const { setIsCommandSearchOpen } = useRootContext();
     const threads = useChatStore((state) => state.threads.slice(0, 4));
     const router = useRouter();
 
+    // Prefetch each thread route only once to avoid redundant work
+    const prefetchedThreadIds = useRef<Set<string>>(new Set());
     useEffect(() => {
         threads.forEach((thread) => {
+            if (prefetchedThreadIds.current.has(thread.id)) {
+                return;
+            }
             router.prefetch(`/chat/${thread.id}`);
+            prefetchedThreadIds.current.add(thread.id);
         });
     }, [threads, router]);
 

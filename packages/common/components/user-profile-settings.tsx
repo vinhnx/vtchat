@@ -84,15 +84,16 @@ export const UserProfileSettings = () => {
         fetchLinkedAccounts();
     }, [fetchLinkedAccounts]);
 
-    // Update form data when session changes
+    // Update form data when session changes, but avoid overwriting while editing
     useEffect(() => {
+        if (isEditing) return;
         if (session?.user) {
             setFormData({
                 name: session.user.name || '',
                 email: session.user.email || '',
             });
         }
-    }, [session]);
+    }, [session, isEditing]);
 
     // Check for OAuth callback completion and show success feedback
     useEffect(() => {

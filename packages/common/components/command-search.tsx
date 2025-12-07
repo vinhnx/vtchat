@@ -9,7 +9,6 @@ import { FeatureSlug } from '@repo/shared/types/subscription';
 import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
 import {
     Button,
-    cn,
     CommandDialog,
     CommandEmpty,
     CommandGroup,
@@ -23,6 +22,7 @@ import {
     DialogHeader,
     DialogTitle,
     Kbd,
+    cn,
     useToast,
 } from '@repo/ui';
 import {
@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
@@ -85,18 +85,22 @@ export const CommandSearch = () => {
         }
     });
 
+    // Prefetch the home route once to speed up navigation
+    const hasPrefetchedHome = useRef(false);
     useEffect(() => {
-        router.prefetch('/');
-    }, [isCommandSearchOpen, threads, router]);
-
-    useEffect(() => {
-        if (isCommandSearchOpen) {
+        if (hasPrefetchedHome.current) {
+            return;
         }
-    }, [isCommandSearchOpen]);
+        router.prefetch('/');
+        hasPrefetchedHome.current = true;
+    }, [router]);
 
     const onClose = () => setIsCommandSearchOpen(false);
 
     useEffect(() => {
+        // Only bind when dialog is closed to reduce global listeners
+        if (isCommandSearchOpen) return;
+
         const handleKeyDown = (e: KeyboardEvent) => {
             // Command+K for command search
             if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -108,7 +112,9 @@ export const CommandSearch = () => {
             // Command+Ctrl+Option+N for new chat
             if (e.key === 'n' && e.metaKey && e.ctrlKey && e.altKey) {
                 e.preventDefault();
-                log.info({}, '🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+                if (process.env.NODE_ENV === 'development') {
+                    log.info({}, '🚀 New chat keyboard shortcut triggered (Cmd+Ctrl+Opt+N)');
+                }
 
                 // Show toast notification
                 toast({
@@ -124,7 +130,7 @@ export const CommandSearch = () => {
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [setIsCommandSearchOpen, router, toast]);
+    }, [isCommandSearchOpen, setIsCommandSearchOpen, router, toast]);
 
     type ActionItem = {
         name: string;

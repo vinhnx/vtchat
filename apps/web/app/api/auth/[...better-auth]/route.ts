@@ -1,7 +1,7 @@
 import { auth, authConfigured } from '@/lib/auth-server';
 import { log } from '@repo/shared/logger';
 import { toNextJsHandler } from 'better-auth/next-js';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 // CORS headers for auth endpoints
 const corsHeaders = {
@@ -26,7 +26,36 @@ const originalPOST = handlers?.POST;
 
 // Wrap the handlers to add CORS headers and error handling
 export async function GET(request: Request) {
+    const url = request.url || '';
+
     if (!authConfigured || !originalGET) {
+        // Local/dev fallback to keep UX working without DATABASE_URL
+        if (url.includes('/fetch-options')) {
+            return new NextResponse(
+                JSON.stringify({ methods: ['GET', 'POST'] }),
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...corsHeaders,
+                    },
+                },
+            );
+        }
+
+        if (url.includes('/get-session')) {
+            return new NextResponse(
+                JSON.stringify({ session: null, user: null }),
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...corsHeaders,
+                    },
+                },
+            );
+        }
+
         return new NextResponse(
             JSON.stringify({
                 error: 'Authentication not configured locally (missing DATABASE_URL)',
@@ -63,7 +92,36 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
+    const url = request.url || '';
+
     if (!authConfigured || !originalPOST) {
+        // In local/dev without DATABASE_URL, allow sign-out to succeed so logout UX works
+        if (url.includes('/sign-out')) {
+            return new NextResponse(
+                JSON.stringify({ success: true }),
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...corsHeaders,
+                    },
+                },
+            );
+        }
+
+        if (url.includes('/fetch-options')) {
+            return new NextResponse(
+                JSON.stringify({ methods: ['GET', 'POST'] }),
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...corsHeaders,
+                    },
+                },
+            );
+        }
+
         return new NextResponse(
             JSON.stringify({
                 error: 'Authentication not configured locally (missing DATABASE_URL)',

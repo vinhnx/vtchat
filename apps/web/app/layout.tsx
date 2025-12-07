@@ -9,6 +9,7 @@ import { RootProvider as FumadocsRootProvider } from 'fumadocs-ui/provider';
 import type { Metadata, Viewport } from 'next';
 import { BetterAuthProvider } from '../components/better-auth-provider';
 import { CanonicalURLManager } from '../components/canonical-url-manager';
+import { FetchMethodPatch } from '../components/fetch-method-patch';
 import { OfflineIndicator } from '../components/offline-indicator';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 import { PWAManager } from '../components/pwa-manager';
@@ -201,6 +202,7 @@ export default function ParentLayout({
                 />
             </head>
             <body className='bg-background text-foreground antialiased'>
+                <FetchMethodPatch />
                 <GatedThemeProvider
                     attribute='class'
                     defaultTheme='light'
