@@ -37,24 +37,6 @@ const getBaseURL = () => {
 export const authClient = createAuthClient({
     baseURL: getBaseURL(),
     plugins: [multiSessionClient(), adminClient()],
-    fetchOptions: {
-        // Ensure method is always properly set
-        onRequest: async (context: { request: Request; }) => {
-            // Create a new request with guaranteed method
-            const method = String(context.request.method || 'GET');
-            const newRequest = new Request(context.request.url, {
-                method,
-                headers: context.request.headers,
-                body: context.request.body,
-                credentials: context.request.credentials,
-                cache: context.request.cache,
-                redirect: context.request.redirect,
-                referrer: context.request.referrer,
-                integrity: context.request.integrity,
-            });
-            context.request = newRequest;
-        },
-    },
 });
 
 // Create optimized session getter with deduplication
