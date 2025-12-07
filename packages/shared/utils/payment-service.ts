@@ -274,12 +274,12 @@ export class CreemService {
     /**
      * Subscribe to VT+ plan
      */
-    static async subscribeToVtPlus(customerEmail?: string) {
+    static async subscribeToVtPlus(customerEmail?: string, successUrlOverride?: string) {
         log.info('[CreemService] Creating VT+ subscription checkout');
 
         // Always use the proper base URL, prioritizing production URL
         const baseUrl = CreemService.getBaseUrl();
-        const successUrl = `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
+        const successUrl = successUrlOverride || `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
 
         log.info({ baseUrl, successUrl }, '[CreemService] VT+ checkout using base URL');
 

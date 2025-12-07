@@ -132,7 +132,7 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
             .where(eq(users.id, userId))
             .orderBy(
                 // Prioritize active/valid subscriptions first
-                sql`CASE 
+                sql`CASE
                         WHEN user_subscriptions.status IN ('active','trialing','past_due') THEN 0
                         WHEN user_subscriptions.status IN ('canceled','cancelled') THEN 1
                         ELSE 2
@@ -154,9 +154,21 @@ export async function getSubscriptionFast(userId: string): Promise<FastSubscript
             currentPeriodEnd: row.currentPeriodEnd,
         });
 
-        const isPremium = isActive
+        let isPremium = isActive
             && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS);
-        const isVtPlus = isPremium;
+        let isVtPlus = isPremium;
+
+        // Last-known VT+ guard: if plan/subplan is VT+ but inactive, still flag VT+ and log
+        if (!isVtPlus && (row.subPlan === PlanSlug.VT_PLUS || row.planSlug === PlanSlug.VT_PLUS)) {
+            isVtPlus = true;
+            log.warn('VT+ plan detected but marked inactive; preserving VT+ flag', {
+                userId,
+                planSlug: row.planSlug,
+                subPlan: row.subPlan,
+                status: row.status,
+                currentPeriodEnd: row.currentPeriodEnd,
+            });
+        }
 
         const fastData: FastSubscriptionData = {
             planSlug: row.planSlug,
@@ -360,7 +372,7 @@ export async function getSubscriptionsBatch(
                 .where(inArray(users.id, stillUncachedIds))
                 .orderBy(
                     // Prioritize active/valid subscriptions first
-                    sql`CASE 
+                    sql`CASE
                         WHEN user_subscriptions.status IN ('active','trialing','past_due') THEN 0
                         WHEN user_subscriptions.status IN ('canceled','cancelled') THEN 1
                         ELSE 2

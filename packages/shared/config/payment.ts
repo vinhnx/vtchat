@@ -471,12 +471,12 @@ export class PaymentService {
     /**
      * Subscribe to VT+ plan
      */
-    static async subscribeToVtPlus(customerEmail?: string) {
+    static async subscribeToVtPlus(customerEmail?: string, successUrlOverride?: string) {
         log.info({}, 'Creating VT+ subscription checkout');
 
         // Always use the proper base URL, prioritizing production URL
         const baseUrl = PaymentService.getBaseUrl();
-        const successUrl = `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
+        const successUrl = successUrlOverride || `${baseUrl}/success?plan=${PlanSlug.VT_PLUS}`;
 
         log.info({ baseUrl, successUrl }, 'VT+ checkout using base URL');
 

@@ -20,22 +20,20 @@ export function hasSubscriptionAccess(subscription: SubscriptionWithPeriod): boo
     const { status, currentPeriodEnd } = subscription;
     const now = new Date();
     const periodEnd = currentPeriodEnd ? new Date(currentPeriodEnd) : null;
-    const notExpired = !periodEnd || now <= periodEnd;
+    const hasPeriodEnd = !!periodEnd;
+    const isBeforeEnd = hasPeriodEnd ? now <= periodEnd : false;
 
     switch (status) {
         case SubscriptionStatusEnum.ACTIVE:
         case SubscriptionStatusEnum.TRIALING:
-            // Active and trialing subscriptions always have access (unless expired)
-            return notExpired;
+            // Active/trialing: allow if still within period; if no period given, allow by default
+            return hasPeriodEnd ? isBeforeEnd : true;
 
         case SubscriptionStatusEnum.CANCELED:
         case SubscriptionStatusEnum.CANCELLED:
-            // Canceled users retain access until period end
-            return notExpired;
-
         case SubscriptionStatusEnum.PAST_DUE:
-            // Past due users have grace period until period end
-            return notExpired;
+            // Canceled/past_due: require a valid period end; no end date means no access
+            return isBeforeEnd;
         default:
             // No access for expired, inactive, incomplete, or no subscription
             return false;

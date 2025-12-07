@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth-server';
 import { PaymentService, PRICE_ID_MAPPING } from '@repo/shared/config/payment';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 // Force dynamic rendering for this route
@@ -151,12 +151,22 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        const protocol = request.headers.get('x-forwarded-proto') || 'https';
+        const host = request.headers.get('host');
+        if (!host) {
+            log.warn('[Checkout API] Missing Host header; using default success URL');
+        }
+        const requestBaseUrl = host ? `${protocol}://${host}` : undefined;
+        const successUrlOverride = requestBaseUrl
+            ? `${requestBaseUrl}/success?plan=${PlanSlug.VT_PLUS}`
+            : undefined;
+
         // Create checkout session using PaymentService
         let checkout;
         try {
             if (packageType === PlanSlug.VT_PLUS) {
                 log.info('Starting VT+ subscription checkout for user');
-                checkout = await PaymentService.subscribeToVtPlus(userEmail);
+                checkout = await PaymentService.subscribeToVtPlus(userEmail, successUrlOverride);
             } else {
                 log.error('Invalid package type for VT+ only system:', {
                     data: packageType,

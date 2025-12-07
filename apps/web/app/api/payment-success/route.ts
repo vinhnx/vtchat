@@ -5,12 +5,12 @@ export const revalidate = 0;
 import { auth } from '@/lib/auth-server';
 import { invalidateAllCaches } from '@/lib/cache/cache-invalidation';
 import { db } from '@/lib/database';
-import { users, userSubscriptions } from '@/lib/database/schema';
+import { sessions, users, userSubscriptions } from '@/lib/database/schema';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 // Schema for processing payment success
@@ -134,8 +134,6 @@ export async function POST(request: NextRequest) {
                 status: SubscriptionStatusEnum.ACTIVE,
                 creemCustomerId: validatedData.customer_id, // Using Creem customer ID
                 creemSubscriptionId: validatedData.subscription_id,
-                currentPeriodStart: new Date(),
-                currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
                 updatedAt: new Date(),
             };
 
@@ -165,6 +163,69 @@ export async function POST(request: NextRequest) {
         await invalidateAllCaches(userId);
 
         log.info('[Payment Success API] Invalidated all caches for user', { userId });
+
+        // Touch sessions to force refresh
+        try {
+            const userSessions = await db.select().from(sessions).where(eq(sessions.userId, userId));
+            if (userSessions.length > 0) {
+                await db
+                    .update(sessions)
+                    .set({
+                        updatedAt: new Date(),
+                    })
+                    .where(eq(sessions.userId, userId));
+                log.info('[Payment Success API] Updated sessions after payment', {
+                    count: userSessions.length,
+                });
+            }
+        } catch (sessionError) {
+            log.warn(
+                { sessionError },
+                '[Payment Success API] Unable to update sessions after payment',
+            );
+        }
+
+        // Post-check: confirm VT+ persisted
+        try {
+            const subRow = await db
+                .select({
+                    plan: userSubscriptions.plan,
+                    status: userSubscriptions.status,
+                    creemSubscriptionId: userSubscriptions.creemSubscriptionId,
+                })
+                .from(userSubscriptions)
+                .where(eq(userSubscriptions.userId, userId))
+                .limit(1);
+
+            const userRow = await db
+                .select({ planSlug: users.planSlug })
+                .from(users)
+                .where(eq(users.id, userId))
+                .limit(1);
+
+            const isVtPlus =
+                (subRow.length > 0 && subRow[0].plan === PlanSlug.VT_PLUS)
+                || (userRow.length > 0 && userRow[0].planSlug === PlanSlug.VT_PLUS);
+
+            if (!isVtPlus) {
+                log.warn(
+                    {
+                        subRow,
+                        userRow,
+                        customerId: validatedData.customer_id,
+                        subscriptionId: validatedData.subscription_id,
+                    },
+                    '[Payment Success API] Post-check: VT+ not reflected after payment update',
+                );
+            } else {
+                log.info('[Payment Success API] Post-check: VT+ confirmed after payment update', {
+                    subscriptionId: subRow[0]?.creemSubscriptionId,
+                    status: subRow[0]?.status,
+                });
+            }
+        } catch (postCheckError) {
+            log.warn({ postCheckError }, '[Payment Success API] Post-check failed');
+        }
 
         return NextResponse.json({
             success: true,

@@ -10,7 +10,7 @@ import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
 import { eq } from 'drizzle-orm';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import crypto from 'node:crypto';
 import { z } from 'zod';
 
@@ -115,11 +115,10 @@ const CreemSubscriptionEventSchema = z.object({
 });
 
 // Explicit product ID to plan mapping - safer than substring matching
-const CREEM_PRODUCT_ID_TO_PLAN: Record<string, string> = {
-    // Add your actual Creem product IDs here when available
-    // Example: "prod_abc123": PlanSlug.VT_PLUS,
-    // Example: "prod_xyz789": PlanSlug.VT_BASE,
-} as const;
+const CREEM_VT_PLUS_PRODUCT_ID = process.env.CREEM_PRODUCT_ID;
+const CREEM_PRODUCT_ID_TO_PLAN: Record<string, string> = CREEM_VT_PLUS_PRODUCT_ID
+    ? { [CREEM_VT_PLUS_PRODUCT_ID]: PlanSlug.VT_PLUS }
+    : {};
 
 // Known VT+ product name patterns (as backup to product ID mapping)
 const VT_PLUS_PRODUCT_PATTERNS = [
@@ -136,8 +135,9 @@ function mapCreemProductToPlan(
     productId?: string,
 ): string {
     // Priority 1: Check metadata for explicit package mapping
-    if (metadata?.packageId) {
-        const packageId = metadata.packageId;
+    const metadataPackageId = metadata?.packageId || metadata?.package_id;
+    if (metadataPackageId) {
+        const packageId = metadataPackageId;
         if (packageId === PlanSlug.VT_PLUS) {
             return PlanSlug.VT_PLUS;
         }
@@ -156,6 +156,13 @@ function mapCreemProductToPlan(
     if (VT_PLUS_PRODUCT_PATTERNS.some((pattern) => productLower === pattern)) {
         return PlanSlug.VT_PLUS;
     }
+    if (
+        productLower.includes('vt+')
+        || productLower.includes('vt plus')
+        || productLower.includes('vt chat plus')
+    ) {
+        return PlanSlug.VT_PLUS;
+    }
 
     // Priority 4: Safe fallback - log unknown products for manual review
     if (productName && productName.trim().length > 0) {
@@ -170,9 +177,37 @@ function mapCreemProductToPlan(
 }
 
 // Find user by email from Creem with proper error handling
-async function findUserByCreemData(customerEmail: string): Promise<string | null> {
+async function findUserByCreemData(
+    customerId: string | undefined,
+    customerEmail: string,
+): Promise<string | null> {
     try {
-        // SECURITY: Validate email format before database query
+        // 1) Match by Creem customer ID if provided
+        if (customerId) {
+            const bySub = await db
+                .select({ userId: userSubscriptions.userId })
+                .from(userSubscriptions)
+                .where(eq(userSubscriptions.creemCustomerId, customerId))
+                .limit(1);
+
+            if (bySub.length > 0) {
+                log.info('[Creem Webhook] Found user by creem_customer_id in subscriptions');
+                return bySub[0].userId;
+            }
+
+            const byUser = await db
+                .select({ id: users.id })
+                .from(users)
+                .where(eq(users.creemCustomerId, customerId))
+                .limit(1);
+
+            if (byUser.length > 0) {
+                log.info('[Creem Webhook] Found user by creem_customer_id in users');
+                return byUser[0].id;
+            }
+        }
+
+        // 2) Fallback: validate and match by email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(customerEmail)) {
             log.error('[Creem Webhook] Invalid email format provided');
@@ -311,7 +346,7 @@ async function handleCheckoutCompleted(event: z.infer<typeof CreemCheckoutEventS
     });
 
     // Find user by email
-    const userId = await findUserByCreemData(data.customer.email);
+    const userId = await findUserByCreemData(data.customer.id, data.customer.email);
 
     if (!userId) {
         log.error('[Creem Webhook] No user found for checkout event');
@@ -348,7 +383,7 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
     });
 
     // Find user by email
-    const userId = await findUserByCreemData(data.customer.email);
+    const userId = await findUserByCreemData(data.customer.id, data.customer.email);
 
     if (!userId) {
         log.error('[Creem Webhook] No user found for subscription event');
@@ -356,7 +391,36 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
     }
 
     const productName = data.product.name;
-    const planSlug = mapCreemProductToPlan(productName, data.metadata, data.product.id);
+    let planSlug = mapCreemProductToPlan(productName, data.metadata, data.product.id);
+
+    // Load existing subscription record once for reuse (plan fallback + period end reuse)
+    const existing = await db
+        .select({
+            plan: userSubscriptions.plan,
+            currentPeriodEnd: userSubscriptions.currentPeriodEnd,
+        })
+        .from(userSubscriptions)
+        .where(eq(userSubscriptions.userId, userId))
+        .limit(1);
+    const userPlanRow = await db
+        .select({ planSlug: users.planSlug })
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
+
+    // If mapping is uncertain (base) but we already have VT+ recorded, keep VT+
+    if (planSlug === PlanSlug.VT_BASE) {
+        const hadVtPlusSubscription = existing.length > 0 && existing[0].plan === PlanSlug.VT_PLUS;
+        const hadVtPlusUserPlan =
+            userPlanRow.length > 0 && userPlanRow[0].planSlug === PlanSlug.VT_PLUS;
+
+        if (hadVtPlusSubscription || hadVtPlusUserPlan) {
+            planSlug = PlanSlug.VT_PLUS;
+            log.info(
+                '[Creem Webhook] Preserving existing VT+ plan when product mapping was ambiguous',
+            );
+        }
+    }
 
     // Map event type to appropriate subscription status
     let subscriptionStatus: SubscriptionStatusEnum;
@@ -385,10 +449,20 @@ async function handleSubscriptionEvent(event: z.infer<typeof CreemSubscriptionEv
             break;
     }
 
-    // Parse expiration date if available
+    // Parse expiration date if available; if missing, preserve prior end if it existed
     let expiresAt: Date | undefined;
     if (data.current_period_end_date) {
         expiresAt = new Date(data.current_period_end_date);
+    } else if (existing.length > 0 && existing[0].currentPeriodEnd) {
+        expiresAt = new Date(existing[0].currentPeriodEnd);
+        log.info(
+            '[Creem Webhook] Reusing existing period end because webhook omitted current_period_end_date',
+        );
+    } else {
+        log.warn(
+            '[Creem Webhook] Missing current_period_end_date and no prior end to reuse',
+            { subscriptionId: data.id, eventType: event.eventType },
+        );
     }
 
     // Update subscription status in database
