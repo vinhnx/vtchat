@@ -4,7 +4,9 @@ import { z } from 'zod';
 type ChartTools = 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';
 
 const chartDataSchema = z.object({
-    name: z.string().describe('Data point label'),
+    // Accept either "name" or "category" to be resilient to provider output
+    name: z.string().optional().describe('Data point label'),
+    category: z.string().optional().describe('Alias for data point label'),
     value: z.number().describe('Data point value'),
 });
 
@@ -23,7 +25,7 @@ const barChartObjectSchema = z.object({
     }),
 });
 
-const normalizeBarChartData = (
+export const normalizeBarChartData = (
     data?:
         | Array<z.infer<typeof chartDataSchema>>
         | z.infer<typeof barChartObjectSchema>['data'],
@@ -33,10 +35,13 @@ const normalizeBarChartData = (
     // Already in array form
     if (Array.isArray(data)) {
         const sanitized = data
-            .map((point) => ({
-                name: point.name,
-                value: Number.isFinite(Number(point.value)) ? Number(point.value) : 0,
-            }))
+            .map((point) => {
+                const label = point.name || (point as any).category;
+                return {
+                    name: label,
+                    value: Number.isFinite(Number(point.value)) ? Number(point.value) : 0,
+                };
+            })
             .filter((point) => point.name?.trim().length);
 
         return sanitized.length > 0 ? sanitized : generateSampleData.sales();

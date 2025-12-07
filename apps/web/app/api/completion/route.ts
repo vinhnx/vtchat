@@ -60,14 +60,21 @@ export async function POST(request: NextRequest) {
 
         const data = parsed.data;
 
+        // Always enrich with managed Gemini key for server-side web search (Pro/Deep)
+        const managedGeminiKey = (process.env.GEMINI_API_KEY
+            || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+            || '').trim();
+        const apiKeys = {
+            ...data.apiKeys,
+            ...(managedGeminiKey ? { GEMINI_API_KEY: managedGeminiKey } : {}),
+        };
+
         // Enforce BYOK for image analysis when required
         const hasImages = hasImageAttachments({
             imageAttachment: (body as any)?.imageAttachment,
             attachments: (body as any)?.attachments,
             messages: data.messages,
         });
-
-        const apiKeys = data.apiKeys || {};
         const validation = validateByokForImageAnalysis({
             chatMode: data.mode,
             apiKeys,
