@@ -16,6 +16,9 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true'
     : (config) => config;
 
 const nextConfig = {
+    // Enable instrumentation hook for fetch patching
+    instrumentationHook: true,
+
     // Now stable in Next 15.5
     typedRoutes: true,
     transpilePackages: [
