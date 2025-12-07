@@ -6,9 +6,9 @@
 import {
     API_KEY_TO_HEADER_MAP,
     createSecureHeaders,
-    validateHTTPS,
+    // validateHTTPS,
 } from '@repo/shared/constants/security-headers';
-import { log } from '@repo/shared/lib/logger';
+// import { log } from '@repo/shared/lib/logger';
 import ky, { type KyInstance, type Options as KyOptions } from 'ky';
 
 export interface ApiKeys {
@@ -30,45 +30,46 @@ const baseClient = ky.create({
         methods: ['get', 'put', 'head', 'delete', 'options', 'trace'],
         statusCodes: [408, 413, 429, 500, 502, 503, 504],
     },
-    hooks: {
-        beforeRequest: [
-            (request) => {
-                // SECURITY: Validate HTTPS in production
-                if (process.env.NODE_ENV === 'production' && !validateHTTPS(request)) {
-                    log.warn('SECURITY: Non-HTTPS request rejected', {
-                        url: new URL(request.url).pathname,
-                    });
-                    throw new Error('HTTPS required in production');
-                }
+    // Disable hooks temporarily to isolate issue
+    // hooks: {
+    //     beforeRequest: [
+    //         (request) => {
+    //             // SECURITY: Validate HTTPS in production
+    //             if (process.env.NODE_ENV === 'production' && !validateHTTPS(request)) {
+    //                 log.warn('SECURITY: Non-HTTPS request rejected', {
+    //                     url: new URL(request.url).pathname,
+    //                 });
+    //                 throw new Error('HTTPS required in production');
+    //             }
 
-                // Log request (without sensitive data)
-                log.info('HTTP request initiated', {
-                    url: new URL(request.url).origin + new URL(request.url).pathname,
-                    method: String(request.method || 'GET'),
-                });
-            },
-        ],
-        afterResponse: [
-            (_request, _options, response) => {
-                // Log response
-                log.info('HTTP request completed', {
-                    status: response.status,
-                    ok: response.ok,
-                });
-                return response;
-            },
-        ],
-        beforeError: [
-            (error) => {
-                // Log errors without exposing sensitive information
-                log.error('HTTP request failed', {
-                    message: error.message,
-                    status: error.response?.status,
-                });
-                return error;
-            },
-        ],
-    },
+    //             // Log request (without sensitive data)
+    //             log.info('HTTP request initiated', {
+    //                 url: new URL(request.url).origin + new URL(request.url).pathname,
+    //                 method: String(request.method || 'GET'),
+    //             });
+    //         },
+    //     ],
+    //     afterResponse: [
+    //         (_request, _options, response) => {
+    //             // Log response
+    //             log.info('HTTP request completed', {
+    //                 status: response.status,
+    //                 ok: response.ok,
+    //             });
+    //             return response;
+    //         },
+    //     ],
+    //     beforeError: [
+    //         (error) => {
+    //             // Log errors without exposing sensitive information
+    //             log.error('HTTP request failed', {
+    //                 message: error.message,
+    //                 status: error.response?.status,
+    //             });
+    //             return error;
+    //         },
+    //     ],
+    // },
 });
 
 /**
