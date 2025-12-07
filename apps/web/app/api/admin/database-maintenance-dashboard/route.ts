@@ -1,5 +1,6 @@
 import { isUserAdmin } from '@/lib/admin';
 import { auth } from '@/lib/auth-server';
+import { http } from '@repo/shared/lib/http-client';
 import { log } from '@repo/shared/lib/logger';
 import { type NextRequest, NextResponse } from 'next/server';
 
