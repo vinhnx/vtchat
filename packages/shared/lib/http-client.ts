@@ -1,102 +1,76 @@
 /**
- * Centralized HTTP client using ky
- * Replaces secure-http.ts with a more powerful and concise solution
+ * Centralized HTTP client using native fetch
+ * Replaces ky to avoid method-related TypeError issues
  */
 
 import {
     API_KEY_TO_HEADER_MAP,
     createSecureHeaders,
-    // validateHTTPS,
 } from '@repo/shared/constants/security-headers';
-// import { log } from '@repo/shared/lib/logger';
-import ky, { type KyInstance, type Options as KyOptions } from 'ky';
 
 export interface ApiKeys {
     [key: string]: string;
 }
 
-export interface SecureRequestOptions extends Omit<KyOptions, 'json'> {
+export interface SecureRequestOptions {
     apiKeys?: ApiKeys;
     body?: any;
+    headers?: HeadersInit;
+    signal?: AbortSignal;
+    timeout?: number;
 }
 
 /**
- * Base HTTP client with security defaults
+ * Create headers with security defaults and API keys
  */
-const baseClient = ky.create({
-    timeout: 30000,
-    retry: {
-        limit: 2,
-        methods: ['get', 'put', 'head', 'delete', 'options', 'trace'],
-        statusCodes: [408, 413, 429, 500, 502, 503, 504],
-    },
-    // Disable hooks temporarily to isolate issue
-    // hooks: {
-    //     beforeRequest: [
-    //         (request) => {
-    //             // SECURITY: Validate HTTPS in production
-    //             if (process.env.NODE_ENV === 'production' && !validateHTTPS(request)) {
-    //                 log.warn('SECURITY: Non-HTTPS request rejected', {
-    //                     url: new URL(request.url).pathname,
-    //                 });
-    //                 throw new Error('HTTPS required in production');
-    //             }
+function createRequestHeaders(apiKeys: ApiKeys = {}, customHeaders: HeadersInit = {}): Headers {
+    const headers = new Headers(customHeaders);
 
-    //             // Log request (without sensitive data)
-    //             log.info('HTTP request initiated', {
-    //                 url: new URL(request.url).origin + new URL(request.url).pathname,
-    //                 method: String(request.method || 'GET'),
-    //             });
-    //         },
-    //     ],
-    //     afterResponse: [
-    //         (_request, _options, response) => {
-    //             // Log response
-    //             log.info('HTTP request completed', {
-    //                 status: response.status,
-    //                 ok: response.ok,
-    //             });
-    //             return response;
-    //         },
-    //     ],
-    //     beforeError: [
-    //         (error) => {
-    //             // Log errors without exposing sensitive information
-    //             log.error('HTTP request failed', {
-    //                 message: error.message,
-    //                 status: error.response?.status,
-    //             });
-    //             return error;
-    //         },
-    //     ],
-    // },
-});
+    // Add security headers
+    const secureHeaders = createSecureHeaders();
+    Object.entries(secureHeaders).forEach(([key, value]) => {
+        headers.set(key, value);
+    });
+
+    // Add API keys to headers (never in body for security)
+    Object.entries(apiKeys).forEach(([keyType, keyValue]) => {
+        const headerName = API_KEY_TO_HEADER_MAP[keyType];
+        if (headerName && keyValue) {
+            headers.set(headerName, keyValue);
+        }
+    });
+
+    return headers;
+}
 
 /**
- * Create a secure HTTP client instance with API key handling
+ * Wrapper for fetch with timeout support
  */
-export function createSecureClient(defaultApiKeys: ApiKeys = {}): KyInstance {
-    return baseClient.extend({
-        hooks: {
-            beforeRequest: [
-                (request) => {
-                    // Add security headers
-                    const secureHeaders = createSecureHeaders();
-                    Object.entries(secureHeaders).forEach(([key, value]) => {
-                        request.headers.set(key, value);
-                    });
+async function fetchWithTimeout(
+    url: string,
+    options: RequestInit & { timeout?: number; },
+): Promise<Response> {
+    const { timeout = 30000, ...fetchOptions } = options;
 
-                    // Add API keys to headers (never in body for security)
-                    Object.entries(defaultApiKeys).forEach(([keyType, keyValue]) => {
-                        const headerName = API_KEY_TO_HEADER_MAP[keyType];
-                        if (headerName && keyValue) {
-                            request.headers.set(headerName, keyValue);
-                        }
-                    });
-                },
-            ],
-        },
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        // Ensure method is always a string
+        const method = String(fetchOptions.method || 'GET').toUpperCase();
+
+        const response = await fetch(url, {
+            ...fetchOptions,
+            method,
+            signal: fetchOptions.signal || controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        return response;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        throw error;
+    }
 }
 
 /**
@@ -106,77 +80,123 @@ export const http = {
     /**
      * GET request with optional API keys
      */
-    get: <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, ...kyOptions } = options;
-        const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
-        return client.get(url, kyOptions).json<T>();
+    get: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
+        const { apiKeys = {}, headers: customHeaders, timeout, signal } = options;
+        const headers = createRequestHeaders(apiKeys, customHeaders);
+
+        const response = await fetchWithTimeout(url, {
+            method: 'GET',
+            headers,
+            timeout,
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
     },
 
     /**
      * POST request with automatic JSON handling and API key support
      */
-    post: <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, body, ...kyOptions } = options;
-        const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
+    post: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
+        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
+        const headers = createRequestHeaders(apiKeys, customHeaders);
 
-        const requestOptions: KyOptions = {
-            ...kyOptions,
-            ...(body && { json: body }),
-        };
+        if (body) {
+            headers.set('Content-Type', 'application/json');
+        }
 
-        return client.post(url, requestOptions).json<T>();
+        const response = await fetchWithTimeout(url, {
+            method: 'POST',
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+            timeout,
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
     },
 
     /**
      * PUT request with automatic JSON handling and API key support
      */
-    put: <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, body, ...kyOptions } = options;
-        const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
+    put: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
+        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
+        const headers = createRequestHeaders(apiKeys, customHeaders);
 
-        const requestOptions: KyOptions = {
-            ...kyOptions,
-            ...(body && { json: body }),
-        };
+        if (body) {
+            headers.set('Content-Type', 'application/json');
+        }
 
-        return client.put(url, requestOptions).json<T>();
+        const response = await fetchWithTimeout(url, {
+            method: 'PUT',
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+            timeout,
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
     },
 
     /**
      * DELETE request with optional API keys
      */
-    delete: <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
-        const { apiKeys = {}, ...kyOptions } = options;
-        const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
-        return client.delete(url, kyOptions).json<T>();
-    },
+    delete: async <T = any>(url: string, options: SecureRequestOptions = {}): Promise<T> => {
+        const { apiKeys = {}, headers: customHeaders, timeout, signal } = options;
+        const headers = createRequestHeaders(apiKeys, customHeaders);
 
-    /**
-     * Raw client access for custom requests
-     */
-    client: baseClient,
+        const response = await fetchWithTimeout(url, {
+            method: 'DELETE',
+            headers,
+            timeout,
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
+    },
 
     /**
      * POST request that returns the raw Response object for streaming
      * Use this for endpoints that return streaming responses instead of JSON
      */
-    postStream: (url: string, options: SecureRequestOptions = {}): Promise<Response> => {
-        const { apiKeys = {}, body, ...kyOptions } = options;
-        const client = Object.keys(apiKeys).length > 0 ? createSecureClient(apiKeys) : baseClient;
+    postStream: async (url: string, options: SecureRequestOptions = {}): Promise<Response> => {
+        const { apiKeys = {}, body, headers: customHeaders, timeout, signal } = options;
+        const headers = createRequestHeaders(apiKeys, customHeaders);
 
-        const requestOptions: KyOptions = {
-            ...kyOptions,
-            ...(body && { json: body }),
-        };
+        if (body) {
+            headers.set('Content-Type', 'application/json');
+        }
 
-        // Return the raw Response for streaming
-        return client.post(url, requestOptions);
+        const response = await fetchWithTimeout(url, {
+            method: 'POST',
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+            timeout,
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return response;
     },
-
-    /**
-     * Create a custom client with specific API keys
-     */
-    withApiKeys: (apiKeys: ApiKeys): KyInstance => createSecureClient(apiKeys),
 };
 
 /**
@@ -204,7 +224,3 @@ export const adminApi = {
         return http.post<T>(`/api/admin${endpoint}`, options);
     },
 };
-
-// Export types for easier usage
-export { ky };
-export type { KyOptions };
