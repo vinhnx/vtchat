@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth-server';
 import { log } from '@repo/shared/lib/logger';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_BASE_URL || 'https://vtchat.io.vn',

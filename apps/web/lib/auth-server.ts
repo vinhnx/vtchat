@@ -16,13 +16,20 @@ if (process.env.DATABASE_URL) {
 
 export const authConfigured = Boolean(process.env.DATABASE_URL && dbInstance);
 
+const isLocalhostUrl = (url?: string) => {
+    return Boolean(url?.includes('localhost') || url?.includes('127.0.0.1'));
+};
+
 const defaultBaseUrl = process.env.NODE_ENV === 'production'
     ? 'https://vtchat.io.vn'
     : 'http://localhost:3000';
 
-const baseURL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL
-    || process.env.NEXT_PUBLIC_BASE_URL
-    || defaultBaseUrl;
+const envBaseUrl = process.env.NEXT_PUBLIC_BETTER_AUTH_URL
+    || process.env.NEXT_PUBLIC_BASE_URL;
+
+const baseURL = envBaseUrl && !(process.env.NODE_ENV === 'production' && isLocalhostUrl(envBaseUrl))
+    ? envBaseUrl
+    : defaultBaseUrl;
 
 // If the database is not configured (e.g., local dev without env), stub auth to avoid hard crashes.
 export const auth = authConfigured

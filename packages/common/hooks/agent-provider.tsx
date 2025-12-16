@@ -11,18 +11,18 @@ import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
 import { log } from '@repo/shared/logger';
 import type { ThreadItem } from '@repo/shared/types';
-import { GEMINI_MODEL_ENUMS_ARRAY, buildCoreMessagesFromThreadItems } from '@repo/shared/utils';
+import { buildCoreMessagesFromThreadItems, GEMINI_MODEL_ENUMS_ARRAY } from '@repo/shared/utils';
 import { useToast } from '@repo/ui/src/components/use-sonner-toast';
 import { useParams, useRouter } from 'next/navigation';
 import {
     createContext,
+    type ReactNode,
     useCallback,
     useContext,
     useEffect,
     useMemo,
     useRef,
     useState,
-    type ReactNode,
 } from 'react';
 import { ApiKeyPromptModal } from '../components/api-key-prompt-modal';
 import { useApiKeysStore, useChatStore } from '../store';

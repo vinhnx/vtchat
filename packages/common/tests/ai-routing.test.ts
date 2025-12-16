@@ -160,9 +160,9 @@ describe('needsServerSideForPlus', () => {
     it('should identify VT+ server models correctly', () => {
         expect(needsServerSideForPlus(ChatMode.CLAUDE_4_SONNET)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.CLAUDE_SONNET_4_5)).toBe(true);
-            expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
+        expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe(false);
-            expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
+        expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
     });
 });
 

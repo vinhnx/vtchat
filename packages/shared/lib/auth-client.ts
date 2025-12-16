@@ -8,17 +8,23 @@ const requestDeduplicator = typeof window !== 'undefined'
     : null;
 
 // Ensure proper URL formatting for Better Auth
+const isLocalhostUrl = (url?: string) => {
+    return Boolean(url?.includes('localhost') || url?.includes('127.0.0.1'));
+};
+
 const getBaseURL = () => {
     const envBaseUrl = process.env.NEXT_PUBLIC_BETTER_AUTH_URL
         || process.env.NEXT_PUBLIC_BASE_URL
         || process.env.NEXT_PUBLIC_APP_URL;
 
-    if (envBaseUrl) {
+    // Prefer env when it is not pointing to localhost in production
+    if (envBaseUrl && !(process.env.NODE_ENV === 'production' && isLocalhostUrl(envBaseUrl))) {
         return envBaseUrl;
     }
 
-    // Use current origin when available to avoid CORS issues on previews
-    if (typeof window !== 'undefined') {
+    // Use current origin when available to avoid CORS issues on previews and to honor the
+    // deployed host instead of baked-in localhost values.
+    if (typeof window !== 'undefined' && window.location.origin) {
         return window.location.origin;
     }
 

@@ -1,4 +1,4 @@
-import { tool, type Tool } from 'ai';
+import { type Tool, tool } from 'ai';
 import { z } from 'zod';
 
 type ChartTools = 'barChart' | 'lineChart' | 'areaChart' | 'pieChart' | 'radarChart';

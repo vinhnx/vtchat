@@ -24,6 +24,10 @@ interface BaseURLOptions {
 export function getBaseURL(opts: BaseURLOptions = {}): string {
     let url: string | undefined;
 
+    const isLocalhostUrl = (candidate?: string) => {
+        return Boolean(candidate?.includes('localhost') || candidate?.includes('127.0.0.1'));
+    };
+
     if (opts.public) {
         // For client-side usage, only use NEXT_PUBLIC_* variables
         url = process.env.NEXT_PUBLIC_APP_URL;
@@ -66,6 +70,11 @@ export function getBaseURL(opts: BaseURLOptions = {}): string {
             throw new Error('APP_URL or NEXT_PUBLIC_APP_URL must be set in production environment');
         }
         return 'http://localhost:3000';
+    }
+
+    if (process.env.NODE_ENV === 'production' && isLocalhostUrl(url)) {
+        log.warn({ url }, '[config] Replacing localhost base URL in production');
+        return 'https://vtchat.io.vn';
     }
 
     // Normalize URL (remove trailing slashes)
