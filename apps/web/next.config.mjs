@@ -429,6 +429,30 @@ const nextConfig = {
                 ],
             },
             {
+                // Compression dictionary for CSS (post-build generated)
+                source: '/_next/static/css/full.css',
+                headers: [
+                    {
+                        key: 'Use-As-Dictionary',
+                        value: 'match="/_next/static/css/*"',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=604800',
+                    },
+                ],
+            },
+            {
+                // Enable clients to vary cache when compression dictionaries are present
+                source: '/_next/static/css/:path*',
+                headers: [
+                    {
+                        key: 'Vary',
+                        value: 'Available-Dictionary, Accept-Encoding',
+                    },
+                ],
+            },
+            {
                 // Optimized cache headers for static assets
                 source: '/(.*)\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2)',
                 headers: [

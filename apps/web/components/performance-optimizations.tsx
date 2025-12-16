@@ -22,6 +22,15 @@ export function PerformanceOptimizations() {
                 referrerPolicy='strict-origin-when-cross-origin'
             />
 
+            {/* Make the full CSS dictionary available for compression-dictionary capable browsers */}
+            <link
+                href='/_next/static/css/full.css'
+                rel='compression-dictionary'
+                as='fetch'
+                type='text/css'
+                crossOrigin='anonymous'
+            />
+
             {/* Optimize viewport for mobile */}
             <meta content='#000000' name='theme-color' />
             <meta content='dark light' name='color-scheme' />

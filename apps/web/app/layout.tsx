@@ -11,6 +11,7 @@ import { BetterAuthProvider } from '../components/better-auth-provider';
 import { CanonicalURLManager } from '../components/canonical-url-manager';
 import { FetchMethodPatch } from '../components/fetch-method-patch';
 import { OfflineIndicator } from '../components/offline-indicator';
+import { DelayedMessageMonitor } from '../components/delayed-message-monitor';
 import { PerformanceOptimizations } from '../components/performance-optimizations';
 import { PWAManager } from '../components/pwa-manager';
 import { ReactScan } from '../components/react-scan';
@@ -224,6 +225,8 @@ export default function ParentLayout({
                                                     >
                                                         {/* React Scan for performance monitoring in development */}
                                                         <ReactScan />
+                                                        {/* Observe delayed postMessage events to diagnose cross-context lag */}
+                                                        <DelayedMessageMonitor />
                                                         {/* PWA Manager for install prompts and service worker */}
                                                         <PWAManager />
                                                         {/* Offline status indicator */}

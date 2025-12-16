@@ -11,6 +11,7 @@
         "dev:scan": "REACT_SCAN_ENABLED=true next dev --turbopack",
         "build": "next build",
         "build:turbo": "next build --turbopack",
+        "postbuild": "bun run scripts/generate-css-dictionary.ts",
         "analyze": "ANALYZE=true next build",
         "start": "next start",
         "lint": "oxlint",
