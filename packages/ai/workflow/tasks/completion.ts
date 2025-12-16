@@ -76,7 +76,8 @@ export const completionTask = createTask<WorkflowEventSchema, WorkflowContextSch
         // Check if model supports OpenAI web search when web search is enabled
         const supportsOpenAISearch = supportsOpenAIWebSearch(model);
         if (webSearch && !supportsOpenAISearch) {
-            // For non-OpenAI models with web search, redirect to planner (or handle appropriately)
+            // Prevent mismatch between prompt/tooling and model capability; route to planner for Gemini web search
+            context.update('webSearch', () => false);
             redirectTo('planner');
             return;
         }

@@ -16,6 +16,22 @@ if (typeof process === 'undefined') {
 let apiKeys: Record<string, string> = {};
 let activeWorkflow: ReturnType<typeof runWorkflow> | null = null;
 
+const abortActiveWorkflow = async (
+    workflow: ReturnType<typeof runWorkflow> | null,
+    graceful?: boolean,
+) => {
+    if (!workflow?.abort) return;
+
+    try {
+        const result = workflow.abort(graceful);
+        if (result instanceof Promise) {
+            await result;
+        }
+    } catch (error) {
+        log.error('[Worker] Error aborting workflow:', { data: error });
+    }
+};
+
 /**
  * Get thinking mode configuration for specific chat modes
  * Automatically enables high-effort reasoning for research modes
@@ -63,12 +79,8 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
         if (type === 'START_WORKFLOW') {
             // If there's an active workflow, abort it before starting a new one
             if (activeWorkflow) {
-                try {
-                    activeWorkflow.abort?.(false);
-                    activeWorkflow = null;
-                } catch (e) {
-                    log.error('[Worker] Error aborting previous workflow:', { data: e });
-                }
+                await abortActiveWorkflow(activeWorkflow, false);
+                activeWorkflow = null;
             }
 
             const {
@@ -171,12 +183,8 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
         } else if (type === 'ABORT_WORKFLOW') {
             // Abort handling
             if (activeWorkflow) {
-                try {
-                    activeWorkflow.abort?.(payload.graceful);
-                    activeWorkflow = null;
-                } catch (e) {
-                    log.error('[Worker] Error aborting workflow:', { data: e });
-                }
+                await abortActiveWorkflow(activeWorkflow, payload.graceful);
+                activeWorkflow = null;
             }
 
             ctx.postMessage({

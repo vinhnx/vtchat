@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { log } from '@repo/shared/lib/logger';
+import { useEffect } from 'react';
 
 interface ExecutionContextInfo {
     type?: string;
@@ -25,10 +25,9 @@ interface DelayedMessageEntry extends PerformanceEntry {
 const DELAY_THRESHOLD_MS = 50;
 const SERIALIZATION_THRESHOLD_MS = 5;
 
-const supportsDelayedMessage =
-    typeof PerformanceObserver !== 'undefined' &&
-    Array.isArray(PerformanceObserver.supportedEntryTypes) &&
-    PerformanceObserver.supportedEntryTypes.includes('delayed-message');
+const supportsDelayedMessage = typeof PerformanceObserver !== 'undefined'
+    && Array.isArray(PerformanceObserver.supportedEntryTypes)
+    && PerformanceObserver.supportedEntryTypes.includes('delayed-message');
 
 export function DelayedMessageMonitor() {
     useEffect(() => {
@@ -39,12 +38,12 @@ export function DelayedMessageMonitor() {
                 const messageEntry = entry as DelayedMessageEntry;
 
                 const blockedDuration = messageEntry.blockedDuration ?? 0;
-                const serializationDuration =
-                    (messageEntry.serialization ?? 0) + (messageEntry.deserialization ?? 0);
+                const serializationDuration = (messageEntry.serialization ?? 0)
+                    + (messageEntry.deserialization ?? 0);
 
                 if (
-                    blockedDuration < DELAY_THRESHOLD_MS &&
-                    serializationDuration < SERIALIZATION_THRESHOLD_MS
+                    blockedDuration < DELAY_THRESHOLD_MS
+                    && serializationDuration < SERIALIZATION_THRESHOLD_MS
                 ) {
                     return;
                 }

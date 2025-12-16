@@ -538,11 +538,28 @@ export const generateTextWithGeminiSearch = async ({
 };
 
 // Cache for generated text to prevent multiple identical requests
-const textGenerationCache = new Map<string, any>();
+const textGenerationCache = new Map<string, { timestamp: number; result: any; }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const MAX_CACHE_ENTRIES = 50;
 
 // In-flight request tracking to prevent multiple concurrent requests
 const inFlightRequests = new Map<string, Promise<any>>();
+
+// Simple cache pruning to keep memory bounded and evict stale entries eagerly
+const pruneTextCache = () => {
+    const now = Date.now();
+    for (const [key, value] of textGenerationCache) {
+        if (now - value.timestamp >= CACHE_TTL) {
+            textGenerationCache.delete(key);
+        }
+    }
+
+    while (textGenerationCache.size > MAX_CACHE_ENTRIES) {
+        const oldestKey = textGenerationCache.keys().next().value;
+        if (!oldestKey) break;
+        textGenerationCache.delete(oldestKey);
+    }
+};
 
 export const generateText = async ({
     prompt,
@@ -584,6 +601,9 @@ export const generateText = async ({
     mode?: string;
 }) => {
     try {
+        // Ensure cache does not grow unbounded before handling new requests
+        pruneTextCache();
+
         // Create a cache key from the parameters
         const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${
             JSON.stringify(tools || {})
@@ -891,6 +911,7 @@ export const generateText = async ({
                     timestamp: Date.now(),
                     result: fullText,
                 });
+                pruneTextCache();
 
                 return fullText;
             } catch (error) {
