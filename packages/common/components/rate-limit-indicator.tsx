@@ -20,7 +20,7 @@ export function RateLimitIndicator({
     const { status, isLoading } = useRateLimit(modelId);
 
     // Only show for rate-limited models
-    if (modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE || !status) {
+    if (modelId !== ModelEnum.GEMINI_3_FLASH_LITE || !status) {
         return null;
     }
 

@@ -67,9 +67,9 @@ export const getRequiredApiKeyForChatMode = (chatMode: ChatMode): keyof ApiKeys 
         [ChatMode.CLAUDE_4_OPUS]: 'ANTHROPIC_API_KEY',
 
         // Google models
-        [ChatMode.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
-        [ChatMode.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
-        [ChatMode.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY', // Even free model requires BYOK for images
+        [ChatMode.GEMINI_3_PRO]: 'GEMINI_API_KEY',
+        [ChatMode.GEMINI_3_FLASH]: 'GEMINI_API_KEY',
+        [ChatMode.GEMINI_3_FLASH_LITE]: 'GEMINI_API_KEY', // Even free model requires BYOK for images
 
         // Research modes (use Gemini)
         [ChatMode.Deep]: 'GEMINI_API_KEY',

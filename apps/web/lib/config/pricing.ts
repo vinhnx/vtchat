@@ -40,7 +40,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'All Premium AI Models (Free with BYOK)',
                     description:
-                        'Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users',
+                        'Access to ALL premium AI models including Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3 with your own API keys - completely free for logged-in users',
                 },
                 {
                     name: '9 Free Server Models',
@@ -62,7 +62,7 @@ export const PRICING_CONFIG = {
                 {
                     name: 'Access to Gemini Models + Enhanced Tools + Nano Banana',
                     description:
-                        'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite) plus enhanced tools (web search, math calculator, charts) and the exclusive Gemini Nano Banana conversational image editor without needing your own API keys.',
+                        'Access all Gemini models (Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite) plus enhanced tools (web search, math calculator, charts) and the exclusive Gemini Nano Banana conversational image editor without needing your own API keys.',
                 },
                 {
                     name: 'Everything in Free Plan (All Premium AI Models Included)',

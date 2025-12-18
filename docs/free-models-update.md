@@ -5,11 +5,11 @@
 
 ## Overview
 
-Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configuration, making all Preview models free, and improving subscription benefit descriptions.
+Enhanced the VT platform's free tier by updating GEMINI_3_FLASH_LITE configuration, making all Preview models free, and improving subscription benefit descriptions.
 
 ## Latest Changes (June 18, 2025)
 
-### 1. Updated GEMINI_2_5_FLASH_LITE Token Configuration
+### 1. Updated GEMINI_3_FLASH_LITE Token Configuration
 
 #### Token Limits Updated (packages/ai/models.ts)
 
@@ -19,35 +19,35 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 ### 2. Made All Preview Models Free
 
-#### GEMINI_2_5_PRO Corrected to Premium (packages/ai/models.ts)
+#### GEMINI_3_PRO Corrected to Premium (packages/ai/models.ts)
 
-- **GEMINI_2_5_PRO** (`gemini-2.5-pro-preview-05-06`) - corrected to `isFree: false` (is NOT a free model)
+- **GEMINI_3_PRO** (`gemini-2.5-pro-preview-05-06`) - corrected to `isFree: false` (is NOT a free model)
 - **Removed Gift Icon** in chat-actions.tsx for accurate pricing representation
 
-#### All Preview Models Now Free (except GEMINI_2_5_PRO)
+#### All Preview Models Now Free (except GEMINI_3_PRO)
 
-- GEMINI_2_5_FLASH_LITE ✅ (1M input/64K output)
-- GEMINI_2_5_FLASH_PREVIEW ✅
-- GEMINI_2_5_PRO ❌ (NOT free - premium model)
-- GEMINI_2_5_PRO_PREVIEW ✅
+- GEMINI_3_FLASH_LITE ✅ (1M input/64K output)
+- GEMINI_3_FLASH_PREVIEW ✅
+- GEMINI_3_PRO ❌ (NOT free - premium model)
+- GEMINI_3_PRO_PREVIEW ✅
 
 #### Chat Actions UI (packages/common/components/chat-input/chat-actions.tsx)
 
-- **Added missing GEMINI_2_5_FLASH_LITE** to the Google provider section
+- **Added missing GEMINI_3_FLASH_LITE** to the Google provider section
 - **Added Gift icons** to all free Gemini models:
-  - GEMINI_2_5_FLASH_LITE ✅ (newly added)
-  - GEMINI_2_5_FLASH_PREVIEW ✅
-  - GEMINI_2_5_PRO_PREVIEW ✅
+  - GEMINI_3_FLASH_LITE ✅ (newly added)
+  - GEMINI_3_FLASH_PREVIEW ✅
+  - GEMINI_3_PRO_PREVIEW ✅
 
 #### Workflow Utils (packages/ai/workflow/utils.ts)
 
-- **Added GEMINI_2_5_FLASH_LITE** to the API key mapping for model selection
-- **Added GEMINI_2_5_FLASH** to the API key mapping (was missing)
+- **Added GEMINI_3_FLASH_LITE** to the API key mapping for model selection
+- **Added GEMINI_3_FLASH** to the API key mapping (was missing)
 - Ensures proper fallback mechanism works for all Gemini models
 
 #### Models Configuration (packages/ai/models.ts)
 
-- **Added web search support** for GEMINI_2_5_FLASH_LITE and GEMINI_2_5_FLASH
+- **Added web search support** for GEMINI_3_FLASH_LITE and GEMINI_3_FLASH
 - Updated `supportsNativeWebSearch` function to include the new models
 - Confirmed `isFree: true` flag is properly set for free models
 
@@ -56,9 +56,9 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 #### Pricing Configuration (apps/web/lib/config/pricing.ts)
 
 - **Enhanced "Access to Free Models" benefit** to include all available free models:
-  - Gemini 2.5 Pro Preview
-  - Gemini 2.5 Flash
-  - Gemini 2.5 Flash Lite Preview
+  - Gemini 3 Pro Preview
+  - Gemini 3 Flash
+  - Gemini 3 Flash Lite Preview
   - DeepSeek V3
   - DeepSeek R1
   - Qwen3 14B
@@ -73,10 +73,10 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 - **Updated "Access to Free Models" description** to include all 4 free Gemini models
 - **Enhanced model list** now includes:
-  - Gemini 2.5 Flash
-  - Gemini 2.5 Flash Lite (1M input/64K output tokens)
-  - Gemini 2.5 Pro
-  - Gemini 2.5 Flash Preview
+  - Gemini 3 Flash
+  - Gemini 3 Flash Lite (1M input/64K output tokens)
+  - Gemini 3 Pro
+  - Gemini 3 Flash Preview
   - DeepSeek V3, DeepSeek R1, Qwen3 14B (OpenRouter models)
 
 #### Enhanced Plus Tier Benefits (apps/web/lib/config/pricing.ts)
@@ -92,7 +92,7 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 #### API Key Configuration Updates
 
-- **Added GEMINI_2_5_FLASH_LITE** to api-key-prompt-modal.tsx
+- **Added GEMINI_3_FLASH_LITE** to api-key-prompt-modal.tsx
 - **Ensures proper API key prompting** for all Gemini models
 - **Consistent user experience** across all model selections
 
@@ -114,9 +114,9 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 
 ### Google Gemini (Free Tier)
 
-- **Gemini 2.5 Flash** - Fast, efficient model for general tasks
-- **Gemini 2.5 Flash Lite Preview** - Preview access to latest features
-- **Gemini 2.5 Pro Preview** - Preview access to Pro-level capabilities (Note: Gemini 2.5 Pro is premium only)
+- **Gemini 3 Flash** - Fast, efficient model for general tasks
+- **Gemini 3 Flash Lite Preview** - Preview access to latest features
+- **Gemini 3 Pro Preview** - Preview access to Pro-level capabilities (Note: Gemini 3 Pro is premium only)
 
 ### OpenRouter Models (Free Tier)
 
@@ -187,7 +187,7 @@ Enhanced the VT platform's free tier by updating GEMINI_2_5_FLASH_LITE configura
 bun dev
 
 # Navigate to chat interface
-# Verify GEMINI_2_5_FLASH_LITE appears in Google section
+# Verify GEMINI_3_FLASH_LITE appears in Google section
 # Verify all free models show gift icons
 ```
 
@@ -217,7 +217,7 @@ bun dev
 
 ### User Interface
 
-- `packages/common/components/chat-input/chat-actions.tsx` - Added GEMINI_2_5_FLASH_LITE and gift icons
+- `packages/common/components/chat-input/chat-actions.tsx` - Added GEMINI_3_FLASH_LITE and gift icons
 - `apps/web/lib/config/pricing.ts` - Updated free tier benefits
 
 ### Documentation
@@ -245,7 +245,7 @@ bun dev
 
 This update significantly enhances the VT free tier by:
 
-- **Adding GEMINI_2_5_FLASH_LITE** model support
+- **Adding GEMINI_3_FLASH_LITE** model support
 - **Improving visual indicators** for free models
 - **Updating benefit descriptions** to be accurate and comprehensive
 - **Maintaining code quality** and proper architecture

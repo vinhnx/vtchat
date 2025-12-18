@@ -961,7 +961,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
             // Log routing decision for debugging
             logRoutingDecision({
                 mode,
-                isFreeModel: mode === ChatMode.GEMINI_2_5_FLASH_LITE,
+                isFreeModel: mode === ChatMode.GEMINI_3_FLASH_LITE,
                 hasVtPlusAccess,
                 needsServerSide: (hasVtPlusAccess
                     && [ChatMode.CLAUDE_4_SONNET, ChatMode.CLAUDE_SONNET_4_5, ChatMode.GPT_4o]
@@ -1054,8 +1054,8 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                 // A request to /api/completion is always a server-side call → we must filter on EVERY path
                 const serverManagedModels: ChatMode[] = hasVtPlusAccess
                     ? [
-                        ChatMode.GEMINI_2_5_PRO,
-                        ChatMode.GEMINI_2_5_FLASH,
+                        ChatMode.GEMINI_3_PRO,
+                        ChatMode.GEMINI_3_FLASH,
                         ChatMode.GEMINI_3_FLASH,
                         ChatMode.GPT_4o,
                         ChatMode.DEEPSEEK_R1,

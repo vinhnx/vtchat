@@ -207,7 +207,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     return !!(key && key.trim() !== '');
                 };
 
-                if (chatMode === ChatMode.GEMINI_2_5_FLASH_LITE) {
+                if (chatMode === ChatMode.GEMINI_3_FLASH_LITE) {
                     return isValidKey(apiKeys.GEMINI_API_KEY);
                 }
 
@@ -217,7 +217,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                 // VT+ users don't need API keys for Gemini models and research modes
                 if (
                     isVtPlus
-                    && chatMode !== ChatMode.GEMINI_2_5_FLASH_LITE
+                    && chatMode !== ChatMode.GEMINI_3_FLASH_LITE
                     && (isGeminiModel(chatMode)
                         || chatMode === ChatMode.Deep
                         || chatMode === ChatMode.Pro)
@@ -242,11 +242,10 @@ export const useApiKeysStore = create<ApiKeysState>()(
                     case ChatMode.Pro:
                         // Deep Research and Pro Search modes support BYOK for free users
                         return isValidKey(apiKeys.GEMINI_API_KEY);
-                    case ChatMode.GEMINI_2_5_PRO:
-                    case ChatMode.GEMINI_2_5_FLASH:
+                    case ChatMode.GEMINI_3_PRO:
                     case ChatMode.GEMINI_3_FLASH:
                         return isValidKey(apiKeys.GEMINI_API_KEY);
-                    case ChatMode.GEMINI_2_5_FLASH_LITE:
+                    case ChatMode.GEMINI_3_FLASH_LITE:
                         return true; // Free model, no API key required
                     case ChatMode.CLAUDE_4_1_OPUS:
                     case ChatMode.CLAUDE_4_SONNET:

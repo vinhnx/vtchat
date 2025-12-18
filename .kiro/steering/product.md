@@ -6,7 +6,7 @@ VT delivers powerful AI conversations with complete privacy protection—startin
 ## Core Value Proposition
 
 - **Privacy-First Architecture**: All conversations stored locally in browser IndexedDB, never on servers
-- **Generous Free Tier**: All premium AI models (Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, etc.) available to logged-in users with BYOK (Bring Your Own Key)
+- **Generous Free Tier**: All premium AI models (Claude 4, GPT-4.1, O3 series, Gemini 3 Pro, etc.) available to logged-in users with BYOK (Bring Your Own Key)
 - **Local AI Support**: Complete integration with Ollama and LM Studio for free, private AI on user's own hardware
 - **Advanced Features**: Document processing, web search, structured output, chart visualization, thinking mode - all free
 
@@ -24,7 +24,7 @@ VT delivers powerful AI conversations with complete privacy protection—startin
 
 ### Free Tier (Logged-in Users)
 
-- ALL premium AI models with BYOK (Claude 4, GPT-4.1, O3 series, Gemini 2.5 Pro, etc.)
+- ALL premium AI models with BYOK (Claude 4, GPT-4.1, O3 series, Gemini 3 Pro, etc.)
 - All advanced features: intelligent tool routing, chart visualization, document processing, web search
 - 9 free server models (no API keys required)
 - Local AI support (Ollama, LM Studio)

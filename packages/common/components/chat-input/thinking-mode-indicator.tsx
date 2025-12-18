@@ -15,16 +15,16 @@ export const ThinkingModeIndicator = () => {
     const setIsSettingsOpen = useAppStore((state) => state.setIsSettingsOpen);
     const setSettingTab = useAppStore((state) => state.setSettingTab);
 
-    // Check if current model supports thinking mode (specific Gemini 2.5 models only)
+    // Check if current model supports thinking mode (specific Gemini 3 models only)
     const isThinkingCapableModel = useMemo(() => {
-        const thinkingModeModels = [ChatMode.GEMINI_2_5_FLASH, ChatMode.GEMINI_2_5_FLASH_LITE];
+        const thinkingModeModels = [ChatMode.GEMINI_3_FLASH, ChatMode.GEMINI_3_FLASH_LITE];
         return thinkingModeModels.includes(chatMode);
     }, [chatMode]);
 
     // Only show indicator if:
     // 1. User has access to thinking mode (VT+)
     // 2. Thinking mode is enabled
-    // 3. Current model supports thinking mode (Gemini 2.5 Flash, Pro, Flash-Lite)
+    // 3. Current model supports thinking mode (Gemini 3 Flash, Pro, Flash-Lite)
     if (!(hasThinkingModeAccess && thinkingMode.enabled && isThinkingCapableModel)) {
         return null;
     }

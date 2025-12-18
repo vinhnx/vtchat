@@ -75,8 +75,8 @@ export async function generateWithUrlContext({
 }> {
     const { apiKey, via } = getEffectiveGeminiApiKey(byokKeys);
 
-    if (model === ModelEnum.GEMINI_2_5_FLASH_LITE && via === 'env') {
-        const err = 'Gemini 2.5 Flash Lite now requires your own Gemini API key.';
+    if (model === ModelEnum.GEMINI_3_FLASH_LITE && via === 'env') {
+        const err = 'Gemini 3 Flash Lite now requires your own Gemini API key.';
         log.error({ via }, err);
         throw new Error(`${err} Add your key in settings to continue.`);
     }

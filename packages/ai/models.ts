@@ -123,36 +123,29 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_2_5_FLASH,
-        name: 'Gemini 2.5 Flash',
+        id: ModelEnum.GEMINI_3_FLASH,
+        name: 'Gemini 3 Flash',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite',
+        id: ModelEnum.GEMINI_3_FLASH_LITE,
+        name: 'Gemini 3 Flash Lite',
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,
     },
     {
-        id: ModelEnum.GEMINI_2_5_PRO,
-        name: 'Gemini 2.5 Pro',
+        id: ModelEnum.GEMINI_3_PRO,
+        name: 'Gemini 3 Pro',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.GEMINI_3_FLASH,
-        name: 'Gemini 3 Flash',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.GEMINI_2_5_FLASH_IMAGE,
-        name: 'Gemini 2.5 Flash Image',
+        id: ModelEnum.GEMINI_3_FLASH_IMAGE,
+        name: 'Gemini 3 Flash Image',
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,
@@ -263,15 +256,13 @@ export const models: Model[] = [
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
         case ChatMode.Deep:
-            return ModelEnum.GEMINI_2_5_FLASH;
+            return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.Pro:
-            return ModelEnum.GEMINI_2_5_FLASH;
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
-            return ModelEnum.GEMINI_2_5_FLASH_LITE;
-        case ChatMode.GEMINI_2_5_PRO:
-            return ModelEnum.GEMINI_2_5_PRO;
-        case ChatMode.GEMINI_2_5_FLASH:
-            return ModelEnum.GEMINI_2_5_FLASH;
+            return ModelEnum.GEMINI_3_FLASH;
+        case ChatMode.GEMINI_3_FLASH_LITE:
+            return ModelEnum.GEMINI_3_FLASH_LITE;
+        case ChatMode.GEMINI_3_PRO:
+            return ModelEnum.GEMINI_3_PRO;
         case ChatMode.GEMINI_3_FLASH:
             return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
@@ -334,7 +325,7 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         case ChatMode.GPT_OSS_20B:
             return ModelEnum.GPT_OSS_20B;
         default:
-            return ModelEnum.GEMINI_2_5_FLASH_LITE;
+            return ModelEnum.GEMINI_3_FLASH_LITE;
     }
 };
 
@@ -342,10 +333,9 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Pro:
         case ChatMode.Deep:
-        case ChatMode.GEMINI_2_5_PRO:
-        case ChatMode.GEMINI_2_5_FLASH:
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
+        case ChatMode.GEMINI_3_PRO:
         case ChatMode.GEMINI_3_FLASH:
+        case ChatMode.GEMINI_3_FLASH_LITE:
             return 1_048_576;
         case ChatMode.CLAUDE_4_1_OPUS:
         case ChatMode.CLAUDE_4_SONNET:
@@ -425,10 +415,9 @@ export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
 
 export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     const googleModels = [
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_FLASH_LITE,
-        ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_3_FLASH,
+        ModelEnum.GEMINI_3_FLASH_LITE,
+        ModelEnum.GEMINI_3_PRO,
     ];
 
     return googleModels.includes(model);
@@ -521,10 +510,9 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // Gemini thinking models (existing functionality)
     const geminiThinkingModels = [
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_PRO,
-        ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_3_FLASH,
+        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
     // OpenAI reasoning models
@@ -571,10 +559,9 @@ export const supportsTools = (model: ModelEnum): boolean => {
 
     // Google models that support tools
     const googleToolModels = [
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_PRO,
-        ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_3_FLASH,
+        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
     // OpenRouter models that support tools
@@ -621,10 +608,9 @@ export const supportsWebSearch = (model: ModelEnum): boolean => {
 export const getReasoningType = (model: ModelEnum): ReasoningType => {
     // Gemini models use thinking config
     const geminiThinkingModels = [
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_PRO,
-        ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_3_FLASH,
+        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
     if (geminiThinkingModels.includes(model)) {

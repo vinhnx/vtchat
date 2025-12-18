@@ -61,10 +61,9 @@ export class ToolRegistry {
             ModelEnum.O4_Mini,
 
             // Gemini models with grounding/web search
-            ModelEnum.GEMINI_2_5_PRO,
-            ModelEnum.GEMINI_2_5_FLASH,
-            ModelEnum.GEMINI_2_5_FLASH_LITE,
+            ModelEnum.GEMINI_3_PRO,
             ModelEnum.GEMINI_3_FLASH,
+            ModelEnum.GEMINI_3_FLASH_LITE,
         ];
 
         // In production, filter by available API keys or environment config

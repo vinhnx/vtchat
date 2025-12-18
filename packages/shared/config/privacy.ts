@@ -26,7 +26,7 @@ VT is built with **privacy-first principles** at its core:
 ### 1.1 Information You Provide
 **When you create an account (optional), we collect:**
 - **Account Information:** Email address, name, profile picture from OAuth providers (Google, GitHub and Twitter/X)
-- **Model Usage Metrics:** We track aggregated request counts and rate-limiting data for managed AI features (e.g., VT+ Gemini Flash and Pro tiers, OpenRouter community models). Gemini 2.5 Flash Lite requires your own Gemini API key (BYOK) and is only counted when routed through VT services—never the key itself.
+- **Model Usage Metrics:** We track aggregated request counts and rate-limiting data for managed AI features (e.g., VT+ Gemini Flash and Pro tiers, OpenRouter community models). Gemini 3 Flash Lite requires your own Gemini API key (BYOK) and is only counted when routed through VT services—never the key itself.
 - **Premium Model Access:** Access to all premium AI models (Claude 4, GPT-4.1, O3, DeepSeek R1, Grok 3, etc.) with BYOK for all logged-in users
 - **Payment Information:** Billing details for VT+ subscription (processed securely by Creem.io)
 - **Support Communications:** Messages you send to our support team via hello@vtchat.io.vn
@@ -60,7 +60,7 @@ VT is built with **privacy-first principles** at its core:
 
 ### 2.1 Service Provision & Authentication
 - **Account Management:** Create and manage your account, authenticate users
-- **Usage Management:** We monitor usage and enforce rate limits for VT-managed AI features (Gemini Flash/Pro tiers, research tools) to ensure fair access for all users. Gemini 2.5 Flash Lite usage is governed by each user's BYOK configuration.
+- **Usage Management:** We monitor usage and enforce rate limits for VT-managed AI features (Gemini Flash/Pro tiers, research tools) to ensure fair access for all users. Gemini 3 Flash Lite usage is governed by each user's BYOK configuration.
 - **Subscription Management:** Process VT+ subscriptions and billing via Creem.io
 - **Feature Access:** Determine access to VT+ exclusive research features with daily quotas (PRO_SEARCH: 50/day, DEEP_RESEARCH: 25/day) while providing all premium AI models free to logged-in users with BYOK
 - **Customer Support:** Respond to support requests within 24 hours via hello@vtchat.io.vn

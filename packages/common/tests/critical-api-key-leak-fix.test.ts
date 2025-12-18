@@ -15,7 +15,7 @@ describe('CRITICAL API Key Leak Fix', () => {
     };
 
     it('should keep Gemini API key for BYOK Flash Lite requests', () => {
-        const mode = ChatMode.GEMINI_2_5_FLASH_LITE;
+        const mode = ChatMode.GEMINI_3_FLASH_LITE;
         const isServerManaged = false;
 
         const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerManaged);
@@ -27,7 +27,7 @@ describe('CRITICAL API Key Leak Fix', () => {
     });
 
     it('should remove ALL provider API keys for VT+ Gemini Pro models', () => {
-        const mode = ChatMode.GEMINI_2_5_PRO;
+        const mode = ChatMode.GEMINI_3_PRO;
         const isServerFunded = true;
 
         const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerFunded);
@@ -39,7 +39,7 @@ describe('CRITICAL API Key Leak Fix', () => {
     });
 
     it('should remove ALL provider API keys for VT+ Gemini Flash models', () => {
-        const mode = ChatMode.GEMINI_2_5_FLASH;
+        const mode = ChatMode.GEMINI_3_FLASH;
         const isServerFunded = true;
 
         const result = filterApiKeysForServerSide(mockApiKeys, mode, isServerFunded);
@@ -96,7 +96,7 @@ describe('CRITICAL API Key Leak Fix', () => {
     });
 
     it('REGRESSION TEST: empty API keys should work without errors', () => {
-        const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, false);
+        const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_3_FLASH_LITE, false);
         expect(result).toEqual({});
     });
 });

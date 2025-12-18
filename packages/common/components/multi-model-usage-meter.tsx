@@ -25,18 +25,18 @@ import { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
 
 // Model configuration for display
 const MODEL_CONFIG = {
-    [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
-        name: 'Gemini 2.5 Flash Lite',
+    [ModelEnum.GEMINI_3_FLASH_LITE]: {
+        name: 'Gemini 3 Flash Lite',
         description: 'Fast and efficient',
         limits: GEMINI_LIMITS.FLASH_LITE,
     },
-    [ModelEnum.GEMINI_2_5_FLASH]: {
-        name: 'Gemini 2.5 Flash',
+    [ModelEnum.GEMINI_3_FLASH]: {
+        name: 'Gemini 3 Flash',
         description: 'Balanced performance',
         limits: GEMINI_LIMITS.FLASH,
     },
-    [ModelEnum.GEMINI_2_5_PRO]: {
-        name: 'Gemini 2.5 Pro',
+    [ModelEnum.GEMINI_3_PRO]: {
+        name: 'Gemini 3 Pro',
         description: 'Advanced capabilities',
         limits: GEMINI_LIMITS.PRO,
     },
@@ -201,15 +201,15 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                     <ChartContainer
                         config={{
                             'flash-lite-2-5': {
-                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_FLASH_LITE].name}`,
+                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_3_FLASH_LITE].name}`,
                                 color: 'hsl(var(--chart-1))',
                             },
                             'flash-2-5': {
-                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_FLASH].name}`,
+                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_3_FLASH].name}`,
                                 color: 'hsl(var(--chart-2))',
                             },
                             'pro-2-5': {
-                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_PRO].name}`,
+                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_3_PRO].name}`,
                                 color: 'hsl(var(--chart-3))',
                             },
                             'flash-3': {
@@ -227,10 +227,10 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
 
                                 // Get actual daily usage values
                                 const flashLiteUsage =
-                                    modelStatuses[ModelEnum.GEMINI_2_5_FLASH_LITE]?.dailyUsed || 0;
+                                    modelStatuses[ModelEnum.GEMINI_3_FLASH_LITE]?.dailyUsed || 0;
                                 const flashUsage =
-                                    modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0;
-                                const proUsage = modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed
+                                    modelStatuses[ModelEnum.GEMINI_3_FLASH]?.dailyUsed || 0;
+                                const proUsage = modelStatuses[ModelEnum.GEMINI_3_PRO]?.dailyUsed
                                     || 0;
                                 const flash3Usage =
                                     modelStatuses[ModelEnum.GEMINI_3_FLASH]?.dailyUsed || 0;
@@ -414,7 +414,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         Server-funded Access
                                     </div>
                                     <div>
-                                        • <strong>Unlimited</strong> Gemini 2.5 Flash Lite access
+                                        • <strong>Unlimited</strong> Gemini 3 Flash Lite access
                                     </div>
                                     <div>• Enhanced limits for all Gemini models</div>
                                     <div>• No API key required for Gemini models</div>
@@ -442,7 +442,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                         Limited Server Access + BYOK
                                     </div>
                                     <div>
-                                        • Gemini 2.5 Flash Lite:{' '}
+                                        • Gemini 3 Flash Lite:{' '}
                                         <strong>{GEMINI_LIMITS.FLASH_LITE.FREE_DAY}/day</strong>,
                                         {' '}
                                         {GEMINI_LIMITS.FLASH_LITE.FREE_MINUTE}/min
@@ -467,7 +467,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
                             <div className='bg-background/50 rounded-lg p-3'>
                                 <div className='text-foreground mb-2 text-sm font-medium'>
-                                    Gemini 2.5 Flash Lite
+                                    Gemini 3 Flash Lite
                                 </div>
                                 <div className='text-muted-foreground space-y-1 text-xs'>
                                     <div>
@@ -487,7 +487,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             </div>
                             <div className='bg-background/50 rounded-lg p-3'>
                                 <div className='text-foreground mb-2 text-sm font-medium'>
-                                    Gemini 2.5 Flash
+                                    Gemini 3 Flash
                                 </div>
                                 <div className='text-muted-foreground space-y-1 text-xs'>
                                     <div>
@@ -504,7 +504,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                             </div>
                             <div className='bg-background/50 rounded-lg p-3'>
                                 <div className='text-foreground mb-2 text-sm font-medium'>
-                                    Gemini 2.5 Pro
+                                    Gemini 3 Pro
                                 </div>
                                 <div className='text-muted-foreground space-y-1 text-xs'>
                                     <div>

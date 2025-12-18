@@ -13,7 +13,7 @@ Changes:
 
 Files:
 
-- packages/ai/models.ts: Added `GEMINI_2_5_FLASH_IMAGE_PREVIEW`.
+- packages/ai/models.ts: Added `GEMINI_3_FLASH_IMAGE_PREVIEW`.
 - packages/ai/image.ts: Helper `generateGeminiImage` with `responseModalities`.
 - apps/web/app/api/image/route.ts: New API route.
 - packages/shared/types.ts: Added `ImageOutput` and `ThreadItem.imageOutputs`.

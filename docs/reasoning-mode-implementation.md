@@ -9,7 +9,7 @@ This document details the complete implementation of AI SDK reasoning tokens sup
 ### 🧠 Core Reasoning Support
 
 - **AI SDK Integration**: Full support for reasoning tokens from multiple providers
-- **Model Compatibility**: Works with Gemini 2.5, DeepSeek R1, Anthropic Claude 4, and OpenAI o-series models
+- **Model Compatibility**: Works with Gemini 3, DeepSeek R1, Anthropic Claude 4, and OpenAI o-series models
 - **Reasoning Types**: Supports text reasoning, redacted content, and structured reasoning details
 - **Message Parts**: Handles AI SDK message parts format with reasoning and text components
 
@@ -70,9 +70,9 @@ export type ThreadItem = {
 // packages/ai/models.ts
 export const supportsReasoning = (model: ModelEnum): boolean => {
     const supportedModels = [
-        // Gemini 2.5 series
-        ModelEnum.GEMINI_2_5_FLASH,
-        ModelEnum.GEMINI_2_5_PRO,
+        // Gemini 3 series
+        ModelEnum.GEMINI_3_FLASH,
+        ModelEnum.GEMINI_3_PRO,
         // DeepSeek reasoning
         ModelEnum.Deepseek_R1,
         ModelEnum.DEEPSEEK_R1,
@@ -216,7 +216,7 @@ export const SETTING_TABS = {
 // packages/ai/__tests__/reasoning.test.ts
 describe('Reasoning Support', () => {
     it('should return true for supported models', () => {
-        expect(supportsReasoning(ModelEnum.GEMINI_2_5_PRO)).toBe(true);
+        expect(supportsReasoning(ModelEnum.GEMINI_3_PRO)).toBe(true);
         expect(supportsReasoning(ModelEnum.CLAUDE_4_SONNET)).toBe(true);
     });
 });

@@ -72,7 +72,7 @@ The structured output extraction feature has been fully implemented for VTChat w
 ### For Users
 
 1. **Upload PDF**: Use document upload button to attach a PDF file
-2. **Select Gemini Model**: Ensure a Gemini model is selected (e.g., `gemini-1.5-pro`)
+2. **Select Gemini Model**: Ensure a Gemini model is selected (e.g., `gemini-2.0-pro-exp-02-05`)
 3. **Extract Data**: Click the structured output button (FileText icon) that appears
 4. **View Results**: Extracted data displays in a structured format
 5. **Download/Close**: Export as JSON or close the display

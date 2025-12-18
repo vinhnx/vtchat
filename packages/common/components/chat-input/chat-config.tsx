@@ -25,9 +25,9 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
     // Map model names to ChatMode values - using exact names from models.ts
     const modelToChatModeMap: Record<string, ChatMode> = {
         // Google models
-        'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
-        'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
-        'Gemini 2.5 Flash Lite': ChatMode.GEMINI_2_5_FLASH_LITE,
+        'Gemini 3 Pro': ChatMode.GEMINI_3_PRO,
+        'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
+        'Gemini 3 Flash Lite': ChatMode.GEMINI_3_FLASH_LITE,
         'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
@@ -95,9 +95,9 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         ChatMode.CLAUDE_4_OPUS,
 
         // Gemini models with thinking support
-        ChatMode.GEMINI_2_5_PRO,
-        ChatMode.GEMINI_2_5_FLASH,
-        ChatMode.GEMINI_2_5_FLASH_LITE,
+        ChatMode.GEMINI_3_PRO,
+        ChatMode.GEMINI_3_FLASH,
+        ChatMode.GEMINI_3_FLASH_LITE,
         ChatMode.GEMINI_3_FLASH,
 
         // xAI reasoning models
@@ -275,8 +275,8 @@ export const modelOptionsByProvider = {
 
     Google: [
         {
-            label: 'Gemini 2.5 Flash Lite',
-            value: ChatMode.GEMINI_2_5_FLASH_LITE,
+            label: 'Gemini 3 Flash Lite',
+            value: ChatMode.GEMINI_3_FLASH_LITE,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
@@ -284,16 +284,16 @@ export const modelOptionsByProvider = {
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Flash',
-            value: ChatMode.GEMINI_2_5_FLASH,
+            label: 'Gemini 3 Flash',
+            value: ChatMode.GEMINI_3_FLASH,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
         {
-            label: 'Gemini 2.5 Pro',
-            value: ChatMode.GEMINI_2_5_PRO,
+            label: 'Gemini 3 Pro',
+            value: ChatMode.GEMINI_3_PRO,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),

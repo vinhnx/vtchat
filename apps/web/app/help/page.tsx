@@ -217,12 +217,12 @@ function HelpCenterContent() {
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research:</strong>{' '}
-                                        Comprehensive multi-step research using Gemini 2.5 Flash for
+                                        Comprehensive multi-step research using Gemini 3 Flash for
                                         in-depth analysis (VT+ exclusive)
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search:</strong>{' '}
-                                        Fast grounding web search using Gemini 2.5 Flash for quick
+                                        Fast grounding web search using Gemini 3 Flash for quick
                                         information retrieval (VT+ exclusive)
                                     </li>
                                     <li className='text-muted-foreground'>
@@ -374,13 +374,13 @@ function HelpCenterContent() {
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Deep Research (VT+ exclusive):</strong>{' '}
-                                        Uses Gemini 2.5 Pro for comprehensive, multi-step research
+                                        Uses Gemini 3 Pro for comprehensive, multi-step research
                                         with detailed analysis and thorough investigation of complex
                                         topics - 25 requests per day
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Pro Search (VT+ exclusive):</strong>{' '}
-                                        Uses Gemini 2.5 Flash for fast, efficient web search and
+                                        Uses Gemini 3 Flash for fast, efficient web search and
                                         information retrieval with quick grounding capabilities - 50
                                         requests per day
                                     </li>
@@ -500,7 +500,7 @@ function HelpCenterContent() {
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>Supported Models:</strong>{' '}
-                                        Available for Gemini 2.5 Pro, 2.5 Flash
+                                        Available for Gemini 3 Pro, 3 Flash
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Cost Reduction:</strong>{' '}
@@ -575,19 +575,18 @@ function HelpCenterContent() {
                                     <li className='text-muted-foreground'>
                                         <strong>Free Models:</strong>{' '}
                                         Access to 9 powerful models, including 5 from the Gemini
-                                        family (2.5 Flash Lite, 2.5 Flash, 2.5 Pro) and 4 from
-                                        OpenRouter.
+                                        family (3 Flash Lite, 3 Flash, 3 Pro) and 4 from OpenRouter.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Free Users:</strong>{' '}
-                                        Enjoy a daily limit of 20 requests for Gemini 2.5 Flash
-                                        Lite, with a rate limit of 5 requests per minute.
+                                        Enjoy a daily limit of 20 requests for Gemini 3 Flash Lite,
+                                        with a rate limit of 5 requests per minute.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>VT+ Users:</strong>{' '}
                                         Benefit from enhanced limits, including 100 requests/day for
-                                        Gemini 2.5 Flash Lite, 50/day for Gemini 2.5 Flash, and
-                                        25/day for Gemini 2.5 Pro.
+                                        Gemini 3 Flash Lite, 50/day for Gemini 3 Flash, and 25/day
+                                        for Gemini 3 Pro.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Daily Reset:</strong>{' '}
@@ -626,8 +625,8 @@ function HelpCenterContent() {
                                 <ul className='mt-4 list-outside list-disc space-y-2 pl-4'>
                                     <li className='text-muted-foreground'>
                                         <strong>All Gemini Models:</strong>{' '}
-                                        Access to Gemini 2.5 Flash Lite (100/day), Gemini 2.5 Flash
-                                        (50/day), Gemini 2.5 Pro (25/day), and Gemini 2.0 models
+                                        Access to Gemini 3 Flash Lite (100/day), Gemini 3 Flash
+                                        (50/day), Gemini 3 Pro (25/day), and Gemini 3 models
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Enhanced Tools:</strong>{' '}
@@ -685,7 +684,7 @@ function HelpCenterContent() {
                                         Includes everything in the free tier, plus three exclusive
                                         research features: PRO_SEARCH for enhanced web searches,
                                         DEEP_RESEARCH for in-depth analysis. Additionally, VT+
-                                        provides managed access to Gemini 2.5 Flash and Pro with
+                                        provides managed access to Gemini 3 Flash and Pro with
                                         built-in rate limits and budget protection, while Flash Lite
                                         always uses your own Gemini API key (BYOK).
                                     </li>

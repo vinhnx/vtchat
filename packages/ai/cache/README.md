@@ -1,11 +1,11 @@
 # Gemini Explicit Caching
 
-This module provides cost-effective caching for Gemini 2.5 and 2.0 models using Google's explicit caching feature. This feature is available to all logged-in users.
+This module provides cost-effective caching for Gemini 3 and 2.0 models using Google's explicit caching feature. This feature is available to all logged-in users.
 
 ## Features
 
 - **Cost Reduction**: Reuse conversation context across multiple queries to reduce API costs
-- **Supported Models**: Gemini 2.5 Pro, Gemini 2.5 Flash and Gemini 2.5 Flash Lite.
+- **Supported Models**: Gemini 3 Pro, Gemini 3 Flash and Gemini 3 Flash Lite.
 - **Configurable TTL**: Set cache duration from 1 minute to 1 hour
 - **Cache Management**: Manage up to 20 cached conversations simultaneously
 - **Authentication Integration**: Seamlessly integrated with VTChat's authentication system

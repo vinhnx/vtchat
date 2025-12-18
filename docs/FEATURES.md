@@ -8,15 +8,15 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 - **OpenAI**: GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-3.5 Turbo, o-series reasoning models
 - **Anthropic**: Claude 3.5 Sonnet (new), Claude 3.5 Haiku, Claude 3 Opus
-- **Google**: Gemini 2.5 Pro, Gemini 2.5 Flash (Lite Preview free tier)
+- **Google**: Gemini 3 Pro, Gemini 3 Flash (Lite Preview free tier)
 - **OpenRouter**: DeepSeek V3, DeepSeek R1, Qwen3 14B, and other open-source models
 - **Together AI**: Open-source model hosting and inference
 - **xAI**: Grok models and other experimental models
 
 ### Advanced AI Capabilities
 
-- **Premium AI Models (VT+ Exclusive)**: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3
-- **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models - available to all logged-in users
+- **Premium AI Models (VT+ Exclusive)**: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 3 Pro, DeepSeek R1, Grok 3
+- **Thinking Mode (Free)**: Complete AI SDK reasoning tokens support with transparent thinking process across Gemini 3, DeepSeek R1, Claude 4, and OpenAI o-series models - available to all logged-in users
 - **Structured Output Extraction (Free)**: AI-powered JSON data extraction from documents with intelligent schema generation - available to all logged-in users
 - **Multi-Modal Processing (Free)**: Text, image, and document analysis with up to 10MB file support - available to all logged-in users
 - **Context Management**: Advanced conversation context handling with thread isolation
@@ -267,7 +267,7 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 | Feature                           | Free Tier                              | VT+ ($5.99/month)                                               |
 | --------------------------------- | -------------------------------------- | --------------------------------------------------------------- |
 | **Basic AI Models**               | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅                                                              |
-| **Premium AI Models**             | ❌                                     | ✅ (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) |
+| **Premium AI Models**             | ❌                                     | ✅ (Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3) |
 | **Basic Chat**                    | ✅                                     | ✅                                                              |
 | **Local Privacy**                 | ✅ (IndexedDB + Thread Isolation)      | ✅ (Enhanced Security)                                          |
 | **Calculator**                    | ✅                                     | ✅                                                              |

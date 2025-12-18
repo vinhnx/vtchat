@@ -10,7 +10,7 @@ export const RATE_LIMIT_MESSAGES = {
     DAILY_LIMIT_SIGNED_OUT:
         'You have reached the daily limit of requests. Please sign in to enjoy more requests, or upgrade to VT+ for unlimited usage!',
     DAILY_LIMIT_VT_PLUS:
-        'You have reached your VT+ daily limit (100 requests) for free Gemini 2.5 Flash Lite. Please try again tomorrow or set up your own Gemini API key for unlimited usage!',
+        'You have reached your VT+ daily limit (100 requests) for free Gemini 3 Flash Lite. Please try again tomorrow or set up your own Gemini API key for unlimited usage!',
 
     // Per-minute limit messages
     MINUTE_LIMIT_SIGNED_IN:
@@ -18,7 +18,7 @@ export const RATE_LIMIT_MESSAGES = {
     MINUTE_LIMIT_SIGNED_OUT:
         'You have reached the rate limit for requests per minute. Please sign in for more requests, or upgrade to VT+ for unlimited usage!',
     MINUTE_LIMIT_VT_PLUS:
-        'You have reached your VT+ rate limit (10 requests per minute) for free Gemini 2.5 Flash Lite. Please wait 1 minute or set up your own Gemini API key for unlimited usage!',
+        'You have reached your VT+ rate limit (10 requests per minute) for free Gemini 3 Flash Lite. Please wait 1 minute or set up your own Gemini API key for unlimited usage!',
 } as const;
 
 /**

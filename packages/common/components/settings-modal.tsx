@@ -344,12 +344,12 @@ export const ApiKeySettings = () => {
                     <CardHeader className='pb-3 md:pb-6'>
                         <CardTitle className='flex items-center gap-2 text-sm font-semibold text-blue-600 md:text-lg dark:text-blue-400'>
                             <Info className='h-4 w-4 md:h-5 md:w-5' />
-                            Free Gemini 2.5 Flash Lite Available
+                            Free Gemini 3 Flash Lite Available
                         </CardTitle>
                         <CardDescription className='text-xs md:text-sm'>
                             {isVtPlus
-                                ? "You're using free Gemini 2.5 Flash Lite with VT+ enhanced limits"
-                                : "You're currently using the free Gemini 2.5 Flash Lite with rate limits"}
+                                ? "You're using free Gemini 3 Flash Lite with VT+ enhanced limits"
+                                : "You're currently using the free Gemini 3 Flash Lite with rate limits"}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className='pt-0'>
@@ -362,13 +362,13 @@ export const ApiKeySettings = () => {
                                 </div>
                                 <div className='text-muted-foreground text-xs md:text-sm'>
                                     {isVtPlus
-                                        ? 'You have enhanced VT+ limits for free Gemini 2.5 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models.'
+                                        ? 'You have enhanced VT+ limits for free Gemini 3 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models.'
                                         : 'Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.'}
                                 </div>
                                 <div className='text-muted-foreground text-xs md:text-sm'>
                                     <strong>Pro tip:</strong>{' '}
-                                    With your own API key, you'll have access to Gemini 2.5 Pro,
-                                    Gemini 2.5 Flash, Gemini 2.5 Flash Lite and other premium models
+                                    With your own API key, you'll have access to Gemini 3 Pro,
+                                    Gemini 3 Flash, Gemini 3 Flash Lite and other premium models
                                     without restrictions
                                     {isVtPlus
                                         ? ', plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+'

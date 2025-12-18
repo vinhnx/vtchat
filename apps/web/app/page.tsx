@@ -539,7 +539,7 @@ export default function HomePage() {
                                         </h4>
                                         <p className='text-muted-foreground text-sm'>
                                             Start using advanced AI features immediately with our
-                                            bring-your-own-key (BYOK) options. Gemini 2.5 Flash Lite
+                                            bring-your-own-key (BYOK) options. Gemini 3 Flash Lite
                                             now requires your own Gemini API key for every request.
                                         </p>
                                     </div>

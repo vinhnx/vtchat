@@ -231,7 +231,7 @@ type State = {
     // Thinking mode settings (VT+ feature)
     thinkingMode: {
         enabled: boolean;
-        budget: number; // 0-24576 for Gemini 2.5 Flash
+        budget: number; // 0-24576 for Gemini 3 Flash
         includeThoughts: boolean;
     };
     // Gemini explicit caching settings (VT+ feature)

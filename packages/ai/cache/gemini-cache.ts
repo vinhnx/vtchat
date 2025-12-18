@@ -1,7 +1,7 @@
 /**
  * Gemini Explicit Caching Implementation
  *
- * Provides cost-effective caching for Gemini 2.5 and 2.0 models using GoogleAICacheManager.
+ * Provides cost-effective caching for Gemini 3 and 2.0 models using GoogleAICacheManager.
  * This feature is exclusive to VT+ subscribers.
  */
 
@@ -14,12 +14,9 @@ import { ModelEnum as ModelEnumValues } from '../models';
  * Supported Gemini models for explicit caching
  */
 export type GoogleModelCacheableId =
-    | 'models/gemini-2.5-pro'
-    | 'models/gemini-flash-latest'
-    | 'models/gemini-flash-lite-latest'
-    | 'models/gemini-3-flash-preview'
-    | 'models/gemini-1.5-flash-001'
-    | 'models/gemini-1.5-pro-001';
+    | 'models/gemini-2.0-pro-exp-02-05'
+    | 'models/gemini-2.0-flash'
+    | 'models/gemini-2.0-flash-lite-preview-02-05';
 
 /**
  * Cache configuration interface
@@ -116,12 +113,9 @@ export class GeminiCacheManager {
  */
 export function isModelCacheable(modelId: string): modelId is GoogleModelCacheableId {
     const cacheableModels: GoogleModelCacheableId[] = [
-        'models/gemini-2.5-pro',
-        'models/gemini-flash-latest',
-        'models/gemini-flash-lite-latest',
-        'models/gemini-3-flash-preview',
-        'models/gemini-1.5-flash-001',
-        'models/gemini-1.5-pro-001',
+        'models/gemini-2.0-pro-exp-02-05',
+        'models/gemini-2.0-flash',
+        'models/gemini-2.0-flash-lite-preview-02-05',
     ];
     return cacheableModels.includes(modelId as GoogleModelCacheableId);
 }
@@ -131,14 +125,12 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
  */
 export function getGeminiCacheableModelId(modelEnum: ModelEnumType): GoogleModelCacheableId | null {
     switch (modelEnum) {
-        case ModelEnumValues.GEMINI_2_5_PRO:
-            return 'models/gemini-2.5-pro';
-        case ModelEnumValues.GEMINI_2_5_FLASH:
-            return 'models/gemini-flash-latest';
-        case ModelEnumValues.GEMINI_2_5_FLASH_LITE:
-            return 'models/gemini-flash-lite-latest';
+        case ModelEnumValues.GEMINI_3_PRO:
+            return 'models/gemini-2.0-pro-exp-02-05';
         case ModelEnumValues.GEMINI_3_FLASH:
-            return 'models/gemini-3-flash-preview';
+            return 'models/gemini-2.0-flash';
+        case ModelEnumValues.GEMINI_3_FLASH_LITE:
+            return 'models/gemini-2.0-flash-lite-preview-02-05';
         default:
             return null;
     }

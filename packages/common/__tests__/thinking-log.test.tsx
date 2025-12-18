@@ -31,7 +31,7 @@ describe('ThinkingLog', () => {
     const createThreadItem = (overrides: Partial<ThreadItem> = {}): ThreadItem => ({
         id: 'test-id',
         threadId: 'test-thread',
-        mode: ChatMode.GEMINI_2_5_PRO_PREVIEW,
+        mode: ChatMode.GEMINI_3_PRO_PREVIEW,
         query: 'Test query',
         answer: { text: 'Test answer' },
         status: 'completed',

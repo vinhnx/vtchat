@@ -16,7 +16,7 @@ export const geminiWebSearchTask = createTask<WorkflowEventSchema, WorkflowConte
         const { updateStep } = sendEvents(events);
 
         // Get mode first before using it
-        const mode = context?.get('mode') || ChatMode.GEMINI_2_5_FLASH_LITE;
+        const mode = context?.get('mode') || ChatMode.GEMINI_3_FLASH_LITE;
 
         // Determine if this is Pro Search mode for enhanced capabilities
         const isProSearch = mode === ChatMode.Pro;
@@ -138,35 +138,35 @@ Please include:
                     const seenUrls = new Set(existingSources.map((source) => source.link));
 
                     for (const source of result.sources || []) {
+                        const sourceUrl = source?.url || (source as any)?.link;
                         if (
-                            source?.url
-                            && typeof source.url === 'string'
-                            && source.url.trim() !== ''
-                            && !seenUrls.has(source.url)
+                            sourceUrl
+                            && typeof sourceUrl === 'string'
+                            && sourceUrl.trim() !== ''
+                            && !seenUrls.has(sourceUrl)
                         ) {
-                            seenUrls.add(source.url);
-                            uniqueNewSources.push(source);
+                            seenUrls.add(sourceUrl);
+                            uniqueNewSources.push({
+                                title: source?.title || 'Web Search Result',
+                                link: sourceUrl,
+                                snippet: source?.description || source?.snippet || '',
+                                index: seenUrls.size,
+                            });
                         }
                     }
-
-                    const newSources = uniqueNewSources.map((source: any, index: number) => ({
-                        title: source.title || 'Web Search Result',
-                        link: source.url,
-                        snippet: source.description || '',
-                        index: index + (existingSources?.length || 0) + 1,
-                    }));
 
                     log.info(
                         {
                             existingCount: existingSources.length,
                             originalNewCount: result.sources?.length || 0,
-                            filteredNewCount: newSources?.length || 0,
-                            totalCount: (existingSources.length || 0) + (newSources?.length || 0),
+                            filteredNewCount: uniqueNewSources?.length || 0,
+                            totalCount: (existingSources.length || 0)
+                                + (uniqueNewSources?.length || 0),
                         },
                         'Updated sources from Gemini web search with deduplication',
                     );
 
-                    return [...existingSources, ...newSources];
+                    return [...existingSources, ...uniqueNewSources];
                 });
             }
 
@@ -222,7 +222,7 @@ Please include:
             }));
 
             // Provide more user-friendly error messages based on model and API key status
-            const isFreeModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+            const isFreeModel = model === ModelEnum.GEMINI_3_FLASH_LITE;
             const hasUserApiKey = userApiKeys?.GEMINI_API_KEY;
             const hasSystemApiKey = isFreeModel ? false : !!process.env.GEMINI_API_KEY;
             const isVtPlusUser = userTier === UserTier.PLUS;
@@ -245,7 +245,7 @@ Please include:
             if (error.message?.includes('Web search requires an API key')) {
                 // Free user needs to provide their own API key for web search
                 throw new Error(
-                    'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
+                    'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                 );
             }
             if (error.message?.includes('API key')) {
@@ -256,7 +256,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Gemini 2.5 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
+                        'Gemini 3 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 throw new Error(
@@ -271,7 +271,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Gemini 2.5 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
+                        'Gemini 3 Flash Lite requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 throw new Error('Invalid Gemini API key. Please check your API key in settings.');
@@ -287,7 +287,7 @@ Please include:
                 }
                 if (isFreeModel && !hasUserApiKey) {
                     throw new Error(
-                        'Gemini 2.5 Flash Lite requests require your own Gemini API key. Add it in settings to continue.',
+                        'Gemini 3 Flash Lite requests require your own Gemini API key. Add it in settings to continue.',
                     );
                 }
                 throw new Error(

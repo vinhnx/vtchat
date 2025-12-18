@@ -10,7 +10,7 @@ Successfully updated VT's tier system to reflect the new feature distribution wh
 
 **Features now available:**
 
-- Free access to Gemini 2.5 Flash Lite Preview (10 requests/day, 1/minute limit)
+- Free access to Gemini 3 Flash Lite Preview (10 requests/day, 1/minute limit)
 - Dark Mode interface
 - Structured Output extraction
 - Thinking Mode with reasoning display

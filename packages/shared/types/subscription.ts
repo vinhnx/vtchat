@@ -217,7 +217,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         slug: FeatureSlug.GEMINI_EXPLICIT_CACHING,
         name: 'Gemini Explicit Caching',
         description:
-            'Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API costs through context reuse',
+            'Cost-effective caching for Gemini 3 and 2.0 models to reduce API costs through context reuse',
     },
     [FeatureSlug.CHART_VISUALIZATION]: {
         slug: FeatureSlug.CHART_VISUALIZATION,
@@ -235,7 +235,7 @@ export const FEATURES: Record<FeatureSlug, FeatureConfig> = {
         slug: FeatureSlug.GEMINI_MODELS_NO_BYOK,
         name: 'All Gemini Models Without BYOK',
         description:
-            'Access all Gemini models (Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite) plus enhanced tools (web search, math calculator, charts) without needing your own API keys',
+            'Access all Gemini models (Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite) plus enhanced tools (web search, math calculator, charts) without needing your own API keys',
     },
 };
 

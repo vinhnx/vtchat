@@ -35,9 +35,9 @@ const getRequiredApiKeyForMode = (chatMode: ChatMode): keyof ApiKeys | null => {
         case ChatMode.GPT_4_1:
             return 'OPENAI_API_KEY';
         case ChatMode.Pro:
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
-        case ChatMode.GEMINI_2_5_FLASH:
-        case ChatMode.GEMINI_2_5_PRO:
+        case ChatMode.GEMINI_3_FLASH_LITE:
+        case ChatMode.GEMINI_3_FLASH:
+        case ChatMode.GEMINI_3_PRO:
         case ChatMode.GEMINI_3_FLASH:
             return 'GEMINI_API_KEY';
         case ChatMode.CLAUDE_SONNET_4_5:

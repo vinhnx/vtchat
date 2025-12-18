@@ -47,7 +47,7 @@ Available to all logged-in users:
 - Chart Visualization
 - Gemini Explicit Caching
 - Mathematical calculation tools
-- All AI models including ALL premium models: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 2.5 Pro, DeepSeek R1, Grok 3 (free with BYOK)
+- All AI models including ALL premium models: Claude Sonnet 4.5, Claude 4 Sonnet/Opus, GPT-4.1, O3/O3 Mini/O4 Mini, O1 Mini/Preview, Gemini 3 Pro, DeepSeek R1, Grok 3 (free with BYOK)
 - 9 free models with server API (5 Gemini + 4 OpenRouter)
 - Unlimited usage with BYOK
 

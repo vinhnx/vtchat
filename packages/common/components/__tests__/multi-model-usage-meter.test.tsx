@@ -30,7 +30,7 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
         mockFetch.mockResolvedValue({
             ok: true,
             json: async () => ({
-                [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
+                [ModelEnum.GEMINI_3_FLASH_LITE]: {
                     dailyUsed: 5,
                     minuteUsed: 2,
                     dailyLimit: 20,
@@ -42,7 +42,7 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
                         minute: new Date(),
                     },
                 },
-                [ModelEnum.GEMINI_2_5_PRO]: {
+                [ModelEnum.GEMINI_3_PRO]: {
                     dailyUsed: 3,
                     minuteUsed: 1,
                     dailyLimit: 10,
@@ -155,13 +155,13 @@ describe('MultiModelUsageMeter Component - Requirements Verification', () => {
 
             await waitFor(() => {
                 // Should show Flash Lite limits
-                expect(screen.getByText('Gemini 2.5 Flash Lite')).toBeInTheDocument();
+                expect(screen.getByText('Gemini 3 Flash Lite')).toBeInTheDocument();
 
                 // Should show Flash limits
-                expect(screen.getByText('Gemini 2.5 Flash')).toBeInTheDocument();
+                expect(screen.getByText('Gemini 3 Flash')).toBeInTheDocument();
 
                 // Should show Pro limits
-                expect(screen.getByText('Gemini 2.5 Pro')).toBeInTheDocument();
+                expect(screen.getByText('Gemini 3 Pro')).toBeInTheDocument();
             });
         });
 

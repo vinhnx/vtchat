@@ -10,7 +10,7 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 
 ### Key Features
 
-- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys + 9 free server models
+- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3) with your own API keys + 9 free server models
 - **Privacy-First**: All conversations stored locally in your browser
 - **Research Features**: Enhanced web search, deep research (VT+ subscription)
 - **Security**: protection with rate limiting and bot detection
@@ -22,7 +22,7 @@ VT is a privacy-first AI chat application that lets you interact with multiple A
 
 Available to all logged-in users:
 
-- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3) with your own API keys
+- **All AI Models**: Access to all premium models (Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3) with your own API keys
 - **9 Free Server Models**: (5 Gemini + 4 OpenRouter models) without needing your own API keys
 - **Dark Theme**: Premium dark mode interface
 - **Thinking Mode**: See how AI thinks through problems
@@ -77,8 +77,8 @@ We never collect or store:
 
 **All Models Available to Logged-in Users:**
 
-- **Premium Models (Free with BYOK)**: Claude 4, GPT-4.1, O3/O3 Mini, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
-- **Free Server Models**: Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.5 Flash Lite, DeepSeek V3, DeepSeek R1, Qwen3 14B, and 4 more OpenRouter models
+- **Premium Models (Free with BYOK)**: Claude 4, GPT-4.1, O3/O3 Mini, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3
+- **Free Server Models**: Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite, DeepSeek V3, DeepSeek R1, Qwen3 14B, and 4 more OpenRouter models
 
 ### Model Access
 

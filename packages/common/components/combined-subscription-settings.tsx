@@ -276,7 +276,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                 Gemini Explicit Caching
                             </CardTitle>
                             <CardDescription>
-                                Cost-effective caching for Gemini 2.5 and 2.0 models to reduce API
+                                Cost-effective caching for Gemini 3 and 2.0 models to reduce API
                                 costs
                             </CardDescription>
                         </CardHeader>

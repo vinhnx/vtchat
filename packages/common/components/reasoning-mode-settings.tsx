@@ -28,8 +28,8 @@ export const ReasoningModeSettings = () => {
     const _supportsReasoning = useMemo(() => {
         const reasoningModels = [
             // Gemini models with thinking support
-            ChatMode.GEMINI_2_5_FLASH,
-            ChatMode.GEMINI_2_5_FLASH_LITE,
+            ChatMode.GEMINI_3_FLASH,
+            ChatMode.GEMINI_3_FLASH_LITE,
 
             // DeepSeek reasoning models
             ChatMode.DEEPSEEK_R1,

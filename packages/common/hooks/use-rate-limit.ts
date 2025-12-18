@@ -25,7 +25,7 @@ export function useRateLimit(modelId: ModelEnum) {
 
     useEffect(() => {
         // Only fetch for free models and authenticated users
-        if (!session?.user?.id || modelId !== ModelEnum.GEMINI_2_5_FLASH_LITE) {
+        if (!session?.user?.id || modelId !== ModelEnum.GEMINI_3_FLASH_LITE) {
             setStatus(null);
             return;
         }
@@ -68,9 +68,9 @@ export function useRateLimit(modelId: ModelEnum) {
 }
 
 export function useRateLimitForChatMode(chatMode: string) {
-    // Map chat mode to model - only needed for Gemini 2.5 Flash Lite
-    const modelId = chatMode === ChatMode.GEMINI_2_5_FLASH_LITE
-        ? ModelEnum.GEMINI_2_5_FLASH_LITE
+    // Map chat mode to model - only needed for Gemini 3 Flash Lite
+    const modelId = chatMode === ChatMode.GEMINI_3_FLASH_LITE
+        ? ModelEnum.GEMINI_3_FLASH_LITE
         : null;
 
     return useRateLimit(modelId as ModelEnum);

@@ -95,7 +95,7 @@
 
 ## Testing
 
-- use ChatMode.ChatMode.GEMINI_2_5_FLASH_LITE to test instead GEMINI_2_5_PRO because cost.
+- use ChatMode.ChatMode.GEMINI_3_FLASH_LITE to test instead GEMINI_3_PRO because cost.
 - Test files should be in `apps/web/app/tests/`. Example: `./test-vt-plus-only.js` should be moved to `apps/web/app/tests/test-vt-plus-only.js`
 - Every implemented feature should have a test case to maintain quality
 - Every unit test should cover critical paths and edge cases

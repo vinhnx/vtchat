@@ -299,7 +299,7 @@ export const ThreadItem = memo(
                                                         </div>
                                                     )}
                                                     <div className='text-xs text-muted-foreground/70'>
-                                                        Using Gemini 2.5 Flash Image
+                                                        Using Gemini 3 Flash Image
                                                     </div>
                                                 </div>
 

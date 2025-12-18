@@ -71,7 +71,7 @@ export const AIMessage = memo(
                                         <span className='text-muted-foreground text-xs font-medium'>
                                             {Array.isArray(threadItem.imageOutputs)
                                                     && threadItem.imageOutputs.length > 0
-                                                ? 'Gemini 2.5 Flash Image'
+                                                ? 'Gemini 3 Flash Image'
                                                 : getModelDisplayName(threadItem.mode)}
                                         </span>
                                     </>

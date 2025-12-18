@@ -42,8 +42,8 @@ The AI routing fix has been successfully implemented and deployed to production 
 
 #### ✅ Should Route to `/api/completion`:
 
-- **Free Models**: Gemini 2.5 Flash Lite Preview
-- **VT+ Models**: Claude Sonnet 4.5, Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 2.5 Pro
+- **Free Models**: Gemini 3 Flash Lite Preview
+- **VT+ Models**: Claude Sonnet 4.5, Claude 4 Sonnet, Claude 4 Opus, GPT 4o, GPT 4o Mini, DeepSeek R1, Gemini 3 Pro
 - **VT+ Features**: Deep Research, Pro Search
 
 #### Expected Network Requests:
@@ -85,7 +85,7 @@ bun test packages/common/tests/ai-routing.test.ts
 - [ ] Test GPT 4o → verify `/api/completion` call
 - [ ] Test GPT 4o Mini → verify `/api/completion` call
 - [ ] Test DeepSeek R1 → verify `/api/completion` call
-- [ ] Test Gemini 2.5 Pro → verify `/api/completion` call
+- [ ] Test Gemini 3 Pro → verify `/api/completion` call
 - [ ] Test Deep Research → verify `/api/completion` call
 - [ ] Test Pro Search → verify `/api/completion` call
 - [ ] Verify no authentication errors

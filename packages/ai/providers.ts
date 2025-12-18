@@ -6,7 +6,7 @@ import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { createTogetherAI } from '@ai-sdk/togetherai';
 import { createXai } from '@ai-sdk/xai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { ChatMode, DEFAULT_CHAT_MODE } from '@repo/shared/config';
+import { DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import { log } from '@repo/shared/logger';
 import { type LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
 import { getMiddlewareForContext, type MiddlewareConfig } from './middleware/config';
@@ -81,7 +81,7 @@ const getApiKey = (
             case Providers.GOOGLE:
                 // Gemini policy:
                 // 1. VT+ users can use managed API keys for eligible tiers
-                // 2. Gemini 2.5 Flash Lite always requires BYOK
+                // 2. Gemini 3 Flash Lite always requires BYOK
                 // 3. Other users must use BYOK
                 if (isVtPlus) {
                     // Set both environment variables for compatibility with new Google provider

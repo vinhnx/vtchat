@@ -107,8 +107,8 @@ By using VT, you acknowledge that we protect your private data from being used i
 
 ### 4.1 Free Tier Benefits (VT_BASE)
 VT_BASE is our free tier for logged-in users that includes:
-- **All Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 2.5 Pro, DeepSeek R1, Grok 3 with your own API keys (BYOK)
-- **Gemini Access**: Gemini 2.5 Flash Lite now requires your own Gemini API key (BYOK). VT+ members receive managed access to higher tier Gemini models (Flash, Pro) and OpenRouter community models without exposing their keys to VT servers.
+- **All Premium AI Models**: Access to Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3 with your own API keys (BYOK)
+- **Gemini Access**: Gemini 3 Flash Lite now requires your own Gemini API key (BYOK). VT+ members receive managed access to higher tier Gemini models (Flash, Pro) and OpenRouter community models without exposing their keys to VT servers.
 - **Daily Reset**: Usage limits reset at 00:00 UTC daily
 - **Registration Required**: Must be signed in to access free tier benefits
 - **Advanced Features**: Dark Mode, Thinking Mode, Document Processing, Structured Output, Chart Visualization, Web Search, Intelligent Tool Router, Reasoning Chain, Gemini Explicit Caching, Multi-modal Chat
@@ -122,7 +122,7 @@ VT+ is a monthly subscription service for **${VT_PLUS_PRICE_FORMATTED} USD** tha
 - **Two Exclusive Research Features with Daily Quotas**:
   - **Enhanced Web Search (PRO_SEARCH)**: 50 requests per day (resets at 00:00 UTC)
   - **Deep Research (DEEP_RESEARCH)**: 25 requests per day (resets at 00:00 UTC)
-- **Expanded Gemini Access**: VT+ subscribers receive expanded, managed access to Gemini 2.5 Flash and Pro tiers, while Gemini 2.5 Flash Lite continues to operate through each member's BYOK configuration for full transparency over usage.
+- **Expanded Gemini Access**: VT+ subscribers receive expanded, managed access to Gemini 3 Flash and Pro tiers, while Gemini 3 Flash Lite continues to operate through each member's BYOK configuration for full transparency over usage.
 - **Priority Support**: Enhanced customer support
 - **Daily Reset Schedule**: Pro Search and Deep Research quotas reset every day at 00:00 UTC to provide consistent daily usage
 

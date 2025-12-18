@@ -9,7 +9,7 @@
 ### 1. **All Premium AI Models Now Free**
 
 - ✅ **No VT+ subscription required** for any individual AI models
-- ✅ **BYOK Access**: All premium models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3) accessible with user's own API keys
+- ✅ **BYOK Access**: All premium models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3) accessible with user's own API keys
 - ✅ **9 Free Server Models**: Still available without any API keys for logged-in users
 
 ### 2. **Only 2 VT+ Exclusive Features Remain**
@@ -69,7 +69,7 @@
 - GPT-4.1/4.1 Mini/4.1 Nano
 - O3/O3 Mini/O4 Mini
 - O1 Mini/O1 Preview
-- Gemini 2.5 Pro
+- Gemini 3 Pro
 - DeepSeek R1
 - Grok 3/Grok 3 Mini
 - GPT-4o/GPT-4o Mini

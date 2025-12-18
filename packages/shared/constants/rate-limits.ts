@@ -4,7 +4,7 @@ import { ModelEnum } from '@repo/ai/models';
  * Global rate-limit numbers used in UI copy and backend logic.
  * Single source of truth for all Gemini model rate limiting.
  *
- * NOTE: Gemini 2.5 Flash Lite is BYOK for every user. VT+ managed limits
+ * NOTE: Gemini 3 Flash Lite is BYOK for every user. VT+ managed limits
  * apply to higher tiers (Flash, Pro) while BYOK requests are governed by
  * the user's own Google API key quotas.
  *
@@ -14,10 +14,6 @@ export const GEMINI_LIMITS = {
     FLASH_LITE: { FREE_DAY: 20, PLUS_DAY: 100, FREE_MINUTE: 5, PLUS_MINUTE: 10 },
     FLASH: { FREE_DAY: 10, PLUS_DAY: 50, FREE_MINUTE: 3, PLUS_MINUTE: 8 },
     PRO: { FREE_DAY: 5, PLUS_DAY: 25, FREE_MINUTE: 2, PLUS_MINUTE: 5 },
-    // Gemini 2.0 models use same limits as their 2.5 counterparts
-    FLASH_2_0: { FREE_DAY: 10, PLUS_DAY: 50, FREE_MINUTE: 3, PLUS_MINUTE: 8 },
-    FLASH_LITE_2_0: { FREE_DAY: 20, PLUS_DAY: 100, FREE_MINUTE: 5, PLUS_MINUTE: 10 },
-    FLASH_3: { FREE_DAY: 10, PLUS_DAY: 50, FREE_MINUTE: 3, PLUS_MINUTE: 8 },
 } as const;
 
 /**
@@ -27,9 +23,9 @@ export const GEMINI_LIMITS = {
  * Based on official Gemini API pricing as of July 2025:
  * - Gemini 2.0 Flash-Lite: $0.075/1M input + $0.30/1M output tokens
  * - Gemini 2.0 Flash: $0.10/1M input + $0.40/1M output tokens
- * - Gemini 2.5 Flash-Lite: $0.10/1M input + $0.40/1M output tokens
- * - Gemini 2.5 Flash: $0.30/1M input + $2.50/1M output tokens
- * - Gemini 2.5 Pro: $1.25/1M input + $10.00/1M output tokens (≤200k prompts)
+ * - Gemini 3 Flash-Lite: $0.10/1M input + $0.40/1M output tokens
+ * - Gemini 3 Flash: $0.30/1M input + $2.50/1M output tokens
+ * - Gemini 3 Pro: $1.25/1M input + $10.00/1M output tokens (≤200k prompts)
  *
  * Estimates assume ~1000 input + 500 output tokens per typical request:
  * - Flash-Lite: ($0.10 * 1k + $0.40 * 0.5k) / 1M = $0.0003 → rounded up to $0.005 (0.5 cents)
@@ -43,9 +39,9 @@ export const GEMINI_PRICES = {
     FLASH: 0.01, // 1 cent per request
     PRO: 0.015, // 1.5 cents per request
     FLASH_3: 0.01, // 1 cent per request
-    [ModelEnum.GEMINI_2_5_FLASH_LITE]: 0.005, // Same as FLASH_LITE
-    [ModelEnum.GEMINI_2_5_FLASH]: 0.01, // Same as FLASH
-    [ModelEnum.GEMINI_3_FLASH]: 0.01, // Same as FLASH_3
+    [ModelEnum.GEMINI_3_FLASH_LITE]: 0.005, // Same as FLASH_LITE
+    [ModelEnum.GEMINI_3_FLASH]: 0.01, // Same as FLASH
+    [ModelEnum.GEMINI_3_PRO]: 0.015, // Same as PRO
 } as const;
 
 /**

@@ -11,7 +11,7 @@ VT (VTChat) has successfully reached production readiness with all core features
 
 ### 🧠 **Advanced AI Capabilities**
 
-- **Reasoning Mode** - Complete AI SDK reasoning tokens support across Gemini 2.5, DeepSeek R1, Claude 4, and OpenAI o-series models
+- **Reasoning Mode** - Complete AI SDK reasoning tokens support across Gemini 3, DeepSeek R1, Claude 4, and OpenAI o-series models
 - **Document Processing** - PDF/DOC/DOCX/TXT/MD file upload and processing (up to 10MB) with Gemini models
 - **Structured Output Extraction** - AI-powered JSON data extraction from documents (VT+ exclusive)
 - **Web Search Integration** - Grounding capabilities with proper premium tier restrictions

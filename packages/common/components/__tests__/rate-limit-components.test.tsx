@@ -77,7 +77,7 @@ describe('Rate Limit UI Components', () => {
             });
 
             const { container } = render(
-                <RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />,
+                <RateLimitIndicator modelId={ModelEnum.GEMINI_3_FLASH_LITE} />,
             );
 
             expect(container.firstChild).toBeNull();
@@ -91,7 +91,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
+            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_3_FLASH_LITE} />);
 
             expect(screen.getByText('Loading...')).toBeInTheDocument();
         });
@@ -104,7 +104,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
+            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_3_FLASH_LITE} />);
 
             expect(screen.getByText('5/10 today')).toBeInTheDocument();
         });
@@ -123,7 +123,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
+            render(<RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_3_FLASH_LITE} />);
 
             // Should show warning icon and text color
             const indicator = screen.getByText('8/10 today');
@@ -148,7 +148,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
+            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_3_FLASH_LITE} />);
 
             expect(screen.getByText(/Rate limited • Resets in 5 minutes/)).toBeInTheDocument();
         });
@@ -167,7 +167,7 @@ describe('Rate Limit UI Components', () => {
                 error: null,
             });
 
-            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />);
+            render(<RateLimitIndicator modelId={ModelEnum.GEMINI_3_FLASH_LITE} />);
 
             expect(screen.getByText('Daily limit almost reached')).toBeInTheDocument();
         });
@@ -401,14 +401,14 @@ describe('Rate Limit UI Components', () => {
             });
 
             const { rerender } = render(
-                <RateLimitIndicator compact={false} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />,
+                <RateLimitIndicator compact={false} modelId={ModelEnum.GEMINI_3_FLASH_LITE} />,
             );
 
             expect(screen.getByText('Daily usage:')).toBeInTheDocument();
 
             // Switch to compact mode
             rerender(
-                <RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_2_5_FLASH_LITE} />,
+                <RateLimitIndicator compact={true} modelId={ModelEnum.GEMINI_3_FLASH_LITE} />,
             );
 
             expect(screen.getByText('5/10 today')).toBeInTheDocument();

@@ -19,7 +19,7 @@ describe('AI Routing Security Tests', () => {
 
             const result = filterApiKeysForServerSide(
                 apiKeys,
-                ChatMode.GEMINI_2_5_FLASH_LITE,
+                ChatMode.GEMINI_3_FLASH_LITE,
                 false,
             );
 
@@ -72,7 +72,7 @@ describe('AI Routing Security Tests', () => {
         });
 
         it('should handle empty API keys object', () => {
-            const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_2_5_FLASH_LITE, false);
+            const result = filterApiKeysForServerSide({}, ChatMode.GEMINI_3_FLASH_LITE, false);
             expect(result).toEqual({});
         });
 
@@ -84,7 +84,7 @@ describe('AI Routing Security Tests', () => {
 
             const result = filterApiKeysForServerSide(
                 apiKeys,
-                ChatMode.GEMINI_2_5_FLASH_LITE,
+                ChatMode.GEMINI_3_FLASH_LITE,
                 false,
             );
             expect(result).toEqual({});
@@ -98,7 +98,7 @@ describe('AI Routing Security Tests', () => {
 
             const result = filterApiKeysForServerSide(
                 apiKeys,
-                ChatMode.GEMINI_2_5_FLASH_LITE,
+                ChatMode.GEMINI_3_FLASH_LITE,
                 false,
             );
             expect(result).toEqual(apiKeys);

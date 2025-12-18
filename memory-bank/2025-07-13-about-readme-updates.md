@@ -17,7 +17,7 @@ Updated both the About page and README to accurately reflect the current state o
 #### ✅ Enhanced AI Capabilities Section
 
 - **Multi-Provider Support**: Added local providers (Ollama, LM Studio)
-- **Premium Models (Free with BYOK)**: ALL premium models listed - Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **Premium Models (Free with BYOK)**: ALL premium models listed - Claude 4, GPT-4.1, O3 series, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3
 - **9 Free Server Models**: Gemini 2.0/2.5 Flash + OpenRouter models with no API keys required
 - **🆓 Free Local AI**: Emphasized completely free, private local AI options
 - **All Advanced Features**: Listed as free for logged-in users including Thinking Mode, Document Processing, Structured Output, Charts, Web Search, Mathematical Calculator
@@ -89,7 +89,7 @@ Updated both the About page and README to accurately reflect the current state o
 
 #### Free Tier (All Logged-in Users)
 
-- **ALL Premium AI Models** with BYOK: Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3
+- **ALL Premium AI Models** with BYOK: Claude 4, GPT-4.1, O3 series, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3
 - **9 Free Server Models**: 5 Gemini + 4 OpenRouter models (no API keys needed)
 - **Local AI Support**: Ollama and LM Studio integration
 - **All Advanced Features**: Intelligent Tool Router, Document Processing, Structured Output, Charts, Web Search, Thinking Mode, Mathematical Calculator

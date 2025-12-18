@@ -96,8 +96,8 @@ const chatModeToApiKeyMap = {
     [ChatMode.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',
 
     // Google models (including free tier)
-    [ChatMode.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
-    [ChatMode.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
+    [ChatMode.GEMINI_3_FLASH_LITE]: 'GEMINI_API_KEY',
+    [ChatMode.GEMINI_3_PRO]: 'GEMINI_API_KEY',
 
     // Research modes
     [ChatMode.Deep]: 'GEMINI_API_KEY',

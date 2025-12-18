@@ -144,7 +144,7 @@ export async function generateGeminiImage(
     const { prompt, byokKeys, userId, userTier, images, config } = params;
 
     const model = getLanguageModel(
-        ModelEnum.GEMINI_2_5_FLASH_IMAGE,
+        ModelEnum.GEMINI_3_FLASH_IMAGE,
         undefined,
         byokKeys,
         false,
@@ -177,7 +177,7 @@ export async function generateGeminiImage(
             selectedAspectRatio,
             manualAspectRatio: Boolean(manualAspectRatio),
         },
-        'Generating image with Gemini 2.5 Flash Image',
+        'Generating image with Gemini 3 Flash Image',
     );
 
     const ratioDirective = selectedAspectRatio
@@ -185,7 +185,7 @@ export async function generateGeminiImage(
         : '6) Default to 16:9 when no aspect ratio is requested.';
 
     // Strengthen instruction to push image output
-    const effectivePrompt = `You are Nano Banana (Gemini 2.5 Flash Image). Follow best practices:
+    const effectivePrompt = `You are Nano Banana (Gemini 3 Flash Image). Follow best practices:
 1) Prefer photoreal detail when asked; respect style requests.
 2) Compose clean, coherent subjects; avoid duplicated limbs or text.
 3) Use consistent lighting; balance foreground and background elements.

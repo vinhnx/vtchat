@@ -69,7 +69,7 @@ export const ModelSettings = () => {
         if (model.isFree) return true;
 
         if (model.provider === 'google') {
-            if (model.id === ModelEnum.GEMINI_2_5_FLASH_LITE) {
+            if (model.id === ModelEnum.GEMINI_3_FLASH_LITE) {
                 return hasApiKeyForProvider('google');
             }
 
@@ -109,7 +109,7 @@ export const ModelSettings = () => {
                                 <ul className='list-disc space-y-1 pl-5'>
                                     <li>Qwen3 14B (via OpenRouter community tier)</li>
                                     <li>Local models via Ollama or LM Studio</li>
-                                    <li>Gemini 2.5 Flash Lite (BYOK required for all users)</li>
+                                    <li>Gemini 3 Flash Lite (BYOK required for all users)</li>
                                 </ul>
                             </div>
                         </div>
@@ -229,7 +229,7 @@ export const ModelSettings = () => {
                                     all registered users without an API key.
                                 </p>
                                 <p>
-                                    Gemini 2.5 Flash Lite now requires your own Gemini API key for
+                                    Gemini 3 Flash Lite now requires your own Gemini API key for
                                     every request, regardless of subscription tier.
                                 </p>
                             </div>

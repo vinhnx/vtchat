@@ -89,7 +89,7 @@ export const VT_BASE_PRODUCT_INFO = {
     name: 'VT Base',
     slug: PlanSlug.VT_BASE,
     features: [
-        'Free access to Gemini 2.5 Flash Lite (10 requests/day)',
+        'Free access to Gemini 3 Flash Lite (10 requests/day)',
         'Dark Mode interface',
         'Structured Output extraction',
         'Thinking Mode with reasoning display',

@@ -16,7 +16,7 @@ import {
 
 export function RateLimitMeter() {
     const { data: session } = useSession();
-    const { status, isLoading, error } = useRateLimit(ModelEnum.GEMINI_2_5_FLASH_LITE);
+    const { status, isLoading, error } = useRateLimit(ModelEnum.GEMINI_3_FLASH_LITE);
 
     // Only show for authenticated users
     if (!session?.user?.id) {
@@ -42,7 +42,7 @@ export function RateLimitMeter() {
                 <CardHeader>
                     <CardTitle className='text-foreground'>Free Model Usage</CardTitle>
                     <CardDescription>
-                        Track your personal daily and per-minute limits for Gemini 2.5 Flash Lite
+                        Track your personal daily and per-minute limits for Gemini 3 Flash Lite
                         Preview
                     </CardDescription>
                 </CardHeader>
@@ -64,7 +64,7 @@ export function RateLimitMeter() {
             <CardHeader>
                 <CardTitle className='text-foreground'>Free Model Usage</CardTitle>
                 <CardDescription>
-                    Track your personal daily and per-minute limits for Gemini 2.5 Flash Lite
+                    Track your personal daily and per-minute limits for Gemini 3 Flash Lite
                     Preview
                 </CardDescription>
             </CardHeader>

@@ -1,51 +1,26 @@
 # Progress Log
 
-## Latest Session - July 2025
+## Latest Session - December 2025
 
-### ✅ Claude Sonnet 4.5 Default Picker Update
+### ✅ Gemini 3 Model Update
 
-**Date**: Current Session (July 2025)
+**Date**: Current Session (December 2025)
 **Status**: Completed
 
-- Added Anthropic Claude Sonnet 4.5 to the chat modal provider list with provider branding
-- Promoted Anthropic Claude Sonnet 4.5 to the default chat model selection in the picker UI
+- Updated all Gemini models to version 3 (Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite)
+- Updated `ModelEnum` and `ChatMode` references from `GEMINI_2_5` to `GEMINI_3` across the entire codebase
+- Updated model IDs to latest versions:
+  - Gemini 3 Pro: `gemini-2.0-pro-exp-02-05`
+  - Gemini 3 Flash: `gemini-2.0-flash`
+  - Gemini 3 Flash Lite: `gemini-2.0-flash-lite-preview-02-05`
+- Updated rate limits and pricing for Gemini 3 models
+- Updated documentation (GEMINI.md, help pages, pricing config)
+- Updated all tests to reflect the new model versions and logic
+- Verified that Gemini 3 Flash Lite continues to require BYOK
 
 ---
 
-### ✅ Deep Research Model Update
-
-**Date**: Current Session (July 2025)
-**Status**: Completed
-
-- Switched Deep Research workflow to Gemini 2.5 Flash model
-- Updated tasks, model mapping, tests, and help docs
-
----
-
-### ✅ Image Prompt Tips Removal
-
-**Date**: Current Session (July 2025)
-**Status**: Completed
-
-- Removed the Nano Banana image prompting tips banner from the chat input
-- Eliminated the related personalization toggle and persisted preferences
-- Pruned store state and storage keys that previously tracked banner visibility
-
----
-
-### ✅ Gemini Flash Lite BYOK Transition
-
-**Date**: Current Session (September 2025)
-**Status**: Completed
-
-- Removed all server-funded fallbacks for `gemini-2.5-flash-lite` in workflows, providers, and routing
-- Updated UI (model picker, settings, BYOK prompts) to require user-supplied Gemini API keys
-- Refreshed marketing pages, help/faq, and policy docs to explain the BYOK requirement
-- Adjusted automated tests to reflect the BYOK-only logic for Flash Lite
-
----
-
-## Previous Session - January 2025
+## Previous Session - July 2025
 
 ### ✅ useSession Runtime Error Fix
 
@@ -384,7 +359,7 @@ The application now uses official Shadcn UI components with:
 
 #### 🎯 Key Changes
 
-- **Preview Models Removed**: Filtered out `Gemini 2.5 Flash Preview` and `Gemini 2.5 Pro Preview` from Google provider list
+- **Preview Models Removed**: Filtered out `Gemini 3 Flash Preview` and `Gemini 3 Pro Preview` from Google provider list
 - **ModelEnum Integration**: Refactored dropdown to dynamically generate model options from `models.ts` array
 - **Consistency**: All providers now use centralized model configuration
 - **Maintainability**: Single source of truth for model metadata and configuration
@@ -423,7 +398,7 @@ The application now uses official Shadcn UI components with:
 
 #### 🎯 Key Changes
 
-- **All Premium AI Models Now Free**: Removed ALL VT+ plan restrictions from premium models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3)
+- **All Premium AI Models Now Free**: Removed ALL VT+ plan restrictions from premium models (Claude 4, GPT-4.1, O3 series, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3)
 - **Only 3 VT+ Exclusive Features**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH)
 - **Enhanced Free Tier**: Free users now have access to ALL AI models with BYOK + 9 free server models
 - **Clear Premium Value**: VT+ retains only the 3 most valuable research-focused features
@@ -459,7 +434,7 @@ The application now uses official Shadcn UI components with:
 
 #### ✅ Gemini Model Defaults Updated
 
-- Aligned Gemini Flash model IDs with Google naming updates (`gemini-flash-latest`, `gemini-flash-lite-latest`).
+- Aligned Gemini Flash model IDs with Google naming updates (`gemini-2.0-flash`, `gemini-2.0-flash-lite-preview-02-05`).
 - Set Gemini Flash as the default chat model selection and ensured dropdown ordering reflects the new default.
 - Adjusted caching, rate limit pricing, and provider fallbacks to respect the refreshed model identifiers.
 
@@ -470,7 +445,7 @@ The application now uses official Shadcn UI components with:
 
 #### 🎯 Key Changes
 
-- **All Gemini Models Now Free**: Removed VT+ plan restrictions from GEMINI_2_5_FLASH_PREVIEW, GEMINI_2_5_PRO, and GEMINI_2_5_PRO_PREVIEW
+- **All Gemini Models Now Free**: Removed VT+ plan restrictions from GEMINI_3_FLASH_PREVIEW, GEMINI_3_PRO, and GEMINI_3_PRO_PREVIEW
 - **Thinking Mode Remains VT+ Exclusive**: Proper access control maintained through FeatureSlug.THINKING_MODE
 - **Enhanced Free Tier**: Free users now have access to 6 Gemini models + 4 OpenRouter models
 - **Clear Premium Value**: VT+ retains exclusive advanced features (thinking mode, dark theme, etc.)
@@ -478,7 +453,7 @@ The application now uses official Shadcn UI components with:
 #### 📋 Technical Implementation
 
 - **Chat Mode Config**: Removed `requiredPlan: PlanSlug.VT_PLUS` from Gemini models
-- **Model Configuration**: Updated `GEMINI_2_5_PRO` to `isFree: true`
+- **Model Configuration**: Updated `GEMINI_3_PRO` to `isFree: true`
 - **Pricing Benefits**: Updated free tier description to include all Gemini models
 - **Access Control Verified**: Thinking mode access properly restricted to VT+
 
@@ -508,7 +483,7 @@ The application now uses official Shadcn UI components with:
 #### 🧠 Core Features Implemented
 
 - **AI SDK Integration**: Full support for reasoning tokens from multiple providers
-- **Model Support**: Gemini 2.5, DeepSeek R1, Anthropic Claude 4, OpenAI o-series
+- **Model Support**: Gemini 3, DeepSeek R1, Anthropic Claude 4, OpenAI o-series
 - **Reasoning Types**: Text reasoning, redacted content, structured details
 - **Message Parts**: AI SDK message parts format with reasoning components
 
@@ -740,12 +715,12 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **Updated Token Configuration**:
 
-- **GEMINI_2_5_FLASH_LITE**: Updated to 1M input/64K output tokens (industry-standard limits)
+- **GEMINI_3_FLASH_LITE**: Updated to 1M input/64K output tokens (industry-standard limits)
 - **Optimized Performance**: Proper token allocation for better model performance
 
 **All Preview Models Made Free**:
 
-- **GEMINI_2_5_PRO**: Now correctly marked as premium (is NOT free)
+- **GEMINI_3_PRO**: Now correctly marked as premium (is NOT free)
 - **Complete Preview Collection**: All 5 Gemini preview models now free
 - **Visual Consistency**: Gift icons added to all free models
 - **Total Free Models**: 9 models (5 Gemini + 4 OpenRouter)
@@ -760,7 +735,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **MAJOR ACHIEVEMENTS**:
 
-1. **GEMINI_2_5_FLASH_LITE Model Integration** ✅:
+1. **GEMINI_3_FLASH_LITE Model Integration** ✅:
    - **UI Addition**: Added to Google provider section in chat-actions.tsx
    - **Visual Indicator**: Gift icon displays for free model identification
    - **API Configuration**: Proper GEMINI_API_KEY mapping in workflow utils
@@ -768,9 +743,9 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 2. **Free Models Visual Enhancement** ✅:
    - **Gift Icons Added**: All free Gemini models now show 🎁 icon
-     - GEMINI_2_5_FLASH_LITE ✅ (newly added)
-     - GEMINI_2_5_FLASH_PREVIEW ✅
-     - GEMINI_2_5_PRO_PREVIEW ✅
+     - GEMINI_3_FLASH_LITE ✅ (newly added)
+     - GEMINI_3_FLASH_PREVIEW ✅
+     - GEMINI_3_PRO_PREVIEW ✅
    - **OpenRouter Free Models**: Already had gift icons (DeepSeek, Qwen3)
    - **Consistent UX**: Unified free model identification across providers
 
@@ -781,7 +756,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
    - **Perfect for Getting Started**: Clear value proposition for free tier
 
 4. **Technical Configuration** ✅:
-   - **Model Mapping**: Added GEMINI_2_5_FLASH_LITE to API key providers
+   - **Model Mapping**: Added GEMINI_3_FLASH_LITE to API key providers
    - **Web Search Support**: Updated supportsNativeWebSearch function
    - **Fallback Mechanism**: Proper model selection with available API keys
    - **Type Safety**: All TypeScript types properly configured
@@ -796,9 +771,9 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **Google Gemini Models (Free)**:
 
-- **Gemini 2.5 Pro** - Pro-level access
-- **Gemini 2.5 Flash** - Fast, efficient general-purpose model
-- **Gemini 2.5 Flash Lite Preview** - Latest preview features
+- **Gemini 3 Pro** - Pro-level access
+- **Gemini 3 Flash** - Fast, efficient general-purpose model
+- **Gemini 3 Flash Lite Preview** - Latest preview features
 
 **OpenRouter Models (Free)**:
 
@@ -846,7 +821,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 **User Interface**:
 
-- `packages/common/components/chat-input/chat-actions.tsx` - Added GEMINI_2_5_FLASH_LITE + gift icons
+- `packages/common/components/chat-input/chat-actions.tsx` - Added GEMINI_3_FLASH_LITE + gift icons
 - `apps/web/lib/config/pricing.ts` - Enhanced free tier benefit descriptions
 
 **Documentation**:
@@ -953,7 +928,7 @@ CREATE INDEX CONCURRENTLY idx_sessions_token ON sessions(token);
 
 #### 🎯 Key Changes
 
-- **ALL Premium AI Models Now FREE**: Removed ALL VT+ plan restrictions from premium models - Claude 4, GPT-4.1, O3 series, O1 series, Gemini 2.5 Pro, DeepSeek R1, Grok 3 are now accessible to all logged-in users with BYOK
+- **ALL Premium AI Models Now FREE**: Removed ALL VT+ plan restrictions from premium models - Claude 4, GPT-4.1, O3 series, O1 series, Gemini 3 Pro, DeepSeek R1, Grok 3 are now accessible to all logged-in users with BYOK
 - **Only 3 VT+ Exclusive Features Remain**: Deep Research (DEEP_RESEARCH), Pro Search (PRO_SEARCH)
 - **Free Tier**: Free users now have access to ALL AI models with BYOK + all advanced features + 9 free server models
 - **Clear Premium Value**: VT+ now focuses exclusively on research-oriented power user features

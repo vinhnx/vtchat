@@ -1,3 +1,4 @@
+import { google } from '@ai-sdk/google';
 import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
@@ -137,7 +138,7 @@ export const generateTextWithGeminiSearch = async ({
             || windowApiKey
         );
 
-        isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        isFreeGeminiModel = model === ModelEnum.GEMINI_3_FLASH_LITE;
         if (isFreeGeminiModel) {
             hasSystemGeminiKey = false;
         }
@@ -158,7 +159,7 @@ export const generateTextWithGeminiSearch = async ({
 
             if (isFreeGeminiModel) {
                 throw new Error(
-                    'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
+                    'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                 );
             }
             if (isVtPlusUser) {
@@ -283,7 +284,7 @@ export const generateTextWithGeminiSearch = async ({
                 }
             }
 
-            const streamTextConfig = filteredMessages?.length
+            const streamTextConfig: any = filteredMessages?.length
                 ? {
                     model: selectedModel,
                     messages: [
@@ -302,6 +303,27 @@ export const generateTextWithGeminiSearch = async ({
                     abortSignal: signal,
                     ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                 };
+
+            // Add native Google Search tool to ensure grounding is triggered
+            // This is a fallback in case the model-level useSearchGrounding is not enough
+            const isGemini2 = model.includes('gemini-2');
+            const googleTools = (google as any).tools;
+
+            if (googleTools) {
+                streamTextConfig.tools = {
+                    googleSearch: isGemini2
+                        ? googleTools.googleSearch?.({})
+                        : googleTools.googleSearchRetrieval?.({}) || googleTools.googleSearch?.({}),
+                };
+            } else {
+                // Fallback to manual tool definition if google.tools is not available
+                streamTextConfig.tools = {
+                    googleSearch: {
+                        type: 'provider-defined',
+                        toolName: isGemini2 ? 'google_search' : 'google_search_retrieval',
+                    },
+                };
+            }
 
             log.info('StreamText config:', {
                 configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
@@ -1011,7 +1033,7 @@ export const generateObject = async ({
         // Handle API key logic for Gemini models (both free tier and VT+ users)
         const isGeminiModel = model.toString().toLowerCase().includes('gemini');
         const isVtPlusUser = userTier === UserTier.PLUS;
-        const isFreeGeminiModel = model === ModelEnum.GEMINI_2_5_FLASH_LITE;
+        const isFreeGeminiModel = model === ModelEnum.GEMINI_3_FLASH_LITE;
 
         if (isGeminiModel) {
             const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY
@@ -1027,7 +1049,7 @@ export const generateObject = async ({
             if (!hasUserGeminiKey && !hasSystemGeminiKey) {
                 if (isFreeGeminiModel) {
                     throw new Error(
-                        'Gemini 2.5 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
+                        'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 if (isVtPlusUser) {
@@ -1602,9 +1624,9 @@ export const selectAvailableModel = (
     const hasApiKeyForModel = (model: ModelEnum): boolean => {
         const providers = {
             // Gemini models
-            [ModelEnum.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
-            [ModelEnum.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_3_FLASH]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_3_FLASH_LITE]: 'GEMINI_API_KEY',
+            [ModelEnum.GEMINI_3_PRO]: 'GEMINI_API_KEY',
             [ModelEnum.GEMINI_3_FLASH]: 'GEMINI_API_KEY',
             // OpenAI models
             [ModelEnum.GPT_5]: 'OPENAI_API_KEY',
@@ -1657,8 +1679,9 @@ export const selectAvailableModel = (
 
     // Fallback priority list - most reliable and cost-effective models first
     const fallbackModels = [
-        ModelEnum.GEMINI_2_5_FLASH_LITE, // Gemini Flash Lite (requires BYOK)
-        ModelEnum.GEMINI_2_5_FLASH, // Newer Gemini
+        ModelEnum.GEMINI_3_FLASH_LITE, // Gemini Flash Lite (requires BYOK)
+        ModelEnum.GEMINI_3_FLASH, // Newer Gemini
+        ModelEnum.GEMINI_3_PRO, // Newer Gemini Pro
         ModelEnum.GPT_5, // GPT-5 as top priority for OpenAI models
         ModelEnum.GPT_4o, // More expensive but reliable
         ModelEnum.GPT_4o_Mini, // Most cost-effective OpenAI model

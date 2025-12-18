@@ -23,25 +23,20 @@ import { useApiKeysStore } from '../store/api-keys.store';
 
 // Model configuration for display
 const MODEL_CONFIG = {
-    [ModelEnum.GEMINI_2_5_FLASH_LITE]: {
-        name: 'Gemini 2.5 Flash Lite',
+    [ModelEnum.GEMINI_3_FLASH_LITE]: {
+        name: 'Gemini 3 Flash Lite',
         description: 'Fast and efficient',
         limits: GEMINI_LIMITS.FLASH_LITE,
     },
-    [ModelEnum.GEMINI_2_5_FLASH]: {
-        name: 'Gemini 2.5 Flash',
+    [ModelEnum.GEMINI_3_FLASH]: {
+        name: 'Gemini 3 Flash',
         description: 'Fast performance',
         limits: GEMINI_LIMITS.FLASH,
     },
-    [ModelEnum.GEMINI_2_5_PRO]: {
-        name: 'Gemini 2.5 Pro',
+    [ModelEnum.GEMINI_3_PRO]: {
+        name: 'Gemini 3 Pro',
         description: 'Most capable',
         limits: GEMINI_LIMITS.PRO,
-    },
-    [ModelEnum.GEMINI_3_FLASH]: {
-        name: 'Gemini 3 Flash',
-        description: 'Most intelligent and fast',
-        limits: GEMINI_LIMITS.FLASH_3,
     },
 } as const;
 
@@ -60,10 +55,9 @@ interface RateLimitStatus {
 }
 
 type GeminiModelId =
-    | ModelEnum.GEMINI_2_5_FLASH_LITE
-    | ModelEnum.GEMINI_2_5_FLASH
-    | ModelEnum.GEMINI_2_5_PRO
-    | ModelEnum.GEMINI_3_FLASH;
+    | ModelEnum.GEMINI_3_FLASH_LITE
+    | ModelEnum.GEMINI_3_FLASH
+    | ModelEnum.GEMINI_3_PRO;
 
 interface RateLimitUsageMeterProps {
     userId?: string;
@@ -74,7 +68,7 @@ interface RateLimitUsageMeterProps {
 export default function RateLimitUsageMeter({
     userId,
     className,
-    modelId = ModelEnum.GEMINI_2_5_FLASH_LITE,
+    modelId = ModelEnum.GEMINI_3_FLASH_LITE,
 }: RateLimitUsageMeterProps) {
     const [status, setStatus] = useState<RateLimitStatus | null>(null);
     const [loading, setLoading] = useState(true);

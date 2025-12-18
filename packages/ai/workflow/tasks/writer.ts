@@ -113,7 +113,7 @@ ${getFormattingInstructions('writer')}
         const mode = context?.get('mode') || '';
         // For Deep Research workflow, select available model with fallback mechanism
         const baseModel = mode === ChatMode.Deep
-            ? ModelEnum.GEMINI_2_5_FLASH
+            ? ModelEnum.GEMINI_3_FLASH
             : getModelFromChatMode(mode);
         const model = selectAvailableModel(baseModel, context?.get('apiKeys'));
 

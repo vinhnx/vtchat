@@ -12,14 +12,14 @@ describe('shouldUseServerSideAPI', () => {
         it('should keep free models client-side unless special features are on', () => {
             expect(
                 shouldUseServerSideAPI({
-                    mode: ChatMode.GEMINI_2_5_FLASH_LITE,
+                    mode: ChatMode.GEMINI_3_FLASH_LITE,
                     hasVtPlus: false,
                 }),
             ).toBe(false);
 
             expect(
                 shouldUseServerSideAPI({
-                    mode: ChatMode.GEMINI_2_5_FLASH_LITE,
+                    mode: ChatMode.GEMINI_3_FLASH_LITE,
                     hasVtPlus: true,
                 }),
             ).toBe(false);
@@ -50,7 +50,7 @@ describe('shouldUseServerSideAPI', () => {
 
             expect(
                 shouldUseServerSideAPI({
-                    mode: ChatMode.GEMINI_2_5_FLASH_LITE,
+                    mode: ChatMode.GEMINI_3_FLASH_LITE,
                     hasVtPlus: true,
                 }),
             ).toBe(false);
@@ -161,7 +161,7 @@ describe('needsServerSideForPlus', () => {
         expect(needsServerSideForPlus(ChatMode.CLAUDE_4_SONNET)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.CLAUDE_SONNET_4_5)).toBe(true);
         expect(needsServerSideForPlus(ChatMode.GPT_4o)).toBe(true);
-        expect(needsServerSideForPlus(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe(false);
+        expect(needsServerSideForPlus(ChatMode.GEMINI_3_FLASH_LITE)).toBe(false);
         expect(needsServerSideForPlus(ChatMode.DEEPSEEK_R1)).toBe(true);
     });
 });
@@ -171,7 +171,7 @@ describe('getProviderKeyToRemove', () => {
         expect(getProviderKeyToRemove(ChatMode.CLAUDE_4_SONNET)).toBe('ANTHROPIC_API_KEY');
         expect(getProviderKeyToRemove(ChatMode.CLAUDE_SONNET_4_5)).toBe('ANTHROPIC_API_KEY');
         expect(getProviderKeyToRemove(ChatMode.GPT_4o)).toBe('OPENAI_API_KEY');
-        expect(getProviderKeyToRemove(ChatMode.GEMINI_2_5_FLASH_LITE)).toBe('GEMINI_API_KEY');
+        expect(getProviderKeyToRemove(ChatMode.GEMINI_3_FLASH_LITE)).toBe('GEMINI_API_KEY');
     });
 });
 

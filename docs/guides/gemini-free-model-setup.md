@@ -1,8 +1,8 @@
-# Gemini 2.5 Flash Lite – BYOK Configuration Guide
+# Gemini 3 Flash Lite – BYOK Configuration Guide
 
 > **Last updated:** September 2025
 
-Gemini 2.5 Flash Lite is no longer funded by VT servers. Every request must use a user-provided
+Gemini 3 Flash Lite is no longer funded by VT servers. Every request must use a user-provided
 Gemini API key (BYOK). This guide outlines the required configuration across the app to enforce the
 new policy and remove the legacy server-funded behaviour.
 
@@ -30,15 +30,15 @@ new policy and remove the legacy server-funded behaviour.
 
 ## User Experience
 
-1. Selecting Gemini 2.5 Flash Lite triggers the BYOK modal if the local store does not contain a
+1. Selecting Gemini 3 Flash Lite triggers the BYOK modal if the local store does not contain a
    Gemini key.
 2. Server-side routes (`/api/completion`, structured extract tools, etc.) return explicit
-   `Gemini 2.5 Flash Lite now requires your own Gemini API key` errors when no key is present.
+   `Gemini 3 Flash Lite now requires your own Gemini API key` errors when no key is present.
 3. Model settings, marketing copy, and documentation highlight that Flash Lite is BYOK-only.
 
 ## Testing Checklist
 
-- [ ] Switch to Gemini 2.5 Flash Lite without a stored key → API key modal appears.
+- [ ] Switch to Gemini 3 Flash Lite without a stored key → API key modal appears.
 - [ ] Provide a valid Gemini key → completions stream successfully.
 - [ ] Attempt server-side flows (web search, planning) without a Gemini key → receive BYOK error.
 - [ ] VT+ users without a Gemini key still see the BYOK requirement for Flash Lite.
