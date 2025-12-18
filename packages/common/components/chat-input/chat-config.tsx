@@ -3,7 +3,7 @@ import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift, MoonStar, Network, Sparkles, Sunrise } from 'lucide-react';
+import { Brain, Gift } from 'lucide-react';
 
 export const chatOptions = [
     {
@@ -123,21 +123,69 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 
 // Helper function to get provider icon
 export const getProviderIcon = (provider: string, size = 16) => {
-    const iconProps = { size, className: 'flex-shrink-0' };
+    const className = 'flex-shrink-0';
 
     switch (provider.toLowerCase()) {
         case 'anthropic':
-            return <Brain {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg'
+                    width={size}
+                    height={size}
+                    alt='Claude'
+                    className={className}
+                />
+            );
         case 'google':
-            return <Sunrise {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/gemini-color.svg'
+                    width={size}
+                    height={size}
+                    alt='Google Gemini'
+                    className={className}
+                />
+            );
         case 'openai':
-            return <Sparkles {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg'
+                    width={size}
+                    height={size}
+                    alt='OpenAI'
+                    className={className}
+                />
+            );
         case 'openrouter':
-            return <Network {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openrouter.svg'
+                    width={size}
+                    height={size}
+                    alt='OpenRouter'
+                    className={className}
+                />
+            );
         case 'fireworks':
-            return <Sparkles {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/fireworks-color.svg'
+                    width={size}
+                    height={size}
+                    alt='Fireworks'
+                    className={className}
+                />
+            );
         case 'xai':
-            return <MoonStar {...iconProps} />;
+            return (
+                <img
+                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/xai.svg'
+                    width={size}
+                    height={size}
+                    alt='xAI'
+                    className={className}
+                />
+            );
         default:
             return null;
     }

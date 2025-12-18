@@ -419,3 +419,35 @@ Updating existing machines in 'vtchat' with rolling strategy
 ✔ [1/2] Cleared lease for 3d8d1736a73789
 ✔ [2/2] Cleared lease for 7815693c23e048
 Checking DNS configuration for vtchat.fly.dev
+WARNING: DNS verification failed: read udp 192.168.54.225:64618->8.8.8.8:53: i/o timeout
+Your app is deployed but DNS may take a few minutes to propagate globally
+[33mWARN[0m DNS checks failed: read udp 192.168.54.225:64618->8.8.8.8:53: i/o timeout
+
+
+Visit your newly deployed app at https://vtchat.fly.dev/
+
+[0;32m[SUCCESS] Deployment completed successfully![0m
+
+Your app is available at:
+   https://vtchat.io.vn
+   https://vtchat.fly.dev
+
+[0;34m[INFO] Checking app status...[0m
+[1mApp[0m
+  Name     = vtchat                                        
+  Owner    = vt                                            
+  Hostname = vtchat.fly.dev                                
+  Image    = vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH  
+
+[1mMachines[0m
+PROCESS	ID            	VERSION	REGION	STATE  	ROLE	CHECKS            	LAST UPDATED         
+app    	3d8d1736a73789	508    	sin   	stopped	    	2 total, 2 warning	2025-12-18T02:40:21Z	
+app    	7815693c23e048	508    	iad   	stopped	    	2 total, 2 warning	2025-12-18T02:40:24Z	
+
+[0;32m[SUCCESS] Deployment completed![0m
+
+[0;32m[SUCCESS] Deployment pipeline completed successfully![0m
+[1;33mSummary:[0m
+[1;33m  Version: v3.16.21[0m
+[1;33m  App: vtchat[0m
+[1;33m  URL: https://vtchat.io.vn[0m
