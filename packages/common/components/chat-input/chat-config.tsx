@@ -28,6 +28,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'Gemini 2.5 Pro': ChatMode.GEMINI_2_5_PRO,
         'Gemini 2.5 Flash': ChatMode.GEMINI_2_5_FLASH,
         'Gemini 2.5 Flash Lite': ChatMode.GEMINI_2_5_FLASH_LITE,
+        'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
@@ -97,6 +98,7 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         ChatMode.GEMINI_2_5_PRO,
         ChatMode.GEMINI_2_5_FLASH,
         ChatMode.GEMINI_2_5_FLASH_LITE,
+        ChatMode.GEMINI_3_FLASH,
 
         // xAI reasoning models
         ChatMode.GROK_4,
@@ -244,6 +246,14 @@ export const modelOptionsByProvider = {
         {
             label: 'Gemini 2.5 Pro',
             value: ChatMode.GEMINI_2_5_PRO,
+            webSearch: true,
+            icon: <Brain className='text-purple-500' size={16} />,
+            providerIcon: getProviderIcon('google', 14),
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 3 Flash',
+            value: ChatMode.GEMINI_3_FLASH,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),

@@ -19,6 +19,7 @@ export const ChatMode = {
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     GEMINI_2_5_FLASH: 'gemini-flash-latest',
     GEMINI_2_5_FLASH_LITE: 'gemini-flash-lite-latest',
+    GEMINI_3_FLASH: 'gemini-3-flash-preview',
 
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
@@ -193,6 +194,14 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
     [ChatMode.GEMINI_2_5_FLASH_LITE]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GEMINI_3_FLASH]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
@@ -473,6 +482,8 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'Google Gemini 2.5 Flash';
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return 'Google Gemini 2.5 Flash Lite';
+        case ChatMode.GEMINI_3_FLASH:
+            return 'Google Gemini 3 Flash';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:

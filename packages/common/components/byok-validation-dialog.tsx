@@ -38,6 +38,7 @@ const CHAT_MODE_TO_API_KEY: ProviderKeyMapping = {
     [ChatMode.GEMINI_2_5_PRO]: 'GEMINI_API_KEY',
     [ChatMode.GEMINI_2_5_FLASH]: 'GEMINI_API_KEY',
     [ChatMode.GEMINI_2_5_FLASH_LITE]: 'GEMINI_API_KEY',
+    [ChatMode.GEMINI_3_FLASH]: 'GEMINI_API_KEY',
     // Anthropic models
     [ChatMode.CLAUDE_4_1_OPUS]: 'ANTHROPIC_API_KEY',
     [ChatMode.CLAUDE_4_SONNET]: 'ANTHROPIC_API_KEY',

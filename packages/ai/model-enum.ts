@@ -6,6 +6,7 @@ export const ModelEnum = {
     GEMINI_2_5_FLASH_LITE: 'gemini-flash-lite-latest',
     GEMINI_2_5_FLASH: 'gemini-flash-latest',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
+    GEMINI_3_FLASH: 'gemini-3-flash-preview',
     GEMINI_2_5_FLASH_IMAGE: 'gemini-2.5-flash-image',
     GPT_4o_Mini: 'gpt-4o-mini',
     GPT_4o: 'gpt-4o',

@@ -6,6 +6,7 @@ const FREE_SERVER_MODELS: ChatMode[] = [];
 const PLUS_SERVER_MODELS: ChatMode[] = [
     ChatMode.GEMINI_2_5_PRO,
     ChatMode.GEMINI_2_5_FLASH,
+    ChatMode.GEMINI_3_FLASH,
     ChatMode.CLAUDE_4_SONNET,
     ChatMode.CLAUDE_SONNET_4_5,
     ChatMode.GPT_4o,

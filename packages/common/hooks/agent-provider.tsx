@@ -1056,6 +1056,7 @@ export const AgentProvider = ({ children }: { children: ReactNode; }) => {
                     ? [
                         ChatMode.GEMINI_2_5_PRO,
                         ChatMode.GEMINI_2_5_FLASH,
+                        ChatMode.GEMINI_3_FLASH,
                         ChatMode.GPT_4o,
                         ChatMode.DEEPSEEK_R1,
                     ]

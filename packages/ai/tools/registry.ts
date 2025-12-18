@@ -64,6 +64,7 @@ export class ToolRegistry {
             ModelEnum.GEMINI_2_5_PRO,
             ModelEnum.GEMINI_2_5_FLASH,
             ModelEnum.GEMINI_2_5_FLASH_LITE,
+            ModelEnum.GEMINI_3_FLASH,
         ];
 
         // In production, filter by available API keys or environment config

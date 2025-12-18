@@ -40,6 +40,11 @@ const MODEL_CONFIG = {
         description: 'Advanced capabilities',
         limits: GEMINI_LIMITS.PRO,
     },
+    [ModelEnum.GEMINI_3_FLASH]: {
+        name: 'Gemini 3 Flash',
+        description: 'Most intelligent and fast',
+        limits: GEMINI_LIMITS.FLASH_3,
+    },
 } as const;
 
 // Models array constant to prevent re-renders
@@ -207,6 +212,10 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                 label: `${MODEL_CONFIG[ModelEnum.GEMINI_2_5_PRO].name}`,
                                 color: 'hsl(var(--chart-3))',
                             },
+                            'flash-3': {
+                                label: `${MODEL_CONFIG[ModelEnum.GEMINI_3_FLASH].name}`,
+                                color: 'hsl(var(--chart-4))',
+                            },
                         }}
                         className='min-h-[240px] w-full max-w-full overflow-hidden'
                     >
@@ -223,6 +232,8 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     modelStatuses[ModelEnum.GEMINI_2_5_FLASH]?.dailyUsed || 0;
                                 const proUsage = modelStatuses[ModelEnum.GEMINI_2_5_PRO]?.dailyUsed
                                     || 0;
+                                const flash3Usage =
+                                    modelStatuses[ModelEnum.GEMINI_3_FLASH]?.dailyUsed || 0;
 
                                 // Generate hourly data points from 00:00 to current hour + 2 offset
                                 for (let hour = 0; hour <= Math.min(currentHour + 2, 23); hour++) {
@@ -235,6 +246,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                             'flash-lite-2-5': 0,
                                             'flash-2-5': 0,
                                             'pro-2-5': 0,
+                                            'flash-3': 0,
                                         });
                                     } else if (hour <= currentHour) {
                                         // Gradually increase to current usage at current hour
@@ -244,6 +256,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                             'flash-lite-2-5': Math.round(flashLiteUsage * progress),
                                             'flash-2-5': Math.round(flashUsage * progress),
                                             'pro-2-5': Math.round(proUsage * progress),
+                                            'flash-3': Math.round(flash3Usage * progress),
                                         });
                                     } else {
                                         // Future hours show current total (flat line)
@@ -252,6 +265,7 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                             'flash-lite-2-5': flashLiteUsage,
                                             'flash-2-5': flashUsage,
                                             'pro-2-5': proUsage,
+                                            'flash-3': flash3Usage,
                                         });
                                     }
                                 }
@@ -327,6 +341,18 @@ export default function MultiModelUsageMeter({ userId, className }: MultiModelUs
                                     r: 4,
                                     strokeWidth: 2,
                                     fill: 'var(--color-pro-2-5)',
+                                }}
+                            />
+                            <Line
+                                type='monotone'
+                                dataKey='flash-3'
+                                stroke='var(--color-flash-3)'
+                                strokeWidth={2}
+                                dot={false}
+                                activeDot={{
+                                    r: 4,
+                                    strokeWidth: 2,
+                                    fill: 'var(--color-flash-3)',
                                 }}
                             />
                         </LineChart>

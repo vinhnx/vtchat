@@ -144,6 +144,13 @@ export const models: Model[] = [
         contextWindow: 1_048_576,
     },
     {
+        id: ModelEnum.GEMINI_3_FLASH,
+        name: 'Gemini 3 Flash',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 1_048_576,
+    },
+    {
         id: ModelEnum.GEMINI_2_5_FLASH_IMAGE,
         name: 'Gemini 2.5 Flash Image',
         provider: 'google',
@@ -265,6 +272,8 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.GEMINI_2_5_FLASH:
             return ModelEnum.GEMINI_2_5_FLASH;
+        case ChatMode.GEMINI_3_FLASH:
+            return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
             return ModelEnum.DEEPSEEK_R1_FIREWORKS;
         case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
@@ -336,6 +345,7 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GEMINI_2_5_PRO:
         case ChatMode.GEMINI_2_5_FLASH:
         case ChatMode.GEMINI_2_5_FLASH_LITE:
+        case ChatMode.GEMINI_3_FLASH:
             return 1_048_576;
         case ChatMode.CLAUDE_4_1_OPUS:
         case ChatMode.CLAUDE_4_SONNET:
@@ -418,6 +428,7 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
         ModelEnum.GEMINI_2_5_PRO,
+        ModelEnum.GEMINI_3_FLASH,
     ];
 
     return googleModels.includes(model);
@@ -513,6 +524,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
+        ModelEnum.GEMINI_3_FLASH,
     ];
 
     // OpenAI reasoning models
@@ -562,6 +574,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
+        ModelEnum.GEMINI_3_FLASH,
     ];
 
     // OpenRouter models that support tools
@@ -611,6 +624,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
         ModelEnum.GEMINI_2_5_FLASH,
         ModelEnum.GEMINI_2_5_PRO,
         ModelEnum.GEMINI_2_5_FLASH_LITE,
+        ModelEnum.GEMINI_3_FLASH,
     ];
 
     if (geminiThinkingModels.includes(model)) {

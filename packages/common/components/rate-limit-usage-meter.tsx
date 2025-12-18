@@ -38,6 +38,11 @@ const MODEL_CONFIG = {
         description: 'Most capable',
         limits: GEMINI_LIMITS.PRO,
     },
+    [ModelEnum.GEMINI_3_FLASH]: {
+        name: 'Gemini 3 Flash',
+        description: 'Most intelligent and fast',
+        limits: GEMINI_LIMITS.FLASH_3,
+    },
 } as const;
 
 // API Response Interfaces
@@ -57,7 +62,8 @@ interface RateLimitStatus {
 type GeminiModelId =
     | ModelEnum.GEMINI_2_5_FLASH_LITE
     | ModelEnum.GEMINI_2_5_FLASH
-    | ModelEnum.GEMINI_2_5_PRO;
+    | ModelEnum.GEMINI_2_5_PRO
+    | ModelEnum.GEMINI_3_FLASH;
 
 interface RateLimitUsageMeterProps {
     userId?: string;

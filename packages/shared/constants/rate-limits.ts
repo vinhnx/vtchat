@@ -17,6 +17,7 @@ export const GEMINI_LIMITS = {
     // Gemini 2.0 models use same limits as their 2.5 counterparts
     FLASH_2_0: { FREE_DAY: 10, PLUS_DAY: 50, FREE_MINUTE: 3, PLUS_MINUTE: 8 },
     FLASH_LITE_2_0: { FREE_DAY: 20, PLUS_DAY: 100, FREE_MINUTE: 5, PLUS_MINUTE: 10 },
+    FLASH_3: { FREE_DAY: 10, PLUS_DAY: 50, FREE_MINUTE: 3, PLUS_MINUTE: 8 },
 } as const;
 
 /**
@@ -41,8 +42,10 @@ export const GEMINI_PRICES = {
     FLASH_LITE: 0.005, // 0.5 cents per request - minimum to ensure non-zero cost tracking
     FLASH: 0.01, // 1 cent per request
     PRO: 0.015, // 1.5 cents per request
+    FLASH_3: 0.01, // 1 cent per request
     [ModelEnum.GEMINI_2_5_FLASH_LITE]: 0.005, // Same as FLASH_LITE
     [ModelEnum.GEMINI_2_5_FLASH]: 0.01, // Same as FLASH
+    [ModelEnum.GEMINI_3_FLASH]: 0.01, // Same as FLASH_3
 } as const;
 
 /**

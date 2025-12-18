@@ -244,6 +244,7 @@ export const useApiKeysStore = create<ApiKeysState>()(
                         return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_5_PRO:
                     case ChatMode.GEMINI_2_5_FLASH:
+                    case ChatMode.GEMINI_3_FLASH:
                         return isValidKey(apiKeys.GEMINI_API_KEY);
                     case ChatMode.GEMINI_2_5_FLASH_LITE:
                         return true; // Free model, no API key required

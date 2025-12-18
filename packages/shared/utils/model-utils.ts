@@ -10,6 +10,7 @@ export const GEMINI_CHAT_MODES = [
     ChatMode.GEMINI_2_5_PRO,
     ChatMode.GEMINI_2_5_FLASH,
     ChatMode.GEMINI_2_5_FLASH_LITE,
+    ChatMode.GEMINI_3_FLASH,
 ] as const;
 
 /**
@@ -19,6 +20,7 @@ export const GEMINI_MODEL_ENUMS = [
     ModelEnum.GEMINI_2_5_FLASH_LITE,
     ModelEnum.GEMINI_2_5_FLASH,
     ModelEnum.GEMINI_2_5_PRO,
+    ModelEnum.GEMINI_3_FLASH,
 ] as const;
 
 /**

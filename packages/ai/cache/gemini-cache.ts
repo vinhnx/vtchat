@@ -17,6 +17,7 @@ export type GoogleModelCacheableId =
     | 'models/gemini-2.5-pro'
     | 'models/gemini-flash-latest'
     | 'models/gemini-flash-lite-latest'
+    | 'models/gemini-3-flash-preview'
     | 'models/gemini-1.5-flash-001'
     | 'models/gemini-1.5-pro-001';
 
@@ -117,6 +118,8 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
     const cacheableModels: GoogleModelCacheableId[] = [
         'models/gemini-2.5-pro',
         'models/gemini-flash-latest',
+        'models/gemini-flash-lite-latest',
+        'models/gemini-3-flash-preview',
         'models/gemini-1.5-flash-001',
         'models/gemini-1.5-pro-001',
     ];
@@ -134,6 +137,8 @@ export function getGeminiCacheableModelId(modelEnum: ModelEnumType): GoogleModel
             return 'models/gemini-flash-latest';
         case ModelEnumValues.GEMINI_2_5_FLASH_LITE:
             return 'models/gemini-flash-lite-latest';
+        case ModelEnumValues.GEMINI_3_FLASH:
+            return 'models/gemini-3-flash-preview';
         default:
             return null;
     }
