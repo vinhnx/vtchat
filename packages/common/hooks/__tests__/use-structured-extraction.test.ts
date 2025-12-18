@@ -30,7 +30,7 @@ vi.mock('@repo/ui', () => ({
 const mockToast = vi.fn();
 
 const createMockStore = (overrides = {}) => ({
-    chatMode: 'gemini-2.0-pro-exp-02-05',
+    chatMode: 'gemini-3-pro-preview',
     documentAttachment: null,
     setStructuredData: vi.fn(),
     clearStructuredData: vi.fn(),
@@ -113,7 +113,7 @@ describe('useStructuredExtraction', () => {
     });
 
     it('should handle extraction with no document', async () => {
-        const mockStore = createMockStore({ chatMode: 'gemini-2.0-pro-exp-02-05' });
+        const mockStore = createMockStore({ chatMode: 'gemini-3-pro-preview' });
         (useChatStore as any).mockImplementation((selector: any) => selector(mockStore));
 
         const { result } = renderHook(() => useStructuredExtraction());
@@ -128,7 +128,7 @@ describe('useStructuredExtraction', () => {
     it('should handle extraction with non-PDF file', async () => {
         const mockFile = new File(['content'], 'test.txt', { type: 'text/plain' });
         const mockStore = createMockStore({
-            chatMode: 'gemini-2.0-pro-exp-02-05',
+            chatMode: 'gemini-3-pro-preview',
             documentAttachment: { file: mockFile, fileName: 'test.txt' },
         });
         (useChatStore as any).mockImplementation((selector: any) => selector(mockStore));
@@ -147,7 +147,7 @@ describe('useStructuredExtraction', () => {
             type: 'application/pdf',
         });
         const mockStore = createMockStore({
-            chatMode: 'gemini-2.0-pro-exp-02-05',
+            chatMode: 'gemini-3-pro-preview',
             documentAttachment: { file: mockFile, fileName: 'resume.pdf' },
         });
         (useChatStore as any).mockImplementation((selector: any) => selector(mockStore));
@@ -214,7 +214,7 @@ describe('useStructuredExtraction', () => {
             type: 'application/pdf',
         });
         const mockStore = createMockStore({
-            chatMode: 'gemini-2.0-pro-exp-02-05',
+            chatMode: 'gemini-3-pro-preview',
             documentAttachment: { file: mockFile, fileName: 'test.pdf' },
         });
         (useChatStore as any).mockImplementation((selector: any) => selector(mockStore));
@@ -238,7 +238,7 @@ describe('useStructuredExtraction', () => {
             type: 'application/pdf',
         });
         const mockStore = createMockStore({
-            chatMode: 'gemini-2.0-pro-exp-02-05',
+            chatMode: 'gemini-3-pro-preview',
             documentAttachment: { file: mockFile, fileName: 'test.pdf' },
         });
         (useChatStore as any).mockImplementation((selector: any) => selector(mockStore));

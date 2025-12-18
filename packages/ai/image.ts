@@ -147,7 +147,6 @@ export async function generateGeminiImage(
         ModelEnum.GEMINI_3_FLASH_IMAGE,
         undefined,
         byokKeys,
-        false,
         undefined,
         false,
         userTier === 'PLUS',

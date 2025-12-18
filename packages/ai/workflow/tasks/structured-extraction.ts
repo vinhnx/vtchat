@@ -144,7 +144,7 @@ export function getSchemaForDocument(text: string): {
     return { schema: GenericDocumentSchema, type: 'document' };
 }
 
-export async function extractStructuredData(documentText: string, model = 'gemini-2.0-flash') {
+export async function extractStructuredData(documentText: string, model = 'gemini-2.5-flash') {
     const { schema, type } = getSchemaForDocument(documentText);
 
     try {

@@ -158,7 +158,7 @@ describe('Gemini Quota Logic', () => {
 
         it('should maintain parameter integrity', () => {
             const complexParams = {
-                model: 'gemini-2.0-pro-exp-02-05',
+                model: 'gemini-3-pro-preview',
                 messages: [{ role: 'user', content: 'Hello' }],
                 temperature: 0.7,
                 maxTokens: 1000,

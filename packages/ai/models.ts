@@ -123,6 +123,27 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
+        id: ModelEnum.GEMINI_2_5_FLASH,
+        name: 'Gemini 2.5 Flash',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
+    },
+    {
+        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
+        name: 'Gemini 2.5 Flash Lite',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 65_536,
+    },
+    {
+        id: ModelEnum.GEMINI_2_5_PRO,
+        name: 'Gemini 2.5 Pro',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
+    },
+    {
         id: ModelEnum.GEMINI_3_FLASH,
         name: 'Gemini 3 Flash',
         provider: 'google',
@@ -259,6 +280,12 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.Pro:
             return ModelEnum.GEMINI_3_FLASH;
+        case ChatMode.GEMINI_2_5_FLASH_LITE:
+            return ModelEnum.GEMINI_2_5_FLASH_LITE;
+        case ChatMode.GEMINI_2_5_PRO:
+            return ModelEnum.GEMINI_2_5_PRO;
+        case ChatMode.GEMINI_2_5_FLASH:
+            return ModelEnum.GEMINI_2_5_FLASH;
         case ChatMode.GEMINI_3_FLASH_LITE:
             return ModelEnum.GEMINI_3_FLASH_LITE;
         case ChatMode.GEMINI_3_PRO:

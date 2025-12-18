@@ -16,9 +16,12 @@ export const ChatMode = {
     GPT_5: 'gpt-5-2025-08-07',
     GPT_4o: 'gpt-4o',
     GPT_4o_Mini: 'gpt-4o-mini',
-    GEMINI_3_PRO: 'gemini-2.0-pro-exp-02-05',
-    GEMINI_3_FLASH: 'gemini-2.0-flash',
-    GEMINI_3_FLASH_LITE: 'gemini-2.0-flash-lite-preview-02-05',
+    GEMINI_2_5_PRO: 'gemini-2.5-pro',
+    GEMINI_2_5_FLASH: 'gemini-2.5-flash',
+    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
+    GEMINI_3_PRO: 'gemini-3-pro-preview',
+    GEMINI_3_FLASH: 'gemini-3-flash-preview',
+    GEMINI_3_FLASH_LITE: 'gemini-3-flash-lite-preview',
 
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
@@ -171,6 +174,27 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
     [ChatMode.CLAUDE_4_OPUS]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GEMINI_2_5_PRO]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GEMINI_2_5_FLASH]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GEMINI_2_5_FLASH_LITE]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
@@ -467,14 +491,18 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI o3 mini';
         case ChatMode.O4_Mini:
             return 'OpenAI o4 mini';
+        case ChatMode.GEMINI_2_5_PRO:
+            return 'Google Gemini 2.5 Pro';
+        case ChatMode.GEMINI_2_5_FLASH:
+            return 'Google Gemini 2.5 Flash';
+        case ChatMode.GEMINI_2_5_FLASH_LITE:
+            return 'Google Gemini 2.5 Flash Lite';
         case ChatMode.GEMINI_3_PRO:
             return 'Google Gemini 3 Pro';
         case ChatMode.GEMINI_3_FLASH:
             return 'Google Gemini 3 Flash';
         case ChatMode.GEMINI_3_FLASH_LITE:
             return 'Google Gemini 3 Flash Lite';
-        case ChatMode.GEMINI_3_FLASH:
-            return 'Google Gemini 3 Flash';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:

@@ -190,7 +190,7 @@ export const userRateLimits = pgTable(
         userId: text('user_id')
             .notNull()
             .references(() => users.id, { onDelete: 'cascade' }),
-        modelId: text('model_id').notNull(), // e.g., 'gemini-2.0-flash-lite-preview-02-05'
+        modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite'
         dailyRequestCount: text('daily_request_count').notNull().default('0'),
         minuteRequestCount: text('minute_request_count').notNull().default('0'),
         lastDailyReset: timestamp('last_daily_reset').notNull().defaultNow(),
@@ -214,7 +214,7 @@ export const providerUsage = pgTable(
         userId: text('user_id')
             .notNull()
             .references(() => users.id, { onDelete: 'cascade' }),
-        modelId: text('model_id').notNull(), // e.g., 'gemini-2.0-flash-lite-preview-02-05' or 'deep-research'
+        modelId: text('model_id').notNull(), // e.g., 'gemini-2.5-flash-lite' or 'deep-research'
         requestTimestamp: timestamp('request_timestamp').notNull().defaultNow(),
         provider: text('provider').notNull().default('gemini'), // 'gemini', 'openai', etc.
         createdAt: timestamp('created_at').notNull().defaultNow(),

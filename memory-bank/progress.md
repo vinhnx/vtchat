@@ -10,9 +10,9 @@
 - Updated all Gemini models to version 3 (Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite)
 - Updated `ModelEnum` and `ChatMode` references from `GEMINI_2_5` to `GEMINI_3` across the entire codebase
 - Updated model IDs to latest versions:
-  - Gemini 3 Pro: `gemini-2.0-pro-exp-02-05`
-  - Gemini 3 Flash: `gemini-2.0-flash`
-  - Gemini 3 Flash Lite: `gemini-2.0-flash-lite-preview-02-05`
+  - Gemini 3 Pro: `gemini-3-pro-preview`
+  - Gemini 3 Flash: `gemini-2.5-flash`
+  - Gemini 3 Flash Lite: `gemini-2.5-flash-lite-preview-02-05`
 - Updated rate limits and pricing for Gemini 3 models
 - Updated documentation (GEMINI.md, help pages, pricing config)
 - Updated all tests to reflect the new model versions and logic
@@ -434,7 +434,7 @@ The application now uses official Shadcn UI components with:
 
 #### ✅ Gemini Model Defaults Updated
 
-- Aligned Gemini Flash model IDs with Google naming updates (`gemini-2.0-flash`, `gemini-2.0-flash-lite-preview-02-05`).
+- Aligned Gemini Flash model IDs with Google naming updates (`gemini-2.5-flash`, `gemini-2.5-flash-lite-preview-02-05`).
 - Set Gemini Flash as the default chat model selection and ensured dropdown ordering reflects the new default.
 - Adjusted caching, rate limit pricing, and provider fallbacks to respect the refreshed model identifiers.
 

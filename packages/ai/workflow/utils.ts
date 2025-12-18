@@ -1,4 +1,3 @@
-import { google } from '@ai-sdk/google';
 import type { TaskParams, TypedEventEmitter } from '@repo/orchestrator';
 import { UserTier, type UserTierType } from '@repo/shared/constants/user-tiers';
 import { log } from '@repo/shared/logger';
@@ -303,27 +302,6 @@ export const generateTextWithGeminiSearch = async ({
                     abortSignal: signal,
                     ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
                 };
-
-            // Add native Google Search tool to ensure grounding is triggered
-            // This is a fallback in case the model-level useSearchGrounding is not enough
-            const isGemini2 = model.includes('gemini-2');
-            const googleTools = (google as any).tools;
-
-            if (googleTools) {
-                streamTextConfig.tools = {
-                    googleSearch: isGemini2
-                        ? googleTools.googleSearch?.({})
-                        : googleTools.googleSearchRetrieval?.({}) || googleTools.googleSearch?.({}),
-                };
-            } else {
-                // Fallback to manual tool definition if google.tools is not available
-                streamTextConfig.tools = {
-                    googleSearch: {
-                        type: 'provider-defined',
-                        toolName: isGemini2 ? 'google_search' : 'google_search_retrieval',
-                    },
-                };
-            }
 
             log.info('StreamText config:', {
                 configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
@@ -774,7 +752,7 @@ export const generateText = async ({
                     }
                 }
 
-                const streamConfig = filteredMessages?.length
+                const streamConfig: any = filteredMessages?.length
                     ? {
                         model: selectedModel,
                         messages: [
