@@ -1,0 +1,421 @@
+[0;35mVT Chat Interactive Deployment Pipeline[0m
+===============================================
+[0;32m[SUCCESS] flyctl is installed and user is authenticated[0m
+
+[0;36m[STEP] Starting deployment pipeline...[0m
+[0;36m[STEP] Checking git repository status...[0m
+[0;32m[SUCCESS] Working directory is clean[0m
+[0;36m[STEP] Creating version tag...[0m
+[0;34m[INFO] Current version: v3.16.20[0m
+[0;34m[INFO] New version: v3.16.21[0m
+[0;36m[STEP] Generating changelog...[0m
+[0;34m[INFO] Using changelogithub to generate changelog...[0m
+[0;34m[INFO] No significant changes to include in changelog[0m
+[0;34m[INFO] Creating tag v3.16.21...[0m
+[0;32m[SUCCESS] Created tag: v3.16.21[0m
+[0;36m[STEP] Pushing to remote repository...[0m
+[0;34m[INFO] Pushing branch: main[0m
+Everything up-to-date
+[0;34m[INFO] Pushing tag: v3.16.21[0m
+To github.com:vinhnx/vtchat.git
+ * [new tag]           v3.16.21 -> v3.16.21
+[0;32m[SUCCESS] Pushed to remote repository[0m
+[0;36m[STEP] Building Next.js application...[0m
+[0;34m[INFO] Running build command...[0m
+$ turbo run build
+turbo 2.6.3
+
+• Packages in scope: @repo/actions, @repo/ai, @repo/common, @repo/orchestrator, @repo/shared, @repo/tailwind-config, @repo/typescript-config, @repo/ui, @vtchat/web
+• Running build in 9 packages
+• Remote caching disabled
+@vtchat/web:build: cache miss, executing 50a0c94bd0a934be
+@vtchat/web:build: $ next build
+@vtchat/web:build:    ▲ Next.js 15.5.0
+@vtchat/web:build:    - Environments: .env
+@vtchat/web:build: 
+@vtchat/web:build: [MDX] updated map file in 16.065292ms
+@vtchat/web:build:    Creating an optimized production build ...
+@vtchat/web:build:  ✓ Compiled successfully in 29.5s
+@vtchat/web:build:    Skipping validation of types
+@vtchat/web:build:    Skipping linting
+@vtchat/web:build:    Collecting page data ...
+@vtchat/web:build:  ⚠ Using edge runtime on a page currently disables static generation for that page
+@vtchat/web:build:    Generating static pages (0/36) ...
+@vtchat/web:build:    Generating static pages (9/36) 
+@vtchat/web:build:    Generating static pages (18/36) 
+@vtchat/web:build:    Generating static pages (27/36) 
+@vtchat/web:build:  ✓ Generating static pages (36/36)
+@vtchat/web:build:    Finalizing page optimization ...
+@vtchat/web:build:    Collecting build traces ...
+@vtchat/web:build: 
+@vtchat/web:build: Route (app)                                        Size  First Load JS
+@vtchat/web:build: ┌ ƒ /                                            8.2 kB        4.12 MB
+@vtchat/web:build: ├ ƒ /_not-found                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /about                                      3.33 kB        4.28 MB
+@vtchat/web:build: ├ ƒ /admin                                      3.45 kB        4.11 MB
+@vtchat/web:build: ├ ƒ /admin/logs                                 4.99 kB        4.28 MB
+@vtchat/web:build: ├ ƒ /admin/security                             4.55 kB        4.12 MB
+@vtchat/web:build: ├ ƒ /admin/users                                 5.4 kB        4.28 MB
+@vtchat/web:build: ├ ƒ /ai-glossary                                2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /ai-resources                               2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /api/[...catchall]                            732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/analytics                          732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/check-status                       732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/database-maintenance-dashboard     732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/database-metrics                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/infrastructure                     732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/logs                               732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/quota-config                       732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/security                           732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/subscription-health                732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/system-metrics                     732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/admin/users                              732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/auth/[...better-auth]                    732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/auth/get-session                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/auth/list-accounts                       732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/auth/session-proxy                       732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/auth/update-user                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/budget/status                            732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/checkout                                 732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/completion                               732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/completion/abort                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/cron/database-maintenance                732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/cron/weekly-maintenance                  732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/debug                                    732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/debug/web-search                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/feedback                                 732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/health                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/image                                    732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/lmstudio-proxy                           732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/metrics/database-maintenance             732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/monitoring/subscription-metrics          732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/og                                       732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/payment-success                          732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/portal                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/portal/return                            732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/rate-limit/status                        732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/search                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/speech                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/subscription                             732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/subscription/invalidate-cache            732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/subscription/status                      732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/tools/structured-extract                 732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/upload                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/user/profile                             732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/vtplus/usage                             732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /api/webhook/creem                            732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /apple-icon                                   732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /chat/[threadId]                            3.73 kB        4.28 MB
+@vtchat/web:build: ├ ● /docs/[[...slug]]                             691 B        4.06 MB
+@vtchat/web:build: ├ ƒ /faq                                        2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /hello                                        732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /help                                       2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /help/faq                                   2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /icon                                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /login                                      4.77 kB        4.28 MB
+@vtchat/web:build: ├ ƒ /login/sso-callback                           896 B        4.06 MB
+@vtchat/web:build: ├ ○ /manifest.webmanifest                         732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /pricing                                     7.3 kB        4.28 MB
+@vtchat/web:build: ├ ƒ /privacy                                    2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /profile                                    2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /recent                                     2.95 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /settings                                   3.97 kB        4.28 MB
+@vtchat/web:build: ├ ○ /sitemap.xml                                  732 B        4.06 MB
+@vtchat/web:build: ├ ƒ /success                                    2.25 kB        4.27 MB
+@vtchat/web:build: ├ ƒ /tailwind-test                                732 B        4.06 MB
+@vtchat/web:build: └ ƒ /terms                                      2.25 kB        4.27 MB
+@vtchat/web:build: + First Load JS shared by all                   4.06 MB
+@vtchat/web:build:   ├ chunks/vendor-00432958-d38d823a653dd6b7.js  21.1 kB
+@vtchat/web:build:   ├ chunks/vendor-00833fa6-cbf96a90d44cb4ed.js  21.8 kB
+@vtchat/web:build:   ├ chunks/vendor-02515780-ee9d7d005615aca5.js  11.9 kB
+@vtchat/web:build:   ├ chunks/vendor-0297662d-188eed2f85a26de7.js    15 kB
+@vtchat/web:build:   ├ chunks/vendor-04fef8b0-1a11c8496384c740.js  15.5 kB
+@vtchat/web:build:   ├ chunks/vendor-09d57346-1cb9dddb3287e9b5.js   117 kB
+@vtchat/web:build:   ├ chunks/vendor-0a63f553-5cf6fb7baa62ee0e.js  17.7 kB
+@vtchat/web:build:   ├ chunks/vendor-0a96a4a1-779a7e082d2541ab.js  15.6 kB
+@vtchat/web:build:   ├ chunks/vendor-0ed4ff38-9c559dd9370b32ce.js  23.3 kB
+@vtchat/web:build:   ├ chunks/vendor-0f37ffd5-1a6ecffb13a58ecd.js  17.3 kB
+@vtchat/web:build:   ├ chunks/vendor-0fbe0e3f-2206c316432658d6.js  11.9 kB
+@vtchat/web:build:   ├ chunks/vendor-1611b9cd-c7c5baa547eeab4e.js  13.9 kB
+@vtchat/web:build:   ├ chunks/vendor-1657c523-3342ef13d7af4adc.js  13.2 kB
+@vtchat/web:build:   ├ chunks/vendor-1b65b307-0937506fe5d3725c.js  14.4 kB
+@vtchat/web:build:   ├ chunks/vendor-1d54e4e8-744db65533f553ce.js  10.5 kB
+@vtchat/web:build:   ├ chunks/vendor-20217e41-4b9ad4fd2b107837.js  25.1 kB
+@vtchat/web:build:   ├ chunks/vendor-207d77d7-ac729b2368ead25c.js  11.7 kB
+@vtchat/web:build:   ├ chunks/vendor-21828f0d-9985b55f55ab7c0c.js  11.6 kB
+@vtchat/web:build:   ├ chunks/vendor-246cd540-97cba36107bb50d5.js  13.1 kB
+@vtchat/web:build:   ├ chunks/vendor-248700bf-0eb4a721631ff842.js  18.6 kB
+@vtchat/web:build:   ├ chunks/vendor-2540123a-43ccafd902016273.js  12.7 kB
+@vtchat/web:build:   ├ chunks/vendor-26bfd2ec-6e6c568d7b413e41.js  29.7 kB
+@vtchat/web:build:   ├ chunks/vendor-26df16ec-5bb59ce89b82dc84.js  21.8 kB
+@vtchat/web:build:   ├ chunks/vendor-270f7480-30020b2fc04038fd.js  16.5 kB
+@vtchat/web:build:   ├ chunks/vendor-2805cf11-64f25bf4851dbf85.js  13.3 kB
+@vtchat/web:build:   ├ chunks/vendor-28d55199-c53b10f14d60e365.js  28.3 kB
+@vtchat/web:build:   ├ chunks/vendor-29ed18ba-cc02386ba39dc96f.js  19.6 kB
+@vtchat/web:build:   ├ chunks/vendor-2b927e7d-bb743c657c57f11f.js  14.1 kB
+@vtchat/web:build:   ├ chunks/vendor-2bc73867-8c382fad744b2ed3.js  15.9 kB
+@vtchat/web:build:   ├ chunks/vendor-2bdd634f-f9f821a9f5f7530b.js    23 kB
+@vtchat/web:build:   ├ chunks/vendor-2ce5ad9b-5cbe402100bd4ac2.js  44.3 kB
+@vtchat/web:build:   ├ chunks/vendor-31a1292d-2204763590452dad.js  42.4 kB
+@vtchat/web:build:   ├ chunks/vendor-31c4f610-8070852e2865835b.js  10.6 kB
+@vtchat/web:build:   ├ chunks/vendor-34b17f13-7685cd423246c9bf.js    12 kB
+@vtchat/web:build:   ├ chunks/vendor-3510cdec-8793ba01de2bfde8.js  20.9 kB
+@vtchat/web:build:   ├ chunks/vendor-358a09b2-d8899b86666a969b.js  23.9 kB
+@vtchat/web:build:   ├ chunks/vendor-36598b9c-4be5d526a1bf4bd1.js    53 kB
+@vtchat/web:build:   ├ chunks/vendor-366f7e96-c0fcf393b80fefc8.js  37.3 kB
+@vtchat/web:build:   ├ chunks/vendor-37a93c5f-9077c05b65527766.js  16.4 kB
+@vtchat/web:build:   ├ chunks/vendor-395de95c-582a060323a5b5f2.js  21.9 kB
+@vtchat/web:build:   ├ chunks/vendor-3aee167a-dd8a82f37db7e204.js  23.9 kB
+@vtchat/web:build:   ├ chunks/vendor-3c9b6905-c60792c3ee741872.js  22.2 kB
+@vtchat/web:build:   ├ chunks/vendor-3d2b59dd-65c322a90ad9bf40.js  11.9 kB
+@vtchat/web:build:   ├ chunks/vendor-42aff285-775e0a19f4f36780.js  77.1 kB
+@vtchat/web:build:   ├ chunks/vendor-42e678e7-860c388de7064f16.js    17 kB
+@vtchat/web:build:   ├ chunks/vendor-43d1a55a-3e142eb1a24e2290.js  27.5 kB
+@vtchat/web:build:   ├ chunks/vendor-448539e4-14c9ad0930743f37.js  20.8 kB
+@vtchat/web:build:   ├ chunks/vendor-48b8d778-e34ae3974d38be04.js  12.6 kB
+@vtchat/web:build:   ├ chunks/vendor-4c6b37ae-9e1e20a5c6a70c55.js  13.3 kB
+@vtchat/web:build:   ├ chunks/vendor-4c9802b3-976fbd5450eb26bb.js  13.5 kB
+@vtchat/web:build:   ├ chunks/vendor-4f68fbd0-0107383255288f55.js  15.2 kB
+@vtchat/web:build:   ├ chunks/vendor-50e661e9-72b06caf96465452.js  34.4 kB
+@vtchat/web:build:   ├ chunks/vendor-5347dc72-d4a88e19bbaab955.js  19.3 kB
+@vtchat/web:build:   ├ chunks/vendor-537af38f-54bef42fb448097c.js  18.6 kB
+@vtchat/web:build:   ├ chunks/vendor-54016f2c-aea272cf72e76dda.js  15.2 kB
+@vtchat/web:build:   ├ chunks/vendor-5497cdea-4ae84b5bdf72e4f6.js  14.8 kB
+@vtchat/web:build:   ├ chunks/vendor-5887519d-4b3c316c5b65c06e.js  20.6 kB
+@vtchat/web:build:   ├ chunks/vendor-58f68c9e-7ae131bf42698f36.js  13.1 kB
+@vtchat/web:build:   ├ chunks/vendor-5934008f-8edc404b10989f5d.js  76.4 kB
+@vtchat/web:build:   ├ chunks/vendor-5947227e-daf8aa928147ea7c.js    30 kB
+@vtchat/web:build:   ├ chunks/vendor-5d056252-aa5e44d67f48ca6e.js  11.7 kB
+@vtchat/web:build:   ├ chunks/vendor-6185be05-13d1ab3139f2b524.js  15.1 kB
+@vtchat/web:build:   ├ chunks/vendor-61e2ea66-6fef1d3492b38814.js    17 kB
+@vtchat/web:build:   ├ chunks/vendor-61e9e281-ba4915dd7a0c0e33.js  30.5 kB
+@vtchat/web:build:   ├ chunks/vendor-64092ca4-3eca38cd030854f0.js  16.5 kB
+@vtchat/web:build:   ├ chunks/vendor-66b14e9f-ad6b406d722c9b28.js  11.7 kB
+@vtchat/web:build:   ├ chunks/vendor-6b948b9f-e7dedd18769c1367.js  22.9 kB
+@vtchat/web:build:   ├ chunks/vendor-6c56be75-ef5da0471e8e71a0.js  15.8 kB
+@vtchat/web:build:   ├ chunks/vendor-6e3d4ace-de042ecf52ed800e.js  27.7 kB
+@vtchat/web:build:   ├ chunks/vendor-7237a82e-f288587629796592.js  13.9 kB
+@vtchat/web:build:   ├ chunks/vendor-76de2287-49f3ba762be8b975.js  16.8 kB
+@vtchat/web:build:   ├ chunks/vendor-76e5f22e-42facc862c709bb8.js  19.4 kB
+@vtchat/web:build:   ├ chunks/vendor-77a35f70-92ac85063ee7ab78.js    19 kB
+@vtchat/web:build:   ├ chunks/vendor-7830306c-378bf2f6e0322522.js  23.9 kB
+@vtchat/web:build:   ├ chunks/vendor-78a34c87-7f5085a09360927f.js  16.1 kB
+@vtchat/web:build:   ├ chunks/vendor-7a8d64d6-d0dd0b94c7b418ef.js  25.5 kB
+@vtchat/web:build:   ├ chunks/vendor-7bcc7859-ee8f2b6388a41c14.js   134 kB
+@vtchat/web:build:   ├ chunks/vendor-7c707f9f-565fdfd7996d77df.js  26.6 kB
+@vtchat/web:build:   ├ chunks/vendor-7dd150df-9a8abebeb5986744.js    11 kB
+@vtchat/web:build:   ├ chunks/vendor-7fd28868-15853565a84c3b8a.js  19.1 kB
+@vtchat/web:build:   ├ chunks/vendor-8197ed08-c671883a49345898.js  29.7 kB
+@vtchat/web:build:   ├ chunks/vendor-88153be5-82a007a5c6628489.js  37.9 kB
+@vtchat/web:build:   ├ chunks/vendor-882c441e-09ad06448edc9af0.js  20.3 kB
+@vtchat/web:build:   ├ chunks/vendor-892ee9c2-e9b713c7773f7fd7.js  17.6 kB
+@vtchat/web:build:   ├ chunks/vendor-8a2352d8-aec489abf6215b37.js  16.5 kB
+@vtchat/web:build:   ├ chunks/vendor-8cbd2506-ac68c298c8618534.js  23.1 kB
+@vtchat/web:build:   ├ chunks/vendor-8cc3f46a-375d5bea171e9455.js  19.9 kB
+@vtchat/web:build:   ├ chunks/vendor-8e7e67e9-baa5e9f9b39ca400.js  16.9 kB
+@vtchat/web:build:   ├ chunks/vendor-910efba9-9df97c5e8364d416.js  15.8 kB
+@vtchat/web:build:   ├ chunks/vendor-913e2530-20f3b83c83d83138.js  34.2 kB
+@vtchat/web:build:   ├ chunks/vendor-9390b4de-4fc7f0a2a8f559b3.js  22.6 kB
+@vtchat/web:build:   ├ chunks/vendor-95212fba-426cbfc1bdac3f80.js  23.2 kB
+@vtchat/web:build:   ├ chunks/vendor-95c1efd5-8fa34efcfca08996.js  17.9 kB
+@vtchat/web:build:   ├ chunks/vendor-98a6762f-c5bab90da92338e0.js    15 kB
+@vtchat/web:build:   ├ chunks/vendor-98db209a-01284dc4d0b14bb3.js    12 kB
+@vtchat/web:build:   ├ chunks/vendor-a196ea30-8dc6ce11693529af.js  21.9 kB
+@vtchat/web:build:   ├ chunks/vendor-a456c2a5-d3fb73989005b50f.js  12.7 kB
+@vtchat/web:build:   ├ chunks/vendor-a4c3dc31-6821dc505a328914.js  19.1 kB
+@vtchat/web:build:   ├ chunks/vendor-a5ee19d6-c0665cd21ae8c694.js  17.7 kB
+@vtchat/web:build:   ├ chunks/vendor-a6ed1a7d-851ec7fa809e975d.js  13.1 kB
+@vtchat/web:build:   ├ chunks/vendor-a7ee8475-e95b1e00177bb7da.js  15.2 kB
+@vtchat/web:build:   ├ chunks/vendor-ab696470-d4d733b4486666f0.js  16.8 kB
+@vtchat/web:build:   ├ chunks/vendor-ad61b67c-b910d3d50816dfd9.js  12.8 kB
+@vtchat/web:build:   ├ chunks/vendor-ad6a2f20-2b00204c384c8737.js  18.5 kB
+@vtchat/web:build:   ├ chunks/vendor-ae48fa3a-9736d3dc83a892d1.js  21.1 kB
+@vtchat/web:build:   ├ chunks/vendor-b2caf839-91807acd496b29b1.js  18.8 kB
+@vtchat/web:build:   ├ chunks/vendor-b49fab05-0c245a0edd14d4e6.js  16.4 kB
+@vtchat/web:build:   ├ chunks/vendor-b896c509-0f88024e09f45304.js  14.6 kB
+@vtchat/web:build:   ├ chunks/vendor-b9e579be-8747669aa1dfae8c.js  16.8 kB
+@vtchat/web:build:   ├ chunks/vendor-b9f70e77-5d651e2e3a9127e6.js  15.7 kB
+@vtchat/web:build:   ├ chunks/vendor-bc283f29-d79fc3eea85a2420.js   196 kB
+@vtchat/web:build:   ├ chunks/vendor-bd076b32-feecc5c3be2d0415.js  11.4 kB
+@vtchat/web:build:   ├ chunks/vendor-bf2edf9f-8fd0f84317d21fe4.js  13.7 kB
+@vtchat/web:build:   ├ chunks/vendor-c0d6a49e-5156f5defe231d12.js  12.4 kB
+@vtchat/web:build:   ├ chunks/vendor-c0d76f48-22b50bbc92ea6d50.js  12.6 kB
+@vtchat/web:build:   ├ chunks/vendor-c3d5c4e7-3c1aad260213190d.js  22.1 kB
+@vtchat/web:build:   ├ chunks/vendor-c43d0e78-9b7a280569746f91.js  22.4 kB
+@vtchat/web:build:   ├ chunks/vendor-c4d2e9b7-a28fbbb409069c61.js  13.8 kB
+@vtchat/web:build:   ├ chunks/vendor-c824d9bb-43fd59cfd0f4438f.js    34 kB
+@vtchat/web:build:   ├ chunks/vendor-c9234fd6-d3f2a9cd39f81e37.js  76.3 kB
+@vtchat/web:build:   ├ chunks/vendor-c99da2ab-b884c6a932766d40.js  23.2 kB
+@vtchat/web:build:   ├ chunks/vendor-ca32d0e6-20b6ce20c2fd1cee.js  12.6 kB
+@vtchat/web:build:   ├ chunks/vendor-cc83b2cd-fc048d879241f651.js  20.5 kB
+@vtchat/web:build:   ├ chunks/vendor-d031d8a3-e28a33e6a067b6d0.js  18.5 kB
+@vtchat/web:build:   ├ chunks/vendor-d2ef064d-44daf96984fedf58.js  23.4 kB
+@vtchat/web:build:   ├ chunks/vendor-d341d730-ab411cbb62c19c0d.js    28 kB
+@vtchat/web:build:   ├ chunks/vendor-d67ae328-102b42e2956f3469.js  11.9 kB
+@vtchat/web:build:   ├ chunks/vendor-daf3779d-c7b5ab3ac0b4834d.js  15.5 kB
+@vtchat/web:build:   ├ chunks/vendor-dd1a9491-21a2c04bc403f934.js   230 kB
+@vtchat/web:build:   ├ chunks/vendor-dd5570a9-3fa54ebc330d1f95.js  14.4 kB
+@vtchat/web:build:   ├ chunks/vendor-de8b2cc4-dc235985059b49e1.js  13.8 kB
+@vtchat/web:build:   ├ chunks/vendor-dfc0d3ba-8841954b9323b578.js  20.9 kB
+@vtchat/web:build:   ├ chunks/vendor-e13b093c-cc139f39d84d9a84.js  10.5 kB
+@vtchat/web:build:   ├ chunks/vendor-e226ac38-804c43a279eadb5b.js  11.7 kB
+@vtchat/web:build:   ├ chunks/vendor-e396c149-c30149a6bc282c3d.js  23.3 kB
+@vtchat/web:build:   ├ chunks/vendor-e6be7117-2f506d6d96c76088.js  14.5 kB
+@vtchat/web:build:   ├ chunks/vendor-e9e18ac4-a6688a26af2ed163.js  14.2 kB
+@vtchat/web:build:   ├ chunks/vendor-ea901a6a-879dfc685a9377eb.js  18.9 kB
+@vtchat/web:build:   ├ chunks/vendor-eb2fbf4c-153f60aa46816525.js  10.4 kB
+@vtchat/web:build:   ├ chunks/vendor-ed167be8-2966358787edfdff.js  13.3 kB
+@vtchat/web:build:   ├ chunks/vendor-f076aa2c-8b15bbb255b6cd78.js  26.3 kB
+@vtchat/web:build:   ├ chunks/vendor-f09cfb03-1cff3362f9e773bf.js  10.4 kB
+@vtchat/web:build:   ├ chunks/vendor-f0cd050f-317b3be84aefc245.js  10.8 kB
+@vtchat/web:build:   ├ chunks/vendor-f5a0e5e4-66910e6398703277.js  14.7 kB
+@vtchat/web:build:   ├ chunks/vendor-f66a3b7f-dc6c0dfd533fb0ab.js  17.7 kB
+@vtchat/web:build:   ├ chunks/vendor-f9027804-7a4f70682fb77bed.js  38.8 kB
+@vtchat/web:build:   ├ chunks/vendor-fa70753b-64d1fe630ed54bdc.js  12.9 kB
+@vtchat/web:build:   ├ chunks/vendor-fb1ef889-ed6b4ad61f657919.js  16.1 kB
+@vtchat/web:build:   ├ chunks/vendor-fbd10709-ac8c9752b053a353.js    14 kB
+@vtchat/web:build:   ├ chunks/vendor-ff30e0d3-a93aaf2ebe3019a9.js  54.2 kB
+@vtchat/web:build:   └ other shared chunks (total)                  416 kB
+@vtchat/web:build: 
+@vtchat/web:build: 
+@vtchat/web:build: ○  (Static)   prerendered as static content
+@vtchat/web:build: ●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+@vtchat/web:build: ƒ  (Dynamic)  server-rendered on demand
+@vtchat/web:build: 
+@vtchat/web:build: $ bun run scripts/generate-css-dictionary.ts
+@vtchat/web:build: CSS dictionary: generated from 3 files -> /Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/apps/web/.next/static/css/full.css
+
+ Tasks:    1 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    44.79s 
+
+[0;32m[SUCCESS] Application built successfully[0m
+[0;32m[SUCCESS] Build verification completed[0m
+[0;36m[STEP] Deploying to Fly.io...[0m
+[0;34m[INFO] App: vtchat[0m
+[0;34m[INFO] Version: v3.16.21[0m
+[0;34m[INFO] Config: fly.toml[0m
+[0;32m[SUCCESS] Starting deployment...[0m
+[0;34m[INFO] Running: flyctl deploy --app vtchat[0m
+[0;34m[INFO] You can also monitor deployment progress at: https://fly.io/apps/vtchat[0m
+[0;34m[INFO] View deployment logs at: https://fly.io/apps/vtchat/monitoring[0m
+==> Verifying app config
+Validating /Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/fly.toml
+[32m✓[0m Configuration is valid
+--> Verified app config
+==> Building image
+Waiting for depot builder...
+
+==> Building image with Depot
+--> build:  (​)
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 67B 0.1s
+#1 transferring dockerfile: 1.03kB 0.2s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 1.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 914B 0.2s
+#3 transferring context: 914B 0.2s done
+#3 DONE 0.2s
+
+#4 [1/6] FROM docker.io/library/node:20-alpine@sha256:77312b5413fe7ae6af2a44aba4ab67711d64d3dbc0abba98aa7cc64917cf8b35
+#4 resolve docker.io/library/node:20-alpine@sha256:77312b5413fe7ae6af2a44aba4ab67711d64d3dbc0abba98aa7cc64917cf8b35 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 ...
+
+#4 [1/6] FROM docker.io/library/node:20-alpine@sha256:77312b5413fe7ae6af2a44aba4ab67711d64d3dbc0abba98aa7cc64917cf8b35
+#4 sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3 1.26MB / 1.26MB 0.1s done
+#4 sha256:fd1849a5c548bc65ee47a64498951bda5d40e87d08efe9dca69b5c8cdedc7a52 443B / 443B 0.1s done
+#4 sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 42.78MB / 42.78MB 0.5s done
+#4 sha256:1074353eec0db2c1d81d5af2671e56e00cf5738486f5762609ea33d606f88612 3.86MB / 3.86MB 0.2s done
+#4 extracting sha256:1074353eec0db2c1d81d5af2671e56e00cf5738486f5762609ea33d606f88612 0.1s done
+#4 extracting sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 1.2s done
+#4 extracting sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3 0.0s done
+#4 extracting sha256:fd1849a5c548bc65ee47a64498951bda5d40e87d08efe9dca69b5c8cdedc7a52 done
+#4 DONE 1.8s
+
+#5 [internal] load build context
+#5 ...
+
+#6 [2/6] RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+#6 DONE 0.8s
+
+#5 [internal] load build context
+#5 transferring context: 27.74MB 5.1s
+#5 transferring context: 71.46MB 10.2s
+#5 transferring context: 107.59MB 15.2s
+#5 transferring context: 138.33MB 19.4s done
+#5 DONE 19.5s
+
+#7 [3/6] COPY --chown=nextjs:nodejs apps/web/.next/standalone /app
+#7 DONE 2.3s
+
+#8 [4/6] COPY --chown=nextjs:nodejs apps/web/.next/static /app/apps/web/.next/static
+#8 DONE 0.3s
+
+#9 [5/6] COPY --chown=nextjs:nodejs apps/web/public /app/apps/web/public
+#9 DONE 0.0s
+
+#10 [6/6] WORKDIR /app/apps/web
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 4.6s done
+#11 exporting manifest sha256:9e354d577ecb1bdeab31eb127d54c85b1415961c78c54b71924bd1a0f836c40c done
+#11 exporting config sha256:4e0555ca162bb164b9398b258c3173e684e0f77dcaa8d502fa0b41ceb3ee53d1 done
+#11 pushing layers for registry.fly.io/vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH@sha256:9e354d577ecb1bdeab31eb127d54c85b1415961c78c54b71924bd1a0f836c40c
+#11 pushing layer sha256:4e0555ca162bb164b9398b258c3173e684e0f77dcaa8d502fa0b41ceb3ee53d1
+#11 pushing layer sha256:ba371c619f30b651ba6d8e321f444fe2a1d27f6d7fda8d10515875a6d3aa5507
+#11 pushing layer sha256:fb846e2b4df288028e32c046e38142fdf9220f91ab07766db3fe91c99b8203c3
+#11 pushing layer sha256:83047f0d0342d45186e08c4a3f561bb80ae9b5f4e24e20bdbcc0f13e1d9eac79
+#11 pushing layer sha256:2c1ce468d9f3d941396801f6e3afc8921466650dd05430fe644cd3537713d27f
+#11 pushing layer sha256:c0f223b84e7a70b31225397df9fcb4548df1772e98ed50d6145914098270a869
+#11 pushing layer sha256:2e213237d4e35b83495b6d2b431926a17560c6091e4cb63688e2d9b385c9ab93
+#11 pushing layer sha256:e4b8d148ffa003a6e1d0cfdcd8e0f8c2c7ec2335ebafad844fa1492868d3f1a7
+#11 pushing layer sha256:f5947673b788a5af5e543449f03960d521f55f82d366381ed2d9dd4fa9b087a9
+#11 pushing layer sha256:3e3dc6f75a4ce1c5ecdf829cea82c17c62d86859c1b38e250218148ef175eaa6
+#11 pushing layer sha256:2c1ce468d9f3d941396801f6e3afc8921466650dd05430fe644cd3537713d27f 0.4s done
+#11 pushing layer sha256:fb846e2b4df288028e32c046e38142fdf9220f91ab07766db3fe91c99b8203c3 0.5s done
+#11 pushing layer sha256:83047f0d0342d45186e08c4a3f561bb80ae9b5f4e24e20bdbcc0f13e1d9eac79 0.4s done
+#11 pushing layer sha256:f5947673b788a5af5e543449f03960d521f55f82d366381ed2d9dd4fa9b087a9 0.6s done
+#11 pushing layer sha256:2e213237d4e35b83495b6d2b431926a17560c6091e4cb63688e2d9b385c9ab93 1.1s done
+#11 pushing layer sha256:4e0555ca162bb164b9398b258c3173e684e0f77dcaa8d502fa0b41ceb3ee53d1 1.3s done
+#11 pushing layer sha256:3e3dc6f75a4ce1c5ecdf829cea82c17c62d86859c1b38e250218148ef175eaa6 1.2s done
+#11 pushing layer sha256:ba371c619f30b651ba6d8e321f444fe2a1d27f6d7fda8d10515875a6d3aa5507 1.5s done
+#11 pushing layer sha256:e4b8d148ffa003a6e1d0cfdcd8e0f8c2c7ec2335ebafad844fa1492868d3f1a7 1.3s done
+#11 pushing layers for registry.fly.io/vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH@sha256:9e354d577ecb1bdeab31eb127d54c85b1415961c78c54b71924bd1a0f836c40c 1.7s done
+#11 pushing layer sha256:c0f223b84e7a70b31225397df9fcb4548df1772e98ed50d6145914098270a869 1.7s done
+#11 pushing manifest for registry.fly.io/vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH@sha256:9e354d577ecb1bdeab31eb127d54c85b1415961c78c54b71924bd1a0f836c40c
+#11 pushing manifest for registry.fly.io/vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH@sha256:9e354d577ecb1bdeab31eb127d54c85b1415961c78c54b71924bd1a0f836c40c 0.1s done
+#11 DONE 6.4s
+--> Build Summary:  (​)
+[38;5;252m--> Building image done[0m
+image: registry.fly.io/vtchat:deployment-01KCQN72S7E20HEPJD7Q8T7ZSH
+image size: 68 MB
+
+Watch your deployment at https://fly.io/apps/vtchat/monitoring
+
+Updating existing machines in 'vtchat' with rolling strategy
+> [1/2] Acquiring lease for 3d8d1736a73789
+> [1/2] Acquired lease for 3d8d1736a73789
+> [2/2] Acquiring lease for 7815693c23e048
+> [2/2] Acquired lease for 7815693c23e048
+> [2/2] Updating machine config for 7815693c23e048
+> [1/2] Updating machine config for 3d8d1736a73789
+> [1/2] Updating 3d8d1736a73789 [app]
+> [2/2] Updating 7815693c23e048 [app]
+> [2/2] Updated machine config for 7815693c23e048
+✔ [2/2] Machine 7815693c23e048 is now in a good state
+> [1/2] Updated machine config for 3d8d1736a73789
+✔ [1/2] Machine 3d8d1736a73789 is now in a good state
+> [2/2] Clearing lease for 7815693c23e048
+> [1/2] Clearing lease for 3d8d1736a73789
+✔ [1/2] Cleared lease for 3d8d1736a73789
+✔ [2/2] Cleared lease for 7815693c23e048
+Checking DNS configuration for vtchat.fly.dev
