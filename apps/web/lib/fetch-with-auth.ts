@@ -1,3 +1,4 @@
+import { log } from '@repo/shared/logger';
 import { cookies, headers } from 'next/headers';
 
 const isLocalhostUrl = (url?: string) => {
@@ -41,7 +42,8 @@ export async function fetchWithAuth(path: string) {
 
     try {
         return await response.json();
-    } catch {
+    } catch (error) {
+        log.debug({ error, path, status: response.status }, 'Failed to parse JSON response in fetchWithAuth');
         return null;
     }
 }
