@@ -1,3 +1,4 @@
+import { log } from '../src/lib/logger';
 import { EnvironmentType } from '../types/environment';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
@@ -62,51 +63,59 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 export const isProduction = process.env.NODE_ENV === 'production';
 
 /**
- * Development-only console logging utility
+ * Development-only logging utility using pino
  */
 export const devLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info({ data: args }, 'devLog');
         }
     },
     warn: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.warn({ data: args }, 'devLog warning');
         }
     },
     error: (...args: any[]) => {
         // Always log errors, even in production
-        console.error(...args);
+        log.error({ data: args }, 'devLog error');
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info({ data: args }, 'devLog info');
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug({ data: args }, 'devLog debug');
         }
     },
 };
 
 /**
- * Production-safe console logging that only shows errors and warnings
+ * Production-safe logging that only shows errors and warnings using pino
  */
 export const prodSafeLog = {
     log: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info({ data: args }, 'prodSafeLog');
         }
     },
     warn: (...args: any[]) => {
+        log.warn({ data: args }, 'prodSafeLog warning');
     },
     error: (...args: any[]) => {
         // Always log errors even in production
-        console.error(...args);
+        log.error({ data: args }, 'prodSafeLog error');
     },
     info: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.info({ data: args }, 'prodSafeLog info');
         }
     },
     debug: (...args: any[]) => {
         if (!IS_PRODUCTION) {
+            log.debug({ data: args }, 'prodSafeLog debug');
         }
     },
 };

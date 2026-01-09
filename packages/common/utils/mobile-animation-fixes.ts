@@ -279,8 +279,10 @@ export const preventLayoutShift = (element: HTMLElement | null) => {
 };
 
 // Debug utility to log animation performance
+// Uses global console.debug intentionally for dev-only diagnostics (pino not available in pure client utils)
 export const debugMobileAnimation = (componentName: string, animationType: string) => {
     if (process.env.NODE_ENV === 'development' && isMobileDevice()) {
+        // eslint-disable-next-line no-console
         console.debug(`[MobileAnimation] ${componentName} - ${animationType}`, {
             reducedMotion: prefersReducedMotion(),
             userAgent: navigator.userAgent,

@@ -1,4 +1,5 @@
 import { InlineLoader } from '@repo/common/components';
+import { log } from '@repo/shared/logger';
 import dynamic from 'next/dynamic';
 import { lazy, Suspense } from 'react';
 
@@ -35,11 +36,14 @@ export const LazyChatInput = lazy(() =>
         .then((mod) => ({
             default: mod.ChatInput,
         }))
-        .catch(() => ({
-            default: () => (
-                <div className='text-destructive'>Failed to load ChatInput component</div>
-            ),
-        }))
+        .catch((error) => {
+            log.error({ error, component: 'ChatInput' }, 'Failed to load ChatInput component');
+            return {
+                default: () => (
+                    <div className='text-destructive'>Failed to load ChatInput component</div>
+                ),
+            };
+        })
 );
 
 export const LazyFooter = lazy(() =>
@@ -47,9 +51,12 @@ export const LazyFooter = lazy(() =>
         .then((mod) => ({
             default: mod.Footer,
         }))
-        .catch(() => ({
-            default: () => <div className='text-destructive'>Failed to load Footer component</div>,
-        }))
+        .catch((error) => {
+            log.error({ error, component: 'Footer' }, 'Failed to load Footer component');
+            return {
+                default: () => <div className='text-destructive'>Failed to load Footer component</div>,
+            };
+        })
 );
 
 // Wrapper components with suspense boundaries
