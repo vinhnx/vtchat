@@ -23,4 +23,4 @@ WORKDIR /app/apps/web
 EXPOSE 3000
 
 # Default command for development
-CMD ["bun", "dev", "--host", "0.0.0.0"]
+CMD ["bun", "dev", "--hostname", "0.0.0.0"]
