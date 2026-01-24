@@ -28,7 +28,6 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'Gemini 3 Pro': ChatMode.GEMINI_3_PRO,
         'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
         'Gemini 3 Flash Lite': ChatMode.GEMINI_3_FLASH_LITE,
-        'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
@@ -98,7 +97,6 @@ export const hasReasoningCapability = (chatMode: ChatMode): boolean => {
         ChatMode.GEMINI_3_PRO,
         ChatMode.GEMINI_3_FLASH,
         ChatMode.GEMINI_3_FLASH_LITE,
-        ChatMode.GEMINI_3_FLASH,
 
         // xAI reasoning models
         ChatMode.GROK_4,
@@ -125,65 +123,105 @@ export const getApiKeyForProvider = (provider: string): keyof ApiKeys => {
 export const getProviderIcon = (provider: string, size = 16) => {
     const className = 'flex-shrink-0';
 
+    // Use a static cache-busting parameter to prevent aggressive browser caching
+    // but allow reasonable caching during a session
+    const cacheBuster = '?v=1'; // Increment this version when icons need to be refreshed
+
     switch (provider.toLowerCase()) {
         case 'anthropic':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='Claude'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         case 'google':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/gemini-color.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/gemini-color.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='Google Gemini'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         case 'openai':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='OpenAI'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         case 'openrouter':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openrouter.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openrouter.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='OpenRouter'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         case 'fireworks':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/fireworks-color.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/fireworks-color.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='Fireworks'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         case 'xai':
             return (
                 <img
-                    src='https://unpkg.com/@lobehub/icons-static-svg@latest/icons/xai.svg'
+                    src={`https://unpkg.com/@lobehub/icons-static-svg@latest/icons/xai.svg${cacheBuster}`}
                     width={size}
                     height={size}
                     alt='xAI'
                     className={className}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => {
+                        // Hide the image if it fails to load due to cache miss or network issue
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                    }}
                 />
             );
         default:
@@ -294,14 +332,6 @@ export const modelOptionsByProvider = {
         {
             label: 'Gemini 3 Pro',
             value: ChatMode.GEMINI_3_PRO,
-            webSearch: true,
-            icon: <Brain className='text-purple-500' size={16} />,
-            providerIcon: getProviderIcon('google', 14),
-            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
-        },
-        {
-            label: 'Gemini 3 Flash',
-            value: ChatMode.GEMINI_3_FLASH,
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
