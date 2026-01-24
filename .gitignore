@@ -113,3 +113,6 @@ WARP.md.bak
 opencode.json
 opencode.json.bak
 # END Ruler Generated Files
+.qwen/
+.vtcode/
+.cursor/
