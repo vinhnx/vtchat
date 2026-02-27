@@ -78,7 +78,7 @@
         "ky": "^1.8.2",
         "lucide-react": "^0.435.0",
         "nanoid": "^5.0.7",
-        "next-mdx-remote": "^5.0.0",
+        "next-mdx-remote": "^6.0.0",
         "prismjs": "^1.29.0",
         "react-window": "^1.8.10",
         "recharts": "^2.12.7",
