@@ -73,7 +73,7 @@
         "@tiptap/react": "^3.0.1",
         "date-fns": "3.6.0",
         "dexie": "^4.0.10",
-        "fast-xml-parser": "^4.5.4",
+        "fast-xml-parser": "^5.3.6",
         "framer-motion": "^11.1.9",
         "ky": "^1.8.2",
         "lucide-react": "^0.435.0",
