@@ -44,7 +44,7 @@
         "@repo/ui": "*",
         "@tanstack/react-table": "^8.21.3",
         "ai": "^4.3.19",
-        "better-auth": "1.2.10",
+        "better-auth": "1.4.5",
         "buffer": "^6.0.3",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
