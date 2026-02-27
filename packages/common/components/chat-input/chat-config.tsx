@@ -3,7 +3,7 @@ import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift, Image } from 'lucide-react';
+import { Brain, Gift, Image as ImageIcon } from 'lucide-react';
 
 export const chatOptions = [
     {
@@ -342,7 +342,7 @@ export const modelOptionsByProvider = {
             label: 'Gemini 3.1 Flash Image',
             value: ChatMode.GEMINI_3_1_FLASH_IMAGE,
             webSearch: false,
-            icon: <Image className='text-blue-500' size={16} />,
+            icon: <ImageIcon className='text-blue-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
             description: 'Nano Banana 2 · Image generation & editing',
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,

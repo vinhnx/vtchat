@@ -4,7 +4,7 @@ import { useDocumentAttachment, useImageAttachment } from '@repo/common/hooks';
 import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore } from '@repo/common/store';
 import { isGeminiModel } from '@repo/common/utils';
-import { ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
+import { ChatMode, ChatModeConfig, STORAGE_KEYS, supportsMultiModal } from '@repo/shared/config';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { http } from '@repo/shared/lib/http-client';
 import { generateThreadId } from '@repo/shared/lib/thread-id';
@@ -391,7 +391,8 @@ export const ChatInput = ({
                 } catch {}
             }
 
-            if (isImagePrompt(messageText) || isImageFollowup) {
+            const isImageModel = chatMode === ChatMode.GEMINI_3_1_FLASH_IMAGE;
+            if (isImageModel || isImagePrompt(messageText) || isImageFollowup) {
                 await runImageFlow(messageText);
                 return;
             }

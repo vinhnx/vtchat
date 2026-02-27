@@ -277,7 +277,9 @@ export async function POST(request: NextRequest) {
 
     const resolvedKeys = {
         ...combinedKeys,
-        ...(managedGeminiKey ? { GEMINI_API_KEY: managedGeminiKey } : {}),
+        ...(userTier === UserTier.PLUS && managedGeminiKey
+            ? { GEMINI_API_KEY: managedGeminiKey }
+            : {}),
     };
 
     const hasGeminiKey = typeof resolvedKeys.GEMINI_API_KEY === 'string'
@@ -340,18 +342,37 @@ export async function POST(request: NextRequest) {
             },
         );
     } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
         log.error(
             {
-                error,
+                error: errorMessage,
                 userId,
                 userTier,
             },
             'Gemini image generation failed',
         );
 
-        return buildErrorResponse(
-            ImageGenerationErrorCode.INTERNAL_ERROR,
-            HttpStatus.INTERNAL_SERVER_ERROR,
+        const isApiKeyError = errorMessage.includes('API key')
+            || errorMessage.includes('authentication')
+            || errorMessage.includes('401');
+
+        if (isApiKeyError) {
+            return buildErrorResponse(
+                ImageGenerationErrorCode.API_KEY_REQUIRED,
+                HttpStatus.FORBIDDEN,
+            );
+        }
+
+        return NextResponse.json(
+            {
+                code: ImageGenerationErrorCode.INTERNAL_ERROR,
+                error: true,
+                message: errorMessage || ERROR_MESSAGES[ImageGenerationErrorCode.INTERNAL_ERROR],
+            },
+            {
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                headers: RESPONSE_HEADERS,
+            },
         );
     }
 }

@@ -115,6 +115,10 @@ function extractAspectRatio(
         regex: RegExp;
         ratio: GeminiFlashImageAspectRatio;
     }> = [
+        { regex: /\bpanoramic\b/i, ratio: '8:1' },
+        { regex: /\bbanner\b/i, ratio: '4:1' },
+        { regex: /\btall\s*banner\b/i, ratio: '1:4' },
+        { regex: /\bfull[\s-]?page\b/i, ratio: '1:4' },
         { regex: /\bultra[\s-]?wide\b/i, ratio: '21:9' },
         { regex: /\bcinematic\b/i, ratio: '21:9' },
         { regex: /\blandscape\b/i, ratio: '16:9' },
@@ -157,7 +161,8 @@ export async function generateGeminiImage(
         undefined,
         byokKeys,
         undefined,
-        false,
+        undefined,
+        undefined,
         userTier === 'PLUS',
     );
 
@@ -195,19 +200,21 @@ export async function generateGeminiImage(
         ? `6) Use the ${selectedAspectRatio} aspect ratio for this request.`
         : '6) Default to 16:9 when no aspect ratio is requested.';
 
-    const sizeDirective = selectedImageSize
-        ? `7) Generate at ${selectedImageSize} resolution.`
-        : '';
+    const promptLines = [
+        'You are Nano Banana 2 (Gemini 3.1 Flash Image). Follow best practices:',
+        '1) Prefer photoreal detail when asked; respect style requests.',
+        '2) Compose clean, coherent subjects; avoid duplicated limbs or text.',
+        '3) Use consistent lighting; balance foreground and background elements.',
+        '4) Preserve existing details when editing reference images.',
+        `5) Supported aspect ratios: ${GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST}.`,
+        ratioDirective,
+        selectedImageSize ? `7) Generate at ${selectedImageSize} resolution.` : null,
+        'Output an IMAGE (and optionally a short TEXT caption). Request:',
+        '',
+        prompt,
+    ].filter((line): line is string => line !== null);
 
-    const effectivePrompt = `You are Nano Banana 2 (Gemini 3.1 Flash Image). Follow best practices:
-1) Prefer photoreal detail when asked; respect style requests.
-2) Compose clean, coherent subjects; avoid duplicated limbs or text.
-3) Use consistent lighting; balance foreground and background elements.
-4) Preserve existing details when editing reference images.
-5) Supported aspect ratios: ${GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST}.
-${ratioDirective}
-${sizeDirective}
-Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
+    const effectivePrompt = promptLines.join('\n');
 
     // Build message with optional inline image parts for editing
     const parts: any[] = [
