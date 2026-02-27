@@ -69,7 +69,7 @@
         "date-fns": "3.6.0",
         "drizzle-orm": "^0.44.4",
         "drizzle-zod": "^0.8.2",
-        "html2pdf.js": "^0.10.3",
+        "html2pdf.js": "^0.14.0",
         "jspdf": "^3.0.1",
         "langchain": "^0.3.28",
         "legid": "^0.1.3",
