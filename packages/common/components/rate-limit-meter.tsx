@@ -64,8 +64,7 @@ export function RateLimitMeter() {
             <CardHeader>
                 <CardTitle className='text-foreground'>Free Model Usage</CardTitle>
                 <CardDescription>
-                    Track your personal daily and per-minute limits for Gemini 3 Flash Lite
-                    Preview
+                    Track your personal daily and per-minute limits for Gemini 3 Flash Lite Preview
                 </CardDescription>
             </CardHeader>
             <CardContent>

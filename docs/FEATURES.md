@@ -264,24 +264,24 @@ VT is a production-ready, privacy-focused AI chat application with security and 
 
 ## 📋 Feature Comparison Matrix
 
-| Feature                           | Free Tier                              | VT+ ($5.99/month)                                               |
-| --------------------------------- | -------------------------------------- | --------------------------------------------------------------- |
-| **Basic AI Models**               | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅                                                              |
+| Feature                           | Free Tier                              | VT+ ($5.99/month)                                             |
+| --------------------------------- | -------------------------------------- | ------------------------------------------------------------- |
+| **Basic AI Models**               | ✅ (9 Models: 5 Gemini + 4 OpenRouter) | ✅                                                            |
 | **Premium AI Models**             | ❌                                     | ✅ (Claude 4, GPT-4.1, O3, Gemini 3 Pro, DeepSeek R1, Grok 3) |
-| **Basic Chat**                    | ✅                                     | ✅                                                              |
-| **Local Privacy**                 | ✅ (IndexedDB + Thread Isolation)      | ✅ (Enhanced Security)                                          |
-| **Calculator**                    | ✅                                     | ✅                                                              |
-| **Security Protection**           | ✅ (Bot Detection + Better Auth)       | ✅ (Priority Support)                                           |
-| **Thinking Mode**                 | ✅ (AI SDK Reasoning Tokens)           | ✅                                                              |
-| **Dark Theme**                    | ✅ (Official Shadcn Variables)         | ✅                                                              |
-| **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅ (Enhanced: up to 25MB, batch processing)                     |
-| **Structured Output**             | ✅ (AI-powered JSON)                   | ✅                                                              |
-| **Chart Visualization**           | ✅                                     | ✅                                                              |
-| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 50/day)                               |
-| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 25/day)                            |
-| **Priority AI Access**            | ❌                                     | ✅ (Skip rate limits, dedicated resources)                      |
-| **Extended Chat History**         | ❌                                     | ✅ (Unlimited storage with advanced search)                     |
-| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models         |
+| **Basic Chat**                    | ✅                                     | ✅                                                            |
+| **Local Privacy**                 | ✅ (IndexedDB + Thread Isolation)      | ✅ (Enhanced Security)                                        |
+| **Calculator**                    | ✅                                     | ✅                                                            |
+| **Security Protection**           | ✅ (Bot Detection + Better Auth)       | ✅ (Priority Support)                                         |
+| **Thinking Mode**                 | ✅ (AI SDK Reasoning Tokens)           | ✅                                                            |
+| **Dark Theme**                    | ✅ (Official Shadcn Variables)         | ✅                                                            |
+| **Document Processing**           | ✅ (PDF/DOC/DOCX up to 10MB)           | ✅ (Enhanced: up to 25MB, batch processing)                   |
+| **Structured Output**             | ✅ (AI-powered JSON)                   | ✅                                                            |
+| **Chart Visualization**           | ✅                                     | ✅                                                            |
+| **Web Search (PRO_SEARCH)**       | ❌                                     | ✅ (Real-time Grounding - 50/day)                             |
+| **Deep Research (DEEP_RESEARCH)** | ❌                                     | ✅ (Comprehensive Analysis - 25/day)                          |
+| **Priority AI Access**            | ❌                                     | ✅ (Skip rate limits, dedicated resources)                    |
+| **Extended Chat History**         | ❌                                     | ✅ (Unlimited storage with advanced search)                   |
+| **Rate Limiting**                 | 10 requests/day (free models)          | Daily quotas for VT+ features, unlimited Premium Models       |
 
 ## 🎯 Target Use Cases
 

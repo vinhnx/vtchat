@@ -172,6 +172,13 @@ export const models: Model[] = [
         contextWindow: 65_536,
     },
     {
+        id: ModelEnum.GEMINI_3_1_FLASH_IMAGE,
+        name: 'Gemini 3.1 Flash Image',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 65_536,
+    },
+    {
         id: ModelEnum.GROK_3,
         name: 'Grok 3',
         provider: 'xai',

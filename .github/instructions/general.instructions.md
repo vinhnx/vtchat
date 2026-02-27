@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: "**"
 ---
 
 # AGENT.md - Development Guidelines
@@ -58,11 +58,11 @@ applyTo: '**'
 - This applies to ALL deployment commands and scripts
 
 - **Production Deployment**: Use `./deploy-fly.sh` to deploy to Fly.io (ONLY WITH USER APPROVAL)
-    - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
-    - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
-    - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
-    - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
-    - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
+  - **Interactive**: `./deploy-fly.sh` (prompts for version bump type)
+  - **Automated**: `./deploy-fly.sh --auto --version patch` (patch/minor/major)
+  - **Features**: Auto-commit, semantic versioning, git tagging, Fly.io deployment
+  - **App URL**: https://vtchat.io.vn (primary) / https://vtchat.fly.dev (backup)
+  - Script handles: git status checks, version tagging, pushing to remote, Fly.io deployment
 
 ### Git Hooks
 

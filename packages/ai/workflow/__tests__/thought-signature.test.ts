@@ -15,11 +15,10 @@ describe('Thought Signature Support', () => {
                 },
             };
 
-            const thoughtSignature =
-                (mockChunk as any)?.extraContent?.google?.thoughtSignature ||
-                (mockChunk as any)?.extra_content?.google?.thought_signature ||
-                (mockChunk as any)?.thoughtSignature ||
-                undefined;
+            const thoughtSignature = (mockChunk as any)?.extraContent?.google?.thoughtSignature
+                || (mockChunk as any)?.extra_content?.google?.thought_signature
+                || (mockChunk as any)?.thoughtSignature
+                || undefined;
 
             expect(thoughtSignature).toBe('test-signature-abc123');
         });
@@ -33,11 +32,10 @@ describe('Thought Signature Support', () => {
                 thoughtSignature: 'alternative-signature-xyz789',
             };
 
-            const thoughtSignature =
-                (mockChunk as any)?.extraContent?.google?.thoughtSignature ||
-                (mockChunk as any)?.extra_content?.google?.thought_signature ||
-                (mockChunk as any)?.thoughtSignature ||
-                undefined;
+            const thoughtSignature = (mockChunk as any)?.extraContent?.google?.thoughtSignature
+                || (mockChunk as any)?.extra_content?.google?.thought_signature
+                || (mockChunk as any)?.thoughtSignature
+                || undefined;
 
             expect(thoughtSignature).toBe('alternative-signature-xyz789');
         });
@@ -50,11 +48,10 @@ describe('Thought Signature Support', () => {
                 args: { param: 'value' },
             };
 
-            const thoughtSignature =
-                (mockChunk as any)?.extraContent?.google?.thoughtSignature ||
-                (mockChunk as any)?.extra_content?.google?.thought_signature ||
-                (mockChunk as any)?.thoughtSignature ||
-                undefined;
+            const thoughtSignature = (mockChunk as any)?.extraContent?.google?.thoughtSignature
+                || (mockChunk as any)?.extra_content?.google?.thought_signature
+                || (mockChunk as any)?.thoughtSignature
+                || undefined;
 
             expect(thoughtSignature).toBeUndefined();
         });
@@ -93,11 +90,10 @@ describe('Thought Signature Support', () => {
             ];
 
             for (const chunk of mockChunks) {
-                const thoughtSignature =
-                    (chunk as any)?.extraContent?.google?.thoughtSignature ||
-                    (chunk as any)?.extra_content?.google?.thought_signature ||
-                    (chunk as any)?.thoughtSignature ||
-                    undefined;
+                const thoughtSignature = (chunk as any)?.extraContent?.google?.thoughtSignature
+                    || (chunk as any)?.extra_content?.google?.thought_signature
+                    || (chunk as any)?.thoughtSignature
+                    || undefined;
 
                 if (thoughtSignature) {
                     thoughtSignatures.push(thoughtSignature);
@@ -137,11 +133,10 @@ describe('Thought Signature Support', () => {
             ];
 
             for (const chunk of mockChunks) {
-                const thoughtSignature =
-                    (chunk as any)?.extraContent?.google?.thoughtSignature ||
-                    (chunk as any)?.extra_content?.google?.thought_signature ||
-                    (chunk as any)?.thoughtSignature ||
-                    undefined;
+                const thoughtSignature = (chunk as any)?.extraContent?.google?.thoughtSignature
+                    || (chunk as any)?.extra_content?.google?.thought_signature
+                    || (chunk as any)?.thoughtSignature
+                    || undefined;
 
                 if (thoughtSignature) {
                     thoughtSignatures.push(thoughtSignature);

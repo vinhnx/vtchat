@@ -516,8 +516,8 @@ function HelpCenterContent() {
                                     <li className='text-muted-foreground'>
                                         <strong>Gemini Access:</strong>{' '}
                                         Gemini 3 Flash Lite now requires your own Gemini API key
-                                        (BYOK). VT+ continues to manage Gemini 3 Flash and Pro
-                                        usage with built-in quotas.
+                                        (BYOK). VT+ continues to manage Gemini 3 Flash and Pro usage
+                                        with built-in quotas.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Free Users:</strong>{' '}
@@ -527,8 +527,8 @@ function HelpCenterContent() {
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>VT+ Users:</strong>{' '}
-                                        Benefit from enhanced managed limits for Gemini 3 Flash
-                                        and Pro, plus BYOK flexibility for Flash Lite.
+                                        Benefit from enhanced managed limits for Gemini 3 Flash and
+                                        Pro, plus BYOK flexibility for Flash Lite.
                                     </li>
                                     <li className='text-muted-foreground'>
                                         <strong>Daily Reset:</strong>{' '}

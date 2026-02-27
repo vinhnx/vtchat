@@ -6,9 +6,13 @@ import { getLanguageModel } from './providers';
 export const GEMINI_FLASH_IMAGE_ASPECT_RATIOS = [
     '21:9',
     '16:9',
+    '8:1',
+    '4:1',
     '4:3',
     '3:2',
     '1:1',
+    '1:4',
+    '1:8',
     '9:16',
     '3:4',
     '2:3',
@@ -24,8 +28,13 @@ const GEMINI_FLASH_IMAGE_ASPECT_RATIO_SET = new Set<GeminiFlashImageAspectRatio>
 
 const GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST = GEMINI_FLASH_IMAGE_ASPECT_RATIOS.join(', ');
 
+export const GEMINI_FLASH_IMAGE_SIZES = ['512px', '1K', '2K', '4K'] as const;
+
+export type GeminiFlashImageSize = (typeof GEMINI_FLASH_IMAGE_SIZES)[number];
+
 export type GeminiImageConfig = {
     aspectRatio?: GeminiFlashImageAspectRatio;
+    imageSize?: GeminiFlashImageSize;
 };
 
 type ByokKeys = Record<string, string> | undefined;
@@ -144,7 +153,7 @@ export async function generateGeminiImage(
     const { prompt, byokKeys, userId, userTier, images, config } = params;
 
     const model = getLanguageModel(
-        ModelEnum.GEMINI_3_FLASH_IMAGE,
+        ModelEnum.GEMINI_3_1_FLASH_IMAGE,
         undefined,
         byokKeys,
         undefined,
@@ -169,28 +178,35 @@ export async function generateGeminiImage(
 
     const selectedAspectRatio = manualAspectRatio ?? promptAspectRatio ?? undefined;
 
+    const selectedImageSize = config?.imageSize ?? undefined;
+
     log.info(
         {
             userId,
             userTier,
             selectedAspectRatio,
+            selectedImageSize,
             manualAspectRatio: Boolean(manualAspectRatio),
         },
-        'Generating image with Gemini 3 Flash Image',
+        'Generating image with Gemini 3.1 Flash Image',
     );
 
     const ratioDirective = selectedAspectRatio
         ? `6) Use the ${selectedAspectRatio} aspect ratio for this request.`
         : '6) Default to 16:9 when no aspect ratio is requested.';
 
-    // Strengthen instruction to push image output
-    const effectivePrompt = `You are Nano Banana (Gemini 3 Flash Image). Follow best practices:
+    const sizeDirective = selectedImageSize
+        ? `7) Generate at ${selectedImageSize} resolution.`
+        : '';
+
+    const effectivePrompt = `You are Nano Banana 2 (Gemini 3.1 Flash Image). Follow best practices:
 1) Prefer photoreal detail when asked; respect style requests.
 2) Compose clean, coherent subjects; avoid duplicated limbs or text.
 3) Use consistent lighting; balance foreground and background elements.
 4) Preserve existing details when editing reference images.
 5) Supported aspect ratios: ${GEMINI_FLASH_IMAGE_ASPECT_RATIO_LIST}.
 ${ratioDirective}
+${sizeDirective}
 Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
 
     // Build message with optional inline image parts for editing
@@ -232,11 +248,17 @@ Output an IMAGE (and optionally a short TEXT caption). Request:\n\n${prompt}`;
 
     const googleOptions: {
         responseModalities: Array<'IMAGE' | 'TEXT'>;
-        imageConfig?: { aspectRatio: GeminiFlashImageAspectRatio; };
+        imageConfig?: {
+            aspectRatio?: GeminiFlashImageAspectRatio;
+            imageSize?: GeminiFlashImageSize;
+        };
     } = { responseModalities: ['IMAGE', 'TEXT'] };
 
-    if (selectedAspectRatio) {
-        googleOptions.imageConfig = { aspectRatio: selectedAspectRatio };
+    if (selectedAspectRatio || selectedImageSize) {
+        googleOptions.imageConfig = {
+            ...(selectedAspectRatio ? { aspectRatio: selectedAspectRatio } : {}),
+            ...(selectedImageSize ? { imageSize: selectedImageSize } : {}),
+        };
     }
 
     const result = await generateTextAi({

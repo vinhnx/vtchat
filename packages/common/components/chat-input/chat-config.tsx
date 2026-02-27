@@ -3,7 +3,7 @@ import type { ApiKeys } from '@repo/common/store/api-keys.store';
 import { ChatMode, ChatModeConfig, DEFAULT_CHAT_MODE } from '@repo/shared/config';
 import type { FeatureSlug, PlanSlug } from '@repo/shared/types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '@repo/shared/utils/subscription';
-import { Brain, Gift } from 'lucide-react';
+import { Brain, Gift, Image } from 'lucide-react';
 
 export const chatOptions = [
     {
@@ -28,6 +28,7 @@ export const getChatModeFromModel = (model: Model): ChatMode | null => {
         'Gemini 3 Pro': ChatMode.GEMINI_3_PRO,
         'Gemini 3 Flash': ChatMode.GEMINI_3_FLASH,
         'Gemini 3 Flash Lite': ChatMode.GEMINI_3_FLASH_LITE,
+        'Gemini 3.1 Flash Image': ChatMode.GEMINI_3_1_FLASH_IMAGE,
         // Anthropic models
         'Claude 4.1 Opus': ChatMode.CLAUDE_4_1_OPUS,
         'Claude 4 Sonnet': ChatMode.CLAUDE_4_SONNET,
@@ -335,6 +336,15 @@ export const modelOptionsByProvider = {
             webSearch: true,
             icon: <Brain className='text-purple-500' size={16} />,
             providerIcon: getProviderIcon('google', 14),
+            requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
+        },
+        {
+            label: 'Gemini 3.1 Flash Image',
+            value: ChatMode.GEMINI_3_1_FLASH_IMAGE,
+            webSearch: false,
+            icon: <Image className='text-blue-500' size={16} />,
+            providerIcon: getProviderIcon('google', 14),
+            description: 'Nano Banana 2 · Image generation & editing',
             requiredApiKey: 'GEMINI_API_KEY' as keyof ApiKeys,
         },
     ],

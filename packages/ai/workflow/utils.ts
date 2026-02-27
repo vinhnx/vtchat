@@ -53,9 +53,10 @@ export class ChunkBuffer {
         this.fullText += chunk;
         this.buffer += chunk;
 
-        const shouldFlush =
-            (this.threshold && this.buffer.length >= this.threshold) ||
-            this.breakPatterns.some(pattern => chunk.includes(pattern) || chunk.endsWith(pattern));
+        const shouldFlush = (this.threshold && this.buffer.length >= this.threshold)
+            || this.breakPatterns.some(pattern =>
+                chunk.includes(pattern) || chunk.endsWith(pattern)
+            );
 
         if (shouldFlush) {
             this.flush();
@@ -107,7 +108,7 @@ export const generateTextWithGeminiSearch = async ({
             hasSignal: !!signal,
             byokKeys: byokKeys ? Object.keys(byokKeys) : undefined,
         },
-        'generateTextWithGeminiSearch parameters'
+        'generateTextWithGeminiSearch parameters',
     ); // Declare variables outside try block so they're available in catch block
     let hasUserGeminiKey = false;
     let hasSystemGeminiKey = false;
@@ -132,8 +133,8 @@ export const generateTextWithGeminiSearch = async ({
             byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0
         );
         hasSystemGeminiKey = !!(
-            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) ||
-            windowApiKey
+            (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY)
+            || windowApiKey
         );
 
         isFreeGeminiModel = model === ModelEnum.GEMINI_3_FLASH_LITE;
@@ -152,17 +153,17 @@ export const generateTextWithGeminiSearch = async ({
                     hasSystemGeminiKey,
                     environment: process.env.NODE_ENV,
                 },
-                'Web search failed: No API key available'
+                'Web search failed: No API key available',
             );
 
             if (isFreeGeminiModel) {
                 throw new Error(
-                    'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.'
+                    'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                 );
             }
             if (isVtPlusUser) {
                 throw new Error(
-                    'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.'
+                    'Web search is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.',
                 );
             }
             throw new Error('Gemini API key is required for web search functionality');
@@ -191,7 +192,7 @@ export const generateTextWithGeminiSearch = async ({
             true,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
-            isVtPlusUser
+            isVtPlusUser,
         );
         log.info('Selected model result:', {
             selectedModel: selectedModel ? 'object' : selectedModel,
@@ -219,13 +220,12 @@ export const generateTextWithGeminiSearch = async ({
         let filteredMessages = messages;
         if (messages?.length) {
             filteredMessages = messages.filter(message => {
-                const hasContent =
-                    message.content &&
-                    (typeof message.content === 'string'
+                const hasContent = message.content
+                    && (typeof message.content === 'string'
                         ? message.content.trim() !== ''
                         : Array.isArray(message.content)
-                          ? message.content.length > 0
-                          : true);
+                        ? message.content.length > 0
+                        : true);
 
                 if (!hasContent) {
                     log.warn('Filtering out message with empty content in GeminiSearch:', {
@@ -285,23 +285,23 @@ export const generateTextWithGeminiSearch = async ({
 
             const streamTextConfig: any = filteredMessages?.length
                 ? {
-                      model: selectedModel,
-                      messages: [
-                          {
-                              role: 'system',
-                              content: prompt,
-                          },
-                          ...filteredMessages,
-                      ],
-                      abortSignal: signal,
-                      ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                  }
+                    model: selectedModel,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: prompt,
+                        },
+                        ...filteredMessages,
+                    ],
+                    abortSignal: signal,
+                    ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                }
                 : {
-                      prompt,
-                      model: selectedModel,
-                      abortSignal: signal,
-                      ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                  };
+                    prompt,
+                    model: selectedModel,
+                    abortSignal: signal,
+                    ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                };
 
             log.info('StreamText config:', {
                 configType: filteredMessages?.length ? 'with-messages' : 'prompt-only',
@@ -380,7 +380,7 @@ export const generateTextWithGeminiSearch = async ({
             // Fallback for legacy error handling
             if (error.message?.includes('undefined to object')) {
                 throw new Error(
-                    'Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.'
+                    'Google Generative AI configuration error. This may be due to missing API key or invalid model configuration.',
                 );
             }
             throw error;
@@ -538,7 +538,7 @@ export const generateTextWithGeminiSearch = async ({
 };
 
 // Cache for generated text to prevent multiple identical requests
-const textGenerationCache = new Map<string, { timestamp: number; result: any }>();
+const textGenerationCache = new Map<string, { timestamp: number; result: any; }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const MAX_CACHE_ENTRIES = 50;
 
@@ -605,9 +605,11 @@ export const generateText = async ({
         pruneTextCache();
 
         // Create a cache key from the parameters
-        const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${JSON.stringify(
-            tools || {}
-        )}:${toolChoice}:${maxSteps}`;
+        const cacheKey = `generateText:${model}:${prompt}:${JSON.stringify(messages || [])}:${
+            JSON.stringify(
+                tools || {},
+            )
+        }:${toolChoice}:${maxSteps}`;
 
         // Check cache first
         const cachedResult = textGenerationCache.get(cacheKey);
@@ -616,7 +618,7 @@ export const generateText = async ({
             if (Date.now() - timestamp < CACHE_TTL) {
                 log.info(
                     { model, prompt: prompt.substring(0, 50) },
-                    'Returning cached generateText result'
+                    'Returning cached generateText result',
                 );
                 return result;
             } else {
@@ -629,7 +631,7 @@ export const generateText = async ({
         if (inFlightRequests.has(cacheKey)) {
             log.info(
                 { model, prompt: prompt.substring(0, 50) },
-                'Returning existing in-flight generateText request'
+                'Returning existing in-flight generateText request',
             );
             return await inFlightRequests.get(cacheKey);
         }
@@ -645,7 +647,7 @@ export const generateText = async ({
                         mode,
                         userTier,
                     },
-                    'generateText called'
+                    'generateText called',
                 );
 
                 // Debug logging for generateText
@@ -657,7 +659,7 @@ export const generateText = async ({
                         mode,
                         userTier,
                     },
-                    'generateText called'
+                    'generateText called',
                 );
 
                 if (signal?.aborted) {
@@ -668,20 +670,20 @@ export const generateText = async ({
                 let filteredMessages = messages;
                 if (messages?.length) {
                     filteredMessages = messages.filter(message => {
-                        const hasContent =
-                            message.content &&
-                            (typeof message.content === 'string'
+                        const hasContent = message.content
+                            && (typeof message.content === 'string'
                                 ? message.content.trim() !== ''
                                 : Array.isArray(message.content)
-                                  ? message.content.length > 0
-                                  : true);
+                                ? message.content.length > 0
+                                : true);
                         return hasContent;
                     });
                 }
 
                 // Import reasoning utilities
-                const { supportsReasoning, getReasoningType, getReasoningTagName } =
-                    await import('../models');
+                const { supportsReasoning, getReasoningType, getReasoningTagName } = await import(
+                    '../models'
+                );
 
                 // Set up middleware based on model's reasoning capabilities
                 let middleware: any;
@@ -700,10 +702,10 @@ export const generateText = async ({
 
                 if (isGeminiModel && isVtPlusUser) {
                     // For VT+ users with Gemini models, check if they have BYOK
-                    const hasUserGeminiKey =
-                        byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-                    const hasSystemGeminiKey =
-                        typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+                    const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY
+                        && byokKeys.GEMINI_API_KEY.trim().length > 0;
+                    const hasSystemGeminiKey = typeof process !== 'undefined'
+                        && !!process.env?.GEMINI_API_KEY;
 
                     if (!hasUserGeminiKey && hasSystemGeminiKey) {
                         // VT+ user without BYOK - use system key
@@ -719,7 +721,7 @@ export const generateText = async ({
                     useSearchGrounding,
                     undefined,
                     thinkingMode?.claude4InterleavedThinking,
-                    isVtPlusUser
+                    isVtPlusUser,
                 );
 
                 // Set up provider options based on model's reasoning type
@@ -754,31 +756,31 @@ export const generateText = async ({
 
                 const streamConfig: any = filteredMessages?.length
                     ? {
-                          model: selectedModel,
-                          messages: [
-                              {
-                                  role: 'system',
-                                  content: prompt,
-                              },
-                              ...filteredMessages,
-                          ],
-                          tools,
-                          maxSteps,
-                          toolChoice: toolChoice as any,
-                          abortSignal: signal,
-                          temperature: 0, // Use temperature 0 for deterministic tool calling
-                          ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                      }
+                        model: selectedModel,
+                        messages: [
+                            {
+                                role: 'system',
+                                content: prompt,
+                            },
+                            ...filteredMessages,
+                        ],
+                        tools,
+                        maxSteps,
+                        toolChoice: toolChoice as any,
+                        abortSignal: signal,
+                        temperature: 0, // Use temperature 0 for deterministic tool calling
+                        ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                    }
                     : {
-                          prompt,
-                          model: selectedModel,
-                          tools,
-                          maxSteps,
-                          toolChoice: toolChoice as any,
-                          abortSignal: signal,
-                          temperature: 0, // Use temperature 0 for deterministic tool calling
-                          ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-                      };
+                        prompt,
+                        model: selectedModel,
+                        tools,
+                        maxSteps,
+                        toolChoice: toolChoice as any,
+                        abortSignal: signal,
+                        temperature: 0, // Use temperature 0 for deterministic tool calling
+                        ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+                    };
 
                 // Use quota-enforced streamText for VT+ users with correct feature based on mode
                 let streamResult;
@@ -787,23 +789,22 @@ export const generateText = async ({
 
                 // Determine if this mode requires VT+ quota consumption
                 const vtplusFeature = getVTPlusFeatureFromChatMode(mode);
-                const requiresQuotaConsumption =
-                    userId &&
-                    userTier === 'PLUS' &&
-                    isEligibleForQuotaConsumption(user, isByokKey) &&
-                    vtplusFeature !== null;
+                const requiresQuotaConsumption = userId
+                    && userTier === 'PLUS'
+                    && isEligibleForQuotaConsumption(user, isByokKey)
+                    && vtplusFeature !== null;
 
                 if (requiresQuotaConsumption) {
-                    const { streamTextWithQuota } =
-                        await import('@repo/common/lib/geminiWithQuota');
+                    const { streamTextWithQuota } = await import(
+                        '@repo/common/lib/geminiWithQuota'
+                    );
                     const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
                     const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
 
                     // Convert string feature code to enum
-                    const feature =
-                        vtplusFeature === 'DR'
-                            ? VtPlusFeature.DEEP_RESEARCH
-                            : VtPlusFeature.PRO_SEARCH;
+                    const feature = vtplusFeature === 'DR'
+                        ? VtPlusFeature.DEEP_RESEARCH
+                        : VtPlusFeature.PRO_SEARCH;
 
                     streamResult = await streamTextWithQuota(streamConfig, {
                         user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
@@ -819,11 +820,12 @@ export const generateText = async ({
                         log.error('Error in streamText call:', { error: error.message });
 
                         // Enhanced error handling with provider-specific error extraction
-                        const { ProviderErrorExtractor } =
-                            await import('../services/provider-error-extractor');
+                        const { ProviderErrorExtractor } = await import(
+                            '../services/provider-error-extractor'
+                        );
                         const errorResult = ProviderErrorExtractor.extractError(
                             error,
-                            model?.provider as any
+                            model?.provider as any,
                         );
 
                         if (errorResult.success && errorResult.error) {
@@ -855,7 +857,7 @@ export const generateText = async ({
 
                                 if (!hasApiKey) {
                                     throw new Error(
-                                        `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`
+                                        `API key required for ${modelInfo.name}. Please add your ${providerName} API key in Settings.`,
                                     );
                                 }
                             }
@@ -887,16 +889,16 @@ export const generateText = async ({
                     if (chunk.type === 'tool-call') {
                         // Capture thought signature from tool call for Gemini 3 models
                         const thoughtSignature =
-                            (chunk as any)?.extraContent?.google?.thoughtSignature ||
-                            (chunk as any)?.extra_content?.google?.thought_signature ||
-                            (chunk as any)?.thoughtSignature ||
-                            undefined;
+                            (chunk as any)?.extraContent?.google?.thoughtSignature
+                            || (chunk as any)?.extra_content?.google?.thought_signature
+                            || (chunk as any)?.thoughtSignature
+                            || undefined;
 
                         if (thoughtSignature) {
                             thoughtSignatures.push(thoughtSignature);
                             log.info(
                                 { thoughtSignature, toolCallId: chunk.toolCallId },
-                                'Captured thought signature from tool call'
+                                'Captured thought signature from tool call',
                             );
                         }
 
@@ -919,7 +921,7 @@ export const generateText = async ({
                             count: thoughtSignatures.length,
                             signatures: thoughtSignatures.map(sig => `${sig.substring(0, 20)}...`),
                         },
-                        'Thought signatures collected for Gemini 3 function calling'
+                        'Thought signatures collected for Gemini 3 function calling',
                     );
                 }
 
@@ -1005,13 +1007,12 @@ export const generateObject = async ({
         let filteredMessages = messages;
         if (messages?.length) {
             filteredMessages = messages.filter(message => {
-                const hasContent =
-                    message.content &&
-                    (typeof message.content === 'string'
+                const hasContent = message.content
+                    && (typeof message.content === 'string'
                         ? message.content.trim() !== ''
                         : Array.isArray(message.content)
-                          ? message.content.length > 0
-                          : true);
+                        ? message.content.length > 0
+                        : true);
 
                 if (!hasContent) {
                     log.warn('Filtering out message with empty content:', {
@@ -1020,8 +1021,8 @@ export const generateObject = async ({
                         contentLength: Array.isArray(message.content)
                             ? message.content.length
                             : typeof message.content === 'string'
-                              ? message.content.length
-                              : 0,
+                            ? message.content.length
+                            : 0,
                     });
                 }
 
@@ -1044,10 +1045,10 @@ export const generateObject = async ({
         const isFreeGeminiModel = model === ModelEnum.GEMINI_3_FLASH_LITE;
 
         if (isGeminiModel) {
-            const hasUserGeminiKey =
-                byokKeys?.GEMINI_API_KEY && byokKeys.GEMINI_API_KEY.trim().length > 0;
-            let hasSystemGeminiKey =
-                typeof process !== 'undefined' && !!process.env?.GEMINI_API_KEY;
+            const hasUserGeminiKey = byokKeys?.GEMINI_API_KEY
+                && byokKeys.GEMINI_API_KEY.trim().length > 0;
+            let hasSystemGeminiKey = typeof process !== 'undefined'
+                && !!process.env?.GEMINI_API_KEY;
 
             if (isFreeGeminiModel) {
                 hasSystemGeminiKey = false;
@@ -1057,12 +1058,12 @@ export const generateObject = async ({
             if (!hasUserGeminiKey && !hasSystemGeminiKey) {
                 if (isFreeGeminiModel) {
                     throw new Error(
-                        'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.'
+                        'Gemini 3 Flash Lite now requires your own Gemini API key. Add your key in settings to continue.',
                     );
                 }
                 if (isVtPlusUser) {
                     throw new Error(
-                        'Planning is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.'
+                        'Planning is temporarily unavailable. Please add your own Gemini API key in settings for unlimited usage.',
                     );
                 }
                 throw new Error('Gemini API key is required for planning functionality');
@@ -1082,7 +1083,7 @@ export const generateObject = async ({
             undefined,
             undefined,
             thinkingMode?.claude4InterleavedThinking,
-            isVtPlusUser
+            isVtPlusUser,
         );
         log.info('Selected model for generateObject:', {
             hasModel: !!selectedModel,
@@ -1129,27 +1130,27 @@ export const generateObject = async ({
 
         const generateConfig = filteredMessages?.length
             ? {
-                  model: selectedModel,
-                  schema,
-                  messages: [
-                      {
-                          role: 'system',
-                          content: prompt,
-                      },
-                      ...filteredMessages,
-                  ],
-                  abortSignal: signal,
-                  temperature: 0, // Use temperature 0 for deterministic structured extraction
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-              }
+                model: selectedModel,
+                schema,
+                messages: [
+                    {
+                        role: 'system',
+                        content: prompt,
+                    },
+                    ...filteredMessages,
+                ],
+                abortSignal: signal,
+                temperature: 0, // Use temperature 0 for deterministic structured extraction
+                ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+            }
             : {
-                  prompt,
-                  model: selectedModel,
-                  schema,
-                  abortSignal: signal,
-                  temperature: 0, // Use temperature 0 for deterministic structured extraction
-                  ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
-              };
+                prompt,
+                model: selectedModel,
+                schema,
+                abortSignal: signal,
+                temperature: 0, // Use temperature 0 for deterministic structured extraction
+                ...(Object.keys(providerOptions).length > 0 && { providerOptions }),
+            };
 
         // Consume quota for VT+ users if using VT-managed models
         if (userId && userTier === 'PLUS' && !byokKeys && feature) {
@@ -1157,12 +1158,11 @@ export const generateObject = async ({
             const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
 
             // Convert feature string to VtPlusFeature enum
-            const vtPlusFeature =
-                feature === 'DR'
-                    ? VtPlusFeature.DEEP_RESEARCH
-                    : feature === 'PS'
-                      ? VtPlusFeature.PRO_SEARCH
-                      : null;
+            const vtPlusFeature = feature === 'DR'
+                ? VtPlusFeature.DEEP_RESEARCH
+                : feature === 'PS'
+                ? VtPlusFeature.PRO_SEARCH
+                : null;
 
             if (vtPlusFeature) {
                 log.info(
@@ -1171,7 +1171,7 @@ export const generateObject = async ({
                         feature: vtPlusFeature,
                         amount: 1,
                     },
-                    'Consuming VT+ quota for generateObject'
+                    'Consuming VT+ quota for generateObject',
                 );
 
                 await consumeQuota({
@@ -1203,10 +1203,10 @@ export const generateObject = async ({
             provider: model.toString().toLowerCase().includes('gemini')
                 ? ('google' as any)
                 : model.toString().toLowerCase().includes('claude')
-                  ? ('anthropic' as any)
-                  : model.toString().toLowerCase().includes('gpt')
-                    ? ('openai' as any)
-                    : undefined,
+                ? ('anthropic' as any)
+                : model.toString().toLowerCase().includes('gpt')
+                ? ('openai' as any)
+                : undefined,
             model: model.toString(),
             userId,
             hasApiKey: !!(byokKeys && Object.keys(byokKeys).length > 0),
@@ -1279,7 +1279,7 @@ export class EventEmitter<T extends Record<string, any>> {
 
 export function createEventManager<T extends Record<string, any>>(
     initialState?: Partial<T>,
-    _schema?: EventSchema<T>
+    _schema?: EventSchema<T>,
 ) {
     const emitter = new EventEmitter<T>(initialState);
 
@@ -1290,12 +1290,11 @@ export function createEventManager<T extends Record<string, any>>(
         getState: emitter.getState.bind(emitter),
         update: <K extends keyof T>(
             key: K,
-            value: T[K] | ((current: T[K] | undefined) => T[K])
+            value: T[K] | ((current: T[K] | undefined) => T[K]),
         ) => {
-            const updater =
-                typeof value === 'function'
-                    ? (value as (current: T[K] | undefined) => T[K])
-                    : () => value;
+            const updater = typeof value === 'function'
+                ? (value as (current: T[K] | undefined) => T[K])
+                : () => value;
 
             emitter.updateState(key, updater);
             emitter.emit('stateChange', {
@@ -1406,9 +1405,9 @@ export const readURL = async (url: string): Promise<TReaderResult> => {
 };
 
 export const processWebPages = async (
-    results: Array<{ link: string; title: string }>,
+    results: Array<{ link: string; title: string; }>,
     signal?: AbortSignal,
-    options = { batchSize: 4, maxPages: 8, timeout: 30_000 }
+    options = { batchSize: 4, maxPages: 8, timeout: 30_000 },
 ) => {
     const processedResults: Array<{
         title: string;
@@ -1503,7 +1502,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
         stepId: number;
         text?: string;
         stepStatus: 'PENDING' | 'COMPLETED';
-        subSteps: Record<string, { status: 'PENDING' | 'COMPLETED'; data?: any }>;
+        subSteps: Record<string, { status: 'PENDING' | 'COMPLETED'; data?: any; }>;
     }) => {
         const { stepId, text, stepStatus, subSteps } = params;
         events?.update('steps', prev => ({
@@ -1524,13 +1523,13 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
                                 data: Array.isArray(value?.data)
                                     ? [...(prev?.[stepId]?.steps?.[key]?.data || []), ...value.data]
                                     : typeof value?.data === 'object'
-                                      ? {
-                                            ...prev?.[stepId]?.steps?.[key]?.data,
-                                            ...value.data,
-                                        }
-                                      : value?.data
-                                        ? value.data
-                                        : prev?.[stepId]?.steps?.[key]?.data,
+                                    ? {
+                                        ...prev?.[stepId]?.steps?.[key]?.data,
+                                        ...value.data,
+                                    }
+                                    : value?.data
+                                    ? value.data
+                                    : prev?.[stepId]?.steps?.[key]?.data,
                             },
                         };
                     }, {}),
@@ -1594,7 +1593,7 @@ export const sendEvents = (events?: TypedEventEmitter<WorkflowEventSchema>) => {
  */
 export const selectAvailableModel = (
     preferredModel: ModelEnum,
-    byokKeys?: Record<string, string>
+    byokKeys?: Record<string, string>,
 ): ModelEnum => {
     log.info('=== selectAvailableModel START ===');
 

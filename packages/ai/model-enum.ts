@@ -10,6 +10,7 @@ export const ModelEnum = {
     GEMINI_3_PRO: 'gemini-3-pro-preview',
     GEMINI_3_FLASH_LITE: 'gemini-3-flash-lite-preview',
     GEMINI_3_FLASH_IMAGE: 'gemini-3-flash-image-preview',
+    GEMINI_3_1_FLASH_IMAGE: 'gemini-3.1-flash-image-preview',
     GPT_4o_Mini: 'gpt-4o-mini',
     GPT_4o: 'gpt-4o',
     GPT_4_1_Mini: 'gpt-4.1-mini',
