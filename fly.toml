@@ -13,6 +13,7 @@ primary_region = 'sin'
 # Only errors/warnings, not requests
 LOG_LEVEL = "warn"
 NODE_ENV = 'production'
+HOST = '0.0.0.0'
 BASE_URL = 'https://vtchat.io.vn'
 BETTER_AUTH_URL = 'https://vtchat.io.vn'
 NEXT_PUBLIC_BASE_URL = 'https://vtchat.io.vn'

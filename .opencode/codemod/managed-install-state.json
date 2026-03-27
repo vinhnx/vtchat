@@ -1,0 +1,49 @@
+{
+  "schema_version": "1",
+  "harness": "opencode",
+  "scope": "project",
+  "components": [
+    {
+      "id": "command:codemod",
+      "kind": "command",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/.opencode/commands/codemod.md",
+      "version": "1.7.11",
+      "fingerprint": "ec5b794478f36d8b60e264ba2d99cf607dfe75ef53f5f36724a93da071bb6cce"
+    },
+    {
+      "id": "discovery-guide:AGENTS.md",
+      "kind": "discovery_guide",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/AGENTS.md",
+      "version": null,
+      "fingerprint": "f12f66daf8efccdc86a884bf7871ef30cd7491829195cac584fd2c88810e52f1"
+    },
+    {
+      "id": "periodic-trigger:check-updates.sh",
+      "kind": "discovery_guide",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/.opencode/codemod/periodic-update/check-updates.sh",
+      "version": null,
+      "fingerprint": "dd27e423eacfdfc1ec333094d1737f29c5aa019d0f6b746ac60bc75efe7867ee"
+    },
+    {
+      "id": "periodic-trigger:codemod-periodic-update.js",
+      "kind": "discovery_guide",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/.opencode/plugins/codemod-periodic-update.js",
+      "version": null,
+      "fingerprint": "b25c3f7b711f5be00ffad2e6f437cef9648ef401889f98976d721522a90f3346"
+    },
+    {
+      "id": "codemod-mcp",
+      "kind": "mcp_config",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/opencode.json",
+      "version": null,
+      "fingerprint": "1b03d3a901a494c3b47727c89915be1018511f540c8c8921cc3c85519b8657a4"
+    },
+    {
+      "id": "codemod",
+      "kind": "skill",
+      "path": "/Users/vinhnguyenxuan/Developer/learn-by-doing/vtchat/.opencode/skills/codemod/SKILL.md",
+      "version": "1.0.0",
+      "fingerprint": "4bf58fca6cc9e0d4b4c903023cc579bd447feaf47b6dea4857ea26caaf4556db"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ USER nextjs
 # Expose port and set environment
 EXPOSE 3000
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV HOST="0.0.0.0"
 
 # Start the application using the standalone server.js
 # This will run from the correct directory with proper module resolution

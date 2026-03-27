@@ -325,3 +325,15 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
+
+<!-- codemod-skill-discovery:begin -->
+## Codemod Skill Discovery
+This section is managed by `codemod` CLI.
+
+- Core skill: `.opencode/skills/codemod/SKILL.md`
+- Package skills: `.opencode/skills/<package-skill>/SKILL.md`
+- Codemod MCP: use it for JSSG authoring guidance, CLI/workflow guidance, import-helper guidance, and semantic-analysis-aware codemod work.
+- Codemod creation command: `/codemod`
+- List installed Codemod skills: `npx codemod ai list --harness opencode --format json`
+
+<!-- codemod-skill-discovery:end -->
