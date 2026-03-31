@@ -52,6 +52,12 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "  • Changelog generation with changelogithub"
     echo "  • Fly.io deployment integration"
     echo "  • Build optimization with cache"
+    echo "  • Security audit (blocks malicious packages)"
+    echo ""
+    echo -e "${YELLOW}Security Audit:${NC}"
+    echo "  • Checks for compromised axios versions (1.14.1, 0.30.4)"
+    echo "  • Detects malicious plain-crypto-js dependency"
+    echo "  • Runs automatically before deployment"
     echo ""
     echo -e "${YELLOW}Environment Variables:${NC}"
     echo "  GITHUB_TOKEN    GitHub token for changelog generation (optional)"
@@ -155,7 +161,7 @@ check_git_status() {
             # In interactive mode, always ask
             echo -n "Do you want to commit these changes before deployment? (y/N): " >&2
             read -r answer
-            
+
             if [[ "$answer" =~ ^[Yy]$ ]]; then
                 print_info "Committing changes..."
                 git add -A
@@ -176,7 +182,7 @@ check_git_status() {
         if [ "$auto_mode" != "--auto" ]; then
             echo -n "Do you want to continue anyway? (y/N): " >&2
             read -r answer
-            
+
             if [[ ! "$answer" =~ ^[Yy]$ ]]; then
                 print_error "Deployment cancelled by user."
                 exit 1
@@ -185,6 +191,30 @@ check_git_status() {
             print_info "Continuing deployment anyway (auto mode)..."
         fi
     fi
+}
+
+# Function to run security audit
+run_security_audit() {
+    print_step "Running security audit..."
+
+    # Check for malicious packages
+    if bun list --depth=0 2>&1 | grep -qE '(axios@1\.14\.1|axios@0\.30\.4|plain-crypto-js)'; then
+        print_error "SECURITY ALERT: Known malicious packages detected!"
+        print_error "  - axios@1.14.1 or axios@0.30.4 (compromised versions)"
+        print_error "  - plain-crypto-js (malicious dependency)"
+        echo "" >&2
+        print_error "Deployment blocked for security reasons."
+        print_error "Run 'bun run audit' for details or downgrade to safe versions."
+        exit 1
+    fi
+
+    # Check for known vulnerable packages (basic check)
+    print_info "Checking for known vulnerable packages..."
+    if bun list --depth=0 2>&1 | grep -qE '(axios)'; then
+        print_warning "axios detected - ensure you're using a safe version (not 1.14.1 or 0.30.4)"
+    fi
+
+    print_status "Security audit passed - no known malicious packages detected"
 }
 
 # Function to generate changelog
@@ -430,16 +460,19 @@ main() {
     # Step 1: Check git status
     check_git_status "$auto_mode"
 
-    # Step 2: Create version tag
+    # Step 2: Run security audit
+    run_security_audit
+
+    # Step 3: Create version tag
     local tag_name=$(create_version_tag "$version_type" "$auto_mode")
 
-    # Step 3: Push to remote
+    # Step 4: Push to remote
     push_to_remote "$tag_name" "$auto_mode"
 
-    # Step 4: Build application
+    # Step 5: Build application
     build_application
 
-    # Step 5: Deploy to Fly.io
+    # Step 6: Deploy to Fly.io
     deploy_to_fly "$tag_name" "$auto_mode"
 
     echo "" >&2

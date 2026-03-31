@@ -19,7 +19,6 @@ import { PlanSlug } from '../packages/shared/types/subscription.ts';
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-    console.error('DATABASE_URL environment variable is required');
     log.error('DATABASE_URL environment variable is required');
     process.exit(1);
 }
@@ -52,7 +51,7 @@ async function syncSubscriptionData() {
             { userCount: usersWithoutSubscriptions.length },
             'Found users needing subscription records',
         );
-        usersWithoutSubscriptions.forEach((user) => {
+        usersWithoutSubscriptions.forEach((_user) => {
         });
 
         // Create subscription records for these users
@@ -81,7 +80,6 @@ async function syncSubscriptionData() {
             'Successfully synced subscription records',
         );
     } catch (error) {
-        console.error('❌ Error syncing subscription data:', error);
         log.error({ error }, 'Error syncing subscription data');
         process.exit(1);
     } finally {

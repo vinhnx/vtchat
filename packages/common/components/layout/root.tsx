@@ -5,7 +5,7 @@ import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from '@r
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
-import { Badge, Button, cn, Flex, SonnerToaster } from '@repo/ui';
+import { Badge, Button, Flex, SonnerToaster } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -21,12 +21,12 @@ export type TRootLayout = {
 export const RootLayout: FC<TRootLayout> = ({ children }) => {
     const { isMobileSidebarOpen, setIsMobileSidebarOpen, isClient } = useRootContext();
     const pathname = usePathname();
-    const { data: session } = useSession();
-    const { isAdmin } = useAdmin();
+    const { data: _session } = useSession();
+    const { isAdmin: _isAdmin } = useAdmin();
 
     const sidebarPlacement = useAppStore((state) => state.sidebarPlacement);
-    const router = useRouter();
-    const { logout, isLoggingOut } = useLogout();
+    const _router = useRouter();
+    const { logout: _logout, isLoggingOut: _isLoggingOut } = useLogout();
 
     // Show mobile PWA installation notification
     useMobilePWANotification();

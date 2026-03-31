@@ -1,11 +1,12 @@
 'use client';
 
+import { log } from '@repo/shared/logger';
 import type { Source } from '@repo/shared/types';
 import { getHost } from '@repo/shared/utils';
 import { HoverCard, HoverCardContent, HoverCardTrigger, LinkFavicon } from '@repo/ui';
 import { ExternalLink } from 'lucide-react';
 import type React from 'react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 interface OGData {
     title?: string;
@@ -62,7 +63,7 @@ export const clearOGCache = () => {
     ogCache.clear();
     ogCacheTimestamps.clear();
     if (process.env.NODE_ENV === 'development') {
-        // Only log in development
+        log.debug('[LinkPreview] OG cache cleared');
     }
 };
 
@@ -70,7 +71,13 @@ export const clearOGCache = () => {
 export const inspectOGCache = () => {
     const entries = Array.from(ogCache.entries());
     if (process.env.NODE_ENV === 'development') {
-        // Only log in development - removed console.log statements
+        log.debug('[LinkPreview] Cache inspection:', {
+            entryCount: entries.length,
+            entries: entries.map(([key, value]) => ({
+                url: key.split('::')[0],
+                title: value.title,
+            })),
+        });
     }
     return entries;
 };
@@ -111,7 +118,7 @@ export const LinkPreview = memo(({ source }: { source: Source; }) => {
     const [ogResult, setOgResult] = useState<OGData | null>(null);
     const [imageError, setImageError] = useState(false);
 
-    const fetchOg = async (source: Source) => {
+    const fetchOg = useCallback(async (source: Source) => {
         try {
             // Create a unique cache key that includes source context
             const cacheKey = generateCacheKey(source);
@@ -152,7 +159,7 @@ export const LinkPreview = memo(({ source }: { source: Source; }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         let mounted = true;
@@ -168,7 +175,7 @@ export const LinkPreview = memo(({ source }: { source: Source; }) => {
         return () => {
             mounted = false;
         };
-    }, [source.link, source.title, source.snippet, source.index]); // Depend on all source properties that affect cache key
+    }, [source, fetchOg]);
 
     if (isLoading) {
         return (

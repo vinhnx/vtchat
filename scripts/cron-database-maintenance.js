@@ -275,26 +275,26 @@ function makeRequest(endpoint, type = 'hourly') {
                         }
                         resolve(response);
                     } else {
-                        console.error(`❌ ${type} maintenance failed:`, response);
+                        log.error({ type, response }, 'Maintenance failed');
                         reject(
                             new Error(`Maintenance failed: ${response.error || 'Unknown error'}`),
                         );
                     }
                 } catch (error) {
-                    console.error('❌ Failed to parse response:', error);
-                    console.error('Raw response (first 500 chars):', data.substring(0, 500));
+                    log.error({ error }, 'Failed to parse response');
+                    log.error({ rawResponse: data.substring(0, 500) }, 'Raw response');
                     reject(error);
                 }
             });
         });
 
         req.on('error', (error) => {
-            console.error('❌ Request failed:', error);
+            log.error({ error }, 'Request failed');
             reject(error);
         });
 
         req.on('timeout', () => {
-            console.error('❌ Request timed out after 30 seconds');
+            log.error('Request timed out after 30 seconds');
             req.destroy();
             reject(new Error('Request timeout'));
         });
@@ -319,7 +319,7 @@ async function runHourlyMaintenance() {
         httpsAgent.destroy();
         process.exit(0);
     } catch (error) {
-        console.error('💥 Hourly maintenance failed:', error.message);
+        log.error({ error: error.message }, 'Hourly maintenance failed');
 
         // Log structured error for monitoring
         logMetrics('hourly', 'fatal_error', 0, 0, error.message);

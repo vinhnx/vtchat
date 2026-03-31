@@ -78,7 +78,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         immer((set, get) => ({
             ...initialState,
 
-            fetchSubscription: async (userId?: string) => {
+            fetchSubscription: async (_userId?: string) => {
                 set((state) => {
                     state.isLoading = true;
                     state.error = null;

@@ -6,9 +6,7 @@ import * as React from 'react';
 
 import {
     ANIMATION_DURATION,
-    createFollowThrough,
     createSecondaryAction,
-    createStaging,
     EASING,
     STAGGER_DELAY,
 } from '../lib/animation-utils';

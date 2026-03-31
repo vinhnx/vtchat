@@ -3,12 +3,7 @@
 import { motion, type Variants } from 'framer-motion';
 import * as React from 'react';
 
-import {
-    ANIMATION_DURATION,
-    EASING,
-    FOLLOW_THROUGH,
-    STAGGER_DELAY,
-} from '../lib/animation-constants';
+import { ANIMATION_DURATION, EASING, STAGGER_DELAY } from '../lib/animation-constants';
 import { cn } from '../lib/utils';
 
 interface EnhancedLoadingProps {

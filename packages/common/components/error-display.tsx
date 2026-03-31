@@ -170,7 +170,7 @@ export const EnhancedErrorDisplay = ({
                 );
                 const result = centralizedGenerator(error, context);
                 setErrorMessage(result);
-            } catch (_serviceError) {
+            } catch {
                 // Fallback to basic error display
                 const errorText = typeof error === 'string' ? error : error.message;
                 setErrorMessage({

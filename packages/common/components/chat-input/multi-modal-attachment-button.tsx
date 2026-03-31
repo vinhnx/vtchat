@@ -26,7 +26,7 @@ export const MultiModalAttachmentButton: FC<MultiModalAttachmentButtonProps> = (
 }) => {
     const chatMode = useChatStore((state) => state.chatMode);
     const { data: session } = useSession();
-    const isSignedIn = !!session;
+    const _isSignedIn = !!session;
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 

@@ -21,15 +21,15 @@ export function createAccessibleMotion<T extends keyof typeof motion>(
         if (shouldReduceMotion) {
             // Remove all animation props when motion is reduced
             const {
-                initial,
-                animate,
-                exit,
-                transition,
-                variants,
-                whileHover,
-                whileTap,
-                whileFocus,
-                whileInView,
+                initial: _initial,
+                animate: _animate,
+                exit: _exit,
+                transition: _transition,
+                variants: _variants,
+                whileHover: _whileHover,
+                whileTap: _whileTap,
+                whileFocus: _whileFocus,
+                whileInView: _whileInView,
                 ...staticProps
             } = { ...defaultProps, ...props };
 

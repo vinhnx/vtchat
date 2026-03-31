@@ -88,7 +88,7 @@ export const useChatEditor = (editorProps: {
 
     useEffect(() => {
         setEditor(editor);
-    }, [editor]);
+    }, [editor, setEditor]);
 
     useEffect(() => {
         if (editor) {

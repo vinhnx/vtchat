@@ -16,7 +16,7 @@ export async function GET(request: Request) {
                 },
             },
         );
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { session: null, error: 'SESSION_FETCH_FAILED' },
             {

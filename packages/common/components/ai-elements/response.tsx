@@ -2,7 +2,7 @@
 
 import { CodeBlock } from '@repo/common/components';
 import { cn } from '@repo/ui';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 import remarkGfm from 'remark-gfm';
 import { Streamdown } from 'streamdown';
 
@@ -135,7 +135,7 @@ export function Response({
                 // Keep GFM by default; allow override/extension
                 remarkPlugins={remarkPlugins ?? [remarkGfm]}
                 rehypePlugins={rehypePlugins}
-                components={{ ...defaultComponents, ...(components || {}) }}
+                components={{ ...defaultComponents, ...components }}
                 allowedImagePrefixes={allowedImagePrefixes}
                 allowedLinkPrefixes={allowedLinkPrefixes}
                 defaultOrigin={defaultOrigin}

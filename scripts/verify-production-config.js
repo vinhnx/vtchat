@@ -267,13 +267,8 @@ class ProductionVerifier {
         // Environment Variables
         for (const [category, result] of Object.entries(this.results)) {
             if (result.checks) {
-                for (const check of result.checks) {
-                    const icon = check.status === 'success'
-                        ? '✅'
-                        : check.status === 'error'
-                        ? '❌'
-                        : '⚠️';
-                    const req = check.required ? '(Required)' : '(Optional)';
+                for (const _check of result.checks) {
+                    // Icon and req variables removed as they were unused
                 }
             } else {
                 // External connections

@@ -223,8 +223,6 @@ function findFiles(directory) {
  * Main migration function
  */
 function main() {
-    // CLI output for user - keeping console for main workflow status
-    console.log('🚀 Starting console to pino logger migration...');
     log.info('Starting console to pino migration');
 
     const rootDir = path.resolve(__dirname, '..');
@@ -244,12 +242,10 @@ function main() {
 
     for (const targetDir of targetDirs) {
         if (!fs.existsSync(targetDir)) {
-            console.log(`⚠️  Directory does not exist, skipping: ${targetDir}`);
             log.warn({ targetDir }, 'Directory does not exist, skipping');
             continue;
         }
 
-        console.log(`🔍 Processing directory: ${targetDir}`);
         log.info({ targetDir }, 'Processing directory');
         const files = findFiles(targetDir);
 
@@ -260,7 +256,6 @@ function main() {
             switch (result.reason) {
                 case 'migrated':
                     stats.migrated++;
-                    console.log(`✅ Migrated: ${file}`);
                     log.info({ file }, 'File migrated successfully');
                     break;
                 case 'excluded':
@@ -272,31 +267,23 @@ function main() {
                 case 'read_error':
                 case 'write_error':
                     stats.errors++;
-                    console.error(`❌ Error processing file ${file}: ${result.error?.message}`);
                     log.error({ file, error: result.error?.message }, 'File processing failed');
                     break;
             }
         }
     }
 
-    console.log('\n📊 Migration Summary:');
-    console.log(`   • Total files analyzed: ${stats.total}`);
-    console.log(`   • Files migrated: ${stats.migrated}`);
-    console.log(`   • Files excluded: ${stats.excluded}`);
-    console.log(`   • Files without console statements: ${stats.noConsole}`);
-    console.log(`   • Errors: ${stats.errors}`);
-
     log.info(stats, 'Migration completed');
 
     if (stats.migrated > 0) {
-        console.log('\n🎉 Migration completed successfully!');
-        console.log('📝 Next steps:');
-        console.log('   1. Review the changes in your IDE');
-        console.log('   2. Run tests to ensure no functionality was broken');
-        console.log('   3. Commit the changes with a descriptive message');
-        console.log('   4. Update any documentation that references console statements');
+        log.info('Migration completed successfully');
+        log.info('Next steps:');
+        log.info('   1. Review the changes in your IDE');
+        log.info('   2. Run tests to ensure no functionality was broken');
+        log.info('   3. Commit the changes with a descriptive message');
+        log.info('   4. Update any documentation that references console statements');
     } else {
-        console.log('\n✅ No files needed migration. All console statements have been replaced!');
+        log.info('No files needed migration. All console statements have been replaced!');
     }
 }
 

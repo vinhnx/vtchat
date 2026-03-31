@@ -2,7 +2,7 @@
 
 import type { QUOTA_WINDOW } from '../src/config/vtPlusLimits';
 
-interface VtPlusUsageData {
+interface _VtPlusUsageData {
     deepResearch: {
         used: number;
         limit: number;

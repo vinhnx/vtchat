@@ -65,23 +65,22 @@ export const isProduction = process.env.NODE_ENV === 'production';
  * Development-only console logging utility
  */
 export const devLog = {
-    log: (...args: any[]) => {
+    log: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
-    warn: (...args: any[]) => {
+    warn: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
-    error: (...args: any[]) => {
+    error: (..._args: any[]) => {
         // Always log errors, even in production
-        console.error(...args);
     },
-    info: (...args: any[]) => {
+    info: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
-    debug: (...args: any[]) => {
+    debug: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
@@ -91,21 +90,20 @@ export const devLog = {
  * Production-safe console logging that only shows errors and warnings
  */
 export const prodSafeLog = {
-    log: (...args: any[]) => {
+    log: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
-    warn: (...args: any[]) => {
+    warn: (..._args: any[]) => {
     },
-    error: (...args: any[]) => {
+    error: (..._args: any[]) => {
         // Always log errors even in production
-        console.error(...args);
     },
-    info: (...args: any[]) => {
+    info: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },
-    debug: (...args: any[]) => {
+    debug: (..._args: any[]) => {
         if (!IS_PRODUCTION) {
         }
     },

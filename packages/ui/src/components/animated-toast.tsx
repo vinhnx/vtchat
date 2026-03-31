@@ -4,14 +4,7 @@ import { motion, type Variants } from 'framer-motion';
 import { AlertTriangle, CheckCircle, Info, X, XCircle } from 'lucide-react';
 import * as React from 'react';
 
-import {
-    ANIMATION_DURATION,
-    createAnticipation,
-    createExaggeration,
-    createFollowThrough,
-    createSecondaryAction,
-    EASING,
-} from '../lib/animation-utils';
+import { ANIMATION_DURATION, createExaggeration, EASING } from '../lib/animation-utils';
 import { cn } from '../lib/utils';
 
 // Toast types with different animation behaviors
@@ -71,18 +64,6 @@ const iconVariants: Variants = {
             stiffness: 300,
             damping: 15,
             delay: 0.1,
-        },
-    },
-};
-
-// PRINCIPLE 8: SECONDARY ACTION - Subtle background pulse for success
-const backgroundVariants: Variants = {
-    success: {
-        backgroundColor: ['rgb(34, 197, 94)', 'rgb(22, 163, 74)', 'rgb(34, 197, 94)'],
-        transition: {
-            duration: 2,
-            repeat: 1,
-            ease: 'easeInOut',
         },
     },
 };

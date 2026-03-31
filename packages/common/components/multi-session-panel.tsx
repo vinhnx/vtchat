@@ -15,7 +15,7 @@ import {
     Separator,
 } from '@repo/ui';
 import { AlertCircle, CheckCircle, Monitor, Smartphone, Tablet, Trash2, Wifi } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface DeviceSession {
     sessionToken: string;
@@ -67,7 +67,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
     const [error, setError] = useState('');
     const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-    const fetchSessions = async () => {
+    const fetchSessions = useCallback(async () => {
         try {
             setLoading(true);
             setError('');
@@ -147,7 +147,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [session]);
 
     const handleSetActive = async (sessionToken: string) => {
         try {
@@ -198,7 +198,7 @@ export function MultiSessionPanel({ className }: MultiSessionPanelProps) {
 
     useEffect(() => {
         fetchSessions();
-    }, []);
+    }, [fetchSessions]);
 
     if (loading) {
         return (

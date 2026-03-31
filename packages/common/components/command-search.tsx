@@ -44,11 +44,11 @@ import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 
 export const CommandSearch = () => {
-    const { threadId: currentThreadId } = useParams();
+    const { threadId: _currentThreadId } = useParams();
     const { isCommandSearchOpen, setIsCommandSearchOpen } = useRootContext();
     const threads = useChatStore((state) => state.threads);
-    const getThread = useChatStore((state) => state.getThread);
-    const removeThread = useChatStore((state) => state.deleteThread);
+    const _getThread = useChatStore((state) => state.getThread);
+    const _removeThread = useChatStore((state) => state.deleteThread);
     const switchThread = useChatStore((state) => state.switchThread);
 
     const router = useRouter();

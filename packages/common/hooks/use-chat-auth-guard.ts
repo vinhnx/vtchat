@@ -41,6 +41,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
 
     const recoveryTimeoutRef = useRef<NodeJS.Timeout>();
     const preservedStateRef = useRef<any>(null);
+    const recoveryTriggerRef = useRef<number>(0);
 
     // Chat store selectors
     const currentThreadId = useChatStore((state) => state.currentThreadId);
@@ -151,10 +152,16 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
             lastError: 'Session expired',
         }));
 
-        if (autoRecovery && authState.recoveryAttempts < maxRecoveryAttempts) {
-            startRecovery();
+        // Trigger recovery by incrementing the trigger counter
+        if (autoRecovery) {
+            setAuthState((prev) => {
+                if (prev.recoveryAttempts < maxRecoveryAttempts && !prev.isRecovering) {
+                    recoveryTriggerRef.current += 1;
+                }
+                return prev;
+            });
         }
-    }, [preserveChatStateData, autoRecovery, authState.recoveryAttempts, maxRecoveryAttempts]);
+    }, [preserveChatStateData, autoRecovery, maxRecoveryAttempts]);
 
     // Handle authentication errors
     const handleAuthError = useCallback(
@@ -171,79 +178,83 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
                 lastError: errorMessage,
             }));
 
-            if (autoRecovery && authState.recoveryAttempts < maxRecoveryAttempts) {
-                startRecovery();
+            // Trigger recovery by incrementing the trigger counter
+            if (autoRecovery) {
+                setAuthState((prev) => {
+                    if (prev.recoveryAttempts < maxRecoveryAttempts && !prev.isRecovering) {
+                        recoveryTriggerRef.current += 1;
+                    }
+                    return prev;
+                });
             }
         },
-        [preserveChatStateData, autoRecovery, authState.recoveryAttempts, maxRecoveryAttempts],
+        [preserveChatStateData, autoRecovery, maxRecoveryAttempts],
     );
 
     // Start recovery process
     const startRecovery = useCallback(() => {
-        if (authState.isRecovering) return;
-
-        setAuthState((prev) => ({
-            ...prev,
-            isRecovering: true,
-            recoveryAttempts: prev.recoveryAttempts + 1,
-        }));
-
-        log.info(
-            { attempt: authState.recoveryAttempts + 1, maxAttempts: maxRecoveryAttempts },
-            '[ChatAuthGuard] Starting authentication recovery',
-        );
-
-        // Clear any existing timeout
-        if (recoveryTimeoutRef.current) {
-            clearTimeout(recoveryTimeoutRef.current);
-        }
-
-        // Attempt recovery with exponential backoff
-        const delay = 2 ** authState.recoveryAttempts * 1000;
-        recoveryTimeoutRef.current = setTimeout(async () => {
-            try {
-                await refreshSession();
-
-                // If successful, restore chat state
-                await restoreChatState();
-
-                setAuthState((prev) => ({
-                    ...prev,
-                    isProtected: false,
-                    isRecovering: false,
-                    lastError: null,
-                }));
-
-                logAuthRecovery(true, 'automatic', undefined);
-                log.info('[ChatAuthGuard] Authentication recovery successful');
-            } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'Recovery failed';
-
-                logAuthRecovery(false, 'automatic', undefined);
-                log.error(
-                    { error: errorMessage },
-                    '[ChatAuthGuard] Authentication recovery failed',
-                );
-
-                setAuthState((prev) => ({
-                    ...prev,
-                    isRecovering: false,
-                    lastError: errorMessage,
-                }));
-
-                // If max attempts reached, redirect to login with preserved state
-                if (authState.recoveryAttempts >= maxRecoveryAttempts) {
-                    redirectToLoginWithState();
-                }
+        setAuthState((prev) => {
+            if (prev.isRecovering || prev.recoveryAttempts >= maxRecoveryAttempts) {
+                return prev;
             }
-        }, delay);
-    }, [
-        authState.isRecovering,
-        authState.recoveryAttempts,
-        maxRecoveryAttempts,
-        refreshSession,
-        restoreChatState,
-    ]);
+
+            log.info(
+                { attempt: prev.recoveryAttempts + 1, maxAttempts: maxRecoveryAttempts },
+                '[ChatAuthGuard] Starting authentication recovery',
+            );
+
+            // Clear any existing timeout
+            if (recoveryTimeoutRef.current) {
+                clearTimeout(recoveryTimeoutRef.current);
+            }
+
+            // Attempt recovery with exponential backoff
+            const delay = 2 ** prev.recoveryAttempts * 1000;
+            recoveryTimeoutRef.current = setTimeout(async () => {
+                try {
+                    await refreshSession();
+
+                    // If successful, restore chat state
+                    await restoreChatState();
+
+                    setAuthState(innerPrev => ({
+                        ...innerPrev,
+                        isProtected: false,
+                        isRecovering: false,
+                        lastError: null,
+                    }));
+
+                    logAuthRecovery(true, 'automatic', undefined);
+                    log.info('[ChatAuthGuard] Authentication recovery successful');
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : 'Recovery failed';
+
+                    logAuthRecovery(false, 'automatic', undefined);
+                    log.error(
+                        { error: errorMessage },
+                        '[ChatAuthGuard] Authentication recovery failed',
+                    );
+
+                    setAuthState(innerPrev => {
+                        if (innerPrev.recoveryAttempts >= maxRecoveryAttempts) {
+                            redirectToLoginWithState();
+                        }
+                        return {
+                            ...innerPrev,
+                            isRecovering: false,
+                            lastError: errorMessage,
+                        };
+                    });
+                }
+            }, delay);
+
+            return {
+                ...prev,
+                isRecovering: true,
+                recoveryAttempts: prev.recoveryAttempts + 1,
+            };
+        });
+    }, [maxRecoveryAttempts, refreshSession, restoreChatState, redirectToLoginWithState]);
 
     // Manual recovery function
     const manualRecovery = useCallback(async () => {
@@ -280,7 +291,7 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
             // If manual recovery fails, redirect to login
             redirectToLoginWithState();
         }
-    }, [refreshSession, restoreChatState]);
+    }, [refreshSession, restoreChatState, redirectToLoginWithState]);
 
     // Redirect to login while preserving state
     const redirectToLoginWithState = useCallback(() => {
@@ -297,6 +308,14 @@ export function useChatAuthGuard(options: ChatAuthGuardOptions = {}) {
 
         router.push(loginUrl);
     }, [router, authState.preservedThreadId]);
+
+    // Trigger recovery when recoveryTriggerRef changes
+    useEffect(() => {
+        if (recoveryTriggerRef.current > 0) {
+            startRecovery();
+            recoveryTriggerRef.current = 0;
+        }
+    }, [startRecovery]);
 
     // Cleanup on unmount
     useEffect(() => {

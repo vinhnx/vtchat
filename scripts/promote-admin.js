@@ -3,6 +3,7 @@
  * Usage: bun run scripts/promote-admin.js vinhnguyen2308@gmail.com
  */
 
+import { log } from '@repo/shared/logger';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
 
@@ -33,11 +34,9 @@ async function promoteUserToAdmin(email) {
             return false;
         }
 
-        const user = result.rows[0];
-
         return true;
     } catch (error) {
-        console.error('❌ Error promoting user to admin:', error);
+        log.error({ error }, 'Error promoting user to admin');
         return false;
     } finally {
         await client.end();

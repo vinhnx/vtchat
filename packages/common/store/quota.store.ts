@@ -65,7 +65,7 @@ export const useQuotaStore = create<QuotaStore>()(
         immer((set, get) => ({
             ...initialState,
 
-            fetchUsage: async (userId?: string) => {
+            fetchUsage: async (_userId?: string) => {
                 set((state) => {
                     state.isLoading = true;
                     state.error = null;

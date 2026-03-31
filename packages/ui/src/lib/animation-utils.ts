@@ -6,7 +6,6 @@ import {
     ANTICIPATION,
     EASING,
     EXAGGERATION,
-    FOLLOW_THROUGH,
     MOTION_VARIANTS as MOTION_VARIANTS_CONST,
     REDUCED_MOTION_VARIANTS,
     STAGGER_DELAY,
@@ -124,7 +123,7 @@ export function createSmoothPath(
  * PRINCIPLE 5: FOLLOW THROUGH & OVERLAPPING ACTION
  * Creates natural continuation with staggered timing
  */
-export function createFollowThrough(elementCount: number): Variants {
+export function createFollowThrough(_elementCount: number): Variants {
     return {
         initial: { opacity: 0, y: 30 },
         animate: {
@@ -318,7 +317,7 @@ export function getAccessibleVariants(
  * Utility to create complex animation sequences
  */
 export function createAnimationSequence(
-    steps: Array<{
+    _steps: Array<{
         element: string;
         variant: Variants;
         delay?: number;
@@ -334,7 +333,7 @@ export function createAnimationSequence(
 /**
  * Utility for list animations with staggering
  */
-export function createListAnimation(itemCount: number): Variants {
+export function createListAnimation(_itemCount: number): Variants {
     return {
         initial: { opacity: 0 },
         animate: {

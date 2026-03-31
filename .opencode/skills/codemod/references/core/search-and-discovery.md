@@ -5,6 +5,7 @@ Use these commands to find the best existing codemod before creating a new one.
 For migration, upgrade, update, or deprecation-rollout requests, registry discovery is required before proposing a manual migration plan.
 
 Required sequence:
+
 - run `codemod search` first,
 - summarize the best candidate packages and gaps,
 - only then decide whether to run an existing codemod or create/plan a custom/manual path.
@@ -40,6 +41,7 @@ Required sequence:
 ## Selection Checklist
 
 Before applying a package, verify:
+
 - package name and scope match target migration,
 - latest version is acceptable,
 - category/language/framework align with your codebase,
@@ -48,6 +50,7 @@ Before applying a package, verify:
 ## Handoff to Execution
 
 After selecting a candidate package:
+
 - run from registry:
   - `codemod run <package-name> --target <repo-path> --dry-run`
 - or use implicit package invocation:

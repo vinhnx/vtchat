@@ -43,7 +43,7 @@ export function useErrorHandler() {
                 }
 
                 return structuredError;
-            } catch (_serviceError) {
+            } catch {
                 // Fallback error handling if the service fails
                 const fallbackMessage = typeof error === 'string' ? error : error.message;
 

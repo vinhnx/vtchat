@@ -14,10 +14,6 @@ export function AccessibilitySettings() {
         updateSettings({ highContrast: checked });
     };
 
-    const handleFontSizeChange = (value: string) => {
-        updateSettings({ fontSize: value as 'small' | 'medium' | 'large' | 'extra-large' });
-    };
-
     const handleFocusIndicatorsChange = (checked: boolean) => {
         updateSettings({ focusIndicators: checked });
     };

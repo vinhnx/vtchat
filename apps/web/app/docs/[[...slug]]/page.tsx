@@ -22,7 +22,7 @@ export default async function Page(props: {
                 </DocsBody>
             </DocsPage>
         );
-    } catch (error) {
+    } catch {
         // If docs source cannot be loaded, return 404 to unblock build
         return notFound();
     }

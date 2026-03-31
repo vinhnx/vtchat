@@ -11,7 +11,6 @@ import {
     Loader2,
     Save,
     Share,
-    Star,
 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { cn } from '../lib/utils';
@@ -74,7 +73,7 @@ export function ContextualButton({
                 setStatus('idle');
                 onStatusChange?.('idle');
             }, resetDelay);
-        } catch (error) {
+        } catch {
             setStatus('error');
             onStatusChange?.('error');
 

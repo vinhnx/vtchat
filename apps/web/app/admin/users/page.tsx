@@ -14,7 +14,7 @@ type UserStats = {
     verificationRate: string;
 };
 
-type ApiResponse = {
+type _ApiResponse = {
     users: User[];
     pagination: {
         page: number;
