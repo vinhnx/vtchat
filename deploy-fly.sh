@@ -229,21 +229,21 @@ generate_changelog() {
 
     print_step "Generating changelog..."
 
-    # Try to generate changelog using changelogithub
-    if command -v npx &> /dev/null; then
+    # Try to generate changelog using changelogithub with bunx (preferred) or npx
+    if command -v bunx &> /dev/null; then
         print_info "Using changelogithub to generate changelog..."
-        
+
         # Set the GITHUB_TOKEN if it exists in environment
         local github_token_args=""
         if [ -n "$GITHUB_TOKEN" ]; then
             github_token_args="--github-token $GITHUB_TOKEN"
         fi
-        
+
         # Generate changelog in dry-run mode to see what would be generated
-        # We redirect stderr to stdout to capture all output, then filter out the URL line
         # Use a temporary file in the system temp directory to avoid any permission issues
         local temp_changelog=$(mktemp)
-        if npx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > "$temp_changelog"; then
+        # Use timeout to prevent hanging (30 seconds max)
+        if timeout 30 bunx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > "$temp_changelog"; then
             # Check if the changelog has meaningful content (not just version info)
             if grep -q "Features\|Bug Fixes\|Performance" "$temp_changelog"; then
                 print_info "Changelog preview:"
@@ -254,13 +254,41 @@ generate_changelog() {
                 print_info "No significant changes to include in changelog"
             fi
         else
-            print_warning "Failed to generate changelog with changelogithub"
+            print_warning "Failed to generate changelog with changelogithub (timeout or error)"
         fi
-        
+
+        # Clean up temp file
+        rm -f "$temp_changelog"
+    elif command -v npx &> /dev/null; then
+        print_info "Using changelogithub to generate changelog (via npx)..."
+
+        # Set the GITHUB_TOKEN if it exists in environment
+        local github_token_args=""
+        if [ -n "$GITHUB_TOKEN" ]; then
+            github_token_args="--github-token $GITHUB_TOKEN"
+        fi
+
+        # Generate changelog in dry-run mode to see what would be generated
+        local temp_changelog=$(mktemp)
+        # Use timeout to prevent hanging (30 seconds max)
+        if timeout 30 npx changelogithub --dry $github_token_args 2>&1 | grep -v "Using the following link" > "$temp_changelog"; then
+            # Check if the changelog has meaningful content (not just version info)
+            if grep -q "Features\|Bug Fixes\|Performance" "$temp_changelog"; then
+                print_info "Changelog preview:"
+                # Redirect preview to stderr so function callers can safely capture stdout
+                head -20 "$temp_changelog" >&2
+                print_status "Changelog generated successfully (preview above)"
+            else
+                print_info "No significant changes to include in changelog"
+            fi
+        else
+            print_warning "Failed to generate changelog with changelogithub (timeout or error)"
+        fi
+
         # Clean up temp file
         rm -f "$temp_changelog"
     else
-        print_warning "npx not found, skipping changelog generation"
+        print_warning "Neither bunx nor npx found, skipping changelog generation"
     fi
 }
 
