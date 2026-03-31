@@ -90,114 +90,11 @@ export const models: Model[] = [
         maxTokens: 64_000,
         contextWindow: 200_000,
     },
-    // xAI Grok models
-    {
-        id: ModelEnum.GROK_4,
-        name: 'Grok 4',
-        provider: 'xai',
-        maxTokens: 256_000,
-        contextWindow: 256_000,
-    },
-    {
-        id: ModelEnum.GROK_3,
-        name: 'Grok 3',
-        provider: 'xai',
-        maxTokens: 131_072,
-        contextWindow: 131_072,
-    },
-    {
-        id: ModelEnum.GROK_3_MINI,
-        name: 'Grok 3 Mini',
-        provider: 'xai',
-        maxTokens: 131_072,
-        contextWindow: 131_072,
-    },
-    // Fireworks models
-    {
-        id: ModelEnum.DEEPSEEK_R1_FIREWORKS,
-        name: 'DeepSeek R1 (Fireworks)',
-        provider: 'fireworks',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-    },
-    {
-        id: ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS,
-        name: 'Kimi K2 Instruct (Fireworks)',
-        provider: 'fireworks',
-        maxTokens: 4_096,
-        contextWindow: 131_072,
-    },
-    // OpenRouter models
-    {
-        id: ModelEnum.DEEPSEEK_V3_0324,
-        name: 'DeepSeek V3 0324',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-    },
-    {
-        id: ModelEnum.DEEPSEEK_R1,
-        name: 'DeepSeek R1',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 163_840,
-    },
-    {
-        id: ModelEnum.QWEN3_235B_A22B,
-        name: 'Qwen3 235B A22B',
-        provider: 'openrouter',
-        maxTokens: 8192,
-        contextWindow: 40_960,
-    },
-    {
-        id: ModelEnum.QWEN3_32B,
-        name: 'Qwen3 32B',
-        provider: 'openrouter',
-        maxTokens: 8192,
-        contextWindow: 40_960,
-    },
-    {
-        id: ModelEnum.MISTRAL_NEMO,
-        name: 'Mistral Nemo',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 131_072,
-    },
-    {
-        id: ModelEnum.QWEN3_14B,
-        name: 'Qwen3 14B',
-        provider: 'openrouter',
-        maxTokens: 8192,
-        contextWindow: 40_960,
-        isFree: true,
-    },
-    {
-        id: ModelEnum.KIMI_K2,
-        name: 'Kimi K2 (OpenRouter)',
-        provider: 'openrouter',
-        maxTokens: 4096,
-        contextWindow: 131_072,
-    },
-    {
-        id: ModelEnum.GPT_OSS_120B,
-        name: 'OpenAI gpt-oss-120b (via OpenRouter)',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 131_072,
-    },
-    {
-        id: ModelEnum.GPT_OSS_20B,
-        name: 'OpenAI gpt-oss-20b (via OpenRouter)',
-        provider: 'openrouter',
-        maxTokens: 32_768,
-        contextWindow: 131_072,
-    },
 ];
 
 export const getModelFromChatMode = (mode?: string): ModelEnum => {
     switch (mode) {
         case ChatMode.Deep:
-            return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.Pro:
             return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.GPT_5_4:
@@ -220,41 +117,13 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.CLAUDE_4_6_SONNET;
         case ChatMode.CLAUDE_4_5_HAIKU:
             return ModelEnum.CLAUDE_4_5_HAIKU;
-        case ChatMode.GROK_4:
-            return ModelEnum.GROK_4;
-        case ChatMode.GROK_3:
-            return ModelEnum.GROK_3;
-        case ChatMode.GROK_3_MINI:
-            return ModelEnum.GROK_3_MINI;
-        case ChatMode.DEEPSEEK_R1_FIREWORKS:
-            return ModelEnum.DEEPSEEK_R1_FIREWORKS;
-        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
-            return ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS;
-        case ChatMode.DEEPSEEK_V3_0324:
-            return ModelEnum.DEEPSEEK_V3_0324;
-        case ChatMode.DEEPSEEK_R1:
-            return ModelEnum.DEEPSEEK_R1;
-        case ChatMode.QWEN3_235B_A22B:
-            return ModelEnum.QWEN3_235B_A22B;
-        case ChatMode.QWEN3_32B:
-            return ModelEnum.QWEN3_32B;
-        case ChatMode.MISTRAL_NEMO:
-            return ModelEnum.MISTRAL_NEMO;
-        case ChatMode.QWEN3_14B:
-            return ModelEnum.QWEN3_14B;
-        case ChatMode.KIMI_K2:
-            return ModelEnum.KIMI_K2;
-        case ChatMode.GPT_OSS_120B:
-            return ModelEnum.GPT_OSS_120B;
-        case ChatMode.GPT_OSS_20B:
-            return ModelEnum.GPT_OSS_20B;
         default:
             return ModelEnum.GPT_5_4_NANO;
     }
 };
 
 export const getChatModeFromModel = (model?: ModelEnum): ChatMode => {
-    if (!model) return ChatMode.Pro;
+    if (!model) return ChatMode.CLAUDE_4_6_SONNET;
 
     switch (model) {
         case ModelEnum.GPT_5_4:
@@ -277,34 +146,6 @@ export const getChatModeFromModel = (model?: ModelEnum): ChatMode => {
             return ChatMode.CLAUDE_4_6_SONNET;
         case ModelEnum.CLAUDE_4_5_HAIKU:
             return ChatMode.CLAUDE_4_5_HAIKU;
-        case ModelEnum.GROK_4:
-            return ChatMode.GROK_4;
-        case ModelEnum.GROK_3:
-            return ChatMode.GROK_3;
-        case ModelEnum.GROK_3_MINI:
-            return ChatMode.GROK_3_MINI;
-        case ModelEnum.DEEPSEEK_R1_FIREWORKS:
-            return ChatMode.DEEPSEEK_R1_FIREWORKS;
-        case ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS:
-            return ChatMode.KIMI_K2_INSTRUCT_FIREWORKS;
-        case ModelEnum.DEEPSEEK_V3_0324:
-            return ChatMode.DEEPSEEK_V3_0324;
-        case ModelEnum.DEEPSEEK_R1:
-            return ChatMode.DEEPSEEK_R1;
-        case ModelEnum.QWEN3_235B_A22B:
-            return ChatMode.QWEN3_235B_A22B;
-        case ModelEnum.QWEN3_32B:
-            return ChatMode.QWEN3_32B;
-        case ModelEnum.MISTRAL_NEMO:
-            return ChatMode.MISTRAL_NEMO;
-        case ModelEnum.QWEN3_14B:
-            return ChatMode.QWEN3_14B;
-        case ModelEnum.KIMI_K2:
-            return ChatMode.KIMI_K2;
-        case ModelEnum.GPT_OSS_120B:
-            return ChatMode.GPT_OSS_120B;
-        case ModelEnum.GPT_OSS_20B:
-            return ChatMode.GPT_OSS_20B;
         default:
             return ChatMode.GPT_5_4_NANO;
     }
@@ -327,27 +168,6 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.GPT_5_4_MINI:
         case ChatMode.GPT_5_4_NANO:
             return 128_000;
-        case ChatMode.GROK_4:
-            return 256_000;
-        case ChatMode.GROK_3:
-        case ChatMode.GROK_3_MINI:
-            return 131_072;
-        case ChatMode.DEEPSEEK_R1_FIREWORKS:
-        case ChatMode.DEEPSEEK_V3_0324:
-        case ChatMode.DEEPSEEK_R1:
-            return 32_768;
-        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
-        case ChatMode.KIMI_K2:
-            return 4_096;
-        case ChatMode.QWEN3_235B_A22B:
-        case ChatMode.QWEN3_32B:
-        case ChatMode.QWEN3_14B:
-            return 8192;
-        case ChatMode.MISTRAL_NEMO:
-            return 32_768;
-        case ChatMode.GPT_OSS_120B:
-        case ChatMode.GPT_OSS_20B:
-            return 32_768;
         default:
             return 65_536;
     }
@@ -359,7 +179,6 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_3_1_FLASH_LITE,
         ModelEnum.GEMINI_3_1_PRO,
     ];
-
     return googleModels.includes(model);
 };
 
@@ -369,10 +188,7 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GPT_5_4_PRO,
         ModelEnum.GPT_5_4_MINI,
         ModelEnum.GPT_5_4_NANO,
-        ModelEnum.GPT_OSS_120B,
-        ModelEnum.GPT_OSS_20B,
     ];
-
     return openaiWebSearchModels.includes(model);
 };
 
@@ -427,11 +243,6 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 };
 
 export const supportsReasoning = (model: ModelEnum): boolean => {
-    const deepseekReasoningModels = [
-        ModelEnum.DEEPSEEK_R1_FIREWORKS,
-        ModelEnum.DEEPSEEK_R1,
-    ];
-
     const anthropicReasoningModels = [
         ModelEnum.CLAUDE_4_6_OPUS,
         ModelEnum.CLAUDE_4_6_SONNET,
@@ -452,7 +263,6 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     ];
 
     return [
-        ...deepseekReasoningModels,
         ...anthropicReasoningModels,
         ...geminiThinkingModels,
         ...openaiReasoningModels,
@@ -465,8 +275,6 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.GPT_5_4_PRO,
         ModelEnum.GPT_5_4_MINI,
         ModelEnum.GPT_5_4_NANO,
-        ModelEnum.GPT_OSS_120B,
-        ModelEnum.GPT_OSS_20B,
     ];
 
     const anthropicToolModels = [
@@ -481,25 +289,10 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.GEMINI_3_1_FLASH_LITE,
     ];
 
-    const openrouterToolModels = [
-        ModelEnum.DEEPSEEK_V3_0324,
-        ModelEnum.QWEN3_235B_A22B,
-        ModelEnum.QWEN3_32B,
-        ModelEnum.QWEN3_14B,
-        ModelEnum.MISTRAL_NEMO,
-        ModelEnum.KIMI_K2,
-        ModelEnum.GPT_OSS_120B,
-        ModelEnum.GPT_OSS_20B,
-    ];
-
-    const xaiToolModels = [ModelEnum.GROK_3, ModelEnum.GROK_3_MINI, ModelEnum.GROK_4];
-
     return [
         ...openaiToolModels,
         ...anthropicToolModels,
         ...googleToolModels,
-        ...openrouterToolModels,
-        ...xaiToolModels,
     ].includes(model);
 };
 
@@ -530,15 +323,6 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
         return ReasoningType.OpenAIReasoning;
     }
 
-    const deepseekReasoningModels = [
-        ModelEnum.DEEPSEEK_R1_FIREWORKS,
-        ModelEnum.DEEPSEEK_R1,
-    ];
-
-    if (deepseekReasoningModels.includes(model)) {
-        return ReasoningType.DeepSeekReasoning;
-    }
-
     const anthropicReasoningModels = [
         ModelEnum.CLAUDE_4_6_OPUS,
         ModelEnum.CLAUDE_4_6_SONNET,
@@ -559,8 +343,6 @@ export const getReasoningTagName = (model: ModelEnum): ReasoningTagName => {
         case ReasoningType.GeminiThinking:
             return 'thought';
         case ReasoningType.OpenAIReasoning:
-            return 'think';
-        case ReasoningType.DeepSeekReasoning:
             return 'think';
         case ReasoningType.AnthropicReasoning:
             return 'thinking';

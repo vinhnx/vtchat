@@ -1,7 +1,6 @@
 'use client';
 
-import { ModelEnum, models } from '@repo/ai/models';
-import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
+import { models } from '@repo/ai/models';
 import {
     Badge,
     Card,
@@ -33,13 +32,9 @@ const providerNames: Record<string, string> = {
     openai: 'OpenAI',
     anthropic: 'Anthropic',
     google: 'Google',
-    openrouter: 'OpenRouter',
-    fireworks: 'Fireworks AI',
-    xai: 'xAI',
 };
 
 export const ModelSettings = () => {
-    const isVtPlus = useVtPlusAccess();
     const apiKeys = useApiKeysStore((state) => state.getAllKeys());
     const groupedModels = groupModelsByProvider();
 
@@ -52,12 +47,6 @@ export const ModelSettings = () => {
                 return !!apiKeys.ANTHROPIC_API_KEY;
             case 'google':
                 return !!apiKeys.GEMINI_API_KEY;
-            case 'openrouter':
-                return !!apiKeys.OPENROUTER_API_KEY;
-            case 'fireworks':
-                return !!apiKeys.FIREWORKS_API_KEY;
-            case 'xai':
-                return !!apiKeys.XAI_API_KEY;
             default:
                 return false;
         }
@@ -65,21 +54,12 @@ export const ModelSettings = () => {
 
     // Check if model is accessible
     const isModelAccessible = (model: (typeof models)[0]): boolean => {
-        // Free models are always accessible
-        if (model.isFree) return true;
-
         if (model.provider === 'google') {
-            if (model.id === ModelEnum.GEMINI_3_FLASH_LITE) {
-                return hasApiKeyForProvider('google');
-            }
-
-            // VT+ users get access to managed Gemini usage for higher tier models
-            if (isVtPlus) return true;
-
+            // All Gemini models require BYOK
             return hasApiKeyForProvider('google');
         }
 
-        // For all other models, check if user has the appropriate API key
+        // For other models, check if user has the appropriate API key
         return hasApiKeyForProvider(model.provider);
     };
 
@@ -98,18 +78,23 @@ export const ModelSettings = () => {
                 <CardHeader>
                     <CardTitle className='text-foreground'>Models Overview</CardTitle>
                     <CardDescription>
-                        VT supports multiple AI providers with a generous free tier and BYOK options
+                        VT supports multiple AI providers with BYOK (Bring Your Own Key)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                         <div className='bg-muted/20 border-muted rounded-lg border p-4'>
-                            <div className='text-foreground mb-2 font-medium'>Free Models</div>
+                            <div className='text-foreground mb-2 font-medium'>
+                                BYOK Required
+                            </div>
                             <div className='text-muted-foreground text-sm'>
+                                <p className='mb-2'>
+                                    All models require your own API keys:
+                                </p>
                                 <ul className='list-disc space-y-1 pl-5'>
-                                    <li>Qwen3 14B (via OpenRouter community tier)</li>
-                                    <li>Local models via Ollama or LM Studio</li>
-                                    <li>Gemini 3 Flash Lite (BYOK required for all users)</li>
+                                    <li>OpenAI API Key for GPT-5.4 series</li>
+                                    <li>Anthropic API Key for Claude 4.6/4.5</li>
+                                    <li>Google API Key for Gemini 3.x</li>
                                 </ul>
                             </div>
                         </div>
@@ -117,11 +102,9 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>VT+ Benefits</div>
                             <div className='text-muted-foreground text-sm'>
                                 <ul className='list-disc space-y-1 pl-5'>
-                                    <li>Enhanced Gemini model limits for managed server usage</li>
-                                    <li>
-                                        BYOK flexibility for Google models, including Flash Lite
-                                    </li>
-                                    <li>Access to all premium research features</li>
+                                    <li>Enhanced Gemini model limits</li>
+                                    <li>Access to Deep Research & Pro Search</li>
+                                    <li>Priority support and features</li>
                                 </ul>
                             </div>
                         </div>
@@ -135,22 +118,18 @@ export const ModelSettings = () => {
                     <CardHeader>
                         <CardTitle className='text-foreground flex items-center gap-2'>
                             {providerNames[provider] || provider}
-                            {!hasApiKeyForProvider(provider) && provider !== 'openrouter' && (
+                            {!hasApiKeyForProvider(provider) && (
                                 <Badge variant='outline' className='text-xs font-normal'>
-                                    {'API Key Required'}
+                                    API Key Required
                                 </Badge>
                             )}
                         </CardTitle>
                         <CardDescription>
                             {provider === 'google'
-                                && 'Gemini models require your own API key for Flash Lite access'}
+                                && 'Gemini models require your own API key'}
                             {provider === 'openai'
                                 && 'Advanced reasoning and function calling capabilities'}
                             {provider === 'anthropic' && 'Claude models with exceptional reasoning'}
-                            {provider === 'openrouter'
-                                && 'Access to multiple open models through one API'}
-                            {provider === 'fireworks' && 'High-performance model hosting'}
-                            {provider === 'xai' && 'Grok models with real-time web access'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -167,11 +146,6 @@ export const ModelSettings = () => {
                                     <div className='mb-2 flex items-start justify-between'>
                                         <div className='text-sm font-medium'>{model.name}</div>
                                         <div className='flex gap-1'>
-                                            {model.isFree && (
-                                                <Badge className='bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'>
-                                                    Free
-                                                </Badge>
-                                            )}
                                             {isModelAccessible(model)
                                                 ? (
                                                     <Badge className='bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
@@ -193,16 +167,9 @@ export const ModelSettings = () => {
                                             Context:{' '}
                                             {(model.contextWindow / 1000).toFixed(0)}K tokens
                                         </div>
-                                        {!isModelAccessible(model) && provider !== 'google' && (
+                                        {!isModelAccessible(model) && (
                                             <div className='text-xs italic'>
                                                 Add {providerNames[provider]} API key to access
-                                            </div>
-                                        )}
-                                        {!isModelAccessible(model)
-                                            && provider === 'google'
-                                            && !isVtPlus && (
-                                            <div className='text-xs italic'>
-                                                Add Google API key or upgrade to VT+
                                             </div>
                                         )}
                                     </div>
@@ -217,24 +184,10 @@ export const ModelSettings = () => {
             <Card className='border-muted/50 bg-muted/10'>
                 <CardHeader>
                     <CardTitle className='text-foreground'>Access Instructions</CardTitle>
-                    <CardDescription>How to access different model types in VT</CardDescription>
+                    <CardDescription>How to access different models in VT</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className='space-y-4'>
-                        <div className='bg-background/50 border-muted rounded-lg border p-4'>
-                            <div className='text-foreground mb-2 font-medium'>Free Models</div>
-                            <div className='text-muted-foreground text-sm'>
-                                <p className='mb-2'>
-                                    Select OpenRouter models (like Qwen3 14B) remain available to
-                                    all registered users without an API key.
-                                </p>
-                                <p>
-                                    Gemini 3 Flash Lite now requires your own Gemini API key for
-                                    every request, regardless of subscription tier.
-                                </p>
-                            </div>
-                        </div>
-
                         <div className='bg-background/50 border-muted rounded-lg border p-4'>
                             <div className='text-foreground mb-2 font-medium'>
                                 BYOK (Bring Your Own Key)
@@ -255,13 +208,12 @@ export const ModelSettings = () => {
                             <div className='text-foreground mb-2 font-medium'>VT+ Subscription</div>
                             <div className='text-muted-foreground text-sm'>
                                 <p className='mb-2'>
-                                    VT+ subscribers receive enhanced Gemini rate limits with
-                                    server-managed usage for premium tiers. Flash Lite still
-                                    respects your BYOK configuration to keep costs predictable.
+                                    VT+ subscribers receive enhanced Gemini rate limits and access
+                                    to exclusive research features.
                                 </p>
                                 <p>
-                                    VT+ also includes exclusive research features like Deep Research
-                                    and Pro Search.
+                                    VT+ includes Deep Research and Pro Search capabilities for
+                                    advanced AI-powered research workflows.
                                 </p>
                             </div>
                         </div>
