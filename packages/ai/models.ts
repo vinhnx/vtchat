@@ -13,10 +13,11 @@ export type Model = {
     provider: ProviderEnumType;
     maxTokens: number;
     contextWindow: number;
-    isFree?: boolean; // Add flag for free models
+    isFree?: boolean;
 };
 
 export const models: Model[] = [
+    // OpenAI GPT-5.4 series (latest frontier)
     {
         id: ModelEnum.GPT_5_4,
         name: 'GPT-5.4',
@@ -45,153 +46,7 @@ export const models: Model[] = [
         maxTokens: 128_000,
         contextWindow: 400_000,
     },
-    {
-        id: ModelEnum.GPT_5,
-        name: 'GPT-5',
-        provider: 'openai',
-        maxTokens: 128_000,
-        contextWindow: 400_000,
-    },
-    {
-        id: ModelEnum.GPT_5_PRO,
-        name: 'GPT-5 Pro',
-        provider: 'openai',
-        maxTokens: 128_000,
-        contextWindow: 400_000,
-    },
-    {
-        id: ModelEnum.GPT_5_MINI,
-        name: 'GPT-5 Mini',
-        provider: 'openai',
-        maxTokens: 128_000,
-        contextWindow: 400_000,
-    },
-    {
-        id: ModelEnum.GPT_5_NANO,
-        name: 'GPT-5 Nano',
-        provider: 'openai',
-        maxTokens: 128_000,
-        contextWindow: 400_000,
-    },
-    {
-        id: ModelEnum.GPT_4o,
-        name: 'GPT-4o',
-        provider: 'openai',
-        maxTokens: 16_384,
-        contextWindow: 128_000,
-    },
-    {
-        id: ModelEnum.GPT_4_1_Mini,
-        name: 'GPT-4.1 Mini',
-        provider: 'openai',
-        maxTokens: 32_768,
-        contextWindow: 1_047_576,
-    },
-    {
-        id: ModelEnum.GPT_4_1,
-        name: 'GPT-4.1',
-        provider: 'openai',
-        maxTokens: 32_768,
-        contextWindow: 1_047_576,
-    },
-    {
-        id: ModelEnum.O3,
-        name: 'o3',
-        provider: 'openai',
-        maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.O3_Mini,
-        name: 'o3-mini',
-        provider: 'openai',
-        maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.O4_Mini,
-        name: 'o4 mini',
-        provider: 'openai',
-        maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.GPT_4_1_Nano,
-        name: 'GPT-4.1 Nano',
-        provider: 'openai',
-        maxTokens: 16_384,
-        contextWindow: 1_047_576,
-    },
-    {
-        id: ModelEnum.O1_MINI,
-        name: 'o1-mini',
-        provider: 'openai',
-        maxTokens: 65_536,
-        contextWindow: 128_000,
-    },
-    {
-        id: ModelEnum.O1,
-        name: 'o1',
-        provider: 'openai',
-        maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.GPT_4o_Mini,
-        name: 'GPT-4o Mini',
-        provider: 'openai',
-        maxTokens: 100_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_6_OPUS,
-        name: 'Claude 4.6 Opus',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_6_SONNET,
-        name: 'Claude 4.6 Sonnet',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_5_HAIKU,
-        name: 'Claude 4.5 Haiku',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_1_OPUS,
-        name: 'Claude 4.1 Opus',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_SONNET,
-        name: 'Claude 4 Sonnet',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_SONNET_4_5,
-        name: 'Claude Sonnet 4.5',
-        provider: 'anthropic',
-        maxTokens: 64_000,
-        contextWindow: 200_000,
-    },
-    {
-        id: ModelEnum.CLAUDE_4_OPUS,
-        name: 'Claude 4 Opus',
-        provider: 'anthropic',
-        maxTokens: 32_000,
-        contextWindow: 200_000,
-    },
+    // Gemini 3.x series (latest)
     {
         id: ModelEnum.GEMINI_3_1_PRO,
         name: 'Gemini 3.1 Pro Preview',
@@ -213,40 +68,35 @@ export const models: Model[] = [
         maxTokens: 65_536,
         contextWindow: 65_536,
     },
+    // Claude 4.6/4.5 series (latest)
     {
-        id: ModelEnum.GEMINI_3_FLASH_IMAGE,
-        name: 'Gemini 3.1 Flash Image Preview',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 65_536,
+        id: ModelEnum.CLAUDE_4_6_OPUS,
+        name: 'Claude 4.6 Opus',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_3_1_FLASH_IMAGE,
-        name: 'Gemini 3.1 Flash Image',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 65_536,
+        id: ModelEnum.CLAUDE_4_6_SONNET,
+        name: 'Claude 4.6 Sonnet',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_2_5_PRO,
-        name: 'Gemini 2.5 Pro',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
+        id: ModelEnum.CLAUDE_4_5_HAIKU,
+        name: 'Claude 4.5 Haiku',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
     },
+    // xAI Grok models
     {
-        id: ModelEnum.GEMINI_2_5_FLASH,
-        name: 'Gemini 2.5 Flash',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 65_536,
+        id: ModelEnum.GROK_4,
+        name: 'Grok 4',
+        provider: 'xai',
+        maxTokens: 256_000,
+        contextWindow: 256_000,
     },
     {
         id: ModelEnum.GROK_3,
@@ -261,13 +111,6 @@ export const models: Model[] = [
         provider: 'xai',
         maxTokens: 131_072,
         contextWindow: 131_072,
-    },
-    {
-        id: ModelEnum.GROK_4,
-        name: 'Grok 4',
-        provider: 'xai',
-        maxTokens: 256_000,
-        contextWindow: 256_000,
     },
     // Fireworks models
     {
@@ -357,63 +200,40 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.Pro:
             return ModelEnum.GEMINI_3_FLASH;
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
-            return ModelEnum.GEMINI_2_5_FLASH_LITE;
-        case ChatMode.GEMINI_2_5_PRO:
-            return ModelEnum.GEMINI_2_5_PRO;
-        case ChatMode.GEMINI_2_5_FLASH:
-            return ModelEnum.GEMINI_2_5_FLASH;
-        case ChatMode.GEMINI_3_1_FLASH_LITE:
-            return ModelEnum.GEMINI_3_1_FLASH_LITE;
+        case ChatMode.GPT_5_4:
+            return ModelEnum.GPT_5_4;
+        case ChatMode.GPT_5_4_PRO:
+            return ModelEnum.GPT_5_4_PRO;
+        case ChatMode.GPT_5_4_MINI:
+            return ModelEnum.GPT_5_4_MINI;
+        case ChatMode.GPT_5_4_NANO:
+            return ModelEnum.GPT_5_4_NANO;
         case ChatMode.GEMINI_3_1_PRO:
             return ModelEnum.GEMINI_3_1_PRO;
         case ChatMode.GEMINI_3_FLASH:
             return ModelEnum.GEMINI_3_FLASH;
-        case ChatMode.DEEPSEEK_R1_FIREWORKS:
-            return ModelEnum.DEEPSEEK_R1_FIREWORKS;
-        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
-            return ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS;
-        case ChatMode.DEEPSEEK_R1:
-            return ModelEnum.DEEPSEEK_R1;
-        case ChatMode.CLAUDE_4_1_OPUS:
-            return ModelEnum.CLAUDE_4_1_OPUS;
-        case ChatMode.CLAUDE_4_SONNET:
-            return ModelEnum.CLAUDE_4_SONNET;
-        case ChatMode.CLAUDE_SONNET_4_5:
-            return ModelEnum.CLAUDE_SONNET_4_5;
-        case ChatMode.CLAUDE_4_OPUS:
-            return ModelEnum.CLAUDE_4_OPUS;
-        case ChatMode.GPT_4o_Mini:
-            return ModelEnum.GPT_4o_Mini;
-        case ChatMode.GPT_4o:
-            return ModelEnum.GPT_4o;
-        case ChatMode.GPT_4_1:
-            return ModelEnum.GPT_4_1;
-        case ChatMode.GPT_5:
-            return ModelEnum.GPT_5;
-        case ChatMode.GPT_4_1_Mini:
-            return ModelEnum.GPT_4_1_Mini;
-        case ChatMode.GPT_4_1_Nano:
-            return ModelEnum.GPT_4_1_Nano;
-        case ChatMode.O3:
-            return ModelEnum.O3;
-        case ChatMode.O3_Mini:
-            return ModelEnum.O3_Mini;
-        case ChatMode.O4_Mini:
-            return ModelEnum.O4_Mini;
-        case ChatMode.O1_MINI:
-            return ModelEnum.O1_MINI;
-        case ChatMode.O1:
-            return ModelEnum.O1;
+        case ChatMode.GEMINI_3_1_FLASH_LITE:
+            return ModelEnum.GEMINI_3_1_FLASH_LITE;
+        case ChatMode.CLAUDE_4_6_OPUS:
+            return ModelEnum.CLAUDE_4_6_OPUS;
+        case ChatMode.CLAUDE_4_6_SONNET:
+            return ModelEnum.CLAUDE_4_6_SONNET;
+        case ChatMode.CLAUDE_4_5_HAIKU:
+            return ModelEnum.CLAUDE_4_5_HAIKU;
+        case ChatMode.GROK_4:
+            return ModelEnum.GROK_4;
         case ChatMode.GROK_3:
             return ModelEnum.GROK_3;
         case ChatMode.GROK_3_MINI:
             return ModelEnum.GROK_3_MINI;
-        case ChatMode.GROK_4:
-            return ModelEnum.GROK_4;
-        // OpenRouter models
+        case ChatMode.DEEPSEEK_R1_FIREWORKS:
+            return ModelEnum.DEEPSEEK_R1_FIREWORKS;
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
+            return ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS;
         case ChatMode.DEEPSEEK_V3_0324:
             return ModelEnum.DEEPSEEK_V3_0324;
+        case ChatMode.DEEPSEEK_R1:
+            return ModelEnum.DEEPSEEK_R1;
         case ChatMode.QWEN3_235B_A22B:
             return ModelEnum.QWEN3_235B_A22B;
         case ChatMode.QWEN3_32B:
@@ -429,7 +249,64 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
         case ChatMode.GPT_OSS_20B:
             return ModelEnum.GPT_OSS_20B;
         default:
-            return ModelEnum.GEMINI_3_FLASH_LITE;
+            return ModelEnum.GPT_5_4_NANO;
+    }
+};
+
+export const getChatModeFromModel = (model?: ModelEnum): ChatMode => {
+    if (!model) return ChatMode.Pro;
+
+    switch (model) {
+        case ModelEnum.GPT_5_4:
+            return ChatMode.GPT_5_4;
+        case ModelEnum.GPT_5_4_PRO:
+            return ChatMode.GPT_5_4_PRO;
+        case ModelEnum.GPT_5_4_MINI:
+            return ChatMode.GPT_5_4_MINI;
+        case ModelEnum.GPT_5_4_NANO:
+            return ChatMode.GPT_5_4_NANO;
+        case ModelEnum.GEMINI_3_1_PRO:
+            return ChatMode.GEMINI_3_1_PRO;
+        case ModelEnum.GEMINI_3_FLASH:
+            return ChatMode.GEMINI_3_FLASH;
+        case ModelEnum.GEMINI_3_1_FLASH_LITE:
+            return ChatMode.GEMINI_3_1_FLASH_LITE;
+        case ModelEnum.CLAUDE_4_6_OPUS:
+            return ChatMode.CLAUDE_4_6_OPUS;
+        case ModelEnum.CLAUDE_4_6_SONNET:
+            return ChatMode.CLAUDE_4_6_SONNET;
+        case ModelEnum.CLAUDE_4_5_HAIKU:
+            return ChatMode.CLAUDE_4_5_HAIKU;
+        case ModelEnum.GROK_4:
+            return ChatMode.GROK_4;
+        case ModelEnum.GROK_3:
+            return ChatMode.GROK_3;
+        case ModelEnum.GROK_3_MINI:
+            return ChatMode.GROK_3_MINI;
+        case ModelEnum.DEEPSEEK_R1_FIREWORKS:
+            return ChatMode.DEEPSEEK_R1_FIREWORKS;
+        case ModelEnum.KIMI_K2_INSTRUCT_FIREWORKS:
+            return ChatMode.KIMI_K2_INSTRUCT_FIREWORKS;
+        case ModelEnum.DEEPSEEK_V3_0324:
+            return ChatMode.DEEPSEEK_V3_0324;
+        case ModelEnum.DEEPSEEK_R1:
+            return ChatMode.DEEPSEEK_R1;
+        case ModelEnum.QWEN3_235B_A22B:
+            return ChatMode.QWEN3_235B_A22B;
+        case ModelEnum.QWEN3_32B:
+            return ChatMode.QWEN3_32B;
+        case ModelEnum.MISTRAL_NEMO:
+            return ChatMode.MISTRAL_NEMO;
+        case ModelEnum.QWEN3_14B:
+            return ChatMode.QWEN3_14B;
+        case ModelEnum.KIMI_K2:
+            return ChatMode.KIMI_K2;
+        case ModelEnum.GPT_OSS_120B:
+            return ChatMode.GPT_OSS_120B;
+        case ModelEnum.GPT_OSS_20B:
+            return ChatMode.GPT_OSS_20B;
+        default:
+            return ChatMode.GPT_5_4_NANO;
     }
 };
 
@@ -439,88 +316,47 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
         case ChatMode.Deep:
         case ChatMode.GEMINI_3_1_PRO:
         case ChatMode.GEMINI_3_FLASH:
-        case ChatMode.GEMINI_3_FLASH_LITE:
+        case ChatMode.GEMINI_3_1_FLASH_LITE:
             return 1_048_576;
-        case ChatMode.CLAUDE_4_1_OPUS:
-        case ChatMode.CLAUDE_4_SONNET:
-        case ChatMode.CLAUDE_4_OPUS:
-        case ChatMode.CLAUDE_SONNET_4_5:
-            return 200_000;
-        case ChatMode.O3:
-        case ChatMode.O3_Mini:
-        case ChatMode.O4_Mini:
-        case ChatMode.GPT_4o_Mini:
-        case ChatMode.O1:
-            return 200_000;
-        case ChatMode.O1_MINI:
+        case ChatMode.CLAUDE_4_6_OPUS:
+        case ChatMode.CLAUDE_4_6_SONNET:
+        case ChatMode.CLAUDE_4_5_HAIKU:
+            return 64_000;
+        case ChatMode.GPT_5_4:
+        case ChatMode.GPT_5_4_PRO:
+        case ChatMode.GPT_5_4_MINI:
+        case ChatMode.GPT_5_4_NANO:
             return 128_000;
-        case ChatMode.GPT_4o:
-            return 128_000;
-        case ChatMode.GPT_4_1_Mini:
-        case ChatMode.GPT_4_1:
-        case ChatMode.GPT_4_1_Nano:
-            return 1_047_576;
+        case ChatMode.GROK_4:
+            return 256_000;
         case ChatMode.GROK_3:
         case ChatMode.GROK_3_MINI:
             return 131_072;
-        case ChatMode.GROK_4:
-            return 256_000;
-        // Fireworks models
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
-            return 163_840;
-        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
-            return 131_072;
-        // OpenRouter models
         case ChatMode.DEEPSEEK_V3_0324:
         case ChatMode.DEEPSEEK_R1:
-            return 163_840;
+            return 32_768;
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
+        case ChatMode.KIMI_K2:
+            return 4_096;
         case ChatMode.QWEN3_235B_A22B:
         case ChatMode.QWEN3_32B:
         case ChatMode.QWEN3_14B:
-            return 40_960;
+            return 8192;
         case ChatMode.MISTRAL_NEMO:
-        case ChatMode.KIMI_K2:
-            return 131_072;
+            return 32_768;
         case ChatMode.GPT_OSS_120B:
         case ChatMode.GPT_OSS_20B:
-            return 200_000;
+            return 32_768;
         default:
-            return 100_000;
+            return 65_536;
     }
-};
-
-export const estimateTokensByWordCount = (text: string): number => {
-    // Simple word splitting by whitespace
-    const words = text?.trim().split(/\s+/);
-
-    // Using a multiplier of 1.35 tokens per word for English text
-    const estimatedTokens = Math.ceil(words.length * 1.35);
-
-    return estimatedTokens;
-};
-
-export const estimateTokensForMessages = (messages: CoreMessage[]): number => {
-    let totalTokens = 0;
-
-    for (const message of messages) {
-        if (typeof message.content === 'string') {
-            totalTokens += estimateTokensByWordCount(message.content);
-        } else if (Array.isArray(message.content)) {
-            for (const part of message.content) {
-                if (part.type === 'text') {
-                    totalTokens += estimateTokensByWordCount(part.text);
-                }
-            }
-        }
-    }
-
-    return totalTokens;
 };
 
 export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     const googleModels = [
         ModelEnum.GEMINI_3_FLASH,
-        ModelEnum.GEMINI_3_FLASH_LITE,
+        ModelEnum.GEMINI_3_1_FLASH_LITE,
         ModelEnum.GEMINI_3_1_PRO,
     ];
 
@@ -533,15 +369,8 @@ export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
         ModelEnum.GPT_5_4_PRO,
         ModelEnum.GPT_5_4_MINI,
         ModelEnum.GPT_5_4_NANO,
-        ModelEnum.GPT_5,
-        ModelEnum.GPT_4o_Mini,
-        ModelEnum.GPT_4o,
-        ModelEnum.O3,
-        ModelEnum.O3_Mini,
-        // OpenAI models via OpenRouter also support OpenAI web search tools
         ModelEnum.GPT_OSS_120B,
         ModelEnum.GPT_OSS_20B,
-        // Add other models as they become available for Responses API
     ];
 
     return openaiWebSearchModels.includes(model);
@@ -573,7 +402,6 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
 
     let totalTokens = messageSizes.reduce((sum, item) => sum + item.tokens, 0);
 
-    // Count tokens for the latest message
     const latestMessageTokens = typeof latestMessage.content === 'string'
         ? estimateTokensByWordCount(latestMessage.content)
         : Array.isArray(latestMessage.content)
@@ -598,43 +426,29 @@ export const trimMessageHistoryEstimated = (messages: CoreMessage[], chatMode: C
     return { trimmedMessages, tokenCount: totalTokens };
 };
 
-/**
- * Detects if a model supports reasoning tokens/thinking capabilities
- */
 export const supportsReasoning = (model: ModelEnum): boolean => {
-    // DeepSeek reasoning models (via Fireworks, OpenRouter)
     const deepseekReasoningModels = [
-        ModelEnum.DEEPSEEK_R1_FIREWORKS, // Fireworks
-        ModelEnum.DEEPSEEK_R1, // OpenRouter
+        ModelEnum.DEEPSEEK_R1_FIREWORKS,
+        ModelEnum.DEEPSEEK_R1,
     ];
 
-    // Anthropic reasoning models
     const anthropicReasoningModels = [
-        ModelEnum.CLAUDE_4_1_OPUS, // claude-4.1-opus-20250805
-        ModelEnum.CLAUDE_4_SONNET, // claude-4-sonnet-20250514
-        ModelEnum.CLAUDE_SONNET_4_5, // claude-sonnet-4-5
-        ModelEnum.CLAUDE_4_OPUS, // claude-4-opus-20250514
+        ModelEnum.CLAUDE_4_6_OPUS,
+        ModelEnum.CLAUDE_4_6_SONNET,
+        ModelEnum.CLAUDE_4_5_HAIKU,
     ];
 
-    // Gemini thinking models (existing functionality)
     const geminiThinkingModels = [
         ModelEnum.GEMINI_3_FLASH,
         ModelEnum.GEMINI_3_1_PRO,
-        ModelEnum.GEMINI_3_FLASH_LITE,
+        ModelEnum.GEMINI_3_1_FLASH_LITE,
     ];
 
-    // OpenAI reasoning models
     const openaiReasoningModels = [
         ModelEnum.GPT_5_4,
         ModelEnum.GPT_5_4_PRO,
         ModelEnum.GPT_5_4_MINI,
         ModelEnum.GPT_5_4_NANO,
-        ModelEnum.GPT_5,
-        ModelEnum.O3,
-        ModelEnum.O3_Mini,
-        ModelEnum.O4_Mini,
-        ModelEnum.O1_MINI,
-        ModelEnum.O1,
     ];
 
     return [
@@ -645,42 +459,28 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     ].includes(model);
 };
 
-/**
- * Checks if a model supports tool calls/function calling
- * Based on capabilities from the models.dev API
- */
 export const supportsTools = (model: ModelEnum): boolean => {
-    // OpenAI models that support tools
     const openaiToolModels = [
         ModelEnum.GPT_5_4,
         ModelEnum.GPT_5_4_PRO,
         ModelEnum.GPT_5_4_MINI,
         ModelEnum.GPT_5_4_NANO,
-        ModelEnum.GPT_5,
-        ModelEnum.GPT_4o,
-        ModelEnum.GPT_4o_Mini,
-        ModelEnum.GPT_4_1,
-        ModelEnum.GPT_4_1_Mini,
-        ModelEnum.GPT_4_1_Nano,
-        // Note: O1/O3 models do NOT support tools
+        ModelEnum.GPT_OSS_120B,
+        ModelEnum.GPT_OSS_20B,
     ];
 
-    // Anthropic models that support tools
     const anthropicToolModels = [
-        ModelEnum.CLAUDE_4_1_OPUS,
-        ModelEnum.CLAUDE_4_SONNET,
-        ModelEnum.CLAUDE_SONNET_4_5,
-        ModelEnum.CLAUDE_4_OPUS,
+        ModelEnum.CLAUDE_4_6_OPUS,
+        ModelEnum.CLAUDE_4_6_SONNET,
+        ModelEnum.CLAUDE_4_5_HAIKU,
     ];
 
-    // Google models that support tools
     const googleToolModels = [
         ModelEnum.GEMINI_3_FLASH,
         ModelEnum.GEMINI_3_1_PRO,
-        ModelEnum.GEMINI_3_FLASH_LITE,
+        ModelEnum.GEMINI_3_1_FLASH_LITE,
     ];
 
-    // OpenRouter models that support tools
     const openrouterToolModels = [
         ModelEnum.DEEPSEEK_V3_0324,
         ModelEnum.QWEN3_235B_A22B,
@@ -692,7 +492,6 @@ export const supportsTools = (model: ModelEnum): boolean => {
         ModelEnum.GPT_OSS_20B,
     ];
 
-    // xAI models that support tools
     const xaiToolModels = [ModelEnum.GROK_3, ModelEnum.GROK_3_MINI, ModelEnum.GROK_4];
 
     return [
@@ -704,69 +503,91 @@ export const supportsTools = (model: ModelEnum): boolean => {
     ].includes(model);
 };
 
-/**
- * Checks if a model supports web search
- * Most models support web search through our implementation
- */
 export const supportsWebSearch = (model: ModelEnum): boolean => {
-    // Almost all models support web search through our unified implementation
-    // Only some very specialized or limited models might not support it
-    const nonWebSearchModels: ModelEnum[] = [
-        // Add any models that don't support web search here if needed
-    ];
-
+    const nonWebSearchModels: ModelEnum[] = [];
     return !nonWebSearchModels.includes(model);
 };
 
-/**
- * Determines the reasoning implementation type for a model
- */
 export const getReasoningType = (model: ModelEnum): ReasoningType => {
-    // Gemini models use thinking config
     const geminiThinkingModels = [
         ModelEnum.GEMINI_3_FLASH,
         ModelEnum.GEMINI_3_1_PRO,
-        ModelEnum.GEMINI_3_FLASH_LITE,
+        ModelEnum.GEMINI_3_1_FLASH_LITE,
     ];
 
     if (geminiThinkingModels.includes(model)) {
-        return ReasoningType.GEMINI_THINKING;
+        return ReasoningType.GeminiThinking;
     }
 
-    // DeepSeek models use reasoning middleware with <think> tags
-    const deepseekReasoningModels = [ModelEnum.DEEPSEEK_R1_FIREWORKS, ModelEnum.DEEPSEEK_R1];
+    const openaiReasoningModels = [
+        ModelEnum.GPT_5_4,
+        ModelEnum.GPT_5_4_PRO,
+        ModelEnum.GPT_5_4_MINI,
+        ModelEnum.GPT_5_4_NANO,
+    ];
+
+    if (openaiReasoningModels.includes(model)) {
+        return ReasoningType.OpenAIReasoning;
+    }
+
+    const deepseekReasoningModels = [
+        ModelEnum.DEEPSEEK_R1_FIREWORKS,
+        ModelEnum.DEEPSEEK_R1,
+    ];
 
     if (deepseekReasoningModels.includes(model)) {
-        return ReasoningType.DEEPSEEK_REASONING;
+        return ReasoningType.DeepSeekReasoning;
     }
 
-    // Anthropic models support reasoning with providerOptions
     const anthropicReasoningModels = [
-        ModelEnum.CLAUDE_4_1_OPUS,
-        ModelEnum.CLAUDE_4_SONNET,
-        ModelEnum.CLAUDE_SONNET_4_5,
-        ModelEnum.CLAUDE_4_OPUS,
+        ModelEnum.CLAUDE_4_6_OPUS,
+        ModelEnum.CLAUDE_4_6_SONNET,
+        ModelEnum.CLAUDE_4_5_HAIKU,
     ];
 
     if (anthropicReasoningModels.includes(model)) {
-        return ReasoningType.ANTHROPIC_REASONING;
+        return ReasoningType.AnthropicReasoning;
     }
 
-    return ReasoningType.NONE;
+    return ReasoningType.None;
 };
 
-/**
- * Gets the appropriate middleware tag for reasoning extraction
- */
-export const getReasoningTagName = (model: ModelEnum): string | null => {
+export const getReasoningTagName = (model: ModelEnum): ReasoningTagName => {
     const reasoningType = getReasoningType(model);
 
     switch (reasoningType) {
-        case ReasoningType.DEEPSEEK_REASONING:
-            return ReasoningTagName.THINK; // DeepSeek uses <think> tags
-        case ReasoningType.ANTHROPIC_REASONING:
-            return ReasoningTagName.THINKING; // Anthropic models may use different tags
+        case ReasoningType.GeminiThinking:
+            return 'thought';
+        case ReasoningType.OpenAIReasoning:
+            return 'think';
+        case ReasoningType.DeepSeekReasoning:
+            return 'think';
+        case ReasoningType.AnthropicReasoning:
+            return 'thinking';
         default:
-            return null; // Gemini uses built-in thinking config, no middleware needed
+            return null;
     }
+};
+
+const estimateTokensByWordCount = (text: string): number => {
+    const wordCount = text.trim().split(/\s+/).length;
+    return Math.ceil(wordCount * 1.3);
+};
+
+const estimateTokensForMessages = (messages: CoreMessage[]): number => {
+    let totalTokens = 0;
+
+    for (const message of messages) {
+        if (typeof message.content === 'string') {
+            totalTokens += estimateTokensByWordCount(message.content);
+        } else if (Array.isArray(message.content)) {
+            for (const part of message.content) {
+                if (part.type === 'text') {
+                    totalTokens += estimateTokensByWordCount(part.text);
+                }
+            }
+        }
+    }
+
+    return totalTokens;
 };

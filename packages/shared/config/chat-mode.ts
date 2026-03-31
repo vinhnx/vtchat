@@ -6,42 +6,19 @@ export const ChatMode = {
     // AI Agent modes
     Pro: 'pro',
     Deep: 'deep',
-    // OpenAI reasoning models
-    O3: 'o3',
-    O3_Mini: 'o3-mini',
-    O4_Mini: 'o4-mini',
-    O1: 'o1',
-    O1_MINI: 'o1-mini',
     // OpenAI GPT models (latest)
     GPT_5_4: 'gpt-5.4',
     GPT_5_4_PRO: 'gpt-5.4-pro',
     GPT_5_4_MINI: 'gpt-5.4-mini',
     GPT_5_4_NANO: 'gpt-5.4-nano',
-    GPT_5_MINI: 'gpt-5-mini',
-    GPT_5_NANO: 'gpt-5-nano',
-    GPT_5: 'gpt-5',
-    GPT_5_Pro: 'gpt-5-pro',
-    GPT_4_1: 'gpt-4.1',
-    GPT_4_1_Mini: 'gpt-4.1-mini',
-    GPT_4_1_Nano: 'gpt-4.1-nano',
-    GPT_4o: 'gpt-4o',
-    GPT_4o_Mini: 'gpt-4o-mini',
     // Gemini models (latest)
     GEMINI_3_1_PRO: 'gemini-3.1-pro-preview',
     GEMINI_3_FLASH: 'gemini-3-flash-preview',
     GEMINI_3_1_FLASH_LITE: 'gemini-3.1-flash-lite-preview',
-    GEMINI_3_1_FLASH_IMAGE: 'gemini-3.1-flash-image-preview',
-    GEMINI_2_5_PRO: 'gemini-2.5-pro',
-    GEMINI_2_5_FLASH: 'gemini-2.5-flash',
-    GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
     // Claude models (latest)
     CLAUDE_4_6_OPUS: 'claude-opus-4-6',
     CLAUDE_4_6_SONNET: 'claude-sonnet-4-6',
     CLAUDE_4_5_HAIKU: 'claude-haiku-4-5',
-    CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
-    CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
-    CLAUDE_SONNET_4_5: 'claude-sonnet-4-5',
-    CLAUDE_4_OPUS: 'claude-opus-4-20250514',
     // Fireworks models
     DEEPSEEK_R1_FIREWORKS: 'deepseek-r1-fireworks',
     KIMI_K2_INSTRUCT_FIREWORKS: 'kimi-k2-instruct-fireworks',
@@ -151,76 +128,6 @@ export const ChatModeConfig: Record<
         multiModal: true,
         retry: true,
         isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_5]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_5_Pro]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_5_Mini]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_5_Nano]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.O3]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.O3_Mini]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: false,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.O4_Mini]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isNew: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_4o_Mini]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
-        isAuthRequired: true,
-    },
-    [ChatMode.GPT_4o]: {
-        webSearch: true,
-        imageUpload: true,
-        multiModal: true,
-        retry: true,
         isAuthRequired: true,
     },
     [ChatMode.CLAUDE_4_6_OPUS]: {
@@ -579,64 +486,29 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI GPT-5.4 Mini';
         case ChatMode.GPT_5_4_NANO:
             return 'OpenAI GPT-5.4 Nano';
-        case ChatMode.GPT_5:
-            return 'OpenAI GPT-5';
-        case ChatMode.GPT_5_Pro:
-            return 'OpenAI GPT-5 Pro';
-        case ChatMode.GPT_5_Mini:
-            return 'OpenAI GPT-5 Mini';
-        case ChatMode.GPT_5_Nano:
-            return 'OpenAI GPT-5 Nano';
-        case ChatMode.GPT_4_1:
-            return 'OpenAI GPT 4.1';
-        case ChatMode.GPT_4_1_Mini:
-            return 'OpenAI GPT 4.1 Mini';
-        case ChatMode.GPT_4_1_Nano:
-            return 'OpenAI GPT 4.1 Nano';
-        case ChatMode.GPT_4o_Mini:
-            return 'OpenAI GPT 4o Mini';
-        case ChatMode.GPT_4o:
-            return 'OpenAI GPT 4o';
         case ChatMode.CLAUDE_4_6_OPUS:
             return 'Anthropic Claude 4.6 Opus';
         case ChatMode.CLAUDE_4_6_SONNET:
             return 'Anthropic Claude 4.6 Sonnet';
         case ChatMode.CLAUDE_4_5_HAIKU:
             return 'Anthropic Claude 4.5 Haiku';
-        case ChatMode.CLAUDE_4_1_OPUS:
-            return 'Anthropic Claude 4.1 Opus';
-        case ChatMode.CLAUDE_4_SONNET:
-            return 'Anthropic Claude 4 Sonnet';
-        case ChatMode.CLAUDE_SONNET_4_5:
-            return 'Anthropic Claude Sonnet 4.5';
-        case ChatMode.CLAUDE_4_OPUS:
-            return 'Anthropic Claude 4 Opus';
-        case ChatMode.O3:
-            return 'OpenAI o3';
-        case ChatMode.O3_Mini:
-            return 'OpenAI o3 mini';
-        case ChatMode.O4_Mini:
-            return 'OpenAI o4 mini';
         case ChatMode.GEMINI_3_1_PRO:
             return 'Google Gemini 3.1 Pro Preview';
         case ChatMode.GEMINI_3_FLASH:
             return 'Google Gemini 3 Flash Preview';
         case ChatMode.GEMINI_3_1_FLASH_LITE:
             return 'Google Gemini 3.1 Flash Lite Preview';
-        case ChatMode.GEMINI_3_1_FLASH_IMAGE:
-            return 'Google Gemini 3.1 Flash Image';
-        case ChatMode.GEMINI_2_5_PRO:
-            return 'Google Gemini 2.5 Pro';
-        case ChatMode.GEMINI_2_5_FLASH:
-            return 'Google Gemini 2.5 Flash';
-        case ChatMode.GEMINI_2_5_FLASH_LITE:
-            return 'Google Gemini 2.5 Flash Lite';
         case ChatMode.GROK_4:
             return 'xAI Grok 4';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:
             return 'xAI Grok 3 Mini';
+        // Fireworks models
+        case ChatMode.DEEPSEEK_R1_FIREWORKS:
+            return 'Fireworks DeepSeek R1';
+        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
+            return 'Fireworks Kimi K2 Instruct';
         // OpenRouter models
         case ChatMode.GPT_OSS_120B:
             return 'OpenAI gpt-oss-120b (via OpenRouter)';
@@ -654,15 +526,6 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenRouter Mistral Nemo';
         case ChatMode.QWEN3_14B:
             return 'OpenRouter Qwen3 14B';
-        // Fireworks models
-        case ChatMode.DEEPSEEK_R1_FIREWORKS:
-            return 'Fireworks DeepSeek R1';
-        case ChatMode.KIMI_K2_INSTRUCT_FIREWORKS:
-            return 'Fireworks Kimi K2 Instruct';
-        case ChatMode.O1_MINI:
-            return 'OpenAI o1-mini';
-        case ChatMode.O1:
-            return 'OpenAI o1';
         case ChatMode.KIMI_K2:
             return 'OpenRouter Kimi K2';
     }
