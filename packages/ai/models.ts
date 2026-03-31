@@ -18,6 +18,34 @@ export type Model = {
 
 export const models: Model[] = [
     {
+        id: ModelEnum.GPT_5_4,
+        name: 'GPT-5.4',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
+        id: ModelEnum.GPT_5_4_PRO,
+        name: 'GPT-5.4 Pro',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
+        id: ModelEnum.GPT_5_4_MINI,
+        name: 'GPT-5.4 Mini',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
+        id: ModelEnum.GPT_5_4_NANO,
+        name: 'GPT-5.4 Nano',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
         id: ModelEnum.GPT_5,
         name: 'GPT-5',
         provider: 'openai',
@@ -501,6 +529,10 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
 
 export const supportsOpenAIWebSearch = (model: ModelEnum): boolean => {
     const openaiWebSearchModels = [
+        ModelEnum.GPT_5_4,
+        ModelEnum.GPT_5_4_PRO,
+        ModelEnum.GPT_5_4_MINI,
+        ModelEnum.GPT_5_4_NANO,
         ModelEnum.GPT_5,
         ModelEnum.GPT_4o_Mini,
         ModelEnum.GPT_4o,
@@ -593,6 +625,10 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 
     // OpenAI reasoning models
     const openaiReasoningModels = [
+        ModelEnum.GPT_5_4,
+        ModelEnum.GPT_5_4_PRO,
+        ModelEnum.GPT_5_4_MINI,
+        ModelEnum.GPT_5_4_NANO,
         ModelEnum.GPT_5,
         ModelEnum.O3,
         ModelEnum.O3_Mini,
@@ -616,6 +652,10 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
 export const supportsTools = (model: ModelEnum): boolean => {
     // OpenAI models that support tools
     const openaiToolModels = [
+        ModelEnum.GPT_5_4,
+        ModelEnum.GPT_5_4_PRO,
+        ModelEnum.GPT_5_4_MINI,
+        ModelEnum.GPT_5_4_NANO,
         ModelEnum.GPT_5,
         ModelEnum.GPT_4o,
         ModelEnum.GPT_4o_Mini,

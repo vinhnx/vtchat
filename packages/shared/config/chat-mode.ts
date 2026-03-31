@@ -13,9 +13,13 @@ export const ChatMode = {
     O1: 'o1',
     O1_MINI: 'o1-mini',
     // OpenAI GPT models (latest)
+    GPT_5_4: 'gpt-5.4',
+    GPT_5_4_PRO: 'gpt-5.4-pro',
+    GPT_5_4_MINI: 'gpt-5.4-mini',
+    GPT_5_4_NANO: 'gpt-5.4-nano',
+    GPT_5_MINI: 'gpt-5-mini',
+    GPT_5_NANO: 'gpt-5-nano',
     GPT_5: 'gpt-5',
-    GPT_5_Mini: 'gpt-5-mini',
-    GPT_5_Nano: 'gpt-5-nano',
     GPT_5_Pro: 'gpt-5-pro',
     GPT_4_1: 'gpt-4.1',
     GPT_4_1_Mini: 'gpt-4.1-mini',
@@ -110,6 +114,38 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
     [ChatMode.GPT_4_1_Nano]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_4]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_4_PRO]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_4_MINI]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_4_NANO]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
@@ -535,6 +571,14 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'Deep Research - Gemini 3 Flash';
         case ChatMode.Pro:
             return 'Pro Search - Gemini 3 Flash';
+        case ChatMode.GPT_5_4:
+            return 'OpenAI GPT-5.4';
+        case ChatMode.GPT_5_4_PRO:
+            return 'OpenAI GPT-5.4 Pro';
+        case ChatMode.GPT_5_4_MINI:
+            return 'OpenAI GPT-5.4 Mini';
+        case ChatMode.GPT_5_4_NANO:
+            return 'OpenAI GPT-5.4 Nano';
         case ChatMode.GPT_5:
             return 'OpenAI GPT-5';
         case ChatMode.GPT_5_Pro:
