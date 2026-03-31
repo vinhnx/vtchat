@@ -3,36 +3,48 @@ import { FeatureSlug, PlanSlug } from '../types/subscription';
 import { checkSubscriptionAccess, type SubscriptionContext } from '../utils/subscription';
 
 export const ChatMode = {
+    // AI Agent modes
     Pro: 'pro',
     Deep: 'deep',
+    // OpenAI reasoning models
     O3: 'o3',
     O3_Mini: 'o3-mini',
     O4_Mini: 'o4-mini',
-    O1_MINI: 'o1-mini',
     O1: 'o1',
+    O1_MINI: 'o1-mini',
+    // OpenAI GPT models (latest)
+    GPT_5: 'gpt-5',
+    GPT_5_Mini: 'gpt-5-mini',
+    GPT_5_Nano: 'gpt-5-nano',
+    GPT_5_Pro: 'gpt-5-pro',
     GPT_4_1: 'gpt-4.1',
     GPT_4_1_Mini: 'gpt-4.1-mini',
     GPT_4_1_Nano: 'gpt-4.1-nano',
-    GPT_5: 'gpt-5-2025-08-07',
     GPT_4o: 'gpt-4o',
     GPT_4o_Mini: 'gpt-4o-mini',
+    // Gemini models (latest)
+    GEMINI_3_1_PRO: 'gemini-3.1-pro-preview',
+    GEMINI_3_FLASH: 'gemini-3-flash-preview',
+    GEMINI_3_1_FLASH_LITE: 'gemini-3.1-flash-lite-preview',
+    GEMINI_3_1_FLASH_IMAGE: 'gemini-3.1-flash-image-preview',
     GEMINI_2_5_PRO: 'gemini-2.5-pro',
     GEMINI_2_5_FLASH: 'gemini-2.5-flash',
     GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
-    GEMINI_3_PRO: 'gemini-3.1-pro',
-    GEMINI_3_FLASH: 'gemini-3-flash',
-    GEMINI_3_FLASH_LITE: 'gemini-3.1-flash-lite',
-    GEMINI_3_1_FLASH_IMAGE: 'gemini-3.1-flash-image-preview',
-
+    // Claude models (latest)
+    CLAUDE_4_6_OPUS: 'claude-opus-4-6',
+    CLAUDE_4_6_SONNET: 'claude-sonnet-4-6',
+    CLAUDE_4_5_HAIKU: 'claude-haiku-4-5',
     CLAUDE_4_1_OPUS: 'claude-opus-4-1-20250805',
     CLAUDE_4_SONNET: 'claude-sonnet-4-20250514',
     CLAUDE_SONNET_4_5: 'claude-sonnet-4-5',
     CLAUDE_4_OPUS: 'claude-opus-4-20250514',
+    // Fireworks models
     DEEPSEEK_R1_FIREWORKS: 'deepseek-r1-fireworks',
     KIMI_K2_INSTRUCT_FIREWORKS: 'kimi-k2-instruct-fireworks',
+    // xAI Grok models
+    GROK_4: 'grok-4',
     GROK_3: 'grok-3',
     GROK_3_MINI: 'grok-3-mini',
-    GROK_4: 'grok-4',
     // OpenRouter models
     DEEPSEEK_V3_0324: 'deepseek-v3-0324',
     DEEPSEEK_R1: 'deepseek-r1',
@@ -113,6 +125,30 @@ export const ChatModeConfig: Record<
         isNew: true,
         isAuthRequired: true,
     },
+    [ChatMode.GPT_5_Pro]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_Mini]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.GPT_5_Nano]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
     [ChatMode.O3]: {
         webSearch: true,
         imageUpload: true,
@@ -149,6 +185,30 @@ export const ChatModeConfig: Record<
         imageUpload: true,
         multiModal: true,
         retry: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.CLAUDE_4_6_OPUS]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.CLAUDE_4_6_SONNET]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
+        isAuthRequired: true,
+    },
+    [ChatMode.CLAUDE_4_5_HAIKU]: {
+        webSearch: true,
+        imageUpload: true,
+        multiModal: true,
+        retry: true,
+        isNew: true,
         isAuthRequired: true,
     },
     [ChatMode.CLAUDE_4_1_OPUS]: {
@@ -202,11 +262,12 @@ export const ChatModeConfig: Record<
         retry: true,
         isAuthRequired: true,
     },
-    [ChatMode.GEMINI_3_PRO]: {
+    [ChatMode.GEMINI_3_1_PRO]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
         retry: true,
+        isNew: true,
         isAuthRequired: true,
     },
     [ChatMode.GEMINI_3_FLASH]: {
@@ -217,7 +278,7 @@ export const ChatModeConfig: Record<
         isNew: true,
         isAuthRequired: true,
     },
-    [ChatMode.GEMINI_3_FLASH_LITE]: {
+    [ChatMode.GEMINI_3_1_FLASH_LITE]: {
         webSearch: true,
         imageUpload: true,
         multiModal: true,
@@ -474,18 +535,30 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'Deep Research - Gemini 3 Flash';
         case ChatMode.Pro:
             return 'Pro Search - Gemini 3 Flash';
+        case ChatMode.GPT_5:
+            return 'OpenAI GPT-5';
+        case ChatMode.GPT_5_Pro:
+            return 'OpenAI GPT-5 Pro';
+        case ChatMode.GPT_5_Mini:
+            return 'OpenAI GPT-5 Mini';
+        case ChatMode.GPT_5_Nano:
+            return 'OpenAI GPT-5 Nano';
         case ChatMode.GPT_4_1:
             return 'OpenAI GPT 4.1';
         case ChatMode.GPT_4_1_Mini:
             return 'OpenAI GPT 4.1 Mini';
         case ChatMode.GPT_4_1_Nano:
             return 'OpenAI GPT 4.1 Nano';
-        case ChatMode.GPT_5:
-            return 'OpenAI GPT-5';
         case ChatMode.GPT_4o_Mini:
             return 'OpenAI GPT 4o Mini';
         case ChatMode.GPT_4o:
             return 'OpenAI GPT 4o';
+        case ChatMode.CLAUDE_4_6_OPUS:
+            return 'Anthropic Claude 4.6 Opus';
+        case ChatMode.CLAUDE_4_6_SONNET:
+            return 'Anthropic Claude 4.6 Sonnet';
+        case ChatMode.CLAUDE_4_5_HAIKU:
+            return 'Anthropic Claude 4.5 Haiku';
         case ChatMode.CLAUDE_4_1_OPUS:
             return 'Anthropic Claude 4.1 Opus';
         case ChatMode.CLAUDE_4_SONNET:
@@ -500,26 +573,26 @@ export const getChatModeName = (mode: ChatMode) => {
             return 'OpenAI o3 mini';
         case ChatMode.O4_Mini:
             return 'OpenAI o4 mini';
+        case ChatMode.GEMINI_3_1_PRO:
+            return 'Google Gemini 3.1 Pro Preview';
+        case ChatMode.GEMINI_3_FLASH:
+            return 'Google Gemini 3 Flash Preview';
+        case ChatMode.GEMINI_3_1_FLASH_LITE:
+            return 'Google Gemini 3.1 Flash Lite Preview';
+        case ChatMode.GEMINI_3_1_FLASH_IMAGE:
+            return 'Google Gemini 3.1 Flash Image';
         case ChatMode.GEMINI_2_5_PRO:
             return 'Google Gemini 2.5 Pro';
         case ChatMode.GEMINI_2_5_FLASH:
             return 'Google Gemini 2.5 Flash';
         case ChatMode.GEMINI_2_5_FLASH_LITE:
             return 'Google Gemini 2.5 Flash Lite';
-        case ChatMode.GEMINI_3_PRO:
-            return 'Google Gemini 3 Pro';
-        case ChatMode.GEMINI_3_FLASH:
-            return 'Google Gemini 3 Flash';
-        case ChatMode.GEMINI_3_FLASH_LITE:
-            return 'Google Gemini 3 Flash Lite';
-        case ChatMode.GEMINI_3_1_FLASH_IMAGE:
-            return 'Google Gemini 3.1 Flash Image';
+        case ChatMode.GROK_4:
+            return 'xAI Grok 4';
         case ChatMode.GROK_3:
             return 'xAI Grok 3';
         case ChatMode.GROK_3_MINI:
             return 'xAI Grok 3 Mini';
-        case ChatMode.GROK_4:
-            return 'xAI Grok 4';
         // OpenRouter models
         case ChatMode.GPT_OSS_120B:
             return 'OpenAI gpt-oss-120b (via OpenRouter)';

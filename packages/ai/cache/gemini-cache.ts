@@ -14,7 +14,9 @@ import { ModelEnum as ModelEnumValues } from '../models';
  * Supported Gemini models for explicit caching
  */
 export type GoogleModelCacheableId =
-    | 'models/gemini-3.1-pro'
+    | 'models/gemini-3.1-pro-preview'
+    | 'models/gemini-3-flash-preview'
+    | 'models/gemini-3.1-flash-lite-preview'
     | 'models/gemini-2.5-flash'
     | 'models/gemini-2.5-flash-lite';
 
@@ -113,7 +115,9 @@ export class GeminiCacheManager {
  */
 export function isModelCacheable(modelId: string): modelId is GoogleModelCacheableId {
     const cacheableModels: GoogleModelCacheableId[] = [
-        'models/gemini-3.1-pro',
+        'models/gemini-3.1-pro-preview',
+        'models/gemini-3-flash-preview',
+        'models/gemini-3.1-flash-lite-preview',
         'models/gemini-2.5-flash',
         'models/gemini-2.5-flash-lite',
     ];
@@ -125,11 +129,15 @@ export function isModelCacheable(modelId: string): modelId is GoogleModelCacheab
  */
 export function getGeminiCacheableModelId(modelEnum: ModelEnumType): GoogleModelCacheableId | null {
     switch (modelEnum) {
-        case ModelEnumValues.GEMINI_3_PRO:
-            return 'models/gemini-3.1-pro';
+        case ModelEnumValues.GEMINI_3_1_PRO:
+            return 'models/gemini-3.1-pro-preview';
         case ModelEnumValues.GEMINI_3_FLASH:
+            return 'models/gemini-3-flash-preview';
+        case ModelEnumValues.GEMINI_3_1_FLASH_LITE:
+            return 'models/gemini-3.1-flash-lite-preview';
+        case ModelEnumValues.GEMINI_2_5_FLASH:
             return 'models/gemini-2.5-flash';
-        case ModelEnumValues.GEMINI_3_FLASH_LITE:
+        case ModelEnumValues.GEMINI_2_5_FLASH_LITE:
             return 'models/gemini-2.5-flash-lite';
         default:
             return null;

@@ -25,6 +25,27 @@ export const models: Model[] = [
         contextWindow: 400_000,
     },
     {
+        id: ModelEnum.GPT_5_PRO,
+        name: 'GPT-5 Pro',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
+        id: ModelEnum.GPT_5_MINI,
+        name: 'GPT-5 Mini',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
+        id: ModelEnum.GPT_5_NANO,
+        name: 'GPT-5 Nano',
+        provider: 'openai',
+        maxTokens: 128_000,
+        contextWindow: 400_000,
+    },
+    {
         id: ModelEnum.GPT_4o,
         name: 'GPT-4o',
         provider: 'openai',
@@ -95,6 +116,27 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
+        id: ModelEnum.CLAUDE_4_6_OPUS,
+        name: 'Claude 4.6 Opus',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
+    },
+    {
+        id: ModelEnum.CLAUDE_4_6_SONNET,
+        name: 'Claude 4.6 Sonnet',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
+    },
+    {
+        id: ModelEnum.CLAUDE_4_5_HAIKU,
+        name: 'Claude 4.5 Haiku',
+        provider: 'anthropic',
+        maxTokens: 64_000,
+        contextWindow: 200_000,
+    },
+    {
         id: ModelEnum.CLAUDE_4_1_OPUS,
         name: 'Claude 4.1 Opus',
         provider: 'anthropic',
@@ -123,15 +165,36 @@ export const models: Model[] = [
         contextWindow: 200_000,
     },
     {
-        id: ModelEnum.GEMINI_2_5_FLASH,
-        name: 'Gemini 2.5 Flash',
+        id: ModelEnum.GEMINI_3_1_PRO,
+        name: 'Gemini 3.1 Pro Preview',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
-        name: 'Gemini 2.5 Flash Lite',
+        id: ModelEnum.GEMINI_3_FLASH,
+        name: 'Gemini 3 Flash Preview',
+        provider: 'google',
+        maxTokens: 1_048_576,
+        contextWindow: 1_048_576,
+    },
+    {
+        id: ModelEnum.GEMINI_3_1_FLASH_LITE,
+        name: 'Gemini 3.1 Flash Lite Preview',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 65_536,
+    },
+    {
+        id: ModelEnum.GEMINI_3_FLASH_IMAGE,
+        name: 'Gemini 3.1 Flash Image Preview',
+        provider: 'google',
+        maxTokens: 65_536,
+        contextWindow: 65_536,
+    },
+    {
+        id: ModelEnum.GEMINI_3_1_FLASH_IMAGE,
+        name: 'Gemini 3.1 Flash Image',
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,
@@ -144,36 +207,15 @@ export const models: Model[] = [
         contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.GEMINI_3_FLASH,
-        name: 'Gemini 3 Flash',
+        id: ModelEnum.GEMINI_2_5_FLASH,
+        name: 'Gemini 2.5 Flash',
         provider: 'google',
         maxTokens: 1_048_576,
         contextWindow: 1_048_576,
     },
     {
-        id: ModelEnum.GEMINI_3_FLASH_LITE,
-        name: 'Gemini 3 Flash Lite',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 65_536,
-    },
-    {
-        id: ModelEnum.GEMINI_3_PRO,
-        name: 'Gemini 3 Pro',
-        provider: 'google',
-        maxTokens: 1_048_576,
-        contextWindow: 1_048_576,
-    },
-    {
-        id: ModelEnum.GEMINI_3_FLASH_IMAGE,
-        name: 'Gemini 3 Flash Image',
-        provider: 'google',
-        maxTokens: 65_536,
-        contextWindow: 65_536,
-    },
-    {
-        id: ModelEnum.GEMINI_3_1_FLASH_IMAGE,
-        name: 'Gemini 3.1 Flash Image',
+        id: ModelEnum.GEMINI_2_5_FLASH_LITE,
+        name: 'Gemini 2.5 Flash Lite',
         provider: 'google',
         maxTokens: 65_536,
         contextWindow: 65_536,
@@ -293,10 +335,10 @@ export const getModelFromChatMode = (mode?: string): ModelEnum => {
             return ModelEnum.GEMINI_2_5_PRO;
         case ChatMode.GEMINI_2_5_FLASH:
             return ModelEnum.GEMINI_2_5_FLASH;
-        case ChatMode.GEMINI_3_FLASH_LITE:
-            return ModelEnum.GEMINI_3_FLASH_LITE;
-        case ChatMode.GEMINI_3_PRO:
-            return ModelEnum.GEMINI_3_PRO;
+        case ChatMode.GEMINI_3_1_FLASH_LITE:
+            return ModelEnum.GEMINI_3_1_FLASH_LITE;
+        case ChatMode.GEMINI_3_1_PRO:
+            return ModelEnum.GEMINI_3_1_PRO;
         case ChatMode.GEMINI_3_FLASH:
             return ModelEnum.GEMINI_3_FLASH;
         case ChatMode.DEEPSEEK_R1_FIREWORKS:
@@ -367,7 +409,7 @@ export const getChatModeMaxTokens = (mode: ChatMode) => {
     switch (mode) {
         case ChatMode.Pro:
         case ChatMode.Deep:
-        case ChatMode.GEMINI_3_PRO:
+        case ChatMode.GEMINI_3_1_PRO:
         case ChatMode.GEMINI_3_FLASH:
         case ChatMode.GEMINI_3_FLASH_LITE:
             return 1_048_576;
@@ -451,7 +493,7 @@ export const supportsNativeWebSearch = (model: ModelEnum): boolean => {
     const googleModels = [
         ModelEnum.GEMINI_3_FLASH,
         ModelEnum.GEMINI_3_FLASH_LITE,
-        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_1_PRO,
     ];
 
     return googleModels.includes(model);
@@ -545,7 +587,7 @@ export const supportsReasoning = (model: ModelEnum): boolean => {
     // Gemini thinking models (existing functionality)
     const geminiThinkingModels = [
         ModelEnum.GEMINI_3_FLASH,
-        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_1_PRO,
         ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
@@ -594,7 +636,7 @@ export const supportsTools = (model: ModelEnum): boolean => {
     // Google models that support tools
     const googleToolModels = [
         ModelEnum.GEMINI_3_FLASH,
-        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_1_PRO,
         ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
@@ -643,7 +685,7 @@ export const getReasoningType = (model: ModelEnum): ReasoningType => {
     // Gemini models use thinking config
     const geminiThinkingModels = [
         ModelEnum.GEMINI_3_FLASH,
-        ModelEnum.GEMINI_3_PRO,
+        ModelEnum.GEMINI_3_1_PRO,
         ModelEnum.GEMINI_3_FLASH_LITE,
     ];
 
