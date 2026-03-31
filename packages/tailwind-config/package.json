@@ -9,8 +9,12 @@
     "files": [
         "index.ts",
         "postcss.js",
-        "prose.config.js"
+        "prose.config.js",
+        "tailwind.css"
     ],
+    "exports": {
+        "./tailwind.css": "./tailwind.css"
+    },
     "devDependencies": {
         "@repo/typescript-config": "*",
         "@tailwindcss/typography": "^0.5.16",

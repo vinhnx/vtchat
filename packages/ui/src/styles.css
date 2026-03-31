@@ -1,4 +1,4 @@
-@import "@repo/tailwind-config/tailwind.css";
+@import "../../tailwind-config/tailwind.css";
 @import "./styles/hover-effects.css";
 
 @layer base {
