@@ -7,12 +7,12 @@
 **Date**: Current Session (December 2025)
 **Status**: Completed
 
-- Updated all Gemini models to version 3 (Gemini 3 Pro, Gemini 3 Flash, Gemini 3 Flash Lite)
+- Updated all Gemini models to version 3 (Gemini 3.1 Pro, Gemini 3 Flash, Gemini 3.1 Flash Lite)
 - Updated `ModelEnum` and `ChatMode` references from `GEMINI_2_5` to `GEMINI_3` across the entire codebase
 - Updated model IDs to latest versions:
-  - Gemini 3 Pro: `gemini-3-pro-preview`
-  - Gemini 3 Flash: `gemini-2.5-flash`
-  - Gemini 3 Flash Lite: `gemini-2.5-flash-lite-preview-02-05`
+  - Gemini 3.1 Pro: `gemini-3.1-pro`
+  - Gemini 3 Flash: `gemini-3-flash`
+  - Gemini 3.1 Flash Lite: `gemini-3.1-flash-lite`
 - Updated rate limits and pricing for Gemini 3 models
 - Updated documentation (GEMINI.md, help pages, pricing config)
 - Updated all tests to reflect the new model versions and logic
