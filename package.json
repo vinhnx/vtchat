@@ -125,6 +125,7 @@
         "critters": "0.0.25",
         "date-fns": "3.6.0",
         "drizzle-orm": "0.44.7",
+        "framer-motion": "^12.38.0",
         "fumadocs-core": "15.8.5",
         "fumadocs-mdx": "11.10.1",
         "fumadocs-ui": "15.8.5",
