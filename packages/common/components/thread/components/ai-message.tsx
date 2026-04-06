@@ -29,7 +29,8 @@ export const AIMessage = memo(
         isCompleted: _isCompleted = false,
     }: AIMessageProps) => {
         const contentRef = useRef<HTMLDivElement>(null);
-        const modelDisplayName = modelOptions.find((option) => option.value === threadItem.mode)?.label
+        const modelDisplayName =
+            modelOptions.find((option) => option.value === threadItem.mode)?.label
             || 'VT Assistant';
 
         return (

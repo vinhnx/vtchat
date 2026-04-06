@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useSession } from '@repo/shared/lib/auth-client';
 import { http } from '@repo/shared/lib/http-client';
