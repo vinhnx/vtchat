@@ -1,11 +1,11 @@
 'use client';
 
+import { AgentProvider } from '@repo/common/hooks/agent-provider';
 import { useSession } from '@repo/shared/lib/auth-client';
 import log from '@repo/shared/logger';
 import { TypographySmall } from '@repo/ui';
 import NextDynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { AgentProvider } from '@repo/common/hooks/agent-provider';
 import { SEOContent } from '../components/seo-content';
 
 // This page needs dynamic rendering due to real-time chat functionality

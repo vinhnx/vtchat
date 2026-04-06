@@ -19,8 +19,8 @@ import { CLAUDE_4_CONFIG, ReasoningType } from '../constants/reasoning';
 import { ModelEnum } from '../models';
 import { getLanguageModel } from '../providers';
 import {
-    type ErrorContext,
     generateErrorMessage as centralizedGenerateErrorMessage,
+    type ErrorContext,
 } from '../services/error-messages';
 import type {
     GenerateTextWithReasoningResult,
