@@ -1,7 +1,7 @@
 'use client';
 import { CommandSearch, MobileTopNavigation } from '@repo/common/components';
 import { useRootContext } from '@repo/common/context';
-import { AgentProvider, useAdmin, useLogout, useMobilePWANotification } from '@repo/common/hooks';
+import { useAdmin, useLogout, useMobilePWANotification } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/lib/logger';
@@ -119,23 +119,21 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
                         sidebarPlacement === 'left' ? 'md:pr-1' : 'md:pl-1'
                     }`}
                 >
-                    <AgentProvider>
-                        <div className={containerClass}>
-                            <div className='relative flex h-full w-full flex-row'>
-                                {/* Main content area - takes remaining space */}
-                                <div className='flex min-w-0 flex-1 flex-col gap-2 overflow-y-auto'>
-                                    {shouldShowDropShadow && (
-                                        <div className='from-secondary via-secondary/70 to-secondary/0 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block' />
-                                    )}
+                    <div className={containerClass}>
+                        <div className='relative flex h-full w-full flex-row'>
+                            {/* Main content area - takes remaining space */}
+                            <div className='flex min-w-0 flex-1 flex-col gap-2 overflow-y-auto'>
+                                {shouldShowDropShadow && (
+                                    <div className='from-secondary via-secondary/70 to-secondary/0 absolute left-0 right-0 top-0 z-40 flex hidden flex-row items-center justify-center gap-1 bg-gradient-to-b p-2 pb-12 md:block' />
+                                )}
 
-                                    {children}
-                                </div>
-
-                                {/* Side drawer - positioned as a separate column to prevent overlap */}
-                                <SideDrawer />
+                                {children}
                             </div>
+
+                            {/* Side drawer - positioned as a separate column to prevent overlap */}
+                            <SideDrawer />
                         </div>
-                    </AgentProvider>
+                    </div>
                 </motion.div>
                 <CommandSearch />
             </Flex>

@@ -1,11 +1,11 @@
 'use client';
 
-import { useAgentStream } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';
 import { Button, RadioGroup, RadioGroupItem, Textarea } from '@repo/ui';
 import { Check, HelpCircle, Square } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useAgentStream } from '../../../hooks/agent-provider';
 
 export const QuestionPrompt = ({ threadItem }: { threadItem: ThreadItem; }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);

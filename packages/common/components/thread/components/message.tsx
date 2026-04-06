@@ -1,12 +1,13 @@
 'use client';
 
 import { ChatEditor, markdownStyles } from '@repo/common/components';
-import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
+import { useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import type { ThreadItem } from '@repo/shared/types';
 import { Button, cn, useToast } from '@repo/ui';
 import { Check, Copy, Pencil } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useAgentStream } from '../../../hooks/agent-provider';
 import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';

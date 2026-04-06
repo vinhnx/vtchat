@@ -1,7 +1,7 @@
 'use client';
 
 import { ChatEditor, markdownStyles } from '@repo/common/components';
-import { useAgentStream, useChatEditor, useCopyText } from '@repo/common/hooks';
+import { useChatEditor, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
 import { useSession } from '@repo/shared/lib/auth-client';
@@ -11,6 +11,7 @@ import { Button, cn, UnifiedAvatar, useToast } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Check, Copy, Pencil, User } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useAgentStream } from '../../../hooks/agent-provider';
 import { AttachmentDisplay } from './attachment-display';
 import { DocumentDisplay } from './document-display';
 import { ImageMessage } from './image-message';

@@ -1,4 +1,3 @@
-export * from './agent-provider';
 export * from './use-admin';
 export * from './use-animate-text';
 export * from './use-clipboard';

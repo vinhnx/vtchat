@@ -43,6 +43,7 @@ export interface ButtonProps
     tooltip?: string;
     tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
     roundedSm?: 'sm' | 'md' | 'lg' | 'full';
+    animationType?: 'squash' | 'secondary' | 'gentle';
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,6 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             tooltip,
             tooltipSide,
             roundedSm,
+            animationType,
             ...props
         },
         ref,
@@ -71,6 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const buttonElement = (
             <button
                 className={cn(buttonVariants({ variant, size }), roundedClass, className)}
+                data-animation-type={animationType}
                 ref={ref}
                 {...props}
             />

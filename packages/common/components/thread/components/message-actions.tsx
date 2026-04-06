@@ -1,6 +1,6 @@
 'use client';
 import { ChatModeOptions } from '@repo/common/components';
-import { useAgentStream, useContextualFeedback, useCopyText } from '@repo/common/hooks';
+import { useContextualFeedback, useCopyText } from '@repo/common/hooks';
 import { useChatStore } from '@repo/common/store';
 import { type ChatMode } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
@@ -17,6 +17,7 @@ import {
 } from '@repo/ui';
 import { AlertCircle, FileText, MessageCircleX, RefreshCcw } from 'lucide-react';
 import React, { forwardRef, useState } from 'react';
+import { useAgentStream } from '../../../hooks/agent-provider';
 import './message-actions.css';
 
 type MessageActionsProps = {

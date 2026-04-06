@@ -5,6 +5,7 @@ import log from '@repo/shared/logger';
 import { TypographySmall } from '@repo/ui';
 import NextDynamic from 'next/dynamic';
 import { useEffect } from 'react';
+import { AgentProvider } from '@repo/common/hooks/agent-provider';
 import { SEOContent } from '../components/seo-content';
 
 // This page needs dynamic rendering due to real-time chat functionality
@@ -74,7 +75,8 @@ export default function HomePage() {
     }, []);
 
     return (
-        <div className='relative flex h-dvh w-full flex-col'>
+        <AgentProvider>
+            <div className='relative flex h-dvh w-full flex-col'>
             {/* SEO-optimized H1 - Completely hidden from view but accessible to search engines */}
             <h1 className='sr-only invisible absolute h-0 w-0 overflow-hidden text-[0px] leading-[0] opacity-0'>
                 VT - AI Chat Platform with Nano Banana Conversational Image Editing, Generative AI &
@@ -592,6 +594,7 @@ export default function HomePage() {
                     </div>
                 </div>
             )}
-        </div>
+            </div>
+        </AgentProvider>
     );
 }

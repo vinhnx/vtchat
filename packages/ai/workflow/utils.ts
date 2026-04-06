@@ -317,9 +317,11 @@ export const generateTextWithGeminiSearch = async ({
             const isByokKey = !!(byokKeys && Object.keys(byokKeys).length > 0);
 
             if (userId && userTier === 'PLUS' && isEligibleForQuotaConsumption(user, isByokKey)) {
-                const { streamTextWithQuota } = await import('@repo/common/lib/geminiWithQuota');
-                const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
-                const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
+                const { streamTextWithQuota } = await import(
+                    '../../common/src/lib/geminiWithQuota'
+                );
+                const { isUsingByokKeys } = await import('../../common/src/lib/geminiWithQuota');
+                const { VtPlusFeature } = await import('../../common/src/config/vtPlusLimits');
 
                 streamResult = await streamTextWithQuota(streamTextConfig as any, {
                     user: { id: userId, planSlug: ACCESS_CONTROL.VT_PLUS_PLAN },
@@ -796,10 +798,12 @@ export const generateText = async ({
 
                 if (requiresQuotaConsumption) {
                     const { streamTextWithQuota } = await import(
-                        '@repo/common/lib/geminiWithQuota'
+                        '../../common/src/lib/geminiWithQuota'
                     );
-                    const { isUsingByokKeys } = await import('@repo/common/lib/geminiWithQuota');
-                    const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
+                    const { isUsingByokKeys } = await import(
+                        '../../common/src/lib/geminiWithQuota'
+                    );
+                    const { VtPlusFeature } = await import('../../common/src/config/vtPlusLimits');
 
                     // Convert string feature code to enum
                     const feature = vtplusFeature === 'DR'
@@ -1154,8 +1158,8 @@ export const generateObject = async ({
 
         // Consume quota for VT+ users if using VT-managed models
         if (userId && userTier === 'PLUS' && !byokKeys && feature) {
-            const { consumeQuota } = await import('@repo/common/lib/vtplusRateLimiter');
-            const { VtPlusFeature } = await import('@repo/common/config/vtPlusLimits');
+            const { consumeQuota } = await import('../../common/src/lib/vtplusRateLimiter');
+            const { VtPlusFeature } = await import('../../common/src/config/vtPlusLimits');
 
             // Convert feature string to VtPlusFeature enum
             const vtPlusFeature = feature === 'DR'

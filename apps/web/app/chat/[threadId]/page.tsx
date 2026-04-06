@@ -1,5 +1,6 @@
 'use client';
 import { Footer, InlineLoader, TableOfMessages, Thread } from '@repo/common/components';
+import { AgentProvider } from '@repo/common/hooks/agent-provider';
 import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
@@ -380,7 +381,8 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => 
     }
 
     return (
-        <div className='bg-muted/50 relative flex h-dvh w-full flex-col'>
+        <AgentProvider>
+            <div className='bg-muted/50 relative flex h-dvh w-full flex-col'>
             <h1
                 style={{
                     position: 'absolute',
@@ -452,7 +454,8 @@ const ChatSessionPage = (props: { params: Promise<{ threadId: string; }>; }) => 
             <div className='pb-safe-area-inset-bottom flex-shrink-0'>
                 <ChatInput />
             </div>
-        </div>
+            </div>
+        </AgentProvider>
     );
 };
 

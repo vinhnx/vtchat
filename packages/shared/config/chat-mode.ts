@@ -135,3 +135,7 @@ export const ChatModeConfig: Record<
         isAuthRequired: true,
     },
 };
+
+export const supportsMultiModal = (chatMode: ChatMode) => {
+    return !!ChatModeConfig[chatMode]?.multiModal;
+};

@@ -76,21 +76,16 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
     const workerRef = useRef<Worker | null>(null);
     const onMessageRef = useRef(onMessage);
 
-    // Keep the callback ref updated
-    useEffect(() => {
-        onMessageRef.current = onMessage;
-    }, [onMessage]);
-
-    // Initialize worker once on mount
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
+    const ensureWorker = () => {
+        if (typeof window === 'undefined') {
+            throw new Error('Workers can only be used in the browser environment');
+        }
 
         if (!workerRef.current) {
             workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
                 type: 'module',
             });
 
-            // Set up message handler
             workerRef.current.onmessage = (event) => {
                 const data = event.data;
                 if (onMessageRef.current) {
@@ -99,7 +94,15 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
             };
         }
 
-        // Clean up worker when component unmounts
+        return workerRef.current;
+    };
+
+    // Keep the callback ref updated
+    useEffect(() => {
+        onMessageRef.current = onMessage;
+    }, [onMessage]);
+
+    useEffect(() => {
         return () => {
             if (workerRef.current) {
                 workerRef.current.terminate();
@@ -152,27 +155,9 @@ export function useWorkflowWorker(onMessage?: (data: any) => void, _onAbort?: ()
         setFlowState(null);
 
         try {
-            if (typeof window === 'undefined') {
-                throw new Error('Workers can only be used in the browser environment');
-            }
+            const worker = ensureWorker();
 
-            // Ensure worker exists
-            if (!workerRef.current) {
-                workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), {
-                    type: 'module',
-                });
-
-                // Set up message handler
-                workerRef.current.onmessage = (event) => {
-                    const data = event.data;
-                    if (onMessageRef.current) {
-                        onMessageRef.current(data);
-                    }
-                };
-            }
-
-            // Start workflow with existing worker
-            workerRef.current.postMessage({
+            worker.postMessage({
                 type: 'START_WORKFLOW',
                 payload: {
                     mode,
