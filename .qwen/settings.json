@@ -26,5 +26,10 @@
       "type": "stdio"
     }
   },
-  "$version": 3
+  "$version": 3,
+  "mcp": {
+    "excluded": [
+      "context7"
+    ]
+  }
 }

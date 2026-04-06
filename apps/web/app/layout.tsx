@@ -2,6 +2,7 @@ import { GatedThemeProvider, RootLayout, SSRErrorBoundary } from '@repo/common/c
 import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { RootProvider } from '@repo/common/context';
 import { AccessibilityProvider } from '@repo/common/contexts/accessibility-context';
+import { AgentProvider } from '@repo/common/hooks/agent-provider';
 import { OptimizedAuthProvider } from '@repo/common/providers';
 import { SubscriptionProvider } from '@repo/common/providers/subscription-provider';
 import { TooltipProvider } from '@repo/ui';
@@ -223,22 +224,24 @@ export default function ParentLayout({
                                                     <FumadocsRootProvider
                                                         search={{ enabled: false }}
                                                     >
-                                                        {/* React Scan for performance monitoring in development */}
-                                                        <ReactScan />
-                                                        {/* Observe delayed postMessage events to diagnose cross-context lag */}
-                                                        <DelayedMessageMonitor />
-                                                        {/* PWA Manager for install prompts and service worker */}
-                                                        <PWAManager />
-                                                        {/* Offline status indicator */}
-                                                        <OfflineIndicator />
-                                                        {/* Canonical URL manager to prevent duplicate content */}
-                                                        <CanonicalURLManager />
-                                                        {/* @ts-ignore - Type compatibility issue between React versions */}
-                                                        <RootLayout>
-                                                            <main className='flex flex-1 flex-col'>
-                                                                {children}
-                                                            </main>
-                                                        </RootLayout>
+                                                        <AgentProvider>
+                                                            {/* React Scan for performance monitoring in development */}
+                                                            <ReactScan />
+                                                            {/* Observe delayed postMessage events to diagnose cross-context lag */}
+                                                            <DelayedMessageMonitor />
+                                                            {/* PWA Manager for install prompts and service worker */}
+                                                            <PWAManager />
+                                                            {/* Offline status indicator */}
+                                                            <OfflineIndicator />
+                                                            {/* Canonical URL manager to prevent duplicate content */}
+                                                            <CanonicalURLManager />
+                                                            {/* @ts-ignore - Type compatibility issue between React versions */}
+                                                            <RootLayout>
+                                                                <main className='flex flex-1 flex-col'>
+                                                                    {children}
+                                                                </main>
+                                                            </RootLayout>
+                                                        </AgentProvider>
                                                     </FumadocsRootProvider>
                                                 </RootProvider>
                                             </PlusDefaultsProvider>

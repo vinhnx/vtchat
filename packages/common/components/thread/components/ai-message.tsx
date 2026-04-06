@@ -1,7 +1,6 @@
 'use client';
 
 import { markdownStyles, Response } from '@repo/common/components';
-import { getModelDisplayName } from '@repo/shared/config';
 import type { ThreadItem } from '@repo/shared/types';
 import { cn } from '@repo/ui';
 import { motion } from 'framer-motion';
@@ -30,6 +29,8 @@ export const AIMessage = memo(
         isCompleted: _isCompleted = false,
     }: AIMessageProps) => {
         const contentRef = useRef<HTMLDivElement>(null);
+        const modelDisplayName = modelOptions.find((option) => option.value === threadItem.mode)?.label
+            || 'VT Assistant';
 
         return (
             <motion.div
@@ -72,7 +73,7 @@ export const AIMessage = memo(
                                             {Array.isArray(threadItem.imageOutputs)
                                                     && threadItem.imageOutputs.length > 0
                                                 ? 'Gemini 3 Flash Image'
-                                                : getModelDisplayName(threadItem.mode)}
+                                                : modelDisplayName}
                                         </span>
                                     </>
                                 );

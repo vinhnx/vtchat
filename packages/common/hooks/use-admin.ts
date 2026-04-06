@@ -1,3 +1,5 @@
+"use client";
+
 import { useSession } from '@repo/shared/lib/auth-client';
 import { http } from '@repo/shared/lib/http-client';
 import { useCallback, useEffect, useRef, useState } from 'react';
