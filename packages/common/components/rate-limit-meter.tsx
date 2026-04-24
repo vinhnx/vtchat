@@ -113,7 +113,7 @@ export function RateLimitMeter() {
                                 Daily limit reached
                             </div>
                             <div className='text-muted-foreground mt-1 text-xs'>
-                                Upgrade to VT+ for unlimited access to all models.
+                                Add your own API key or try again tomorrow.
                             </div>
                         </div>
                     )}
@@ -124,7 +124,7 @@ export function RateLimitMeter() {
                                 Low on daily requests
                             </div>
                             <div className='text-muted-foreground mt-1 text-xs'>
-                                Consider upgrading to VT+ for unlimited access.
+                                You can add your own API key for more headroom.
                             </div>
                         </div>
                     )}

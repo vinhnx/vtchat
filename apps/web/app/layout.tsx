@@ -1,5 +1,4 @@
 import { GatedThemeProvider, RootLayout, SSRErrorBoundary } from '@repo/common/components';
-import { PlusDefaultsProvider } from '@repo/common/components/plus-defaults-provider';
 import { RootProvider } from '@repo/common/context';
 import { AccessibilityProvider } from '@repo/common/contexts/accessibility-context';
 import { AgentProvider } from '@repo/common/hooks/agent-provider';
@@ -219,8 +218,7 @@ export default function ParentLayout({
                                 <BetterAuthProvider>
                                     <OptimizedAuthProvider>
                                         <SubscriptionProvider>
-                                            <PlusDefaultsProvider>
-                                                <RootProvider>
+                                            <RootProvider>
                                                     <FumadocsRootProvider
                                                         search={{ enabled: false }}
                                                     >
@@ -244,7 +242,6 @@ export default function ParentLayout({
                                                         </AgentProvider>
                                                     </FumadocsRootProvider>
                                                 </RootProvider>
-                                            </PlusDefaultsProvider>
                                         </SubscriptionProvider>
                                     </OptimizedAuthProvider>
                                 </BetterAuthProvider>

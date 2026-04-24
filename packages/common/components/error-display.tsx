@@ -3,14 +3,13 @@
 import type { ErrorContext } from '@repo/ai/services/error-messages';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
 import { AlertCircle, ExternalLink, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ErrorDisplayProps {
     title: string;
     message: string;
     action?: string;
     helpUrl?: string;
-    upgradeUrl?: string;
     settingsAction?: string;
     onRetry?: () => void;
     onOpenSettings?: () => void;
@@ -34,7 +33,6 @@ export const ErrorDisplay = ({
     message,
     action,
     helpUrl,
-    upgradeUrl,
     settingsAction,
     onRetry,
     onOpenSettings,
@@ -124,17 +122,6 @@ export const ErrorDisplay = ({
                                 </Button>
                             )}
 
-                            {upgradeUrl && (
-                                <Button
-                                    variant='outline'
-                                    size='sm'
-                                    onClick={() => window.open(upgradeUrl, '_blank')}
-                                    className='flex items-center gap-1'
-                                >
-                                    Upgrade to VT+
-                                </Button>
-                            )}
-
                             {onRetry && (
                                 <Button size='sm' onClick={handleRetry} disabled={isRetrying}>
                                     {isRetrying ? 'Retrying...' : 'Try Again'}
@@ -178,7 +165,6 @@ export const EnhancedErrorDisplay = ({
                     message: fallbackProps.message || errorText || 'An unexpected error occurred',
                     action: fallbackProps.action,
                     helpUrl: fallbackProps.helpUrl,
-                    upgradeUrl: fallbackProps.upgradeUrl,
                     settingsAction: fallbackProps.settingsAction,
                 });
             } finally {
@@ -257,9 +243,9 @@ export const ApiKeyErrorDisplay = ({
     const providerName = providerDisplayNames[provider] || provider;
     const helpUrl = providerUrls[provider];
 
-    const message = isVtPlus
-        ? `Your VT+ subscription includes managed usage, but you can add your own ${providerName} API key for unlimited access and faster responses.`
-        : `To use ${providerName} models, you need to provide your own API key. This is free to obtain and gives you direct access to ${providerName}'s latest models.`;
+    void isVtPlus;
+
+    const message = `To use ${providerName} models, you can add your own API key for unlimited access and faster responses.`;
 
     const action = provider === 'lmstudio'
         ? '1. Start LM Studio → Local Server tab → Start Server\n2. Add server URL in Settings → API Keys → LM Studio\n3. Default URL: http://localhost:1234'

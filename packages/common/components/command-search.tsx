@@ -5,7 +5,6 @@ import { useChatStore } from '@repo/common/store';
 import { useSession } from '@repo/shared/lib/auth-client';
 
 import { log } from '@repo/shared/logger';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import { getIsAfter, getIsToday, getIsYesterday, getSubDays } from '@repo/shared/utils';
 import {
     Button,
@@ -39,7 +38,6 @@ import {
 import { useTheme } from 'next-themes';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useFeatureAccess } from '../hooks/use-subscription-access';
 import { GatedFeatureAlert } from './gated-feature-alert';
 import { LoginRequiredDialog, useLoginRequired } from './login-required-dialog';
 
@@ -57,7 +55,6 @@ export const CommandSearch = () => {
     const { data: session } = useSession();
     const isSignedIn = !!session;
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
-    const hasThemeAccess = useFeatureAccess(FeatureSlug.DARK_THEME);
     const { toast } = useToast();
 
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
@@ -152,15 +149,7 @@ export const CommandSearch = () => {
             name: 'Change Theme',
             icon: Palette,
             action: () => {
-                // Check if user is trying to switch to dark mode without VT+ access
-                const nextTheme = theme === 'light' ? 'dark' : 'light';
-
-                if (nextTheme === 'dark' && !hasThemeAccess) {
-                    setShowSubscriptionDialog(true);
-                    return;
-                }
-
-                setTheme(nextTheme);
+                setTheme(theme === 'light' ? 'dark' : 'light');
                 onClose();
             },
             requiresAuth: false,

@@ -1,18 +1,9 @@
 'use client';
 
-import {
-    useCreemSubscription,
-    useCurrentPlan,
-    useFeatureAccess,
-    useVtPlusAccess,
-} from '@repo/common/hooks';
+import { useCurrentPlan, useFeatureAccess } from '@repo/common/hooks';
 import { useAppStore } from '@repo/common/store';
-import { BUTTON_TEXT, THINKING_MODE, VT_PLUS_PRICE_WITH_INTERVAL } from '@repo/shared/constants';
-import { log } from '@repo/shared/logger';
 import { FeatureSlug, PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import {
-    Alert,
-    AlertDescription,
     Button,
     Card,
     CardContent,
@@ -20,15 +11,13 @@ import {
     CardHeader,
     CardTitle,
     Label,
-    Skeleton,
     Slider,
     Switch,
     TypographyH3,
     TypographyMuted,
 } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Activity, Brain, CreditCard, FileText, Sparkles, Zap } from 'lucide-react';
-import { PaymentRedirectLoader } from './payment-redirect-loader';
+import { Activity, Brain, FileText, Zap } from 'lucide-react';
 import { UserTierBadge } from './user-tier-badge';
 
 interface CombinedSubscriptionSettingsProps {
@@ -36,13 +25,8 @@ interface CombinedSubscriptionSettingsProps {
 }
 
 export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSettingsProps) {
-    const isVtPlus = useVtPlusAccess();
-    const { planSlug, isLoaded } = useCurrentPlan();
-    const {
-        openCustomerPortal,
-        isPortalLoading,
-        isLoading: isPaymentLoading,
-    } = useCreemSubscription();
+    void onClose;
+    const { planSlug } = useCurrentPlan();
 
     const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
     const hasGeminiCachingAccess = useFeatureAccess(FeatureSlug.GEMINI_EXPLICIT_CACHING);
@@ -66,42 +50,25 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
         });
     };
 
-    const handleManageSubscription = async () => {
-        try {
-            await openCustomerPortal();
-        } catch (error) {
-            log.error({ error }, 'Failed to open subscription portal');
-        }
-    };
-
-    const handleUpgradeToPlus = () => {
-        onClose?.();
-        window.location.href = '/pricing';
-    };
-
     return (
         <>
-            <PaymentRedirectLoader isLoading={isPaymentLoading || isPortalLoading} />
             <div className='space-y-6'>
                 {/* Header */}
                 <div className='flex items-center gap-3'>
                     <div>
-                        <TypographyH3 className='text-lg md:text-xl'>VT+</TypographyH3>
+                        <TypographyH3 className='text-lg md:text-xl'>Features</TypographyH3>
                         <TypographyMuted className='text-sm md:text-base'>
-                            Premium features and subscription management
+                            Included controls for model behavior and caching
                         </TypographyMuted>
                     </div>
                 </div>
 
-                {/* Current Plan & Billing Card */}
+                {/* Current Plan Card */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className='flex items-center gap-2'>
-                            <CreditCard className='h-5 w-5' />
-                            Plan & Billing
-                        </CardTitle>
+                        <CardTitle className='flex items-center gap-2'>Current Plan</CardTitle>
                         <CardDescription>
-                            Your subscription details and billing management
+                            All features are included by default
                         </CardDescription>
                     </CardHeader>
                     <CardContent className='space-y-4'>
@@ -117,40 +84,17 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                                         </div>
                                     </div>
                                 </div>
-                                {isLoaded
-                                    ? (
-                                        <div className='shrink-0'>
-                                            {isVtPlus
-                                                ? (
-                                                    <Button
-                                                        disabled={isPortalLoading}
-                                                        onClick={handleManageSubscription}
-                                                        size='sm'
-                                                        variant='outline'
-                                                    >
-                                                        {isPortalLoading
-                                                            ? BUTTON_TEXT.LOADING
-                                                            : BUTTON_TEXT.MANAGE_BILLING}
-                                                    </Button>
-                                                )
-                                                : (
-                                                    <Button onClick={handleUpgradeToPlus} size='sm'>
-                                                        Upgrade to VT+
-                                                    </Button>
-                                                )}
-                                        </div>
-                                    )
-                                    : (
-                                        <div className='shrink-0'>
-                                            <Skeleton className='h-9 w-28 rounded-md' />
-                                        </div>
-                                    )}
+                                <div className='shrink-0'>
+                                    <Button disabled size='sm' variant='outline'>
+                                        Included
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* VT+ Features Section - Only show if user has VT+ */}
+                {/* Feature Controls */}
                 {hasThinkingModeAccess && (
                     <Card>
                         <CardHeader>
@@ -267,7 +211,7 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     </Card>
                 )}
 
-                {/* Gemini Explicit Caching Section - Only show if user has VT+ */}
+                {/* Gemini Explicit Caching Section */}
                 {hasGeminiCachingAccess && (
                     <Card>
                         <CardHeader>
@@ -395,18 +339,6 @@ export function CombinedSubscriptionSettings({ onClose }: CombinedSubscriptionSe
                     </Card>
                 )}
 
-                {/* Simple Upgrade Promotion for Free Users */}
-                {!isVtPlus && (
-                    <Alert className='border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30'>
-                        <Sparkles className='h-4 w-4' />
-                        <AlertDescription className='text-amber-800 dark:text-amber-200'>
-                            <strong>Ready to upgrade?</strong> Get VT+ for{' '}
-                            {VT_PLUS_PRICE_WITH_INTERVAL}{' '}
-                            with free trial included and cancel anytime. Unlock premium AI models,
-                            research capabilities, and AI memory.
-                        </AlertDescription>
-                    </Alert>
-                )}
             </div>
         </>
     );

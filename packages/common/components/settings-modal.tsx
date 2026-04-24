@@ -1,7 +1,6 @@
 'use client';
 
 import { useChatEditor } from '@repo/common/hooks';
-import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useSession } from '@repo/shared/lib/auth-client';
 import {
     Alert,
@@ -87,8 +86,8 @@ export const SettingsModal = () => {
             component: <AccessibilitySettings />,
         },
         {
-            title: 'VT+',
-            description: 'Premium features and usage management',
+            title: 'Features',
+            description: 'Usage, reasoning, and model preferences',
             key: SETTING_TABS.USAGE_CREDITS,
             component: <CombinedSubscriptionSettings onClose={() => setIsSettingsOpen(false)} />,
         },
@@ -143,7 +142,7 @@ export const SettingsModal = () => {
                                     Settings
                                 </TypographyH1>
                                 <p className='text-muted-foreground/80 text-sm md:text-base'>
-                                    Customize your VT experience and manage your account
+                                    Customize your experience and manage your account
                                 </p>
                             </div>
                             <Button
@@ -217,8 +216,6 @@ export const ApiKeySettings = () => {
     const setApiKey = useApiKeysStore((state) => state.setKey);
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-    const isVtPlus = useVtPlusAccess();
-
     const apiKeyList = [
         {
             name: 'OpenAI',
@@ -302,8 +299,8 @@ export const ApiKeySettings = () => {
             {/* BYOK Note */}
             <Alert>
                 <AlertDescription>
-                    To use Gemini image generation, add your Google Gemini API key here. VT+ users
-                    may have enhanced access based on plan policy.
+                    To use Gemini image generation, add your Google Gemini API key here if you
+                    want to use your own provider key.
                 </AlertDescription>
             </Alert>
 
@@ -347,33 +344,24 @@ export const ApiKeySettings = () => {
                             Free Gemini 3 Flash Lite Available
                         </CardTitle>
                         <CardDescription className='text-xs md:text-sm'>
-                            {isVtPlus
-                                ? "You're using free Gemini 3 Flash Lite with VT+ enhanced limits"
-                                : "You're currently using the free Gemini 3 Flash Lite with rate limits"}
+                            You're currently using Gemini 3 Flash Lite with managed access.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className='pt-0'>
                         <div className='border-border/50 rounded-lg border bg-blue-50 p-3 md:p-4 dark:bg-blue-950/20'>
                             <div className='space-y-2 md:space-y-3'>
                                 <div className='text-foreground text-xs md:text-sm'>
-                                    <strong>Current limits:</strong> {isVtPlus
-                                        ? '100 requests per day, 10 requests per minute (VT+ enhanced)'
-                                        : '20 requests per day, 5 requests per minute'}
+                                    Managed access is available for Gemini 3 Flash Lite.
                                 </div>
                                 <div className='text-muted-foreground text-xs md:text-sm'>
-                                    {isVtPlus
-                                        ? 'You have enhanced VT+ limits for free Gemini 3 Flash Lite. Add your own Gemini API key below for unlimited usage of all Gemini models.'
-                                        : 'Add your own Google Gemini API key below to remove rate limits and unlock unlimited usage of all Gemini models.'}
+                                    Add your own Google Gemini API key below if you want to use
+                                    your personal provider quota instead.
                                 </div>
                                 <div className='text-muted-foreground text-xs md:text-sm'>
                                     <strong>Pro tip:</strong>{' '}
                                     With your own API key, you'll have access to Gemini 3 Pro,
-                                    Gemini 3 Flash, Gemini 3 Flash Lite and other premium models
-                                    without restrictions
-                                    {isVtPlus
-                                        ? ', plus you already enjoy enhanced limits (5x daily, 2x per-minute) with VT+'
-                                        : ''}
-                                    .
+                                    Gemini 3 Flash, Gemini 3 Flash Lite and other models without
+                                    depending on managed limits.
                                 </div>
                             </div>
                         </div>

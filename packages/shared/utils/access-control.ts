@@ -21,31 +21,34 @@ export interface SubscriptionData {
 }
 
 /**
- * Check if user has VT+ access based on plan slug
+ * Check if user has access based on plan slug
  */
-export function hasVTPlusAccess(user: UserContext): boolean {
-    return user?.planSlug === PlanSlug.VT_PLUS;
+export function hasVTPlusAccess(_user: UserContext): boolean {
+    return true;
 }
 
 /**
  * Check if user has VT+ access by plan slug string
  */
 export function hasVTPlusAccessByPlan(planSlug?: string | null): boolean {
-    return planSlug === PlanSlug.VT_PLUS;
+    void planSlug;
+    return true;
 }
 
 /**
  * Check if user has base plan access
  */
 export function hasVTBaseAccess(user: UserContext): boolean {
-    return user?.planSlug === PlanSlug.VT_BASE || !user?.planSlug;
+    void user;
+    return true;
 }
 
 /**
  * Check if user can upgrade (not already VT+)
  */
 export function canUpgrade(user: UserContext): boolean {
-    return !hasVTPlusAccess(user);
+    void user;
+    return false;
 }
 
 /**
@@ -61,7 +64,8 @@ export function isPlanEqual(planA?: string | null, planB?: string | null): boole
  * Check if user has VT+ access based on subscription data
  */
 export function hasVTPlusAccessFromSubscription(subscription: SubscriptionData): boolean {
-    return subscription.plan === PlanSlug.VT_PLUS && subscription.isActive;
+    void subscription;
+    return true;
 }
 
 /**
@@ -72,7 +76,8 @@ export function isEligibleForQuotaConsumption(
     user: UserContext,
     isByokKey: boolean = false,
 ): boolean {
-    return !isByokKey && hasVTPlusAccess(user);
+    void user;
+    return !isByokKey;
 }
 
 /**
@@ -80,14 +85,16 @@ export function isEligibleForQuotaConsumption(
  * (VT+ users get managed access)
  */
 export function shouldBypassApiKeyRequirement(user: UserContext): boolean {
-    return hasVTPlusAccess(user);
+    void user;
+    return true;
 }
 
 /**
  * Get normalized plan slug (handles null/undefined cases)
  */
 export function getNormalizedPlanSlug(planSlug?: string | null): PlanSlug {
-    return planSlug === PlanSlug.VT_PLUS ? PlanSlug.VT_PLUS : PlanSlug.VT_BASE;
+    void planSlug;
+    return PlanSlug.VT_BASE;
 }
 
 /**
@@ -97,15 +104,9 @@ export function hasFeatureAccess(
     user: UserContext,
     requiredPlan: PlanSlug = PlanSlug.VT_PLUS,
 ): boolean {
-    if (requiredPlan === PlanSlug.VT_BASE) {
-        return true; // Base features are available to all users
-    }
-
-    if (requiredPlan === PlanSlug.VT_PLUS) {
-        return hasVTPlusAccess(user);
-    }
-
-    return false;
+    void user;
+    void requiredPlan;
+    return true;
 }
 
 /**
@@ -119,10 +120,6 @@ export function validateUserForQuota(user: UserContext): {
         return { isValid: false, reason: 'User ID is required' };
     }
 
-    if (!hasVTPlusAccess(user)) {
-        return { isValid: false, reason: 'VT+ access required' };
-    }
-
     return { isValid: true };
 }
 
@@ -131,36 +128,16 @@ export function validateUserForQuota(user: UserContext): {
  * Centralizes the logic for mapping chat modes to VT+ features
  */
 export function getVTPlusFeatureFromChatMode(mode?: string): string | null {
-    // Import VtPlusFeature enum values as constants to avoid circular imports
-    const VT_PLUS_FEATURES = {
-        DEEP_RESEARCH: 'DR',
-        PRO_SEARCH: 'PS',
-    } as const;
-
-    // ChatMode constants to avoid imports
-    const CHAT_MODES = {
-        Deep: 'deep',
-        Pro: 'pro',
-    } as const;
-
-    switch (mode) {
-        case CHAT_MODES.Deep:
-            return VT_PLUS_FEATURES.DEEP_RESEARCH;
-        case CHAT_MODES.Pro:
-            return VT_PLUS_FEATURES.PRO_SEARCH;
-        default:
-            // Regular chat modes don't consume VT+ quota
-            return null;
-    }
+    void mode;
+    return null;
 }
 
 /**
  * Common access control constants
  */
 export const ACCESS_CONTROL = {
-    VT_PLUS_PLAN: PlanSlug.VT_PLUS,
     VT_BASE_PLAN: PlanSlug.VT_BASE,
-    REQUIRED_PLAN_FOR_QUOTA: PlanSlug.VT_PLUS,
+    REQUIRED_PLAN_FOR_QUOTA: PlanSlug.VT_BASE,
 } as const;
 
 export type AccessControlConstants = typeof ACCESS_CONTROL;

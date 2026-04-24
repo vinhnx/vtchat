@@ -7,9 +7,9 @@ export const aiRelatedLinks = [
             'Learn about our advanced artificial intelligence features and privacy-first approach',
     },
     {
-        href: '/pricing',
-        title: 'AI Platform Pricing',
-        description: 'Discover our free AI models and premium VT+ research tools',
+        href: '/settings',
+        title: 'Feature Settings',
+        description: 'Adjust included feature controls and personal preferences',
     },
     {
         href: '/ai-resources',
@@ -34,7 +34,7 @@ export const helpRelatedLinks = [
     {
         href: '/faq',
         title: 'Frequently Asked Questions',
-        description: 'Common questions about AI features, pricing, and technical support',
+        description: 'Common questions about AI features and technical support',
     },
     {
         href: '/about',

@@ -81,8 +81,8 @@ export function SettingsContent() {
         },
         {
             id: SETTING_TABS.USAGE_CREDITS,
-            label: 'VT+',
-            description: 'Premium features and usage management',
+            label: 'Features',
+            description: 'Included features and usage controls',
             component: <CombinedSubscriptionSettings onClose={() => {}} />,
         },
         {

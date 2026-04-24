@@ -208,9 +208,9 @@ export class ErrorMessageService {
         if (provider === Providers.GOOGLE && !context.hasApiKey) {
             if (isVtPlus) {
                 return {
-                    title: 'VT+ Rate Limit Reached',
+                    title: 'Usage Limit Reached',
                     message:
-                        "You've reached your VT+ usage limit for Gemini models. Add your own API key for unlimited usage.",
+                        "You've reached your usage limit for Gemini models. Add your own API key for unlimited usage.",
                     action: 'Add your own Gemini API key in Settings → API Keys → Google Gemini',
                     helpUrl: PROVIDER_SETUP_URLS[provider],
                     settingsAction: 'open_api_keys',
@@ -219,10 +219,9 @@ export class ErrorMessageService {
                 return {
                     title: 'Free Usage Limit Reached',
                     message:
-                        "You've reached the daily limit for free Gemini usage. Add your own API key or upgrade to VT+ for higher limits.",
-                    action: 'Add your own Gemini API key for unlimited usage',
+                        "You've reached the daily limit for free Gemini usage. Add your own API key to continue.",
+                    action: 'Add your own Gemini API key in Settings → API Keys → Google Gemini',
                     helpUrl: PROVIDER_SETUP_URLS[provider],
-                    upgradeUrl: '/pricing',
                     settingsAction: 'open_api_keys',
                 };
             }
@@ -320,9 +319,9 @@ export class ErrorMessageService {
         if (provider === Providers.GOOGLE && !context.hasApiKey) {
             if (isVtPlus) {
                 return {
-                    title: 'VT+ Monthly Quota Exceeded',
+                    title: 'Monthly Quota Exceeded',
                     message:
-                        "You've used all your VT+ quota for this month. Add your own API key for unlimited usage.",
+                        "You've used all your monthly quota for this month. Add your own API key for unlimited usage.",
                     action: 'Add your own Gemini API key in Settings → API Keys → Google Gemini',
                     helpUrl: PROVIDER_SETUP_URLS[provider],
                     settingsAction: 'open_api_keys',
@@ -331,9 +330,8 @@ export class ErrorMessageService {
                 return {
                     title: 'Free Quota Exceeded',
                     message:
-                        "You've reached your free usage limit. Upgrade to VT+ or add your own API key for continued access.",
-                    action: 'Upgrade to VT+ or add your own API key',
-                    upgradeUrl: '/pricing',
+                        "You've reached your free usage limit. Add your own API key for continued access.",
+                    action: 'Add your own Gemini API key in Settings → API Keys → Google Gemini',
                     helpUrl: PROVIDER_SETUP_URLS[provider],
                     settingsAction: 'open_api_keys',
                 };
@@ -344,8 +342,7 @@ export class ErrorMessageService {
             title: 'Usage Quota Exceeded',
             message:
                 `You've exceeded your usage quota for ${providerName}. This may reset daily or monthly depending on your plan.`,
-            action: 'Wait for quota reset or upgrade your plan',
-            upgradeUrl: '/pricing',
+            action: 'Wait for quota reset or add your own API key',
         };
     }
 

@@ -28,7 +28,6 @@ export const ICON_SIZES = {
 export const EXCLUDED_PATHS = [
     '/',
     '/settings',
-    '/pricing',
     '/about',
     '/login',
     '/privacy',

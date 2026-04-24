@@ -3,7 +3,6 @@
 import { type ProviderError } from '@repo/ai/services/provider-error-extractor';
 import { Alert, AlertDescription, Button } from '@repo/ui';
 import { AlertCircle, ArrowRight, Mail, Settings, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface RateLimitErrorAlertProps {
     error: string | ProviderError;
@@ -11,14 +10,12 @@ interface RateLimitErrorAlertProps {
 }
 
 export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertProps) {
-    const router = useRouter();
-
     const handleOpenUsageSettings = () => {
-        router.push('/settings?tab=usage');
+        window.open('/settings?tab=usage', '_blank');
     };
 
     const handleUpgrade = () => {
-        window.open('/pricing', '_blank');
+        window.open('/settings?tab=usage', '_blank');
     };
 
     const handleContactSupport = () => {
@@ -162,7 +159,7 @@ export function RateLimitErrorAlert({ error, className }: RateLimitErrorAlertPro
                                         </Button>
                                         <Button className='group gap-2' onClick={handleUpgrade}>
                                             <Sparkles className='h-4 w-4' />
-                                            Upgrade to VT+
+                                            Open Settings
                                             <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
                                         </Button>
                                     </>

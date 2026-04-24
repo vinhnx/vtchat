@@ -25,7 +25,7 @@ export type PublicRoute = (typeof PublicRoutes)[keyof typeof PublicRoutes];
  */
 export const ProtectedRoutes = {
     SETTINGS: '/settings',
-    PRICING: '/pricing', // VT+ subscription page - requires login
+    PRICING: '/settings',
     SUCCESS: '/success',
     PROFILE: '/profile',
 } as const;

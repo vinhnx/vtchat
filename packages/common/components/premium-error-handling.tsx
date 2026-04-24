@@ -53,7 +53,7 @@ export const PremiumErrorBoundary = memo(
                     type: 'rate_limit',
                     title: 'Rate Limit Exceeded',
                     description:
-                        "You've reached the limit for this feature. Please try again later or upgrade your plan.",
+                        "You've reached the limit for this feature. Please try again later.",
                     icon: Zap,
                     color: 'text-purple-500',
                     bgColor: 'bg-purple-50 dark:bg-purple-900/20',

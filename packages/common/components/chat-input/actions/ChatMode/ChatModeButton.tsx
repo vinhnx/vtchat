@@ -136,12 +136,12 @@ export function ChatModeButton() {
                                 </Button>
                                 <Button
                                     onClick={() => {
-                                        push('/pricing');
+                                        push('/settings?tab=usage');
                                         setShowGateAlert(null);
                                     }}
                                     className='flex-1'
                                 >
-                                    Upgrade to VT+
+                                    Open Settings
                                 </Button>
                             </div>
                         </div>

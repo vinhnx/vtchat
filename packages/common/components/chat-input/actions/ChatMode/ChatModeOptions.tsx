@@ -53,7 +53,7 @@ export function ChatModeOptions({
 
     const { showLoginPrompt, setShowLoginPrompt } = useLoginPrompt();
     const { hasAccess, isLoaded } = useSubscriptionAccess();
-    const isVtPlus = useVtPlusAccess();
+    const hasEnhancedAccess = useVtPlusAccess();
 
     // Animation state for dropdown items
     const [isAnimating, setIsAnimating] = useState(false);
@@ -72,25 +72,21 @@ export function ChatModeOptions({
             return false;
         }
 
-        // CRITICAL: Special handling for Deep Research and Pro Search
+        // Deep Research and Pro Search follow the same access rules as other modes.
         if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
-            // Check if user has VT+ subscription first
             const hasFeatureAccess = mode === ChatMode.Deep
                 ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                 : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
-            // If user has VT+ and feature access, they can use it without BYOK
-            if (isVtPlus && hasFeatureAccess) {
+            if (hasFeatureAccess) {
                 return false;
             }
 
-            // For free users, check if they have BYOK Gemini key
             const hasByokGeminiKey = !!apiKeys[API_KEY_NAMES.GOOGLE];
             if (hasByokGeminiKey) {
-                return false; // Free users can use BYOK
+                return false;
             }
 
-            // No VT+ subscription and no BYOK key - show gated
             return true;
         }
 
@@ -140,23 +136,20 @@ export function ChatModeOptions({
             const hasRequiredApiKey = !!apiKeys[requiredApiKey];
 
             if (!hasRequiredApiKey) {
-                // Special handling for Deep Research and Pro Search: VT+ users don't need BYOK
+                // Deep Research and Pro Search can proceed once access checks pass.
                 if (mode === ChatMode.Deep || mode === ChatMode.Pro) {
                     const hasFeatureAccess = mode === ChatMode.Deep
                         ? hasAccess({ feature: FeatureSlug.DEEP_RESEARCH })
                         : hasAccess({ feature: FeatureSlug.PRO_SEARCH });
 
-                    // If user has VT+ access, bypass BYOK requirement
-                    if (isVtPlus && hasFeatureAccess) {
+                    if (hasFeatureAccess) {
                         setChatMode(mode);
                         return;
                     }
                 }
 
-                // Special handling for Gemini models: VT+ users don't need BYOK
                 if (requiredApiKey === API_KEY_NAMES.GOOGLE) {
-                    // If user has VT+ access, bypass BYOK requirement for all Gemini models
-                    if (isVtPlus) {
+                    if (hasEnhancedAccess) {
                         setChatMode(mode);
                         return;
                     }
@@ -182,8 +175,7 @@ export function ChatModeOptions({
                 feature: config?.requiredFeature,
                 plan: config?.requiredPlan,
                 title: `${option?.label}`,
-                message:
-                    `${option?.label} is a premium feature. Upgrade to VT+ to access advanced AI models and features.`,
+                message: `${option?.label} is available to all signed-in users.`,
             });
             return;
         }
@@ -264,15 +256,6 @@ export function ChatModeOptions({
                                             <p className='m-0 text-sm font-medium'>
                                                 {option.label}
                                             </p>
-                                            {(option.value === ChatMode.Deep
-                                                || option.value === ChatMode.Pro) && (
-                                                <Badge
-                                                    className='bg-[#BFB38F]/20 px-1.5 py-0.5 text-[10px] text-[#D99A4E]'
-                                                    variant='secondary'
-                                                >
-                                                    VT+
-                                                </Badge>
-                                            )}
                                         </div>
                                         {option.description && (
                                             <p className='text-muted-foreground text-xs font-light'>

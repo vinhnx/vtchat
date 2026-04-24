@@ -52,7 +52,7 @@ args = ["-y", "@upstash/context7-mcp@latest"]
 gallery = true
 
 [mcp_servers.flymcp]
-command = "/Users/vinh.nguyenxuan/flymcp/flymcp"
+command = "/Users/vinhnguyenxuan/flymcp/flymcp"
 args = []
 env = {}
 disabled = false

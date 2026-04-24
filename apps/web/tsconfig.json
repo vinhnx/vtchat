@@ -9,6 +9,7 @@
         ".next-dev/types/**/*.ts"
     ],
     "compilerOptions": {
+        "ignoreDeprecations": "6.0",
         "paths": {
             "@repo/shared/types": ["./lib/types"],
             "@/hooks": ["./lib/hooks"],

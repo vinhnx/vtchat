@@ -288,7 +288,7 @@ const StructuredOutputButton = () => {
                     documentType: type,
                     fileName: file.name,
                     chatMode,
-                    userApiKeys: getAllKeys, // Pass user's API keys for non-VT+ users
+                    userApiKeys: getAllKeys, // Pass user's API keys when available
                 },
             });
 
@@ -424,7 +424,7 @@ Please help me analyze this data and provide insights or answer any questions ab
                     ? hasProcessedData
                         ? `Structured data extracted from ${structuredData?.fileName}`
                         : 'Upload document to extract structured data (PDF, TXT, MD)'
-                    : 'Unlock AI-powered structured data extraction with VT+'}
+                    : 'Unlock AI-powered structured data extraction'}
                 variant='ghost'
             >
                 {isProcessing

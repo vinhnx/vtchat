@@ -10,7 +10,7 @@ describe('Footer Component', () => {
         expect(screen.getByText('Home')).toBeInTheDocument();
         expect(screen.getByText('Terms')).toBeInTheDocument();
         expect(screen.getByText('Privacy')).toBeInTheDocument();
-        expect(screen.getByText('VT+')).toBeInTheDocument();
+        expect(screen.getByText('Features')).toBeInTheDocument();
         expect(screen.getByText('Hello')).toBeInTheDocument();
         expect(screen.getByText('Help')).toBeInTheDocument();
         expect(screen.getByText('Feedback')).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe('Footer Component', () => {
         const homeLink = screen.getByRole('link', { name: 'Home' });
         const termsLink = screen.getByRole('link', { name: 'Terms' });
         const privacyLink = screen.getByRole('link', { name: 'Privacy' });
-        const vtplusLink = screen.getByRole('link', { name: 'VT+' });
+        const featuresLink = screen.getByRole('link', { name: 'Features' });
         const helloLink = screen.getByRole('link', { name: 'Hello' });
         const helpLink = screen.getByRole('link', { name: 'Help' });
         const feedbackLink = screen.getByRole('link', { name: 'Feedback' });
@@ -40,7 +40,7 @@ describe('Footer Component', () => {
         expect(homeLink).toHaveAttribute('href', '/');
         expect(termsLink).toHaveAttribute('href', '/terms');
         expect(privacyLink).toHaveAttribute('href', '/privacy');
-        expect(vtplusLink).toHaveAttribute('href', '/pricing');
+        expect(featuresLink).toHaveAttribute('href', '/settings');
         expect(helloLink).toHaveAttribute('href', '/hello');
         expect(helpLink).toHaveAttribute('href', '/help');
         expect(feedbackLink).toHaveAttribute('href', 'https://vtchat.userjot.com');

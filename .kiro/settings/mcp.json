@@ -40,7 +40,7 @@
             ]
         },
         "flymcp": {
-            "command": "/Users/vinh.nguyenxuan/flymcp/flymcp",
+            "command": "/Users/vinhnguyenxuan/flymcp/flymcp",
             "args": [],
             "env": {},
             "disabled": false,

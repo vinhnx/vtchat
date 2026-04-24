@@ -8,13 +8,13 @@ import { Brain } from 'lucide-react';
 export const chatOptions = [
     {
         label: 'Deep Research',
-        description: 'In depth research on complex topic • 10/day with VT+',
+        description: 'In depth research on complex topics',
         value: ChatMode.Deep,
         iconName: 'Atom',
     },
     {
         label: 'Pro Search',
-        description: 'Enhanced web search with advanced AI • 20/day with VT+',
+        description: 'Enhanced web search with advanced AI',
         value: ChatMode.Pro,
         iconName: 'Star',
     },

@@ -8,15 +8,18 @@
  */
 
 import { useSession } from '@repo/shared/lib/auth-client';
-import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { requestDeduplicator } from '@repo/shared/utils/request-deduplication';
-import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period'; // Corrected import
 import type React from 'react';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { VT_BASE_PRODUCT_INFO } from '../../shared/config/payment';
 import { PortalReturnIndicator } from '../components/portal-return-indicator';
+
+const VT_BASE_PRODUCT_INFO = {
+    id: 'free_tier',
+    name: 'Free',
+    description: 'Included access for all signed-in users',
+    features: [],
+};
 
 export interface SubscriptionStatus {
     plan: string;
@@ -62,11 +65,7 @@ interface SubscriptionContextType {
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
-// Global state to prevent multiple simultaneous requests
-let globalFetchPromise: Promise<SubscriptionStatus> | null = null;
 let globalSubscriptionStatus: SubscriptionStatus | null = null;
-let globalIsLoading = true;
-let globalError: string | null = null;
 
 // Export function to access global subscription status synchronously
 export function getGlobalSubscriptionStatus(): SubscriptionStatus | null {
@@ -76,9 +75,6 @@ export function getGlobalSubscriptionStatus(): SubscriptionStatus | null {
 // Export function to reset global state (for sign-out cleanup)
 export function resetGlobalSubscriptionState(): void {
     globalSubscriptionStatus = null;
-    globalFetchPromise = null;
-    globalIsLoading = true;
-    globalError = null;
 }
 
 // Clean up global state on hot module reload in development
@@ -97,246 +93,50 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(
         globalSubscriptionStatus,
     );
-    const [isLoading, setIsLoading] = useState(globalIsLoading);
-    const [error, setError] = useState<string | null>(globalError);
     const [isPortalReturn, setIsPortalReturn] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
 
     // Track previous user ID to detect sign-out
     const [previousUserId, setPreviousUserId] = useState<string | null>(session?.user?.id || null);
 
+    const createFreeStatus = useCallback((trigger: RefreshTrigger): SubscriptionStatus => {
+        const status: SubscriptionStatus = {
+            plan: PlanSlug.VT_BASE,
+            status: SubscriptionStatusEnum.ACTIVE,
+            isPlusSubscriber: false,
+            hasSubscription: false,
+            productInfo: VT_BASE_PRODUCT_INFO,
+            isAnonymous: !session?.user,
+            fromCache: true,
+            cachedAt: new Date(),
+            fetchCount: 1,
+            lastRefreshTrigger: trigger,
+        };
+
+        globalSubscriptionStatus = status;
+        return status;
+    }, [session?.user]);
+
     const fetchSubscriptionStatus = useCallback(
         async (trigger: RefreshTrigger = 'initial', forceRefresh = false) => {
-            const userId = session?.user?.id || null;
-            // const userDescription = userId ? `user ${userId}` : 'anonymous user'; // Removed - no longer used in production logs
-
-            // For anonymous users, immediately return basic anonymous tier without API calls
-            if (!userId) {
-                // log.info(
-                //     '[Subscription Provider] Returning basic anonymous tier for anonymous user'
-                // ); // Removed - too verbose for production
-                const anonymousStatus: SubscriptionStatus = {
-                    plan: PlanSlug.ANONYMOUS,
-                    status: SubscriptionStatusEnum.ACTIVE,
-                    isPlusSubscriber: false,
-                    hasSubscription: false,
-                    productInfo: VT_BASE_PRODUCT_INFO,
-                    isAnonymous: true,
-                    fromCache: false,
-                    cachedAt: new Date(),
-                    fetchCount: 1,
-                    lastRefreshTrigger: trigger,
-                };
-
-                globalSubscriptionStatus = anonymousStatus;
-                globalIsLoading = false;
-                globalError = null;
-                setSubscriptionStatus(anonymousStatus);
-                setIsLoading(false);
-                setError(null);
-                return anonymousStatus;
-            }
-
-            // If there's already a global fetch in progress and not forcing refresh, wait for it
-            if (globalFetchPromise && !forceRefresh) {
-                // log.info(
-                //     { userDescription },
-                //     '[Subscription Provider] Using existing global fetch'
-                // ); // Removed - too verbose for production
-                const result = await globalFetchPromise;
-                setSubscriptionStatus(result);
-                setIsLoading(false);
-                setError(null);
-                return result;
-            }
-
-            try {
-                setIsLoading(true);
-                setError(null);
-                globalIsLoading = true;
-                globalError = null;
-
-                // log.info(
-                //     { userDescription, trigger },
-                //     '[Subscription Provider] Starting global fetch'
-                // ); // Removed - too verbose for production
-
-                // Create the global fetch promise with deduplication
-                const requestKey = `subscription-${userId}-${trigger}`;
-                const currentPromise = requestDeduplicator.deduplicate(requestKey, async () => {
-                    // Build API URL with trigger and force refresh parameters
-                    const params = new URLSearchParams({
-                        trigger,
-                        ...(forceRefresh && { force: 'true' }),
-                    });
-
-                    // Create AbortController for timeout (longer in development)
-                    const controller = new AbortController();
-                    const timeoutMs = process.env.NODE_ENV === 'development' ? 30_000 : 15_000; // 30s dev, 15s prod
-                    const timeoutId = setTimeout(() => {
-                        controller.abort();
-                    }, timeoutMs);
-
-                    try {
-                        const response = await fetch(`/api/subscription/status?${params}`, {
-                            signal: controller.signal,
-                            headers: {
-                                'Cache-Control': 'no-cache',
-                            },
-                        });
-
-                        clearTimeout(timeoutId);
-
-                        if (!response.ok) {
-                            throw new Error(
-                                `Failed to fetch subscription status: ${response.statusText}`,
-                            );
-                        }
-
-                        const status = await response.json();
-
-                        // Convert date strings back to Date objects
-                        if (status.currentPeriodEnd) {
-                            status.currentPeriodEnd = new Date(status.currentPeriodEnd);
-                        }
-                        if (status.cachedAt) {
-                            status.cachedAt = new Date(status.cachedAt);
-                        }
-
-                        // Guarantee isPlusSubscriber boolean flag
-                        if (status.isPlusSubscriber === undefined) {
-                            status.isPlusSubscriber = status.plan === PlanSlug.VT_PLUS;
-                        }
-
-                        // Add product info for display purposes
-                        if (status.plan === PlanSlug.VT_BASE) {
-                            status.productInfo = VT_BASE_PRODUCT_INFO;
-                        }
-
-                        return status;
-                    } catch (error) {
-                        clearTimeout(timeoutId);
-
-                        if (error instanceof Error && error.name === 'AbortError') {
-                            const timeoutSec = process.env.NODE_ENV === 'development' ? 30 : 15;
-                            log.warn(
-                                `Subscription fetch timeout (${timeoutSec}s) - using cached status`,
-                                {
-                                    userId: session?.user?.id,
-                                    trigger: state.lastRefreshTrigger,
-                                },
-                            );
-                            // Return cached status or fallback instead of throwing
-                            const fallbackFreeTier: SubscriptionStatus = {
-                                plan: PlanSlug.VT_BASE,
-                                status: SubscriptionStatusEnum.ACTIVE,
-                                isPlusSubscriber: false,
-                                hasSubscription: false,
-                                productInfo: VT_BASE_PRODUCT_INFO,
-                                isAnonymous: !session?.user,
-                            };
-                            return globalSubscriptionStatus || fallbackFreeTier;
-                        }
-
-                        // Handle network errors during page navigation
-                        if (error instanceof TypeError && error.message.includes('NetworkError')) {
-                            throw new Error(
-                                'Network error - request cancelled during page navigation',
-                            );
-                        }
-
-                        throw error;
-                    }
-                });
-
-                // Store the promise for cleanup, but use the local copy to avoid race conditions
-                globalFetchPromise = currentPromise;
-
-                // Wait for the result
-                const result = await currentPromise;
-
-                // Update global and local state
-                globalSubscriptionStatus = result;
-                globalIsLoading = false;
-                setSubscriptionStatus(result);
-                setIsLoading(false);
-
-                // log.info(
-                //     result
-                //         ? {
-                //               plan: result.plan,
-                //               isPlusSubscriber: result.isPlusSubscriber,
-                //               fromCache: result.fromCache,
-                //               fetchCount: result.fetchCount,
-                //               trigger: result.lastRefreshTrigger,
-                //           }
-                //         : {},
-                //     `Global fetch completed for ${userDescription}`
-                // ); // Removed - too verbose for production
-
-                // Clear the global promise after a short delay to allow other components to use it
-                setTimeout(() => {
-                    globalFetchPromise = null;
-                }, 1000); // Keep for 1 second
-
-                return result;
-            } catch (err) {
-                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-
-                // Don't log network errors during page navigation as errors
-                if (
-                    errorMessage.includes('request cancelled during page navigation')
-                    || errorMessage.includes('NetworkError')
-                    || errorMessage.includes('AbortError')
-                ) {
-                    log.debug('Request cancelled during page navigation', { error: errorMessage });
-                } else {
-                    log.error({ error: errorMessage }, 'Error fetching subscription status');
-                }
-
-                // Update global and local error state
-                globalError = errorMessage;
-                globalIsLoading = false;
-                setError(errorMessage);
-                setIsLoading(false);
-
-                // Clear the failed promise
-                globalFetchPromise = null;
-
-                // Fallback to default free plan on error
-                const fallbackFreeTier: SubscriptionStatus = {
-                    plan: PlanSlug.VT_BASE,
-                    status: SubscriptionStatusEnum.ACTIVE,
-                    isPlusSubscriber: false,
-                    hasSubscription: false,
-                    productInfo: VT_BASE_PRODUCT_INFO,
-                    isAnonymous: !session?.user,
-                };
-
-                globalSubscriptionStatus = fallbackFreeTier;
-                setSubscriptionStatus(fallbackFreeTier);
-
-                // Return fallback instead of throwing to prevent unhandled promise rejections
-                return fallbackFreeTier;
-            }
+            void forceRefresh;
+            const status = createFreeStatus(trigger);
+            setSubscriptionStatus(status);
+            return status;
         },
-        [session?.user],
+        [createFreeStatus],
     );
 
     // Initial fetch when provider mounts - this handles page refresh
     useEffect(() => {
-        // Always fetch on mount to ensure fresh data after page refresh
         const trigger = globalSubscriptionStatus ? 'page_refresh' : 'initial';
-        fetchSubscriptionStatus(trigger);
-    }, [fetchSubscriptionStatus]); // Include dependency but it's stable due to useCallback
+        void fetchSubscriptionStatus(trigger);
+    }, [fetchSubscriptionStatus]);
 
     // Trigger subscription status check when session becomes available or changes
     useEffect(() => {
         if (session?.user) {
-            // Only fetch if we don't have data yet or if the session actually changed
-            if (!globalSubscriptionStatus || globalIsLoading) {
-                fetchSubscriptionStatus('initial', false);
-            }
+            void fetchSubscriptionStatus('initial', false);
         }
     }, [session?.user, fetchSubscriptionStatus]);
 
@@ -346,19 +146,16 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
         // If we had a user before but don't now (sign-out) or user changed, reset global state
         if (previousUserId && !currentUserId) {
-            // User signed out - clean up global state
             resetGlobalSubscriptionState();
-            setSubscriptionStatus(null);
-            setIsLoading(false);
-            setError(null);
+            setSubscriptionStatus(createFreeStatus('manual'));
         } else if (previousUserId && currentUserId && previousUserId !== currentUserId) {
-            // User switched - clean up previous user's data
             resetGlobalSubscriptionState();
+            setSubscriptionStatus(createFreeStatus('manual'));
         }
 
         // Update tracked user ID
         setPreviousUserId(currentUserId);
-    }, [session?.user?.id, previousUserId]);
+    }, [session?.user?.id, previousUserId, createFreeStatus]);
 
     // Refresh subscription status - useful after purchases or manual refresh
     const refreshSubscriptionStatus = useCallback(
@@ -372,14 +169,10 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
-                // Check if we're returning from a payment flow
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('checkout_success') || urlParams.has('payment_success')) {
-                    // log.info({}, 'Detected return from payment, refreshing subscription'); // Removed - too verbose for production
                     setIsPortalReturn(true);
-                    refreshSubscriptionStatus(true, 'payment');
-
-                    // Clean up URL parameters after handling
+                    void refreshSubscriptionStatus(true, 'payment');
                     if (window.history.replaceState) {
                         const url = new URL(window.location.href);
                         url.searchParams.delete('checkout_success');
@@ -400,9 +193,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
         const handleBeforeUnload = () => {
             // Clear any pending requests before page unload
-            if (globalFetchPromise) {
-                globalFetchPromise = null;
-            }
+            resetGlobalSubscriptionState();
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -416,65 +207,26 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
 
     // Check subscription expiration periodically
     useEffect(() => {
-        if (!subscriptionStatus?.currentPeriodEnd) return;
-
-        const checkExpiration = () => {
-            if (!subscriptionStatus.currentPeriodEnd) return;
-
-            const now = new Date();
-            const expiryDate = new Date(subscriptionStatus.currentPeriodEnd);
-            const timeDiff = expiryDate.getTime() - now.getTime();
-            const daysDiff = timeDiff / (1000 * 3600 * 24);
-
-            // Only refresh when actually expired and status is not already expired
-            // This prevents infinite loops from repeated "expiration" trigger calls
-            if (daysDiff <= 0 && subscriptionStatus.status !== SubscriptionStatusEnum.EXPIRED) {
-                refreshSubscriptionStatus(true, 'expiration');
-            }
-        };
-
-        // Check expiration on mount and every hour
-        checkExpiration();
-        const interval = setInterval(checkExpiration, 60 * 60 * 1000); // 1 hour
-
-        return () => clearInterval(interval);
-    }, [
-        subscriptionStatus?.currentPeriodEnd,
-        subscriptionStatus?.status,
-        refreshSubscriptionStatus,
-    ]);
+        return undefined;
+    }, [subscriptionStatus]);
 
     const contextValue: SubscriptionContextType = {
-        subscriptionStatus,
-        isLoading,
-        error,
-        refreshSubscriptionStatus,
-
-        // Portal return state
+        subscriptionStatus: subscriptionStatus ?? createFreeStatus('initial'),
+        isLoading: false,
+        error: null,
+        refreshSubscriptionStatus: async () => undefined,
         isPortalReturn,
         setIsPortalReturn,
-
-        // Portal loading state
         isPortalLoading,
         setIsPortalLoading,
-
-        // Convenience properties
-        isPlusSubscriber: subscriptionStatus?.isPlusSubscriber ?? false,
-        plan: subscriptionStatus?.plan ?? PlanSlug.VT_BASE,
-        hasActiveSubscription: (() => {
-            if (!subscriptionStatus?.hasSubscription) return false;
-
-            // Use centralized grace period logic
-            return hasSubscriptionAccess({
-                status: subscriptionStatus.status as SubscriptionStatusEnum,
-                currentPeriodEnd: subscriptionStatus.currentPeriodEnd,
-            });
-        })(),
-        isAnonymous: subscriptionStatus?.isAnonymous ?? !session?.user,
-        fromCache: subscriptionStatus?.fromCache ?? false,
-        fetchCount: subscriptionStatus?.fetchCount ?? 0,
-        lastRefreshTrigger: subscriptionStatus?.lastRefreshTrigger,
-        cachedAt: subscriptionStatus?.cachedAt,
+        isPlusSubscriber: false,
+        plan: PlanSlug.VT_BASE,
+        hasActiveSubscription: false,
+        isAnonymous: !session?.user,
+        fromCache: true,
+        fetchCount: 1,
+        lastRefreshTrigger: 'initial',
+        cachedAt: new Date(),
     };
 
     return (

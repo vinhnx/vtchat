@@ -35,7 +35,7 @@ export const RootLayout: FC<TRootLayout> = ({ children }) => {
         'relative flex flex-1 flex-row h-[100dvh] border border-border bg-secondary w-full shadow-sm md:rounded-sm md:overflow-hidden';
 
     // Hide drop shadow on plus page
-    const shouldShowDropShadow = pathname !== '/pricing';
+    const shouldShowDropShadow = pathname !== '/settings';
 
     // Close mobile sidebar when route changes
     useEffect(() => {
@@ -278,7 +278,7 @@ export const SideDrawer = () => {
     const isThreadPage = pathname !== '/'
         && pathname !== '/recent'
         && pathname !== '/settings'
-        && pathname !== '/pricing'
+        && pathname !== '/settings'
         && pathname !== '/about'
         && pathname !== '/login'
         && pathname !== '/privacy'

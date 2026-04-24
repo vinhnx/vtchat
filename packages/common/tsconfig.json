@@ -1,6 +1,7 @@
 {
     "extends": "@repo/typescript-config",
     "compilerOptions": {
+        "ignoreDeprecations": "6.0",
         "baseUrl": ".",
         "jsx": "react-jsx"
     },

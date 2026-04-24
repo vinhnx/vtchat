@@ -54,13 +54,8 @@ export const ModelSettings = () => {
 
     // Check if model is accessible
     const isModelAccessible = (model: (typeof models)[0]): boolean => {
-        if (model.provider === 'google') {
-            // All Gemini models require BYOK
-            return hasApiKeyForProvider('google');
-        }
-
-        // For other models, check if user has the appropriate API key
-        return hasApiKeyForProvider(model.provider);
+        void model;
+        return true;
     };
 
     return (
@@ -78,7 +73,7 @@ export const ModelSettings = () => {
                 <CardHeader>
                     <CardTitle className='text-foreground'>Models Overview</CardTitle>
                     <CardDescription>
-                        VT supports multiple AI providers with BYOK (Bring Your Own Key)
+                        VT supports multiple AI providers with optional BYOK (Bring Your Own Key)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -99,12 +94,12 @@ export const ModelSettings = () => {
                             </div>
                         </div>
                         <div className='bg-muted/20 border-muted rounded-lg border p-4'>
-                            <div className='text-foreground mb-2 font-medium'>VT+ Benefits</div>
+                            <div className='text-foreground mb-2 font-medium'>Included Features</div>
                             <div className='text-muted-foreground text-sm'>
                                 <ul className='list-disc space-y-1 pl-5'>
-                                    <li>Enhanced Gemini model limits</li>
-                                    <li>Access to Deep Research & Pro Search</li>
-                                    <li>Priority support and features</li>
+                                    <li>Deep Research and Pro Search are available to signed-in users</li>
+                                    <li>Reasoning mode and caching controls are included</li>
+                                    <li>Provider API keys remain optional for personal key usage</li>
                                 </ul>
                             </div>
                         </div>
@@ -118,15 +113,15 @@ export const ModelSettings = () => {
                     <CardHeader>
                         <CardTitle className='text-foreground flex items-center gap-2'>
                             {providerNames[provider] || provider}
-                            {!hasApiKeyForProvider(provider) && (
-                                <Badge variant='outline' className='text-xs font-normal'>
-                                    API Key Required
-                                </Badge>
-                            )}
+                                {hasApiKeyForProvider(provider) && (
+                                    <Badge variant='outline' className='text-xs font-normal'>
+                                        API Key Configured
+                                    </Badge>
+                                )}
                         </CardTitle>
                         <CardDescription>
                             {provider === 'google'
-                                && 'Gemini models require your own API key'}
+                                && 'Gemini models are available with managed access or your own API key'}
                             {provider === 'openai'
                                 && 'Advanced reasoning and function calling capabilities'}
                             {provider === 'anthropic' && 'Claude models with exceptional reasoning'}
@@ -146,20 +141,9 @@ export const ModelSettings = () => {
                                     <div className='mb-2 flex items-start justify-between'>
                                         <div className='text-sm font-medium'>{model.name}</div>
                                         <div className='flex gap-1'>
-                                            {isModelAccessible(model)
-                                                ? (
-                                                    <Badge className='bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
-                                                        Available
-                                                    </Badge>
-                                                )
-                                                : (
-                                                    <Badge
-                                                        variant='outline'
-                                                        className='text-muted-foreground'
-                                                    >
-                                                        Locked
-                                                    </Badge>
-                                                )}
+                                            <Badge className='bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
+                                                Available
+                                            </Badge>
                                         </div>
                                     </div>
                                     <div className='text-muted-foreground space-y-1 text-xs'>
@@ -167,11 +151,10 @@ export const ModelSettings = () => {
                                             Context:{' '}
                                             {(model.contextWindow / 1000).toFixed(0)}K tokens
                                         </div>
-                                        {!isModelAccessible(model) && (
-                                            <div className='text-xs italic'>
-                                                Add {providerNames[provider]} API key to access
-                                            </div>
-                                        )}
+                                        <div className='text-xs italic'>
+                                            Add {providerNames[provider]} API key if you want to
+                                            use your own provider credentials.
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -205,15 +188,15 @@ export const ModelSettings = () => {
                         </div>
 
                         <div className='bg-background/50 border-muted rounded-lg border p-4'>
-                            <div className='text-foreground mb-2 font-medium'>VT+ Subscription</div>
+                            <div className='text-foreground mb-2 font-medium'>Managed Access</div>
                             <div className='text-muted-foreground text-sm'>
                                 <p className='mb-2'>
-                                    VT+ subscribers receive enhanced Gemini rate limits and access
-                                    to exclusive research features.
+                                    Signed-in users can use the built-in Gemini access and research
+                                    features without an upgrade step.
                                 </p>
                                 <p>
-                                    VT+ includes Deep Research and Pro Search capabilities for
-                                    advanced AI-powered research workflows.
+                                    Deep Research and Pro Search are available alongside the rest
+                                    of the app's core features.
                                 </p>
                             </div>
                         </div>

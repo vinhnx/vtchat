@@ -1,12 +1,9 @@
 'use client';
 
 import { REASONING_BUDGETS } from '@repo/ai/constants/reasoning';
-import { useFeatureAccess } from '@repo/common/hooks/use-subscription-access';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { ChatMode } from '@repo/shared/config';
-import { FeatureSlug } from '@repo/shared/types/subscription';
 import {
-    Button,
     Card,
     CardContent,
     CardHeader,
@@ -22,7 +19,6 @@ export const ReasoningModeSettings = () => {
     const thinkingMode = useAppStore((state) => state.thinkingMode);
     const setThinkingMode = useAppStore((state) => state.setThinkingMode);
     const chatMode = useChatStore((state) => state.chatMode);
-    const hasThinkingModeAccess = useFeatureAccess(FeatureSlug.THINKING_MODE);
 
     // Check if current model supports reasoning
     const _supportsReasoning = useMemo(() => {
@@ -64,38 +60,6 @@ export const ReasoningModeSettings = () => {
             budget: value[0],
         });
     };
-
-    // Check for access
-    if (!hasThinkingModeAccess) {
-        return (
-            <Card>
-                <CardHeader>
-                    <TypographyH3 className='text-foreground'>Reasoning Mode</TypographyH3>
-                </CardHeader>
-                <CardContent>
-                    <div className='py-6 text-center'>
-                        <div className='bg-muted mx-auto w-fit rounded-full p-4'>
-                            <div className='bg-foreground h-8 w-8 rounded' />
-                        </div>
-                        <p className='text-foreground mt-3 text-base font-medium'>VT+ Feature</p>
-                        <p className='text-muted-foreground mt-1 text-sm'>
-                            Advanced reasoning capabilities for complex problem-solving. Available
-                            exclusively for VT+ subscribers.
-                        </p>
-                        <Button
-                            className='mt-4'
-                            size='sm'
-                            onClick={() => {
-                                window.location.href = '/pricing';
-                            }}
-                        >
-                            Upgrade to VT+
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-        );
-    }
 
     return (
         <div className='space-y-6'>

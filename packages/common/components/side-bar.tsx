@@ -1,10 +1,9 @@
 'use client';
 import { useRootContext } from '@repo/common/context';
 import { useReducedMotion } from '@repo/common/contexts/accessibility-context';
-import { useAdmin, useCreemSubscription, useLogout } from '@repo/common/hooks';
+import { useAdmin, useLogout } from '@repo/common/hooks';
 import { useAppStore, useChatStore } from '@repo/common/store';
 import { getSessionCacheBustedAvatarUrl } from '@repo/common/utils/avatar-cache';
-import { BUTTON_TEXT, TOOLTIP_TEXT } from '@repo/shared/constants';
 import { useSession } from '@repo/shared/lib/auth-client';
 import { log } from '@repo/shared/logger';
 import type { Thread } from '@repo/shared/types';
@@ -36,7 +35,6 @@ import {
     ChevronsUpDown,
     ChevronUp,
     Command,
-    ExternalLink,
     FileText,
     HelpCircle,
     Info,
@@ -111,7 +109,6 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
     const isSidebarOpen = forceMobile || useAppStore((state) => state.isSidebarOpen);
 
     const { push } = useRouter();
-    const { isPlusSubscriber, openCustomerPortal, isPortalLoading } = useCreemSubscription();
     const { logout, isLoggingOut } = useLogout();
     const { showLoginPrompt, requireLogin, hideLoginPrompt } = useLoginRequired();
     const { toast } = useToast();
@@ -834,16 +831,9 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                             <Button
                                 className={cn(
                                     'group relative w-full justify-between overflow-hidden border shadow-sm transition-all duration-300',
-                                    'border-[#D99A4E]/30 bg-gradient-to-r from-[#D99A4E]/20 to-[#BFB38F]/20 text-[#262626] hover:from-[#D99A4E]/30 hover:to-[#BFB38F]/30 hover:shadow-lg hover:shadow-[#D99A4E]/20 dark:border-[#BFB38F]/30 dark:from-[#D99A4E]/10 dark:to-[#BFB38F]/10 dark:text-[#BFB38F] dark:hover:from-[#D99A4E]/20 dark:hover:to-[#BFB38F]/20 dark:hover:shadow-[#BFB38F]/10',
+                                    'border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-sidebar-accent/80 hover:shadow-sm',
                                 )}
-                                disabled={isPortalLoading}
-                                onClick={() => {
-                                    if (isPlusSubscriber) {
-                                        openCustomerPortal();
-                                    } else {
-                                        push('/pricing');
-                                    }
-                                }}
+                                onClick={() => push('/settings')}
                                 roundedSm='lg'
                                 size={isSidebarOpen ? 'sm' : 'icon-sm'}
                                 variant='ghost'
@@ -851,7 +841,7 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 <Sparkles
                                     className={cn(
                                         'flex-shrink-0 transition-all duration-300 group-hover:scale-110',
-                                        'text-amber-600/80 group-hover:text-amber-700 dark:text-amber-400/80 dark:group-hover:text-amber-300',
+                                        'text-sidebar-foreground/70 group-hover:text-sidebar-foreground',
                                         isSidebarOpen && 'mr-2',
                                     )}
                                     size={16}
@@ -860,50 +850,29 @@ export const Sidebar = ({ forceMobile = false }: { forceMobile?: boolean; } = {}
                                 <span
                                     className={cn(
                                         'flex-1 truncate text-left font-medium',
-                                        'text-[#262626] dark:text-[#BFB38F]',
+                                        'text-sidebar-foreground',
                                     )}
                                 >
-                                    {isPortalLoading
-                                        ? BUTTON_TEXT.LOADING
-                                        : isPlusSubscriber
-                                        ? BUTTON_TEXT.MANAGE_SUBSCRIPTION
-                                        : BUTTON_TEXT.UPGRADE_TO_PLUS}
+                                    Features
                                 </span>
-                                {isPlusSubscriber && (
-                                    <ExternalLink
-                                        className='ml-1 flex-shrink-0 text-amber-600/80 dark:text-amber-400/80'
-                                        size={12}
-                                    />
-                                )}
                             </Button>
                         )
                         : (
                             <Button
                                 className={cn(
                                     'group !m-0 flex items-center justify-center !p-0 transition-all duration-300',
-                                    // Remove background in collapsed state, keep hover effects
                                     'hover:bg-sidebar-accent hover:text-sidebar-foreground',
                                 )}
-                                disabled={isPortalLoading}
-                                onClick={() => {
-                                    if (isPlusSubscriber) {
-                                        openCustomerPortal();
-                                    } else {
-                                        push('/pricing');
-                                    }
-                                }}
+                                onClick={() => push('/settings')}
                                 roundedSm='lg'
                                 size='icon-sm'
-                                tooltip={isPlusSubscriber
-                                    ? TOOLTIP_TEXT.MANAGE_SUBSCRIPTION_NEW_TAB
-                                    : TOOLTIP_TEXT.UPGRADE_TO_PLUS}
+                                tooltip='Open settings'
                                 tooltipSide='right'
                                 variant='ghost'
                             >
                                 <Sparkles
                                     className={cn(
                                         'm-0 p-0 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110',
-                                        // Use consistent sidebar foreground colors for collapsed state
                                         'text-sidebar-foreground/70 group-hover:text-sidebar-foreground',
                                     )}
                                     size={16}

@@ -1,6 +1,5 @@
 'use client';
 
-import { useVtPlusAccess } from '@repo/common/hooks/use-subscription-access';
 import { useApiKeysStore, useChatStore } from '@repo/common/store';
 import { mergeAspectRatioHint } from '@repo/common/utils/aspect-ratio';
 import { http } from '@repo/shared/lib/http-client';
@@ -32,8 +31,6 @@ export const ImageGenButton = ({
     const router = useRouter();
     const { threadId: currentThreadId } = useParams();
     const { toast } = useToast();
-    const isVtPlus = useVtPlusAccess();
-
     const editor = useChatStore((s) => s.editor);
     const createThread = useChatStore((s) => s.createThread);
     const createThreadItem = useChatStore((s) => s.createThreadItem);
@@ -225,12 +222,7 @@ export const ImageGenButton = ({
         toast,
     ]);
 
-    const tooltip = hasGeminiKey
-        ? 'Generate image from prompt'
-        : 'Tip: Add your Gemini API Key in Settings for image generation';
-
-    // Premium glass effect similar to VT+ badge
-    const premiumClasses = 'vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E]';
+    const tooltip = 'Generate image from prompt';
 
     return (
         <ContextMenu>
@@ -239,8 +231,7 @@ export const ImageGenButton = ({
                     <Button
                         onClick={handleGenerate}
                         size='sm'
-                        variant={hasGeminiKey || isVtPlus ? 'secondary' : 'ghost'}
-                        className={hasGeminiKey || isVtPlus ? premiumClasses : ''}
+                        variant={hasGeminiKey ? 'secondary' : 'ghost'}
                         aria-label='Generate image'
                     >
                         <Image size={16} strokeWidth={2} />
@@ -298,7 +289,7 @@ export const StyleModeSelector = () => {
                 <Button
                     size='sm'
                     variant='secondary'
-                    className='vt-plus-glass border-[#D99A4E]/30 text-[#D99A4E]'
+                    className='border-border/50 bg-muted text-foreground'
                     aria-label='Style mode templates'
                 >
                     Styles

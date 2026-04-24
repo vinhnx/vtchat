@@ -9,7 +9,7 @@ args = ["-y", "@upstash/context7-mcp@latest"]
 
 [[mcp.stdio_servers]]
 name = "flymcp"
-command = "/Users/vinh.nguyenxuan/flymcp/flymcp"
+command = "/Users/vinhnguyenxuan/flymcp/flymcp"
 args = []
 env = {}
 

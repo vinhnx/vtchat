@@ -19,8 +19,8 @@ const links = [
         href: '/privacy',
     },
     {
-        title: 'VT+',
-        href: '/pricing',
+        title: 'Features',
+        href: '/settings',
     },
     {
         title: 'Hello',
