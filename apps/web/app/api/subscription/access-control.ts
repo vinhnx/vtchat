@@ -6,110 +6,27 @@
  */
 
 import { auth } from '@/lib/auth-server';
-import { VTPlusAccess } from '@repo/shared/config/vt-plus-features';
 import { log } from '@repo/shared/logger';
 import { PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { hasSubscriptionAccess } from '@repo/shared/utils/subscription-grace-period';
+import { PLANS } from '@repo/shared/types/subscription';
 import type { NextRequest } from 'next/server';
-import { checkSubscriptionOptimized } from '../../../lib/auth/optimized-subscription-check';
 
 /**
  * Get comprehensive subscription status for a user
  * Uses dynamic import to avoid build-time dependency issues
  */
 async function getComprehensiveSubscriptionStatus(userId: string) {
-    try {
-        // Import dynamically to avoid build-time issues with drizzle
-        const subscriptionSync = await import(
-            '../../../../../packages/shared/utils/subscription-sync'
-        );
-        return await subscriptionSync.getComprehensiveSubscriptionStatus(userId);
-    } catch (importError) {
-        log.warn(
-            { error: importError },
-            'Could not import subscription-sync, falling back to direct database query',
-        );
-
-        try {
-            // Fallback: direct database query if import fails
-            const { db, withDatabaseErrorHandling } = await import('@/lib/database');
-            const { users, userSubscriptions } = await import('@/lib/database/schema');
-            const { eq } = await import('drizzle-orm');
-
-            return await withDatabaseErrorHandling(async () => {
-                // Get user's current plan from database
-                const userResult = await db
-                    .select({ planSlug: users.planSlug })
-                    .from(users)
-                    .where(eq(users.id, userId))
-                    .limit(1);
-
-                if (userResult.length === 0) {
-                    // User not found, default to free plan
-                    return {
-                        plan: PlanSlug.VT_BASE,
-                        isActive: true,
-                        expiresAt: null,
-                        source: 'default' as const,
-                        hasDbSubscription: false,
-                        userPlanSlug: null,
-                        needsSync: false,
-                    };
-                }
-
-                const userPlanSlug = userResult[0].planSlug;
-
-                // Check for active subscription
-                const subscriptionResult = await db
-                    .select()
-                    .from(userSubscriptions)
-                    .where(eq(userSubscriptions.userId, userId))
-                    .limit(1);
-
-                const subscription = subscriptionResult.length > 0 ? subscriptionResult[0] : null;
-
-                // Determine if user has active VT+ access
-                let isActive = false;
-                let plan = PlanSlug.VT_BASE;
-
-                if (subscription) {
-                    // Use centralized grace period logic
-                    isActive = hasSubscriptionAccess({
-                        status: subscription.status as SubscriptionStatusEnum,
-                        currentPeriodEnd: subscription.currentPeriodEnd,
-                    });
-                    plan = isActive && subscription.plan === PlanSlug.VT_PLUS
-                        ? PlanSlug.VT_PLUS
-                        : PlanSlug.VT_BASE;
-                } else if (userPlanSlug === PlanSlug.VT_PLUS) {
-                    // Fallback to user plan if no subscription record
-                    plan = PlanSlug.VT_PLUS;
-                    isActive = true;
-                } else {
-                    // Default to free plan
-                    plan = PlanSlug.VT_BASE;
-                    isActive = true; // Free tier is always "active"
-                }
-
-                return {
-                    plan,
-                    isActive,
-                    expiresAt: subscription?.currentPeriodEnd || null,
-                    source: subscription ? 'subscription' : ('user_plan' as const),
-                    hasDbSubscription: !!subscription,
-                    userPlanSlug,
-                    needsSync: false,
-                };
-            }, 'Get user subscription status');
-        } catch (dbError) {
-            log.error('Database query failed, denying access for security:', {
-                error: dbError instanceof Error ? dbError.message : 'Unknown error',
-            });
-            // SECURITY: Don't provide fallback access when database fails
-            throw new Error('Unable to verify subscription status');
-        }
-    }
+    void userId;
+    return {
+        plan: PlanSlug.VT_BASE,
+        isActive: true,
+        expiresAt: null,
+        source: 'default' as const,
+        hasDbSubscription: false,
+        userPlanSlug: null,
+        needsSync: false,
+    };
 }
 
 export interface AccessCheckResult {
@@ -141,32 +58,12 @@ export async function checkVTPlusAccess(identifier: RequestIdentifier): Promise<
     }
 
     try {
-        // Use optimized subscription check first (10x faster)
-        const optimizedResult = await checkSubscriptionOptimized(userId);
-
-        if (optimizedResult) {
-            return {
-                hasAccess: optimizedResult.isVtPlus,
-                reason: optimizedResult.isVtPlus ? undefined : 'VT+ subscription required',
-                subscriptionStatus: optimizedResult.isVtPlus
-                    ? SubscriptionStatusEnum.ACTIVE
-                    : SubscriptionStatusEnum.NONE,
-                planSlug: (optimizedResult.planSlug as PlanSlug) || PlanSlug.VT_BASE,
-            };
-        }
-
-        // Fallback to comprehensive check if optimized fails
         const subscriptionStatus = await getComprehensiveSubscriptionStatus(userId);
 
-        const hasVTPlus = subscriptionStatus.plan === PlanSlug.VT_PLUS
-            && subscriptionStatus.isActive;
-
         return {
-            hasAccess: hasVTPlus,
-            reason: hasVTPlus ? undefined : 'VT+ subscription required',
-            subscriptionStatus: hasVTPlus
-                ? SubscriptionStatusEnum.ACTIVE
-                : SubscriptionStatusEnum.NONE,
+            hasAccess: true,
+            reason: undefined,
+            subscriptionStatus: SubscriptionStatusEnum.ACTIVE,
             planSlug: subscriptionStatus.plan,
         };
     } catch (error) {
@@ -240,10 +137,7 @@ export async function checkFeatureAccess(
         return baseAccess;
     }
 
-    // Check if the specific feature is enabled
-    const hasFeatureAccess = VTPlusAccess.getAccessibleFeatures(true).some(
-        (feature: { id: string; }) => feature.id === featureId,
-    );
+    const hasFeatureAccess = PLANS[PlanSlug.VT_PLUS].features.includes(featureId as never);
 
     return {
         ...baseAccess,
@@ -339,7 +233,7 @@ export async function getUserAccessibleFeatures(userId?: string) {
         return [];
     }
 
-    return VTPlusAccess.getAccessibleFeatures(true);
+    return PLANS[PlanSlug.VT_PLUS].features;
 }
 
 // Rate limiting functionality removed - no longer needed
