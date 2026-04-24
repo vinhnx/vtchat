@@ -14,13 +14,12 @@ import { useSession } from '@repo/shared/lib/auth-client';
 import { FeatureSlug } from '@repo/shared/types/subscription';
 // Types imported by useChatModeAccess
 import {
-    Badge,
     cn,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    Input,
+    Input
 } from '@repo/ui';
 import { Brain, Globe, Wrench } from 'lucide-react';
 
