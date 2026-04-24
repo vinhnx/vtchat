@@ -155,8 +155,12 @@ check_git_status() {
         if [ "$auto_mode" = "--auto" ]; then
             print_info "In auto mode - automatically committing changes..."
             git add -A
-            git commit -m "Auto-commit before deployment"
-            print_status "Changes committed successfully"
+            if git diff --cached --quiet HEAD --; then
+                print_info "No staged changes to commit; continuing with deployment"
+            else
+                git commit -m "Auto-commit before deployment"
+                print_status "Changes committed successfully"
+            fi
         else
             # In interactive mode, always ask
             echo -n "Do you want to commit these changes before deployment? (y/N): " >&2
@@ -165,8 +169,12 @@ check_git_status() {
             if [[ "$answer" =~ ^[Yy]$ ]]; then
                 print_info "Committing changes..."
                 git add -A
-                git commit -m "Commit before deployment"
-                print_status "Changes committed successfully"
+                if git diff --cached --quiet HEAD --; then
+                    print_info "No staged changes to commit; continuing with deployment"
+                else
+                    git commit -m "Commit before deployment"
+                    print_status "Changes committed successfully"
+                fi
             else
                 print_info "Proceeding without committing changes..."
             fi
