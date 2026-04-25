@@ -7,9 +7,8 @@
 
 import { auth } from '@/lib/auth-server';
 import { log } from '@repo/shared/logger';
-import { PlanSlug } from '@repo/shared/types/subscription';
+import { PLANS, PlanSlug } from '@repo/shared/types/subscription';
 import { SubscriptionStatusEnum } from '@repo/shared/types/subscription-status';
-import { PLANS } from '@repo/shared/types/subscription';
 import type { NextRequest } from 'next/server';
 
 /**

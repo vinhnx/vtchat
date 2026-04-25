@@ -352,7 +352,7 @@ push_to_remote() {
 
     # Get current branch name and ensure it's clean
     local current_branch=$(git branch --show-current)
-    
+
     # Validate branch name
     if [ -z "$current_branch" ]; then
         print_error "Could not determine current branch"
@@ -365,7 +365,7 @@ push_to_remote() {
         print_error "Failed to push branch $current_branch"
         exit 1
     fi
-    
+
     print_info "Pushing tag: $tag_name"
     if ! git push origin "$tag_name"; then
         print_error "Failed to push tag $tag_name"
