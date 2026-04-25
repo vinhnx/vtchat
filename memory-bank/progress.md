@@ -1,5 +1,18 @@
 # Progress Log
 
+## Latest Session - April 2026
+
+### ✅ Dependabot Security Alerts Fixed
+
+**Date**: Current Session
+**Status**: Completed
+
+- Updated `drizzle-orm` to `0.45.2` in the root and affected workspace manifests
+- Updated `uuid` to `14.0.0` in the affected workspace manifests
+- Refreshed `bun.lock` to align resolved packages with the patched versions
+
+---
+
 ## Latest Session - December 2025
 
 ### ✅ Gemini 3 Model Update

@@ -52,7 +52,7 @@
         "cobe": "0.6.4",
         "crypto-browserify": "3.12.1",
         "date-fns": "3.6.0",
-        "drizzle-orm": "0.44.4",
+        "drizzle-orm": "0.45.2",
         "events": "3.3.0",
         "geist": "1.4.2",
         "immer": "10.1.1",
