@@ -92,7 +92,7 @@
         "autoprefixer": "10.4.21",
         "drizzle-kit": "0.31.4",
         "husky": "9.1.7",
-        "postcss": "8.5.6",
+        "postcss": "8.5.10",
         "postcss-load-config": "6.0.1",
         "postgres": "3.4.7",
         "tailwindcss": "4.1.11",
