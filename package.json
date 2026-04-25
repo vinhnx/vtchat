@@ -65,7 +65,7 @@
         "drizzle-kit": "0.31.8",
         "entities": "6.0.1",
         "globals": "16.5.0",
-        "happy-dom": "20.7.0",
+        "happy-dom": "20.8.9",
         "jsdom": "26.1.0",
         "knip": "5.71.0",
         "oxlint": "1.31.0",
