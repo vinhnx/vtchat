@@ -24,8 +24,6 @@ VT is a production-ready, privacy-focused AI chat application delivering cutting
 
 **Featuring Nano Banana** - The Conversational image editor! Generate and iteratively edit images through natural conversation, exclusive to VT.
 
-Live at [https://vtchat.io.vn](https://vtchat.io.vn)
-
 ## Screenshots
 
 <div align="center">
