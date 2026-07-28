@@ -68,7 +68,7 @@
         "react": "19.1.1",
         "react-dom": "19.1.1",
         "recharts": "2.15.4",
-        "sharp": "0.34.3",
+        "sharp": "0.35.0",
         "sonner": "2.0.6",
         "stream-browserify": "3.0.0",
         "streamdown": "1.2.0",
